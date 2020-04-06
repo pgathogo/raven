@@ -4,7 +4,8 @@
 #include<string>
 #include<variant>
 
-using FieldValueType = std::variant<std::string>;
+using FieldValueType = std::variant<std::string, int>;
+
 
 class Field{
     public:
@@ -17,54 +18,71 @@ class Field{
         void setDBColumnName(std::string aName);
         void setName(const std::string aName);
         void setLabel(const std::string aLabel);
-        void setValue(const FieldValueType aValue);
-        void setStringValue(const std::string aValue);
+
         bool visible() const;
         void setVisible(bool value);
         bool formOnly() const;
         void setFormOnly(bool value);
 
-        virtual std::string valueToString() const;
-        virtual FieldValueType value() const;
+        virtual std::string valueToString()const = 0;
+        virtual std::string dbValueFormatter()=0;
 
-    protected:
-        FieldValueType getValue() const;
+        virtual void stringToValue(std::string val)=0;
+
     private:
         std::string mFieldName;
         std::string mFieldLabel;
         std::string mDBColumnName;
         bool mVisible;
         bool mFormOnly;
-        FieldValueType mValue;
 };
 
 class IntegerField : public Field{
     public:
+        typedef int type;
         IntegerField();
         ~IntegerField() override;
         IntegerField(std::string aName, std::string aLabel);
-        FieldValueType value() const override;
         std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+
+        void setValue(int val);
+
+        void stringToValue(std::string val) override;
+
+    private:
+        int mValue;
 };
 
 class StringField : public Field{
     public:
+        typedef std::string type;
         StringField();
         ~StringField() override;
         StringField(std::string aName, std::string aLabel);
-        FieldValueType value() const override;
         std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+
+        void setValue(std::string val);
+        void stringToValue(std::string val) override;
     private:
-        std::string testVal;
+        std::string mValue;
 };
 
 class TextField :public Field{
     public:
+        typedef std::string type;
         TextField();
         ~TextField() override;
         TextField(std::string aName, std::string aLabel);
-        FieldValueType value() const override;
         std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+
+        void setValue(std::string val);
+        void stringToValue(std::string val) override;
+
+    private:
+        std::string mValue;
 };
 
 using IF = std::tuple<IntegerField, int>;

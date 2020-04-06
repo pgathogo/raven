@@ -19,6 +19,9 @@ protected:
     virtual void loadEntity(BaseEntity& entity) = 0;
 
     void setObjectID(BaseEntity& entity, int id);
+
+    std::string commaSepColumns(BaseEntity* entity);
+    std::string commaSepValues(BaseEntity* entity);
 };
 
 class PostgresDatabaseManager : public BaseDatabaseManager

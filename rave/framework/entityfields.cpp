@@ -5,10 +5,8 @@ Field::Field()
      mFieldLabel{"FieldLabel"},
      mDBColumnName{"dbColumnName"},
      mVisible{true},
-     mFormOnly{false},
-     mValue{""}
+     mFormOnly{false}
 {
-    mValue = "";
 }
 
 Field::Field(std::string aName, std::string aLabel)
@@ -16,10 +14,8 @@ Field::Field(std::string aName, std::string aLabel)
      mFieldLabel{aLabel},
      mDBColumnName{aName},
      mVisible{true},
-     mFormOnly{false},
-     mValue{""}
+     mFormOnly{false}
 {
-    mValue = "";
 }
 
 Field::~Field(){}
@@ -54,20 +50,6 @@ void Field::setDBColumnName(std::string aName)
     mDBColumnName = aName;
 }
 
-void Field::setValue(const FieldValueType aValue)
-{
-    mValue = aValue;
-}
-
-void Field::setStringValue(const std::string aValue)
-{
-    mValue = aValue;
-}
-
-FieldValueType Field::getValue() const
-{
-    return mValue;
-}
 
 bool Field::visible() const
 {
@@ -89,15 +71,6 @@ void Field::setFormOnly(bool value)
     mFormOnly = value;
 }
 
-FieldValueType Field::value() const
-{
-    return mValue;
-}
-
-std::string Field::valueToString() const
-{
-    return "";
-}
 /* ------ IntegerField ------ */
 
 IntegerField::IntegerField()
@@ -113,14 +86,24 @@ IntegerField::IntegerField(std::string aName, std::string aLabel)
 IntegerField::~IntegerField(){}
 
 
-FieldValueType IntegerField::value() const
-{
-    return std::get<std::string>(this->getValue());
-}
-
 std::string IntegerField::valueToString() const
 {
-    return std::get<std::string>(this->getValue());
+    return std::to_string(mValue);
+}
+
+std::string IntegerField::dbValueFormatter()
+{
+    return valueToString();
+}
+
+void IntegerField::setValue(int val)
+{
+    mValue = val;
+}
+
+void IntegerField::stringToValue(std::string val)
+{
+    mValue = std::stoi(val);
 }
 
 /* -------- StringField --------- */
@@ -138,14 +121,23 @@ StringField::StringField(std::string aName, std::string aLabel)
 StringField::~StringField(){}
 
 
-FieldValueType StringField::value() const
-{
-    return std::get<std::string>(this->getValue());
-}
-
 std::string StringField::valueToString() const
 {
-    return std::get<std::string>(this->getValue());
+    return mValue;
+}
+
+std::string StringField::dbValueFormatter()
+{
+    return "'"+mValue+"'";
+}
+
+void StringField::setValue(std::string val)
+{
+    mValue = val;
+}
+void StringField::stringToValue(std::string val)
+{
+    mValue = val;
 }
 
 /* ---- TextField ---- */
@@ -160,12 +152,23 @@ TextField::TextField(std::string aName, std::string aLabel)
 TextField::~TextField()
 {
 }
-FieldValueType TextField::value() const
-{
-    return std::get<std::string>(this->getValue());
-}
+
 std::string TextField::valueToString() const
 {
-    return std::get<std::string>(this->getValue());
+    return mValue;
 }
 
+std::string TextField::dbValueFormatter()
+{
+    return "'"+mValue+"'";
+}
+
+void TextField::setValue(std::string val)
+{
+    mValue = val;
+}
+
+void TextField::stringToValue(std::string val)
+{
+    mValue = val;
+}

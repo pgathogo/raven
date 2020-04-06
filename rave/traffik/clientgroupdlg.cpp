@@ -23,7 +23,8 @@ ClientGroupDlg::~ClientGroupDlg()
 
 void ClientGroupDlg::AddRecord()
 {
-    clientGroupDetailDlg = new ClientGroupDetailDlg(entityDataModel());
+    clientGroupDetailDlg = new ClientGroupDetailDlg(
+                            entityDataModel());
     //mMdiArea->addSubWindow(clientGroupDetailDlg);
     clientGroupDetailDlg->show();
 }

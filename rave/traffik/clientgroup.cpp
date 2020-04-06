@@ -34,12 +34,12 @@ BaseEntity* ClientGroup::copy() const
 
 void ClientGroup::setName(std::string aName)
 {
-    mName->setStringValue(aName);
+    mName->setValue(aName);
 }
 
 void ClientGroup::setDescription(std::string aDescription)
 {
-    mDescription->setStringValue(aDescription);
+    mDescription->setValue(aDescription);
 }
 
 

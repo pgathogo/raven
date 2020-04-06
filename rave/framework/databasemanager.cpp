@@ -12,17 +12,59 @@ void BaseDatabaseManager::setObjectID(BaseEntity& entity, int id)
 
 BaseDatabaseManager::~BaseDatabaseManager(){}
 
+std::string BaseDatabaseManager::commaSepColumns(BaseEntity* entity)
+{
+    std::string flds;
+    std::size_t i = 1;
+
+    auto cols = entity->dbColumnNames();
+    for (auto& col : cols){
+       flds += col;
+       if (i<cols.size())
+           flds +=",";
+       ++i;
+    }
+
+    return flds;
+}
+
+std::string BaseDatabaseManager::commaSepValues(BaseEntity* entity)
+{
+    std::string vals;
+
+    size_t i = 1;
+    size_t fcount = entity->fieldsCount();
+
+    qDebug() << "Field Count: "<< fcount;
+
+    auto cIter = entity->cBeginIter();
+    for(; cIter != entity->cEndIter(); ++cIter){
+        auto ptr(std::get<1>(*cIter).get());
+         vals += ptr->dbValueFormatter();
+         if(i<entity->fieldsCount())
+             vals +=",";
+        ++i;
+    }
+
+    return vals;
+}
 
 PostgresDatabaseManager::PostgresDatabaseManager()
 {
     dataProvider =  new PostgresDataProvider;
 }
 
+
 void PostgresDatabaseManager::saveEntity(BaseEntity* entity)
 {
     //populateFields(entity);
 
+    qDebug() << "PostgresDatabaseManager::saveEntity";
     std::string queryStatement;
+
+    std::string vals = commaSepValues(entity);
+
+    qDebug() << "SaveEntity :" << QString::fromStdString(vals);
 
    // We need a way to identify new entities
     /*
@@ -33,32 +75,15 @@ void PostgresDatabaseManager::saveEntity(BaseEntity* entity)
     }
     */
 
-     provider()->executeQuery(queryStatement);
+     //provider()->executeQuery(queryStatement);
 
 }
 
 int PostgresDatabaseManager::fetchAll(BaseEntity* entity)
 {
-    // build query string from Entity
-    // Using the formating libary - check that from the
-    // Fig tool
-    auto cols = entity->dbColumnNames();
-    std::string SELECT = "SELECT ";
     std::string sql;
-    std::string flds;
-    std::size_t i = 1;
-
-    qDebug() << "COL COUNT: "<< cols.size();
-    for (auto& col : cols){
-    qDebug() << "count: "<< i;
-       flds += col;
-       if (i<cols.size())
-           flds +=",";
-       ++i;
-    }
-    sql = SELECT + flds + " FROM "+entity->tableName();
-    qDebug() << strtoqstr(sql) ;
-    //const std::string query = "Select first_name, surname from ug_applicants where first_name like '%James%'";
+    std::string flds = commaSepColumns(entity);
+    sql = "SELECT " + flds + " FROM "+entity->tableName();
     return provider()->executeQuery(sql);
 }
 
