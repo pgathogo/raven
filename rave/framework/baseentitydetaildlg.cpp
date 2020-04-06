@@ -2,13 +2,13 @@
 #include "ui_baseentitydetaildlg.h"
 #include "entitydatamodel.h"
 
-BaseEntityDetailDlg::BaseEntityDetailDlg(EntityDataModel* edm, QWidget *parent) :
-    QWidget(parent),
-    bui(new Ui::BaseEntityDetailDlg),
-    mEntityDataModel{edm}
+BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
+    QDialog(parent),
+    bui(new Ui::BaseEntityDetailDlg)
 {
     bui->setupUi(this);
     connectSlots();
+    //setModal(true);
 }
 
 BaseEntityDetailDlg::~BaseEntityDetailDlg()
@@ -18,16 +18,27 @@ BaseEntityDetailDlg::~BaseEntityDetailDlg()
 
 void BaseEntityDetailDlg::connectSlots()
 {
-    connect(bui->btnSave, &QPushButton::clicked, this, &BaseEntityDetailDlg::saveRecord);
+    connect(bui->btnSave, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveClicked);
+    connect(bui->btnClose, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnCloseClicked);
 }
 
-
-EntityDataModel* BaseEntityDetailDlg::entityDataModel()
+void BaseEntityDetailDlg::btnSaveClicked()
 {
-    return mEntityDataModel;
+    saveRecord();
+    done(1);
+}
+
+void BaseEntityDetailDlg::btnCloseClicked()
+{
+    done(0);
 }
 
 void BaseEntityDetailDlg::save(BaseEntity* entity)
 {
-    mEntityDataModel->saveEntity(entity);
+    //mEntityDataModel->saveEntity(entity);
+}
+
+void BaseEntityDetailDlg::setTitle(std::string title)
+{
+    bui->lblTitle->setText(QString::fromStdString(title));
 }

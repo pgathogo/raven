@@ -6,6 +6,7 @@
 
 class BaseEntity;
 class EntityDataModel;
+class QTableView;
 
 namespace Ui {
 class BaseEntityBrowserDlg;
@@ -24,16 +25,24 @@ public:
     void connectSlots();
     void setMdiArea(QMdiArea* mdi);
 
+    int selectedRowId();
+    QString selectedRowName();
+
+    virtual void addRecord()=0;
+    virtual void updateRecord()=0;
+    virtual void searchRecord()=0;
+
 protected:
     EntityDataModel* entityDataModel() const;
     QMdiArea* mMdiArea;
 
 public slots:
-    virtual void AddRecord()=0;
-    virtual void searchRecord();
+    void addBtnClicked();
+    void editBtnClicked();
+    void searchBtnClicked();
 
 private:
-    Ui::BaseEntityBrowserDlg *ui;
+    Ui::BaseEntityBrowserDlg* bui;
     BaseEntity* mBaseEntity;
     EntityDataModel* mEntityDataModel;
 };

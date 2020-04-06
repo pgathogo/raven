@@ -16,7 +16,8 @@ class BaseDataProvider
 public:
     BaseDataProvider();
     virtual ~BaseDataProvider();
-    virtual int executeQuery(const std::string query){ return -1; };
+    virtual bool executeQuery(const std::string query) = 0;
+    virtual int read(const std::string query) = 0;
     void append(StringMapped* data);
     int cacheSize() const;
     std::vector<StringMapped*>::iterator cacheIter();
@@ -31,7 +32,8 @@ class PostgresDataProvider: public BaseDataProvider
     public:
         PostgresDataProvider();
         ~PostgresDataProvider() override;
-        int executeQuery(const std::string query) override;
+        bool executeQuery(const std::string query) override;
+        int read(const std::string query) override;
         void test() {}
     private:
         PGconn* conn;

@@ -20,10 +20,12 @@ using StringMap = std::map<std::string, std::string>;
 class BaseEntity
 {
 public:
-    BaseEntity():mID{-1}{}
+    BaseEntity();
     virtual ~BaseEntity();
+
     int id() const;
     void setId(int i);
+
     virtual BaseEntity* copy()const = 0;
     virtual BaseEntity* mapFields(StringMap* e) = 0;
 
@@ -42,6 +44,8 @@ public:
     std::vector<std::string> dbColumnNames();
 
     size_t fieldsCount(){ return mFields.size(); }
+
+    virtual std::string searchColumn() const = 0;
 
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
@@ -65,25 +69,8 @@ public:
 
     }
 
-    /*
-    template<typename T>
-    typename T::type dbValue(T* fld)
-    {
-        typename T::type val = std::get<typename T::type>(fld->getValue());
-        return std::get<typename T::type>(fld->dbValueFormatter(val));
-    }
-
-
-    template<typename T>
-    std::string dbValueAsString(T* fld)
-    {
-        typename T::type val = std::get<typename T::type>(fld->getValue());
-        return fld->dbValueFormatter(val);
-    }
-  */
-
 private:
-    int mID;
+    IntegerField* mID;
     std::vector<FieldMap> mFields;
 
 };

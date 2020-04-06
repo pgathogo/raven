@@ -19,6 +19,7 @@ ClientGroup::ClientGroup()
 
     mHeader << QString::fromStdString(mName->fieldLabel())
             << QString::fromStdString(mDescription->fieldLabel());
+
 }
 
 ClientGroup::~ClientGroup()
@@ -65,7 +66,7 @@ BaseEntity* ClientGroup::mapFields(StringMap* e)
 
        for(iter=beginIter(); iter != endIter(); ++iter){
 
-           if ((std::get<0>(*iter) == it->first) &&
+           if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
                (std::get<1>(*iter)->visible())){
                 auto ptr(std::get<1>(*iter).get());
                 ct->setValueByField(ptr, it->second);
@@ -97,4 +98,9 @@ QStringList ClientGroup::tableHeaders() const
 std::string ClientGroup::tableName() const
 {
     return "rave_clientgroup";
+}
+
+std::string ClientGroup::searchColumn() const
+{
+    return name()->valueToString();
 }

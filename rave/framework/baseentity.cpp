@@ -1,15 +1,21 @@
 #include "baseentity.h"
 
+BaseEntity::BaseEntity()
+        :mID{nullptr}
+{
+    mID = createField<IntegerField>("id", "Unique identifier");
+}
+
 BaseEntity::~BaseEntity(){}
 
 int BaseEntity::id() const
 {
-    return mID;
+    return mID->value().toInt();
 }
 
 void BaseEntity::setId(int i)
 {
-    mID = i;
+    mID->setValue(i);
 }
 
 std::vector<FieldMap>::const_iterator BaseEntity::cBeginIter()

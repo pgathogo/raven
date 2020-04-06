@@ -24,7 +24,7 @@ EntityModel::EntityModel(BaseEntity* entity)
     this->setHorizontalHeaderLabels(entity->tableHeaders());
 }
 
-std::vector<BaseEntity*> EntityModel::entities() const
+std::vector<EntityRecord> EntityModel::entities() const
 {
     return mEntities;
 }
@@ -32,19 +32,34 @@ std::vector<BaseEntity*> EntityModel::entities() const
 void EntityModel::addEntity(BaseEntity* entity)
 {
     addRow(entity);
-    mEntities.push_back(entity);
+    std::string key = entity->searchColumn();
+    // we need a way to check that key is not empty!!
+    EntityRecord record = make_tuple(key, entity);
+    mEntities.push_back(record);
 }
 
 void EntityModel::addRow(BaseEntity* entity)
 {
    appendRow(entity->cols());
 }
+
+BaseEntity* EntityModel::findRecordByName(std::string name)
+{
+    for (auto& record : mEntities){
+        if (std::get<0>(record) == name)
+            return std::get<1>(record);
+    }
+
+    return nullptr;
+}
+
+
 /* ----------- EntityDataModel ------------------ */
 
 EntityDataModel::~EntityDataModel()
 {
-    for (auto e : entities())
-        delete e;
+    for (auto record: entities())
+        delete std::get<1>(record);
 }
 
 EntityDataModel::EntityDataModel(BaseEntity* baseEntity)

@@ -12,19 +12,20 @@
 #include "dataprovider.h"
 
 
-//class BaseEntity;
+using EntityRecord = std::tuple<std::string, BaseEntity*>;
 
 class EntityModel : public QStandardItemModel{
     public:
         EntityModel();
         EntityModel(BaseEntity* entity);
         ~EntityModel();
-        std::vector<BaseEntity*> entities() const;
+        std::vector<EntityRecord> entities() const;
+        BaseEntity* findRecordByName(std::string name);
     protected:
         void addEntity(BaseEntity* entity);
     private:
         BaseEntity* mEntity;
-        std::vector<BaseEntity*> mEntities;
+        std::vector<EntityRecord> mEntities;
         void addRow(BaseEntity* entity);
         BaseEntity* entityByID();
         bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);

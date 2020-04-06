@@ -57,7 +57,30 @@ bool PostgresDataProvider::openConnection()
     return true;
 }
 
-int PostgresDataProvider::executeQuery(const std::string query)
+bool PostgresDataProvider::executeQuery(const std::string query)
+{
+    qDebug() << "PostgresDataProvider::create";
+
+    PGresult* res;
+    static auto cleanFinish = [](PGconn* conn, PGresult* res){
+        PQclear(res);
+        PQfinish(conn);
+    };
+
+    res = PQexec(conn, query.c_str());
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK){
+        qDebug() << "executeQuery command failed! "<< PQerrorMessage(conn);
+        cleanFinish(conn, res);
+        return false;
+    }
+
+    cleanFinish(conn, res);
+
+    return true;
+}
+
+int PostgresDataProvider::read(const std::string query)
 {
     qDebug() << "PostgresDataProvider::executeQuery";
 

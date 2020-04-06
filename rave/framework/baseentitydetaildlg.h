@@ -1,32 +1,35 @@
 #ifndef BASEENTITYDETAILDLG_H
 #define BASEENTITYDETAILDLG_H
 
-#include <QWidget>
+#include <QDialog>
 
-class EntityDataModel;
+//class EntityDataModel;
 class BaseEntity;
 
 namespace Ui {
 class BaseEntityDetailDlg;
 }
 
-class BaseEntityDetailDlg : public QWidget
+class BaseEntityDetailDlg : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BaseEntityDetailDlg(EntityDataModel* edm, QWidget *parent = nullptr);
+    explicit BaseEntityDetailDlg(QDialog *parent = nullptr);
     ~BaseEntityDetailDlg();
 
     void connectSlots();
     virtual void saveRecord()=0;
+    virtual void populateFields()=0;
+
+private slots:
+    void btnSaveClicked();
+    void btnCloseClicked();
 
 protected:
     Ui::BaseEntityDetailDlg* bui;
-    EntityDataModel* entityDataModel();
     void save(BaseEntity* entity);
-private:
-    EntityDataModel* mEntityDataModel;
+    void setTitle(std::string title);
 };
 
 #endif // BASEENTITYDETAILDLG_H

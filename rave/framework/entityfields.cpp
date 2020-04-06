@@ -106,6 +106,10 @@ void IntegerField::stringToValue(std::string val)
     mValue = std::stoi(val);
 }
 
+QVariant IntegerField::value()
+{
+    return QVariant(mValue);
+}
 /* -------- StringField --------- */
 
 StringField::StringField()
@@ -139,6 +143,10 @@ void StringField::stringToValue(std::string val)
 {
     mValue = val;
 }
+QVariant StringField::value()
+{
+    return QVariant(QString::fromStdString(mValue));
+}
 
 /* ---- TextField ---- */
 TextField::TextField()
@@ -171,4 +179,9 @@ void TextField::setValue(std::string val)
 void TextField::stringToValue(std::string val)
 {
     mValue = val;
+}
+
+QVariant TextField::value()
+{
+    return QVariant(QString::fromStdString(mValue));
 }

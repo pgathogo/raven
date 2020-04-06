@@ -6,47 +6,43 @@
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::BaseEntityBrowserDlg),
+    bui(new Ui::BaseEntityBrowserDlg),
     mBaseEntity{nullptr},
     mEntityDataModel{nullptr}
 {
-    ui->setupUi(this);
+    bui->setupUi(this);
     connectSlots();
 }
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
                                            BaseEntity* entity)
         :QDialog(parent)
-        ,ui(new Ui::BaseEntityBrowserDlg)
+        ,bui(new Ui::BaseEntityBrowserDlg)
         ,mBaseEntity{entity}
         ,mEntityDataModel{new EntityDataModel(entity)}
 
 {
-    ui->setupUi(this);
+    bui->setupUi(this);
     connectSlots();
-    ui->tvEntity->setModel(mEntityDataModel);
-    ui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    bui->tvEntity->setModel(mEntityDataModel);
+    bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 BaseEntityBrowserDlg::~BaseEntityBrowserDlg()
 {
-    delete ui;
+    delete bui;
 }
 
 void BaseEntityBrowserDlg::connectSlots()
 {
-    connect(ui->btnAdd, &QPushButton::clicked, this, &BaseEntityBrowserDlg::AddRecord);
-    connect(ui->btnSearch, &QPushButton::clicked, this, &BaseEntityBrowserDlg::searchRecord);
+    connect(bui->btnAdd, &QPushButton::clicked, this, &BaseEntityBrowserDlg::addBtnClicked);
+    connect(bui->btnEdit, &QPushButton::clicked, this, &BaseEntityBrowserDlg::editBtnClicked);
+    connect(bui->btnSearch, &QPushButton::clicked, this, &BaseEntityBrowserDlg::searchBtnClicked);
 }
 
 void BaseEntityBrowserDlg::setDialogTitle(const QString title)
 {
     this->setWindowTitle(title);
-}
-
-void BaseEntityBrowserDlg::searchRecord()
-{
-    qDebug() << "BaseEntityBrowserDlg()::searchRecord";
 }
 
 EntityDataModel* BaseEntityBrowserDlg::entityDataModel() const
@@ -57,4 +53,33 @@ EntityDataModel* BaseEntityBrowserDlg::entityDataModel() const
 void BaseEntityBrowserDlg::setMdiArea(QMdiArea* mdi)
 {
     mMdiArea = mdi;
+}
+
+void BaseEntityBrowserDlg::addBtnClicked()
+{
+    addRecord();
+}
+
+void BaseEntityBrowserDlg::searchBtnClicked()
+{
+    searchRecord();
+}
+
+void BaseEntityBrowserDlg::editBtnClicked()
+{
+    updateRecord();
+}
+
+int BaseEntityBrowserDlg::selectedRowId()
+{
+    return bui->tvEntity->currentIndex().row();
+}
+
+QString BaseEntityBrowserDlg::selectedRowName()
+{
+
+    QVariant col_name = bui->tvEntity->model()->data(
+                            bui->tvEntity->model()->index(
+                                    selectedRowId(), 0));
+    return col_name.toString();
 }

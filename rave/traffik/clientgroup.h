@@ -28,6 +28,7 @@ public:
     QStringList tableHeaders() const override;
 
     std::string tableName() const override;
+    std::string searchColumn() const override;
 
 private:
     StringField* mName;

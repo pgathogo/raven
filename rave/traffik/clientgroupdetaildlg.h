@@ -1,10 +1,10 @@
 #ifndef CLIENTGROUPDETAILDLG_H
 #define CLIENTGROUPDETAILDLG_H
 
-#include <QWidget>
+#include <QDialog>
 #include "../framework/baseentitydetaildlg.h"
 
-class EntityDataModel;
+class ClientGroup;
 
 namespace Ui {
 class ClientGroupDetailDlg;
@@ -15,14 +15,15 @@ class ClientGroupDetailDlg : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit ClientGroupDetailDlg(EntityDataModel* edm,
-                              QWidget *parent = nullptr);
-    ~ClientGroupDetailDlg();
+    explicit ClientGroupDetailDlg(ClientGroup* cg, QDialog *parent = nullptr);
+    ~ClientGroupDetailDlg() override;
 
     void saveRecord() override;
+    void populateFields() override;
 
 private:
     Ui::ClientGroupDetailDlg *ui;
+    ClientGroup* clientGroup;
 };
 
 #endif // CLIENTGROUPDETAILDLG_H

@@ -5,6 +5,8 @@
 #include <QDebug>
 #include "../utils/util.h"
 
+using namespace raven;
+
 void BaseDatabaseManager::setObjectID(BaseEntity& entity, int id)
 {
     //entity.setEntityId(id);
@@ -12,17 +14,34 @@ void BaseDatabaseManager::setObjectID(BaseEntity& entity, int id)
 
 BaseDatabaseManager::~BaseDatabaseManager(){}
 
+std::string BaseDatabaseManager::columnsForSelection(BaseEntity* entity)
+{
+
+    std::string flds;
+    std::size_t i = 1;
+    auto cols = entity->dbColumnNames();
+    for (auto& col : cols){
+           flds += col;
+           if (i<cols.size())
+           flds +=",";
+           ++i;
+    }
+
+    return flds;
+}
+
 std::string BaseDatabaseManager::commaSepColumns(BaseEntity* entity)
 {
     std::string flds;
     std::size_t i = 1;
-
     auto cols = entity->dbColumnNames();
     for (auto& col : cols){
-       flds += col;
-       if (i<cols.size())
+        if (col != "id"){
+           flds += col;
+           if (i<cols.size())
            flds +=",";
-       ++i;
+        }
+           ++i;
     }
 
     return flds;
@@ -33,20 +52,40 @@ std::string BaseDatabaseManager::commaSepValues(BaseEntity* entity)
     std::string vals;
 
     size_t i = 1;
-    size_t fcount = entity->fieldsCount();
-
-    qDebug() << "Field Count: "<< fcount;
 
     auto cIter = entity->cBeginIter();
     for(; cIter != entity->cEndIter(); ++cIter){
         auto ptr(std::get<1>(*cIter).get());
-         vals += ptr->dbValueFormatter();
-         if(i<entity->fieldsCount())
-             vals +=",";
+        if (ptr->fieldName() != "id"){
+             vals += ptr->dbValueFormatter();
+             if(i<entity->fieldsCount())
+                 vals +=",";
+        }
+
         ++i;
     }
 
     return vals;
+}
+
+std::string BaseDatabaseManager::makeInsertString(BaseEntity* entity)
+{
+    std::string flds = commaSepColumns(entity);
+    std::string vals = commaSepValues(entity);
+    std::string in_a = "INSERT INTO "+entity->tableName()+"( "+flds+")";
+    std::string in_b = " VALUES ("+vals+")";
+    std::string insert_stmt = in_a + in_b;
+    return insert_stmt;
+}
+
+std::string BaseDatabaseManager::makeUpdateString(BaseEntity* entity)
+{
+    std::string flds = commaSepColumns(entity);
+    std::string vals = commaSepValues(entity);
+    std::string in_a = "UPDATE "+entity->tableName()+" SET ("+flds+")";
+    std::string in_b = "=("+vals+") WHERE id ="+std::to_string(entity->id());
+    std::string update_stmt = in_a + in_b;
+    return update_stmt;
 }
 
 PostgresDatabaseManager::PostgresDatabaseManager()
@@ -60,31 +99,28 @@ void PostgresDatabaseManager::saveEntity(BaseEntity* entity)
     //populateFields(entity);
 
     qDebug() << "PostgresDatabaseManager::saveEntity";
-    std::string queryStatement;
+    std::string sqlQuery;
 
-    std::string vals = commaSepValues(entity);
 
-    qDebug() << "SaveEntity :" << QString::fromStdString(vals);
-
-   // We need a way to identify new entities
-    /*
-    if (entity->getEntityId() > 0){
-        // queryStatment = make_UPDATE_statement
+    if (entity->id() > 0){
+         sqlQuery = makeUpdateString(entity);
     } else {
-        // queryStatment = make_INSERT_statement
+         sqlQuery = makeInsertString(entity);
     }
-    */
 
-     //provider()->executeQuery(queryStatement);
+    qDebug() << strtoq(sqlQuery);
+
+     //if (provider()->executeQuery(sqlQuery))
+     //    qDebug() << "Entity Saved.";
 
 }
 
 int PostgresDatabaseManager::fetchAll(BaseEntity* entity)
 {
     std::string sql;
-    std::string flds = commaSepColumns(entity);
+    std::string flds = columnsForSelection(entity);
     sql = "SELECT " + flds + " FROM "+entity->tableName();
-    return provider()->executeQuery(sql);
+    return provider()->read(sql);
 }
 
 void PostgresDatabaseManager::deleteEntity(const BaseEntity& /*entity*/)

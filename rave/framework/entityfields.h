@@ -3,6 +3,7 @@
 
 #include<string>
 #include<variant>
+#include<QVariant>
 
 using FieldValueType = std::variant<std::string, int>;
 
@@ -29,6 +30,8 @@ class Field{
 
         virtual void stringToValue(std::string val)=0;
 
+        virtual QVariant value()=0;
+
     private:
         std::string mFieldName;
         std::string mFieldLabel;
@@ -50,6 +53,8 @@ class IntegerField : public Field{
 
         void stringToValue(std::string val) override;
 
+        QVariant value() override;
+
     private:
         int mValue;
 };
@@ -65,6 +70,7 @@ class StringField : public Field{
 
         void setValue(std::string val);
         void stringToValue(std::string val) override;
+        QVariant value() override;
     private:
         std::string mValue;
 };
@@ -80,6 +86,7 @@ class TextField :public Field{
 
         void setValue(std::string val);
         void stringToValue(std::string val) override;
+        QVariant value() override;
 
     private:
         std::string mValue;

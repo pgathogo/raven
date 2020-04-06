@@ -1,14 +1,18 @@
 #include "clientgroupdetaildlg.h"
 #include "ui_baseentitydetaildlg.h"
 #include "ui_clientgroupdetaildlg.h"
+#include "../framework/baseentitydetaildlg.h"
 #include "clientgroup.h"
 
-ClientGroupDetailDlg::ClientGroupDetailDlg(EntityDataModel* edm,
-                QWidget *parent) :
-    BaseEntityDetailDlg(edm, parent),
-    ui(new Ui::ClientGroupDetailDlg)
+ClientGroupDetailDlg::ClientGroupDetailDlg(
+                ClientGroup* cg, QDialog *parent) :
+    BaseEntityDetailDlg(parent),
+    ui(new Ui::ClientGroupDetailDlg),
+    clientGroup{cg}
 {
     ui->setupUi(bui->baseContainer);
+    this->setTitle("Client Group");
+    populateFields();
 }
 
 ClientGroupDetailDlg::~ClientGroupDetailDlg()
@@ -18,11 +22,13 @@ ClientGroupDetailDlg::~ClientGroupDetailDlg()
 
 void ClientGroupDetailDlg::saveRecord()
 {
-    ClientGroup* cg = new ClientGroup;
-    cg->setName(ui->edtName->text().toStdString());
-    cg->setDescription(ui->edtDesc->toPlainText().toStdString());
-    this->save(cg);
+    clientGroup->setName(ui->edtName->text().toStdString());
+    clientGroup->setDescription(ui->edtDesc->toPlainText().toStdString());
+}
 
-
+void ClientGroupDetailDlg::populateFields()
+{
+    ui->edtName->setText(QString::fromStdString(clientGroup->name()->valueToString()));
+    ui->edtDesc->setText(QString::fromStdString(clientGroup->description()->valueToString()));
 }
 

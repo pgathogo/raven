@@ -19,7 +19,8 @@ public:
     explicit ClientGroupDlg(QWidget *parent = nullptr);
     ~ClientGroupDlg() override;
 
-    void AddRecord() override;
+    void addRecord() override;
+    void updateRecord() override;
     void searchRecord() override;
 
 private:
