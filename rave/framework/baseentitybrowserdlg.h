@@ -25,21 +25,24 @@ public:
     void connectSlots();
     void setMdiArea(QMdiArea* mdi);
 
-    int selectedRowId();
-    QString selectedRowName();
-    void updateTableViewRecord(BaseEntity* entity);
 
     virtual void addRecord()=0;
     virtual void updateRecord()=0;
+    virtual void deleteRecord()=0;
     virtual void searchRecord()=0;
 
 protected:
     EntityDataModel* entityDataModel() const;
     QMdiArea* mMdiArea;
+    int selectedRowId() const;
+    QString selectedRowName();
+    void updateTableViewRecord(BaseEntity* entity);
+    void removeSelectedRow();
 
 public slots:
     void addBtnClicked();
     void editBtnClicked();
+    void deleteBtnClicked();
     void searchBtnClicked();
 
 private:

@@ -54,6 +54,17 @@ BaseEntity* EntityModel::findRecordByName(std::string name)
     return nullptr;
 }
 
+void EntityModel::deleteFromModel(const std::string name)
+{
+    int i=0;
+    for (auto& record : mEntities){
+        if (std::get<0>(record) == name)
+            break;
+        ++i;
+    }
+
+    mEntities.erase(mEntities.begin()+i);
+}
 
 /* ----------- EntityDataModel ------------------ */
 
@@ -92,7 +103,13 @@ void EntityDataModel::saveEntity(BaseEntity* entity)
         dbManager->saveEntity(entity);
         addEntity(entity);
     }
+}
 
+void EntityDataModel::deleteEntity(const std::string name, BaseEntity* entity)
+{
+    if (entity->id() > 0)
+        dbManager->deleteEntity(entity);
+    deleteFromModel(name);
 }
 
 void EntityDataModel::all()

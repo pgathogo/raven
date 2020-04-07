@@ -52,6 +52,16 @@ void ClientGroupDlg::updateRecord()
    }
 }
 
+void ClientGroupDlg::deleteRecord()
+{
+   std::string searchName = selectedRowName().toStdString();
+   BaseEntity* entity = entityDataModel()->findRecordByName(searchName);
+
+   entityDataModel()->deleteEntity(searchName, entity);
+
+   this->removeSelectedRow();
+}
+
 void ClientGroupDlg::searchRecord()
 {
     qDebug() << "ClientGroupDlg()::searchRecord";

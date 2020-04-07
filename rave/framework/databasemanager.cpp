@@ -125,8 +125,12 @@ int PostgresDatabaseManager::fetchAll(BaseEntity* entity)
     return provider()->read(sql);
 }
 
-void PostgresDatabaseManager::deleteEntity(const BaseEntity& /*entity*/)
+int PostgresDatabaseManager::deleteEntity(BaseEntity* entity)
 {
+    std::string sql;
+    sql = "DELETE FROM "+entity->tableName()+" WHERE ID ="+std::to_string(entity->id());
+    qDebug() << QString::fromStdString(sql);
+    return provider()->executeQuery(sql);
 }
 
 void PostgresDatabaseManager::loadEntity(BaseEntity& entity)

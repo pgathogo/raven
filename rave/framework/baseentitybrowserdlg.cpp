@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include "baseentitybrowserdlg.h"
 #include "ui_baseentitybrowserdlg.h"
 
@@ -37,6 +39,7 @@ void BaseEntityBrowserDlg::connectSlots()
 {
     connect(bui->btnAdd, &QPushButton::clicked, this, &BaseEntityBrowserDlg::addBtnClicked);
     connect(bui->btnEdit, &QPushButton::clicked, this, &BaseEntityBrowserDlg::editBtnClicked);
+    connect(bui->btnDelete, &QPushButton::clicked, this, &BaseEntityBrowserDlg::deleteBtnClicked);
     connect(bui->btnSearch, &QPushButton::clicked, this, &BaseEntityBrowserDlg::searchBtnClicked);
 }
 
@@ -60,17 +63,26 @@ void BaseEntityBrowserDlg::addBtnClicked()
     addRecord();
 }
 
-void BaseEntityBrowserDlg::searchBtnClicked()
-{
-    searchRecord();
-}
-
 void BaseEntityBrowserDlg::editBtnClicked()
 {
     updateRecord();
 }
 
-int BaseEntityBrowserDlg::selectedRowId()
+void BaseEntityBrowserDlg::deleteBtnClicked()
+{
+    if (QMessageBox::question(this, tr("Traffik"),
+                                    tr("Are you sure you want to delete the record?"),
+                                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
+
+        deleteRecord();
+}
+
+void BaseEntityBrowserDlg::searchBtnClicked()
+{
+    searchRecord();
+}
+
+int BaseEntityBrowserDlg::selectedRowId() const
 {
     return bui->tvEntity->currentIndex().row();
 }
@@ -82,6 +94,11 @@ QString BaseEntityBrowserDlg::selectedRowName()
                             bui->tvEntity->model()->index(
                                     selectedRowId(), 0));
     return col_name.toString();
+}
+
+void BaseEntityBrowserDlg::removeSelectedRow()
+{
+    bui->tvEntity->model()->removeRow(selectedRowId());
 }
 
 void BaseEntityBrowserDlg::updateTableViewRecord(BaseEntity* entity)

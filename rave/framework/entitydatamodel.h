@@ -23,14 +23,13 @@ class EntityModel : public QStandardItemModel{
         BaseEntity* findRecordByName(std::string name);
     protected:
         void addEntity(BaseEntity* entity);
+        void deleteFromModel(const std::string name);
     private:
         BaseEntity* mEntity;
         std::vector<EntityRecord> mEntities;
         void addRow(BaseEntity* entity);
         BaseEntity* entityByID();
         bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);
-        bool deleteEntity(BaseEntity* entity);
-        bool deleteItemByName(std::string name);
 };
 
 class EntityDataModel : public EntityModel
@@ -44,6 +43,7 @@ public:
 
     //std::vector<T*> entities() const;
     void saveEntity(BaseEntity* entity);
+    void deleteEntity(const std::string name, BaseEntity* entity);
 
     void all();
 
