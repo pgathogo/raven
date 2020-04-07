@@ -11,6 +11,7 @@ class BaseDatabaseManager
 {
 public:
     virtual ~BaseDatabaseManager();
+    virtual void updateEntity(BaseEntity* entity) = 0;
     virtual void saveEntity(BaseEntity* entity) = 0;
     virtual int fetchAll(BaseEntity* entity) = 0;
     virtual BaseDataProvider* provider() = 0;
@@ -32,9 +33,11 @@ class PostgresDatabaseManager : public BaseDatabaseManager
 {
 public:
     PostgresDatabaseManager();
+     ~PostgresDatabaseManager() override;
     virtual void populateFields(BaseEntity* /*entity*/){}
     virtual void populateObject(const BaseEntity& /*entity*/){}
 
+    void updateEntity(BaseEntity* entity) override;
     void saveEntity(BaseEntity* entity) override;
     int fetchAll(BaseEntity* entity) override;
     BaseDataProvider* provider() override;

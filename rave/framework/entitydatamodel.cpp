@@ -38,9 +38,10 @@ void EntityModel::addEntity(BaseEntity* entity)
     mEntities.push_back(record);
 }
 
+
 void EntityModel::addRow(BaseEntity* entity)
 {
-   appendRow(entity->cols());
+   appendRow(entity->tableViewColumns());
 }
 
 BaseEntity* EntityModel::findRecordByName(std::string name)
@@ -60,6 +61,9 @@ EntityDataModel::~EntityDataModel()
 {
     for (auto record: entities())
         delete std::get<1>(record);
+
+    delete mEntity;
+    delete dbManager;
 }
 
 EntityDataModel::EntityDataModel(BaseEntity* baseEntity)
@@ -82,8 +86,13 @@ void EntityDataModel::populateEntity(BaseEntity& baseEntity)
 
 void EntityDataModel::saveEntity(BaseEntity* entity)
 {
-    addEntity(entity);
-    dbManager->saveEntity(entity);
+    if (entity->id() > 0){
+        dbManager->updateEntity(entity);
+    }else{
+        dbManager->saveEntity(entity);
+        addEntity(entity);
+    }
+
 }
 
 void EntityDataModel::all()

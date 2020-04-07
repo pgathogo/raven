@@ -25,6 +25,8 @@ ClientGroup::ClientGroup()
 ClientGroup::~ClientGroup()
 {
     qDebug() << "ClientGroup::dtor";
+    delete mName;
+    delete mDescription;
 }
 
 BaseEntity* ClientGroup::copy() const
@@ -79,7 +81,7 @@ BaseEntity* ClientGroup::mapFields(StringMap* e)
    return ct;
 }
 
-QList<QStandardItem*> ClientGroup::cols()
+QList<QStandardItem*> ClientGroup::tableViewColumns()
 {
     QString gname  = QString::fromStdString(name()->valueToString());
     QString desc = QString::fromStdString(description()->valueToString());
@@ -87,6 +89,13 @@ QList<QStandardItem*> ClientGroup::cols()
     QStandardItem* Qgname = new QStandardItem(gname);
     QStandardItem* Qdesc = new QStandardItem(desc);
     return{Qgname, Qdesc};
+}
+
+std::vector<std::string> ClientGroup::tableViewValues()
+{
+    std::string gname  = name()->valueToString();
+    std::string desc = description()->valueToString();
+    return{gname, desc};
 }
 
 QStringList ClientGroup::tableHeaders() const

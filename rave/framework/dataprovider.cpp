@@ -7,7 +7,9 @@ BaseDataProvider::BaseDataProvider()
 {
 }
 
-BaseDataProvider::~BaseDataProvider(){}
+BaseDataProvider::~BaseDataProvider()
+{
+}
 
 void BaseDataProvider::append(StringMapped* data)
 {
@@ -54,6 +56,7 @@ bool PostgresDataProvider::openConnection()
         return false;
     }
 
+    qDebug() << "Connection opened. - " << PQerrorMessage(conn);
     return true;
 }
 
@@ -67,10 +70,27 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         PQfinish(conn);
     };
 
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK){
+        qDebug() << "BEGIN command failed! "<< PQerrorMessage(conn);
+        cleanFinish(conn, res);
+        return -1;
+    }
+
+    PQclear(res);
+
     res = PQexec(conn, query.c_str());
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
         qDebug() << "executeQuery command failed! "<< PQerrorMessage(conn);
+        cleanFinish(conn, res);
+        return false;
+    }
+
+    res = PQexec(conn, "COMMIT");
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        qDebug() << "COMMIT command failed! "<< PQerrorMessage(conn);
         cleanFinish(conn, res);
         return false;
     }
@@ -145,7 +165,7 @@ int PostgresDataProvider::read(const std::string query)
     res = PQexec(conn, "END");
     PQclear(res);
 
-    PQfinish(conn);
+   // PQfinish(conn);
 
     return cacheSize();
 }

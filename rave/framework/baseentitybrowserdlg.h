@@ -27,6 +27,7 @@ public:
 
     int selectedRowId();
     QString selectedRowName();
+    void updateTableViewRecord(BaseEntity* entity);
 
     virtual void addRecord()=0;
     virtual void updateRecord()=0;

@@ -93,26 +93,28 @@ PostgresDatabaseManager::PostgresDatabaseManager()
     dataProvider =  new PostgresDataProvider;
 }
 
+PostgresDatabaseManager::~PostgresDatabaseManager()
+{
+    //delete dataProvider;
+}
 
 void PostgresDatabaseManager::saveEntity(BaseEntity* entity)
 {
-    //populateFields(entity);
-
     qDebug() << "PostgresDatabaseManager::saveEntity";
+
     std::string sqlQuery;
 
+    sqlQuery = makeInsertString(entity);
 
-    if (entity->id() > 0){
-         sqlQuery = makeUpdateString(entity);
-    } else {
-         sqlQuery = makeInsertString(entity);
-    }
+     provider()->executeQuery(sqlQuery);
 
-    qDebug() << strtoq(sqlQuery);
+}
 
-     //if (provider()->executeQuery(sqlQuery))
-     //    qDebug() << "Entity Saved.";
-
+void PostgresDatabaseManager::updateEntity(BaseEntity* entity)
+{
+    std::string sqlQuery;
+    sqlQuery = makeUpdateString(entity);
+     provider()->executeQuery(sqlQuery);
 }
 
 int PostgresDatabaseManager::fetchAll(BaseEntity* entity)

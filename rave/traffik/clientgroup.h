@@ -24,7 +24,8 @@ public:
     TextField* description() const;
     void setDescription(std::string aDescription);
 
-    QList<QStandardItem*> cols() override;
+    QList<QStandardItem*> tableViewColumns() override;
+    std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 
     std::string tableName() const override;

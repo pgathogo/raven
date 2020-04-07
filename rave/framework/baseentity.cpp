@@ -6,7 +6,11 @@ BaseEntity::BaseEntity()
     mID = createField<IntegerField>("id", "Unique identifier");
 }
 
-BaseEntity::~BaseEntity(){}
+BaseEntity::~BaseEntity()
+{
+    delete mID;
+    mFields.clear();
+}
 
 int BaseEntity::id() const
 {

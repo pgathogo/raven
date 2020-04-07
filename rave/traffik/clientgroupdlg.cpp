@@ -44,8 +44,10 @@ void ClientGroupDlg::updateRecord()
            ClientGroup* cg = dynamic_cast<ClientGroup*>(baseEntity);
             clientGroupDetailDlg = new ClientGroupDetailDlg(cg);
 
-            if (clientGroupDetailDlg->exec() > 0)
+            if (clientGroupDetailDlg->exec() > 0){
+                updateTableViewRecord(cg);
                 entityDataModel()->saveEntity(cg);
+             }
        }
    }
 }

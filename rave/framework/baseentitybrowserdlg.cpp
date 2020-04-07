@@ -83,3 +83,16 @@ QString BaseEntityBrowserDlg::selectedRowName()
                                     selectedRowId(), 0));
     return col_name.toString();
 }
+
+void BaseEntityBrowserDlg::updateTableViewRecord(BaseEntity* entity)
+{
+    std::vector<std::string> values = entity->tableViewValues();
+    int col = 0;
+    for (auto value: values){
+        QVariant qvalue(QString::fromStdString(value));
+        QModelIndex modelIndex = bui->tvEntity->model()->index(selectedRowId(), col);
+        QAbstractItemModel* model = bui->tvEntity->model();
+        model->setData(modelIndex, qvalue);
+        ++col;
+    }
+}
