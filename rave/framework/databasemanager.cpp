@@ -3,9 +3,7 @@
 #include "dataprovider.h"
 
 #include <QDebug>
-#include "../utils/util.h"
-
-using namespace raven;
+#include "../utils/tools.h"
 
 void BaseDatabaseManager::setObjectID(BaseEntity& entity, int id)
 {
@@ -129,7 +127,7 @@ int PostgresDatabaseManager::deleteEntity(BaseEntity* entity)
 {
     std::string sql;
     sql = "DELETE FROM "+entity->tableName()+" WHERE ID ="+std::to_string(entity->id());
-    qDebug() << QString::fromStdString(sql);
+    qDebug() << stoq(sql);
     return provider()->executeQuery(sql);
 }
 

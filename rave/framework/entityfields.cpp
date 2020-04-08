@@ -1,5 +1,7 @@
 #include "entityfields.h"
 
+#include "../utils/tools.h"
+
 Field::Field()
     :mFieldName{"FieldName"},
      mFieldLabel{"FieldLabel"},
@@ -145,7 +147,7 @@ void StringField::stringToValue(std::string val)
 }
 QVariant StringField::value()
 {
-    return QVariant(QString::fromStdString(mValue));
+    return QVariant(strtoq(mValue));
 }
 
 /* ---- TextField ---- */

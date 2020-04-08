@@ -39,7 +39,7 @@ HEADERS += \
     ../framework/entitydatamodel.h \
     ../framework/entityfields.h \
     ../framework/queryset.h \
-    ../utils/util.h \
+    ../utils/tools.h \
     clientgroup.h \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \

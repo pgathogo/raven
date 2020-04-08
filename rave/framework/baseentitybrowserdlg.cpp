@@ -6,6 +6,8 @@
 #include "baseentity.h"
 #include "entitydatamodel.h"
 
+#include "../utils/tools.h"
+
 BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
     QDialog(parent),
     bui(new Ui::BaseEntityBrowserDlg),
@@ -65,16 +67,24 @@ void BaseEntityBrowserDlg::addBtnClicked()
 
 void BaseEntityBrowserDlg::editBtnClicked()
 {
-    updateRecord();
+    if (selectedRowId() < 0){
+        showMessage("Select a record to edit.");
+    }else{
+        updateRecord();
+    }
 }
 
 void BaseEntityBrowserDlg::deleteBtnClicked()
 {
-    if (QMessageBox::question(this, tr("Traffik"),
+    if (selectedRowId() < 0){
+        showMessage("Select a record to delete.");
+    }else{
+        if (QMessageBox::question(this, tr("Traffik"),
                                     tr("Are you sure you want to delete the record?"),
                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
 
         deleteRecord();
+    }
 }
 
 void BaseEntityBrowserDlg::searchBtnClicked()
