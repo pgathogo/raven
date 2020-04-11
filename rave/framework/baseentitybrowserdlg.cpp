@@ -10,6 +10,7 @@
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
     QDialog(parent),
+    mMdiArea{nullptr},
     bui(new Ui::BaseEntityBrowserDlg),
     mBaseEntity{nullptr},
     mEntityDataModel{nullptr}
@@ -30,6 +31,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     connectSlots();
     bui->tvEntity->setModel(mEntityDataModel);
     bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    populateFilterCombo();
 }
 
 BaseEntityBrowserDlg::~BaseEntityBrowserDlg()
@@ -89,7 +91,24 @@ void BaseEntityBrowserDlg::deleteBtnClicked()
 
 void BaseEntityBrowserDlg::searchBtnClicked()
 {
+
     searchRecord();
+}
+
+void BaseEntityBrowserDlg::searchRecord()
+{
+    if (bui->edtFilter->text().isEmpty()){
+        entityDataModel()->all();
+    }else{
+        printstr("BaseEntityBrowserDlg::searchRecord");
+        std::tuple<std::string, std::string> searchItem;
+        auto data = bui->cbFilter->itemData(
+                            bui->cbFilter->currentIndex()).value<QVariant>();
+        std::string columnName = data.toString().toStdString();
+        std::string item = bui->edtFilter->text().toStdString();
+        searchItem = std::make_tuple(columnName, item);
+        entityDataModel()->searchByField(searchItem);
+    }
 }
 
 int BaseEntityBrowserDlg::selectedRowId() const
@@ -121,5 +140,17 @@ void BaseEntityBrowserDlg::updateTableViewRecord(BaseEntity* entity)
         QAbstractItemModel* model = bui->tvEntity->model();
         model->setData(modelIndex, qvalue);
         ++col;
+    }
+}
+
+void BaseEntityBrowserDlg::populateFilterCombo()
+{
+    auto cIter = mBaseEntity->cBeginIter();
+    for(; cIter != mBaseEntity->cEndIter(); ++cIter){
+        auto ptr(std::get<1>(*cIter).get());
+        printstr(ptr->fieldLabel());
+        if (ptr->searchable())
+            bui->cbFilter->addItem(stoq(ptr->fieldLabel()),
+                               QVariant(stoq(ptr->dbColumnName())));
     }
 }

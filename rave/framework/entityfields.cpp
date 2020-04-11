@@ -7,7 +7,8 @@ Field::Field()
      mFieldLabel{"FieldLabel"},
      mDBColumnName{"dbColumnName"},
      mVisible{true},
-     mFormOnly{false}
+     mFormOnly{false},
+     mSearchable{true}
 {
 }
 
@@ -16,7 +17,8 @@ Field::Field(std::string aName, std::string aLabel)
      mFieldLabel{aLabel},
      mDBColumnName{aName},
      mVisible{true},
-     mFormOnly{false}
+     mFormOnly{false},
+     mSearchable{true}
 {
 }
 
@@ -71,6 +73,35 @@ bool Field::formOnly() const
 void Field::setFormOnly(bool value)
 {
     mFormOnly = value;
+}
+void Field::setSearchable(bool value)
+{
+    mSearchable = value;
+}
+
+bool Field::searchable()
+{
+    return mSearchable;
+}
+
+void Field::setDisplayName(const std::string dispName)
+{
+    mDisplayName = dispName;
+}
+
+std::string Field::displayName() const
+{
+    return mDisplayName;
+}
+
+void Field::setMandatory(bool value)
+{
+    mMandatory = value;
+}
+
+bool Field::mandatory() const
+{
+    return mMandatory;
 }
 
 /* ------ IntegerField ------ */
@@ -147,7 +178,7 @@ void StringField::stringToValue(std::string val)
 }
 QVariant StringField::value()
 {
-    return QVariant(strtoq(mValue));
+    return QVariant(stoq(mValue));
 }
 
 /* ---- TextField ---- */

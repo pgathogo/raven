@@ -4,12 +4,13 @@ BaseEntity::BaseEntity()
         :mID{nullptr}
 {
     mID = createField<IntegerField>("id", "Unique identifier");
+    mID->setSearchable(false);
 }
 
 BaseEntity::~BaseEntity()
 {
-    delete mID;
-    mFields.clear();
+    //delete mID;
+    //mFields.clear();
 }
 
 int BaseEntity::id() const
@@ -52,4 +53,22 @@ std::vector<std::string> BaseEntity::dbColumnNames()
             cols.push_back(std::get<1>(*citer)->dbColumnName());
     }
     return cols;
+}
+
+ErrorMessage BaseEntity::validate()
+{
+    // Fields marked as mandatory should have values
+    ErrorMessage em = std::make_tuple(true,"");
+    auto cIter = cBeginIter();
+    for(; cIter != cEndIter(); ++cIter){
+        if (std::get<1>(*cIter)->mandatory()){
+            if (std::get<1>(*cIter)->valueToString().empty()){
+                em = std::make_tuple(false,
+                                     "`"+std::get<1>(*cIter)->fieldLabel()+"` has no value!");
+                break;
+            }
+        }
+    }
+
+    return em;
 }

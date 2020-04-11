@@ -2,6 +2,9 @@
 #define BASEENTITYDETAILDLG_H
 
 #include <QDialog>
+#include <QKeyEvent>
+
+#include "../utils/types.h"
 
 //class EntityDataModel;
 class BaseEntity;
@@ -19,8 +22,9 @@ public:
     ~BaseEntityDetailDlg();
 
     void connectSlots();
-    virtual void saveRecord()=0;
+    [[nodiscard]] virtual ErrorMessage saveRecord()=0;
     virtual void populateFields()=0;
+    void closeEvent(QCloseEvent* event);
 
 private slots:
     void btnSaveClicked();
@@ -30,6 +34,9 @@ protected:
     Ui::BaseEntityDetailDlg* bui;
     void save(BaseEntity* entity);
     void setTitle(std::string title);
+
+private:
+   bool mOkClose;
 };
 
 #endif // BASEENTITYDETAILDLG_H

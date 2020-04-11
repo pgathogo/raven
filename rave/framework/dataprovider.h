@@ -19,6 +19,7 @@ public:
     virtual bool executeQuery(const std::string query) = 0;
     virtual int read(const std::string query) = 0;
     void append(StringMapped* data);
+    void clear();
     int cacheSize() const;
     std::vector<StringMapped*>::iterator cacheIter();
     DataQuerySet<StringMapped>* cache();

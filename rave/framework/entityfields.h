@@ -22,8 +22,18 @@ class Field{
 
         bool visible() const;
         void setVisible(bool value);
+
         bool formOnly() const;
         void setFormOnly(bool value);
+
+        void setSearchable(bool value);
+        bool searchable();
+
+        void setDisplayName(const std::string dispName);
+        std::string displayName() const;
+
+        void setMandatory(bool value);
+        bool mandatory() const;
 
         virtual std::string valueToString()const = 0;
         virtual std::string dbValueFormatter()=0;
@@ -38,6 +48,9 @@ class Field{
         std::string mDBColumnName;
         bool mVisible;
         bool mFormOnly;
+        bool mSearchable;
+        std::string mDisplayName;
+        bool mMandatory;
 };
 
 class IntegerField : public Field{

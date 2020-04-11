@@ -12,7 +12,7 @@
 #include "dataprovider.h"
 
 
-using EntityRecord = std::tuple<std::string, BaseEntity*>;
+using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 
 class EntityModel : public QStandardItemModel{
     public:
@@ -20,9 +20,11 @@ class EntityModel : public QStandardItemModel{
         EntityModel(BaseEntity* entity);
         ~EntityModel();
         std::vector<EntityRecord> entities() const;
-        BaseEntity* findRecordByName(std::string name);
+        BaseEntity* findEntityByName(std::string name);
+        void clearEntities();
+        void setHeader();
     protected:
-        void addEntity(BaseEntity* entity);
+        void addEntity(std::unique_ptr<BaseEntity> entity);
         void deleteFromModel(const std::string name);
     private:
         BaseEntity* mEntity;
@@ -39,10 +41,10 @@ public:
     ~EntityDataModel();
 
     void populateFields(BaseEntity* baseEntity);
-    void populateEntity(BaseEntity& baseEntity);
 
     //std::vector<T*> entities() const;
-    void saveEntity(BaseEntity* entity);
+    void createEntity(std::unique_ptr<BaseEntity> entity);
+    void updateEntity(BaseEntity* entity);
     void deleteEntity(const std::string name, BaseEntity* entity);
 
     void all();
@@ -68,9 +70,14 @@ public:
         auto res = std::make_tuple( create (std::forward<Types>(args) )...);
     }
 
+    void searchByField(std::tuple<std::string, std::string>);
+
+
 private:
     BaseEntity* mEntity;
     BaseDatabaseManager* dbManager;
+
+    void populateEntities();
 };
 
 

@@ -22,6 +22,7 @@ public:
     int elemSize() const;
     T1* currentElement();
     int currentIndex() const;
+    void clear();
 
     void addElement(T1* element);
     typename std::vector<T1*>::iterator elemIter();
@@ -100,6 +101,14 @@ template<typename T1>
 int QuerySet<T1>::currentIndex() const
 {
     return index;
+}
+
+template<typename T1>
+void QuerySet<T1>::clear()
+{
+    for (auto elem : elems)
+        delete elem;
+    elems.clear();
 }
 
 template<typename T1>

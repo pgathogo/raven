@@ -14,6 +14,7 @@ ClientGroup::ClientGroup()
 {
     mName = createField<StringField>("group_name","Group Name");
     mName->setDBColumnName("name");
+    mName->setMandatory(true);
     mDescription = createField<TextField>("group_description","Group Desc.");
     mDescription->setDBColumnName("description");
 
@@ -25,8 +26,12 @@ ClientGroup::ClientGroup()
 ClientGroup::~ClientGroup()
 {
     qDebug() << "ClientGroup::dtor";
-    delete mName;
-    delete mDescription;
+    /*
+    if (mName != nullptr)
+        delete mName;
+    if (mDescription != nullptr)
+        delete mDescription;
+    */
 }
 
 BaseEntity* ClientGroup::copy() const
@@ -57,6 +62,7 @@ TextField* ClientGroup::description() const
 }
 
 
+/*
 BaseEntity* ClientGroup::mapFields(StringMap* e)
 {
    std::map<std::string, std::string>::const_iterator it;
@@ -80,6 +86,19 @@ BaseEntity* ClientGroup::mapFields(StringMap* e)
 
    return ct;
 }
+*/
+
+
+
+std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
+{
+    FieldValues fvs = mapping(sm);
+    std::unique_ptr<ClientGroup> cg = std::make_unique<ClientGroup>();
+    for (auto& fv : fvs)
+        cg->setValueByField(std::get<0>(fv), std::get<1>(fv));
+    return std::move(cg);
+}
+
 
 QList<QStandardItem*> ClientGroup::tableViewColumns()
 {

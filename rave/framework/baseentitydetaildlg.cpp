@@ -1,10 +1,13 @@
+
 #include "baseentitydetaildlg.h"
 #include "ui_baseentitydetaildlg.h"
 #include "entitydatamodel.h"
+#include "../utils/tools.h"
 
 BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     QDialog(parent),
-    bui(new Ui::BaseEntityDetailDlg)
+    bui(new Ui::BaseEntityDetailDlg),
+    mOkClose{true}
 {
     bui->setupUi(this);
     connectSlots();
@@ -22,10 +25,23 @@ void BaseEntityDetailDlg::connectSlots()
     connect(bui->btnClose, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnCloseClicked);
 }
 
+void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
+{
+    qDebug() << "mOkClose: "<< mOkClose;
+    if(!mOkClose)
+        event->ignore();
+}
+
 void BaseEntityDetailDlg::btnSaveClicked()
 {
-    saveRecord();
-    done(1);
+    ErrorMessage em = saveRecord();
+
+    if (std::get<0>(em)){
+       mOkClose = true;
+       done(1);
+    }else{
+       mOkClose = false;
+    }
 }
 
 void BaseEntityDetailDlg::btnCloseClicked()
@@ -35,7 +51,6 @@ void BaseEntityDetailDlg::btnCloseClicked()
 
 void BaseEntityDetailDlg::save(BaseEntity* entity)
 {
-    //mEntityDataModel->saveEntity(entity);
 }
 
 void BaseEntityDetailDlg::setTitle(std::string title)

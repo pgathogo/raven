@@ -16,6 +16,11 @@ void BaseDataProvider::append(StringMapped* data)
     dataQuerySet.addRecord(data);
 }
 
+void BaseDataProvider::clear()
+{
+    dataQuerySet.clear();
+}
+
 int BaseDataProvider::cacheSize() const
 {
     return dataQuerySet.elemSize();
@@ -67,7 +72,7 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     PGresult* res;
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
         PQclear(res);
-        PQfinish(conn);
+        //PQfinish(conn);
     };
 
     res = PQexec(conn, "BEGIN");
@@ -95,6 +100,21 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         return false;
     }
 
+    /*
+    int nFields;
+    int i;
+    std::string id;
+    nFields = PQnfields(res);
+    for (i=0; i<PQntuples(res); ++i){
+        for (int j=0; j<nFields; ++j){
+            id = PQgetvalue(res, i, j);
+            break;
+        }
+    }
+
+    qDebug() << "Id: "<< QString::fromStdString(id);
+   */
+
     cleanFinish(conn, res);
 
     return true;
@@ -103,6 +123,8 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 int PostgresDataProvider::read(const std::string query)
 {
     qDebug() << "PostgresDataProvider::executeQuery";
+
+    clear();
 
     PGresult* res;
     int nFields;

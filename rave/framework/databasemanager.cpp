@@ -1,3 +1,5 @@
+#include <tuple>
+
 #include "databasemanager.h"
 #include "baseentity.h"
 #include "dataprovider.h"
@@ -71,7 +73,7 @@ std::string BaseDatabaseManager::makeInsertString(BaseEntity* entity)
     std::string flds = commaSepColumns(entity);
     std::string vals = commaSepValues(entity);
     std::string in_a = "INSERT INTO "+entity->tableName()+"( "+flds+")";
-    std::string in_b = " VALUES ("+vals+")";
+    std::string in_b = " VALUES ("+vals+") ";
     std::string insert_stmt = in_a + in_b;
     return insert_stmt;
 }
@@ -120,6 +122,16 @@ int PostgresDatabaseManager::fetchAll(BaseEntity* entity)
     std::string sql;
     std::string flds = columnsForSelection(entity);
     sql = "SELECT " + flds + " FROM "+entity->tableName();
+    return provider()->read(sql);
+}
+
+int PostgresDatabaseManager::searchByField(BaseEntity* entity, std::tuple<std::string, std::string> sf)
+{
+    std::string sql;
+    std::string flds = columnsForSelection(entity);
+    sql = "SELECT "+flds+" FROM "+entity->tableName()+
+                    " WHERE LOWER("+ std::get<0>(sf)+") LIKE '%"+
+                    std::get<1>(sf)+"%'";
     return provider()->read(sql);
 }
 

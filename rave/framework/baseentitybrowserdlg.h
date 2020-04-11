@@ -25,11 +25,10 @@ public:
     void connectSlots();
     void setMdiArea(QMdiArea* mdi);
 
-
     virtual void addRecord()=0;
     virtual void updateRecord()=0;
     virtual void deleteRecord()=0;
-    virtual void searchRecord()=0;
+    virtual void searchRecord();
 
 protected:
     EntityDataModel* entityDataModel() const;
@@ -49,6 +48,7 @@ private:
     Ui::BaseEntityBrowserDlg* bui;
     BaseEntity* mBaseEntity;
     EntityDataModel* mEntityDataModel;
+    void populateFilterCombo();
 };
 
 #endif // BASEENTITYBROWSERDLG_H

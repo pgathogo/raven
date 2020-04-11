@@ -7,6 +7,8 @@
 #include "ui_clientgroupdlg.h"
 #include "../framework/entitydatamodel.h"
 
+#include "../utils/tools.h"
+
 
 ClientGroupDlg::ClientGroupDlg(QWidget *parent) :
     BaseEntityBrowserDlg(parent, new ClientGroup()),
@@ -26,27 +28,35 @@ ClientGroupDlg::~ClientGroupDlg()
 
 void ClientGroupDlg::addRecord()
 {
-    ClientGroup* cg = new ClientGroup();
-    clientGroupDetailDlg = new ClientGroupDetailDlg(cg);
-    if (clientGroupDetailDlg->exec() > 0)
-        entityDataModel()->saveEntity(cg);
+    std::unique_ptr<ClientGroup> ucg = std::make_unique<ClientGroup>();
+    auto ptr(ucg.get());
+    clientGroupDetailDlg = new ClientGroupDetailDlg(ptr);
+    if (clientGroupDetailDlg->exec() > 0){
+        // Give entity a dummy ID
+        ucg->setId(9999);
+        entityDataModel()->createEntity(std::move(ucg));
+    }
 }
 
 void ClientGroupDlg::updateRecord()
 {
    std::string searchName = selectedRowName().toStdString();
 
+
    if (!searchName.empty()){
-       BaseEntity* baseEntity = entityDataModel()->findRecordByName(searchName);
+       BaseEntity* baseEntity = entityDataModel()->findEntityByName(searchName);
 
        if (baseEntity != nullptr){
 
            ClientGroup* cg = dynamic_cast<ClientGroup*>(baseEntity);
+
+            printstr(cg->name()->valueToString());
+
             clientGroupDetailDlg = new ClientGroupDetailDlg(cg);
 
             if (clientGroupDetailDlg->exec() > 0){
                 updateTableViewRecord(cg);
-                entityDataModel()->saveEntity(cg);
+                entityDataModel()->updateEntity(cg);
              }
        }
    }
@@ -55,16 +65,11 @@ void ClientGroupDlg::updateRecord()
 void ClientGroupDlg::deleteRecord()
 {
    std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = entityDataModel()->findRecordByName(searchName);
+   BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
 
    entityDataModel()->deleteEntity(searchName, entity);
 
    this->removeSelectedRow();
 }
 
-void ClientGroupDlg::searchRecord()
-{
-    qDebug() << "ClientGroupDlg()::searchRecord";
-    entityDataModel()->all();
-}
 

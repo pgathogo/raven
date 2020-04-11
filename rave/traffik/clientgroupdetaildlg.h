@@ -18,7 +18,7 @@ public:
     explicit ClientGroupDetailDlg(ClientGroup* cg, QDialog *parent = nullptr);
     ~ClientGroupDetailDlg() override;
 
-    void saveRecord() override;
+    ErrorMessage saveRecord() override;
     void populateFields() override;
 
 private:

@@ -8,6 +8,8 @@
 #include <QList>
 #include "entityfields.h"
 
+#include "../utils/types.h"
+
 class QString;
 class QStringList;
 
@@ -16,6 +18,8 @@ class QStandardItem;
 //using FieldMap = std::map<std::string, std::unique_ptr<Field>>;
 using FieldMap = std::tuple<std::string, std::unique_ptr<Field>>;
 using StringMap = std::map<std::string, std::string>;
+using FieldValue = std::tuple<Field*, std::string>;
+using FieldValues = std::vector<std::tuple<Field*, std::string>>;
 
 class BaseEntity
 {
@@ -23,11 +27,11 @@ public:
     BaseEntity();
     virtual ~BaseEntity();
 
-    int id() const;
+    [[nodiscard]] int id() const;
     void setId(int i);
 
     virtual BaseEntity* copy()const = 0;
-    virtual BaseEntity* mapFields(StringMap* e) = 0;
+    virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
 
     std::vector<FieldMap>::const_iterator cBeginIter();
     std::vector<FieldMap>::const_iterator cEndIter();
@@ -48,6 +52,8 @@ public:
 
     virtual std::string searchColumn() const = 0;
 
+    [[nodiscard]] virtual ErrorMessage validate();
+
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");
@@ -59,9 +65,8 @@ public:
         return ptr;
     }
 
-    void setValueByField(Field* fld, std::string val)
+    void setValueByField(Field* fld, const std::string& val)
     {
-
         std::vector<FieldMap>::iterator iter;
         for (iter=beginIter(); iter != endIter(); ++iter){
             if (std::get<0>(*iter) == fld->fieldName())
@@ -69,6 +74,33 @@ public:
         }
 
     }
+
+    FieldValues mapping(StringMap* e)
+    {
+       std::map<std::string, std::string>::const_iterator it;
+       std::vector<FieldMap>::iterator iter;
+       FieldValues flds;
+
+       std::tuple<Field*, std::string> fieldVal;
+
+       for(it=e->cbegin(); it != e->cend(); ++it){
+
+           for(iter=beginIter(); iter != endIter(); ++iter){
+
+               if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
+                   (std::get<1>(*iter)->visible())){
+                    Field* ptr(std::get<1>(*iter).get());
+                    fieldVal = std::make_tuple(ptr, it->second);
+                    flds.push_back(fieldVal);
+               }
+
+           }
+
+        }
+
+       return flds;
+    }
+
 
 private:
     IntegerField* mID;

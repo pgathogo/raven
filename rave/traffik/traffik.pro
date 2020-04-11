@@ -40,6 +40,7 @@ HEADERS += \
     ../framework/entityfields.h \
     ../framework/queryset.h \
     ../utils/tools.h \
+    ../utils/types.h \
     clientgroup.h \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \

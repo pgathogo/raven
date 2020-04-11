@@ -22,7 +22,6 @@ public:
     void addRecord() override;
     void updateRecord() override;
     void deleteRecord() override;
-    void searchRecord() override;
 
 private:
     Ui::ClientGroupDlg *ui;

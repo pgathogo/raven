@@ -16,7 +16,7 @@ public:
     ClientGroup();
     ~ClientGroup() override;
     BaseEntity* copy() const override;
-    BaseEntity* mapFields(StringMap* e) override;
+    std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     StringField* name() const;
     void setName(std::string aName);

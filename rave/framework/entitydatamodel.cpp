@@ -13,7 +13,7 @@ EntityModel::~EntityModel()
 {
     qDebug() << "EntityModel::dtor";
     qDebug() << "model.rowCount: BEFORE" << rowCount();
-    //mEntities.clear();
+    mEntities.clear();
     clear();
     qDebug() << "model.rowCount: AFTER" << rowCount();
 }
@@ -21,21 +21,29 @@ EntityModel::~EntityModel()
 EntityModel::EntityModel(BaseEntity* entity)
     :mEntity{entity}
 {
-    this->setHorizontalHeaderLabels(entity->tableHeaders());
+    setHeader();
 }
 
+void EntityModel::setHeader()
+{
+    this->setHorizontalHeaderLabels(mEntity->tableHeaders());
+}
+
+/*
 std::vector<EntityRecord> EntityModel::entities() const
 {
     return mEntities;
 }
+*/
 
-void EntityModel::addEntity(BaseEntity* entity)
+void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
 {
-    addRow(entity);
+    BaseEntity* be = entity.get();
+    addRow(be);
     std::string key = entity->searchColumn();
     // we need a way to check that key is not empty!!
-    EntityRecord record = make_tuple(key, entity);
-    mEntities.push_back(record);
+    EntityRecord record = make_tuple(key, std::move(entity));
+    mEntities.push_back(std::move(record));
 }
 
 
@@ -44,14 +52,19 @@ void EntityModel::addRow(BaseEntity* entity)
    appendRow(entity->tableViewColumns());
 }
 
-BaseEntity* EntityModel::findRecordByName(std::string name)
+BaseEntity* EntityModel::findEntityByName(std::string name)
 {
+    BaseEntity* be = nullptr;
+
     for (auto& record : mEntities){
-        if (std::get<0>(record) == name)
-            return std::get<1>(record);
+        if (std::get<0>(record) == name){
+            be = std::get<1>(record).get();
+            break;
+        }
+
     }
 
-    return nullptr;
+    return be;
 }
 
 void EntityModel::deleteFromModel(const std::string name)
@@ -66,13 +79,17 @@ void EntityModel::deleteFromModel(const std::string name)
     mEntities.erase(mEntities.begin()+i);
 }
 
+void EntityModel::clearEntities()
+{
+    clear();
+    mEntities.clear();
+    setHeader();
+}
+
 /* ----------- EntityDataModel ------------------ */
 
 EntityDataModel::~EntityDataModel()
 {
-    for (auto record: entities())
-        delete std::get<1>(record);
-
     delete mEntity;
     delete dbManager;
 }
@@ -90,19 +107,29 @@ void EntityDataModel::populateFields(BaseEntity* baseEntity)
     qDebug() << "EntityDataModel::PopulateFields" ;
 }
 
-void EntityDataModel::populateEntity(BaseEntity& baseEntity)
+void EntityDataModel::populateEntities()
 {
-    qDebug() << "EntityDataModel::populateEntity";
+    clearEntities();
+    dbManager->provider()->cache()->first();
+    do{
+       auto e = dbManager->provider()->cache()->currentElement();
+       auto eptr = mEntity->mapFields(e);
+       addEntity(std::move(eptr));
+       dbManager->provider()->cache()->next();
+    }while(!dbManager->provider()->cache()->isLast());
 }
 
-void EntityDataModel::saveEntity(BaseEntity* entity)
+void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
-    if (entity->id() > 0){
+    auto ptr(entity.get());
+    dbManager->saveEntity(ptr);
+    addEntity(std::move(entity));
+}
+
+void EntityDataModel::updateEntity(BaseEntity* entity)
+{
+    if (entity->id() > 0)
         dbManager->updateEntity(entity);
-    }else{
-        dbManager->saveEntity(entity);
-        addEntity(entity);
-    }
 }
 
 void EntityDataModel::deleteEntity(const std::string name, BaseEntity* entity)
@@ -114,16 +141,14 @@ void EntityDataModel::deleteEntity(const std::string name, BaseEntity* entity)
 
 void EntityDataModel::all()
 {
-
-if (dbManager->fetchAll(mEntity) > 0){
-   dbManager->provider()->cache()->first();
-   do{
-       auto e = dbManager->provider()->cache()->currentElement();
-       auto eptr = mEntity->mapFields(e);
-       addEntity(eptr);
-       dbManager->provider()->cache()->next();
-   }while(!dbManager->provider()->cache()->isLast());
+    if (dbManager->fetchAll(mEntity) > 0)
+        populateEntities();
 
 }
+
+void EntityDataModel::searchByField(std::tuple<std::string, std::string> searchItem)
+{
+    if (dbManager->searchByField(mEntity, searchItem) > 0)
+        populateEntities();
 
 }

@@ -7,6 +7,8 @@ class BaseEntity;
 class BaseDataProvider;
 class PostgresDataProvider;
 
+using SearchField = std::tuple<std::string, std::string>;
+
 class BaseDatabaseManager
 {
 public:
@@ -15,6 +17,8 @@ public:
     virtual void saveEntity(BaseEntity* entity) = 0;
     virtual int deleteEntity(BaseEntity* entity) = 0;
     virtual int fetchAll(BaseEntity* entity) = 0;
+    virtual int searchByField(BaseEntity* entity,
+                          std::tuple<std::string, std::string> sf) = 0;
     virtual BaseDataProvider* provider() = 0;
 protected:
     virtual void loadEntity(BaseEntity& entity) = 0;
@@ -41,6 +45,8 @@ public:
     void saveEntity(BaseEntity* entity) override;
     int deleteEntity(BaseEntity* entity)override;
     int fetchAll(BaseEntity* entity) override;
+    int searchByField(BaseEntity* entity,
+                          std::tuple<std::string, std::string> sf) override;
     BaseDataProvider* provider() override;
 protected:
     void loadEntity(BaseEntity& entity)override;

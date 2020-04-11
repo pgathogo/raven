@@ -20,10 +20,16 @@ ClientGroupDetailDlg::~ClientGroupDetailDlg()
     delete ui;
 }
 
-void ClientGroupDetailDlg::saveRecord()
+ErrorMessage ClientGroupDetailDlg::saveRecord()
 {
+    qDebug() <<"ClientGroupDetailDlg::saveRecord";
+
     clientGroup->setName(ui->edtName->text().toStdString());
     clientGroup->setDescription(ui->edtDesc->toPlainText().toStdString());
+
+    ErrorMessage em =  clientGroup->validate();
+
+    return em;
 }
 
 void ClientGroupDetailDlg::populateFields()
