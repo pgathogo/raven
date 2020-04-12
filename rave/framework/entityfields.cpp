@@ -8,7 +8,8 @@ Field::Field()
      mDBColumnName{"dbColumnName"},
      mVisible{true},
      mFormOnly{false},
-     mSearchable{true}
+     mSearchable{true},
+     mMandatory{false}
 {
 }
 
@@ -18,7 +19,8 @@ Field::Field(std::string aName, std::string aLabel)
      mDBColumnName{aName},
      mVisible{true},
      mFormOnly{false},
-     mSearchable{true}
+     mSearchable{true},
+     mMandatory{false}
 {
 }
 

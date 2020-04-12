@@ -31,11 +31,8 @@ void ClientGroupDlg::addRecord()
     std::unique_ptr<ClientGroup> ucg = std::make_unique<ClientGroup>();
     auto ptr(ucg.get());
     clientGroupDetailDlg = new ClientGroupDetailDlg(ptr);
-    if (clientGroupDetailDlg->exec() > 0){
-        // Give entity a dummy ID
-        ucg->setId(9999);
+    if (clientGroupDetailDlg->exec() > 0)
         entityDataModel()->createEntity(std::move(ucg));
-    }
 }
 
 void ClientGroupDlg::updateRecord()
@@ -62,14 +59,5 @@ void ClientGroupDlg::updateRecord()
    }
 }
 
-void ClientGroupDlg::deleteRecord()
-{
-   std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
-
-   entityDataModel()->deleteEntity(searchName, entity);
-
-   this->removeSelectedRow();
-}
 
 

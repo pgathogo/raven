@@ -122,7 +122,8 @@ void EntityDataModel::populateEntities()
 void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
     auto ptr(entity.get());
-    dbManager->saveEntity(ptr);
+    int id = dbManager->createEntity(ptr);
+    entity->setId(id);
     addEntity(std::move(entity));
 }
 

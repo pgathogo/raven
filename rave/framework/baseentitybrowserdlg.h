@@ -27,7 +27,7 @@ public:
 
     virtual void addRecord()=0;
     virtual void updateRecord()=0;
-    virtual void deleteRecord()=0;
+    virtual void deleteRecord();
     virtual void searchRecord();
 
 protected:

@@ -100,21 +100,6 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         return false;
     }
 
-    /*
-    int nFields;
-    int i;
-    std::string id;
-    nFields = PQnfields(res);
-    for (i=0; i<PQntuples(res); ++i){
-        for (int j=0; j<nFields; ++j){
-            id = PQgetvalue(res, i, j);
-            break;
-        }
-    }
-
-    qDebug() << "Id: "<< QString::fromStdString(id);
-   */
-
     cleanFinish(conn, res);
 
     return true;
@@ -190,4 +175,73 @@ int PostgresDataProvider::read(const std::string query)
    // PQfinish(conn);
 
     return cacheSize();
+}
+
+int PostgresDataProvider::fetchLastId(const std::string tableName)
+{
+    qDebug() << "PostgresDataProvider::fetchLastId";
+
+    std::string query = "SELECT max(id) AS id from "+tableName;
+
+    clear();
+
+    PGresult* res;
+    int nFields;
+    int i;
+
+    static auto cleanFinish = [](PGconn* conn, PGresult* res){
+        PQclear(res);
+        PQfinish(conn);
+    };
+
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK){
+        qDebug() << "BEGIN command failed! "<< PQerrorMessage(conn);
+        cleanFinish(conn, res);
+        return -1;
+    }
+
+    PQclear(res);
+
+    std::string curs = "DECLARE mcursor CURSOR FOR "+query;
+    const char* sql = curs.c_str();
+    res = PQexec(conn, sql);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK){
+        qDebug() << "DECLARE CURSOR failed! " << PQerrorMessage(conn);
+        cleanFinish(conn, res);
+        return -1;
+    }
+
+    PQclear(res);
+
+    res = PQexec(conn, "FETCH ALL in mcursor");
+    if (PQresultStatus(res) != PGRES_TUPLES_OK){
+        qDebug() << "FETCH ALL failed! " << PQerrorMessage(conn);
+        cleanFinish(conn, res);
+        return -1;
+    }
+
+    nFields = PQnfields(res);
+
+    std::string lastId;
+
+    for(i=0; i<PQntuples(res); ++i){
+        //RecordTuple record;
+        for(int j=0; j<nFields; ++j){
+            //record = std::make_tuple(PQfname(res, j), PQgetvalue(res, i, j));
+            lastId = PQgetvalue(res, i, j);
+        }
+    }
+
+    PQclear(res);
+    res = PQexec(conn, "CLEAR mcursor");
+    PQclear(res);
+
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+   // PQfinish(conn);
+
+    return std::stoi(lastId);
 }

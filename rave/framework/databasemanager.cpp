@@ -98,15 +98,18 @@ PostgresDatabaseManager::~PostgresDatabaseManager()
     //delete dataProvider;
 }
 
-void PostgresDatabaseManager::saveEntity(BaseEntity* entity)
+int PostgresDatabaseManager::createEntity(BaseEntity* entity)
 {
-    qDebug() << "PostgresDatabaseManager::saveEntity";
-
     std::string sqlQuery;
 
     sqlQuery = makeInsertString(entity);
 
      provider()->executeQuery(sqlQuery);
+
+     // Get id of the created record.
+     int lastId = provider()->fetchLastId(entity->tableName());
+
+     return lastId;
 
 }
 

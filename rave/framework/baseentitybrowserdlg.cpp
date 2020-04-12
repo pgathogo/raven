@@ -111,6 +111,14 @@ void BaseEntityBrowserDlg::searchRecord()
     }
 }
 
+void BaseEntityBrowserDlg::deleteRecord()
+{
+   std::string searchName = selectedRowName().toStdString();
+   BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
+   entityDataModel()->deleteEntity(searchName, entity);
+   removeSelectedRow();
+}
+
 int BaseEntityBrowserDlg::selectedRowId() const
 {
     return bui->tvEntity->currentIndex().row();
