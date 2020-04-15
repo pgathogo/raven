@@ -8,6 +8,7 @@
 
 //class EntityDataModel;
 class BaseEntity;
+class NotificationBar;
 
 namespace Ui {
 class BaseEntityDetailDlg;
@@ -29,6 +30,7 @@ public:
 private slots:
     void btnSaveClicked();
     void btnCloseClicked();
+    void btnSaveNewClicked();
 
 protected:
     Ui::BaseEntityDetailDlg* bui;
@@ -36,6 +38,7 @@ protected:
     void setTitle(std::string title);
 
 private:
+   NotificationBar* mNoticeBar;
    bool mOkClose;
 };
 

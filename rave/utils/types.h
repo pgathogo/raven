@@ -5,4 +5,9 @@
 
 using ErrorMessage = std::tuple<bool, std::string>;
 
+enum class NotificationType {
+    ntERROR,
+    ntSUCCESS
+};
+
 #endif // TYPES_H

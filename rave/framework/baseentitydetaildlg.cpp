@@ -2,15 +2,18 @@
 #include "baseentitydetaildlg.h"
 #include "ui_baseentitydetaildlg.h"
 #include "entitydatamodel.h"
+#include "../utils/notificationbar.h"
 #include "../utils/tools.h"
 
 BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     QDialog(parent),
     bui(new Ui::BaseEntityDetailDlg),
+    mNoticeBar{nullptr},
     mOkClose{true}
 {
     bui->setupUi(this);
     connectSlots();
+    mNoticeBar = new NotificationBar(bui->noticeLayout);
     //setModal(true);
 }
 
@@ -23,6 +26,7 @@ void BaseEntityDetailDlg::connectSlots()
 {
     connect(bui->btnSave, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveClicked);
     connect(bui->btnClose, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnCloseClicked);
+    connect(bui->btnSaveNew, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveNewClicked);
 }
 
 void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
@@ -49,6 +53,10 @@ void BaseEntityDetailDlg::btnCloseClicked()
     done(0);
 }
 
+void BaseEntityDetailDlg::btnSaveNewClicked()
+{
+   mNoticeBar->errorNotification("testing");
+}
 void BaseEntityDetailDlg::save(BaseEntity* entity)
 {
 }

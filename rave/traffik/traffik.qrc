@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images/icons">
+        <file>images/icons/close_msg.png</file>
+        <file>images/icons/remove.png</file>
+    </qresource>
+</RCC>

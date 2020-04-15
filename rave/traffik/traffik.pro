@@ -24,6 +24,8 @@ SOURCES += \
     ../framework/dataprovider.cpp \
     ../framework/entitydatamodel.cpp \
     ../framework/entityfields.cpp \
+    ../utils/notificationbar.cpp \
+    ../utils/notificationitem.cpp \
     clientgroup.cpp \
     clientgroupdetaildlg.cpp \
     clientgroupdlg.cpp \
@@ -39,6 +41,8 @@ HEADERS += \
     ../framework/entitydatamodel.h \
     ../framework/entityfields.h \
     ../framework/queryset.h \
+    ../utils/notificationbar.h \
+    ../utils/notificationitem.h \
     ../utils/tools.h \
     ../utils/types.h \
     clientgroup.h \
@@ -49,6 +53,7 @@ HEADERS += \
 FORMS += \
     ../framework/baseentitybrowserdlg.ui \
     ../framework/baseentitydetaildlg.ui \
+    ../utils/notificationitem.ui \
     clientgroupdetaildlg.ui \
     clientgroupdlg.ui \
     mainwindow.ui
@@ -58,7 +63,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES +=
+RESOURCES += \
+    traffik.qrc
 
 #win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
 win32:CONFIG(debug, debug|release): LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
