@@ -52,7 +52,12 @@ public:
 
     virtual std::string searchColumn() const = 0;
 
-    [[nodiscard]] virtual ErrorMessage validate();
+    [[nodiscard]] virtual ActionResult validate();
+
+    void setValueByField(Field* fld, const std::string& val);
+    FieldValues mapping(StringMap* e);
+
+    virtual void populateEntity()=0;
 
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
@@ -64,43 +69,6 @@ public:
         mFields.emplace_back(std::move(fm));
         return ptr;
     }
-
-    void setValueByField(Field* fld, const std::string& val)
-    {
-        std::vector<FieldMap>::iterator iter;
-        for (iter=beginIter(); iter != endIter(); ++iter){
-            if (std::get<0>(*iter) == fld->fieldName())
-               std::get<1>(*iter)->stringToValue(val);
-        }
-
-    }
-
-    FieldValues mapping(StringMap* e)
-    {
-       std::map<std::string, std::string>::const_iterator it;
-       std::vector<FieldMap>::iterator iter;
-       FieldValues flds;
-
-       std::tuple<Field*, std::string> fieldVal;
-
-       for(it=e->cbegin(); it != e->cend(); ++it){
-
-           for(iter=beginIter(); iter != endIter(); ++iter){
-
-               if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
-                   (std::get<1>(*iter)->visible())){
-                    Field* ptr(std::get<1>(*iter).get());
-                    fieldVal = std::make_tuple(ptr, it->second);
-                    flds.push_back(fieldVal);
-               }
-
-           }
-
-        }
-
-       return flds;
-    }
-
 
 private:
     IntegerField* mID;

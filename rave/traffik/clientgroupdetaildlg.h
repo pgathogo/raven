@@ -18,8 +18,11 @@ public:
     explicit ClientGroupDetailDlg(ClientGroup* cg, QDialog *parent = nullptr);
     ~ClientGroupDetailDlg() override;
 
-    ErrorMessage saveRecord() override;
-    void populateFields() override;
+    ActionResult saveRecord() override;
+    //void populateFields() override;
+    void bindWidgets() override;
+
+    std::string title() override;
 
 private:
     Ui::ClientGroupDetailDlg *ui;

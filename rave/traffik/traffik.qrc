@@ -2,5 +2,6 @@
     <qresource prefix="/images/icons">
         <file>images/icons/close_msg.png</file>
         <file>images/icons/remove.png</file>
+        <file>images/icons/success.png</file>
     </qresource>
 </RCC>

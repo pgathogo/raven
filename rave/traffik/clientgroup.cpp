@@ -26,12 +26,6 @@ ClientGroup::ClientGroup()
 ClientGroup::~ClientGroup()
 {
     qDebug() << "ClientGroup::dtor";
-    /*
-    if (mName != nullptr)
-        delete mName;
-    if (mDescription != nullptr)
-        delete mDescription;
-    */
 }
 
 BaseEntity* ClientGroup::copy() const
@@ -131,4 +125,10 @@ std::string ClientGroup::tableName() const
 std::string ClientGroup::searchColumn() const
 {
     return name()->valueToString();
+}
+
+void ClientGroup::populateEntity()
+{
+    mName->setValueFromWidget();
+    mDescription->setValueFromWidget();
 }

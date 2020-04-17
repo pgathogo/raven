@@ -18,6 +18,7 @@ public:
     ~NotificationBar();
     void insertNotification(std::string message, NotificationType nType);
     void errorNotification(std::string message);
+    void successNotification(std::string message);
 
 signals:
 
@@ -31,6 +32,8 @@ private:
     std::size_t mTimeInterval;
     std::string errorStyleSheet;
     std::string errorFontColor;
+    std::string successStyleSheet;
+    std::string successFontColor;
 };
 
 #endif // NOTIFICATIONBAR_H

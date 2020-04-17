@@ -7,6 +7,12 @@
 
 using FieldValueType = std::variant<std::string, int>;
 
+class FormField;
+class IntegerFormField;
+class StringFormField;
+
+class QLineEdit;
+class QTextEdit;
 
 class Field{
     public:
@@ -68,8 +74,13 @@ class IntegerField : public Field{
 
         QVariant value() override;
 
+        //IntegerFormField* widget();
+
+        QLineEdit* widget();
+
     private:
         int mValue;
+        QLineEdit* mWidget;
 };
 
 class StringField : public Field{
@@ -84,8 +95,15 @@ class StringField : public Field{
         void setValue(std::string val);
         void stringToValue(std::string val) override;
         QVariant value() override;
+
+        QLineEdit* widget();
+        void setWidget(QLineEdit* lineEdit);
+        void setValueFromWidget();
+
+        void printWidgetValue();
     private:
         std::string mValue;
+        QLineEdit* mWidget;
 };
 
 class TextField :public Field{
@@ -101,8 +119,13 @@ class TextField :public Field{
         void stringToValue(std::string val) override;
         QVariant value() override;
 
+        QTextEdit* widget();
+        void setWidget(QTextEdit* textEdit);
+        void setValueFromWidget();
+
     private:
         std::string mValue;
+        QTextEdit* mWidget;
 };
 
 using IF = std::tuple<IntegerField, int>;

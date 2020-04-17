@@ -14,7 +14,10 @@ BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     bui->setupUi(this);
     connectSlots();
     mNoticeBar = new NotificationBar(bui->noticeLayout);
-    //setModal(true);
+}
+
+std::string BaseEntityDetailDlg::title(){
+    return "Details Dialog";
 }
 
 BaseEntityDetailDlg::~BaseEntityDetailDlg()
@@ -38,12 +41,13 @@ void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
 
 void BaseEntityDetailDlg::btnSaveClicked()
 {
-    ErrorMessage em = saveRecord();
+    ActionResult ar = saveRecord();
 
-    if (std::get<0>(em)){
+    if (std::get<0>(ar) == ActionResultType::arSUCCESS){
        mOkClose = true;
        done(1);
     }else{
+       mNoticeBar->errorNotification(std::get<1>(ar));
        mOkClose = false;
     }
 }
@@ -55,7 +59,8 @@ void BaseEntityDetailDlg::btnCloseClicked()
 
 void BaseEntityDetailDlg::btnSaveNewClicked()
 {
-   mNoticeBar->errorNotification("testing");
+   //mNoticeBar->errorNotification("Testing");
+   mNoticeBar->successNotification("Success");
 }
 void BaseEntityDetailDlg::save(BaseEntity* entity)
 {

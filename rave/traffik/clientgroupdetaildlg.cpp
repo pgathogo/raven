@@ -11,8 +11,13 @@ ClientGroupDetailDlg::ClientGroupDetailDlg(
     clientGroup{cg}
 {
     ui->setupUi(bui->baseContainer);
-    this->setTitle("Client Group");
-    populateFields();
+    bindWidgets();
+    setTitle(title());
+}
+
+std::string ClientGroupDetailDlg::title()
+{
+    return "Client Group";
 }
 
 ClientGroupDetailDlg::~ClientGroupDetailDlg()
@@ -20,21 +25,18 @@ ClientGroupDetailDlg::~ClientGroupDetailDlg()
     delete ui;
 }
 
-ErrorMessage ClientGroupDetailDlg::saveRecord()
+ActionResult ClientGroupDetailDlg::saveRecord()
 {
-    qDebug() <<"ClientGroupDetailDlg::saveRecord";
+    clientGroup->populateEntity();
 
-    clientGroup->setName(ui->edtName->text().toStdString());
-    clientGroup->setDescription(ui->edtDesc->toPlainText().toStdString());
+    ActionResult ar =  clientGroup->validate();
 
-    ErrorMessage em =  clientGroup->validate();
-
-    return em;
+    return ar;
 }
 
-void ClientGroupDetailDlg::populateFields()
-{
-    ui->edtName->setText(QString::fromStdString(clientGroup->name()->valueToString()));
-    ui->edtDesc->setText(QString::fromStdString(clientGroup->description()->valueToString()));
-}
 
+void ClientGroupDetailDlg::bindWidgets()
+{
+    clientGroup->name()->setWidget(ui->edtName);
+    clientGroup->description()->setWidget(ui->edtDesc);
+}

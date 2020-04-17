@@ -3,7 +3,12 @@
 
 #include <string>
 
-using ErrorMessage = std::tuple<bool, std::string>;
+enum class ActionResultType {
+    arSUCCESS,
+    arERROR
+};
+
+using ActionResult = std::tuple<ActionResultType, std::string>;
 
 enum class NotificationType {
     ntERROR,

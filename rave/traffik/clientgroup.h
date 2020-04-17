@@ -31,6 +31,8 @@ public:
     std::string tableName() const override;
     std::string searchColumn() const override;
 
+    void populateEntity() override;
+
 private:
     StringField* mName;
     TextField* mDescription;

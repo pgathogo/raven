@@ -1,4 +1,8 @@
+#include <QLineEdit>
+#include <QTextEdit>
+
 #include "entityfields.h"
+#include "formfields.h"
 
 #include "../utils/tools.h"
 
@@ -110,15 +114,20 @@ bool Field::mandatory() const
 
 IntegerField::IntegerField()
     :Field()
+    ,mWidget{new QLineEdit}
 {
 }
 
 IntegerField::IntegerField(std::string aName, std::string aLabel)
     :Field(aName, aLabel)
+    ,mWidget{new QLineEdit}
 {
 }
 
-IntegerField::~IntegerField(){}
+IntegerField::~IntegerField()
+{
+    delete mWidget;
+}
 
 
 std::string IntegerField::valueToString() const
@@ -145,19 +154,32 @@ QVariant IntegerField::value()
 {
     return QVariant(mValue);
 }
+
+QLineEdit* IntegerField::widget()
+{
+    return mWidget;
+}
+
+
+
 /* -------- StringField --------- */
 
 StringField::StringField()
         :Field()
+        ,mWidget{new QLineEdit}
 {
 }
 
 StringField::StringField(std::string aName, std::string aLabel)
     :Field(aName, aLabel)
+    ,mWidget{new QLineEdit}
 {
 }
 
-StringField::~StringField(){}
+StringField::~StringField()
+{
+    delete mWidget;
+}
 
 
 std::string StringField::valueToString() const
@@ -181,6 +203,25 @@ void StringField::stringToValue(std::string val)
 QVariant StringField::value()
 {
     return QVariant(stoq(mValue));
+}
+QLineEdit* StringField::widget()
+{
+    return mWidget;
+}
+void StringField::setWidget(QLineEdit* lineEdit)
+{
+    mWidget = lineEdit;
+    mWidget->setText(QString::fromStdString(mValue));
+}
+
+void StringField::printWidgetValue()
+{
+    qDebug() << "Widget Value: " << mWidget->text();
+}
+
+void StringField::setValueFromWidget()
+{
+    mValue = mWidget->text().toStdString();
 }
 
 /* ---- TextField ---- */
@@ -219,4 +260,20 @@ void TextField::stringToValue(std::string val)
 QVariant TextField::value()
 {
     return QVariant(QString::fromStdString(mValue));
+}
+
+QTextEdit* TextField::widget()
+{
+    return mWidget;
+}
+
+void TextField::setWidget(QTextEdit* textEdit)
+{
+    mWidget = textEdit;
+    mWidget->insertPlainText(QString::fromStdString(mValue));
+}
+
+void TextField::setValueFromWidget()
+{
+    mValue = mWidget->toPlainText().toStdString();
 }

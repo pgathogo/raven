@@ -34,6 +34,9 @@ void NotificationItem::setMessage(const std::string message,
     if (noticeType == NotificationType::ntERROR)
         noticePixmap = QPixmap(":/images/icons/images/icons/remove.png");
 
+    if (noticeType == NotificationType::ntSUCCESS)
+        noticePixmap = QPixmap(":/images/icons/images/icons/success.png");
+
     ui->lblMessage->setText(QString::fromStdString(message));
     ui->lblIcon->setPixmap(noticePixmap);
     ui->frame->setStyleSheet(QString::fromStdString(styleSheet));

@@ -23,8 +23,13 @@ public:
     ~BaseEntityDetailDlg();
 
     void connectSlots();
-    [[nodiscard]] virtual ErrorMessage saveRecord()=0;
-    virtual void populateFields()=0;
+    [[nodiscard]] virtual ActionResult saveRecord()=0;
+
+    //virtual void populateFields()=0;
+    virtual void bindWidgets()=0;
+
+    virtual std::string title();
+
     void closeEvent(QCloseEvent* event);
 
 private slots:

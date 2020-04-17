@@ -55,20 +55,56 @@ std::vector<std::string> BaseEntity::dbColumnNames()
     return cols;
 }
 
-ErrorMessage BaseEntity::validate()
+ActionResult BaseEntity::validate()
 {
     // Fields marked as mandatory should have values
-    ErrorMessage em = std::make_tuple(true,"");
+    ActionResult ar = std::make_tuple(ActionResultType::arSUCCESS,"");
     auto cIter = cBeginIter();
     for(; cIter != cEndIter(); ++cIter){
         if (std::get<1>(*cIter)->mandatory()){
             if (std::get<1>(*cIter)->valueToString().empty()){
-                em = std::make_tuple(false,
+                ar = std::make_tuple(ActionResultType::arERROR,
                                      "`"+std::get<1>(*cIter)->fieldLabel()+"` has no value!");
                 break;
             }
         }
     }
 
-    return em;
+    return ar;
+}
+
+void BaseEntity::setValueByField(Field* fld, const std::string& val)
+{
+    std::vector<FieldMap>::iterator iter;
+    for (iter=beginIter(); iter != endIter(); ++iter){
+        if (std::get<0>(*iter) == fld->fieldName())
+           std::get<1>(*iter)->stringToValue(val);
+    }
+
+}
+
+FieldValues BaseEntity::mapping(StringMap* e)
+{
+    std::map<std::string, std::string>::const_iterator it;
+    std::vector<FieldMap>::iterator iter;
+    FieldValues flds;
+
+    std::tuple<Field*, std::string> fieldVal;
+
+    for(it=e->cbegin(); it != e->cend(); ++it){
+
+       for(iter=beginIter(); iter != endIter(); ++iter){
+
+           if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
+           (std::get<1>(*iter)->visible())){
+            Field* ptr(std::get<1>(*iter).get());
+            fieldVal = std::make_tuple(ptr, it->second);
+            flds.push_back(fieldVal);
+           }
+
+         }
+
+      }
+
+       return flds;
 }

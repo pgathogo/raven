@@ -14,6 +14,9 @@ NotificationBar::NotificationBar(QVBoxLayout* layout, std::size_t timeInterval, 
     errorStyleSheet = "background-color: #FFBABA;";
     errorFontColor = "color: #D8000C;";
 
+    successStyleSheet = "background-color: #DFF2BF;";
+    successFontColor = "color: #4F8A10;";
+
     mLayout = new QVBoxLayout();
     mLayout = layout;
 
@@ -41,6 +44,9 @@ void NotificationBar::insertNotification(std::string message, NotificationType n
         if (nType == NotificationType::ntERROR){
             frameStyle = errorStyleSheet;
             fontColor = errorFontColor;
+        } else if (nType == NotificationType::ntSUCCESS){
+            frameStyle = successStyleSheet;
+            fontColor = successFontColor;
         }
 
         nItem->setMessage(message, nType, frameStyle, fontColor);
@@ -53,6 +59,11 @@ void NotificationBar::insertNotification(std::string message, NotificationType n
 void NotificationBar::errorNotification(std::string message)
 {
     this->insertNotification(message, NotificationType::ntERROR);
+}
+
+void NotificationBar::successNotification(std::string message)
+{
+    this->insertNotification(message, NotificationType::ntSUCCESS);
 }
 
 void NotificationBar::clear()
