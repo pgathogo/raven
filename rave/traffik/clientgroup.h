@@ -15,8 +15,6 @@ class ClientGroup : public BaseEntity
 public:
     ClientGroup();
     ~ClientGroup() override;
-    BaseEntity* copy() const override;
-    std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     StringField* name() const;
     void setName(std::string aName);
@@ -24,11 +22,15 @@ public:
     TextField* description() const;
     void setDescription(std::string aDescription);
 
+    BaseEntity* copy() const override;
+    std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
+
     QList<QStandardItem*> tableViewColumns() override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 
     std::string tableName() const override;
+    void setTableName(std::string table_name) override;
     std::string searchColumn() const override;
 
     void populateEntity() override;
@@ -37,6 +39,7 @@ private:
     StringField* mName;
     TextField* mDescription;
     QStringList mHeader;
+    std::string mTableName;
 };
 
 #endif // CLIENTGROUP_H

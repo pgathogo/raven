@@ -4,6 +4,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "clientgroupdlg.h"
+#include "valuelistbrowser.h"
+
+#include "valuelist.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -72,6 +75,10 @@ void MainWindow::createActions()
     setupMenu->addAction(voAction);
     voAction->setStatusTip(tr("Create new voice over persons"));
 
+    QAction* genderAction = new QAction(tr("&Gender"), setupMenu);
+    setupMenu->addAction(genderAction);
+    genderAction->setStatusTip(tr("Maintain Gender value list"));
+    connect(genderAction, &QAction::triggered, this, &MainWindow::newGender);
 
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
@@ -83,6 +90,15 @@ void MainWindow::newClientGroup()
 {
     ClientGroupDlg* clientGroup = createSubWindow<ClientGroupDlg>();
     clientGroup->exec();
+}
+
+void MainWindow::newGender()
+{
+    Gender* gender = new Gender;
+    ValueListBrowser* valueList = createSubWindow<ValueListBrowser>(gender);
+    //valueList->setEntityDataModel(new Gender());
+    valueList->exec();
+    //valueList->setTableName("rave_gender");
 }
 
 void MainWindow::openClientBrowser()

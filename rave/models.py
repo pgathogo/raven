@@ -3,9 +3,41 @@
 # python manage.py makemigrations
 # python manage.py migrate
 #
-from datetime import datetime
 from django.db import models
+from django.utils import timezone
+
+def strip_seconds(dt):
+    return dt.replace(second=0, microsecond=0)
+
+def now():
+   return strip_seconds(timezone.now())
+
+class ValueList(models.Model):
+    code = models.CharField(max_length=6)
+    value = models.CharField(max_length=100)
+
+    class Meta:
+        abstract = True
 
 class ClientGroup(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
+    add_login = models.CharField(max_length=15)
+    add_dtime = models.DateTimeField(default=now())
+
+class Gender(ValueList):
+    pass
+
+class Person(models.Model):
+    name = models.CharField(max_length=200)
+    gender = models.ForeignKey(Gender)
+    mobile_no = models.CharField(max_length=15)
+    add_login = models.CharField(max_length=15)
+    add_dtime = models.DateTimeField(default=now())
+
+    class Meta:
+        abstract = True
+
+
+class SalesPerson(Person):
+    pass

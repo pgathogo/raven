@@ -5,6 +5,7 @@
 #include <QMdiArea>
 
 class BaseEntity;
+class ValueList;
 class EntityDataModel;
 class QTableView;
 
@@ -29,6 +30,9 @@ public:
     virtual void updateRecord()=0;
     virtual void deleteRecord();
     virtual void searchRecord();
+
+    void setEntityDataModel(BaseEntity* entity);
+    BaseEntity* baseEntity();
 
 protected:
     EntityDataModel* entityDataModel() const;

@@ -2,7 +2,6 @@
 #include <QTextEdit>
 
 #include "entityfields.h"
-#include "formfields.h"
 
 #include "../utils/tools.h"
 
@@ -175,6 +174,22 @@ StringField::StringField(std::string aName, std::string aLabel)
     ,mWidget{new QLineEdit}
 {
 }
+
+StringField::StringField(const StringField& sf)
+{
+    if (sf.mWidget)
+        mWidget = sf.mWidget;
+}
+
+StringField& StringField::operator=(const StringField& sf)
+{
+    if (this != &sf){
+        delete mWidget;
+        mWidget = sf.mWidget;
+    }
+    return *this;
+}
+
 
 StringField::~StringField()
 {

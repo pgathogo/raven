@@ -6,7 +6,6 @@
 #include "clientgroup.h"
 #include "ui_clientgroupdlg.h"
 #include "../framework/entitydatamodel.h"
-
 #include "../utils/tools.h"
 
 
@@ -38,7 +37,6 @@ void ClientGroupDlg::addRecord()
 void ClientGroupDlg::updateRecord()
 {
    std::string searchName = selectedRowName().toStdString();
-
 
    if (!searchName.empty()){
        BaseEntity* baseEntity = entityDataModel()->findEntityByName(searchName);

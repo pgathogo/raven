@@ -1,6 +1,4 @@
 #include <typeinfo>
-
-#include <typeinfo>
 #include <QDebug>
 #include <QList>
 #include <QStandardItem>
@@ -21,6 +19,7 @@ ClientGroup::ClientGroup()
     mHeader << QString::fromStdString(mName->fieldLabel())
             << QString::fromStdString(mDescription->fieldLabel());
 
+    setTableName("rave_clientgroup");
 }
 
 ClientGroup::~ClientGroup()
@@ -55,35 +54,6 @@ TextField* ClientGroup::description() const
     return mDescription;
 }
 
-
-/*
-BaseEntity* ClientGroup::mapFields(StringMap* e)
-{
-   std::map<std::string, std::string>::const_iterator it;
-   std::vector<FieldMap>::iterator iter;
-
-   ClientGroup* ct = new ClientGroup;
-
-   for(it=e->cbegin(); it != e->cend(); ++it){
-
-       for(iter=beginIter(); iter != endIter(); ++iter){
-
-           if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
-               (std::get<1>(*iter)->visible())){
-                auto ptr(std::get<1>(*iter).get());
-                ct->setValueByField(ptr, it->second);
-           }
-
-       }
-
-    }
-
-   return ct;
-}
-*/
-
-
-
 std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
 {
     FieldValues fvs = mapping(sm);
@@ -116,10 +86,15 @@ QStringList ClientGroup::tableHeaders() const
     return mHeader;
 }
 
+void ClientGroup::setTableName(std::string table_name)
+{
+    mTableName = table_name;
+}
 
 std::string ClientGroup::tableName() const
 {
-    return "rave_clientgroup";
+    //return "rave_clientgroup";
+    return mTableName;
 }
 
 std::string ClientGroup::searchColumn() const

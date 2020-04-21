@@ -10,6 +10,8 @@ class QMenu;
 class QAction;
 QT_END_NAMESPACE
 
+class BaseEntity;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -27,9 +29,19 @@ public:
         return win;
     }
 
+    template<typename T1, typename T2>
+    T1* createSubWindow(T2* entity)
+    {
+        T1* win = new T1(this, entity);
+        win->setMdiArea(mdiArea);
+        mdiArea->addSubWindow(win);
+        return win;
+    }
+
 private slots:
     void openClientBrowser();
     void newClientGroup();
+    void newGender();
 
 private:
     Ui::MainWindow *ui;

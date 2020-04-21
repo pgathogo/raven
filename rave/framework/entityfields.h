@@ -86,9 +86,14 @@ class IntegerField : public Field{
 class StringField : public Field{
     public:
         typedef std::string type;
+
         StringField();
         ~StringField() override;
         StringField(std::string aName, std::string aLabel);
+
+        StringField(const StringField& sf);
+        StringField& operator=(const StringField& sf);
+
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
 

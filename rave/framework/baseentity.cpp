@@ -108,3 +108,4 @@ FieldValues BaseEntity::mapping(StringMap* e)
 
        return flds;
 }
+

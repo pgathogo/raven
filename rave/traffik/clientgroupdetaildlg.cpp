@@ -28,9 +28,7 @@ ClientGroupDetailDlg::~ClientGroupDetailDlg()
 ActionResult ClientGroupDetailDlg::saveRecord()
 {
     clientGroup->populateEntity();
-
     ActionResult ar =  clientGroup->validate();
-
     return ar;
 }
 

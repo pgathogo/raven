@@ -30,7 +30,10 @@ SOURCES += \
     clientgroupdetaildlg.cpp \
     clientgroupdlg.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    valuelist.cpp \
+    valuelistbrowser.cpp \
+    valuelistdetaildlg.cpp
 
 HEADERS += \
     ../framework/baseentity.h \
@@ -48,7 +51,10 @@ HEADERS += \
     clientgroup.h \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \
-    mainwindow.h
+    mainwindow.h \
+    valuelist.h \
+    valuelistbrowser.h \
+    valuelistdetaildlg.h
 
 FORMS += \
     ../framework/baseentitybrowserdlg.ui \
@@ -56,7 +62,9 @@ FORMS += \
     ../utils/notificationitem.ui \
     clientgroupdetaildlg.ui \
     clientgroupdlg.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    valuelistbrowser.ui \
+    valuelistdetaildlg.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

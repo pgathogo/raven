@@ -22,6 +22,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
 BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
                                            BaseEntity* entity)
         :QDialog(parent)
+        ,mMdiArea{nullptr}
         ,bui(new Ui::BaseEntityBrowserDlg)
         ,mBaseEntity{entity}
         ,mEntityDataModel{new EntityDataModel(entity)}
@@ -32,6 +33,27 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     bui->tvEntity->setModel(mEntityDataModel);
     bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
+}
+
+
+void BaseEntityBrowserDlg::setEntityDataModel(BaseEntity* entity)
+{
+    if (mEntityDataModel){
+        delete mEntityDataModel;
+        delete mBaseEntity;
+    }
+    mEntityDataModel = new EntityDataModel(entity);
+    mBaseEntity = entity;
+
+    //bui->tvEntity->setModel(mEntityDataModel);
+    //bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //populateFilterCombo();
+
+}
+
+BaseEntity* BaseEntityBrowserDlg::baseEntity()
+{
+    return mBaseEntity;
 }
 
 BaseEntityBrowserDlg::~BaseEntityBrowserDlg()
@@ -162,3 +184,4 @@ void BaseEntityBrowserDlg::populateFilterCombo()
                                QVariant(stoq(ptr->dbColumnName())));
     }
 }
+
