@@ -8,7 +8,7 @@
 BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     QDialog(parent),
     bui(new Ui::BaseEntityDetailDlg),
-    mNoticeBar{nullptr},
+    mNoticeBar{},
     mOkClose{true}
 {
     bui->setupUi(this);
@@ -22,6 +22,8 @@ std::string BaseEntityDetailDlg::title(){
 
 BaseEntityDetailDlg::~BaseEntityDetailDlg()
 {
+    qDebug() << "BaseEntityDetailDlg::dtor" ;
+    delete mNoticeBar;
     delete bui;
 }
 
@@ -35,6 +37,7 @@ void BaseEntityDetailDlg::connectSlots()
 void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
 {
     qDebug() << "mOkClose: "<< mOkClose;
+    done(0);
     if(!mOkClose)
         event->ignore();
 }

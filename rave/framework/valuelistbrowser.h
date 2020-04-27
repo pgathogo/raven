@@ -2,7 +2,7 @@
 #define VALUELISTBROWSER_H
 
 #include <QDialog>
-#include "../framework/baseentitybrowserdlg.h"
+#include "baseentitybrowserdlg.h"
 
 class EntityDataModel;
 class ValueListDetailDlg;

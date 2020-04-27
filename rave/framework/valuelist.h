@@ -1,7 +1,7 @@
 #ifndef VALUELIST_H
 #define VALUELIST_H
 
-#include "../framework/baseentity.h"
+#include "baseentity.h"
 
 class StringField;
 

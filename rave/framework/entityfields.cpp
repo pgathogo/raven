@@ -125,6 +125,7 @@ IntegerField::IntegerField(std::string aName, std::string aLabel)
 
 IntegerField::~IntegerField()
 {
+    qDebug() << "IntgerField::dtor";
     delete mWidget;
 }
 
@@ -193,6 +194,7 @@ StringField& StringField::operator=(const StringField& sf)
 
 StringField::~StringField()
 {
+    qDebug() << "StringField::dtor";
     delete mWidget;
 }
 
@@ -242,14 +244,18 @@ void StringField::setValueFromWidget()
 /* ---- TextField ---- */
 TextField::TextField()
         :Field()
+        ,mWidget{ new QTextEdit }
 {
 }
 TextField::TextField(std::string aName, std::string aLabel)
         :Field(aName, aLabel)
+        ,mWidget{ new QTextEdit }
 {
 }
 TextField::~TextField()
 {
+    qDebug() << "TextField::dtor";
+    delete mWidget;
 }
 
 std::string TextField::valueToString() const

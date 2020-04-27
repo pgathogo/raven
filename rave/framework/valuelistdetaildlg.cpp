@@ -3,8 +3,8 @@
 #include "valuelistdetaildlg.h"
 #include "ui_valuelistdetaildlg.h"
 #include "ui_baseentitydetaildlg.h"
-#include "../framework/baseentitydetaildlg.h"
-#include "../framework/baseentity.h"
+#include "baseentitydetaildlg.h"
+#include "baseentity.h"
 #include "valuelist.h"
 
 ValueListDetailDlg::ValueListDetailDlg(

@@ -3,6 +3,7 @@
 #include "ui_clientgroupdetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
 #include "clientgroup.h"
+#include "../utils/daypartgrid.h"
 
 ClientGroupDetailDlg::ClientGroupDetailDlg(
                 ClientGroup* cg, QDialog *parent) :
@@ -13,6 +14,7 @@ ClientGroupDetailDlg::ClientGroupDetailDlg(
     ui->setupUi(bui->baseContainer);
     bindWidgets();
     setTitle(title());
+    //DayPartGrid* dpg = new DayPartGrid(ui->vlGrid);
 }
 
 std::string ClientGroupDetailDlg::title()
@@ -23,6 +25,7 @@ std::string ClientGroupDetailDlg::title()
 ClientGroupDetailDlg::~ClientGroupDetailDlg()
 {
     delete ui;
+    //delete clientGroup;
 }
 
 ActionResult ClientGroupDetailDlg::saveRecord()

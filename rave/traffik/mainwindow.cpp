@@ -4,15 +4,34 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "clientgroupdlg.h"
-#include "valuelistbrowser.h"
+#include "typeexclusionbrowser.h"
+#include "../framework/valuelistbrowser.h"
 
-#include "valuelist.h"
+#include "../framework/valuelist.h"
+#include "../utils/plainform.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , pf{}
     , ui(new Ui::MainWindow)
     , mdiArea{ new QMdiArea }
-
+    ,traffikMenu{}
+    ,reportMenu{}
+    ,qreportSubMenu{}
+    ,clientRptSubMenu{}
+    ,setupMenu{}
+    ,helpMenu{}
+    ,clientAction{}
+    ,spotAction{}
+    ,orderAction{}
+    ,timebandAction{}
+    ,breakAction{}
+    ,commlogAction{}
+    ,viewbreakAction{}
+    ,exitAction{}
+    ,qreportAction{}
+    ,clientRptAction{}
+    ,plainFormAction{}
 {
     ui->setupUi(this);
 
@@ -80,6 +99,17 @@ void MainWindow::createActions()
     genderAction->setStatusTip(tr("Maintain Gender value list"));
     connect(genderAction, &QAction::triggered, this, &MainWindow::newGender);
 
+    QAction* typeExAction = new QAction(tr("&Exlclusions"), setupMenu);
+    setupMenu->addAction(typeExAction);
+    typeExAction->setStatusTip(tr("Maintain Type Exclusions"));
+    connect(typeExAction, &QAction::triggered, this, &MainWindow::newTypeExclusion);
+
+    plainFormAction = new QAction(tr("&Test"), setupMenu);
+    plainFormAction = new QAction(tr("&Test"), setupMenu);
+    setupMenu->addAction(plainFormAction);
+    plainFormAction->setStatusTip(tr("Maintain Gender value list"));
+    connect(plainFormAction, &QAction::triggered, this, &MainWindow::plainForm);
+
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->addAction(clientAction);
@@ -101,27 +131,48 @@ void MainWindow::newGender()
     //valueList->setTableName("rave_gender");
 }
 
+void MainWindow::newTypeExclusion()
+{
+    TypeExclusionBrowser* typeEx = createSubWindow<TypeExclusionBrowser>();
+    typeEx->exec();
+}
+
+void MainWindow::plainForm()
+{
+    pf = new PlainForm();
+    pf->exec();
+}
 void MainWindow::openClientBrowser()
 {
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
     delete mdiArea;
+    delete pf;
+    delete ui;
 
-    /* know the order of deletion
     delete traffikMenu;
     delete reportMenu;
+    delete qreportSubMenu;
+    delete clientRptSubMenu;
     delete setupMenu;
     delete helpMenu;
 
+    /*
     delete clientAction;
     delete spotAction;
+    delete orderAction;
+    delete timebandAction;
+    delete breakAction;
+    delete commlogAction;
+    delete viewbreakAction;
+    delete exitAction;
     delete qreportAction;
-    delete qreportSubMenu;
     delete clientRptAction;
-    delete clientRptSubMenu;
-    */
+    delete plainFormAction;
+*/
+
+
 }
 

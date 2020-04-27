@@ -7,8 +7,8 @@
 
 ClientGroup::ClientGroup()
     :BaseEntity(),
-     mName{nullptr},
-     mDescription{nullptr}
+     mName{},
+     mDescription{}
 {
     mName = createField<StringField>("group_name","Group Name");
     mName->setDBColumnName("name");
@@ -22,9 +22,37 @@ ClientGroup::ClientGroup()
     setTableName("rave_clientgroup");
 }
 
+ClientGroup::ClientGroup(const ClientGroup& other)
+{
+    qDebug() << "ClientGroup::copy ctor";
+
+    if (other.mName)
+        mName = other.mName;
+    if (other.mDescription)
+        mDescription = other.mDescription;
+}
+
+ClientGroup& ClientGroup::operator=(const ClientGroup& other)
+{
+    qDebug() << "ClientGroup::assignment operator";
+
+    if (this != &other){
+        delete mName;
+        delete mDescription;
+
+        mName = other.mName;
+        mDescription = other.mDescription;
+    }
+    return *this;
+}
+
+
+
 ClientGroup::~ClientGroup()
 {
     qDebug() << "ClientGroup::dtor";
+    //delete mName;
+    //delete mDescription;
 }
 
 BaseEntity* ClientGroup::copy() const
@@ -56,11 +84,16 @@ TextField* ClientGroup::description() const
 
 std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
 {
+    auto cg = entityFieldMap<ClientGroup>(sm);
+    return std::move(cg);
+
+    /*
     FieldValues fvs = mapping(sm);
     std::unique_ptr<ClientGroup> cg = std::make_unique<ClientGroup>();
     for (auto& fv : fvs)
         cg->setValueByField(std::get<0>(fv), std::get<1>(fv));
     return std::move(cg);
+    */
 }
 
 

@@ -16,6 +16,9 @@ public:
     ClientGroup();
     ~ClientGroup() override;
 
+    ClientGroup(const ClientGroup& other);
+    ClientGroup& operator=(const ClientGroup& other);
+
     StringField* name() const;
     void setName(std::string aName);
 

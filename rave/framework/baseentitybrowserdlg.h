@@ -3,10 +3,10 @@
 
 #include <QDialog>
 #include <QMdiArea>
+#include "entitydatamodel.h"
 
 class BaseEntity;
 class ValueList;
-class EntityDataModel;
 class QTableView;
 
 namespace Ui {
@@ -34,6 +34,47 @@ public:
     void setEntityDataModel(BaseEntity* entity);
     BaseEntity* baseEntity();
 
+    template <typename T1, typename T2>
+    void update()
+    {
+        std::string searchName = selectedRowName().toStdString();
+        if (!searchName.empty()){
+        BaseEntity* be = mEntityDataModel->findEntityByName(searchName);
+        if (be != nullptr){
+          T1* entity = dynamic_cast<T1*>(be);
+          T2* dlg = new T2(entity);
+          if(dlg->exec() > 0){
+              updateTableViewRecord(entity);
+              mEntityDataModel->updateEntity(entity);
+          }
+        }
+
+      }
+    }
+
+    template <typename T1, typename T2>
+    void addEntity()
+    {
+        std::unique_ptr<T1> uT1 = std::make_unique<T1>();
+        auto ptr(uT1.get());
+        T2* dlg = new T2(ptr);
+        if (dlg->exec() > 0)
+            entityDataModel()->createEntity(std::move(uT1));
+    }
+
+    template <typename T1, typename T2>
+    void addEntity(T1* e)
+    {
+        std::unique_ptr<T1> uT1 = std::make_unique<T1>();
+        auto ptr(uT1.get());
+        ptr = e;
+        T2* dlg = new T2(ptr);
+        if (dlg->exec() > 0){
+            std::unique_ptr<T1> uT3(ptr);
+            entityDataModel()->createEntity(std::move(uT3));
+        }
+    }
+
 protected:
     EntityDataModel* entityDataModel() const;
     QMdiArea* mMdiArea;
@@ -47,6 +88,8 @@ public slots:
     void editBtnClicked();
     void deleteBtnClicked();
     void searchBtnClicked();
+
+
 
 private:
     Ui::BaseEntityBrowserDlg* bui;

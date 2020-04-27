@@ -4,8 +4,8 @@
 #include "valuelist.h"
 #include "valuelistdetaildlg.h"
 
-#include "../framework/entitydatamodel.h"
-#include "../framework/baseentity.h"
+#include "entitydatamodel.h"
+#include "baseentity.h"
 #include "../utils/tools.h"
 
 ValueListBrowser::ValueListBrowser(QWidget* parent,
@@ -25,6 +25,9 @@ ValueListBrowser::~ValueListBrowser()
 
 void ValueListBrowser::addRecord()
 {
+    addEntity<ValueList, ValueListDetailDlg>(mEntity);
+
+    /*
     std::unique_ptr<ValueList> uvl = std::make_unique<ValueList>();
     auto ptr(uvl.get());
     ptr = mEntity;
@@ -33,10 +36,12 @@ void ValueListBrowser::addRecord()
         std::unique_ptr<BaseEntity> be(ptr);
         entityDataModel()->createEntity(std::move(be));
     }
+    */
 }
 
 void ValueListBrowser::updateRecord()
 {
+   update<ValueList, ValueListDetailDlg>();
 }
 
 

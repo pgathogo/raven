@@ -11,6 +11,7 @@ class QAction;
 QT_END_NAMESPACE
 
 class BaseEntity;
+class PlainForm;
 
 class MainWindow : public QMainWindow
 {
@@ -42,8 +43,11 @@ private slots:
     void openClientBrowser();
     void newClientGroup();
     void newGender();
+    void plainForm();
+    void newTypeExclusion();
 
 private:
+    PlainForm* pf;
     Ui::MainWindow *ui;
     QMdiArea* mdiArea;
 
@@ -53,7 +57,6 @@ private:
     QMenu* clientRptSubMenu;
     QMenu* setupMenu;
     QMenu* helpMenu;
-
     QAction* clientAction;
     QAction* spotAction;
     QAction* orderAction;
@@ -62,9 +65,9 @@ private:
     QAction* commlogAction;
     QAction* viewbreakAction;
     QAction* exitAction;
-
     QAction* qreportAction;
     QAction* clientRptAction;
+    QAction* plainFormAction;
 
     void createActions();
 

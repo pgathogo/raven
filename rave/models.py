@@ -38,6 +38,20 @@ class Person(models.Model):
     class Meta:
         abstract = True
 
-
 class SalesPerson(Person):
     pass
+
+class Daypart(models.Model):
+    daypart1 = models.CharField(max_length=96)
+    daypart2 = models.CharField(max_length=96)
+    daypart3 = models.CharField(max_length=96)
+    daypart4 = models.CharField(max_length=96)
+    daypart5 = models.CharField(max_length=96)
+    daypart6 = models.CharField(max_length=96)
+    daypart7 = models.CharField(max_length=96)
+    class Meta:
+        abstract = True
+
+class TypeExclusion(Daypart):
+    name = models.CharField(max_length=255)
+    description = models.TextField()

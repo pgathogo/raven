@@ -71,6 +71,16 @@ public:
         return ptr;
     }
 
+    template<typename T>
+    std::unique_ptr<T> entityFieldMap(StringMap* map)
+    {
+        FieldValues fval = mapping(map);
+        std::unique_ptr<T> uT = std::make_unique<T>();
+        for(auto& v : fval)
+            uT->setValueByField(std::get<0>(v), std::get<1>(v));
+        return std::move(uT);
+    }
+
 private:
     IntegerField* mID;
     std::vector<FieldMap> mFields;

@@ -12,7 +12,7 @@
 ClientGroupDlg::ClientGroupDlg(QWidget *parent) :
     BaseEntityBrowserDlg(parent, new ClientGroup()),
     ui(new Ui::ClientGroupDlg),
-    clientGroupDetailDlg{nullptr}
+    clientGroupDetailDlg{}
 {
     ui->setupUi(this);
     setDialogTitle("Client Groups");
@@ -21,8 +21,8 @@ ClientGroupDlg::ClientGroupDlg(QWidget *parent) :
 ClientGroupDlg::~ClientGroupDlg()
 {
     delete ui;
-    if (clientGroupDetailDlg != nullptr)
-        delete clientGroupDetailDlg;
+    //if (clientGroupDetailDlg != nullptr)
+    delete clientGroupDetailDlg;
 }
 
 void ClientGroupDlg::addRecord()
@@ -36,25 +36,9 @@ void ClientGroupDlg::addRecord()
 
 void ClientGroupDlg::updateRecord()
 {
-   std::string searchName = selectedRowName().toStdString();
 
-   if (!searchName.empty()){
-       BaseEntity* baseEntity = entityDataModel()->findEntityByName(searchName);
+   update<ClientGroup, ClientGroupDetailDlg>();
 
-       if (baseEntity != nullptr){
-
-           ClientGroup* cg = dynamic_cast<ClientGroup*>(baseEntity);
-
-            printstr(cg->name()->valueToString());
-
-            clientGroupDetailDlg = new ClientGroupDetailDlg(cg);
-
-            if (clientGroupDetailDlg->exec() > 0){
-                updateTableViewRecord(cg);
-                entityDataModel()->updateEntity(cg);
-             }
-       }
-   }
 }
 
 

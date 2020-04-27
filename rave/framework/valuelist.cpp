@@ -12,8 +12,8 @@ ValueList::ValueList()
     mListValue = createField<StringField>("value", "Value");
     mListValue->setMandatory(true);
 
-    mHeader << QString::fromStdString(mCode->fieldLabel())
-               << QString::fromStdString(mListValue->fieldLabel());
+    mHeader << QString::fromStdString(mListValue->fieldLabel())
+            << QString::fromStdString(mCode->fieldLabel());
 }
 
 ValueList::ValueList(const ValueList& vl)
@@ -86,14 +86,14 @@ QList<QStandardItem*> ValueList::tableViewColumns()
     QStandardItem* qCode = new QStandardItem(tvCode);
     QStandardItem* qValue = new QStandardItem(tvValue);
 
-    return {qCode, qValue};
+    return {qValue, qCode};
 }
 
 std::vector<std::string> ValueList::tableViewValues()
 {
-    std::string vCode = code()->valueToString();
     std::string vValue = listValue()->valueToString();
-    return {vCode, vValue};
+    std::string vCode = code()->valueToString();
+    return {vValue, vCode};
 }
 
 QStringList ValueList::tableHeaders() const

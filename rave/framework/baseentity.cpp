@@ -1,7 +1,8 @@
+#include <QDebug>
 #include "baseentity.h"
 
 BaseEntity::BaseEntity()
-        :mID{nullptr}
+        :mID{}
 {
     mID = createField<IntegerField>("id", "Unique identifier");
     mID->setSearchable(false);
@@ -9,6 +10,7 @@ BaseEntity::BaseEntity()
 
 BaseEntity::~BaseEntity()
 {
+    qDebug() << "BaseEntity::dtor";
     //delete mID;
     //mFields.clear();
 }
@@ -46,6 +48,8 @@ std::vector<FieldMap>::iterator BaseEntity::endIter()
 
 std::vector<std::string> BaseEntity::dbColumnNames()
 {
+    // All fields are dbcolumns, unless they are marked
+    // formOnly.
     std::vector<std::string> cols;
     std::vector<FieldMap>::const_iterator citer;
     for (citer=cBeginIter(); citer != cEndIter(); ++citer){

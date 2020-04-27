@@ -24,16 +24,21 @@ SOURCES += \
     ../framework/dataprovider.cpp \
     ../framework/entitydatamodel.cpp \
     ../framework/entityfields.cpp \
+    ../framework/valuelist.cpp \
+    ../framework/valuelistbrowser.cpp \
+    ../framework/valuelistdetaildlg.cpp \
+    ../utils/daypartgrid.cpp \
     ../utils/notificationbar.cpp \
     ../utils/notificationitem.cpp \
+    ../utils/plainform.cpp \
     clientgroup.cpp \
     clientgroupdetaildlg.cpp \
     clientgroupdlg.cpp \
     main.cpp \
     mainwindow.cpp \
-    valuelist.cpp \
-    valuelistbrowser.cpp \
-    valuelistdetaildlg.cpp
+    typeexclusion.cpp \
+    typeexclusionbrowser.cpp \
+    typeexclusiondetails.cpp \
 
 HEADERS += \
     ../framework/baseentity.h \
@@ -44,27 +49,36 @@ HEADERS += \
     ../framework/entitydatamodel.h \
     ../framework/entityfields.h \
     ../framework/queryset.h \
+    ../framework/valuelist.h \
+    ../framework/valuelistbrowser.h \
+    ../framework/valuelistdetaildlg.h \
+    ../utils/daypartgrid.h \
     ../utils/notificationbar.h \
     ../utils/notificationitem.h \
+    ../utils/plainform.h \
     ../utils/tools.h \
     ../utils/types.h \
     clientgroup.h \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \
     mainwindow.h \
-    valuelist.h \
-    valuelistbrowser.h \
-    valuelistdetaildlg.h
+    typeexclusion.h \
+    typeexclusionbrowser.h \
+    typeexclusiondetails.h \
 
 FORMS += \
     ../framework/baseentitybrowserdlg.ui \
     ../framework/baseentitydetaildlg.ui \
+    ../framework/valuelistbrowser.ui \
+    ../framework/valuelistdetaildlg.ui \
+    ../utils/daypartgrid.ui \
     ../utils/notificationitem.ui \
+    ../utils/plainform.ui \
     clientgroupdetaildlg.ui \
     clientgroupdlg.ui \
     mainwindow.ui \
-    valuelistbrowser.ui \
-    valuelistdetaildlg.ui
+    typeexclusionbrowser.ui \
+    typeexclusiondetails.ui \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
