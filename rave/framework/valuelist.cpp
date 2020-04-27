@@ -69,12 +69,17 @@ BaseEntity* ValueList::copy() const
 
 std::unique_ptr<BaseEntity> ValueList::mapFields(StringMap* sm)
 {
+    auto te = entityFieldMap<ValueList>(sm);
+    return std::move(te);
+
+    /*
     FieldValues fvs = mapping(sm);
     std::unique_ptr<ValueList> vl = std::make_unique<ValueList>();
     for (auto& fv : fvs)
         vl->setValueByField(std::get<0>(fv), std::get<1>(fv));
         vl->setTableName(this->tableName());
     return std::move(vl);
+    */
 }
 
 

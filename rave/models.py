@@ -19,14 +19,24 @@ class ValueList(models.Model):
     class Meta:
         abstract = True
 
+class Gender(ValueList):
+    pass
+
+class ManyToMany(models.Model):
+    parent_id = models.IntegerField()
+    detail_id = models.IntegerField()
+
+    class Meta:
+        abstract = True
+
+class VoiceExclusion(ManyToMany):
+    pass
+
 class ClientGroup(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     add_login = models.CharField(max_length=15)
     add_dtime = models.DateTimeField(default=now())
-
-class Gender(ValueList):
-    pass
 
 class Person(models.Model):
     name = models.CharField(max_length=200)

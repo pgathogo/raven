@@ -82,6 +82,10 @@ protected:
     QString selectedRowName();
     void updateTableViewRecord(BaseEntity* entity);
     void removeSelectedRow();
+    void hideAddButton();
+    void hideEditButton();
+    void hideDeleteButton();
+    Ui::BaseEntityBrowserDlg* bui;
 
 public slots:
     void addBtnClicked();
@@ -92,7 +96,6 @@ public slots:
 
 
 private:
-    Ui::BaseEntityBrowserDlg* bui;
     BaseEntity* mBaseEntity;
     EntityDataModel* mEntityDataModel;
     void populateFilterCombo();

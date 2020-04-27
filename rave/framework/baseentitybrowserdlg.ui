@@ -93,6 +93,9 @@
      </item>
     </layout>
    </item>
+   <item>
+    <layout class="QHBoxLayout" name="hlExtend"/>
+   </item>
   </layout>
  </widget>
  <resources/>

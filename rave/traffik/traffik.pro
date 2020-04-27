@@ -24,6 +24,10 @@ SOURCES += \
     ../framework/dataprovider.cpp \
     ../framework/entitydatamodel.cpp \
     ../framework/entityfields.cpp \
+    ../framework/manytomany.cpp \
+    ../framework/manytomanybrowser.cpp \
+    ../framework/picklistbrowser.cpp \
+    ../framework/selectclosewidget.cpp \
     ../framework/valuelist.cpp \
     ../framework/valuelistbrowser.cpp \
     ../framework/valuelistdetaildlg.cpp \
@@ -48,7 +52,11 @@ HEADERS += \
     ../framework/dataprovider.h \
     ../framework/entitydatamodel.h \
     ../framework/entityfields.h \
+    ../framework/manytomany.h \
+    ../framework/manytomanybrowser.h \
+    ../framework/picklistbrowser.h \
     ../framework/queryset.h \
+    ../framework/selectclosewidget.h \
     ../framework/valuelist.h \
     ../framework/valuelistbrowser.h \
     ../framework/valuelistdetaildlg.h \
@@ -69,6 +77,9 @@ HEADERS += \
 FORMS += \
     ../framework/baseentitybrowserdlg.ui \
     ../framework/baseentitydetaildlg.ui \
+    ../framework/manytomanybrowser.ui \
+    ../framework/picklistbrowser.ui \
+    ../framework/selectclosewidget.ui \
     ../framework/valuelistbrowser.ui \
     ../framework/valuelistdetaildlg.ui \
     ../utils/daypartgrid.ui \

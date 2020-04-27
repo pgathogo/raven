@@ -185,3 +185,15 @@ void BaseEntityBrowserDlg::populateFilterCombo()
     }
 }
 
+void BaseEntityBrowserDlg::hideAddButton()
+{
+    bui->btnAdd->setVisible(false);
+}
+void BaseEntityBrowserDlg::hideEditButton()
+{
+    bui->btnEdit->setVisible(false);
+}
+void BaseEntityBrowserDlg::hideDeleteButton()
+{
+    bui->btnDelete->setVisible(false);
+}

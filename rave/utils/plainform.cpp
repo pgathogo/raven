@@ -4,19 +4,24 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "ui_plainform.h"
 #include "../utils/daypartgrid.h"
+#include "../framework/manytomanybrowser.h"
 
 PlainForm::PlainForm(QDialog *parent) :
-    ui(new Ui::PlainForm)
+    ui(new Ui::PlainForm),
+    dpg{},
+    mtom{}
 {
     ui->setupUi(this);
     connect(ui->btnShow, &QPushButton::clicked,this, &PlainForm::onShow);
-    dpg = new DayPartGrid(ui->vlGrid);
-    fillGrid();
+    //dpg = new DayPartGrid(ui->vlGrid);
+    //fillGrid();
+    mtom = new ManyToManyBrowser(ui->vlGrid);
 }
 
 PlainForm::~PlainForm()
 {
     delete dpg;
+    delete mtom;
     delete ui;
 }
 

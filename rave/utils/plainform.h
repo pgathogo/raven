@@ -5,6 +5,7 @@
 #include "../framework/baseentitydetaildlg.h"
 
 class DayPartGrid;
+class ManyToManyBrowser;
 
 namespace Ui {
 class PlainForm;
@@ -25,6 +26,7 @@ public slots:
 private:
     Ui::PlainForm *ui;
     DayPartGrid* dpg;
+    ManyToManyBrowser* mtom;
 };
 
 #endif // PLAINFORM_H
