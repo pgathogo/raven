@@ -12,3 +12,8 @@ SelectCloseWidget::~SelectCloseWidget()
 {
     delete ui;
 }
+
+QPushButton* SelectCloseWidget::selectBtn()
+{
+    return ui->btnSelect;
+}

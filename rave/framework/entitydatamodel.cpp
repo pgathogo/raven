@@ -11,11 +11,9 @@ EntityModel::EntityModel()
 
 EntityModel::~EntityModel()
 {
-    qDebug() << "EntityModel::dtor";
-    qDebug() << "model.rowCount: BEFORE" << rowCount();
+    delete mEntity;
     mEntities.clear();
     clear();
-    qDebug() << "model.rowCount: AFTER" << rowCount();
 }
 
 EntityModel::EntityModel(BaseEntity* entity)
@@ -43,6 +41,17 @@ void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
     std::string key = entity->searchColumn();
     // we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
+    mEntities.push_back(std::move(record));
+}
+
+void EntityModel::addEntity(BaseEntity* entity)
+{
+    //BaseEntity* be = entity.get();
+    addRow(entity);
+    std::string key = entity->searchColumn();
+    // we need a way to check that key is not empty!!
+    std::unique_ptr<BaseEntity> uPtr(entity);
+    EntityRecord record = make_tuple(key, std::move(uPtr));
     mEntities.push_back(std::move(record));
 }
 
@@ -119,13 +128,26 @@ void EntityDataModel::populateEntities()
     }while(!dbManager->provider()->cache()->isLast());
 }
 
+/*
 void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
     auto ptr(entity.get());
     int id = dbManager->createEntity(ptr);
     entity->setId(id);
     // Create many to many entites
-    addEntity(std::move(entity));
+    //addEntity(std::move(entity));
+}
+*/
+
+
+void EntityDataModel::createEntity(BaseEntity* entity)
+{
+    //auto ptr(entity.get());
+    int id = dbManager->createEntity(entity);
+    entity->setId(id);
+    //std::unique_ptr<BaseEntity> uPtr = std::make_unique<BaseEntity>();
+    // Create many to many entites
+    addEntity(entity);
 }
 
 void EntityDataModel::updateEntity(BaseEntity* entity)
@@ -146,6 +168,11 @@ void EntityDataModel::all()
     if (dbManager->fetchAll(mEntity) > 0)
         populateEntities();
 
+}
+
+void EntityDataModel::cacheEntity(BaseEntity* entity)
+{
+    addEntity(entity);
 }
 
 void EntityDataModel::searchByField(std::tuple<std::string, std::string> searchItem)

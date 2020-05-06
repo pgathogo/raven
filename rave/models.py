@@ -13,7 +13,7 @@ def now():
    return strip_seconds(timezone.now())
 
 class ValueList(models.Model):
-    code = models.CharField(max_length=6)
+    code = models.CharField(max_length=6, null=True, blank=True)
     value = models.CharField(max_length=100)
 
     class Meta:
@@ -34,16 +34,16 @@ class VoiceExclusion(ManyToMany):
 
 class ClientGroup(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
-    add_login = models.CharField(max_length=15)
-    add_dtime = models.DateTimeField(default=now())
+    description = models.TextField(null=True, blank=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
 
 class Person(models.Model):
     name = models.CharField(max_length=200)
-    gender = models.ForeignKey(Gender)
-    mobile_no = models.CharField(max_length=15)
-    add_login = models.CharField(max_length=15)
-    add_dtime = models.DateTimeField(default=now())
+    gender = models.ForeignKey(Gender, null=True, blank=True)
+    mobile_no = models.CharField(max_length=15, null=True, blank=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -52,16 +52,19 @@ class SalesPerson(Person):
     pass
 
 class Daypart(models.Model):
-    daypart1 = models.CharField(max_length=96)
-    daypart2 = models.CharField(max_length=96)
-    daypart3 = models.CharField(max_length=96)
-    daypart4 = models.CharField(max_length=96)
-    daypart5 = models.CharField(max_length=96)
-    daypart6 = models.CharField(max_length=96)
-    daypart7 = models.CharField(max_length=96)
+    daypart1 = models.CharField(max_length=96, null=True, blank=True)
+    daypart2 = models.CharField(max_length=96, null=True, blank=True)
+    daypart3 = models.CharField(max_length=96, null=True, blank=True)
+    daypart4 = models.CharField(max_length=96, null=True, blank=True)
+    daypart5 = models.CharField(max_length=96, null=True, blank=True)
+    daypart6 = models.CharField(max_length=96, null=True, blank=True)
+    daypart7 = models.CharField(max_length=96, null=True, blank=True)
     class Meta:
         abstract = True
 
 class TypeExclusion(Daypart):
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
+
+class VoiceOver(Person, Daypart):
+    pass

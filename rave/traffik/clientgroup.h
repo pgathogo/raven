@@ -33,7 +33,7 @@ public:
     QStringList tableHeaders() const override;
 
     std::string tableName() const override;
-    void setTableName(std::string table_name) override;
+    void setTableName(const std::string table_name) override;
     std::string searchColumn() const override;
 
     void populateEntity() override;

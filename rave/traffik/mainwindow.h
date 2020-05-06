@@ -30,10 +30,10 @@ public:
         return win;
     }
 
-    template<typename T1, typename T2>
-    T1* createSubWindow(T2* entity)
+    template<typename T1>
+    T1* createSubWindow(std::string vltype)
     {
-        T1* win = new T1(this, entity);
+        T1* win = new T1(vltype, this);
         win->setMdiArea(mdiArea);
         mdiArea->addSubWindow(win);
         return win;
@@ -45,6 +45,7 @@ private slots:
     void newGender();
     void plainForm();
     void newTypeExclusion();
+    void newVoiceOver();
 
 private:
     PlainForm* pf;

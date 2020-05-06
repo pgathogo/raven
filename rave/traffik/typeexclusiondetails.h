@@ -17,7 +17,7 @@ class TypeExclusionDetails : public BaseEntityDetailDlg
 
 public:
     explicit TypeExclusionDetails(TypeExclusion* tex, QDialog *parent = nullptr);
-    ~TypeExclusionDetails();
+    ~TypeExclusionDetails() override;
 
     ActionResult saveRecord() override;
     void bindWidgets() override;

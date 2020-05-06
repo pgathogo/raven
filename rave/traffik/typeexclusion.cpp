@@ -47,6 +47,7 @@ TypeExclusion::TypeExclusion()
 
 TypeExclusion::TypeExclusion(const TypeExclusion& other)
 {
+    /*
     if (other.mName)
         mName = other.mName;
     if (other.mDescription)
@@ -65,10 +66,12 @@ TypeExclusion::TypeExclusion(const TypeExclusion& other)
         mDaypart6 = other.mDaypart6;
     if (other.mDaypart7)
         mDaypart7 = other.mDaypart7;
+        */
 }
 
 TypeExclusion& TypeExclusion::operator=(const TypeExclusion& other)
 {
+    /*
     if (this != &other){
         delete mName;
         delete mDescription;
@@ -90,6 +93,7 @@ TypeExclusion& TypeExclusion::operator=(const TypeExclusion& other)
         mDaypart6 = other.mDaypart6;
         mDaypart7 = other.mDaypart7;
     }
+    */
     return *this;
 }
 
@@ -197,17 +201,8 @@ BaseEntity* TypeExclusion::copy() const
 }
 std::unique_ptr<BaseEntity> TypeExclusion::mapFields(StringMap* e)
 {
-
     auto te = entityFieldMap<TypeExclusion>(e);
     return std::move(te);
-
-    /*
-    FieldValues fvs = mapping(e);
-    std::unique_ptr<TypeExclusion> te = std::make_unique<TypeExclusion>();
-    for (auto& fv : fvs)
-        te->setValueByField(std::get<0>(fv), std::get<1>(fv));
-    return std::move(te);
-    */
 }
 
 QList<QStandardItem*> TypeExclusion::tableViewColumns()
@@ -238,6 +233,7 @@ void TypeExclusion::setTableName(std::string table_name)
 {
     mTableName = table_name;
 }
+
 std::string TypeExclusion::searchColumn() const
 {
     return name()->valueToString();

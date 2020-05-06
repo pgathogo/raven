@@ -13,6 +13,7 @@ class StringFormField;
 
 class QLineEdit;
 class QTextEdit;
+class QComboBox;
 
 class Field{
     public:
@@ -131,6 +132,34 @@ class TextField :public Field{
     private:
         std::string mValue;
         QTextEdit* mWidget;
+};
+
+class LookupField : public Field{
+public:
+        LookupField();
+        ~LookupField() override;
+        LookupField(std::string aName, std::string aLabel);
+        std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+
+        void setValue(int val);
+        void stringToValue(std::string val) override;
+        QVariant value() override;
+
+        void setIndex(int i);
+        int index() const;
+
+        void setCurrText(std::string txt);
+        std::string currText() const;
+
+        QComboBox* widget();
+        void setWidget(QComboBox* textEdit);
+        void setValueFromWidget();
+    private:
+        int mValue;
+        int mIndex;
+        std::string mCurrText;
+        QComboBox* mWidget;
 };
 
 

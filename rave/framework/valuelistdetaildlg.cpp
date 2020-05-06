@@ -19,22 +19,15 @@ ValueListDetailDlg::ValueListDetailDlg(
 
 }
 
-void ValueListDetailDlg::setEntity(BaseEntity* entity)
-{
-    //BaseEntity* valueList = dynamic_cast<BaseEntity*>(entity);
-
-    qDebug() << "TableName: " << QString::fromStdString(mEntity->tableName());
-}
-
 ValueListDetailDlg::~ValueListDetailDlg()
 {
+    qDebug() << "ValueListDetailDlg::dtor";
     delete ui;
 }
 
 std::string ValueListDetailDlg::title()
 {
-    //return mEntity->title();
-    return "title";
+    return mEntity->windowTitle();
 }
 
 void ValueListDetailDlg::bindWidgets()

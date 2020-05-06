@@ -1,6 +1,7 @@
 #ifndef VALUELIST_H
 #define VALUELIST_H
 
+#include <QDebug>
 #include "baseentity.h"
 
 class StringField;
@@ -11,8 +12,8 @@ public:
     ValueList();
     ~ValueList() override;
 
-    ValueList(const ValueList& vl);
-    ValueList& operator=(const ValueList& vl);
+    ValueList(const ValueList& rhs);
+    ValueList& operator=(const ValueList& rhs);
 
     StringField* code() const;
     void setCode(std::string pCode);
@@ -48,8 +49,11 @@ private:
 
 class Gender : public ValueList{
     public:
+        Gender():ValueList(){}
+        Gender(const Gender& rhs){qDebug() << "Gender::copy ctor"; }
         std::string windowTitle() const override;
         std::string tableName() const override;
+
     protected:
         std::string valueListTableName() const override;
 

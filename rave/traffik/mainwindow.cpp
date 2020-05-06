@@ -9,6 +9,9 @@
 
 #include "../framework/valuelist.h"
 #include "../utils/plainform.h"
+#include "clientgroup.h"
+
+#include "voiceoverbrowser.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -104,6 +107,11 @@ void MainWindow::createActions()
     typeExAction->setStatusTip(tr("Maintain Type Exclusions"));
     connect(typeExAction, &QAction::triggered, this, &MainWindow::newTypeExclusion);
 
+    QAction* voiceOverAction = new QAction(tr("&Voice Overs"), setupMenu);
+    setupMenu->addAction(voiceOverAction);
+    voiceOverAction->setStatusTip(tr("Maintain details of voice overs"));
+    connect(voiceOverAction, &QAction::triggered, this, &MainWindow::newVoiceOver);
+
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     setupMenu->addAction(plainFormAction);
@@ -124,8 +132,8 @@ void MainWindow::newClientGroup()
 
 void MainWindow::newGender()
 {
-    Gender* gender = new Gender;
-    ValueListBrowser* valueList = createSubWindow<ValueListBrowser>(gender);
+    //Gender* gender = new Gender;
+    ValueListBrowser* valueList = createSubWindow<ValueListBrowser>("gender");
     //valueList->setEntityDataModel(new Gender());
     valueList->exec();
     //valueList->setTableName("rave_gender");
@@ -136,6 +144,13 @@ void MainWindow::newTypeExclusion()
     TypeExclusionBrowser* typeEx = createSubWindow<TypeExclusionBrowser>();
     typeEx->exec();
 }
+
+void MainWindow::newVoiceOver()
+{
+    VoiceOverBrowser* vob = createSubWindow<VoiceOverBrowser>();
+    vob->exec();
+}
+
 
 void MainWindow::plainForm()
 {

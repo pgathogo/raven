@@ -45,7 +45,7 @@ public:
     virtual QStringList tableHeaders() const = 0;
 
     virtual std::string tableName() const = 0;
-    virtual void setTableName(std::string table_name)=0;
+    virtual void setTableName(const std::string table_name)=0;
 
     std::vector<std::string> dbColumnNames();
 

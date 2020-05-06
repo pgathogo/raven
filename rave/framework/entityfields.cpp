@@ -1,5 +1,7 @@
+#include <QDebug>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QComboBox>
 
 #include "entityfields.h"
 
@@ -166,27 +168,32 @@ QLineEdit* IntegerField::widget()
 
 StringField::StringField()
         :Field()
-        ,mWidget{new QLineEdit}
+        ,mWidget{new QLineEdit()}
 {
+    qDebug() << "StringField::ctor";
 }
 
 StringField::StringField(std::string aName, std::string aLabel)
     :Field(aName, aLabel)
-    ,mWidget{new QLineEdit}
+    ,mWidget{new QLineEdit()}
 {
 }
 
 StringField::StringField(const StringField& sf)
 {
     if (sf.mWidget)
-        mWidget = sf.mWidget;
+        mWidget->setText(sf.mWidget->text());
+    mValue = sf.mValue;
 }
 
 StringField& StringField::operator=(const StringField& sf)
 {
+    qDebug() << "StringField::operator=";
     if (this != &sf){
-        delete mWidget;
-        mWidget = sf.mWidget;
+        //delete mWidget;
+        //mWidget = new QLineEdit();
+        mWidget->setText(sf.mWidget->text());
+        mValue = sf.mValue;
     }
     return *this;
 }
@@ -297,4 +304,83 @@ void TextField::setWidget(QTextEdit* textEdit)
 void TextField::setValueFromWidget()
 {
     mValue = mWidget->toPlainText().toStdString();
+}
+
+/* -------- LookupField ------------- */
+
+LookupField::LookupField()
+        :Field()
+        ,mWidget{ new QComboBox }
+{
+}
+
+LookupField::LookupField(std::string aName, std::string aLabel)
+        :Field(aName, aLabel)
+        ,mWidget{ new QComboBox }
+{
+}
+
+LookupField::~LookupField()
+{
+    qDebug() << "LookupField::dtor";
+    delete mWidget;
+}
+
+std::string LookupField::valueToString() const
+{
+    return std::to_string(mValue);
+}
+
+std::string LookupField::dbValueFormatter()
+{
+    return std::to_string(mValue);
+}
+
+void LookupField::setValue(int val)
+{
+    mValue = val;
+}
+
+void LookupField::stringToValue(std::string val)
+{
+    mValue = stoi(val);
+}
+
+QVariant LookupField::value()
+{
+    return QVariant(mValue);
+}
+
+QComboBox* LookupField::widget()
+{
+    return mWidget;
+}
+
+void LookupField::setWidget(QComboBox* widget)
+{
+    mWidget = widget;
+    //mWidget->insertPlainText(QString::fromStdString(mValue));
+}
+
+void LookupField::setValueFromWidget()
+{
+    // get this from the model
+    //mValue = mWidget->toPlainText().toStdString();
+}
+
+void LookupField::setIndex(int i)
+{
+    mIndex = i;
+}
+int LookupField::index() const
+{
+    return mIndex;
+}
+void LookupField::setCurrText(std::string txt)
+{
+    mCurrText = txt;
+}
+std::string LookupField::currText() const
+{
+    return mCurrText;
 }

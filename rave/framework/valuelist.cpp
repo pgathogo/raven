@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QList>
 #include <QStandardItem>
 
@@ -8,6 +9,8 @@ ValueList::ValueList()
         ,mCode{}
         ,mListValue{}
 {
+    qDebug() << "ValueList::ctor" ;
+
     mCode = createField<StringField>("code", "Code");
     mListValue = createField<StringField>("value", "Value");
     mListValue->setMandatory(true);
@@ -16,49 +19,70 @@ ValueList::ValueList()
             << QString::fromStdString(mCode->fieldLabel());
 }
 
-ValueList::ValueList(const ValueList& vl)
+
+ValueList::ValueList(const ValueList& rhs)
 {
-    if (vl.mCode)
-        mCode = vl.mCode;
-    if (vl.mListValue)
-        mListValue = vl.mListValue;
+    qDebug() << "ValueList::copy ctor";
+    if (rhs.mCode)
+        *mCode = *rhs.mCode;
+    if (rhs.mListValue)
+        *mListValue = *rhs.mListValue;
+    mHeader = rhs.mHeader;
+    mTableName = rhs.tableName(); //mTableName;
 }
 
-ValueList& ValueList::operator=(const ValueList& vl)
+ValueList& ValueList::operator=(const ValueList& rhs)
 {
-    if (this != &vl){
-        delete mCode;
-        delete mListValue;
+    qDebug() << "ValueList::operator=";
 
-        mCode = vl.mCode;
-        mListValue = vl.mListValue;
+    if (this != &rhs){
+        //delete mCode;
+        //delete mListValue;
+
+        //mCode = createField<StringField>(rhs.mCode->, "Code");
+        //mListValue = createField<StringField>("value", "Value");
+        //mListValue->setMandatory(true);
+
+        *mCode = *rhs.mCode;
+        *mListValue = *rhs.mListValue;
+
+        mHeader = rhs.mHeader;
+        mTableName = rhs.tableName(); //mTableName;
     }
+
     return *this;
 }
 
+
 ValueList::~ValueList()
 {
+    qDebug() << "ValueList::dtor";
 }
+
 
 StringField* ValueList::code() const
 {
     return mCode;
 }
 
+
 void ValueList::setCode(std::string pCode)
 {
     mCode->setValue(pCode);
 }
+
 
 StringField* ValueList::listValue() const
 {
     return mListValue;
 }
 
+
 void ValueList::setListValue(std::string pValue)
 {
     mListValue->setValue(pValue);
 }
+
 
 
 BaseEntity* ValueList::copy() const
@@ -155,3 +179,4 @@ std::string Gender::tableName() const
 {
     return "rave_gender";
 }
+

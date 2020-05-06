@@ -8,35 +8,35 @@
 #include "baseentity.h"
 #include "../utils/tools.h"
 
-ValueListBrowser::ValueListBrowser(QWidget* parent,
-                                   ValueList* entity):
-        BaseEntityBrowserDlg(parent, entity),
-        mEntity{entity},
-        ui{new Ui::ValueListBrowser}
+//ValueListBrowser::ValueListBrowser(QWidget* parent,
+//                                   ValueList* entity):
+ValueListBrowser::ValueListBrowser(const std::string& vltype, QWidget* parent)
+    :BaseEntityBrowserDlg(parent,
+                          ValueListBrowser::createValueList(vltype)),
+     ui{new Ui::ValueListBrowser},
+     vdd{},
+     vtype{vltype}
 {
+    qDebug() << "ValueList Ctor";
     ui->setupUi(this);
     setDialogTitle("Lookup");
 }
 
 ValueListBrowser::~ValueListBrowser()
 {
+    delete vdd;
     delete ui;
 }
 
 void ValueListBrowser::addRecord()
 {
-    addEntity<ValueList, ValueListDetailDlg>(mEntity);
-
-    /*
-    std::unique_ptr<ValueList> uvl = std::make_unique<ValueList>();
-    auto ptr(uvl.get());
-    ptr = mEntity;
-    valueListDetailDlg = new ValueListDetailDlg(ptr);
-    if (valueListDetailDlg->exec() > 0){
-        std::unique_ptr<BaseEntity> be(ptr);
-        entityDataModel()->createEntity(std::move(be));
+    ValueList* ent = ValueListBrowser::createValueList(vtype);
+    vdd = new ValueListDetailDlg(ent);
+    if (vdd->exec() > 0){
+        ValueList vl;
+        vl = *ent;
+        entityDataModel()->createEntity(ent);
     }
-    */
 }
 
 void ValueListBrowser::updateRecord()

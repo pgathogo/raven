@@ -43,6 +43,9 @@ SOURCES += \
     typeexclusion.cpp \
     typeexclusionbrowser.cpp \
     typeexclusiondetails.cpp \
+    voiceover.cpp \
+    voiceoverbrowser.cpp \
+    voiceoverform.cpp
 
 HEADERS += \
     ../framework/baseentity.h \
@@ -72,7 +75,10 @@ HEADERS += \
     mainwindow.h \
     typeexclusion.h \
     typeexclusionbrowser.h \
-    typeexclusiondetails.h \
+    typeexclusiondetails.h  \
+    voiceover.h \
+    voiceoverbrowser.h \
+    voiceoverform.h
 
 FORMS += \
     ../framework/baseentitybrowserdlg.ui \
@@ -90,6 +96,8 @@ FORMS += \
     mainwindow.ui \
     typeexclusionbrowser.ui \
     typeexclusiondetails.ui \
+    voiceoverbrowser.ui \
+    voiceoverform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

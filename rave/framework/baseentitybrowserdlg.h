@@ -47,6 +47,7 @@ public:
               updateTableViewRecord(entity);
               mEntityDataModel->updateEntity(entity);
           }
+          delete dlg;
         }
 
       }
@@ -62,7 +63,7 @@ public:
             entityDataModel()->createEntity(std::move(uT1));
     }
 
-    template <typename T1, typename T2>
+    template <typename T1, typename T2, typename T3>
     void addEntity(T1* e)
     {
         std::unique_ptr<T1> uT1 = std::make_unique<T1>();
@@ -70,8 +71,8 @@ public:
         ptr = e;
         T2* dlg = new T2(ptr);
         if (dlg->exec() > 0){
-            std::unique_ptr<T1> uT3(ptr);
-            entityDataModel()->createEntity(std::move(uT3));
+            std::unique_ptr<T3> uT3 = std::make_unique<T3>(*ptr);
+            //entityDataModel()->createEntity(std::move(uT3));
         }
     }
 

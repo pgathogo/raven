@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QPushButton;
+
 namespace Ui {
 class SelectCloseWidget;
 }
@@ -14,6 +16,8 @@ class SelectCloseWidget : public QWidget
 public:
     explicit SelectCloseWidget(QWidget *parent = nullptr);
     ~SelectCloseWidget();
+
+    QPushButton* selectBtn();
 
 private:
     Ui::SelectCloseWidget *ui;

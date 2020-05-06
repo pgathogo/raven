@@ -3,9 +3,11 @@
 
 #include <QDialog>
 #include "baseentitybrowserdlg.h"
+#include "valuelist.h"
 
 class EntityDataModel;
 class ValueListDetailDlg;
+class Gender;
 
 
 namespace Ui {
@@ -18,20 +20,26 @@ class ValueListBrowser : public BaseEntityBrowserDlg
 
 public:
     //explicit ValueListBrowser(QWidget *parent = nullptr);
-    ValueListBrowser(QWidget* parent = nullptr, ValueList* entity = nullptr);
+    ValueListBrowser(const std::string& vltype, QWidget* parent = nullptr);
+
     ~ValueListBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
 
-    //std::string tableName() const;
+  static ValueList*
+  createValueList(const std::string& vlType)
+  {
+      if (vlType =="gender")
+          return new Gender();
 
-protected:
-    ValueList* mEntity;
+      return nullptr;
+  }
 
 private:
     Ui::ValueListBrowser *ui;
-    ValueListDetailDlg* valueListDetailDlg;
+    ValueListDetailDlg* vdd;
+    std::string vtype;
 
 };
 

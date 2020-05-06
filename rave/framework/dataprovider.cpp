@@ -117,7 +117,7 @@ int PostgresDataProvider::read(const std::string query)
 
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
         PQclear(res);
-        PQfinish(conn);
+        //PQfinish(conn);
     };
 
     res = PQexec(conn, "BEGIN");

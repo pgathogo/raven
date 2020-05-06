@@ -25,6 +25,7 @@ class EntityModel : public QStandardItemModel{
         void setHeader();
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
+        void addEntity(BaseEntity* entity);
         void deleteFromModel(const std::string name);
     private:
         BaseEntity* mEntity;
@@ -43,9 +44,12 @@ public:
     void populateFields(BaseEntity* baseEntity);
 
     //std::vector<T*> entities() const;
-    void createEntity(std::unique_ptr<BaseEntity> entity);
+    //void createEntity(std::unique_ptr<BaseEntity> entity);
+    void createEntity(BaseEntity* entity);
     void updateEntity(BaseEntity* entity);
     void deleteEntity(const std::string name, BaseEntity* entity);
+
+    void cacheEntity(BaseEntity* entity);
 
     void all();
 
@@ -71,6 +75,8 @@ public:
     }
 
     void searchByField(std::tuple<std::string, std::string>);
+
+
 
 
 private:

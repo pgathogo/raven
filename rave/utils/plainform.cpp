@@ -15,7 +15,7 @@ PlainForm::PlainForm(QDialog *parent) :
     connect(ui->btnShow, &QPushButton::clicked,this, &PlainForm::onShow);
     //dpg = new DayPartGrid(ui->vlGrid);
     //fillGrid();
-    mtom = new ManyToManyBrowser(ui->vlGrid);
+   // mtom = new ManyToManyBrowser(ui->vlGrid);
 }
 
 PlainForm::~PlainForm()
