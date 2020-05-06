@@ -17,7 +17,8 @@ VoiceOverForm::VoiceOverForm(
     ui(new Ui::VoiceOverForm),
     mVoiceOver{vo},
     mDayPart{},
-    mMtoM{}
+    mVoiceEx{},
+    mMtoMBrowser{}
 {
     ui->setupUi(bui->baseContainer);
     bindWidgets();
@@ -25,27 +26,24 @@ VoiceOverForm::VoiceOverForm(
     mDayPart = new DayPartGrid(ui->vlDayPart);
     populateGrid();
 
-    //VoiceExclusion* voiceEx = new VoiceExclusion(mVoiceOver,
-     //                                            new TypeExclusion);
-    //voiceEx->setParentEntity(mVoiceOver);
-    //voiceEx->setDetailEntity(new TypeExclusion);
-
-    mMtoM = new ManyToManyBrowser(
-                "voice_type_exclusion",
-                mVoiceOver,
-                new TypeExclusion, ui->vlTypeEx, this);
-
+    mVoiceEx = new VoiceExclusion(mVoiceOver, new TypeExclusion());
+    mMtoMBrowser = new ManyToManyBrowser(mVoiceEx, ui->vlTypeEx, this);
 }
 
 VoiceOverForm::~VoiceOverForm()
 {
     delete mDayPart;
-    delete mVoiceOver;
+    delete mVoiceEx;
+    //delete mVoiceOver;
+    //delete mMtoM;
     delete ui;
 }
 
 ActionResult VoiceOverForm::saveRecord()
 {
+    ActionResult a;
+    qDebug() << "Selected: "<< mMtoMBrowser->cnt();
+    return a;
     mVoiceOver->populateEntity();
 
     auto dayparts = mDayPart->readGrid();
@@ -86,3 +84,8 @@ void VoiceOverForm::populateGrid()
     mDayPart->updateGrid(dayparts);
 }
 
+
+ManyToMany* VoiceOverForm::getMtoM() const
+{
+    return mMtoMBrowser->getManyToMany();
+}

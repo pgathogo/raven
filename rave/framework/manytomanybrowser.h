@@ -20,28 +20,32 @@ class ManyToManyBrowser : public BaseEntityBrowserDlg
 
 public:
     explicit ManyToManyBrowser(
-            const std::string typeInfo,
-            BaseEntity* pEnt,
-            BaseEntity* dEnt,
+            ManyToMany* mtom,
             QVBoxLayout* layout,
-            QWidget *parent = nullptr);
+            QWidget *parent = nullptr
+            );
 
     ~ManyToManyBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
 
+    //createMToM(const std::string typeInfo, BaseEntity* pEnt, BaseEntity* dEnt)
     static ManyToMany*
-    createMToM(const std::string typeInfo, BaseEntity* pEnt, BaseEntity* dEnt)
+    createMToM(ManyToMany* mtom)
     {
-        if (typeInfo == "voice_type_exclusion"){
+        if (mtom->typeInfo() == "voice_type_exclusion"){
             VoiceExclusion* ve = new VoiceExclusion(
-                        pEnt,dEnt);
+                        mtom->parentEntity(),
+                        mtom->detailEntity());
             return ve;
         }
 
         return nullptr;
     }
+
+    size_t cnt(){ return mMtoM->getSize(); }
+    ManyToMany* getManyToMany() const{ return mMtoM; }
 
 private slots:
     void selectedItem(BaseEntity* entity);
@@ -49,8 +53,9 @@ private slots:
 private:
     Ui::ManyToManyBrowser *ui;
     PickListBrowser* plb;
-    BaseEntity* mParentEntity;
-    BaseEntity* mDetailEntity;
+    ManyToMany* mMtoM;
+    //BaseEntity* mParentEntity;
+    //BaseEntity* mDetailEntity;
 };
 
 #endif // MANYTOMANYBROWSER_H

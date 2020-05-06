@@ -6,6 +6,7 @@
 #include "picklistbrowser.h"
 #include "manytomany.h"
 
+/*
 ManyToManyBrowser::ManyToManyBrowser(
         const std::string typeInfo,
         BaseEntity* pEnt,
@@ -14,10 +15,17 @@ ManyToManyBrowser::ManyToManyBrowser(
         QWidget *parent) :
     BaseEntityBrowserDlg(parent,
                          ManyToManyBrowser::createMToM(typeInfo, pEnt, dEnt)),
+                         */
+ManyToManyBrowser::ManyToManyBrowser(
+        ManyToMany* mtom,
+        QVBoxLayout* layout,
+        QWidget *parent
+        ):
+    BaseEntityBrowserDlg(parent,
+                         ManyToManyBrowser::createMToM(mtom)),
     ui(new Ui::ManyToManyBrowser),
     plb{},
-    mParentEntity{pEnt},
-    mDetailEntity{dEnt}
+    mMtoM{mtom}
 {
     ui->setupUi(this);
     hideEditButton();
@@ -33,7 +41,7 @@ ManyToManyBrowser::~ManyToManyBrowser()
 
 void ManyToManyBrowser::addRecord()
 {
-    plb = new PickListBrowser(mDetailEntity, entityDataModel());
+    plb = new PickListBrowser(*mMtoM, entityDataModel());
     plb->exec();
 }
 

@@ -1,9 +1,12 @@
 #include <QStandardItem>
 #include "voiceover.h"
+#include "typeexclusion.h"
+#include "../framework/manytomany.h"
 
 VoiceOver::VoiceOver()
     :BaseEntity{}
     ,mName{}
+    ,mVoiceEx{}
 {
     mName = createField<StringField>("voiceover_name", "Voice Over Name");
     mName->setDBColumnName("name");
@@ -31,6 +34,9 @@ VoiceOver::VoiceOver()
     mDaypart6->setSearchable(false);
     mDaypart7 = createField<StringField>("daypart7", "Daypart6");
     mDaypart7->setSearchable(false);
+
+    mVoiceEx = new VoiceExclusion(this, new TypeExclusion);
+
     mHeader << QString::fromStdString(mName->fieldLabel())
             << QString::fromStdString(mGender->fieldLabel());
 

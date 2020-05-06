@@ -6,6 +6,8 @@
 
 class VoiceOver;
 class DayPartGrid;
+class VoiceExclusion;
+class ManyToMany;
 class ManyToManyBrowser;
 
 namespace Ui {
@@ -25,11 +27,14 @@ public:
     std::string title() override;
     void populateGrid();
 
+    ManyToMany* getMtoM() const;
+
 private:
     Ui::VoiceOverForm *ui;
     VoiceOver* mVoiceOver;
     DayPartGrid* mDayPart;
-    ManyToManyBrowser* mMtoM;
+    VoiceExclusion* mVoiceEx;
+    ManyToManyBrowser* mMtoMBrowser;
 
 };
 

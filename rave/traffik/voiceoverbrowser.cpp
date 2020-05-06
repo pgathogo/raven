@@ -3,9 +3,11 @@
 
 #include "voiceover.h"
 #include "voiceoverform.h"
+#include "typeexclusion.h"
+#include "../framework/manytomany.h"
 
-VoiceOverBrowser::VoiceOverBrowser(QWidget *parent,
-                                   VoiceOver* vo) :
+
+VoiceOverBrowser::VoiceOverBrowser(QWidget *parent):
     BaseEntityBrowserDlg(parent, new VoiceOver()),
     ui(new Ui::VoiceOverBrowser),
     mVoiceOver{new VoiceOver()}
@@ -24,9 +26,16 @@ VoiceOverBrowser::~VoiceOverBrowser()
 void VoiceOverBrowser::addRecord()
 {
     mVoiceOver = new VoiceOver();
-    mVOForm = new VoiceOverForm(mVoiceOver);
-    if (mVOForm->exec() > 0)
-        entityDataModel()->createEntity(mVoiceOver);
+    mVOForm = new VoiceOverForm(mVoiceOver, this);
+    if (mVOForm->exec() > 0){
+       // entityDataModel()->createEntity(mVoiceOver);
+        auto iterB = mVOForm->getMtoM()->cVecBegin();
+        auto iterE = mVOForm->getMtoM()->cVecEnd();
+        for (; iterB != iterE; ++iterB){
+            TypeExclusion* te = dynamic_cast<TypeExclusion*>((*iterB).get());
+            qDebug() << QString::fromStdString(te->name()->valueToString());
+        }
+    }
 }
 
 void VoiceOverBrowser::updateRecord()

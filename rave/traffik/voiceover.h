@@ -3,6 +3,8 @@
 
 #include "../framework/baseentity.h"
 
+class VoiceExclusion;
+
 class VoiceOver : public BaseEntity
 {
 public:
@@ -64,6 +66,7 @@ private:
     StringField* mDaypart6;
     StringField* mDaypart7;
     LookupField* mGender;
+    VoiceExclusion* mVoiceEx;
 
     QStringList mHeader;
     std::string mTableName;

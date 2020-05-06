@@ -17,7 +17,7 @@ class VoiceOverBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
-    explicit VoiceOverBrowser(QWidget *parent = nullptr, VoiceOver* vo=nullptr);
+    explicit VoiceOverBrowser(QWidget *parent = nullptr);
     ~VoiceOverBrowser() override;
 
     void addRecord() override;

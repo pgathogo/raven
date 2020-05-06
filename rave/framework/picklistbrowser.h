@@ -6,6 +6,7 @@
 #include "baseentitybrowserdlg.h"
 
 class SelectCloseWidget;
+class ManyToMany;
 class EntityDataModel;
 
 namespace Ui {
@@ -17,7 +18,7 @@ class PickListBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
-    explicit PickListBrowser(BaseEntity* entity,
+    explicit PickListBrowser(ManyToMany& mtom,
                             EntityDataModel* edm,
                             QWidget *parent = nullptr);
     ~PickListBrowser() override;
@@ -36,6 +37,7 @@ private:
     SelectCloseWidget* scw;
     BaseEntity* mEntity;
     EntityDataModel* destModel;
+    ManyToMany& mMtoM;
 };
 
 #endif // PICKLISTBROWSER_H

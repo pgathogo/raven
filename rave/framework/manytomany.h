@@ -3,12 +3,16 @@
 
 #include "baseentity.h"
 
+
+using VecIter =  std::vector<std::unique_ptr<BaseEntity>>::const_iterator;
+
 class IntegerField;
 
 class ManyToMany : public BaseEntity
 {
 public:
     ManyToMany();
+    ManyToMany(BaseEntity* parentEntity, BaseEntity* detailEntity);
     ~ManyToMany() override;
 
     ManyToMany(const ManyToMany& other);
@@ -40,6 +44,12 @@ public:
     BaseEntity* parentEntity() const;
     BaseEntity* detailEntity() const;
 
+    void addEntity(BaseEntity* entity);
+    std::size_t getSize(){ return mEntities.size(); }
+
+    VecIter cVecBegin();
+    VecIter cVecEnd();
+
 protected:
     BaseEntity* mParentEntity;
     BaseEntity* mDetailEntity;
@@ -47,7 +57,7 @@ protected:
     IntegerField* mParentId;
     IntegerField* mDetailId;
 private:
-
+    std::vector<std::unique_ptr<BaseEntity>> mEntities;
     QStringList mHeader;
     std::string mTableName;
 
@@ -55,7 +65,8 @@ private:
 
 class VoiceExclusion : public ManyToMany{
     public:
-        VoiceExclusion(BaseEntity* pEnt=nullptr, BaseEntity* dEnt=nullptr);
+        VoiceExclusion();
+        VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt);
         ~VoiceExclusion() override;
 
         std::string windowTitle() const override;

@@ -7,16 +7,23 @@ ManyToMany::ManyToMany()
     ,mDetailEntity{}
     ,mParentId{}
     ,mDetailId{}
+{}
+
+ManyToMany::ManyToMany(BaseEntity* parentEntity, BaseEntity* detailEntity)
+    :mParentEntity{parentEntity}
+    ,mDetailEntity{detailEntity}
+    ,mParentId{}
+    ,mDetailId{}
+    ,mEntities{}
 {
+    mParentId = createField<IntegerField>("parent_id","Parent ID");
+    mDetailId = createField<IntegerField>("detail_id","Detail ID");
 }
 
 ManyToMany::~ManyToMany()
 {
     delete mParentEntity;
     delete mDetailEntity;
-
-    delete mParentId;
-    delete mDetailId;
 }
 
 ManyToMany::ManyToMany(const ManyToMany& other)
@@ -138,9 +145,26 @@ std::string ManyToMany::typeInfo() const
     return "base_type";
 }
 
+void ManyToMany::addEntity(BaseEntity* entity)
+{
+    mEntities.emplace_back(std::move(entity));
+}
+
+VecIter ManyToMany::cVecBegin()
+{
+    return mEntities.cbegin();
+}
+VecIter ManyToMany::cVecEnd()
+{
+    return mEntities.cend();
+}
+
 /* ---------------- VoiceExclusion -----------------*/
+VoiceExclusion::VoiceExclusion()
+    :ManyToMany{}{}
+
 VoiceExclusion::VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt):
-    ManyToMany{}
+    ManyToMany{pEnt, dEnt}
 {
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(dEnt);
     //mHeader << QString::fromStdString(te->name()->fieldLabel())
