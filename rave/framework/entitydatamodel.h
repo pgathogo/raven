@@ -13,16 +13,20 @@
 
 
 using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
+using VecIter = std::vector<EntityRecord>::iterator;
 
 class EntityModel : public QStandardItemModel{
     public:
         EntityModel();
         EntityModel(BaseEntity* entity);
         ~EntityModel();
-        std::vector<EntityRecord> entities() const;
+        std::vector<EntityRecord> entities();
         BaseEntity* findEntityByName(std::string name);
         void clearEntities();
         void setHeader();
+
+        VecIter vecBegin();
+        VecIter vecEnd();
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
         void addEntity(BaseEntity* entity);
@@ -30,6 +34,7 @@ class EntityModel : public QStandardItemModel{
     private:
         BaseEntity* mEntity;
         std::vector<EntityRecord> mEntities;
+
         void addRow(BaseEntity* entity);
         BaseEntity* entityByID();
         bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);
@@ -38,6 +43,7 @@ class EntityModel : public QStandardItemModel{
 class EntityDataModel : public EntityModel
 {
 public:
+    EntityDataModel();
     EntityDataModel(BaseEntity* baseEntity);
     ~EntityDataModel();
 
@@ -45,11 +51,13 @@ public:
 
     //std::vector<T*> entities() const;
     //void createEntity(std::unique_ptr<BaseEntity> entity);
-    void createEntity(BaseEntity* entity);
+    bool createEntity(BaseEntity* entity);
     void updateEntity(BaseEntity* entity);
     void deleteEntity(const std::string name, BaseEntity* entity);
 
     void cacheEntity(BaseEntity* entity);
+
+    EntityRecord record(int i);
 
     void all();
 
@@ -75,9 +83,6 @@ public:
     }
 
     void searchByField(std::tuple<std::string, std::string>);
-
-
-
 
 private:
     BaseEntity* mEntity;

@@ -2,6 +2,7 @@
 #include "voiceover.h"
 #include "typeexclusion.h"
 #include "../framework/manytomany.h"
+#include "../framework/valuelist.h"
 
 VoiceOver::VoiceOver()
     :BaseEntity{}
@@ -45,6 +46,7 @@ VoiceOver::VoiceOver()
 
 VoiceOver::~VoiceOver()
 {
+    //delete mGenderModel;
 }
 
 std::string VoiceOver::tableName() const
@@ -63,7 +65,7 @@ BaseEntity* VoiceOver::copy() const
 }
 std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
 {
-    auto te = entityFieldMap<VoiceOver>(e);
+    std::unique_ptr<VoiceOver> te = entityFieldMap<VoiceOver>(e);
     return std::move(te);
 }
 

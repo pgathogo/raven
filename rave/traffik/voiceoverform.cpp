@@ -9,6 +9,9 @@
 #include "voiceover.h"
 #include "typeexclusion.h"
 #include "../framework/picklistbrowser.h"
+#include "../framework/valuelist.h"
+
+VoiceOverForm::VoiceOverForm(){}
 
 VoiceOverForm::VoiceOverForm(
         VoiceOver* vo,
@@ -18,7 +21,8 @@ VoiceOverForm::VoiceOverForm(
     mVoiceOver{vo},
     mDayPart{},
     mVoiceEx{},
-    mMtoMBrowser{}
+    mMtoMBrowser{},
+    mGenderModel{}
 {
     ui->setupUi(bui->baseContainer);
     bindWidgets();
@@ -28,22 +32,23 @@ VoiceOverForm::VoiceOverForm(
 
     mVoiceEx = new VoiceExclusion(mVoiceOver, new TypeExclusion());
     mMtoMBrowser = new ManyToManyBrowser(mVoiceEx, ui->vlTypeEx, this);
+
+    connect(ui->cbGender, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(comboChanged(int)));
 }
 
 VoiceOverForm::~VoiceOverForm()
 {
+    qDebug() << "VoiceOverForm::dtor";
     delete mDayPart;
-    delete mVoiceEx;
-    //delete mVoiceOver;
+    //delete mVoiceEx;
+    //delete mGenderModel;
     //delete mMtoM;
     delete ui;
 }
 
 ActionResult VoiceOverForm::saveRecord()
 {
-    ActionResult a;
-    qDebug() << "Selected: "<< mMtoMBrowser->cnt();
-    return a;
     mVoiceOver->populateEntity();
 
     auto dayparts = mDayPart->readGrid();
@@ -64,6 +69,10 @@ void VoiceOverForm::bindWidgets()
     mVoiceOver->name()->setWidget(ui->edtName);
     mVoiceOver->mobileno()->setWidget(ui->edtMobile);
     mVoiceOver->gender()->setWidget(ui->cbGender);
+
+    mGenderModel = new EntityDataModel(new Gender());
+    mVoiceOver->gender()->setDataModel(mGenderModel);
+    mGenderModel->all();
 }
 
 std::string VoiceOverForm::title()
@@ -87,5 +96,11 @@ void VoiceOverForm::populateGrid()
 
 ManyToMany* VoiceOverForm::getMtoM() const
 {
-    return mMtoMBrowser->getManyToMany();
+    return mVoiceEx;
+}
+
+void VoiceOverForm::comboChanged(int i)
+{
+    EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbGender->model());
+    mVoiceOver->gender()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }

@@ -10,6 +10,7 @@ using FieldValueType = std::variant<std::string, int>;
 class FormField;
 class IntegerFormField;
 class StringFormField;
+class EntityDataModel;
 
 class QLineEdit;
 class QTextEdit;
@@ -155,6 +156,8 @@ public:
         QComboBox* widget();
         void setWidget(QComboBox* textEdit);
         void setValueFromWidget();
+
+        void setDataModel(EntityDataModel* edm);
     private:
         int mValue;
         int mIndex;

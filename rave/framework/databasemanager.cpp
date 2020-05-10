@@ -109,7 +109,6 @@ int PostgresDatabaseManager::createEntity(BaseEntity* entity)
      // Get id of the created record.
      int lastId = provider()->fetchLastId(entity->tableName());
 
-
      return lastId;
 
 }

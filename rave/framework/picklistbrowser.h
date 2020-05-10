@@ -28,6 +28,7 @@ public:
 
 public slots:
     void onSelectItem();
+    void onCloseSelection();
 
 signals:
     void itemSelected(BaseEntity* entity);

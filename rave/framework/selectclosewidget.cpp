@@ -17,3 +17,8 @@ QPushButton* SelectCloseWidget::selectBtn()
 {
     return ui->btnSelect;
 }
+
+QPushButton* SelectCloseWidget::closeBtn()
+{
+    return ui->btnClose;
+}

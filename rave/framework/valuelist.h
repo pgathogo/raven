@@ -44,6 +44,7 @@ private:
     StringField* mListValue;
     QStringList mHeader;
     std::string mTableName;
+    //static std::map<int, std::string> cache;
 };
 
 

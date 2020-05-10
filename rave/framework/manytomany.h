@@ -4,7 +4,7 @@
 #include "baseentity.h"
 
 
-using VecIter =  std::vector<std::unique_ptr<BaseEntity>>::const_iterator;
+using ConstVecIter =  std::vector<std::unique_ptr<BaseEntity>>::const_iterator;
 
 class IntegerField;
 
@@ -47,8 +47,8 @@ public:
     void addEntity(BaseEntity* entity);
     std::size_t getSize(){ return mEntities.size(); }
 
-    VecIter cVecBegin();
-    VecIter cVecEnd();
+    ConstVecIter cVecBegin();
+    ConstVecIter cVecEnd();
 
 protected:
     BaseEntity* mParentEntity;

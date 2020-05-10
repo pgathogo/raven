@@ -18,11 +18,22 @@
     <layout class="QVBoxLayout" name="vlGrid"/>
    </item>
    <item>
-    <widget class="QPushButton" name="btnShow">
-     <property name="text">
-      <string>Show</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="btnShow">
+       <property name="text">
+        <string>Show</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnClose">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

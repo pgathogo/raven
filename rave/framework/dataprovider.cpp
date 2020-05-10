@@ -234,6 +234,9 @@ int PostgresDataProvider::fetchLastId(const std::string tableName)
         }
     }
 
+    if (lastId.empty())
+        lastId = "-1";
+
     PQclear(res);
     res = PQexec(conn, "CLEAR mcursor");
     PQclear(res);

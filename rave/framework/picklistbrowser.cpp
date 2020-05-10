@@ -25,6 +25,8 @@ PickListBrowser::PickListBrowser(ManyToMany& mtom,
     scw = new SelectCloseWidget();
 
     connect(scw->selectBtn(), &QPushButton::clicked, this, &PickListBrowser::onSelectItem);
+    connect(scw->closeBtn(), &QPushButton::clicked, this, &PickListBrowser::onCloseSelection);
+
     bui->hlExtend->addWidget(scw);
 
 }
@@ -54,3 +56,7 @@ void PickListBrowser::onSelectItem()
     //BaseEntity* evil = &ent;
 }
 
+void PickListBrowser::onCloseSelection()
+{
+    done(0);
+}

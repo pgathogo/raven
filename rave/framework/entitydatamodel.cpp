@@ -95,20 +95,42 @@ void EntityModel::clearEntities()
     setHeader();
 }
 
+VecIter EntityModel::vecBegin()
+{
+    return mEntities.begin();
+}
+
+VecIter EntityModel::vecEnd()
+{
+    return mEntities.end();
+}
+
 /* ----------- EntityDataModel ------------------ */
+
+
+EntityDataModel::EntityDataModel():
+    EntityModel{},
+    mEntity{},
+    dbManager{}
+{
+    qDebug() << "EntityDataModel::Default Ctor";
+    dbManager = new PostgresDatabaseManager;
+}
+
+EntityDataModel::EntityDataModel(BaseEntity* baseEntity)
+    :EntityModel{baseEntity},
+     mEntity{baseEntity},
+     dbManager{}
+{
+    qDebug() << "EntityDataModel::ctor";
+    dbManager = new PostgresDatabaseManager;
+}
 
 EntityDataModel::~EntityDataModel()
 {
     delete mEntity;
     delete dbManager;
-}
-
-EntityDataModel::EntityDataModel(BaseEntity* baseEntity)
-    :EntityModel{baseEntity},
-     mEntity{baseEntity}
-{
-    qDebug() << "EntityDataModel::ctor";
-    dbManager = new PostgresDatabaseManager;
+    qDebug() << "EntityDataModel::dtor";
 }
 
 void EntityDataModel::populateFields(BaseEntity* baseEntity)
@@ -140,14 +162,19 @@ void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 */
 
 
-void EntityDataModel::createEntity(BaseEntity* entity)
+bool EntityDataModel::createEntity(BaseEntity* entity)
 {
     //auto ptr(entity.get());
+    bool succeded = false;
     int id = dbManager->createEntity(entity);
-    entity->setId(id);
-    //std::unique_ptr<BaseEntity> uPtr = std::make_unique<BaseEntity>();
-    // Create many to many entites
-    addEntity(entity);
+    if (id > 0){
+        entity->setId(id);
+        //std::unique_ptr<BaseEntity> uPtr = std::make_unique<BaseEntity>();
+        // Create many to many entites
+        addEntity(entity);
+        succeded = true;
+    }
+    return succeded;
 }
 
 void EntityDataModel::updateEntity(BaseEntity* entity)
@@ -181,3 +208,8 @@ void EntityDataModel::searchByField(std::tuple<std::string, std::string> searchI
         populateEntities();
 
 }
+
+EntityRecord EntityDataModel::record(int i)
+{
+}
+

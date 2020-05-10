@@ -5,6 +5,7 @@
 #include "ui_plainform.h"
 #include "../utils/daypartgrid.h"
 #include "../framework/manytomanybrowser.h"
+#include "../framework/entitydatamodel.h"
 
 PlainForm::PlainForm(QDialog *parent) :
     ui(new Ui::PlainForm),
@@ -13,6 +14,7 @@ PlainForm::PlainForm(QDialog *parent) :
 {
     ui->setupUi(this);
     connect(ui->btnShow, &QPushButton::clicked,this, &PlainForm::onShow);
+    connect(ui->btnClose, &QPushButton::clicked,this, &PlainForm::onClose);
     //dpg = new DayPartGrid(ui->vlGrid);
     //fillGrid();
    // mtom = new ManyToManyBrowser(ui->vlGrid);
@@ -22,14 +24,21 @@ PlainForm::~PlainForm()
 {
     delete dpg;
     delete mtom;
+    delete edm;
     delete ui;
 }
 
 void PlainForm::onShow()
 {
-    auto dp = dpg->readGrid();
-    for (const auto& [key, value] : dp)
-        qDebug() << QString::fromStdString(key)+" : "<< QString::fromStdString(value) ;
+    edm = new EntityDataModel();
+    //auto dp = dpg->readGrid();
+    //for (const auto& [key, value] : dp)
+    //    qDebug() << QString::fromStdString(key)+" : "<< QString::fromStdString(value) ;
+}
+
+void PlainForm::onClose()
+{
+    done(1);
 }
 
 void PlainForm::fillGrid()

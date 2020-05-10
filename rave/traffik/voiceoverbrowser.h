@@ -27,6 +27,7 @@ private:
     Ui::VoiceOverBrowser *ui;
     VoiceOver* mVoiceOver;
     VoiceOverForm* mVOForm;
+    EntityDataModel* edm;
 
 };
 

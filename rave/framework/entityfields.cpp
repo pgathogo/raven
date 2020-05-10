@@ -4,6 +4,7 @@
 #include <QComboBox>
 
 #include "entityfields.h"
+#include "entitydatamodel.h"
 
 #include "../utils/tools.h"
 
@@ -310,12 +311,16 @@ void TextField::setValueFromWidget()
 
 LookupField::LookupField()
         :Field()
+        ,mValue{1}
+        ,mIndex{0}
         ,mWidget{ new QComboBox }
 {
 }
 
 LookupField::LookupField(std::string aName, std::string aLabel)
         :Field(aName, aLabel)
+        ,mValue{1}
+        ,mIndex{0}
         ,mWidget{ new QComboBox }
 {
 }
@@ -383,4 +388,9 @@ void LookupField::setCurrText(std::string txt)
 std::string LookupField::currText() const
 {
     return mCurrText;
+}
+
+void LookupField::setDataModel(EntityDataModel* edm)
+{
+    mWidget->setModel(edm);
 }

@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QStandardItem>
 #include "manytomany.h"
 #include "typeexclusion.h"
@@ -22,6 +23,7 @@ ManyToMany::ManyToMany(BaseEntity* parentEntity, BaseEntity* detailEntity)
 
 ManyToMany::~ManyToMany()
 {
+    qDebug() << "ManyToMany::dtor" ;
     delete mParentEntity;
     delete mDetailEntity;
 }
@@ -150,11 +152,11 @@ void ManyToMany::addEntity(BaseEntity* entity)
     mEntities.emplace_back(std::move(entity));
 }
 
-VecIter ManyToMany::cVecBegin()
+ConstVecIter ManyToMany::cVecBegin()
 {
     return mEntities.cbegin();
 }
-VecIter ManyToMany::cVecEnd()
+ConstVecIter ManyToMany::cVecEnd()
 {
     return mEntities.cend();
 }

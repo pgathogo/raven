@@ -18,6 +18,7 @@ public:
     ~SelectCloseWidget();
 
     QPushButton* selectBtn();
+    QPushButton* closeBtn();
 
 private:
     Ui::SelectCloseWidget *ui;

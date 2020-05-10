@@ -161,7 +161,6 @@ std::string ValueList::windowTitle() const
     return "";
 }
 
-
 /* ----- Gender ------- */
 
 
