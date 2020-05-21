@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QStandardItem>
 #include "typeexclusion.h"
 
@@ -47,58 +48,66 @@ TypeExclusion::TypeExclusion()
 
 TypeExclusion::TypeExclusion(const TypeExclusion& other)
 {
-    /*
+
     if (other.mName)
-        mName = other.mName;
+        mName->setValue(other.mName->valueToString());
+
     if (other.mDescription)
-        mDescription = other.mDescription;
+        mDescription->setValue(other.mDescription->valueToString());
+
     if (other.mDaypart1)
-        mDaypart1 = other.mDaypart1;
+        mDaypart1->setValue(other.mDaypart1->valueToString());
+
     if (other.mDaypart2)
-        mDaypart2 = other.mDaypart2;
+        mDaypart2->setValue(other.mDaypart2->valueToString());
+
     if (other.mDaypart3)
-        mDaypart3 = other.mDaypart3;
+        mDaypart3->setValue(other.mDaypart3->valueToString());
+
     if (other.mDaypart4)
-        mDaypart4 = other.mDaypart4;
+        mDaypart4->setValue(other.mDaypart4->valueToString());
+
     if (other.mDaypart5)
-        mDaypart5 = other.mDaypart5;
+        mDaypart5->setValue(other.mDaypart5->valueToString());
+
     if (other.mDaypart6)
-        mDaypart6 = other.mDaypart6;
+        mDaypart6->setValue(other.mDaypart6->valueToString());
+
     if (other.mDaypart7)
-        mDaypart7 = other.mDaypart7;
-        */
+        mDaypart7->setValue(other.mDaypart7->valueToString());
 }
 
 TypeExclusion& TypeExclusion::operator=(const TypeExclusion& other)
 {
-    /*
     if (this != &other){
-        delete mName;
-        delete mDescription;
-        delete mDaypart1;
-        delete mDaypart2;
-        delete mDaypart3;
-        delete mDaypart4;
-        delete mDaypart5;
-        delete mDaypart6;
-        delete mDaypart7;
+        this->clearFields();
+        mName = createField<StringField>("exclusion_name", "Exclusion Name");
+        mDescription = createField<TextField>("exclusion_desc", "Description");
+        mDaypart1 = createField<StringField>("daypart1", "Daypart1");
+        mDaypart2 = createField<StringField>("daypart2", "Daypart2");
+        mDaypart3 = createField<StringField>("daypart3", "Daypart3");
+        mDaypart4 = createField<StringField>("daypart4", "Daypart4");
+        mDaypart5 = createField<StringField>("daypart5", "Daypart5");
+        mDaypart6 = createField<StringField>("daypart6", "Daypart6");
+        mDaypart7 = createField<StringField>("daypart7", "Daypart6");
 
-        mName = other.mName;
-        mDescription = other.mDescription;
-        mDaypart1 = other.mDaypart1;
-        mDaypart2 = other.mDaypart2;
-        mDaypart3 = other.mDaypart3;
-        mDaypart4 = other.mDaypart4;
-        mDaypart5 = other.mDaypart5;
-        mDaypart6 = other.mDaypart6;
-        mDaypart7 = other.mDaypart7;
+        *mName = *other.mName;
+        *mDescription = *other.mDescription;
+        *mDaypart1 = *other.mDaypart1;
+        *mDaypart2 = *other.mDaypart2;
+        *mDaypart3 = *other.mDaypart3;
+        *mDaypart4 = *other.mDaypart4;
+        *mDaypart5 = *other.mDaypart5;
+        *mDaypart6 = *other.mDaypart6;
+        *mDaypart7 = *other.mDaypart7;
     }
-    */
+
     return *this;
 }
 
 TypeExclusion::~TypeExclusion()
 {
+    qDebug() << "TypeExclusion::dtor";
     /*
     delete mName;
     delete mDescription;

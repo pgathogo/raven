@@ -22,6 +22,7 @@ public:
 
     void addRecord() override;
     void updateRecord() override;
+    void deleteRecord() override;
 
 private:
     Ui::VoiceOverBrowser *ui;

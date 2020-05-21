@@ -54,6 +54,8 @@ public:
     StringField* daypart7() const;
     void setDaypart7(std::string dp);
 
+    VoiceExclusion* voiceEx();
+
 private:
     StringField* mName;
     StringField* mMobileNo;
@@ -67,6 +69,8 @@ private:
     StringField* mDaypart7;
     LookupField* mGender;
     VoiceExclusion* mVoiceEx;
+
+    static EntityDataModel* mGenderDM;
 
     QStringList mHeader;
     std::string mTableName;

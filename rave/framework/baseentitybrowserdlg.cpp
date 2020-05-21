@@ -135,10 +135,17 @@ void BaseEntityBrowserDlg::searchRecord()
 
 void BaseEntityBrowserDlg::deleteRecord()
 {
+   BaseEntity* entity = findSelectedEntity();
+   entity->setDBAction(DBAction::dbaDELETE);
+   entityDataModel()->deleteEntity(entity);
+   removeSelectedRow();
+}
+
+BaseEntity* BaseEntityBrowserDlg::findSelectedEntity()
+{
    std::string searchName = selectedRowName().toStdString();
    BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
-   entityDataModel()->deleteEntity(searchName, entity);
-   removeSelectedRow();
+   return entity;
 }
 
 int BaseEntityBrowserDlg::selectedRowId() const

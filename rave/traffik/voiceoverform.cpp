@@ -20,9 +20,9 @@ VoiceOverForm::VoiceOverForm(
     ui(new Ui::VoiceOverForm),
     mVoiceOver{vo},
     mDayPart{},
-    mVoiceEx{},
     mMtoMBrowser{},
-    mGenderModel{}
+    mGenderModel{},
+    mVoiceExModel{}
 {
     ui->setupUi(bui->baseContainer);
     bindWidgets();
@@ -30,8 +30,11 @@ VoiceOverForm::VoiceOverForm(
     mDayPart = new DayPartGrid(ui->vlDayPart);
     populateGrid();
 
-    mVoiceEx = new VoiceExclusion(mVoiceOver, new TypeExclusion());
-    mMtoMBrowser = new ManyToManyBrowser(mVoiceEx, ui->vlTypeEx, this);
+    mMtoMBrowser = new ManyToManyBrowser(mVoiceOver->voiceEx(),
+                                             ui->vlTypeEx, this);
+
+    mVoiceExModel = new EntityDataModel(
+                new VoiceExclusion(new VoiceOver, new TypeExclusion));
 
     connect(ui->cbGender, SIGNAL(currentIndexChanged(int)),
             this, SLOT(comboChanged(int)));
@@ -39,9 +42,9 @@ VoiceOverForm::VoiceOverForm(
 
 VoiceOverForm::~VoiceOverForm()
 {
-    qDebug() << "VoiceOverForm::dtor";
     delete mDayPart;
-    //delete mVoiceEx;
+    delete mVoiceExModel;
+    qDebug() << "VoiceOverForm::dtor";
     //delete mGenderModel;
     //delete mMtoM;
     delete ui;
@@ -60,8 +63,27 @@ ActionResult VoiceOverForm::saveRecord()
     mVoiceOver->setDaypart6(dayparts["daypart6"]);
     mVoiceOver->setDaypart7(dayparts["daypart7"]);
 
+    // ManyToMany
+    if (mVoiceOver->id() > 0)
+        saveVoiceExclusions();
+
     ActionResult ar = mVoiceOver->validate();
     return ar;
+}
+
+void VoiceOverForm::saveVoiceExclusions()
+{
+    VecIter it =  mMtoMBrowser->entityDataModel()->vecBegin();
+    VecIter vend = mMtoMBrowser->entityDataModel()->vecEnd();
+    for(; it!= vend; ++it){
+        ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(*it).get());
+
+        if (mtom->dbAction() == DBAction::dbaCREATE)
+            mVoiceExModel->createEntityDB(mtom);
+
+        if (mtom->dbAction() == DBAction::dbaDELETE)
+            mVoiceExModel->deleteEntity(mtom);
+    }
 }
 
 void VoiceOverForm::bindWidgets()
@@ -70,9 +92,9 @@ void VoiceOverForm::bindWidgets()
     mVoiceOver->mobileno()->setWidget(ui->edtMobile);
     mVoiceOver->gender()->setWidget(ui->cbGender);
 
-    mGenderModel = new EntityDataModel(new Gender());
-    mVoiceOver->gender()->setDataModel(mGenderModel);
-    mGenderModel->all();
+    //mGenderModel = new EntityDataModel(new Gender());
+    //mVoiceOver->gender()->setDataModel(mGenderModel);
+    //mGenderModel->all();
 }
 
 std::string VoiceOverForm::title()
@@ -96,7 +118,7 @@ void VoiceOverForm::populateGrid()
 
 ManyToMany* VoiceOverForm::getMtoM() const
 {
-    return mVoiceEx;
+    return mVoiceOver->voiceEx();
 }
 
 void VoiceOverForm::comboChanged(int i)

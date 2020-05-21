@@ -12,6 +12,7 @@
 #include "clientgroup.h"
 
 #include "voiceoverbrowser.h"
+#include "../framework/databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     ,qreportAction{}
     ,clientRptAction{}
     ,plainFormAction{}
+    ,mPGManager{}
 {
     ui->setupUi(this);
 
@@ -43,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(mdiArea);
 
     createActions();
+
+    mPGManager = new PostgresDatabaseManager;
 
     this->setWindowTitle("Raven - Traffik");
 }
@@ -58,7 +62,6 @@ void MainWindow::createActions()
     clientAction = traffikMenu->addAction("&Client");
     clientAction->setStatusTip("Client details");
     connect(clientAction, &QAction::triggered, this, &MainWindow::openClientBrowser);
-
 
     // Spots
     spotAction = traffikMenu->addAction("&Client Spots");
@@ -93,10 +96,6 @@ void MainWindow::createActions()
     cgAction->setStatusTip(tr("Create a new client group"));
     connect(cgAction, &QAction::triggered, this, &MainWindow::newClientGroup);
 
-    QAction* voAction = new QAction(tr("&Voice Overs"), setupMenu);
-    setupMenu->addAction(voAction);
-    voAction->setStatusTip(tr("Create new voice over persons"));
-
     QAction* genderAction = new QAction(tr("&Gender"), setupMenu);
     setupMenu->addAction(genderAction);
     genderAction->setStatusTip(tr("Maintain Gender value list"));
@@ -107,6 +106,7 @@ void MainWindow::createActions()
     typeExAction->setStatusTip(tr("Maintain Type Exclusions"));
     connect(typeExAction, &QAction::triggered, this, &MainWindow::newTypeExclusion);
 
+    // Voice Overs
     QAction* voiceOverAction = new QAction(tr("&Voice Overs"), setupMenu);
     setupMenu->addAction(voiceOverAction);
     voiceOverAction->setStatusTip(tr("Maintain details of voice overs"));
@@ -173,21 +173,7 @@ MainWindow::~MainWindow()
     delete clientRptSubMenu;
     delete setupMenu;
     delete helpMenu;
-
-    /*
-    delete clientAction;
-    delete spotAction;
-    delete orderAction;
-    delete timebandAction;
-    delete breakAction;
-    delete commlogAction;
-    delete viewbreakAction;
-    delete exitAction;
-    delete qreportAction;
-    delete clientRptAction;
-    delete plainFormAction;
-*/
-
+    delete mPGManager;
 
 }
 

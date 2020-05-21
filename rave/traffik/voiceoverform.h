@@ -30,6 +30,7 @@ public:
     void populateGrid();
 
     ManyToMany* getMtoM() const;
+    void saveVoiceExclusions();
 
 private slots:
     void comboChanged(int i);
@@ -38,9 +39,9 @@ private:
     Ui::VoiceOverForm *ui;
     VoiceOver* mVoiceOver;
     DayPartGrid* mDayPart;
-    VoiceExclusion* mVoiceEx;
     ManyToManyBrowser* mMtoMBrowser;
     EntityDataModel* mGenderModel;
+    EntityDataModel* mVoiceExModel;
 
 };
 

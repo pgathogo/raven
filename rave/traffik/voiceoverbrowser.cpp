@@ -10,7 +10,6 @@
 VoiceOverBrowser::VoiceOverBrowser(QWidget *parent):
     BaseEntityBrowserDlg(parent, new VoiceOver()),
     ui(new Ui::VoiceOverBrowser),
-    mVoiceOver{new VoiceOver()},
     mVOForm{nullptr},
     edm{}
 {
@@ -53,10 +52,21 @@ void VoiceOverBrowser::addRecord()
                 edm->createEntity(ve);
             }
          }
+    }else{
+        delete mVoiceOver;
     }
 }
 
 void VoiceOverBrowser::updateRecord()
 {
    update<VoiceOver, VoiceOverForm>();
+}
+
+void VoiceOverBrowser::deleteRecord()
+{
+    BaseEntity* entity = findSelectedEntity();
+    EntityDataModel edm(new VoiceExclusion);
+    edm.deleteEntityByValue({"parent_id", entity->id()});
+    entityDataModel()->deleteEntity(entity);
+    removeSelectedRow();
 }

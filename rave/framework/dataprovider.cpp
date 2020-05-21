@@ -2,6 +2,7 @@
 #include <map>
 #include "dataprovider.h"
 #include "queryset.h"
+#include "databaseconnector.h"
 
 BaseDataProvider::BaseDataProvider()
 {
@@ -36,9 +37,11 @@ DataQuerySet<StringMapped>* BaseDataProvider::cache()
     return &dataQuerySet;
 }
 
+//PostgresDataProvider* PostgresDataProvider::mInstance = nullptr;
+
 PostgresDataProvider::PostgresDataProvider()
-    : BaseDataProvider(),
-      conn{nullptr}
+    : BaseDataProvider()
+    ,mPGConnector{nullptr}
 {
     qDebug() << "Open connection ...";
     openConnection();
@@ -46,34 +49,56 @@ PostgresDataProvider::PostgresDataProvider()
 
 PostgresDataProvider::~PostgresDataProvider()
 {
-    PQfinish(conn);
+    //PQfinish(conn);
 }
 
-bool PostgresDataProvider::openConnection()
+/*
+PostgresDataProvider* PostgresDataProvider::instance()
+{
+    if (mInstance == nullptr){
+        mInstance = new PostgresDataProvider;
+    }
+
+    return mInstance;
+}
+*/
+
+void PostgresDataProvider::openConnection()
 {
     // read this values from registry
-    const char* conninfo = "user=postgres password=abc123 dbname=raven port=5433";
+    //const char* conninfo = "user=postgres password=abc123 dbname=raven port=5433";
+    std::string conninfo = "user=postgres password=abc123 dbname=raven port=5433";
 
+    mPGConnector = PostgresConnector::instance(conninfo);
+
+    conn = mPGConnector->connection();
+
+
+    /*
     conn = PQconnectdb(conninfo);
     if (PQstatus(conn) != CONNECTION_OK){
         qDebug() << "Connection to database failed! - " << PQerrorMessage(conn);
         PQfinish(conn);
         return false;
     }
-
     qDebug() << "Connection opened. - " << PQerrorMessage(conn);
     return true;
+    */
+
 }
 
 bool PostgresDataProvider::executeQuery(const std::string query)
 {
-    qDebug() << "PostgresDataProvider::create";
+    qDebug() << "PostgresDataProvider::executeQuery";
 
-    PGresult* res;
+    PGresult* res = nullptr;
+
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
         PQclear(res);
-        //PQfinish(conn);
     };
+
+    if (res != nullptr)
+        PQclear(res);
 
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
@@ -117,7 +142,6 @@ int PostgresDataProvider::read(const std::string query)
 
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
         PQclear(res);
-        //PQfinish(conn);
     };
 
     res = PQexec(conn, "BEGIN");
@@ -179,8 +203,6 @@ int PostgresDataProvider::read(const std::string query)
 
 int PostgresDataProvider::fetchLastId(const std::string tableName)
 {
-    qDebug() << "PostgresDataProvider::fetchLastId";
-
     std::string query = "SELECT max(id) AS id from "+tableName;
 
     clear();
@@ -243,8 +265,6 @@ int PostgresDataProvider::fetchLastId(const std::string tableName)
 
     res = PQexec(conn, "END");
     PQclear(res);
-
-   // PQfinish(conn);
 
     return std::stoi(lastId);
 }

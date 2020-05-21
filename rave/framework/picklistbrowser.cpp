@@ -7,15 +7,14 @@
 #include "selectclosewidget.h"
 #include "manytomany.h"
 
-PickListBrowser::PickListBrowser(ManyToMany& mtom,
-                                EntityDataModel* edm,
+PickListBrowser::PickListBrowser(PickListSetting& plSetting,
                                  QWidget *parent) :
-    BaseEntityBrowserDlg(parent, mtom.detailEntity()),
+    BaseEntityBrowserDlg(parent, plSetting.listEntity),
     ui(new Ui::PickListBrowser),
     scw{},
-    mEntity{mtom.detailEntity()},
-    destModel{edm},
-    mMtoM{mtom}
+    mPickListSetting{plSetting}
+    //mEntity{mtom.detailEntity()},
+    //mMtoM{mtom}
 {
     ui->setupUi(this);
     hideAddButton();
@@ -49,14 +48,12 @@ void PickListBrowser::onSelectItem()
     qDebug() << "PickListBrowser::onSelectItem()";
     std::string searchName = selectedRowName().toStdString();
     BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
-    destModel->cacheEntity(entity);
-    mMtoM.addEntity(entity);
-
-   // BaseEntity& ent = *entity;
-    //BaseEntity* evil = &ent;
+    entity->setDBAction(DBAction::dbaCREATE);
+    mPickListSetting.selectedEntities.push_back(entity);
 }
 
 void PickListBrowser::onCloseSelection()
 {
     done(0);
 }
+

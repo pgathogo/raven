@@ -13,6 +13,7 @@ TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent,
 {
     ui->setupUi(this);
     setDialogTitle("Type Exclusions");
+
 }
 
 TypeExclusionBrowser::~TypeExclusionBrowser()

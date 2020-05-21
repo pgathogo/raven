@@ -12,6 +12,7 @@ QT_END_NAMESPACE
 
 class BaseEntity;
 class PlainForm;
+class PostgresDatabaseManager;
 
 class MainWindow : public QMainWindow
 {
@@ -70,6 +71,7 @@ private:
     QAction* clientRptAction;
     QAction* plainFormAction;
 
+    PostgresDatabaseManager* mPGManager;
     void createActions();
 
 

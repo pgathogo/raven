@@ -11,6 +11,8 @@
 using StringMapped = std::map<std::string, std::string>;
 using RecordTuple = std::tuple<std::string, std::string>;
 
+class PostgresConnector;
+
 class BaseDataProvider
 {
 public:
@@ -33,14 +35,17 @@ class PostgresDataProvider: public BaseDataProvider
 {
     public:
         PostgresDataProvider();
+        //static PostgresDataProvider* instance();
         ~PostgresDataProvider() override;
         bool executeQuery(const std::string query) override;
         int fetchLastId(const std::string tableName) override;
         int read(const std::string query) override;
         void test() {}
+        void openConnection();
     private:
+        PostgresConnector* mPGConnector;
         PGconn* conn;
-        bool openConnection();
+        //static PostgresDataProvider* mInstance;
 };
 
 #endif // DATAPROVIDER_H

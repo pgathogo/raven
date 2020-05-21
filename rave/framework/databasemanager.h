@@ -8,6 +8,8 @@ class BaseDataProvider;
 class PostgresDataProvider;
 
 using SearchField = std::tuple<std::string, std::string>;
+using ColumnName = std::string;
+using ColumnValue = int;
 
 class BaseDatabaseManager
 {
@@ -16,7 +18,14 @@ public:
     virtual void updateEntity(BaseEntity* entity) = 0;
     virtual int createEntity(BaseEntity* entity) = 0;
     virtual int deleteEntity(BaseEntity* entity) = 0;
+
+    virtual int deleteEntityByValue(
+            BaseEntity* entity,
+            std::tuple<ColumnName, ColumnValue>) = 0; // make it generic
+
     virtual int fetchAll(BaseEntity* entity) = 0;
+    virtual int searchById(BaseEntity* entity,
+                           std::tuple<std::string, int> field_value) = 0;
     virtual int searchByField(BaseEntity* entity,
                           std::tuple<std::string, std::string> sf) = 0;
     virtual BaseDataProvider* provider() = 0;
@@ -44,9 +53,14 @@ public:
     void updateEntity(BaseEntity* entity) override;
     int createEntity(BaseEntity* entity) override;
     int deleteEntity(BaseEntity* entity)override;
+    virtual int deleteEntityByValue(
+            BaseEntity* entity,
+            std::tuple<ColumnName, ColumnValue>) override;
     int fetchAll(BaseEntity* entity) override;
     int searchByField(BaseEntity* entity,
                           std::tuple<std::string, std::string> sf) override;
+    int searchById(BaseEntity* entity,
+                           std::tuple<std::string, int> field_value) override;
     BaseDataProvider* provider() override;
 protected:
     void loadEntity(BaseEntity& entity)override;

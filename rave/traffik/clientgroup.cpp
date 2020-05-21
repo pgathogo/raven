@@ -87,13 +87,6 @@ std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
     auto cg = entityFieldMap<ClientGroup>(sm);
     return std::move(cg);
 
-    /*
-    FieldValues fvs = mapping(sm);
-    std::unique_ptr<ClientGroup> cg = std::make_unique<ClientGroup>();
-    for (auto& fv : fvs)
-        cg->setValueByField(std::get<0>(fv), std::get<1>(fv));
-    return std::move(cg);
-    */
 }
 
 
@@ -126,7 +119,6 @@ void ClientGroup::setTableName(std::string table_name)
 
 std::string ClientGroup::tableName() const
 {
-    //return "rave_clientgroup";
     return mTableName;
 }
 

@@ -1,8 +1,12 @@
 #include <QDebug>
 #include "baseentity.h"
+#include "entitydatamodel.h"
+#include "../utils/types.h"
 
 BaseEntity::BaseEntity()
         :mID{}
+        ,mEDM{}
+        ,mDBAction{DBAction::dbaNONE}
 {
     mID = createField<IntegerField>("id", "Unique identifier");
     mID->setSearchable(false);
@@ -101,6 +105,10 @@ FieldValues BaseEntity::mapping(StringMap* e)
 
            if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
            (std::get<1>(*iter)->visible())){
+
+               std::string col = std::get<1>(*iter)->dbColumnName();
+               std::string val = it->second;
+
             Field* ptr(std::get<1>(*iter).get());
             fieldVal = std::make_tuple(ptr, it->second);
             flds.push_back(fieldVal);
@@ -113,3 +121,22 @@ FieldValues BaseEntity::mapping(StringMap* e)
        return flds;
 }
 
+void BaseEntity::getEntityById(BaseEntity& entity, int id)
+{
+    mEDM = new EntityDataModel(entity);
+    mEDM->getById({"id", id});
+}
+
+void BaseEntity::setDBAction(DBAction dbact)
+{
+    mDBAction = dbact;
+}
+
+DBAction BaseEntity::dbAction() const
+{
+    return mDBAction;
+}
+void BaseEntity::clearFields()
+{
+    mFields.clear();
+}

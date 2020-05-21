@@ -20,7 +20,7 @@ class EntityModel : public QStandardItemModel{
         EntityModel();
         EntityModel(BaseEntity* entity);
         ~EntityModel();
-        std::vector<EntityRecord> entities();
+        size_t entitiesCount();
         BaseEntity* findEntityByName(std::string name);
         void clearEntities();
         void setHeader();
@@ -30,7 +30,7 @@ class EntityModel : public QStandardItemModel{
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
         void addEntity(BaseEntity* entity);
-        void deleteFromModel(const std::string name);
+        void deleteFromModel();
     private:
         BaseEntity* mEntity;
         std::vector<EntityRecord> mEntities;
@@ -45,6 +45,7 @@ class EntityDataModel : public EntityModel
 public:
     EntityDataModel();
     EntityDataModel(BaseEntity* baseEntity);
+    EntityDataModel(BaseEntity& baseEntity);
     ~EntityDataModel();
 
     void populateFields(BaseEntity* baseEntity);
@@ -53,15 +54,25 @@ public:
     //void createEntity(std::unique_ptr<BaseEntity> entity);
     bool createEntity(BaseEntity* entity);
     void updateEntity(BaseEntity* entity);
-    void deleteEntity(const std::string name, BaseEntity* entity);
+    //void deleteEntity(const std::string name, BaseEntity* entity);
+    void deleteEntity(BaseEntity* entity);
+    void deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value);
 
     void cacheEntity(BaseEntity* entity);
 
-    EntityRecord record(int i);
+    int createEntityDB(BaseEntity* entity);
 
     void all();
+    void searchByField(std::tuple<std::string, std::string>);
+    void searchById(std::tuple<std::string, int>);
+    void getById(std::tuple<std::string, int>);
 
     BaseEntity* entity() const { return mEntity; }
+
+    size_t count();
+
+    void mapEntity(StringMap* map, BaseEntity& entity);
+    void populateMToMDetails();
 
     class detail{
         public:
@@ -82,10 +93,9 @@ public:
         auto res = std::make_tuple( create (std::forward<Types>(args) )...);
     }
 
-    void searchByField(std::tuple<std::string, std::string>);
 
 private:
-    BaseEntity* mEntity;
+    BaseEntity* mEntity;   // deleted at the base class
     BaseDatabaseManager* dbManager;
 
     void populateEntities();

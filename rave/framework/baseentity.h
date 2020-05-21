@@ -12,8 +12,9 @@
 
 class QString;
 class QStringList;
-
 class QStandardItem;
+
+class EntityDataModel;
 
 //using FieldMap = std::map<std::string, std::unique_ptr<Field>>;
 using FieldMap = std::tuple<std::string, std::unique_ptr<Field>>;
@@ -60,6 +61,13 @@ public:
 
     virtual void populateEntity()=0;
 
+    void getEntityById(BaseEntity& entity, int id);
+
+    void setDBAction(DBAction dbact);
+    DBAction dbAction() const;
+
+    void clearFields();
+
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");
@@ -71,6 +79,7 @@ public:
         return ptr;
     }
 
+    /*
     template<typename T>
     std::unique_ptr<T> entityFieldMap(StringMap* map)
     {
@@ -80,10 +89,24 @@ public:
             uT->setValueByField(std::get<0>(v), std::get<1>(v));
         return std::move(uT);
     }
+    */
+
+    template<typename T, typename... TArgs>
+    std::unique_ptr<T> entityFieldMap(StringMap* map, TArgs...mArgs)
+    {
+        FieldValues fval = mapping(map);
+        std::unique_ptr<T> uT = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
+        for(auto& v : fval)
+            uT->setValueByField(std::get<0>(v), std::get<1>(v));
+        return std::move(uT);
+    }
+
 
 private:
     IntegerField* mID;
     std::vector<FieldMap> mFields;
+    EntityDataModel* mEDM;
+    DBAction mDBAction;
 
 };
 

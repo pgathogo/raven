@@ -13,13 +13,18 @@ namespace Ui {
 class PickListBrowser;
 }
 
+struct PickListSetting {
+    BaseEntity* listEntity;
+    std::vector<BaseEntity*> selectedEntities;
+};
+
 class PickListBrowser : public BaseEntityBrowserDlg
 {
     Q_OBJECT
 
 public:
-    explicit PickListBrowser(ManyToMany& mtom,
-                            EntityDataModel* edm,
+                //EntityDataModel* edm,
+    explicit PickListBrowser(PickListSetting& plSetting,
                             QWidget *parent = nullptr);
     ~PickListBrowser() override;
 
@@ -36,9 +41,11 @@ signals:
 private:
     Ui::PickListBrowser *ui;
     SelectCloseWidget* scw;
-    BaseEntity* mEntity;
-    EntityDataModel* destModel;
-    ManyToMany& mMtoM;
+    PickListSetting& mPickListSetting;
+    //BaseEntity* mEntity;
+    //EntityDataModel* destModel;
+    //ManyToMany& mMtoM;
+    //std::vector<BaseEntity*> cont;
 };
 
 #endif // PICKLISTBROWSER_H

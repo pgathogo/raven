@@ -16,12 +16,9 @@ TypeExclusionDetails::TypeExclusionDetails(
     ui->setupUi(bui->baseContainer);
     bindWidgets();
     setTitle(title());
-    //ui->tabWidget->setTabText(0, "Details");
-    //ui->tabWidget->setTabText(1, "Daypart");
+    ui->tabWidget->setCurrentIndex(0);
     dpg = new DayPartGrid(ui->vlTypeEx);
     populateGrid();
-
-
 }
 
 TypeExclusionDetails::~TypeExclusionDetails()

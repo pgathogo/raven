@@ -41,16 +41,15 @@ public:
         if (!searchName.empty()){
         BaseEntity* be = mEntityDataModel->findEntityByName(searchName);
         if (be != nullptr){
-          T1* entity = dynamic_cast<T1*>(be);
-          T2* dlg = new T2(entity);
-          if(dlg->exec() > 0){
+            T1* entity = dynamic_cast<T1*>(be);
+            T2* dlg = new T2(entity);
+            if(dlg->exec() > 0){
               updateTableViewRecord(entity);
               mEntityDataModel->updateEntity(entity);
+             }
+            delete dlg;
           }
-          delete dlg;
-        }
-
-      }
+       }
     }
 
     template <typename T1, typename T2>
@@ -76,8 +75,8 @@ public:
         }
     }
 
-protected:
     EntityDataModel* entityDataModel() const;
+protected:
     QMdiArea* mMdiArea;
     int selectedRowId() const;
     QString selectedRowName();
@@ -86,6 +85,7 @@ protected:
     void hideAddButton();
     void hideEditButton();
     void hideDeleteButton();
+    BaseEntity* findSelectedEntity();
     Ui::BaseEntityBrowserDlg* bui;
 
 public slots:
@@ -93,8 +93,6 @@ public slots:
     void editBtnClicked();
     void deleteBtnClicked();
     void searchBtnClicked();
-
-
 
 private:
     BaseEntity* mBaseEntity;

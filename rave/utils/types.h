@@ -15,4 +15,11 @@ enum class NotificationType {
     ntSUCCESS
 };
 
+enum class DBAction{
+        dbaCREATE,
+        dbaUPDATE,
+        dbaDELETE,
+        dbaNONE
+};
+
 #endif // TYPES_H

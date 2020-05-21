@@ -20,6 +20,7 @@ SOURCES += \
     ../framework/baseentity.cpp \
     ../framework/baseentitybrowserdlg.cpp \
     ../framework/baseentitydetaildlg.cpp \
+    ../framework/databaseconnector.cpp \
     ../framework/databasemanager.cpp \
     ../framework/dataprovider.cpp \
     ../framework/entitydatamodel.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     ../framework/baseentity.h \
     ../framework/baseentitybrowserdlg.h \
     ../framework/baseentitydetaildlg.h \
+    ../framework/databaseconnector.h \
     ../framework/databasemanager.h \
     ../framework/dataprovider.h \
     ../framework/entitydatamodel.h \

@@ -91,6 +91,7 @@ std::string BaseDatabaseManager::makeUpdateString(BaseEntity* entity)
 PostgresDatabaseManager::PostgresDatabaseManager()
 {
     dataProvider =  new PostgresDataProvider;
+    dataProvider->openConnection();
 }
 
 PostgresDatabaseManager::~PostgresDatabaseManager()
@@ -138,11 +139,30 @@ int PostgresDatabaseManager::searchByField(BaseEntity* entity, std::tuple<std::s
     return provider()->read(sql);
 }
 
+int PostgresDatabaseManager::searchById(BaseEntity* entity, std::tuple<std::string, int> field_value)
+{
+    std::string sql;
+    std::string flds = columnsForSelection(entity);
+    sql = "SELECT "+flds+" FROM "+entity->tableName()+
+                    " WHERE "+ std::get<0>(field_value)+" = "+std::to_string(std::get<1>(field_value));
+    return provider()->read(sql);
+}
+
 int PostgresDatabaseManager::deleteEntity(BaseEntity* entity)
 {
     std::string sql;
     sql = "DELETE FROM "+entity->tableName()+" WHERE ID ="+std::to_string(entity->id());
     qDebug() << stoq(sql);
+    return provider()->executeQuery(sql);
+}
+
+int PostgresDatabaseManager::deleteEntityByValue( BaseEntity* entity,
+            std::tuple<ColumnName, ColumnValue> column)
+{
+    std::string sql;
+    sql = "DELETE FROM "+entity->tableName()+" WHERE "+
+            std::get<0>(column)+" = "+
+           std::to_string(std::get<1>(column));
     return provider()->executeQuery(sql);
 }
 

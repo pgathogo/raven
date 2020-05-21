@@ -3,19 +3,25 @@
 #include "typeexclusion.h"
 #include "../framework/manytomany.h"
 #include "../framework/valuelist.h"
+#include "../framework/entitydatamodel.h"
+
+EntityDataModel* VoiceOver::mGenderDM{nullptr};
 
 VoiceOver::VoiceOver()
     :BaseEntity{}
     ,mName{}
     ,mVoiceEx{}
 {
+    if (mGenderDM == nullptr)
+        mGenderDM = new EntityDataModel(new Gender());
+
     mName = createField<StringField>("voiceover_name", "Voice Over Name");
     mName->setDBColumnName("name");
     mName->setMandatory(true);
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No");
 
-    mGender = createField<LookupField>("gender", "Gender");
+    mGender = createField<LookupField>("gender", "Gender", mGenderDM);
     mGender->setDBColumnName("gender_id");
 
     mDaypart1 = createField<StringField>("daypart1", "Daypart1");
@@ -42,11 +48,13 @@ VoiceOver::VoiceOver()
             << QString::fromStdString(mGender->fieldLabel());
 
     setTableName("rave_voiceover");
+
 }
 
 VoiceOver::~VoiceOver()
 {
     //delete mGenderModel;
+    qDebug() << "VoiceOver::dtor";
 }
 
 std::string VoiceOver::tableName() const
@@ -65,14 +73,15 @@ BaseEntity* VoiceOver::copy() const
 }
 std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
 {
-    std::unique_ptr<VoiceOver> te = entityFieldMap<VoiceOver>(e);
-    return std::move(te);
+    std::unique_ptr<VoiceOver> vo = entityFieldMap<VoiceOver>(e);
+    vo->voiceEx()->setParentId(vo->id());
+    return std::move(vo);
 }
 
 QList<QStandardItem*> VoiceOver::tableViewColumns()
 {
-    QString nm  = QString::fromStdString(name()->valueToString());
-    QString gen = QString::fromStdString(gender()->valueToString());
+    QString nm  = QString::fromStdString(name()->displayName());
+    QString gen = QString::fromStdString(gender()->displayName());
 
     QStandardItem* Qname = new QStandardItem(nm);
     QStandardItem* Qgen = new QStandardItem(gen);
@@ -80,8 +89,8 @@ QList<QStandardItem*> VoiceOver::tableViewColumns()
 }
 std::vector<std::string> VoiceOver::tableViewValues()
 {
-    std::string gname  = name()->valueToString();
-    std::string gen = gender()->valueToString();
+    std::string gname  = name()->displayName();
+    std::string gen = gender()->displayName();
     return{gname, gen};
 }
 
@@ -196,3 +205,7 @@ void VoiceOver::setDaypart7(std::string dp)
     mDaypart7->setValue(dp);
 }
 
+VoiceExclusion* VoiceOver::voiceEx()
+{
+    return mVoiceEx;
+}

@@ -169,14 +169,14 @@ VoiceExclusion::VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt):
     ManyToMany{pEnt, dEnt}
 {
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(dEnt);
-    //mHeader << QString::fromStdString(te->name()->fieldLabel())
-     //       << QString::fromStdString(te->description()->fieldLabel());
     mHeader = te->tableHeaders();
-
     setTableName("rave_typeexclusion");
 }
 
-VoiceExclusion::~VoiceExclusion(){}
+VoiceExclusion::~VoiceExclusion()
+{
+    qDebug() << "VoiceExxclusion::dtor";
+}
 
 std::string VoiceExclusion::windowTitle() const
 {
@@ -199,15 +199,20 @@ BaseEntity* VoiceExclusion::copy() const
 }
 std::unique_ptr<BaseEntity> VoiceExclusion::mapFields(StringMap* sm)
 {
-    auto te = entityFieldMap<VoiceExclusion>(sm);
-    return std::move(te);
+    auto ve = entityFieldMap<VoiceExclusion>(sm,
+                                             mParentEntity,
+                                             mDetailEntity);
+
+    getEntityById(*mDetailEntity, ve->detailId()->value().toInt());
+
+    return std::move(ve);
 }
 
 QList<QStandardItem*> VoiceExclusion::tableViewColumns()
 {
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
-    QString gname  = QString::fromStdString(te->name()->valueToString());
-    QString desc = QString::fromStdString(te->description()->valueToString());
+    QString gname  = QString::fromStdString(te->name()->displayName());
+    QString desc = QString::fromStdString(te->description()->displayName());
 
     QStandardItem* Qgname = new QStandardItem(gname);
     QStandardItem* Qdesc = new QStandardItem(desc);

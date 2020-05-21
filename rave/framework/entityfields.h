@@ -4,6 +4,7 @@
 #include<string>
 #include<variant>
 #include<QVariant>
+#include<memory>
 
 using FieldValueType = std::variant<std::string, int>;
 
@@ -37,8 +38,8 @@ class Field{
         void setSearchable(bool value);
         bool searchable();
 
-        void setDisplayName(const std::string dispName);
-        std::string displayName() const;
+        //void setDisplayName(const std::string dispName);
+        virtual std::string displayName() const = 0;
 
         void setMandatory(bool value);
         bool mandatory() const;
@@ -75,6 +76,7 @@ class IntegerField : public Field{
         void stringToValue(std::string val) override;
 
         QVariant value() override;
+        std::string displayName() const override;
 
         //IntegerFormField* widget();
 
@@ -108,6 +110,7 @@ class StringField : public Field{
         void setValueFromWidget();
 
         void printWidgetValue();
+        std::string displayName() const override;
     private:
         std::string mValue;
         QLineEdit* mWidget;
@@ -130,6 +133,7 @@ class TextField :public Field{
         void setWidget(QTextEdit* textEdit);
         void setValueFromWidget();
 
+        std::string displayName() const override;
     private:
         std::string mValue;
         QTextEdit* mWidget;
@@ -139,7 +143,7 @@ class LookupField : public Field{
 public:
         LookupField();
         ~LookupField() override;
-        LookupField(std::string aName, std::string aLabel);
+        LookupField(std::string aName, std::string aLabel, EntityDataModel* edm);
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
 
@@ -157,12 +161,17 @@ public:
         void setWidget(QComboBox* textEdit);
         void setValueFromWidget();
 
-        void setDataModel(EntityDataModel* edm);
+        void cacheData();
+        std::size_t cacheCount();
+        std::string displayName() const override;
+
     private:
         int mValue;
         int mIndex;
         std::string mCurrText;
         QComboBox* mWidget;
+        static EntityDataModel* mEDM;
+        static bool hasData;
 };
 
 

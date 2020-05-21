@@ -5,6 +5,7 @@
 
 #include "baseentitybrowserdlg.h"
 #include "manytomany.h"
+#include "typeexclusion.h"
 
 class EntityDataModel;
 class QVBoxLayout;
@@ -29,10 +30,11 @@ public:
 
     void addRecord() override;
     void updateRecord() override;
+    void deleteRecord() override;
 
     //createMToM(const std::string typeInfo, BaseEntity* pEnt, BaseEntity* dEnt)
     static ManyToMany*
-    createMToM(ManyToMany* mtom)
+    createMtoM(ManyToMany* mtom)
     {
         if (mtom->typeInfo() == "voice_type_exclusion"){
             VoiceExclusion* ve = new VoiceExclusion(
@@ -40,8 +42,21 @@ public:
                         mtom->detailEntity());
             return ve;
         }
-
         return nullptr;
+    }
+
+    ManyToMany* createMtoM(ManyToMany* mtom, BaseEntity* detail)
+    {
+        if (mtom->typeInfo() == "voice_type_exclusion"){
+            TypeExclusion* dte = dynamic_cast<TypeExclusion*>(detail);
+            //TypeExclusion te(*dte);
+            VoiceExclusion* ve = new VoiceExclusion(
+                        mtom->parentEntity(), dte);
+            ve->setDBAction(detail->dbAction());
+            return ve;
+        }
+        return nullptr;
+
     }
 
     size_t cnt(){ return mMtoM->getSize(); }
