@@ -41,6 +41,9 @@ SOURCES += \
     clientgroupdlg.cpp \
     main.cpp \
     mainwindow.cpp \
+    salesperson.cpp \
+    salespersonbrowser.cpp \
+    salespersonform.cpp \
     typeexclusion.cpp \
     typeexclusionbrowser.cpp \
     typeexclusiondetails.cpp \
@@ -75,6 +78,9 @@ HEADERS += \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \
     mainwindow.h \
+    salesperson.h \
+    salespersonbrowser.h \
+    salespersonform.h \
     typeexclusion.h \
     typeexclusionbrowser.h \
     typeexclusiondetails.h  \
@@ -96,6 +102,8 @@ FORMS += \
     clientgroupdetaildlg.ui \
     clientgroupdlg.ui \
     mainwindow.ui \
+    salespersonbrowser.ui \
+    salespersonform.ui \
     typeexclusionbrowser.ui \
     typeexclusiondetails.ui \
     voiceoverbrowser.ui \

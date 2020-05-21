@@ -204,10 +204,6 @@ void TypeExclusion::setDaypart7(std::string dp)
     mDaypart7->setValue(dp);
 }
 
-BaseEntity* TypeExclusion::copy() const
-{
-    return new TypeExclusion;
-}
 std::unique_ptr<BaseEntity> TypeExclusion::mapFields(StringMap* e)
 {
     auto te = entityFieldMap<TypeExclusion>(e);

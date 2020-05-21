@@ -13,8 +13,6 @@ public:
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
-
-    BaseEntity* copy() const override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     QList<QStandardItem*> tableViewColumns() override;

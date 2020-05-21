@@ -15,7 +15,7 @@ ValueListDetailDlg::ValueListDetailDlg(
 {
     ui->setupUi(bui->baseContainer);
     bindWidgets();
-    setTitle(title());
+    setTitle(windowTitle());
 
 }
 
@@ -25,7 +25,7 @@ ValueListDetailDlg::~ValueListDetailDlg()
     delete ui;
 }
 
-std::string ValueListDetailDlg::title()
+std::string ValueListDetailDlg::windowTitle()
 {
     return mEntity->windowTitle();
 }

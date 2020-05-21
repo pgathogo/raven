@@ -91,13 +91,9 @@ void VoiceOverForm::bindWidgets()
     mVoiceOver->name()->setWidget(ui->edtName);
     mVoiceOver->mobileno()->setWidget(ui->edtMobile);
     mVoiceOver->gender()->setWidget(ui->cbGender);
-
-    //mGenderModel = new EntityDataModel(new Gender());
-    //mVoiceOver->gender()->setDataModel(mGenderModel);
-    //mGenderModel->all();
 }
 
-std::string VoiceOverForm::title()
+std::string VoiceOverForm::windowTitle()
 {
     return "Voice Over Details";
 }

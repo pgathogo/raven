@@ -47,6 +47,7 @@ private slots:
     void plainForm();
     void newTypeExclusion();
     void newVoiceOver();
+    void browseSalesPerson();
 
 private:
     PlainForm* pf;

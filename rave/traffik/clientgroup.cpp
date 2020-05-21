@@ -55,12 +55,6 @@ ClientGroup::~ClientGroup()
     //delete mDescription;
 }
 
-BaseEntity* ClientGroup::copy() const
-{
-    qDebug() << "ClientGroup copy ...";
-    return new ClientGroup();
-}
-
 void ClientGroup::setName(std::string aName)
 {
     mName->setValue(aName);

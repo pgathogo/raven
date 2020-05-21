@@ -15,7 +15,7 @@ TypeExclusionDetails::TypeExclusionDetails(
 {
     ui->setupUi(bui->baseContainer);
     bindWidgets();
-    setTitle(title());
+    setTitle(windowTitle());
     ui->tabWidget->setCurrentIndex(0);
     dpg = new DayPartGrid(ui->vlTypeEx);
     populateGrid();
@@ -23,14 +23,14 @@ TypeExclusionDetails::TypeExclusionDetails(
 
 TypeExclusionDetails::~TypeExclusionDetails()
 {
-    qDebug() << "TypeExclusion dtor";
     delete ui;
-    delete typeEx;
+    //delete typeEx;
     delete dpg;
+    qDebug() << "TypeExclusion dtor";
 }
 
 
-std::string TypeExclusionDetails::title()
+std::string TypeExclusionDetails::windowTitle()
 {
     return "Type Exclusions";
 }

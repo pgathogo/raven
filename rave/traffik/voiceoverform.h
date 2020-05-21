@@ -26,7 +26,7 @@ public:
 
     ActionResult saveRecord() override;
     void bindWidgets() override;
-    std::string title() override;
+    std::string windowTitle() override;
     void populateGrid();
 
     ManyToMany* getMtoM() const;

@@ -23,7 +23,6 @@ public:
     IntegerField* detailId() const;
     void setDetailId(int id);
 
-    BaseEntity* copy() const override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
 
     QList<QStandardItem*> tableViewColumns() override;
@@ -72,7 +71,6 @@ class VoiceExclusion : public ManyToMany{
         std::string windowTitle() const override;
         std::string typeInfo() const override;
 
-        BaseEntity* copy() const override;
         std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
 
         QList<QStandardItem*> tableViewColumns() override;

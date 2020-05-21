@@ -75,10 +75,6 @@ void ManyToMany::setDetailId(int id)
     mDetailId->setValue(id);
 }
 
-BaseEntity* ManyToMany::copy() const
-{
-    return new ManyToMany();
-}
 std::unique_ptr<BaseEntity> ManyToMany::mapFields(StringMap* sm)
 {
     auto te = entityFieldMap<ManyToMany>(sm);
@@ -193,10 +189,6 @@ std::string VoiceExclusion::typeInfo() const
     return "voice_type_exclusion";
 }
 
-BaseEntity* VoiceExclusion::copy() const
-{
-    return new VoiceExclusion();
-}
 std::unique_ptr<BaseEntity> VoiceExclusion::mapFields(StringMap* sm)
 {
     auto ve = entityFieldMap<VoiceExclusion>(sm,

@@ -13,12 +13,15 @@ BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
 {
     bui->setupUi(this);
     connectSlots();
+    //setWindowTitle(QString::fromStdString(title()));
     mNoticeBar = new NotificationBar(bui->noticeLayout);
 }
+
 
 std::string BaseEntityDetailDlg::title(){
     return "Details Dialog";
 }
+
 
 BaseEntityDetailDlg::~BaseEntityDetailDlg()
 {
@@ -71,5 +74,7 @@ void BaseEntityDetailDlg::save(BaseEntity* entity)
 
 void BaseEntityDetailDlg::setTitle(std::string title)
 {
-    bui->lblTitle->setText(QString::fromStdString(title));
+    QString qtitle = QString::fromStdString(title);
+    setWindowTitle(qtitle);
+    bui->lblTitle->setText(qtitle);
 }

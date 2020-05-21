@@ -21,7 +21,7 @@ public:
     ActionResult saveRecord() override;
     void bindWidgets() override;
 
-    std::string title() override;
+    std::string windowTitle() override;
 
 private:
     Ui::ClientGroupDetailDlg *ui;

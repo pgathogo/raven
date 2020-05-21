@@ -13,11 +13,11 @@ ClientGroupDetailDlg::ClientGroupDetailDlg(
 {
     ui->setupUi(bui->baseContainer);
     bindWidgets();
-    setTitle(title());
+    setTitle(windowTitle());
     //DayPartGrid* dpg = new DayPartGrid(ui->vlGrid);
 }
 
-std::string ClientGroupDetailDlg::title()
+std::string ClientGroupDetailDlg::windowTitle()
 {
     return "Client Group";
 }

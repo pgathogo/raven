@@ -25,7 +25,6 @@ public:
     TextField* description() const;
     void setDescription(std::string aDescription);
 
-    BaseEntity* copy() const override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     QList<QStandardItem*> tableViewColumns() override;

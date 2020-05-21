@@ -28,7 +28,8 @@ public:
     //virtual void populateFields()=0;
     virtual void bindWidgets()=0;
 
-    virtual std::string title();
+    std::string title();
+    virtual std::string windowTitle() = 0;
 
     void closeEvent(QCloseEvent* event);
 

@@ -44,7 +44,6 @@ public:
     StringField* daypart7() const;
     void setDaypart7(std::string dp);
 
-    BaseEntity* copy() const override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     QList<QStandardItem*> tableViewColumns() override;

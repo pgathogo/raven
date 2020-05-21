@@ -21,7 +21,6 @@ public:
     StringField* listValue() const;
     void setListValue(std::string pValue);
 
-    BaseEntity* copy() const override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     QList<QStandardItem*> tableViewColumns() override;

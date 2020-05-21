@@ -31,7 +31,6 @@ public:
     [[nodiscard]] int id() const;
     void setId(int i);
 
-    virtual BaseEntity* copy()const = 0;
     virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
 
     std::vector<FieldMap>::const_iterator cBeginIter();

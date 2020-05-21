@@ -83,14 +83,6 @@ void ValueList::setListValue(std::string pValue)
     mListValue->setValue(pValue);
 }
 
-
-
-BaseEntity* ValueList::copy() const
-{
-    return new ValueList();
-}
-
-
 std::unique_ptr<BaseEntity> ValueList::mapFields(StringMap* sm)
 {
     auto te = entityFieldMap<ValueList>(sm);

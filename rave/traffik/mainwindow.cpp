@@ -12,6 +12,7 @@
 #include "clientgroup.h"
 
 #include "voiceoverbrowser.h"
+#include "salespersonbrowser.h"
 #include "../framework/databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -112,6 +113,11 @@ void MainWindow::createActions()
     voiceOverAction->setStatusTip(tr("Maintain details of voice overs"));
     connect(voiceOverAction, &QAction::triggered, this, &MainWindow::newVoiceOver);
 
+    QAction* salesPersonAction = new QAction(tr("&Sales Person"), setupMenu);
+    setupMenu->addAction(salesPersonAction);
+    salesPersonAction->setStatusTip(tr("Maintain details of Sales Persons"));
+    connect(salesPersonAction, &QAction::triggered, this, &MainWindow::browseSalesPerson);
+
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     setupMenu->addAction(plainFormAction);
@@ -149,6 +155,13 @@ void MainWindow::newVoiceOver()
 {
     VoiceOverBrowser* vob = createSubWindow<VoiceOverBrowser>();
     vob->exec();
+}
+
+void MainWindow::browseSalesPerson()
+{
+    SalesPersonBrowser* spb = createSubWindow<SalesPersonBrowser>();
+    spb->exec();
+
 }
 
 

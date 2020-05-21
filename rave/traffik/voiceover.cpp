@@ -10,6 +10,8 @@ EntityDataModel* VoiceOver::mGenderDM{nullptr};
 VoiceOver::VoiceOver()
     :BaseEntity{}
     ,mName{}
+    ,mMobileNo{}
+    ,mGender{}
     ,mVoiceEx{}
 {
     if (mGenderDM == nullptr)
@@ -67,10 +69,6 @@ void VoiceOver::setTableName(const std::string table_name)
     mTableName = table_name;
 }
 
-BaseEntity* VoiceOver::copy() const
-{
-    return new VoiceOver;
-}
 std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
 {
     std::unique_ptr<VoiceOver> vo = entityFieldMap<VoiceOver>(e);
@@ -80,6 +78,7 @@ std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
 
 QList<QStandardItem*> VoiceOver::tableViewColumns()
 {
+
     QString nm  = QString::fromStdString(name()->displayName());
     QString gen = QString::fromStdString(gender()->displayName());
 
@@ -107,6 +106,7 @@ std::string VoiceOver::searchColumn() const
 void VoiceOver::populateEntity()
 {
     mName->setValueFromWidget();
+    mMobileNo->setValueFromWidget();
     mGender->setValueFromWidget();
 }
 
