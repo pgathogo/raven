@@ -13,6 +13,7 @@
 
 #include "voiceoverbrowser.h"
 #include "salespersonbrowser.h"
+#include "agentbrowser.h"
 #include "../framework/databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -118,6 +119,11 @@ void MainWindow::createActions()
     salesPersonAction->setStatusTip(tr("Maintain details of Sales Persons"));
     connect(salesPersonAction, &QAction::triggered, this, &MainWindow::browseSalesPerson);
 
+    QAction* agentAction = new QAction(tr("&Agents"));
+    setupMenu->addAction(agentAction);
+    agentAction->setStatusTip(tr("Maintain Agents details"));
+    connect(agentAction, &QAction::triggered, this, &MainWindow::browseAgent);
+
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     setupMenu->addAction(plainFormAction);
@@ -161,7 +167,12 @@ void MainWindow::browseSalesPerson()
 {
     SalesPersonBrowser* spb = createSubWindow<SalesPersonBrowser>();
     spb->exec();
+}
 
+void MainWindow::browseAgent()
+{
+    AgentBrowser* agentBrowser = createSubWindow<AgentBrowser>();
+    agentBrowser->exec();
 }
 
 

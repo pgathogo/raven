@@ -48,6 +48,7 @@ private slots:
     void newTypeExclusion();
     void newVoiceOver();
     void browseSalesPerson();
+    void browseAgent();
 
 private:
     PlainForm* pf;

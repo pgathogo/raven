@@ -51,6 +51,15 @@ class Person(models.Model):
 class SalesPerson(Person):
     pass
 
+class Agent(models.Model):
+    name = models.CharField(max_length=250)
+    address = models.TextField(null=True, blank=True)
+    town = models.CharField(max_length=200, null=True, blank=True)
+    telephone = models.CharField(max_length=200, null=True, blank=True)
+    email  = models.CharField(max_length=200, null=True, blank=True)
+    contact_name = models.CharField(max_length=200, null=True, blank=True)
+    contact_mobile_no = models.CharField(max_length=200, null=True, blank=True)
+
 class Daypart(models.Model):
     daypart1 = models.CharField(max_length=96, null=True, blank=True)
     daypart2 = models.CharField(max_length=96, null=True, blank=True)

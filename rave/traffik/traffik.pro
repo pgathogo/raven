@@ -36,6 +36,9 @@ SOURCES += \
     ../utils/notificationbar.cpp \
     ../utils/notificationitem.cpp \
     ../utils/plainform.cpp \
+    agent.cpp \
+    agentbrowser.cpp \
+    agentform.cpp \
     clientgroup.cpp \
     clientgroupdetaildlg.cpp \
     clientgroupdlg.cpp \
@@ -74,6 +77,9 @@ HEADERS += \
     ../utils/plainform.h \
     ../utils/tools.h \
     ../utils/types.h \
+    agent.h \
+    agentbrowser.h \
+    agentform.h \
     clientgroup.h \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \
@@ -99,6 +105,8 @@ FORMS += \
     ../utils/daypartgrid.ui \
     ../utils/notificationitem.ui \
     ../utils/plainform.ui \
+    agentbrowser.ui \
+    agentform.ui \
     clientgroupdetaildlg.ui \
     clientgroupdlg.ui \
     mainwindow.ui \
