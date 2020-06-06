@@ -20,9 +20,10 @@ public:
     ~AgentForm() override;
 
     ActionResult saveRecord() override;
-    void bindWidgets() override;
     std::string windowTitle() override;
 
+    void populateEntityFields() override;
+    void populateFormWidgets() override;
 private:
     Ui::AgentForm *ui;
     Agent* mAgent;

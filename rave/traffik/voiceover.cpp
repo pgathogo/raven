@@ -105,9 +105,9 @@ std::string VoiceOver::searchColumn() const
 
 void VoiceOver::populateEntity()
 {
-    mName->setValueFromWidget();
-    mMobileNo->setValueFromWidget();
-    mGender->setValueFromWidget();
+   // mName->setValueFromWidget();
+   // mMobileNo->setValueFromWidget();
+   // mGender->setValueFromWidget();
 }
 
 StringField* VoiceOver::name() const

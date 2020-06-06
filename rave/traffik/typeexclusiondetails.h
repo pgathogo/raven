@@ -20,9 +20,10 @@ public:
     ~TypeExclusionDetails() override;
 
     ActionResult saveRecord() override;
-    void bindWidgets() override;
     std::string windowTitle() override;
     void populateGrid();
+    void populateEntityFields() override;
+    void populateFormWidgets() override;
 
 private:
     Ui::TypeExclusionDetails *ui;

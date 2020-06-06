@@ -113,21 +113,21 @@ bool Field::mandatory() const
 IntegerField::IntegerField()
     :Field()
     ,mValue{-1}
-    ,mWidget{new QLineEdit}
+    //,mWidget{new QLineEdit}
 {
 }
 
 IntegerField::IntegerField(std::string aName, std::string aLabel)
     :Field(aName, aLabel)
     ,mValue{-1}
-    ,mWidget{new QLineEdit}
+    //,mWidget{new QLineEdit}
 {
 }
 
 IntegerField::~IntegerField()
 {
     qDebug() << "IntgerField::dtor";
-    delete mWidget;
+   // delete mWidget;
 }
 
 
@@ -151,15 +151,17 @@ void IntegerField::stringToValue(std::string val)
     setValue(std::stoi(val));
 }
 
-QVariant IntegerField::value()
+int IntegerField::value()
 {
-    return QVariant(mValue);
+    return mValue;
 }
 
+/*
 QLineEdit* IntegerField::widget()
 {
     return mWidget;
 }
+*/
 
 std::string IntegerField::displayName() const
 {
@@ -171,22 +173,19 @@ std::string IntegerField::displayName() const
 /* -------- StringField --------- */
 
 StringField::StringField()
-        :Field()
-        ,mWidget{new QLineEdit()}
 {
     qDebug() << "StringField::ctor";
 }
 
 StringField::StringField(std::string aName, std::string aLabel)
     :Field(aName, aLabel)
-    ,mWidget{new QLineEdit()}
 {
 }
 
 StringField::StringField(const StringField& sf)
 {
-    if (sf.mWidget)
-        mWidget->setText(sf.mWidget->text());
+//    if (sf.mWidget)
+//        mWidget->setText(sf.mWidget->text());
     mValue = sf.mValue;
 }
 
@@ -196,7 +195,7 @@ StringField& StringField::operator=(const StringField& sf)
     if (this != &sf){
         //delete mWidget;
         //mWidget = new QLineEdit();
-        mWidget->setText(sf.mWidget->text());
+       // mWidget->setText(sf.mWidget->text());
         mValue = sf.mValue;
     }
     return *this;
@@ -206,7 +205,7 @@ StringField& StringField::operator=(const StringField& sf)
 StringField::~StringField()
 {
     qDebug() << "StringField::dtor";
-    delete mWidget;
+   // delete mWidget;
 }
 
 
@@ -228,29 +227,23 @@ void StringField::stringToValue(std::string val)
 {
     setValue(val);
 }
-QVariant StringField::value()
+std::string StringField::value()
 {
-    return QVariant(stoq(mValue));
+    return mValue;
 }
-QLineEdit* StringField::widget()
-{
-    return mWidget;
-}
+/*
 void StringField::setWidget(QLineEdit* lineEdit)
 {
+    delete mWidget;
     mWidget = lineEdit;
     mWidget->setText(QString::fromStdString(mValue));
-}
-
-void StringField::printWidgetValue()
-{
-    qDebug() << "Widget Value: " << mWidget->text();
 }
 
 void StringField::setValueFromWidget()
 {
     mValue = mWidget->text().toStdString();
 }
+*/
 
 std::string StringField::displayName() const
 {
@@ -260,18 +253,18 @@ std::string StringField::displayName() const
 /* ---- TextField ---- */
 TextField::TextField()
         :Field()
-        ,mWidget{ new QTextEdit }
+        //,mWidget{ new QTextEdit }
 {
 }
 TextField::TextField(std::string aName, std::string aLabel)
         :Field(aName, aLabel)
-        ,mWidget{ new QTextEdit }
+        //,mWidget{ new QTextEdit }
 {
 }
 TextField::~TextField()
 {
     qDebug() << "TextField::dtor";
-    delete mWidget;
+    //delete mWidget;
 }
 
 std::string TextField::valueToString() const
@@ -294,11 +287,12 @@ void TextField::stringToValue(std::string val)
     mValue = val;
 }
 
-QVariant TextField::value()
+std::string TextField::value()
 {
-    return QVariant(QString::fromStdString(mValue));
+    return mValue;
 }
 
+/*
 QTextEdit* TextField::widget()
 {
     return mWidget;
@@ -306,6 +300,7 @@ QTextEdit* TextField::widget()
 
 void TextField::setWidget(QTextEdit* textEdit)
 {
+    delete mWidget;
     mWidget = textEdit;
     mWidget->insertPlainText(QString::fromStdString(mValue));
 }
@@ -314,6 +309,7 @@ void TextField::setValueFromWidget()
 {
     mValue = mWidget->toPlainText().toStdString();
 }
+*/
 
 std::string TextField::displayName() const
 {
@@ -329,7 +325,7 @@ LookupField::LookupField()
         :Field()
         ,mValue{1}
         ,mIndex{0}
-        ,mWidget{ new QComboBox }
+        //,mWidget{ new QComboBox }
 {
 }
 
@@ -337,7 +333,7 @@ LookupField::LookupField(std::string aName, std::string aLabel, EntityDataModel*
         :Field(aName, aLabel)
         ,mValue{-1}
         ,mIndex{-1}
-        ,mWidget{ new QComboBox }
+        //,mWidget{ new QComboBox }
 {
     //mWidget->setModel(edm);
     if (!hasData){
@@ -349,7 +345,7 @@ LookupField::LookupField(std::string aName, std::string aLabel, EntityDataModel*
 LookupField::~LookupField()
 {
     qDebug() << "LookupField::dtor";
-    delete mWidget;
+    //delete mWidget;
 }
 
 std::string LookupField::valueToString() const
@@ -372,11 +368,12 @@ void LookupField::stringToValue(std::string val)
     mValue = stoi(val);
 }
 
-QVariant LookupField::value()
+int LookupField::value()
 {
-    return QVariant(mValue);
+    return mValue;
 }
 
+/*
 QComboBox* LookupField::widget()
 {
     return mWidget;
@@ -384,6 +381,7 @@ QComboBox* LookupField::widget()
 
 void LookupField::setWidget(QComboBox* widget)
 {
+    delete mWidget;
     mWidget = widget;
     mWidget->setModel(mEDM);
     mWidget->setCurrentIndex(mWidget->findText(
@@ -395,6 +393,7 @@ void LookupField::setValueFromWidget()
     // get this from the model
     //mValue = mWidget->toPlainText().toStdString();
 }
+*/
 
 void LookupField::setIndex(int i)
 {
@@ -441,4 +440,129 @@ std::string LookupField::displayName() const
     }
 
     return name;
+}
+
+/*
+ChoiceField::ChoiceField()
+    :mIndex{-1}
+    //:mWidget{}
+{
+}
+
+ChoiceField::ChoiceField(std::string aName, std::string aLabel)
+    :Field(aName, aLabel)
+    ,mIndex{-1}
+    //,mWidget{new QComboBox}
+{
+}
+
+ChoiceField::~ChoiceField()
+{
+    //delete mWidget;
+}
+
+std::string ChoiceField::valueToString() const
+{
+    return mValue;
+}
+
+std::string ChoiceField::dbValueFormatter()
+{
+    return mValue;
+}
+
+void ChoiceField::stringToValue(std::string val)
+{
+}
+
+std::string ChoiceField::value()
+{
+    return mValue;
+}
+
+std::string ChoiceField::displayName() const
+{
+    std::string name = "NOT-FOUND";
+
+    for (auto& c : mChoices){
+        if (mValue == std::get<0>(c)){
+            name = std::get<1>(c);
+        }
+    }
+
+    return name;
+}
+
+void ChoiceField::addChoice(Choice choice)
+{
+    mChoices.push_back(choice);
+    //mWidget->addItem(QString::fromStdString(std::get<1>(choice)));
+}
+
+void ChoiceField::setValue(std::string value)
+{
+    mValue = value;
+}
+
+void ChoiceField::setIndex(int i)
+{
+    mIndex = i;
+}
+
+int ChoiceField::index() const
+{
+    return mIndex;
+}
+
+void ChoiceField::setCurrText(std::string text)
+{
+    mCurrText = text;
+}
+
+std::string ChoiceField::currText() const
+{
+    return mCurrText;
+}
+*/
+
+/* ----- ForeignKeyField ------- */
+ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLabel,
+                std::unique_ptr<BaseEntity> fkEntity)
+    :Field{aName, aLabel}
+    ,mFKEntity{std::move(fkEntity)}
+    ,mValue{-1}
+{
+}
+
+ForeignKeyField::~ForeignKeyField()
+{
+}
+std::string ForeignKeyField::valueToString() const
+{
+    return std::to_string(mValue);
+}
+
+std::string ForeignKeyField::dbValueFormatter()
+{
+    return std::to_string(mValue);
+}
+
+void ForeignKeyField::stringToValue(std::string val)
+{
+    mValue = stoi(val);
+}
+
+void ForeignKeyField::setValue(int val)
+{
+    mValue = val;
+}
+
+int ForeignKeyField::value()
+{
+    return mValue;
+}
+
+std::string ForeignKeyField::displayName() const
+{
+    return "";
 }

@@ -19,19 +19,19 @@ class BaseEntityDetailDlg : public QDialog
     Q_OBJECT
 
 public:
-    explicit BaseEntityDetailDlg(QDialog *parent = nullptr);
-    ~BaseEntityDetailDlg();
+        explicit BaseEntityDetailDlg(QDialog *parent = nullptr);
+        ~BaseEntityDetailDlg();
 
-    void connectSlots();
-    [[nodiscard]] virtual ActionResult saveRecord()=0;
+        void connectSlots();
+        [[nodiscard]] virtual ActionResult saveRecord()=0;
 
-    //virtual void populateFields()=0;
-    virtual void bindWidgets()=0;
+        virtual void populateEntityFields()=0;
+        virtual void populateFormWidgets()=0;
 
-    std::string title();
-    virtual std::string windowTitle() = 0;
+        std::string title();
+        virtual std::string windowTitle() = 0;
 
-    void closeEvent(QCloseEvent* event);
+        void closeEvent(QCloseEvent* event);
 
 private slots:
     void btnSaveClicked();

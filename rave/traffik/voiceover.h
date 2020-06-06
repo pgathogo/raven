@@ -68,6 +68,8 @@ private:
     LookupField* mGender;
     VoiceExclusion* mVoiceEx;
 
+    //ChoiceField<std::string, std::string>* mGender2;
+
     static EntityDataModel* mGenderDM;
 
     QStringList mHeader;

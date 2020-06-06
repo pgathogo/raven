@@ -70,3 +70,8 @@ void VoiceOverBrowser::deleteRecord()
     entityDataModel()->deleteEntity(entity);
     removeSelectedRow();
 }
+
+std::string VoiceOverBrowser::typeID()
+{
+    return "VoiceOverBrowser";
+}

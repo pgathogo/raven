@@ -170,7 +170,7 @@ void EntityDataModel::populateMToMDetails()
     VecIter it = vecBegin();
     for (; it != vecEnd(); ++it){
         ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(*it).get());
-        ids.push_back(mtom->detailId()->value().toInt());
+        ids.push_back(mtom->detailId()->value());
     }
 
 }

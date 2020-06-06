@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QMdiArea>
+#include <QMdiSubWindow>
+#include "../framework/baseentitybrowserdlg.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,9 +27,25 @@ public:
     template<typename T>
     T* createSubWindow()
     {
+
         T* win = new T(this);
         win->setMdiArea(mdiArea);
         mdiArea->addSubWindow(win);
+
+        /*
+        for(int i=0; i<mdiArea->subWindowList().size(); ++i){
+            BaseEntityBrowserDlg* basedlg = dynamic_cast<BaseEntityBrowserDlg*>(
+                        mdiArea->subWindowList().at(i));
+            if (basedlg->typeID() == T::TYPEID){
+                win = dynamic_cast<T*>(basedlg);
+            }else{
+                T* win = new T(this);
+                win->setMdiArea(mdiArea);
+                mdiArea->addSubWindow(win);
+            }
+        }
+        */
+
         return win;
     }
 

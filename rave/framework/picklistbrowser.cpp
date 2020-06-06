@@ -57,3 +57,8 @@ void PickListBrowser::onCloseSelection()
     done(0);
 }
 
+
+std::string PickListBrowser::typeID()
+{
+    return "PickListBrowser";
+}

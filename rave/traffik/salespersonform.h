@@ -20,8 +20,9 @@ public:
     ~SalesPersonForm() override;
 
     ActionResult saveRecord() override;
-    void bindWidgets() override;
     std::string windowTitle() override;
+    void populateEntityFields() override;
+    void populateFormWidgets() override;
 
 private slots:
     void genderComboChanged(int i);

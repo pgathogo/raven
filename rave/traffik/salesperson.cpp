@@ -77,9 +77,9 @@ std::string SalesPerson::searchColumn() const
 
 void SalesPerson::populateEntity()
 {
-    mName->setValueFromWidget();
-    mMobileNo->setValueFromWidget();
-    mGender->setValueFromWidget();
+   // mName->setValueFromWidget();
+   // mMobileNo->setValueFromWidget();
+   // mGender->setValueFromWidget();
 }
 
 StringField* SalesPerson::name() const

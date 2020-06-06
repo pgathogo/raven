@@ -81,9 +81,9 @@ std::string Agent::searchColumn() const
 }
 void Agent::populateEntity()
 {
-    mName->setValueFromWidget();
-    mContactName->setValueFromWidget();
-    mMobileNo->setValueFromWidget();
+    //mName->setValueFromWidget();
+    //mContactName->setValueFromWidget();
+    //mMobileNo->setValueFromWidget();
 }
 
 StringField* Agent::name() const

@@ -60,6 +60,51 @@ class Agent(models.Model):
     contact_name = models.CharField(max_length=200, null=True, blank=True)
     contact_mobile_no = models.CharField(max_length=200, null=True, blank=True)
 
+SALUTATION = (
+        ('MISS', 'Miss.'),
+        ('MS', 'Ms.'),
+        ('MRS', 'Mrs.'),
+        ('MR', 'Mr.'),
+        )
+
+REVENUE_TYPE = (
+        ('C', 'Cash'),
+        ('T', 'Trade'),
+        )
+
+BILL_CYCLE = (
+        ('W', 'Weekly'),
+        ('B', 'Bi-Weekly'),
+        ('M', 'Monthly'),
+        )
+
+class Client(models.Model):
+    name = models.CharField(max_length=255)
+    bill_name = models.CharField(max_length=255, null=True, blank=True)
+    address1 = models.CharField(max_length=255, null=True, blank=True)
+    address2 = models.CharField(max_length=255, null=True, blank=True)
+    town = models.CharField(max_length=200, null=True, blank=True)
+    postal_no = models.CharField(max_length=100, null=True, blank=True)
+    postal_code = models.CharField(max_length=10, null=True, blank=True)
+    telephone = models.CharField(max_length=15, null=True, blank=True)
+    client_email = models.CharField(max_length=100, null=True, blank=True)
+    client_mobile = models.CharField(max_length=15, null=True, blank=True)
+    contact_name = models.CharField(max_length=255, null=True, blank=True)
+    contact_salute = models.CharField(max_length=5, choices=SALUTATION)
+    contact_email = models.CharField(max_length=100, null=True, blank=True)
+    contact_mobile = models.CharField(max_length=15, null=True, blank=True)
+    agency = models.ForeignKey(Agent, blank=True, null=True)
+    client_group = models.ForeignKey(ClientGroup, blank=True, null=True)
+    account_manager = models.ForeignKey(SalesPerson, blank=True, null=True)
+    revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE, default='C')
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    agency_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    sales_rep_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    late_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    grace_period = models.IntegerField(null=True)
+    bill_cycle = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
+
 class Daypart(models.Model):
     daypart1 = models.CharField(max_length=96, null=True, blank=True)
     daypart2 = models.CharField(max_length=96, null=True, blank=True)

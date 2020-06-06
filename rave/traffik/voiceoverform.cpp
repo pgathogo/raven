@@ -10,6 +10,7 @@
 #include "typeexclusion.h"
 #include "../framework/picklistbrowser.h"
 #include "../framework/valuelist.h"
+#include "../utils/tools.h"
 
 VoiceOverForm::VoiceOverForm(){}
 
@@ -25,10 +26,10 @@ VoiceOverForm::VoiceOverForm(
     mVoiceExModel{}
 {
     ui->setupUi(bui->baseContainer);
-    bindWidgets();
     setTitle(title());
     mDayPart = new DayPartGrid(ui->vlDayPart);
     populateGrid();
+    populateFormWidgets();
 
     mMtoMBrowser = new ManyToManyBrowser(mVoiceOver->voiceEx(),
                                              ui->vlTypeEx, this);
@@ -52,7 +53,27 @@ VoiceOverForm::~VoiceOverForm()
 
 ActionResult VoiceOverForm::saveRecord()
 {
-    mVoiceOver->populateEntity();
+
+    populateEntityFields();
+
+    // ManyToMany
+    if (mVoiceOver->id() > 0)
+        saveVoiceExclusions();
+
+    ActionResult ar = mVoiceOver->validate();
+    return ar;
+}
+
+void VoiceOverForm::populateFormWidgets()
+{
+    ui->edtName->setText(stoq(mVoiceOver->name()->value()));
+    ui->edtMobile->setText(stoq(mVoiceOver->mobileno()->value()));
+}
+
+void VoiceOverForm::populateEntityFields()
+{
+    mVoiceOver->name()->setValue(ui->edtName->text().toStdString());
+    mVoiceOver->mobileno()->setValue(ui->edtMobile->text().toStdString());
 
     auto dayparts = mDayPart->readGrid();
     mVoiceOver->setDaypart1(dayparts["daypart1"]);
@@ -62,13 +83,6 @@ ActionResult VoiceOverForm::saveRecord()
     mVoiceOver->setDaypart5(dayparts["daypart5"]);
     mVoiceOver->setDaypart6(dayparts["daypart6"]);
     mVoiceOver->setDaypart7(dayparts["daypart7"]);
-
-    // ManyToMany
-    if (mVoiceOver->id() > 0)
-        saveVoiceExclusions();
-
-    ActionResult ar = mVoiceOver->validate();
-    return ar;
 }
 
 void VoiceOverForm::saveVoiceExclusions()
@@ -84,13 +98,6 @@ void VoiceOverForm::saveVoiceExclusions()
         if (mtom->dbAction() == DBAction::dbaDELETE)
             mVoiceExModel->deleteEntity(mtom);
     }
-}
-
-void VoiceOverForm::bindWidgets()
-{
-    mVoiceOver->name()->setWidget(ui->edtName);
-    mVoiceOver->mobileno()->setWidget(ui->edtMobile);
-    mVoiceOver->gender()->setWidget(ui->cbGender);
 }
 
 std::string VoiceOverForm::windowTitle()

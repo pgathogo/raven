@@ -195,7 +195,7 @@ std::unique_ptr<BaseEntity> VoiceExclusion::mapFields(StringMap* sm)
                                              mParentEntity,
                                              mDetailEntity);
 
-    getEntityById(*mDetailEntity, ve->detailId()->value().toInt());
+    getEntityById(*mDetailEntity, ve->detailId()->value());
 
     return std::move(ve);
 }

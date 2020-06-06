@@ -31,6 +31,8 @@ public:
     virtual void deleteRecord();
     virtual void searchRecord();
 
+    virtual std::string typeID()=0;
+
     void setEntityDataModel(BaseEntity* entity);
     BaseEntity* baseEntity();
 

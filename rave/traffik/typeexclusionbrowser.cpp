@@ -36,3 +36,8 @@ void TypeExclusionBrowser::updateRecord()
 {
    update<TypeExclusion, TypeExclusionDetails>();
 }
+
+std::string TypeExclusionBrowser::typeID()
+{
+    return "TypeExclusionBrowser";
+}

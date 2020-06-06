@@ -5,6 +5,7 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "typeexclusion.h"
 #include "../utils/daypartgrid.h"
+#include "../utils/tools.h"
 
 TypeExclusionDetails::TypeExclusionDetails(
         TypeExclusion* tex, QDialog *parent) :
@@ -14,10 +15,11 @@ TypeExclusionDetails::TypeExclusionDetails(
     dpg{}
 {
     ui->setupUi(bui->baseContainer);
-    bindWidgets();
     setTitle(windowTitle());
     ui->tabWidget->setCurrentIndex(0);
     dpg = new DayPartGrid(ui->vlTypeEx);
+
+    populateFormWidgets();
     populateGrid();
 }
 
@@ -37,7 +39,21 @@ std::string TypeExclusionDetails::windowTitle()
 
 ActionResult TypeExclusionDetails::saveRecord()
 {
-    typeEx->populateEntity();
+    populateEntityFields();
+    ActionResult ar = typeEx->validate();
+    return ar;
+}
+
+void TypeExclusionDetails::populateFormWidgets()
+{
+    ui->edtName->setText(stoq(typeEx->name()->value()));
+    ui->edtDesc->setText(stoq(typeEx->description()->value()));
+}
+
+void TypeExclusionDetails::populateEntityFields()
+{
+    typeEx->name()->setValue(ui->edtName->text().toStdString());
+    typeEx->description()->setValue(ui->edtDesc->toPlainText().toStdString());
 
     auto dayparts = dpg->readGrid();
     typeEx->setDaypart1(dayparts["daypart1"]);
@@ -48,14 +64,6 @@ ActionResult TypeExclusionDetails::saveRecord()
     typeEx->setDaypart6(dayparts["daypart6"]);
     typeEx->setDaypart7(dayparts["daypart7"]);
 
-    ActionResult ar = typeEx->validate();
-    return ar;
-}
-
-void TypeExclusionDetails::bindWidgets()
-{
-    typeEx->name()->setWidget(ui->edtName);
-    typeEx->description()->setWidget(ui->edtDesc);
 }
 
 void TypeExclusionDetails::populateGrid()

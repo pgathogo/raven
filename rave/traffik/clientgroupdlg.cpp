@@ -42,5 +42,9 @@ void ClientGroupDlg::updateRecord()
 
 }
 
+std::string ClientGroupDlg::typeID()
+{
+    return "ClientGroupDlg";
+}
 
 

@@ -17,11 +17,15 @@ class TypeExclusionBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
+    static constexpr auto TYPEID = "TypeExclusionBrowser";
+
     explicit TypeExclusionBrowser(QWidget *parent = nullptr, TypeExclusion* tEx=nullptr);
     ~TypeExclusionBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
+
+    std::string typeID() override;
 
 private:
     Ui::TypeExclusionBrowser *ui;

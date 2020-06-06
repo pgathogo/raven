@@ -21,7 +21,7 @@ BaseEntity::~BaseEntity()
 
 int BaseEntity::id() const
 {
-    return mID->value().toInt();
+    return mID->value();
 }
 
 void BaseEntity::setId(int i)
@@ -52,14 +52,23 @@ std::vector<FieldMap>::iterator BaseEntity::endIter()
 
 std::vector<std::string> BaseEntity::dbColumnNames()
 {
-    // All fields are dbcolumns, unless they are marked
+    // All fields are database columns, unless they are marked
     // formOnly.
-    std::vector<std::string> cols;
+    /*
     std::vector<FieldMap>::const_iterator citer;
     for (citer=cBeginIter(); citer != cEndIter(); ++citer){
         if (!std::get<1>(*citer)->formOnly())
             cols.push_back(std::get<1>(*citer)->dbColumnName());
     }
+    */
+
+    std::vector<std::string> cols;
+    auto& flds = fields();
+    for (auto& f : flds){
+        if (!std::get<1>(f)->formOnly())
+            cols.push_back(std::get<1>(f)->dbColumnName());
+    }
+
     return cols;
 }
 
@@ -139,4 +148,9 @@ DBAction BaseEntity::dbAction() const
 void BaseEntity::clearFields()
 {
     mFields.clear();
+}
+
+std::vector<FieldMap> const& BaseEntity::fields()
+{
+    return mFields;
 }

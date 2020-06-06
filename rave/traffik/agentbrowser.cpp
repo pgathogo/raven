@@ -17,6 +17,7 @@ AgentBrowser::AgentBrowser(QWidget *parent) :
 AgentBrowser::~AgentBrowser()
 {
     delete mAgent;
+    delete mAgentForm;
     delete ui;
 }
 
@@ -31,4 +32,9 @@ void AgentBrowser::addRecord()
 void AgentBrowser::updateRecord()
 {
     update<Agent, AgentForm>();
+}
+
+std::string AgentBrowser::typeID()
+{
+    return "AgentBrowser";
 }

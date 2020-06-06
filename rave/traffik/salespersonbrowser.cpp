@@ -31,3 +31,8 @@ void SalesPersonBrowser::updateRecord()
 {
    update<SalesPerson, SalesPersonForm>();
 }
+
+std::string SalesPersonBrowser::typeID()
+{
+    return "SalesPersonBrowser";
+}

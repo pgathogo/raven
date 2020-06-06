@@ -4,6 +4,7 @@
 #include <QStandardItem>
 
 #include "clientgroup.h"
+#include "../framework/choicefield.h"
 
 ClientGroup::ClientGroup()
     :BaseEntity(),
@@ -123,6 +124,6 @@ std::string ClientGroup::searchColumn() const
 
 void ClientGroup::populateEntity()
 {
-    mName->setValueFromWidget();
-    mDescription->setValueFromWidget();
+    //mName->setValueFromWidget();
+    //mDescription->setValueFromWidget();
 }

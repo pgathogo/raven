@@ -6,6 +6,7 @@
 #include "baseentitydetaildlg.h"
 #include "baseentity.h"
 #include "valuelist.h"
+#include "../utils/tools.h"
 
 ValueListDetailDlg::ValueListDetailDlg(
                 ValueList* entity, QDialog* parent) :
@@ -14,9 +15,8 @@ ValueListDetailDlg::ValueListDetailDlg(
     mEntity{entity}
 {
     ui->setupUi(bui->baseContainer);
-    bindWidgets();
     setTitle(windowTitle());
-
+    populateFormWidgets();
 }
 
 ValueListDetailDlg::~ValueListDetailDlg()
@@ -30,15 +30,21 @@ std::string ValueListDetailDlg::windowTitle()
     return mEntity->windowTitle();
 }
 
-void ValueListDetailDlg::bindWidgets()
-{
-    mEntity->code()->setWidget(ui->edtCode);
-    mEntity->listValue()->setWidget(ui->edtValue);
-}
-
 ActionResult ValueListDetailDlg::saveRecord()
 {
-    mEntity->populateEntity();
+    populateEntityFields();
     ActionResult ar =  mEntity->validate();
     return ar;
+}
+
+void ValueListDetailDlg::populateFormWidgets()
+{
+    ui->edtCode->setText(stoq(mEntity->code()->value()));
+    ui->edtValue->setText(stoq(mEntity->listValue()->value()));
+}
+
+void ValueListDetailDlg::populateEntityFields()
+{
+    mEntity->code()->setValue(ui->edtCode->text().toStdString());
+    mEntity->listValue()->setValue(ui->edtValue->text().toStdString());
 }

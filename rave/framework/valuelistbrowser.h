@@ -20,12 +20,16 @@ class ValueListBrowser : public BaseEntityBrowserDlg
 
 public:
     //explicit ValueListBrowser(QWidget *parent = nullptr);
+    static constexpr auto TYPEID = "ValueListBrowser";
+
     ValueListBrowser(const std::string& vltype, QWidget* parent = nullptr);
 
     ~ValueListBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
+
+    std::string typeID() override;
 
   static ValueList*
   createValueList(const std::string& vlType)

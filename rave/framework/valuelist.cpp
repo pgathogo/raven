@@ -144,8 +144,8 @@ std::string ValueList::searchColumn() const
 
 void ValueList::populateEntity()
 {
-    mCode->setValueFromWidget();
-    mListValue->setValueFromWidget();
+    //mCode->setValueFromWidget();
+    //mListValue->setValueFromWidget();
 }
 
 std::string ValueList::windowTitle() const

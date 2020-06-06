@@ -4,6 +4,7 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "clientgroup.h"
 #include "../utils/daypartgrid.h"
+#include "../utils/tools.h"
 
 ClientGroupDetailDlg::ClientGroupDetailDlg(
                 ClientGroup* cg, QDialog *parent) :
@@ -12,9 +13,8 @@ ClientGroupDetailDlg::ClientGroupDetailDlg(
     clientGroup{cg}
 {
     ui->setupUi(bui->baseContainer);
-    bindWidgets();
     setTitle(windowTitle());
-    //DayPartGrid* dpg = new DayPartGrid(ui->vlGrid);
+    populateFormWidgets();
 }
 
 std::string ClientGroupDetailDlg::windowTitle()
@@ -30,14 +30,21 @@ ClientGroupDetailDlg::~ClientGroupDetailDlg()
 
 ActionResult ClientGroupDetailDlg::saveRecord()
 {
-    clientGroup->populateEntity();
+    populateEntityFields();
     ActionResult ar =  clientGroup->validate();
     return ar;
 }
 
-
-void ClientGroupDetailDlg::bindWidgets()
+void ClientGroupDetailDlg::populateFormWidgets()
 {
-    clientGroup->name()->setWidget(ui->edtName);
-    clientGroup->description()->setWidget(ui->edtDesc);
+    ui->edtName->setText(stoq(clientGroup->name()->value()));
+    ui->edtDesc->setText(stoq(clientGroup->description()->value()));
 }
+
+void ClientGroupDetailDlg::populateEntityFields()
+{
+    clientGroup->name()->setValue(ui->edtName->text().toStdString());
+    clientGroup->description()->setValue(ui->edtDesc->toPlainText().toStdString());
+}
+
+

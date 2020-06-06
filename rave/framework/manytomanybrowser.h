@@ -20,6 +20,8 @@ class ManyToManyBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
+    static constexpr auto TYPEID = "ManyToManyBrowser";
+
     explicit ManyToManyBrowser(
             ManyToMany* mtom,
             QVBoxLayout* layout,
@@ -31,6 +33,8 @@ public:
     void addRecord() override;
     void updateRecord() override;
     void deleteRecord() override;
+
+    std::string typeID() override;
 
     //createMToM(const std::string typeInfo, BaseEntity* pEnt, BaseEntity* dEnt)
     static ManyToMany*

@@ -8,8 +8,6 @@
 #include "baseentity.h"
 #include "../utils/tools.h"
 
-//ValueListBrowser::ValueListBrowser(QWidget* parent,
-//                                   ValueList* entity):
 ValueListBrowser::ValueListBrowser(const std::string& vltype, QWidget* parent)
     :BaseEntityBrowserDlg(parent,
                           ValueListBrowser::createValueList(vltype)),
@@ -45,3 +43,7 @@ void ValueListBrowser::updateRecord()
 }
 
 
+std::string ValueListBrowser::typeID()
+{
+    return "ValueListBrowser";
+}

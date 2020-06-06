@@ -21,9 +21,9 @@ ManyToManyBrowser::ManyToManyBrowser(
     hideEditButton();
     layout->addWidget(this);
 
-    if (mMtoM->parentId()->value().toInt() > 0){
+    if (mMtoM->parentId()->value() > 0){
         std::string columnName = mtom->parentId()->dbColumnName();
-        int value = mMtoM->parentId()->value().toInt();
+        int value = mMtoM->parentId()->value();
         auto needle = std::make_tuple(columnName, value);
         // VoiceExclusion...
         entityDataModel()->searchById(needle);
@@ -50,7 +50,7 @@ void ManyToManyBrowser::addRecord()
         BaseEntity* be = *it;
         if (be->dbAction() == DBAction::dbaCREATE){
             auto m2m = createMtoM(mMtoM, be);
-            m2m->setParentId(mMtoM->parentId()->value().toInt());
+            m2m->setParentId(mMtoM->parentId()->value());
             m2m->setDetailId(be->id());
             m2m->setTableName(mMtoM->tableName());
             entityDataModel()->cacheEntity(m2m);
@@ -75,4 +75,9 @@ void ManyToManyBrowser::selectedItem(BaseEntity* entity)
 {
 
     qDebug() << QString::fromStdString(entity->tableName());
+}
+
+std::string ManyToManyBrowser::typeID()
+{
+    return "ManyToManyBrowser";
 }

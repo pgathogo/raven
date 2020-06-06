@@ -10,7 +10,7 @@ using FieldValueType = std::variant<std::string, int>;
 
 class FormField;
 class IntegerFormField;
-class StringFormField;
+class BaseEntity;
 class EntityDataModel;
 
 class QLineEdit;
@@ -49,7 +49,7 @@ class Field{
 
         virtual void stringToValue(std::string val)=0;
 
-        virtual QVariant value()=0;
+        //virtual QVariant value()=0;
 
     private:
         std::string mFieldName;
@@ -75,16 +75,16 @@ class IntegerField : public Field{
 
         void stringToValue(std::string val) override;
 
-        QVariant value() override;
+        int value();
         std::string displayName() const override;
 
         //IntegerFormField* widget();
 
-        QLineEdit* widget();
+        //QLineEdit* widget();
 
     private:
         int mValue;
-        QLineEdit* mWidget;
+        //QLineEdit* mWidget;
 };
 
 class StringField : public Field{
@@ -103,17 +103,12 @@ class StringField : public Field{
 
         void setValue(std::string val);
         void stringToValue(std::string val) override;
-        QVariant value() override;
+        std::string value();
 
-        QLineEdit* widget();
-        void setWidget(QLineEdit* lineEdit);
-        void setValueFromWidget();
-
-        void printWidgetValue();
         std::string displayName() const override;
     private:
         std::string mValue;
-        QLineEdit* mWidget;
+        //QLineEdit* mWidget;
 };
 
 class TextField :public Field{
@@ -127,16 +122,16 @@ class TextField :public Field{
 
         void setValue(std::string val);
         void stringToValue(std::string val) override;
-        QVariant value() override;
+        std::string value();
 
-        QTextEdit* widget();
-        void setWidget(QTextEdit* textEdit);
-        void setValueFromWidget();
+        //QTextEdit* widget();
+        //void setWidget(QTextEdit* textEdit);
+        //void setValueFromWidget();
 
         std::string displayName() const override;
     private:
         std::string mValue;
-        QTextEdit* mWidget;
+        //QTextEdit* mWidget;
 };
 
 class LookupField : public Field{
@@ -149,17 +144,13 @@ public:
 
         void setValue(int val);
         void stringToValue(std::string val) override;
-        QVariant value() override;
+        int value();
 
         void setIndex(int i);
         int index() const;
 
         void setCurrText(std::string txt);
         std::string currText() const;
-
-        QComboBox* widget();
-        void setWidget(QComboBox* textEdit);
-        void setValueFromWidget();
 
         void cacheData();
         std::size_t cacheCount();
@@ -169,9 +160,59 @@ public:
         int mValue;
         int mIndex;
         std::string mCurrText;
-        QComboBox* mWidget;
         static EntityDataModel* mEDM;
         static bool hasData;
+};
+
+/*
+using Choice = std::tuple<std::string, std::string>;
+class ChoiceField : public Field{
+public:
+        ChoiceField();
+        ChoiceField(std::string aName, std::string aLabel);
+        ~ChoiceField() override;
+
+        std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+        void stringToValue(std::string val) override;
+        std::string value();
+        std::string displayName() const override;
+
+        void addChoice(Choice choice);
+        void setValue(std::string value);
+        void setIndex(int i);
+        int index() const;
+
+        void setCurrText(std::string text);
+        std::string currText() const;
+
+    private:
+        //QComboBox* mWidget;
+        std::vector<Choice> mChoices;
+        std::string mValue;
+        int mIndex;
+        std::string mCurrText;
+};
+*/
+
+class ForeignKeyField : public Field {
+    public:
+        ForeignKeyField(const std::string aName, const std::string aLabel,
+                        std::unique_ptr<BaseEntity> fkEntity);
+        ~ForeignKeyField() override;
+
+        std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+        void stringToValue(std::string val) override;
+        void setValue(int val);
+        int value();
+
+        void cacheData();
+        std::size_t cacheCount();
+        std::string displayName() const override;
+    private:
+        std::unique_ptr<BaseEntity> mFKEntity;
+        int mValue;
 };
 
 

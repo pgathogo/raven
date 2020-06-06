@@ -17,6 +17,8 @@ class VoiceOverBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
+    static constexpr auto TYPEID = "VoiceOverBrowser";
+
     explicit VoiceOverBrowser(QWidget *parent = nullptr);
     ~VoiceOverBrowser() override;
 
@@ -24,6 +26,7 @@ public:
     void updateRecord() override;
     void deleteRecord() override;
 
+    std::string typeID() override;
 private:
     Ui::VoiceOverBrowser *ui;
     VoiceOver* mVoiceOver;

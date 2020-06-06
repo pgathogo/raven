@@ -23,6 +23,8 @@ class PickListBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
+    static constexpr auto TYPEID = "PickListBrowser";
+
                 //EntityDataModel* edm,
     explicit PickListBrowser(PickListSetting& plSetting,
                             QWidget *parent = nullptr);
@@ -31,6 +33,7 @@ public:
     void addRecord() override;
     void updateRecord() override;
 
+    std::string typeID() override;
 public slots:
     void onSelectItem();
     void onCloseSelection();

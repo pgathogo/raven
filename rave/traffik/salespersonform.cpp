@@ -5,6 +5,7 @@
 #include "salesperson.h"
 
 #include "../framework/entitydatamodel.h"
+#include "../utils/tools.h"
 
 SalesPersonForm::SalesPersonForm(SalesPerson* sp,
                                  QDialog *parent) :
@@ -13,8 +14,8 @@ SalesPersonForm::SalesPersonForm(SalesPerson* sp,
     mSalesPerson{sp}
 {
     ui->setupUi(bui->baseContainer);
-    bindWidgets();
     setTitle(windowTitle());
+    populateFormWidgets();
 
     connect(ui->cbGender, SIGNAL(currentIndexChanged(int)),
             this, SLOT(genderComboChanged(int)));
@@ -29,17 +30,23 @@ SalesPersonForm::~SalesPersonForm()
 
 ActionResult SalesPersonForm::saveRecord()
 {
-    mSalesPerson->populateEntity();
+    populateEntityFields();
     ActionResult ar = mSalesPerson->validate();
     return ar;
 }
 
-void SalesPersonForm::bindWidgets()
+void SalesPersonForm::populateFormWidgets()
 {
-    mSalesPerson->name()->setWidget(ui->edtName);
-    mSalesPerson->mobileno()->setWidget(ui->edtMobile);
-    mSalesPerson->gender()->setWidget(ui->cbGender);
+    ui->edtName->setText(stoq(mSalesPerson->name()->value()));
+    ui->edtMobile->setText(stoq(mSalesPerson->mobileno()->value()));
 }
+
+void SalesPersonForm::populateEntityFields()
+{
+    mSalesPerson->name()->setValue(ui->edtName->text().toStdString());
+    mSalesPerson->mobileno()->setValue(ui->edtMobile->text().toStdString());
+}
+
 
 std::string SalesPersonForm::windowTitle()
 {

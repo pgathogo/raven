@@ -58,6 +58,7 @@ HEADERS += \
     ../framework/baseentity.h \
     ../framework/baseentitybrowserdlg.h \
     ../framework/baseentitydetaildlg.h \
+    ../framework/choicefield.h \
     ../framework/databaseconnector.h \
     ../framework/databasemanager.h \
     ../framework/dataprovider.h \

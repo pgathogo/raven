@@ -25,12 +25,13 @@ public:
     ~VoiceOverForm() override;
 
     ActionResult saveRecord() override;
-    void bindWidgets() override;
     std::string windowTitle() override;
     void populateGrid();
 
     ManyToMany* getMtoM() const;
     void saveVoiceExclusions();
+    void populateEntityFields() override;
+    void populateFormWidgets() override;
 
 private slots:
     void comboChanged(int i);

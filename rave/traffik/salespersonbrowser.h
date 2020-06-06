@@ -18,11 +18,15 @@ class SalesPersonBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
+    static constexpr auto TYPEID = "SalesPersonBrowser";
+
     explicit SalesPersonBrowser(QWidget *parent = nullptr);
     ~SalesPersonBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
+
+    std::string typeID() override;
 
 private:
     Ui::SalesPersonBrowser *ui;

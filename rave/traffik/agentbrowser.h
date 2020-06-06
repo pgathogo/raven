@@ -18,11 +18,14 @@ class AgentBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
+    static constexpr auto TYPEID = "AgentBrowser";
     explicit AgentBrowser(QWidget *parent = nullptr);
     ~AgentBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
+
+    std::string typeID() override;
 
 private:
     Ui::AgentBrowser *ui;

@@ -67,6 +67,8 @@ public:
 
     void clearFields();
 
+    std::vector<FieldMap> const& fields();
+
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");

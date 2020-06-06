@@ -246,6 +246,6 @@ std::string TypeExclusion::searchColumn() const
 
 void TypeExclusion::populateEntity()
 {
-    mName->setValueFromWidget();
-    mDescription->setValueFromWidget();
+    //mName->setValueFromWidget();
+    //mDescription->setValueFromWidget();
 }
