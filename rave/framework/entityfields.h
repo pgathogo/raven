@@ -156,6 +156,8 @@ public:
         std::size_t cacheCount();
         std::string displayName() const override;
 
+        EntityDataModel* dataModel() const;
+
     private:
         int mValue;
         int mIndex;

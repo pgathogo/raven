@@ -4,10 +4,6 @@
 #include <QDialog>
 #include "../framework/baseentitybrowserdlg.h"
 
-class EntityDataModel;
-class VoiceOver;
-class VoiceOverForm;
-
 namespace Ui {
 class VoiceOverBrowser;
 }
@@ -29,9 +25,6 @@ public:
     std::string typeID() override;
 private:
     Ui::VoiceOverBrowser *ui;
-    VoiceOver* mVoiceOver;
-    VoiceOverForm* mVOForm;
-    EntityDataModel* edm;
 
 };
 

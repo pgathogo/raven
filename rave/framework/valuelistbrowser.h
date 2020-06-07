@@ -22,7 +22,8 @@ public:
     //explicit ValueListBrowser(QWidget *parent = nullptr);
     static constexpr auto TYPEID = "ValueListBrowser";
 
-    ValueListBrowser(const std::string& vltype, QWidget* parent = nullptr);
+    ValueListBrowser(const std::string& vltype,
+                     QWidget* parent = nullptr);
 
     ~ValueListBrowser() override;
 
@@ -42,9 +43,7 @@ public:
 
 private:
     Ui::ValueListBrowser *ui;
-    ValueListDetailDlg* vdd;
     std::string vtype;
-
 };
 
 #endif // VALUELISTBROWSER_H

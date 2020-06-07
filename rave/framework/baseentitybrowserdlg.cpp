@@ -113,7 +113,6 @@ void BaseEntityBrowserDlg::deleteBtnClicked()
 
 void BaseEntityBrowserDlg::searchBtnClicked()
 {
-
     searchRecord();
 }
 

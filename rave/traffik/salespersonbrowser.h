@@ -6,8 +6,6 @@
 #include "../framework/baseentitybrowserdlg.h"
 
 class EntityDataModel;
-class SalesPerson;
-class SalesPersonForm;
 
 namespace Ui {
 class SalesPersonBrowser;
@@ -30,8 +28,6 @@ public:
 
 private:
     Ui::SalesPersonBrowser *ui;
-    SalesPerson* mSalesPerson;
-    SalesPersonForm* mSalesPersonForm;
 };
 
 #endif // SALESPERSONBROWSER_H

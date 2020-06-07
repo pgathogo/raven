@@ -5,8 +5,6 @@
 #include "../framework/baseentitybrowserdlg.h"
 
 class EntityDataModel;
-class TypeExclusion;
-class TypeExclusionDetails;
 
 namespace Ui {
 class TypeExclusionBrowser;
@@ -19,7 +17,7 @@ class TypeExclusionBrowser : public BaseEntityBrowserDlg
 public:
     static constexpr auto TYPEID = "TypeExclusionBrowser";
 
-    explicit TypeExclusionBrowser(QWidget *parent = nullptr, TypeExclusion* tEx=nullptr);
+    explicit TypeExclusionBrowser(QWidget *parent = nullptr);
     ~TypeExclusionBrowser() override;
 
     void addRecord() override;
@@ -29,8 +27,6 @@ public:
 
 private:
     Ui::TypeExclusionBrowser *ui;
-    TypeExclusion* mTypeExcl;
-    TypeExclusionDetails* mTypeExD;
 
 };
 

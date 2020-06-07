@@ -157,6 +157,11 @@ ConstVecIter ManyToMany::cVecEnd()
     return mEntities.cend();
 }
 
+std::vector<std::unique_ptr<BaseEntity>> const& ManyToMany::entities() const
+{
+    return mEntities;
+}
+
 /* ---------------- VoiceExclusion -----------------*/
 VoiceExclusion::VoiceExclusion()
     :ManyToMany{}{}

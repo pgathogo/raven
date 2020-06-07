@@ -2,6 +2,7 @@
 #define VOICEOVERFORM_H
 
 #include <QWidget>
+#include <memory>
 #include "../framework/baseentitydetaildlg.h"
 
 class VoiceOver;
@@ -10,6 +11,8 @@ class VoiceExclusion;
 class ManyToMany;
 class ManyToManyBrowser;
 class EntityDataModel;
+
+using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 
 namespace Ui {
 class VoiceOverForm;
@@ -32,6 +35,8 @@ public:
     void saveVoiceExclusions();
     void populateEntityFields() override;
     void populateFormWidgets() override;
+
+    std::vector<EntityRecord> const& typeExclusions() const;
 
 private slots:
     void comboChanged(int i);

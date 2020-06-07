@@ -26,9 +26,10 @@ VoiceOverForm::VoiceOverForm(
     mVoiceExModel{}
 {
     ui->setupUi(bui->baseContainer);
-    setTitle(title());
-    mDayPart = new DayPartGrid(ui->vlDayPart);
+    setTitle(windowTitle());
+
     populateGrid();
+
     populateFormWidgets();
 
     mMtoMBrowser = new ManyToManyBrowser(mVoiceOver->voiceEx(),
@@ -53,7 +54,6 @@ VoiceOverForm::~VoiceOverForm()
 
 ActionResult VoiceOverForm::saveRecord()
 {
-
     populateEntityFields();
 
     // ManyToMany
@@ -68,6 +68,9 @@ void VoiceOverForm::populateFormWidgets()
 {
     ui->edtName->setText(stoq(mVoiceOver->name()->value()));
     ui->edtMobile->setText(stoq(mVoiceOver->mobileno()->value()));
+    ui->cbGender->setModel(mVoiceOver->gender()->dataModel());
+    ui->cbGender->setCurrentIndex(ui->cbGender->findText(
+                                 QString::fromStdString(mVoiceOver->gender()->displayName())));
 }
 
 void VoiceOverForm::populateEntityFields()
@@ -83,6 +86,11 @@ void VoiceOverForm::populateEntityFields()
     mVoiceOver->setDaypart5(dayparts["daypart5"]);
     mVoiceOver->setDaypart6(dayparts["daypart6"]);
     mVoiceOver->setDaypart7(dayparts["daypart7"]);
+}
+
+std::vector<EntityRecord> const& VoiceOverForm::typeExclusions() const
+{
+    return mMtoMBrowser->entityDataModel()->modelEntities();
 }
 
 void VoiceOverForm::saveVoiceExclusions()
@@ -107,6 +115,8 @@ std::string VoiceOverForm::windowTitle()
 
 void VoiceOverForm::populateGrid()
 {
+    mDayPart = new DayPartGrid(ui->vlDayPart);
+
     std::map<std::string, std::string> dayparts;
     dayparts["daypart1"] = mVoiceOver->daypart1()->valueToString();
     dayparts["daypart2"] = mVoiceOver->daypart2()->valueToString();
@@ -115,6 +125,7 @@ void VoiceOverForm::populateGrid()
     dayparts["daypart5"] = mVoiceOver->daypart5()->valueToString();
     dayparts["daypart6"] = mVoiceOver->daypart6()->valueToString();
     dayparts["daypart7"] = mVoiceOver->daypart7()->valueToString();
+
     mDayPart->updateGrid(dayparts);
 }
 

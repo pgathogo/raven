@@ -144,11 +144,8 @@ void MainWindow::newClientGroup()
 
 void MainWindow::newGender()
 {
-    //Gender* gender = new Gender;
     ValueListBrowser* valueList = createSubWindow<ValueListBrowser>("gender");
-    //valueList->setEntityDataModel(new Gender());
     valueList->exec();
-    //valueList->setTableName("rave_gender");
 }
 
 void MainWindow::newTypeExclusion()

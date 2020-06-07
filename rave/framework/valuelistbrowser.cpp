@@ -8,11 +8,11 @@
 #include "baseentity.h"
 #include "../utils/tools.h"
 
-ValueListBrowser::ValueListBrowser(const std::string& vltype, QWidget* parent)
+ValueListBrowser::ValueListBrowser(const std::string& vltype,
+                                   QWidget* parent)
     :BaseEntityBrowserDlg(parent,
                           ValueListBrowser::createValueList(vltype)),
      ui{new Ui::ValueListBrowser},
-     vdd{},
      vtype{vltype}
 {
     qDebug() << "ValueList Ctor";
@@ -22,18 +22,18 @@ ValueListBrowser::ValueListBrowser(const std::string& vltype, QWidget* parent)
 
 ValueListBrowser::~ValueListBrowser()
 {
-    delete vdd;
     delete ui;
 }
 
 void ValueListBrowser::addRecord()
 {
     ValueList* ent = ValueListBrowser::createValueList(vtype);
-    vdd = new ValueListDetailDlg(ent);
+    std::unique_ptr<ValueListDetailDlg> vdd =
+            std::make_unique<ValueListDetailDlg>(ent);
     if (vdd->exec() > 0){
-        ValueList vl;
-        vl = *ent;
         entityDataModel()->createEntity(ent);
+    }else{
+        delete ent;
     }
 }
 

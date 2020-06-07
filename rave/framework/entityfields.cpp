@@ -373,6 +373,11 @@ int LookupField::value()
     return mValue;
 }
 
+EntityDataModel* LookupField::dataModel() const
+{
+    return mEDM;
+}
+
 /*
 QComboBox* LookupField::widget()
 {

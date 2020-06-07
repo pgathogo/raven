@@ -4,12 +4,9 @@
 #include "typeexclusion.h"
 #include "typeexclusiondetails.h"
 
-TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent,
-                                           TypeExclusion* tEx) :
+TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent):
     BaseEntityBrowserDlg(parent, new TypeExclusion),
-    ui(new Ui::TypeExclusionBrowser),
-    mTypeExcl{tEx},
-    mTypeExD{}
+    ui(new Ui::TypeExclusionBrowser)
 {
     ui->setupUi(this);
     setDialogTitle("Type Exclusions");
@@ -18,18 +15,16 @@ TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent,
 
 TypeExclusionBrowser::~TypeExclusionBrowser()
 {
-    delete mTypeExcl;
-    delete mTypeExD;
     delete ui;
 }
 
 void TypeExclusionBrowser::addRecord()
 {
-    //addEntity<TypeExclusion, TypeExclusionDetails>();
-    mTypeExcl = new TypeExclusion();
-    mTypeExD = new TypeExclusionDetails(mTypeExcl);
-    if (mTypeExD->exec() > 0)
-        entityDataModel()->createEntity(mTypeExcl);
+    std::unique_ptr<TypeExclusion> tex = std::make_unique<TypeExclusion>();
+    std::unique_ptr<TypeExclusionDetails> texForm =
+            std::make_unique<TypeExclusionDetails>(tex.get());
+    if (texForm->exec() > 0)
+        entityDataModel()->createEntity(std::move(tex));
 }
 
 void TypeExclusionBrowser::updateRecord()

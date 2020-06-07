@@ -106,9 +106,15 @@ VecIter EntityModel::vecEnd()
 {
     return mEntities.end();
 }
+
 size_t EntityModel::entitiesCount()
 {
     return mEntities.size();
+}
+
+std::vector<EntityRecord> const& EntityModel::modelEntities() const
+{
+    return mEntities;
 }
 
 /* ----------- EntityDataModel ------------------ */
@@ -183,6 +189,18 @@ bool EntityDataModel::createEntity(BaseEntity* entity)
     if (id > 0){
         entity->setId(id);
         addEntity(entity);
+        succeded = true;
+    }
+    return succeded;
+}
+
+bool EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
+{
+    bool succeded = false;
+    int id = dbManager->createEntity(entity.get());
+    if (id > 0){
+        entity->setId(id);
+        addEntity(std::move(entity)); // entity final resting place
         succeded = true;
     }
     return succeded;

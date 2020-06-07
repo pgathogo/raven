@@ -5,8 +5,6 @@
 #include "../framework/baseentitybrowserdlg.h"
 
 class EntityDataModel;
-class ClientGroupDetailDlg;
-class ClientGroup;
 
 namespace Ui {
 class ClientGroupDlg;
@@ -19,7 +17,7 @@ class ClientGroupDlg : public BaseEntityBrowserDlg
 public:
     static constexpr auto TYPEID = "ClientGroupDlg";
 
-    explicit ClientGroupDlg(QWidget *parent = nullptr, ClientGroup* cg = nullptr);
+    explicit ClientGroupDlg(QWidget *parent = nullptr);
     ~ClientGroupDlg() override;
 
     void addRecord() override;
@@ -29,8 +27,6 @@ public:
 private:
 
     Ui::ClientGroupDlg *ui;
-    ClientGroupDetailDlg* clientGroupDetailDlg;
-    ClientGroup* clientGroup;
 };
 
 #endif // CLIENTGROUPDLG_H

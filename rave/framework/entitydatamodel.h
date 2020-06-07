@@ -27,6 +27,9 @@ class EntityModel : public QStandardItemModel{
 
         VecIter vecBegin();
         VecIter vecEnd();
+
+        std::vector<EntityRecord> const& modelEntities() const;
+
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
         void addEntity(BaseEntity* entity);
@@ -51,7 +54,7 @@ public:
     void populateFields(BaseEntity* baseEntity);
 
     //std::vector<T*> entities() const;
-    //void createEntity(std::unique_ptr<BaseEntity> entity);
+    bool createEntity(std::unique_ptr<BaseEntity> entity);
     bool createEntity(BaseEntity* entity);
     void updateEntity(BaseEntity* entity);
     //void deleteEntity(const std::string name, BaseEntity* entity);

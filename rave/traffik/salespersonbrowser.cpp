@@ -6,8 +6,7 @@
 
 SalesPersonBrowser::SalesPersonBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent, new SalesPerson),
-    ui(new Ui::SalesPersonBrowser),
-    mSalesPerson{}
+    ui(new Ui::SalesPersonBrowser)
 {
     ui->setupUi(this);
     setDialogTitle("Sales Persons");
@@ -15,16 +14,15 @@ SalesPersonBrowser::SalesPersonBrowser(QWidget *parent) :
 
 SalesPersonBrowser::~SalesPersonBrowser()
 {
-    delete mSalesPerson;
     delete ui;
 }
 
 void SalesPersonBrowser::addRecord()
 {
-    mSalesPerson = new SalesPerson();
-    mSalesPersonForm = new SalesPersonForm(mSalesPerson);
-    if (mSalesPersonForm->exec() > 0)
-        entityDataModel()->createEntity(mSalesPerson);
+    std::unique_ptr<SalesPerson> sp = std::make_unique<SalesPerson>();
+    std::unique_ptr<SalesPersonForm> spForm = std::make_unique<SalesPersonForm>(sp.get());
+    if (spForm->exec() > 0)
+        entityDataModel()->createEntity(std::move(sp));
 }
 
 void SalesPersonBrowser::updateRecord()

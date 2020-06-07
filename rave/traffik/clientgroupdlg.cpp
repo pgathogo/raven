@@ -9,12 +9,9 @@
 #include "../utils/tools.h"
 
 
-ClientGroupDlg::ClientGroupDlg(QWidget *parent,
-                               ClientGroup* cg) :
+ClientGroupDlg::ClientGroupDlg(QWidget *parent):
     BaseEntityBrowserDlg(parent, new ClientGroup),
-    ui(new Ui::ClientGroupDlg),
-    clientGroupDetailDlg{},
-    clientGroup{cg}
+    ui(new Ui::ClientGroupDlg)
 {
     ui->setupUi(this);
     setDialogTitle("Client Groups");
@@ -22,17 +19,16 @@ ClientGroupDlg::ClientGroupDlg(QWidget *parent,
 
 ClientGroupDlg::~ClientGroupDlg()
 {
-    delete clientGroup;
-    delete clientGroupDetailDlg;
     delete ui;
 }
 
 void ClientGroupDlg::addRecord()
 {
-    clientGroup = new ClientGroup();
-    clientGroupDetailDlg = new ClientGroupDetailDlg(clientGroup);
-    if (clientGroupDetailDlg->exec() > 0)
-        entityDataModel()->createEntity(clientGroup);
+    std::unique_ptr<ClientGroup> cg = std::make_unique<ClientGroup>();
+    std::unique_ptr<ClientGroupDetailDlg> cgdForm =
+            std::make_unique<ClientGroupDetailDlg>(cg.get());
+    if (cgdForm->exec() > 0)
+        entityDataModel()->createEntity(std::move(cg));
 }
 
 void ClientGroupDlg::updateRecord()

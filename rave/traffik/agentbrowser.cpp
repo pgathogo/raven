@@ -6,9 +6,7 @@
 
 AgentBrowser::AgentBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent, new Agent),
-    ui(new Ui::AgentBrowser),
-    mAgent{},
-    mAgentForm{}
+    ui(new Ui::AgentBrowser)
 {
     ui->setupUi(this);
     setDialogTitle("Agents");
@@ -16,17 +14,16 @@ AgentBrowser::AgentBrowser(QWidget *parent) :
 
 AgentBrowser::~AgentBrowser()
 {
-    delete mAgent;
-    delete mAgentForm;
     delete ui;
 }
 
 void AgentBrowser::addRecord()
 {
-    mAgent = new Agent();
-    mAgentForm = new AgentForm(mAgent);
-    if (mAgentForm->exec() > 0)
-        entityDataModel()->createEntity(mAgent);
+    std::unique_ptr<Agent> agent = std::make_unique<Agent>();
+    std::unique_ptr<AgentForm> aForm =
+            std::make_unique<AgentForm>(agent.get());
+    if (aForm->exec() > 0)
+        entityDataModel()->createEntity(std::move(agent));
 }
 
 void AgentBrowser::updateRecord()

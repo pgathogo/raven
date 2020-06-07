@@ -8,10 +8,8 @@
 
 
 VoiceOverBrowser::VoiceOverBrowser(QWidget *parent):
-    BaseEntityBrowserDlg(parent, new VoiceOver()),
-    ui(new Ui::VoiceOverBrowser),
-    mVOForm{nullptr},
-    edm{}
+    BaseEntityBrowserDlg(parent, new VoiceOver())
+    ,ui(new Ui::VoiceOverBrowser)
 {
     ui->setupUi(this);
     setDialogTitle("Voice Overs");
@@ -19,42 +17,39 @@ VoiceOverBrowser::VoiceOverBrowser(QWidget *parent):
 
 VoiceOverBrowser::~VoiceOverBrowser()
 {
-    //delete mVoiceOver;
-    delete mVOForm;
-    delete edm;
     delete ui;
 }
 
 void VoiceOverBrowser::addRecord()
 {
-    mVoiceOver = new VoiceOver();
+    std::unique_ptr<VoiceOver> vo =
+            std::make_unique<VoiceOver>();
 
-    if (mVOForm != nullptr)
-        delete mVOForm;
+    std::unique_ptr<VoiceOverForm> voForm =
+           std::make_unique<VoiceOverForm>(vo.get(), this);
 
-    mVOForm = new VoiceOverForm(mVoiceOver, this);
+    if (voForm->exec() > 0){
+        if (entityDataModel()->createEntity(vo.get()) ) {
 
-    if (mVOForm->exec() > 0){
-        if (entityDataModel()->createEntity(mVoiceOver) ) {
+            std::unique_ptr<EntityDataModel> edm =
+                   std::make_unique<EntityDataModel>();
 
-            edm = new EntityDataModel();
+            auto& exlusions = voForm->typeExclusions();
+            for(auto& type : exlusions){
 
-            auto iterB = mVOForm->getMtoM()->cVecBegin();
-            auto iterE = mVOForm->getMtoM()->cVecEnd();
+                ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(type).get());
+                if (mtom->dbAction() == DBAction::dbaCREATE){
+                    mtom->setParentId(vo->id());
+                    edm->createEntityDB(mtom);
+                }
 
-            for (; iterB != iterE; ++iterB){
-                VoiceExclusion* ve = new VoiceExclusion(
-                            new VoiceOver(),
-                            new TypeExclusion());
-                ve->setParentId(mVoiceOver->id());
-                ve->setDetailId(dynamic_cast<TypeExclusion*>((*iterB).get())->id());
+                if (mtom->dbAction() == DBAction::dbaDELETE)
+                    edm->deleteEntity(mtom);
 
-                edm->createEntity(ve);
             }
          }
-    }else{
-        delete mVoiceOver;
     }
+
 }
 
 void VoiceOverBrowser::updateRecord()

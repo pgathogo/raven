@@ -6,8 +6,6 @@
 #include "../framework/baseentitybrowserdlg.h"
 
 class EntityDataModel;
-class Agent;
-class AgentForm;
 
 namespace Ui {
 class AgentBrowser;
@@ -29,9 +27,6 @@ public:
 
 private:
     Ui::AgentBrowser *ui;
-    Agent* mAgent;
-    AgentForm* mAgentForm;
-
 };
 
 #endif // AGENTBROWSER_H

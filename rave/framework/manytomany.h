@@ -49,6 +49,8 @@ public:
     ConstVecIter cVecBegin();
     ConstVecIter cVecEnd();
 
+    std::vector<std::unique_ptr<BaseEntity>> const& entities() const;
+
 protected:
     BaseEntity* mParentEntity;
     BaseEntity* mDetailEntity;

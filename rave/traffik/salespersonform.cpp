@@ -39,6 +39,9 @@ void SalesPersonForm::populateFormWidgets()
 {
     ui->edtName->setText(stoq(mSalesPerson->name()->value()));
     ui->edtMobile->setText(stoq(mSalesPerson->mobileno()->value()));
+    ui->cbGender->setModel(mSalesPerson->gender()->dataModel());
+    ui->cbGender->setCurrentIndex(ui->cbGender->findText(
+                                 QString::fromStdString(mSalesPerson->gender()->displayName())));
 }
 
 void SalesPersonForm::populateEntityFields()
