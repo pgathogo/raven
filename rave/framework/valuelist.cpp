@@ -87,27 +87,18 @@ std::unique_ptr<BaseEntity> ValueList::mapFields(StringMap* sm)
 {
     auto te = entityFieldMap<ValueList>(sm);
     return std::move(te);
-
-    /*
-    FieldValues fvs = mapping(sm);
-    std::unique_ptr<ValueList> vl = std::make_unique<ValueList>();
-    for (auto& fv : fvs)
-        vl->setValueByField(std::get<0>(fv), std::get<1>(fv));
-        vl->setTableName(this->tableName());
-    return std::move(vl);
-    */
 }
 
 
-QList<QStandardItem*> ValueList::tableViewColumns()
+std::list<std::string> ValueList::tableViewColumns()
 {
-    QString tvCode = QString::fromStdString(code()->valueToString());
-    QString tvValue = QString::fromStdString(listValue()->valueToString());
+    std::list<std::string> cols;
 
-    QStandardItem* qCode = new QStandardItem(tvCode);
-    QStandardItem* qValue = new QStandardItem(tvValue);
+    cols.push_back(listValue()->valueToString());
+    cols.push_back(code()->valueToString());
 
-    return {qValue, qCode};
+    return cols;
+
 }
 
 std::vector<std::string> ValueList::tableViewValues()

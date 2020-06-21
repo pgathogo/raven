@@ -3,7 +3,7 @@
 #include "../framework/valuelist.h"
 #include "../framework/entitydatamodel.h"
 
-EntityDataModel* SalesPerson::mGenderDM{};
+//EntityDataModel* SalesPerson::mGenderDM{nullptr};
 
 SalesPerson::SalesPerson()
     :BaseEntity{}
@@ -11,8 +11,6 @@ SalesPerson::SalesPerson()
     ,mMobileNo{}
     ,mGender{}
 {
-    if (mGenderDM == nullptr)
-        mGenderDM = new EntityDataModel(new Gender());
 
     mName = createField<StringField>("salesperson_name", "Sales Person Name");
     mName->setDBColumnName("name");
@@ -20,7 +18,7 @@ SalesPerson::SalesPerson()
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No.");
 
-    mGender = createField<LookupField>("gender", "Gender", mGenderDM);
+    mGender = createField<LookupField>("gender", "Gender", new Gender());
     mGender->setDBColumnName("gender_id");
 
     mHeader << QString::fromStdString(mName->fieldLabel())
@@ -49,8 +47,16 @@ std::unique_ptr<BaseEntity> SalesPerson::mapFields(StringMap* raw_entity)
     return std::move(sp);
 }
 
-QList<QStandardItem*> SalesPerson::tableViewColumns()
+std::list<std::string> SalesPerson::tableViewColumns()
 {
+    std::list<std::string> cols;
+
+    cols.push_back(name()->displayName());
+    cols.push_back(name()->displayName());
+
+    return cols;
+
+    /*
     QString nm = QString::fromStdString(name()->displayName());
     QString gen = QString::fromStdString(gender()->displayName());
 
@@ -58,6 +64,7 @@ QList<QStandardItem*> SalesPerson::tableViewColumns()
     QStandardItem* qgen = new QStandardItem(gen);
 
     return {qname, qgen};
+    */
 }
 
 std::vector<std::string> SalesPerson::tableViewValues()
@@ -77,9 +84,6 @@ std::string SalesPerson::searchColumn() const
 
 void SalesPerson::populateEntity()
 {
-   // mName->setValueFromWidget();
-   // mMobileNo->setValueFromWidget();
-   // mGender->setValueFromWidget();
 }
 
 StringField* SalesPerson::name() const

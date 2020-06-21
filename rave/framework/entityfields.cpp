@@ -20,7 +20,7 @@ Field::Field()
 {
 }
 
-Field::Field(std::string aName, std::string aLabel)
+Field::Field(const std::string aName, const std::string aLabel)
     :mFieldName{aName},
      mFieldLabel{aLabel},
      mDBColumnName{aName},
@@ -117,7 +117,7 @@ IntegerField::IntegerField()
 {
 }
 
-IntegerField::IntegerField(std::string aName, std::string aLabel)
+IntegerField::IntegerField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel)
     ,mValue{-1}
     //,mWidget{new QLineEdit}
@@ -148,7 +148,8 @@ void IntegerField::setValue(int val)
 
 void IntegerField::stringToValue(std::string val)
 {
-    setValue(std::stoi(val));
+    if (!val.empty())
+        setValue(std::stoi(val));
 }
 
 int IntegerField::value()
@@ -168,6 +169,42 @@ std::string IntegerField::displayName() const
     return valueToString();
 }
 
+/* ------- DecimalField ------------ */
+DecimalField::DecimalField()
+{
+}
+
+DecimalField::DecimalField(const std::string aName, const std::string aLabel)
+    :Field{aName, aLabel}
+    ,mValue{0.0}
+{
+}
+DecimalField::~DecimalField()
+{
+}
+std::string DecimalField::valueToString() const
+{
+    return std::to_string(mValue);
+}
+std::string DecimalField::dbValueFormatter()
+{
+    return std::to_string(mValue);
+}
+void DecimalField::stringToValue(const std::string /*val*/)
+{
+}
+void DecimalField::setValue(double val)
+{
+    mValue = val;
+}
+double DecimalField::value()
+{
+    return mValue;
+}
+std::string DecimalField::displayName() const
+{
+    return valueToString();
+}
 
 
 /* -------- StringField --------- */
@@ -177,7 +214,7 @@ StringField::StringField()
     qDebug() << "StringField::ctor";
 }
 
-StringField::StringField(std::string aName, std::string aLabel)
+StringField::StringField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel)
 {
 }
@@ -223,14 +260,17 @@ void StringField::setValue(std::string val)
 {
     mValue = val;
 }
+
 void StringField::stringToValue(std::string val)
 {
     setValue(val);
 }
+
 std::string StringField::value()
 {
     return mValue;
 }
+
 /*
 void StringField::setWidget(QLineEdit* lineEdit)
 {
@@ -256,7 +296,7 @@ TextField::TextField()
         //,mWidget{ new QTextEdit }
 {
 }
-TextField::TextField(std::string aName, std::string aLabel)
+TextField::TextField(const std::string aName, const std::string aLabel)
         :Field(aName, aLabel)
         //,mWidget{ new QTextEdit }
 {
@@ -318,34 +358,36 @@ std::string TextField::displayName() const
 
 /* -------- LookupField ------------- */
 
-bool LookupField::hasData = false;
-EntityDataModel* LookupField::mEDM{};
+std::map<std::string, std::unique_ptr<EntityDataModel>> LookupField::lookups;
+
 
 LookupField::LookupField()
         :Field()
         ,mValue{1}
         ,mIndex{0}
-        //,mWidget{ new QComboBox }
 {
 }
 
-LookupField::LookupField(std::string aName, std::string aLabel, EntityDataModel* edm)
-        :Field(aName, aLabel)
+LookupField::LookupField(const std::string aName,
+                         const std::string aLabel,
+                         BaseEntity* lookupEntity)
+        :Field{aName, aLabel}
         ,mValue{-1}
         ,mIndex{-1}
-        //,mWidget{ new QComboBox }
 {
-    //mWidget->setModel(edm);
-    if (!hasData){
-        mEDM = edm;
-        cacheData();
+
+    auto it = lookups.find(aName);
+    if (it == lookups.end()){
+        lookups[aName]= std::make_unique<EntityDataModel>(lookupEntity);
+        lookups[aName]->all();
     }
+
+
 }
 
 LookupField::~LookupField()
 {
     qDebug() << "LookupField::dtor";
-    //delete mWidget;
 }
 
 std::string LookupField::valueToString() const
@@ -355,7 +397,16 @@ std::string LookupField::valueToString() const
 
 std::string LookupField::dbValueFormatter()
 {
-    return std::to_string(mValue);
+    std::string result;
+
+    if (mValue == -1){
+        result = "null";
+    }else{
+        result = std::to_string(mValue);
+    }
+
+    return result;
+
 }
 
 void LookupField::setValue(int val)
@@ -365,40 +416,19 @@ void LookupField::setValue(int val)
 
 void LookupField::stringToValue(std::string val)
 {
-    mValue = stoi(val);
+    if (!val.empty())
+        mValue = stoi(val);
 }
 
-int LookupField::value()
+int LookupField::value() const
 {
     return mValue;
 }
 
 EntityDataModel* LookupField::dataModel() const
 {
-    return mEDM;
+    return lookups[fieldName()].get();
 }
-
-/*
-QComboBox* LookupField::widget()
-{
-    return mWidget;
-}
-
-void LookupField::setWidget(QComboBox* widget)
-{
-    delete mWidget;
-    mWidget = widget;
-    mWidget->setModel(mEDM);
-    mWidget->setCurrentIndex(mWidget->findText(
-                                 QString::fromStdString(this->displayName())));
-}
-
-void LookupField::setValueFromWidget()
-{
-    // get this from the model
-    //mValue = mWidget->toPlainText().toStdString();
-}
-*/
 
 void LookupField::setIndex(int i)
 {
@@ -419,25 +449,27 @@ std::string LookupField::currText() const
 
 void LookupField::cacheData()
 {
+    /*
     if (!hasData){
         mEDM->all();
         if (mEDM->count() > 0)
             hasData = true;
     }
+    */
 }
 
 std::size_t LookupField::cacheCount()
 {
-    return mEDM->count();
+    return lookups[fieldName()]->count();
 }
 
 std::string LookupField::displayName() const
 {
     std::string name = "NOT-FOUND";
 
-    auto it = mEDM->vecBegin();
+    auto it = lookups[fieldName()]->vecBegin();
 
-    for(; it != mEDM->vecEnd(); ++it){
+    for(; it != lookups[fieldName()]->vecEnd(); ++it){
         if (mValue == std::get<1>(*it)->id()){
             ValueList* vl = dynamic_cast<ValueList*>(std::get<1>(*it).get());
             name = vl->listValue()->displayName();
@@ -447,127 +479,47 @@ std::string LookupField::displayName() const
     return name;
 }
 
-/*
-ChoiceField::ChoiceField()
-    :mIndex{-1}
-    //:mWidget{}
-{
-}
-
-ChoiceField::ChoiceField(std::string aName, std::string aLabel)
-    :Field(aName, aLabel)
-    ,mIndex{-1}
-    //,mWidget{new QComboBox}
-{
-}
-
-ChoiceField::~ChoiceField()
-{
-    //delete mWidget;
-}
-
-std::string ChoiceField::valueToString() const
-{
-    return mValue;
-}
-
-std::string ChoiceField::dbValueFormatter()
-{
-    return mValue;
-}
-
-void ChoiceField::stringToValue(std::string val)
-{
-}
-
-std::string ChoiceField::value()
-{
-    return mValue;
-}
-
-std::string ChoiceField::displayName() const
-{
-    std::string name = "NOT-FOUND";
-
-    for (auto& c : mChoices){
-        if (mValue == std::get<0>(c)){
-            name = std::get<1>(c);
-        }
-    }
-
-    return name;
-}
-
-void ChoiceField::addChoice(Choice choice)
-{
-    mChoices.push_back(choice);
-    //mWidget->addItem(QString::fromStdString(std::get<1>(choice)));
-}
-
-void ChoiceField::setValue(std::string value)
-{
-    mValue = value;
-}
-
-void ChoiceField::setIndex(int i)
-{
-    mIndex = i;
-}
-
-int ChoiceField::index() const
-{
-    return mIndex;
-}
-
-void ChoiceField::setCurrText(std::string text)
-{
-    mCurrText = text;
-}
-
-std::string ChoiceField::currText() const
-{
-    return mCurrText;
-}
-*/
 
 /* ----- ForeignKeyField ------- */
+
+
 ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLabel,
-                std::unique_ptr<BaseEntity> fkEntity)
-    :Field{aName, aLabel}
-    ,mFKEntity{std::move(fkEntity)}
-    ,mValue{-1}
+                BaseEntity* fkEntity, const std::string dispName)
+    :LookupField{aName, aLabel, fkEntity}
+     ,mDisplayName{dispName}
 {
 }
 
 ForeignKeyField::~ForeignKeyField()
 {
 }
-std::string ForeignKeyField::valueToString() const
-{
-    return std::to_string(mValue);
-}
-
-std::string ForeignKeyField::dbValueFormatter()
-{
-    return std::to_string(mValue);
-}
-
-void ForeignKeyField::stringToValue(std::string val)
-{
-    mValue = stoi(val);
-}
-
-void ForeignKeyField::setValue(int val)
-{
-    mValue = val;
-}
-
-int ForeignKeyField::value()
-{
-    return mValue;
-}
 
 std::string ForeignKeyField::displayName() const
 {
-    return "";
+    std::string name = "NOT-FOUND";
+    bool found = false;
+
+    auto it = dataModel()->vecBegin();
+
+    for(; it != dataModel()->vecEnd(); ++it){
+
+        if (found)
+            break;
+
+        if (value() == std::get<1>(*it)->id()){
+            BaseEntity* entity = dynamic_cast<BaseEntity*>(std::get<1>(*it).get());
+
+            for (const auto& tup: entity->fields()){
+                if (std::get<0>(tup) == mDisplayName){
+                    name = std::get<1>(tup)->displayName();
+                    found = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return name;
 }
+
+

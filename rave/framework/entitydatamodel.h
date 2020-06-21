@@ -19,6 +19,7 @@ class EntityModel : public QStandardItemModel{
     public:
         EntityModel();
         EntityModel(BaseEntity* entity);
+        EntityModel(std::unique_ptr<BaseEntity> entity);
         ~EntityModel();
         size_t entitiesCount();
         BaseEntity* findEntityByName(std::string name);
@@ -36,6 +37,7 @@ class EntityModel : public QStandardItemModel{
         void deleteFromModel();
     private:
         BaseEntity* mEntity;
+        std::unique_ptr<BaseEntity> mUEntity;
         std::vector<EntityRecord> mEntities;
 
         void addRow(BaseEntity* entity);
@@ -48,16 +50,15 @@ class EntityDataModel : public EntityModel
 public:
     EntityDataModel();
     EntityDataModel(BaseEntity* baseEntity);
+    EntityDataModel(std::unique_ptr<BaseEntity> baseEntity);
     EntityDataModel(BaseEntity& baseEntity);
     ~EntityDataModel();
 
     void populateFields(BaseEntity* baseEntity);
 
-    //std::vector<T*> entities() const;
     bool createEntity(std::unique_ptr<BaseEntity> entity);
     bool createEntity(BaseEntity* entity);
     void updateEntity(BaseEntity* entity);
-    //void deleteEntity(const std::string name, BaseEntity* entity);
     void deleteEntity(BaseEntity* entity);
     void deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value);
 
@@ -99,6 +100,7 @@ public:
 
 private:
     BaseEntity* mEntity;   // deleted at the base class
+    std::unique_ptr<BaseEntity> mUEntity;
     BaseDatabaseManager* dbManager;
 
     void populateEntities();

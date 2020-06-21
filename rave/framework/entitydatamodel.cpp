@@ -6,8 +6,6 @@
 EntityModel::EntityModel()
     :mEntity{nullptr}
 {
-    //QStringList qs(header_labels);
-    //this->setHorizontalHeaderLabels(qs);
 }
 
 EntityModel::~EntityModel()
@@ -24,17 +22,16 @@ EntityModel::EntityModel(BaseEntity* entity)
     setHeader();
 }
 
+EntityModel::EntityModel(std::unique_ptr<BaseEntity> entity)
+    :mUEntity{std::move(entity)}
+{
+    setHeader();
+}
+
 void EntityModel::setHeader()
 {
     this->setHorizontalHeaderLabels(mEntity->tableHeaders());
 }
-
-/*
-std::vector<EntityRecord> EntityModel::entities() const
-{
-    return mEntities;
-}
-*/
 
 void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
 {
@@ -60,7 +57,11 @@ void EntityModel::addEntity(BaseEntity* entity)
 
 void EntityModel::addRow(BaseEntity* entity)
 {
-   appendRow(entity->tableViewColumns());
+    std::list names = entity->tableViewColumns();
+    QList<QStandardItem*> view_names;
+    for (std::string c : names)
+        view_names << new QStandardItem(QString::fromStdString(c));
+    appendRow(view_names);
 }
 
 BaseEntity* EntityModel::findEntityByName(std::string name)
@@ -134,7 +135,16 @@ EntityDataModel::EntityDataModel(BaseEntity* baseEntity)
      mEntity{baseEntity},
      dbManager{}
 {
-    qDebug() << "EntityDataModel::ctor";
+    qDebug() << "EntityDataModel::Raw Pointer - ctor";
+    dbManager = new PostgresDatabaseManager;
+}
+
+EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
+    :EntityModel{std::move(baseEntity)},
+     mUEntity{std::move(baseEntity)},
+     dbManager{}
+{
+    qDebug() << "EntityDataModel::Unique Pointer - ctor";
     dbManager = new PostgresDatabaseManager;
 }
 

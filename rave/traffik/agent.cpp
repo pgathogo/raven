@@ -1,4 +1,4 @@
-#include <QStandardItem>
+#include <QDebug>
 #include "agent.h"
 
 Agent::Agent()
@@ -30,8 +30,14 @@ Agent::Agent()
 
 }
 
+Agent::Agent(const Agent& /*other*/)
+{
+    qDebug() << "Agent::copy ctor";
+}
+
 Agent::~Agent()
 {
+    qDebug() << "Agent::dtor" ;
 }
 
 std::string Agent::tableName() const
@@ -50,8 +56,17 @@ std::unique_ptr<BaseEntity> Agent::mapFields(StringMap* raw_entity)
     return std::move(agent);
 }
 
-QList<QStandardItem*> Agent::tableViewColumns()
+std::list<std::string> Agent::tableViewColumns()
 {
+    std::list<std::string> cols;
+
+    cols.push_back(name()->displayName());
+    cols.push_back(contactName()->displayName());
+    cols.push_back(mobileNo()->displayName());
+
+    return cols;
+
+    /*
     QString nm = QString::fromStdString(name()->displayName());
     QString contact_name = QString::fromStdString(contactName()->displayName());
     QString mobile_no = QString::fromStdString(mobileNo()->displayName());
@@ -61,7 +76,7 @@ QList<QStandardItem*> Agent::tableViewColumns()
     QStandardItem* qmobile = new QStandardItem(mobile_no);
 
     return {qname, qcontact, qmobile};
-
+    */
 }
 
 std::vector<std::string> Agent::tableViewValues()

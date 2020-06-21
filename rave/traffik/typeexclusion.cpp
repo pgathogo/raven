@@ -210,14 +210,23 @@ std::unique_ptr<BaseEntity> TypeExclusion::mapFields(StringMap* e)
     return std::move(te);
 }
 
-QList<QStandardItem*> TypeExclusion::tableViewColumns()
+std::list<std::string> TypeExclusion::tableViewColumns()
 {
+    std::list<std::string> cols;
+
+    cols.push_back(name()->valueToString());
+    cols.push_back(description()->valueToString());
+
+    return cols;
+
+    /*
     QString gname  = QString::fromStdString(name()->valueToString());
     QString desc = QString::fromStdString(description()->valueToString());
 
     QStandardItem* Qgname = new QStandardItem(gname);
     QStandardItem* Qdesc = new QStandardItem(desc);
     return{Qgname, Qdesc};
+    */
 }
 std::vector<std::string> TypeExclusion::tableViewValues()
 {

@@ -1,7 +1,5 @@
 #include <typeinfo>
 #include <QDebug>
-#include <QList>
-#include <QStandardItem>
 
 #include "clientgroup.h"
 #include "../framework/choicefield.h"
@@ -85,14 +83,15 @@ std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
 }
 
 
-QList<QStandardItem*> ClientGroup::tableViewColumns()
+std::list<std::string> ClientGroup::tableViewColumns()
 {
-    QString gname  = QString::fromStdString(name()->valueToString());
-    QString desc = QString::fromStdString(description()->valueToString());
+    std::list<std::string> cols;
 
-    QStandardItem* Qgname = new QStandardItem(gname);
-    QStandardItem* Qdesc = new QStandardItem(desc);
-    return{Qgname, Qdesc};
+    cols.push_back(name()->displayName());
+    cols.push_back(description()->displayName());
+
+    return cols;
+
 }
 
 std::vector<std::string> ClientGroup::tableViewValues()

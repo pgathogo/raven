@@ -39,6 +39,9 @@ SOURCES += \
     agent.cpp \
     agentbrowser.cpp \
     agentform.cpp \
+    client.cpp \
+    clientbrowser.cpp \
+    clientform.cpp \
     clientgroup.cpp \
     clientgroupdetaildlg.cpp \
     clientgroupdlg.cpp \
@@ -81,6 +84,9 @@ HEADERS += \
     agent.h \
     agentbrowser.h \
     agentform.h \
+    client.h \
+    clientbrowser.h \
+    clientform.h \
     clientgroup.h \
     clientgroupdetaildlg.h \
     clientgroupdlg.h \
@@ -108,6 +114,8 @@ FORMS += \
     ../utils/plainform.ui \
     agentbrowser.ui \
     agentform.ui \
+    clientbrowser.ui \
+    clientform.ui \
     clientgroupdetaildlg.ui \
     clientgroupdlg.ui \
     mainwindow.ui \

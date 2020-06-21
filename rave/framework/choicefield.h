@@ -2,7 +2,6 @@
 #define CHOICEFIELDGEN_H
 
 #include "entityfields.h"
-
 template<typename T>
 class ChoiceField : public Field{
     public:
@@ -13,7 +12,7 @@ class ChoiceField : public Field{
             std::string valueToString() const override;
             std::string dbValueFormatter() override;
             void stringToValue(std::string val) override;
-            T value();
+            T value() const;
             std::string displayName() const override;
 
             void addChoice(std::tuple<T, std::string> choice);
@@ -23,6 +22,8 @@ class ChoiceField : public Field{
 
             void setCurrText(std::string text);
             std::string currText() const;
+
+            std::vector<std::tuple<T, std::string>> choices() const;
 
         private:
             std::vector<std::tuple<T, std::string>> mChoices;
@@ -35,6 +36,7 @@ template<typename T>
 ChoiceField<T>::ChoiceField()
 {
 }
+
 template<typename T>
 ChoiceField<T>::ChoiceField(std::string aName,
                                   std::string aLabel)
@@ -60,20 +62,29 @@ std::string ChoiceField<T>::valueToString() const
 template<typename T>
 std::string ChoiceField<T>::dbValueFormatter()
 {
+    std::string result;
+
     if constexpr(std::is_integral_v<T>){
-        return std::to_string(mValue);
+        result = std::to_string(mValue);
     }else{
-        return mValue;
+        result = mValue;
+    }
+
+    return "'"+result+"'";
+}
+
+template<typename T>
+void ChoiceField<T>::stringToValue(std::string val)
+{
+    if constexpr(std::is_integral_v<T>){
+        mValue = std::stoi(val);
+    }else{
+        mValue = val;
     }
 }
 
 template<typename T>
-void ChoiceField<T>::stringToValue(std::string /*val*/)
-{
-}
-
-template<typename T>
-T ChoiceField<T>::value()
+T ChoiceField<T>::value() const
 {
     return mValue;
 }
@@ -127,4 +138,12 @@ std::string ChoiceField<T>::currText() const
 {
     return mCurrText;
 }
+
+template<typename T>
+std::vector<std::tuple<T, std::string>> ChoiceField<T>::choices() const
+{
+    return mChoices;
+}
+
+
 #endif // CHOICEFIELDGEN_H

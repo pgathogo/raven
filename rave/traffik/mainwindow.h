@@ -59,7 +59,7 @@ public:
     }
 
 private slots:
-    void openClientBrowser();
+    void browseClients();
     void newClientGroup();
     void newGender();
     void plainForm();
@@ -93,7 +93,5 @@ private:
 
     PostgresDatabaseManager* mPGManager;
     void createActions();
-
-
 };
 #endif // MAINWINDOW_H

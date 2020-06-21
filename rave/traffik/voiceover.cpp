@@ -23,7 +23,7 @@ VoiceOver::VoiceOver()
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No");
 
-    mGender = createField<LookupField>("gender", "Gender", mGenderDM);
+    mGender = createField<LookupField>("gender", "Gender", new Gender());
     mGender->setDBColumnName("gender_id");
 
     mDaypart1 = createField<StringField>("daypart1", "Daypart1");
@@ -76,15 +76,16 @@ std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
     return std::move(vo);
 }
 
-QList<QStandardItem*> VoiceOver::tableViewColumns()
+std::list<std::string> VoiceOver::tableViewColumns()
 {
 
-    QString nm  = QString::fromStdString(name()->displayName());
-    QString gen = QString::fromStdString(gender()->displayName());
+    std::list<std::string> cols;
 
-    QStandardItem* Qname = new QStandardItem(nm);
-    QStandardItem* Qgen = new QStandardItem(gen);
-    return{Qname, Qgen};
+    cols.push_back(name()->displayName());
+    cols.push_back(gender()->displayName());
+
+    return cols;
+
 }
 std::vector<std::string> VoiceOver::tableViewValues()
 {

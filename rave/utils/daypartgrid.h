@@ -63,7 +63,6 @@ public:
         gridCells[cell->row()][cell->column()] = state.toggle();
     }
 
-
 private slots:
     //void saveGrid();
     void cell_entered(int row, int col);

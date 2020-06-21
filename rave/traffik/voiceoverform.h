@@ -46,7 +46,7 @@ private:
     VoiceOver* mVoiceOver;
     DayPartGrid* mDayPart;
     ManyToManyBrowser* mMtoMBrowser;
-    EntityDataModel* mGenderModel;
+    //EntityDataModel* mGenderModel;
     EntityDataModel* mVoiceExModel;
 
 };

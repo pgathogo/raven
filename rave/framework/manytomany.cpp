@@ -81,7 +81,7 @@ std::unique_ptr<BaseEntity> ManyToMany::mapFields(StringMap* sm)
     return std::move(te);
 }
 
-QList<QStandardItem*> ManyToMany::tableViewColumns()
+std::list<std::string> ManyToMany::tableViewColumns()
 {
     return mDetailEntity->tableViewColumns();
 }
@@ -205,15 +205,24 @@ std::unique_ptr<BaseEntity> VoiceExclusion::mapFields(StringMap* sm)
     return std::move(ve);
 }
 
-QList<QStandardItem*> VoiceExclusion::tableViewColumns()
+std::list<std::string> VoiceExclusion::tableViewColumns()
 {
+    std::list<std::string> cols;
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
+
+    cols.push_back(te->name()->displayName());
+    cols.push_back(te->description()->displayName());
+
+    return cols;
+
+    /*
     QString gname  = QString::fromStdString(te->name()->displayName());
     QString desc = QString::fromStdString(te->description()->displayName());
 
     QStandardItem* Qgname = new QStandardItem(gname);
     QStandardItem* Qdesc = new QStandardItem(desc);
     return{Qgname, Qdesc};
+    */
 }
 std::vector<std::string> VoiceExclusion::tableViewValues()
 {
@@ -221,6 +230,7 @@ std::vector<std::string> VoiceExclusion::tableViewValues()
     std::string pname = te->name()->valueToString();
     std::string pdesc = te->description()->valueToString();
     return {pname, pdesc};
+
 }
 QStringList VoiceExclusion::tableHeaders() const
 {

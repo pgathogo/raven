@@ -25,7 +25,7 @@ public:
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
 
-    QList<QStandardItem*> tableViewColumns() override;
+    std::list<std::string> tableViewColumns() override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 
@@ -75,7 +75,7 @@ class VoiceExclusion : public ManyToMany{
 
         std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
 
-        QList<QStandardItem*> tableViewColumns() override;
+        std::list<std::string> tableViewColumns() override;
         std::vector<std::string> tableViewValues() override;
         QStringList tableHeaders() const override;
 

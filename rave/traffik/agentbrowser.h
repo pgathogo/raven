@@ -22,7 +22,6 @@ public:
 
     void addRecord() override;
     void updateRecord() override;
-
     std::string typeID() override;
 
 private:

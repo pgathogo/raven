@@ -55,11 +55,15 @@ void DayPartGrid::prepareGrid()
 void DayPartGrid::cell_entered(int row, int col)
 {
     QTableWidgetItem* cell = ui->twDaypart->item(row, col);
+    this->update_cell_state<Selected>(cell);
+
+    /*
     if (is_cell_selected(cell)){
         this->update_cell_state<Unselected>(cell);
     }else{
         this->update_cell_state<Selected>(cell);
     }
+    */
 }
 
 void DayPartGrid::cell_clicked(int row, int col)

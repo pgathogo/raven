@@ -39,7 +39,8 @@ public:
     std::vector<FieldMap>::iterator beginIter();
     std::vector<FieldMap>::iterator endIter();
 
-    virtual QList<QStandardItem*> tableViewColumns() = 0;
+    //virtual QList<QStandardItem*> tableViewColumns() = 0;
+    virtual std::list<std::string> tableViewColumns() = 0;
     virtual std::vector<std::string> tableViewValues() = 0;
 
     virtual QStringList tableHeaders() const = 0;

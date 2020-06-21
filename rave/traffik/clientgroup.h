@@ -27,7 +27,7 @@ public:
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
-    QList<QStandardItem*> tableViewColumns() override;
+    std::list<std::string> tableViewColumns() override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 

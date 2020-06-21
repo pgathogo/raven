@@ -1,20 +1,23 @@
 #include <QMdiArea>
 #include <QToolBar>
 
+#include "../framework/valuelistbrowser.h"
+#include "../framework/databasemanager.h"
+#include "../framework/valuelist.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "clientgroupdlg.h"
 #include "typeexclusionbrowser.h"
-#include "../framework/valuelistbrowser.h"
 
-#include "../framework/valuelist.h"
 #include "../utils/plainform.h"
 #include "clientgroup.h"
 
 #include "voiceoverbrowser.h"
 #include "salespersonbrowser.h"
 #include "agentbrowser.h"
-#include "../framework/databasemanager.h"
+#include "clientbrowser.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -63,7 +66,7 @@ void MainWindow::createActions()
     // Client
     clientAction = traffikMenu->addAction("&Client");
     clientAction->setStatusTip("Client details");
-    connect(clientAction, &QAction::triggered, this, &MainWindow::openClientBrowser);
+    connect(clientAction, &QAction::triggered, this, &MainWindow::browseClients);
 
     // Spots
     spotAction = traffikMenu->addAction("&Client Spots");
@@ -178,8 +181,10 @@ void MainWindow::plainForm()
     pf = new PlainForm();
     pf->exec();
 }
-void MainWindow::openClientBrowser()
+void MainWindow::browseClients()
 {
+    ClientBrowser* clientBrowser = createSubWindow<ClientBrowser>();
+    clientBrowser->exec();
 }
 
 MainWindow::~MainWindow()

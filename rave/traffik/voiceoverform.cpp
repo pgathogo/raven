@@ -22,7 +22,7 @@ VoiceOverForm::VoiceOverForm(
     mVoiceOver{vo},
     mDayPart{},
     mMtoMBrowser{},
-    mGenderModel{},
+   // mGenderModel{},
     mVoiceExModel{}
 {
     ui->setupUi(bui->baseContainer);

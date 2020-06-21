@@ -20,7 +20,7 @@ class QComboBox;
 class Field{
     public:
         Field();
-        Field(const std::string aName, std::string aLabel);
+        Field(const std::string aName, const std::string aLabel);
         virtual ~Field();
         std::string fieldName() const;
         std::string fieldLabel() const;
@@ -67,7 +67,7 @@ class IntegerField : public Field{
         typedef int type;
         IntegerField();
         ~IntegerField() override;
-        IntegerField(std::string aName, std::string aLabel);
+        IntegerField(const std::string aName, const std::string aLabel);
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
 
@@ -78,13 +78,23 @@ class IntegerField : public Field{
         int value();
         std::string displayName() const override;
 
-        //IntegerFormField* widget();
-
-        //QLineEdit* widget();
-
     private:
         int mValue;
-        //QLineEdit* mWidget;
+};
+
+class DecimalField : public Field{
+    public:
+        DecimalField();
+        DecimalField(const std::string aName, const std::string aLabel);
+        ~DecimalField() override;
+        std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+        void stringToValue(const std::string val) override;
+        void setValue(double val);
+        double value();
+        std::string displayName() const override;
+    private:
+        double mValue;
 };
 
 class StringField : public Field{
@@ -93,7 +103,7 @@ class StringField : public Field{
 
         StringField();
         ~StringField() override;
-        StringField(std::string aName, std::string aLabel);
+        StringField(const std::string aName, const std::string aLabel);
 
         StringField(const StringField& sf);
         StringField& operator=(const StringField& sf);
@@ -116,7 +126,7 @@ class TextField :public Field{
         typedef std::string type;
         TextField();
         ~TextField() override;
-        TextField(std::string aName, std::string aLabel);
+        TextField(const std::string aName, const std::string aLabel);
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
 
@@ -138,13 +148,15 @@ class LookupField : public Field{
 public:
         LookupField();
         ~LookupField() override;
-        LookupField(std::string aName, std::string aLabel, EntityDataModel* edm);
+        LookupField(const std::string aName, const std::string aLabel, BaseEntity* lookupEntity);
+
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
+        void stringToValue(std::string val) override;
+        std::string displayName() const override;
 
         void setValue(int val);
-        void stringToValue(std::string val) override;
-        int value();
+        int value() const ;
 
         void setIndex(int i);
         int index() const;
@@ -154,7 +166,6 @@ public:
 
         void cacheData();
         std::size_t cacheCount();
-        std::string displayName() const override;
 
         EntityDataModel* dataModel() const;
 
@@ -162,59 +173,19 @@ public:
         int mValue;
         int mIndex;
         std::string mCurrText;
-        static EntityDataModel* mEDM;
-        static bool hasData;
+        static std::map<std::string, std::unique_ptr<EntityDataModel>> lookups;
 };
 
-/*
-using Choice = std::tuple<std::string, std::string>;
-class ChoiceField : public Field{
-public:
-        ChoiceField();
-        ChoiceField(std::string aName, std::string aLabel);
-        ~ChoiceField() override;
-
-        std::string valueToString() const override;
-        std::string dbValueFormatter() override;
-        void stringToValue(std::string val) override;
-        std::string value();
-        std::string displayName() const override;
-
-        void addChoice(Choice choice);
-        void setValue(std::string value);
-        void setIndex(int i);
-        int index() const;
-
-        void setCurrText(std::string text);
-        std::string currText() const;
-
-    private:
-        //QComboBox* mWidget;
-        std::vector<Choice> mChoices;
-        std::string mValue;
-        int mIndex;
-        std::string mCurrText;
-};
-*/
-
-class ForeignKeyField : public Field {
+class ForeignKeyField : public LookupField {
     public:
         ForeignKeyField(const std::string aName, const std::string aLabel,
-                        std::unique_ptr<BaseEntity> fkEntity);
+                        BaseEntity* fkEntity, const std::string dispName);
         ~ForeignKeyField() override;
 
-        std::string valueToString() const override;
-        std::string dbValueFormatter() override;
-        void stringToValue(std::string val) override;
-        void setValue(int val);
-        int value();
-
-        void cacheData();
-        std::size_t cacheCount();
         std::string displayName() const override;
     private:
-        std::unique_ptr<BaseEntity> mFKEntity;
         int mValue;
+        std::string mDisplayName;
 };
 
 
