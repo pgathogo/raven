@@ -28,7 +28,7 @@ public:
     StringField* mobileno() const;
     void setMobileNo(std::string mobileno);
 
-    LookupField* gender() const;
+    ForeignKeyField* gender() const;
     void setGender( int i);
 
     StringField* daypart1() const;
@@ -66,12 +66,8 @@ private:
     StringField* mDaypart6;
     StringField* mDaypart7;
 
-    LookupField* mGender;
+    ForeignKeyField* mGender;
     VoiceExclusion* mVoiceEx;
-
-    //ChoiceField<std::string, std::string>* mGender2;
-
-    static EntityDataModel* mGenderDM;
 
     QStringList mHeader;
     std::string mTableName;

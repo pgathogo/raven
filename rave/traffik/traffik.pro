@@ -50,6 +50,7 @@ SOURCES += \
     salesperson.cpp \
     salespersonbrowser.cpp \
     salespersonform.cpp \
+    timeband.cpp \
     typeexclusion.cpp \
     typeexclusionbrowser.cpp \
     typeexclusiondetails.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
     salesperson.h \
     salespersonbrowser.h \
     salespersonform.h \
+    timeband.h \
     typeexclusion.h \
     typeexclusionbrowser.h \
     typeexclusiondetails.h  \

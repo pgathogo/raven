@@ -3,8 +3,6 @@
 #include "../framework/valuelist.h"
 #include "../framework/entitydatamodel.h"
 
-//EntityDataModel* SalesPerson::mGenderDM{nullptr};
-
 SalesPerson::SalesPerson()
     :BaseEntity{}
     ,mName{}
@@ -18,7 +16,7 @@ SalesPerson::SalesPerson()
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No.");
 
-    mGender = createField<LookupField>("gender", "Gender", new Gender());
+    mGender = createField<ForeignKeyField>("gender", "Gender", new Gender(), "value");
     mGender->setDBColumnName("gender_id");
 
     mHeader << QString::fromStdString(mName->fieldLabel())
@@ -55,16 +53,6 @@ std::list<std::string> SalesPerson::tableViewColumns()
     cols.push_back(name()->displayName());
 
     return cols;
-
-    /*
-    QString nm = QString::fromStdString(name()->displayName());
-    QString gen = QString::fromStdString(gender()->displayName());
-
-    QStandardItem* qname = new QStandardItem(nm);
-    QStandardItem* qgen = new QStandardItem(gen);
-
-    return {qname, qgen};
-    */
 }
 
 std::vector<std::string> SalesPerson::tableViewValues()
@@ -106,7 +94,7 @@ void SalesPerson::setMobileNo(std::string mobileno)
     mMobileNo->setValue(mobileno);
 }
 
-LookupField* SalesPerson::gender() const
+ForeignKeyField* SalesPerson::gender() const
 {
     return mGender;
 }

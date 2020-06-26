@@ -9,13 +9,8 @@
 using FieldValueType = std::variant<std::string, int>;
 
 class FormField;
-class IntegerFormField;
 class BaseEntity;
 class EntityDataModel;
-
-class QLineEdit;
-class QTextEdit;
-class QComboBox;
 
 class Field{
     public:
@@ -38,7 +33,6 @@ class Field{
         void setSearchable(bool value);
         bool searchable();
 
-        //void setDisplayName(const std::string dispName);
         virtual std::string displayName() const = 0;
 
         void setMandatory(bool value);
@@ -49,16 +43,14 @@ class Field{
 
         virtual void stringToValue(std::string val)=0;
 
-        //virtual QVariant value()=0;
-
     private:
         std::string mFieldName;
         std::string mFieldLabel;
         std::string mDBColumnName;
+        std::string mDisplayName;
         bool mVisible;
         bool mFormOnly;
         bool mSearchable;
-        std::string mDisplayName;
         bool mMandatory;
 };
 
@@ -97,6 +89,21 @@ class DecimalField : public Field{
         double mValue;
 };
 
+class BooleanField : public Field{
+    public:
+        BooleanField();
+        BooleanField(const std::string aName, const std::string aLabel);
+        ~BooleanField() override;
+        std::string valueToString() const override;
+        std::string dbValueFormatter() override;
+        void stringToValue(const std::string val) override;
+        void setValue(bool val);
+        bool value() const ;
+        std::string displayName() const override;
+    private:
+        bool mValue;
+};
+
 class StringField : public Field{
     public:
         typedef std::string type;
@@ -118,7 +125,6 @@ class StringField : public Field{
         std::string displayName() const override;
     private:
         std::string mValue;
-        //QLineEdit* mWidget;
 };
 
 class TextField :public Field{
@@ -134,25 +140,22 @@ class TextField :public Field{
         void stringToValue(std::string val) override;
         std::string value();
 
-        //QTextEdit* widget();
-        //void setWidget(QTextEdit* textEdit);
-        //void setValueFromWidget();
-
         std::string displayName() const override;
     private:
         std::string mValue;
-        //QTextEdit* mWidget;
 };
 
-class LookupField : public Field{
+class ForeignKeyField : public Field {
 public:
-        LookupField();
-        ~LookupField() override;
-        LookupField(const std::string aName, const std::string aLabel, BaseEntity* lookupEntity);
+        ForeignKeyField();
+        ForeignKeyField(const std::string aName, const std::string aLabel,
+                        BaseEntity* fkEntity, const std::string displayField);
+        ~ForeignKeyField() override;
 
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
         void stringToValue(std::string val) override;
+
         std::string displayName() const override;
 
         void setValue(int val);
@@ -173,19 +176,8 @@ public:
         int mValue;
         int mIndex;
         std::string mCurrText;
+        std::string mDisplayField;
         static std::map<std::string, std::unique_ptr<EntityDataModel>> lookups;
-};
-
-class ForeignKeyField : public LookupField {
-    public:
-        ForeignKeyField(const std::string aName, const std::string aLabel,
-                        BaseEntity* fkEntity, const std::string dispName);
-        ~ForeignKeyField() override;
-
-        std::string displayName() const override;
-    private:
-        int mValue;
-        std::string mDisplayName;
 };
 
 

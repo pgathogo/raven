@@ -122,3 +122,39 @@ class TypeExclusion(Daypart):
 
 class VoiceOver(Person, Daypart):
     pass
+
+BILL_METHOD = (
+        ('FF', 'Flat Fee'),
+        ('IP', 'Increment By Percentage'),
+        )
+
+class TimeBand(Daypart):
+    name = models.CharField(max_length=255)
+    bill_method = models.CharField(max_length=2, blank=True, null=True, choices=BILL_METHOD)
+    locked = models.BooleanField(default=False)
+    base_price = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    base_duration = models.IntegerField(null=True)
+    ip_duration1 = models.IntegerField(null=True)
+    ip_percent1 = models.IntegerField(null=True)
+    ip_duration2 = models.IntegerField(null=True)
+    ip_percent2 = models.IntegerField(null=True)
+    ip_duration3 = models.IntegerField(null=True)
+    ip_percent3 = models.IntegerField(null=True)
+    ip_duration4 = models.IntegerField(null=True)
+    ip_percent4 = models.IntegerField(null=True)
+    ip_duration5 = models.IntegerField(null=True)
+    ip_percent6 = models.IntegerField(null=True)
+    ip_duration7 = models.IntegerField(null=True)
+    ip_percent7 = models.IntegerField(null=True)
+    ip_duration8 = models.IntegerField(null=True)
+    ip_percent8 = models.IntegerField(null=True)
+    ip_duration9 = models.IntegerField(null=True)
+    ip_percent9 = models.IntegerField(null=True)
+    ip_duration10 = models.IntegerField(null=True)
+    ip_percent10 = models.IntegerField(null=True)
+    ip_duration11 = models.IntegerField(null=True)
+    ip_percent11 = models.IntegerField(null=True)
+    ip_duration12 = models.IntegerField(null=True)
+    ip_percent12 = models.IntegerField(null=True)
+
+

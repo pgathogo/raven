@@ -54,14 +54,6 @@ std::vector<std::string> BaseEntity::dbColumnNames()
 {
     // All fields are database columns, unless they are marked
     // formOnly.
-    /*
-    std::vector<FieldMap>::const_iterator citer;
-    for (citer=cBeginIter(); citer != cEndIter(); ++citer){
-        if (!std::get<1>(*citer)->formOnly())
-            cols.push_back(std::get<1>(*citer)->dbColumnName());
-    }
-    */
-
     std::vector<std::string> cols;
     auto& flds = fields();
     for (auto& f : flds){

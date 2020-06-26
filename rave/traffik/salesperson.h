@@ -27,14 +27,12 @@ public:
     StringField* mobileno() const;
     void setMobileNo(std::string mobileno);
 
-    LookupField* gender() const;
+    ForeignKeyField* gender() const;
     void setGender( int i);
 private:
     StringField* mName;
     StringField* mMobileNo;
-    LookupField* mGender;
-
-    //static EntityDataModel* mGenderDM;
+    ForeignKeyField* mGender;
 
     QStringList mHeader;
     std::string mTableName;

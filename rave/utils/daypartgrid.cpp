@@ -7,7 +7,8 @@ DayPartGrid::DayPartGrid(QVBoxLayout* layout, QWidget *parent) :
     QWidget{parent},
     ui{new Ui::DayPartGrid},
     mDayParts{},
-    mLayout{layout}
+    mLayout{layout},
+    sp{0,0}
 {
     ui->setupUi(this);
     //connect(ui->twDaypart, SIGNAL(cellEntered(int, int)), this, SLOT(cell_entered(int, int)));
@@ -57,6 +58,13 @@ void DayPartGrid::cell_entered(int row, int col)
     QTableWidgetItem* cell = ui->twDaypart->item(row, col);
     this->update_cell_state<Selected>(cell);
 
+    if (col > sp.col){
+        for(int r=sp.row; r<row; ++r){
+            QTableWidgetItem* cell = ui->twDaypart->item(r, col);
+            this->update_cell_state<Selected>(cell);
+        }
+    }
+
     /*
     if (is_cell_selected(cell)){
         this->update_cell_state<Unselected>(cell);
@@ -68,6 +76,9 @@ void DayPartGrid::cell_entered(int row, int col)
 
 void DayPartGrid::cell_clicked(int row, int col)
 {
+    // save start point
+    setStartPoint(row, col);
+
     QTableWidgetItem* cell = ui->twDaypart->item(row, col);
 
     if (is_cell_selected(cell)){
@@ -92,6 +103,17 @@ void DayPartGrid::updateGrid(std::map<std::string, std::string> dayparts)
         }
         ++r;
     }
+}
+
+void DayPartGrid::setStartPoint(int row, int col)
+{
+    sp.row = row;
+    sp.col = col;
+}
+
+StartPoint DayPartGrid::startPoint()
+{
+    return sp;
 }
 
 std::map<std::string, std::string> DayPartGrid::getDayparts()

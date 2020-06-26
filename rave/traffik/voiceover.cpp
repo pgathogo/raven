@@ -5,8 +5,6 @@
 #include "../framework/valuelist.h"
 #include "../framework/entitydatamodel.h"
 
-EntityDataModel* VoiceOver::mGenderDM{nullptr};
-
 VoiceOver::VoiceOver()
     :BaseEntity{}
     ,mName{}
@@ -14,8 +12,6 @@ VoiceOver::VoiceOver()
     ,mGender{}
     ,mVoiceEx{}
 {
-    if (mGenderDM == nullptr)
-        mGenderDM = new EntityDataModel(new Gender());
 
     mName = createField<StringField>("voiceover_name", "Voice Over Name");
     mName->setDBColumnName("name");
@@ -23,7 +19,7 @@ VoiceOver::VoiceOver()
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No");
 
-    mGender = createField<LookupField>("gender", "Gender", new Gender());
+    mGender = createField<ForeignKeyField>("gender", "Gender", new Gender(), "value");
     mGender->setDBColumnName("gender_id");
 
     mDaypart1 = createField<StringField>("daypart1", "Daypart1");
@@ -106,9 +102,6 @@ std::string VoiceOver::searchColumn() const
 
 void VoiceOver::populateEntity()
 {
-   // mName->setValueFromWidget();
-   // mMobileNo->setValueFromWidget();
-   // mGender->setValueFromWidget();
 }
 
 StringField* VoiceOver::name() const
@@ -131,7 +124,7 @@ void VoiceOver::setMobileNo(std::string mobileno)
     mMobileNo->setValue(mobileno);
 }
 
-LookupField* VoiceOver::gender() const
+ForeignKeyField* VoiceOver::gender() const
 {
     return mGender;
 }
@@ -139,8 +132,6 @@ LookupField* VoiceOver::gender() const
 void VoiceOver::setGender(int index)
 {
     mGender->setIndex(index);
-    // set curText
-    // set mValue - id of selected record
 }
 
 StringField* VoiceOver::daypart1() const

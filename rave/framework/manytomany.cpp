@@ -215,14 +215,6 @@ std::list<std::string> VoiceExclusion::tableViewColumns()
 
     return cols;
 
-    /*
-    QString gname  = QString::fromStdString(te->name()->displayName());
-    QString desc = QString::fromStdString(te->description()->displayName());
-
-    QStandardItem* Qgname = new QStandardItem(gname);
-    QStandardItem* Qdesc = new QStandardItem(desc);
-    return{Qgname, Qdesc};
-    */
 }
 std::vector<std::string> VoiceExclusion::tableViewValues()
 {

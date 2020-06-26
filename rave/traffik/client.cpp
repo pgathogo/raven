@@ -32,14 +32,9 @@ Client::Client()
     mInterestRate = createField<DecimalField>("interest_rate", "Interest Rate");
     mLateFee = createField<DecimalField>("late_fee", "Late Fee");
 
-    Agent* agent = new Agent();
-    mAgency = createField<ForeignKeyField>( "agency_id", "Agency", agent, "agent_name");
-
-    ClientGroup* cg = new ClientGroup();
-    mClientGroup = createField<ForeignKeyField>("client_group_id", "Client Group", cg, "group_name" );
-
-    SalesPerson* sp = new SalesPerson();
-    mAccountManager = createField<ForeignKeyField>("account_manager_id", "Account Manager", sp, "salesperson_name");
+    mAgency = createField<ForeignKeyField>( "agency_id", "Agency", new Agent(), "agent_name");
+    mClientGroup = createField<ForeignKeyField>("client_group_id", "Client Group", new ClientGroup(), "group_name" );
+    mAccountManager = createField<ForeignKeyField>("account_manager_id", "Account Manager", new SalesPerson(), "salesperson_name");
 
     mContactSalute = createField<ChoiceField<std::string>>("contact_salute", "Contact Salute");
     mContactSalute->addChoice({"Miss","Miss."});
@@ -103,6 +98,7 @@ std::vector<std::string> Client::tableViewValues()
                 contactMobile()->displayName() };
 
 }
+
 QStringList Client::tableHeaders() const
 {
     return mHeader;

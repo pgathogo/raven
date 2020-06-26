@@ -28,6 +28,11 @@ struct Unselected: public CellSelectionState{
     int toggle(){ return 0; }
 };
 
+struct StartPoint{
+    int row;
+    int col;
+};
+
 class DayPartGrid : public QWidget
 {
     Q_OBJECT
@@ -51,6 +56,9 @@ public:
 
     std::map<std::string, std::string> readGrid();
 
+    void setStartPoint(int row, int col);
+    StartPoint startPoint();
+
     template<typename T>
     struct item_return{ typedef T type; };
 
@@ -71,6 +79,7 @@ private:
     Ui::DayPartGrid *ui;
     std::map<std::string, std::string> mDayParts;
     QVBoxLayout* mLayout;
+    StartPoint sp;
 };
 
 #endif // DAYPARTGRID_H

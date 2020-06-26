@@ -206,6 +206,50 @@ std::string DecimalField::displayName() const
     return valueToString();
 }
 
+/* -------- BooleanField --------*/
+
+BooleanField::BooleanField()
+    :mValue{false}
+{}
+
+BooleanField::BooleanField(const std::string aName, const std::string aLabel)
+    :mValue{false}
+{
+}
+
+BooleanField::~BooleanField()
+{
+}
+
+std::string BooleanField::valueToString() const
+{
+    return mValue ? "true" : "false";
+}
+
+std::string BooleanField::dbValueFormatter()
+{
+    return mValue ? "true" : "false";
+}
+
+void BooleanField::stringToValue(const std::string val)
+{
+}
+
+void BooleanField::setValue(bool val)
+{
+    mValue = val;
+}
+
+bool BooleanField::value() const
+{
+    return mValue;
+}
+
+std::string BooleanField::displayName() const
+{
+    return mValue ? "True" : "False";
+}
+
 
 /* -------- StringField --------- */
 
@@ -358,44 +402,45 @@ std::string TextField::displayName() const
 
 /* -------- LookupField ------------- */
 
-std::map<std::string, std::unique_ptr<EntityDataModel>> LookupField::lookups;
+std::map<std::string, std::unique_ptr<EntityDataModel>> ForeignKeyField::lookups;
 
 
-LookupField::LookupField()
+ForeignKeyField::ForeignKeyField()
         :Field()
         ,mValue{1}
         ,mIndex{0}
+        ,mDisplayField{}
 {
 }
 
-LookupField::LookupField(const std::string aName,
-                         const std::string aLabel,
-                         BaseEntity* lookupEntity)
+ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLabel,
+                BaseEntity* fkEntity, const std::string displayField)
         :Field{aName, aLabel}
         ,mValue{-1}
         ,mIndex{-1}
+        ,mDisplayField{displayField}
 {
 
     auto it = lookups.find(aName);
     if (it == lookups.end()){
-        lookups[aName]= std::make_unique<EntityDataModel>(lookupEntity);
+        lookups[aName]= std::make_unique<EntityDataModel>(fkEntity);
         lookups[aName]->all();
     }
 
 
 }
 
-LookupField::~LookupField()
+ForeignKeyField::~ForeignKeyField()
 {
     qDebug() << "LookupField::dtor";
 }
 
-std::string LookupField::valueToString() const
+std::string ForeignKeyField::valueToString() const
 {
     return std::to_string(mValue);
 }
 
-std::string LookupField::dbValueFormatter()
+std::string ForeignKeyField::dbValueFormatter()
 {
     std::string result;
 
@@ -409,89 +454,54 @@ std::string LookupField::dbValueFormatter()
 
 }
 
-void LookupField::setValue(int val)
+void ForeignKeyField::setValue(int val)
 {
     mValue = val;
 }
 
-void LookupField::stringToValue(std::string val)
+void ForeignKeyField::stringToValue(std::string val)
 {
     if (!val.empty())
         mValue = stoi(val);
 }
 
-int LookupField::value() const
+int ForeignKeyField::value() const
 {
     return mValue;
 }
 
-EntityDataModel* LookupField::dataModel() const
+EntityDataModel* ForeignKeyField::dataModel() const
 {
     return lookups[fieldName()].get();
 }
 
-void LookupField::setIndex(int i)
+void ForeignKeyField::setIndex(int i)
 {
     mIndex = i;
 }
-int LookupField::index() const
+int ForeignKeyField::index() const
 {
     return mIndex;
 }
-void LookupField::setCurrText(std::string txt)
+void ForeignKeyField::setCurrText(std::string txt)
 {
     mCurrText = txt;
 }
-std::string LookupField::currText() const
+std::string ForeignKeyField::currText() const
 {
     return mCurrText;
 }
 
-void LookupField::cacheData()
+void ForeignKeyField::cacheData()
 {
     /*
-    if (!hasData){
-        mEDM->all();
-        if (mEDM->count() > 0)
-            hasData = true;
     }
     */
 }
 
-std::size_t LookupField::cacheCount()
+std::size_t ForeignKeyField::cacheCount()
 {
     return lookups[fieldName()]->count();
-}
-
-std::string LookupField::displayName() const
-{
-    std::string name = "NOT-FOUND";
-
-    auto it = lookups[fieldName()]->vecBegin();
-
-    for(; it != lookups[fieldName()]->vecEnd(); ++it){
-        if (mValue == std::get<1>(*it)->id()){
-            ValueList* vl = dynamic_cast<ValueList*>(std::get<1>(*it).get());
-            name = vl->listValue()->displayName();
-        }
-    }
-
-    return name;
-}
-
-
-/* ----- ForeignKeyField ------- */
-
-
-ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLabel,
-                BaseEntity* fkEntity, const std::string dispName)
-    :LookupField{aName, aLabel, fkEntity}
-     ,mDisplayName{dispName}
-{
-}
-
-ForeignKeyField::~ForeignKeyField()
-{
 }
 
 std::string ForeignKeyField::displayName() const
@@ -510,7 +520,7 @@ std::string ForeignKeyField::displayName() const
             BaseEntity* entity = dynamic_cast<BaseEntity*>(std::get<1>(*it).get());
 
             for (const auto& tup: entity->fields()){
-                if (std::get<0>(tup) == mDisplayName){
+                if (std::get<0>(tup) == mDisplayField){
                     name = std::get<1>(tup)->displayName();
                     found = true;
                     break;
@@ -521,5 +531,9 @@ std::string ForeignKeyField::displayName() const
 
     return name;
 }
+
+
+
+
 
 
