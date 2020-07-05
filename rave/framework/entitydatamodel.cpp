@@ -2,6 +2,8 @@
 #include "entitydatamodel.h"
 #include "baseentity.h"
 #include "manytomany.h"
+#include "postgreserror.h"
+#include "../utils/tools.h"
 
 EntityModel::EntityModel()
     :mEntity{nullptr}
@@ -64,7 +66,7 @@ void EntityModel::addRow(BaseEntity* entity)
     appendRow(view_names);
 }
 
-BaseEntity* EntityModel::findEntityByName(std::string name)
+BaseEntity* EntityModel::findEntityByName(const std::string name)
 {
     BaseEntity* be = nullptr;
 
@@ -126,7 +128,6 @@ EntityDataModel::EntityDataModel():
     mEntity{},
     dbManager{}
 {
-    qDebug() << "EntityDataModel::Default Ctor";
     dbManager = new PostgresDatabaseManager;
 }
 
@@ -135,7 +136,6 @@ EntityDataModel::EntityDataModel(BaseEntity* baseEntity)
      mEntity{baseEntity},
      dbManager{}
 {
-    qDebug() << "EntityDataModel::Raw Pointer - ctor";
     dbManager = new PostgresDatabaseManager;
 }
 
@@ -144,7 +144,6 @@ EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
      mUEntity{std::move(baseEntity)},
      dbManager{}
 {
-    qDebug() << "EntityDataModel::Unique Pointer - ctor";
     dbManager = new PostgresDatabaseManager;
 }
 
@@ -159,7 +158,6 @@ EntityDataModel::EntityDataModel(BaseEntity& baseEntity)
 EntityDataModel::~EntityDataModel()
 {
     delete dbManager;
-    qDebug() << "EntityDataModel::dtor";
 }
 
 void EntityDataModel::populateFields(BaseEntity* baseEntity)
@@ -207,13 +205,19 @@ bool EntityDataModel::createEntity(BaseEntity* entity)
 bool EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
     bool succeded = false;
-    int id = dbManager->createEntity(entity.get());
-    if (id > 0){
-        entity->setId(id);
-        addEntity(std::move(entity)); // entity final resting place
-        succeded = true;
-    }
-    return succeded;
+    //try{
+        int id = dbManager->createEntity(entity.get());
+        if (id > 0){
+            entity->setId(id);
+            addEntity(std::move(entity)); // entity final resting place
+            succeded = true;
+        }
+
+        return succeded;
+   //}
+   // catch(PostgresError pe){
+   //     throw;
+   // }
 }
 
 int EntityDataModel::createEntityDB(BaseEntity* entity)

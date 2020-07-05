@@ -22,7 +22,7 @@ class EntityModel : public QStandardItemModel{
         EntityModel(std::unique_ptr<BaseEntity> entity);
         ~EntityModel();
         size_t entitiesCount();
-        BaseEntity* findEntityByName(std::string name);
+        BaseEntity* findEntityByName(const std::string name);
         void clearEntities();
         void setHeader();
 

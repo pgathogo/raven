@@ -5,6 +5,9 @@
 #include <QMdiArea>
 #include "entitydatamodel.h"
 
+#include "../framework/postgreserror.h"
+#include "../utils/tools.h"
+
 class BaseEntity;
 class ValueList;
 class QTableView;
@@ -46,8 +49,13 @@ public:
             T1* entity = dynamic_cast<T1*>(be);
             T2* dlg = new T2(entity);
             if(dlg->exec() > 0){
-              updateTableViewRecord(entity);
-              mEntityDataModel->updateEntity(entity);
+             try{
+                    updateTableViewRecord(entity);
+                    mEntityDataModel->updateEntity(entity);
+                }
+                catch(PostgresError pe){
+                    showMessage(pe.errorMessage());
+                }
              }
             delete dlg;
           }

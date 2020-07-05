@@ -74,6 +74,15 @@ public:
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");
         auto uPtr = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
+
+        /*
+        auto fldname = uPtr->fieldName();
+        auto iter = std::find_if(mFields.begin(), mFields.end(),
+                                [fldname](FieldMap fm)
+                    {return (fldname == std::get<0>(fm)) ? true : false; });
+        static_assert(iter != mFields.end(), "Field name already exists!");
+        */
+
         FieldMap fm;
         auto ptr(uPtr.get());
         fm = std::make_tuple(uPtr->fieldName(), std::move(uPtr));

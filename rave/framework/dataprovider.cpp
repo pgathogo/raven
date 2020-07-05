@@ -3,6 +3,7 @@
 #include "dataprovider.h"
 #include "queryset.h"
 #include "databaseconnector.h"
+#include "postgreserror.h"
 
 BaseDataProvider::BaseDataProvider()
 {
@@ -89,8 +90,6 @@ void PostgresDataProvider::openConnection()
 
 bool PostgresDataProvider::executeQuery(const std::string query)
 {
-    qDebug() << "PostgresDataProvider::executeQuery";
-
     PGresult* res = nullptr;
 
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
@@ -102,9 +101,10 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
-        qDebug() << "BEGIN command failed! "<< PQerrorMessage(conn);
+        char* cmdError = "BEGIN command failed!\n";
+        char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
         cleanFinish(conn, res);
-        return -1;
+        throw PostgresError(errorMsg);
     }
 
     PQclear(res);
@@ -112,17 +112,19 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     res = PQexec(conn, query.c_str());
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
-        qDebug() << "executeQuery command failed! "<< PQerrorMessage(conn);
+        char* cmdError = "EXECUTE command failed!\n";
+        char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
         cleanFinish(conn, res);
-        return false;
+        throw PostgresError(errorMsg);
     }
 
     res = PQexec(conn, "COMMIT");
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        qDebug() << "COMMIT command failed! "<< PQerrorMessage(conn);
+        char* cmdError = "COMMIT command failed!\n";
+        char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
         cleanFinish(conn, res);
-        return false;
+        throw PostgresError(errorMsg);
     }
 
     cleanFinish(conn, res);
@@ -132,7 +134,6 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 
 int PostgresDataProvider::read(const std::string query)
 {
-    qDebug() << "PostgresDataProvider::executeQuery";
 
     clear();
 
@@ -267,4 +268,12 @@ int PostgresDataProvider::fetchLastId(const std::string tableName)
     PQclear(res);
 
     return std::stoi(lastId);
+}
+
+char* PostgresDataProvider::make_error_message(char* cmdError, char* pgError)
+{
+    char* msg = new char[strlen(cmdError)+strlen(pgError)+1];
+    strcpy(msg, cmdError);
+    strcat(msg, pgError);
+    return msg;
 }

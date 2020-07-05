@@ -7,47 +7,83 @@ TimeBand::TimeBand()
     mName->setMandatory(true);
 
     mLocked = createField<BooleanField>("locked", "is Band Locked");
+    mLocked->setSearchable(false);
 
     mBillMethod = createField<ChoiceField<std::string>>("bill_method", "Bill Method");
+    mBillMethod->setSearchable(false);
     mBillMethod->addChoice({"FF","Flat Fee"});
     mBillMethod->addChoice({"IP","Increment By Percentage"});
+    mBillMethod->setValue("FF");
 
     mBasePrice  = createField<DecimalField>("base_price", "Base Price");
+    mBasePrice->setSearchable(false);
     mBaseDuration  = createField<IntegerField>("base_duration", "Base Duration");
+    mBaseDuration->setSearchable(false);
 
     mIPDuration1  = createField<IntegerField>("ip_duration1","");
-    mPercent1  = createField<IntegerField>("ip_duration1","");
+    mIPDuration1->setSearchable(false);
+    mPercent1  = createField<IntegerField>("ip_percent1","");
+    mPercent1->setSearchable(false);
 
     mIPDuration2  = createField<IntegerField>("ip_duration2","");
+    mIPDuration2->setSearchable(false);
     mPercent2  = createField<IntegerField>("ip_percent2","");
+    mPercent2->setSearchable(false);
     mIPDuration3  = createField<IntegerField>("ip_duration3","");
+    mIPDuration3->setSearchable(false);
     mPercent3  = createField<IntegerField>("ip_percent3","");
+    mPercent3->setSearchable(false);
     mIPDuration4  = createField<IntegerField>("ip_duration4","");
+    mIPDuration4->setSearchable(false);
     mPercent4  = createField<IntegerField>("ip_percent4","");
+    mPercent4->setSearchable(false);
     mIPDuration5  = createField<IntegerField>("ip_duration5","");
+    mIPDuration5->setSearchable(false);
     mPercent5  = createField<IntegerField>("ip_percent5","");
+    mPercent5->setSearchable(false);
     mIPDuration6  = createField<IntegerField>("ip_duration6","");
+    mIPDuration6->setSearchable(false);
     mPercent6  = createField<IntegerField>("ip_percent6","");
+    mPercent6->setSearchable(false);
     mIPDuration7  = createField<IntegerField>("ip_duration7","");
+    mIPDuration7->setSearchable(false);
     mPercent7  = createField<IntegerField>("ip_percent7","");
+    mPercent7->setSearchable(false);
     mIPDuration8  = createField<IntegerField>("ip_duration8","");
+    mIPDuration8->setSearchable(false);
     mPercent8  = createField<IntegerField>("ip_percent8","");
+    mPercent8->setSearchable(false);
     mIPDuration9  = createField<IntegerField>("ip_duration9","");
+    mIPDuration9->setSearchable(false);
     mPercent9  = createField<IntegerField>("ip_percent9","");
+    mPercent9->setSearchable(false);
     mIPDuration10  = createField<IntegerField>("ip_duration10","");
+    mIPDuration10->setSearchable(false);
     mPercent10  = createField<IntegerField>("ip_percent10","");
+    mPercent10->setSearchable(false);
     mIPDuration11  = createField<IntegerField>("ip_duration11","");
+    mIPDuration11->setSearchable(false);
     mPercent11  = createField<IntegerField>("ip_percent11","");
+    mPercent11->setSearchable(false);
     mIPDuration12  = createField<IntegerField>("ip_duration12","");
+    mIPDuration12->setSearchable(false);
     mPercent12  = createField<IntegerField>("ip_percent12","");
+    mPercent12->setSearchable(false);
 
     mDaypart1  = createField<StringField>("daypart1", "");
+    mDaypart1->setSearchable(false);
     mDaypart2  = createField<StringField>("daypart2", "");
+    mDaypart2->setSearchable(false);
     mDaypart3  = createField<StringField>("daypart3", "");
+    mDaypart3->setSearchable(false);
     mDaypart4  = createField<StringField>("daypart4", "");
+    mDaypart4->setSearchable(false);
     mDaypart5  = createField<StringField>("daypart5", "");
+    mDaypart5->setSearchable(false);
     mDaypart6  = createField<StringField>("daypart6", "");
+    mDaypart6->setSearchable(false);
     mDaypart7  = createField<StringField>("daypart7", "");
+    mDaypart7->setSearchable(false);
 
     mHeader << QString::fromStdString(mName->fieldLabel());
 

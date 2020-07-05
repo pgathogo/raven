@@ -28,6 +28,7 @@ SOURCES += \
     ../framework/manytomany.cpp \
     ../framework/manytomanybrowser.cpp \
     ../framework/picklistbrowser.cpp \
+    ../framework/postgreserror.cpp \
     ../framework/selectclosewidget.cpp \
     ../framework/valuelist.cpp \
     ../framework/valuelistbrowser.cpp \
@@ -51,6 +52,8 @@ SOURCES += \
     salespersonbrowser.cpp \
     salespersonform.cpp \
     timeband.cpp \
+    timebandbrowser.cpp \
+    timebandform.cpp \
     typeexclusion.cpp \
     typeexclusionbrowser.cpp \
     typeexclusiondetails.cpp \
@@ -71,6 +74,7 @@ HEADERS += \
     ../framework/manytomany.h \
     ../framework/manytomanybrowser.h \
     ../framework/picklistbrowser.h \
+    ../framework/postgreserror.h \
     ../framework/queryset.h \
     ../framework/selectclosewidget.h \
     ../framework/valuelist.h \
@@ -96,6 +100,8 @@ HEADERS += \
     salespersonbrowser.h \
     salespersonform.h \
     timeband.h \
+    timebandbrowser.h \
+    timebandform.h \
     typeexclusion.h \
     typeexclusionbrowser.h \
     typeexclusiondetails.h  \
@@ -123,6 +129,8 @@ FORMS += \
     mainwindow.ui \
     salespersonbrowser.ui \
     salespersonform.ui \
+    timebandbrowser.ui \
+    timebandform.ui \
     typeexclusionbrowser.ui \
     typeexclusiondetails.ui \
     voiceoverbrowser.ui \

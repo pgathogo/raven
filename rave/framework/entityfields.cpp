@@ -190,8 +190,9 @@ std::string DecimalField::dbValueFormatter()
 {
     return std::to_string(mValue);
 }
-void DecimalField::stringToValue(const std::string /*val*/)
+void DecimalField::stringToValue(const std::string val)
 {
+    mValue = std::stod(val);
 }
 void DecimalField::setValue(double val)
 {
@@ -213,7 +214,8 @@ BooleanField::BooleanField()
 {}
 
 BooleanField::BooleanField(const std::string aName, const std::string aLabel)
-    :mValue{false}
+    :Field{aName, aLabel}
+    ,mValue{false}
 {
 }
 

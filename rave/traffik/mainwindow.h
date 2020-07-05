@@ -67,6 +67,7 @@ private slots:
     void newVoiceOver();
     void browseSalesPerson();
     void browseAgent();
+    void browseTimeBands();
 
 private:
     PlainForm* pf;

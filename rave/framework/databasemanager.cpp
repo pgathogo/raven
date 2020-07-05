@@ -3,6 +3,7 @@
 #include "databasemanager.h"
 #include "baseentity.h"
 #include "dataprovider.h"
+#include "postgreserror.h"
 
 #include <QDebug>
 #include "../utils/tools.h"
@@ -105,13 +106,15 @@ int PostgresDatabaseManager::createEntity(BaseEntity* entity)
 
     sqlQuery = makeInsertString(entity);
 
-     provider()->executeQuery(sqlQuery);
-
-     // Get id of the created record.
-     int lastId = provider()->fetchLastId(entity->tableName());
-
-     return lastId;
-
+    try{
+        provider()->executeQuery(sqlQuery);
+        // Get id of the created record.
+        int lastId = provider()->fetchLastId(entity->tableName());
+        return lastId;
+    }
+    catch (PostgresError pe){
+        throw;
+    }
 }
 
 void PostgresDatabaseManager::updateEntity(BaseEntity* entity)
