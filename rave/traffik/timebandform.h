@@ -1,6 +1,8 @@
 #ifndef TIMEBANDFORM_H
 #define TIMEBANDFORM_H
 
+#include <memory>
+
 #include <QWidget>
 #include "../framework/baseentitydetaildlg.h"
 
@@ -36,7 +38,8 @@ private slots:
 private:
     Ui::TimeBandForm *ui;
     TimeBand* mTimeBand;
-    DayPartGrid* mDPG;
+    std::unique_ptr<DayPartGrid> mDPG;
+    //DayPartGrid* mDPG;
 };
 
 #endif // TIMEBANDFORM_H

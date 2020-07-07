@@ -66,7 +66,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0,1,0">
            <item>
             <widget class="QLabel" name="label_3">
              <property name="text">
@@ -92,6 +92,13 @@
             <widget class="QSpinBox" name="edtBaseDuration">
              <property name="maximum">
               <number>60</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_29">
+             <property name="text">
+              <string>Secs</string>
              </property>
             </widget>
            </item>

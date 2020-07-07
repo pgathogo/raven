@@ -7,6 +7,7 @@
 #include "entitydatamodel.h"
 
 #include "../utils/tools.h"
+#include "../framework/ravenexception.h"
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
     QDialog(parent),
@@ -25,12 +26,12 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
         ,mMdiArea{nullptr}
         ,bui(new Ui::BaseEntityBrowserDlg)
         ,mBaseEntity{entity}
-        ,mEntityDataModel{new EntityDataModel(entity)}
+        ,mEntityDataModel{std::make_unique<EntityDataModel>(entity)}
 
 {
     bui->setupUi(this);
     connectSlots();
-    bui->tvEntity->setModel(mEntityDataModel);
+    bui->tvEntity->setModel(mEntityDataModel.get());
     bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
 }
@@ -39,16 +40,11 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
 void BaseEntityBrowserDlg::setEntityDataModel(BaseEntity* entity)
 {
     if (mEntityDataModel){
-        delete mEntityDataModel;
+        //delete mEntityDataModel;
         delete mBaseEntity;
     }
-    mEntityDataModel = new EntityDataModel(entity);
+    mEntityDataModel = std::make_unique<EntityDataModel>(entity);
     mBaseEntity = entity;
-
-    //bui->tvEntity->setModel(mEntityDataModel);
-    //bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    //populateFilterCombo();
-
 }
 
 BaseEntity* BaseEntityBrowserDlg::baseEntity()
@@ -76,7 +72,7 @@ void BaseEntityBrowserDlg::setDialogTitle(const QString title)
 
 EntityDataModel* BaseEntityBrowserDlg::entityDataModel() const
 {
-    return mEntityDataModel;
+    return mEntityDataModel.get();
 }
 
 void BaseEntityBrowserDlg::setMdiArea(QMdiArea* mdi)
@@ -136,8 +132,14 @@ void BaseEntityBrowserDlg::deleteRecord()
 {
    BaseEntity* entity = findSelectedEntity();
    entity->setDBAction(DBAction::dbaDELETE);
-   entityDataModel()->deleteEntity(entity);
-   removeSelectedRow();
+
+   try{
+       entityDataModel()->deleteEntity(entity);
+       removeSelectedRow();
+   }
+   catch (RavenException& re){
+       showMessage(re.errorMessage());
+   }
 }
 
 BaseEntity* BaseEntityBrowserDlg::findSelectedEntity()

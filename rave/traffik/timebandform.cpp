@@ -19,7 +19,7 @@ TimeBandForm::TimeBandForm(TimeBand* tband,
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
     ui->tabWidget->setCurrentIndex(0);
-    mDPG = new DayPartGrid(ui->vlDaypart);
+    mDPG = std::make_unique<DayPartGrid>(ui->vlDaypart);
 
     connect(ui->rbIncPercent, &QRadioButton::toggled, this, &TimeBandForm::onIncPercent);
 
@@ -29,7 +29,6 @@ TimeBandForm::TimeBandForm(TimeBand* tband,
 
 TimeBandForm::~TimeBandForm()
 {
-    delete mDPG;
     delete ui;
 }
 
@@ -123,8 +122,6 @@ void TimeBandForm::populateFormWidgets()
     ui->edtBasePrice->setValue(mTimeBand->basePrice()->value());
     ui->edtBaseDuration->setValue(mTimeBand->baseDuration()->value());
 
-    qDebug() << mTimeBand->locked()->value();
-
     ui->cbLock->setChecked(mTimeBand->locked()->value());
 
     if (mTimeBand->billMethod()->value() == "FF"){
@@ -133,6 +130,43 @@ void TimeBandForm::populateFormWidgets()
     }else{
         ui->rbIncPercent->setChecked(true);
     }
+
+    ui->sbD1->setValue(mTimeBand->iPDuration1()->value());
+    ui->sbP1->setValue(mTimeBand->percent1()->value());
+
+    ui->sbD2->setValue(mTimeBand->iPDuration2()->value());
+    ui->sbP2->setValue(mTimeBand->percent2()->value());
+
+    ui->sbD3->setValue(mTimeBand->iPDuration3()->value());
+    ui->sbP3->setValue(mTimeBand->percent3()->value());
+
+    ui->sbD4->setValue(mTimeBand->iPDuration4()->value());
+    ui->sbP4->setValue(mTimeBand->percent4()->value());
+
+    ui->sbD5->setValue(mTimeBand->iPDuration5()->value());
+    ui->sbP5->setValue(mTimeBand->percent5()->value());
+
+    ui->sbD6->setValue(mTimeBand->iPDuration6()->value());
+    ui->sbP6->setValue(mTimeBand->percent6()->value());
+
+    ui->sbD7->setValue(mTimeBand->iPDuration7()->value());
+    ui->sbP7->setValue(mTimeBand->percent7()->value());
+
+    ui->sbD8->setValue(mTimeBand->iPDuration8()->value());
+    ui->sbP8->setValue(mTimeBand->percent8()->value());
+
+    ui->sbD9->setValue(mTimeBand->iPDuration9()->value());
+    ui->sbP9->setValue(mTimeBand->percent9()->value());
+
+    ui->sbD10->setValue(mTimeBand->iPDuration10()->value());
+    ui->sbP10->setValue(mTimeBand->percent10()->value());
+
+    ui->sbD11->setValue(mTimeBand->iPDuration11()->value());
+    ui->sbP11->setValue(mTimeBand->percent11()->value());
+
+    ui->sbD12->setValue(mTimeBand->iPDuration12()->value());
+    ui->sbP12->setValue(mTimeBand->percent12()->value());
+
 }
 
 void TimeBandForm::onIncPercent(bool checked)

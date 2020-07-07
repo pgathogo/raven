@@ -5,7 +5,7 @@
 #include <QMdiArea>
 #include "entitydatamodel.h"
 
-#include "../framework/postgreserror.h"
+#include "../framework/ravenexception.h"
 #include "../utils/tools.h"
 
 class BaseEntity;
@@ -44,30 +44,31 @@ public:
     {
         std::string searchName = selectedRowName().toStdString();
         if (!searchName.empty()){
-        BaseEntity* be = mEntityDataModel->findEntityByName(searchName);
-        if (be != nullptr){
-            T1* entity = dynamic_cast<T1*>(be);
-            T2* dlg = new T2(entity);
-            if(dlg->exec() > 0){
-             try{
-                    updateTableViewRecord(entity);
-                    mEntityDataModel->updateEntity(entity);
+            BaseEntity* be = mEntityDataModel->findEntityByName(searchName);
+            if (be != nullptr){
+                T1* entity = dynamic_cast<T1*>(be);
+                std::unique_ptr<T2> dlg = std::make_unique<T2>(entity);
+                if(dlg->exec() > 0){
+                    try{
+                        updateTableViewRecord(entity);
+                        mEntityDataModel->updateEntity(entity);
+                    }
+                    catch(RavenException re){
+                        showMessage(re.errorMessage());
+                    }
                 }
-                catch(PostgresError pe){
-                    showMessage(pe.errorMessage());
-                }
-             }
-            delete dlg;
-          }
-       }
+            }
+        }
     }
 
+    /*
     template <typename T1, typename T2>
     void addEntity()
     {
         std::unique_ptr<T1> uT1 = std::make_unique<T1>();
         auto ptr(uT1.get());
-        T2* dlg = new T2(ptr);
+        //T2* dlg = new T2(ptr);
+        std::unique_ptr<T2> dlg = std::make_unique<T2>(ptr);
         if (dlg->exec() > 0)
             entityDataModel()->createEntity(std::move(uT1));
     }
@@ -84,6 +85,7 @@ public:
             //entityDataModel()->createEntity(std::move(uT3));
         }
     }
+    */
 
     EntityDataModel* entityDataModel() const;
 protected:
@@ -106,7 +108,8 @@ public slots:
 
 private:
     BaseEntity* mBaseEntity;
-    EntityDataModel* mEntityDataModel;
+    //EntityDataModel* mEntityDataModel;
+    std::unique_ptr<EntityDataModel> mEntityDataModel;
     void populateFilterCombo();
 };
 

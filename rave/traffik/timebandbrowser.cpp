@@ -4,7 +4,7 @@
 #include "timeband.h"
 #include "timebandform.h"
 
-#include "../framework/postgreserror.h"
+#include "../framework/ravenexception.h"
 #include "../utils/tools.h"
 
 TimeBandBrowser::TimeBandBrowser(QWidget* parent) :
@@ -29,8 +29,8 @@ void TimeBandBrowser::addRecord()
         try{
         entityDataModel()->createEntity(std::move(tband));
         }
-        catch(PostgresError pe){
-            showMessage(pe.errorMessage());
+        catch(RavenException& re){
+            showMessage(re.errorMessage());
         }
     }
 }

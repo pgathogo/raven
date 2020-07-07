@@ -22,7 +22,6 @@ VoiceOverForm::VoiceOverForm(
     mVoiceOver{vo},
     mDayPart{},
     mMtoMBrowser{},
-   // mGenderModel{},
     mVoiceExModel{}
 {
     ui->setupUi(bui->baseContainer);
@@ -35,6 +34,7 @@ VoiceOverForm::VoiceOverForm(
     mMtoMBrowser = new ManyToManyBrowser(mVoiceOver->voiceEx(),
                                              ui->vlTypeEx, this);
 
+    //mVoiceExModel = new EntityDataModel(mVoiceOver->voiceEx());
     mVoiceExModel = new EntityDataModel(
                 new VoiceExclusion(new VoiceOver, new TypeExclusion));
 
@@ -47,8 +47,6 @@ VoiceOverForm::~VoiceOverForm()
     delete mDayPart;
     delete mVoiceExModel;
     qDebug() << "VoiceOverForm::dtor";
-    //delete mGenderModel;
-    //delete mMtoM;
     delete ui;
 }
 

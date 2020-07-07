@@ -3,7 +3,7 @@
 #include "dataprovider.h"
 #include "queryset.h"
 #include "databaseconnector.h"
-#include "postgreserror.h"
+#include "ravenexception.h"
 
 BaseDataProvider::BaseDataProvider()
 {
@@ -90,6 +90,7 @@ void PostgresDataProvider::openConnection()
 
 bool PostgresDataProvider::executeQuery(const std::string query)
 {
+
     PGresult* res = nullptr;
 
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
@@ -104,7 +105,7 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         char* cmdError = "BEGIN command failed!\n";
         char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
         cleanFinish(conn, res);
-        throw PostgresError(errorMsg);
+        throw PostgresException(errorMsg);
     }
 
     PQclear(res);
@@ -115,7 +116,7 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         char* cmdError = "EXECUTE command failed!\n";
         char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
         cleanFinish(conn, res);
-        throw PostgresError(errorMsg);
+        throw PostgresException(errorMsg);
     }
 
     res = PQexec(conn, "COMMIT");
@@ -124,7 +125,7 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         char* cmdError = "COMMIT command failed!\n";
         char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
         cleanFinish(conn, res);
-        throw PostgresError(errorMsg);
+        throw PostgresException(errorMsg);
     }
 
     cleanFinish(conn, res);

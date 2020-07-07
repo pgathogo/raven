@@ -11,8 +11,9 @@ ManyToManyBrowser::ManyToManyBrowser(
         QVBoxLayout* layout,
         QWidget *parent
         ):
-    BaseEntityBrowserDlg(parent,
-                         ManyToManyBrowser::createMtoM(mtom)),
+    BaseEntityBrowserDlg(parent, mtom),
+    //BaseEntityBrowserDlg(parent,
+    //                     ManyToManyBrowser::createMtoM(mtom)),
     ui(new Ui::ManyToManyBrowser),
     plb{},
     mMtoM{mtom}

@@ -28,7 +28,7 @@ SOURCES += \
     ../framework/manytomany.cpp \
     ../framework/manytomanybrowser.cpp \
     ../framework/picklistbrowser.cpp \
-    ../framework/postgreserror.cpp \
+    ../framework/ravenexception.cpp \
     ../framework/selectclosewidget.cpp \
     ../framework/valuelist.cpp \
     ../framework/valuelistbrowser.cpp \
@@ -74,8 +74,8 @@ HEADERS += \
     ../framework/manytomany.h \
     ../framework/manytomanybrowser.h \
     ../framework/picklistbrowser.h \
-    ../framework/postgreserror.h \
     ../framework/queryset.h \
+    ../framework/ravenexception.h \
     ../framework/selectclosewidget.h \
     ../framework/valuelist.h \
     ../framework/valuelistbrowser.h \
