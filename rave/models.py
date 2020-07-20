@@ -105,6 +105,11 @@ class Client(models.Model):
     grace_period = models.IntegerField(null=True)
     bill_cycle = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
 
+class Brand(models.Model):
+    brand_name = models.CharField(max_length=255)
+    client = models.ForeignKey(Client)
+    brand_manager = models.ForeignKey(SalesPerson, null=True, blank=True)
+
 class Daypart(models.Model):
     daypart1 = models.CharField(max_length=96, null=True, blank=True)
     daypart2 = models.CharField(max_length=96, null=True, blank=True)

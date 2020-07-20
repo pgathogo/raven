@@ -3,146 +3,9 @@
 #include "manytomany.h"
 #include "typeexclusion.h"
 
-ManyToMany::ManyToMany()
-    :mParentEntity{}
-    ,mDetailEntity{}
-    ,mParentId{}
-    ,mDetailId{}
-{}
-
-ManyToMany::ManyToMany(BaseEntity* parentEntity, BaseEntity* detailEntity)
-    :mParentEntity{parentEntity}
-    ,mDetailEntity{detailEntity}
-    ,mParentId{}
-    ,mDetailId{}
-    ,mEntities{}
-{
-    mParentId = createField<IntegerField>("parent_id","Parent ID");
-    mDetailId = createField<IntegerField>("detail_id","Detail ID");
-}
-
 ManyToMany::~ManyToMany()
 {
-    qDebug() << "ManyToMany::dtor" ;
-    delete mParentEntity;
-    delete mDetailEntity;
 }
-
-ManyToMany::ManyToMany(const ManyToMany& other)
-{
-    if (other.mParentEntity)
-        mParentEntity = other.mParentEntity;
-    if (other.mDetailEntity)
-        mDetailEntity = other.mDetailEntity;
-    if (other.mParentId)
-        mParentId = other.mParentId;
-    if (other.mDetailId)
-        mDetailId = other.mDetailId;
-}
-
-ManyToMany& ManyToMany::operator=(const ManyToMany& other)
-{
-    if (this != &other){
-        delete mParentEntity;
-        delete mDetailEntity;
-        delete mParentId;
-        delete mDetailId;
-
-        mParentEntity = other.mParentEntity;
-        mDetailEntity = other.mDetailEntity;
-
-        mParentId = other.mParentId;
-        mDetailId = other.mDetailId;
-    }
-
-    return *this;
-}
-
-IntegerField* ManyToMany::parentId() const
-{
-    return mParentId;
-}
-void ManyToMany::setParentId(int id)
-{
-    mParentId->setValue(id);
-}
-IntegerField* ManyToMany::detailId() const
-{
-    return mDetailId;
-}
-void ManyToMany::setDetailId(int id)
-{
-    mDetailId->setValue(id);
-}
-
-std::unique_ptr<BaseEntity> ManyToMany::mapFields(StringMap* sm)
-{
-    auto te = entityFieldMap<ManyToMany>(sm);
-    return std::move(te);
-}
-
-std::list<std::string> ManyToMany::tableViewColumns()
-{
-    return mDetailEntity->tableViewColumns();
-}
-std::vector<std::string> ManyToMany::tableViewValues()
-{
-    std::string pid = mParentId->valueToString();
-    std::string did = mDetailId->valueToString();
-    return {pid, did};
-}
-QStringList ManyToMany::tableHeaders() const
-{
-    return mHeader;
-}
-std::string ManyToMany::tableName() const
-{
-    return mTableName;
-}
-
-void ManyToMany::setTableName(std::string table_name)
-{
-}
-std::string ManyToMany::searchColumn() const
-{
-    return mDetailEntity->searchColumn();
-}
-
-void ManyToMany::populateEntity()
-{
-    mParentId->setValue(mParentEntity->id());
-    mDetailId->setValue(mDetailEntity->id());
-}
-
-std::string ManyToMany::windowTitle() const
-{
-    return " ";
-}
-
-void ManyToMany::setParentEntity(BaseEntity* pEntity)
-{
-    mParentEntity = pEntity;
-}
-
-void ManyToMany::setDetailEntity(BaseEntity* dEntity)
-{
-    mDetailEntity = dEntity;
-}
-
-BaseEntity* ManyToMany::parentEntity() const
-{
-    return mParentEntity;
-}
-BaseEntity* ManyToMany::detailEntity() const
-{
-    return mDetailEntity;
-}
-
-std::string ManyToMany::typeInfo() const
-{
-    return "base_type";
-}
-
 void ManyToMany::addEntity(BaseEntity* entity)
 {
     mEntities.emplace_back(std::move(entity));
@@ -162,16 +25,53 @@ std::vector<std::unique_ptr<BaseEntity>> const& ManyToMany::entities() const
     return mEntities;
 }
 
+
 /* ---------------- VoiceExclusion -----------------*/
 VoiceExclusion::VoiceExclusion()
     :ManyToMany{}{}
 
-VoiceExclusion::VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt):
-    ManyToMany{pEnt, dEnt}
+VoiceExclusion::VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt)
+    :ManyToMany{}
+    ,mParentEntity{pEnt}
+    ,mDetailEntity{dEnt}
+
 {
-    TypeExclusion* te = dynamic_cast<TypeExclusion*>(dEnt);
-    mHeader = te->tableHeaders();
+    mParentId = createField<IntegerField>("parent_id","Parent ID");
+    mDetailId = createField<IntegerField>("detail_id","Detail ID");
+
+    //TypeExclusion* te = dynamic_cast<TypeExclusion*>(dEnt);
+    mHeader = dEnt->tableHeaders();
     setTableName("rave_typeexclusion");
+}
+
+VoiceExclusion::VoiceExclusion(const VoiceExclusion& other)
+{
+    if (other.mParentEntity)
+        mParentEntity = other.mParentEntity;
+    if (other.mDetailEntity)
+        mDetailEntity = other.mDetailEntity;
+    if (other.mParentId)
+        mParentId = other.mParentId;
+    if (other.mDetailId)
+        mDetailId = other.mDetailId;
+}
+
+VoiceExclusion& VoiceExclusion::operator=(const VoiceExclusion& other)
+{
+    if (this != &other){
+        delete mParentEntity;
+        delete mDetailEntity;
+        delete mParentId;
+        delete mDetailId;
+
+        mParentEntity = other.mParentEntity;
+        mDetailEntity = other.mDetailEntity;
+
+        mParentId = other.mParentId;
+        mDetailId = other.mDetailId;
+    }
+
+    return *this;
 }
 
 VoiceExclusion::~VoiceExclusion()
@@ -179,9 +79,9 @@ VoiceExclusion::~VoiceExclusion()
     qDebug() << "VoiceExxclusion::dtor";
 }
 
-std::string VoiceExclusion::windowTitle() const
+std::unique_ptr<ManyToMany> VoiceExclusion::copy(BaseEntity* pEnt, BaseEntity* dEnt) const
 {
-    return "Voice Exclusions";
+    return std::make_unique<VoiceExclusion>(pEnt, dEnt);
 }
 
 std::string VoiceExclusion::tableName() const
@@ -197,15 +97,28 @@ std::string VoiceExclusion::typeInfo() const
 std::unique_ptr<BaseEntity> VoiceExclusion::mapFields(StringMap* sm)
 {
     auto ve = entityFieldMap<VoiceExclusion>(sm,
-                                             mParentEntity,
-                                             mDetailEntity);
+                                             std::move(mParentEntity),
+                                             std::move(mDetailEntity));
 
-    getEntityById(*mDetailEntity, ve->detailId()->value());
+   // getEntityById(*mDetailEntity, ve->detailId()->value());
 
     return std::move(ve);
 }
 
-std::list<std::string> VoiceExclusion::tableViewColumns()
+void VoiceExclusion::setDetailEntity(BaseEntity* other)
+{
+    mDetailEntity = other;
+}
+
+void VoiceExclusion::afterMapping(BaseEntity& entity)
+{
+    VoiceExclusion& ve = dynamic_cast<VoiceExclusion&>(entity);
+    auto te = ve.detailEntity()->cloneAsUnique();
+    ve.setDetailEntity(te.get());
+    getEntityById(std::move(te), ve.detailId()->value());
+}
+
+std::list<std::string> VoiceExclusion::tableViewColumns() const
 {
     std::list<std::string> cols;
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
@@ -243,3 +156,44 @@ void VoiceExclusion::populateEntity()
     mParentId->setValue(mParentEntity->id());
     mDetailId->setValue(mDetailEntity->id());
 }
+
+IntegerField* VoiceExclusion::parentId() const
+{
+    return mParentId;
+}
+
+void VoiceExclusion::setParentId(int id)
+{
+    mParentId->setValue(id);
+}
+
+IntegerField* VoiceExclusion::detailId() const
+{
+    return mDetailId;
+}
+
+void VoiceExclusion::setDetailId(int id)
+{
+    mDetailId->setValue(id);
+}
+
+BaseEntity* VoiceExclusion::parentEntity() const
+{
+    return mParentEntity;
+}
+
+BaseEntity* VoiceExclusion::detailEntity() const
+{
+    return mDetailEntity;
+}
+
+BaseEntity* VoiceExclusion::mtomEntity()
+{
+    return this;
+}
+
+std::unique_ptr<BaseEntity> VoiceExclusion::cloneAsUnique()
+{
+    return std::make_unique<VoiceExclusion>(mParentEntity, mDetailEntity);
+}
+

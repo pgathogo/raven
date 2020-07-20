@@ -1,18 +1,26 @@
-#ifndef SALESPERSON_H
-#define SALESPERSON_H
+#ifndef BRAND_H
+#define BRAND_H
 
 #include "../framework/baseentity.h"
 
+class StringField;
 
-class SalesPerson : public BaseEntity
+class Brand : public BaseEntity
 {
 public:
-    SalesPerson();
-    ~SalesPerson() override;
+    Brand();
+    ~Brand() override;
+
+    void setBrandName(std::string brand_name);
+    StringField* brandName() const;
+    void setClient(int client_id);
+    ForeignKeyField* client() const;
+    void setBrandManager(int brand_manager_id);
+    ForeignKeyField* brandManager() const;
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
-    std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
+    std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     std::list<std::string> tableViewColumns() const override;
     std::vector<std::string> tableViewValues() override;
@@ -24,21 +32,14 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 
-    StringField* name() const;
-    void setName(std::string aName);
-
-    StringField* mobileno() const;
-    void setMobileNo(std::string mobileno);
-
-    ForeignKeyField* gender() const;
-    void setGender( int i);
 private:
-    StringField* mName;
-    StringField* mMobileNo;
-    ForeignKeyField* mGender;
+    StringField* mBrandName;
+    ForeignKeyField* mClient;
+    ForeignKeyField* mBrandManager;
 
     QStringList mHeader;
     std::string mTableName;
+
 };
 
-#endif // SALESPERSON_H
+#endif // BRAND_H

@@ -8,6 +8,7 @@
 
 
 Client::Client()
+    :BaseEntity{}
 {
 
     mName = createField<StringField>("name", "Client Name:");
@@ -32,9 +33,12 @@ Client::Client()
     mInterestRate = createField<DecimalField>("interest_rate", "Interest Rate");
     mLateFee = createField<DecimalField>("late_fee", "Late Fee");
 
-    mAgency = createField<ForeignKeyField>( "agency_id", "Agency", new Agent(), "agent_name");
-    mClientGroup = createField<ForeignKeyField>("client_group_id", "Client Group", new ClientGroup(), "group_name" );
-    mAccountManager = createField<ForeignKeyField>("account_manager_id", "Account Manager", new SalesPerson(), "salesperson_name");
+    mAgency = createField<ForeignKeyField>( "agency_id", "Agency",
+                                            std::make_unique<Agent>(), "agent_name");
+    mClientGroup = createField<ForeignKeyField>("client_group_id", "Client Group",
+                                                std::make_unique<ClientGroup>(), "group_name" );
+    mAccountManager = createField<ForeignKeyField>("account_manager_id", "Account Manager",
+                                                   std::make_unique<SalesPerson>(), "salesperson_name");
 
     mContactSalute = createField<ChoiceField<std::string>>("contact_salute", "Contact Salute");
     mContactSalute->addChoice({"Miss","Miss."});
@@ -77,7 +81,7 @@ std::unique_ptr<BaseEntity> Client::mapFields(StringMap* raw_entity)
     return std::move(client);
 }
 
-std::list<std::string> Client::tableViewColumns()
+std::list<std::string> Client::tableViewColumns() const
 {
     std::list<std::string> cols;
 
@@ -339,4 +343,14 @@ void Client::setGracePeriod(int gPeriod)
 void Client::setBillCycle(const std::string bCycle)
 {
     mBillCycle->setValue(bCycle);
+}
+
+std::unique_ptr<BaseEntity> Client::cloneAsUnique()
+{
+    return std::make_unique<Client>();
+}
+
+void Client::afterMapping(BaseEntity &entity)
+{
+
 }

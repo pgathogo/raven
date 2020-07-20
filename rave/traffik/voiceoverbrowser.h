@@ -8,6 +8,8 @@ namespace Ui {
 class VoiceOverBrowser;
 }
 
+class VoiceOverForm;
+
 class VoiceOverBrowser : public BaseEntityBrowserDlg
 {
     Q_OBJECT
@@ -21,6 +23,7 @@ public:
     void addRecord() override;
     void updateRecord() override;
     void deleteRecord() override;
+    void saveVoiceExclusions(const VoiceOverForm& vof);
 
     std::string typeID() override;
 private:

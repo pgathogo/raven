@@ -10,7 +10,8 @@
 
 
 ClientGroupDlg::ClientGroupDlg(QWidget *parent):
-    BaseEntityBrowserDlg(parent, new ClientGroup),
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<ClientGroup>()),
     ui(new Ui::ClientGroupDlg)
 {
     ui->setupUi(this);
@@ -25,10 +26,12 @@ ClientGroupDlg::~ClientGroupDlg()
 void ClientGroupDlg::addRecord()
 {
     std::unique_ptr<ClientGroup> cg = std::make_unique<ClientGroup>();
-    std::unique_ptr<ClientGroupDetailDlg> cgdForm =
+
+    std::unique_ptr<ClientGroupDetailDlg> cgForm =
             std::make_unique<ClientGroupDetailDlg>(cg.get());
-    if (cgdForm->exec() > 0)
-        entityDataModel()->createEntity(std::move(cg));
+
+    if (cgForm->exec() > 0)
+        entityDataModel().createEntity(std::move(cg));
 }
 
 void ClientGroupDlg::updateRecord()

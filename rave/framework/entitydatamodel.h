@@ -11,14 +11,13 @@
 #include "baseentity.h"
 #include "dataprovider.h"
 
-
 using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 using VecIter = std::vector<EntityRecord>::iterator;
 
 class EntityModel : public QStandardItemModel{
     public:
         EntityModel();
-        EntityModel(BaseEntity* entity);
+        //EntityModel(BaseEntity* entity);
         EntityModel(std::unique_ptr<BaseEntity> entity);
         ~EntityModel();
         size_t entitiesCount();
@@ -31,38 +30,41 @@ class EntityModel : public QStandardItemModel{
 
         std::vector<EntityRecord> const& modelEntities() const;
 
+        std::string entityTableName() const;
+
+        BaseEntity& getEntity();
+
+
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
-        void addEntity(BaseEntity* entity);
+        //void addEntity(BaseEntity* entity);
         void deleteFromModel();
     private:
-        BaseEntity* mEntity;
-        std::unique_ptr<BaseEntity> mUEntity;
+        std::unique_ptr<BaseEntity> mEntity;
         std::vector<EntityRecord> mEntities;
-
-        void addRow(BaseEntity* entity);
-        BaseEntity* entityByID();
-        bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);
+        void addRow(const std::list<std::string> entity_cols);
+        //bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);
 };
 
 class EntityDataModel : public EntityModel
 {
 public:
     EntityDataModel();
-    EntityDataModel(BaseEntity* baseEntity);
+    //EntityDataModel(BaseEntity* baseEntity);
     EntityDataModel(std::unique_ptr<BaseEntity> baseEntity);
-    EntityDataModel(BaseEntity& baseEntity);
+    //EntityDataModel(BaseEntity& baseEntity);
     ~EntityDataModel();
 
-    void populateFields(BaseEntity* baseEntity);
+    //void populateFields(std::unique_ptr<BaseEntity> baseEntity);
 
-    bool createEntity(std::unique_ptr<BaseEntity> entity);
-    bool createEntity(BaseEntity* entity);
+    void createEntity(std::unique_ptr<BaseEntity> entity);
+    void cacheEntity(std::unique_ptr<BaseEntity> entity);
+
+    //bool createEntity(BaseEntity* entity);
     void updateEntity(BaseEntity* entity);
     void deleteEntity(BaseEntity* entity);
     void deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value);
 
-    void cacheEntity(BaseEntity* entity);
 
     int createEntityDB(BaseEntity* entity);
 
@@ -71,7 +73,7 @@ public:
     void searchById(std::tuple<std::string, int>);
     void getById(std::tuple<std::string, int>);
 
-    BaseEntity* entity() const { return mEntity; }
+    //BaseEntity* entity() const { return mEntity; }
 
     size_t count();
 
@@ -99,10 +101,8 @@ public:
 
 
 private:
-    BaseEntity* mEntity;   // deleted at the base class
-    std::unique_ptr<BaseEntity> mUEntity;
-    BaseDatabaseManager* dbManager;
-
+    //std::unique_ptr<BaseEntity> mEntity;   // deleted at the base class
+    std::unique_ptr<BaseDatabaseManager> dbManager;
     void populateEntities();
 };
 

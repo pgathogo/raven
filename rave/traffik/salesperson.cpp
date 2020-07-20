@@ -16,7 +16,8 @@ SalesPerson::SalesPerson()
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No.");
 
-    mGender = createField<ForeignKeyField>("gender", "Gender", new Gender(), "value");
+    mGender = createField<ForeignKeyField>("gender", "Gender",
+                                           std::make_unique<Gender>(), "value");
     mGender->setDBColumnName("gender_id");
 
     mHeader << QString::fromStdString(mName->fieldLabel())
@@ -45,7 +46,7 @@ std::unique_ptr<BaseEntity> SalesPerson::mapFields(StringMap* raw_entity)
     return std::move(sp);
 }
 
-std::list<std::string> SalesPerson::tableViewColumns()
+std::list<std::string> SalesPerson::tableViewColumns() const
 {
     std::list<std::string> cols;
 
@@ -102,4 +103,15 @@ ForeignKeyField* SalesPerson::gender() const
 void SalesPerson::setGender(int index)
 {
     mGender->setIndex(index);
+}
+
+
+std::unique_ptr<BaseEntity> SalesPerson::cloneAsUnique()
+{
+    return std::make_unique<SalesPerson>();
+}
+
+void SalesPerson::afterMapping(BaseEntity &entity)
+{
+
 }

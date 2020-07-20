@@ -27,7 +27,7 @@ public:
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
-    std::list<std::string> tableViewColumns() override;
+    std::list<std::string> tableViewColumns() const override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 
@@ -36,6 +36,8 @@ public:
     std::string searchColumn() const override;
 
     void populateEntity() override;
+    std::unique_ptr<BaseEntity> cloneAsUnique() override;
+    void afterMapping(BaseEntity& entity) override;
 
 private:
     StringField* mName;

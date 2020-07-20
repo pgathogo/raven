@@ -5,7 +5,8 @@
 #include "agentform.h"
 
 AgentBrowser::AgentBrowser(QWidget *parent) :
-    BaseEntityBrowserDlg(parent, new Agent),
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<Agent>()),
     ui(new Ui::AgentBrowser)
 {
     ui->setupUi(this);
@@ -23,7 +24,7 @@ void AgentBrowser::addRecord()
     std::unique_ptr<AgentForm> aForm =
             std::make_unique<AgentForm>(agent.get());
     if (aForm->exec() > 0)
-        entityDataModel()->createEntity(std::move(agent));
+        entityDataModel().createEntity(std::move(agent));
 }
 
 void AgentBrowser::updateRecord()

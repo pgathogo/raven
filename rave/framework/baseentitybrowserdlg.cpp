@@ -13,7 +13,6 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
     QDialog(parent),
     mMdiArea{nullptr},
     bui(new Ui::BaseEntityBrowserDlg),
-    mBaseEntity{nullptr},
     mEntityDataModel{nullptr}
 {
     bui->setupUi(this);
@@ -21,14 +20,13 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
 }
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
-                                           BaseEntity* entity)
+                                           std::unique_ptr<BaseEntity> entity)
         :QDialog(parent)
         ,mMdiArea{nullptr}
         ,bui(new Ui::BaseEntityBrowserDlg)
-        ,mBaseEntity{entity}
-        ,mEntityDataModel{std::make_unique<EntityDataModel>(entity)}
-
+        ,mEntityDataModel{nullptr}
 {
+    mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
     bui->setupUi(this);
     connectSlots();
     bui->tvEntity->setModel(mEntityDataModel.get());
@@ -36,7 +34,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     populateFilterCombo();
 }
 
-
+/*
 void BaseEntityBrowserDlg::setEntityDataModel(BaseEntity* entity)
 {
     if (mEntityDataModel){
@@ -46,11 +44,7 @@ void BaseEntityBrowserDlg::setEntityDataModel(BaseEntity* entity)
     mEntityDataModel = std::make_unique<EntityDataModel>(entity);
     mBaseEntity = entity;
 }
-
-BaseEntity* BaseEntityBrowserDlg::baseEntity()
-{
-    return mBaseEntity;
-}
+*/
 
 BaseEntityBrowserDlg::~BaseEntityBrowserDlg()
 {
@@ -70,14 +64,13 @@ void BaseEntityBrowserDlg::setDialogTitle(const QString title)
     this->setWindowTitle(title);
 }
 
-EntityDataModel* BaseEntityBrowserDlg::entityDataModel() const
-{
-    return mEntityDataModel.get();
-}
-
 void BaseEntityBrowserDlg::setMdiArea(QMdiArea* mdi)
 {
-    mMdiArea = mdi;
+   mMdiArea = mdi;
+}
+EntityDataModel& BaseEntityBrowserDlg::entityDataModel() const
+{
+    return *mEntityDataModel;
 }
 
 void BaseEntityBrowserDlg::addBtnClicked()
@@ -109,13 +102,18 @@ void BaseEntityBrowserDlg::deleteBtnClicked()
 
 void BaseEntityBrowserDlg::searchBtnClicked()
 {
-    searchRecord();
+    try{
+        searchRecord();
+    }
+    catch(DatabaseException& de){
+       showMessage(de.errorMessage());
+    }
 }
 
 void BaseEntityBrowserDlg::searchRecord()
 {
     if (bui->edtFilter->text().isEmpty()){
-        entityDataModel()->all();
+        entityDataModel().all();
     }else{
         printstr("BaseEntityBrowserDlg::searchRecord");
         std::tuple<std::string, std::string> searchItem;
@@ -124,7 +122,7 @@ void BaseEntityBrowserDlg::searchRecord()
         std::string columnName = data.toString().toStdString();
         std::string item = bui->edtFilter->text().toStdString();
         searchItem = std::make_tuple(columnName, item);
-        entityDataModel()->searchByField(searchItem);
+        entityDataModel().searchByField(searchItem);
     }
 }
 
@@ -134,18 +132,18 @@ void BaseEntityBrowserDlg::deleteRecord()
    entity->setDBAction(DBAction::dbaDELETE);
 
    try{
-       entityDataModel()->deleteEntity(entity);
+       entityDataModel().deleteEntity(entity);
        removeSelectedRow();
    }
-   catch (RavenException& re){
-       showMessage(re.errorMessage());
-   }
+   catch (DatabaseException& de){
+       showMessage(de.errorMessage());
+    }
 }
 
 BaseEntity* BaseEntityBrowserDlg::findSelectedEntity()
 {
    std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
+   BaseEntity* entity = entityDataModel().findEntityByName(searchName);
    return entity;
 }
 
@@ -168,9 +166,9 @@ void BaseEntityBrowserDlg::removeSelectedRow()
     bui->tvEntity->model()->removeRow(selectedRowId());
 }
 
-void BaseEntityBrowserDlg::updateTableViewRecord(BaseEntity* entity)
+void BaseEntityBrowserDlg::updateTableViewRecord(const std::vector<std::string> values)
 {
-    std::vector<std::string> values = entity->tableViewValues();
+    //std::vector<std::string> values = entity->tableViewValues();
     int col = 0;
     for (auto value: values){
         QVariant qvalue(QString::fromStdString(value));
@@ -183,10 +181,10 @@ void BaseEntityBrowserDlg::updateTableViewRecord(BaseEntity* entity)
 
 void BaseEntityBrowserDlg::populateFilterCombo()
 {
-    auto cIter = mBaseEntity->cBeginIter();
-    for(; cIter != mBaseEntity->cEndIter(); ++cIter){
-        auto ptr(std::get<1>(*cIter).get());
-        printstr(ptr->fieldLabel());
+    //auto cIter = mBaseEntity->cBeginIter();
+    //for(; cIter != mBaseEntity->cEndIter(); ++cIter){
+    for (auto& fld : entityDataModel().getEntity().fields()){
+        auto ptr(std::get<1>(fld).get());
         if (ptr->searchable())
             bui->cbFilter->addItem(stoq(ptr->fieldLabel()),
                                QVariant(stoq(ptr->dbColumnName())));
@@ -204,4 +202,9 @@ void BaseEntityBrowserDlg::hideEditButton()
 void BaseEntityBrowserDlg::hideDeleteButton()
 {
     bui->btnDelete->setVisible(false);
+}
+
+std::string BaseEntityBrowserDlg::typeID()
+{
+    return "BaseEntityBrowserDlg";
 }

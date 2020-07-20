@@ -20,9 +20,8 @@ VoiceOverForm::VoiceOverForm(
     BaseEntityDetailDlg(parent),
     ui(new Ui::VoiceOverForm),
     mVoiceOver{vo},
-    mDayPart{},
-    mMtoMBrowser{},
-    mVoiceExModel{}
+    mDayPart{nullptr},
+    mMtoMBrowser{nullptr}
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
@@ -31,12 +30,13 @@ VoiceOverForm::VoiceOverForm(
 
     populateFormWidgets();
 
-    mMtoMBrowser = new ManyToManyBrowser(mVoiceOver->voiceEx(),
-                                             ui->vlTypeEx, this);
-
-    //mVoiceExModel = new EntityDataModel(mVoiceOver->voiceEx());
-    mVoiceExModel = new EntityDataModel(
-                new VoiceExclusion(new VoiceOver, new TypeExclusion));
+    auto te = std::make_unique<TypeExclusion>();
+    auto ve = std::make_unique<VoiceExclusion>(mVoiceOver, te.get());
+    ve->setParentId(vo->id());
+    mMtoMBrowser =
+            std::make_unique<ManyToManyBrowser>(ve.get(),
+                                                ui->vlTypeEx,
+                                                this);
 
     connect(ui->cbGender, SIGNAL(currentIndexChanged(int)),
             this, SLOT(comboChanged(int)));
@@ -44,8 +44,8 @@ VoiceOverForm::VoiceOverForm(
 
 VoiceOverForm::~VoiceOverForm()
 {
-    delete mDayPart;
-    delete mVoiceExModel;
+    //delete mMtoMBrowser;
+    //delete mVoiceExModel;
     qDebug() << "VoiceOverForm::dtor";
     delete ui;
 }
@@ -53,10 +53,6 @@ VoiceOverForm::~VoiceOverForm()
 ActionResult VoiceOverForm::saveRecord()
 {
     populateEntityFields();
-
-    // ManyToMany
-    if (mVoiceOver->id() > 0)
-        saveVoiceExclusions();
 
     ActionResult ar = mVoiceOver->validate();
     return ar;
@@ -88,9 +84,10 @@ void VoiceOverForm::populateEntityFields()
 
 std::vector<EntityRecord> const& VoiceOverForm::typeExclusions() const
 {
-    return mMtoMBrowser->entityDataModel()->modelEntities();
+    return mMtoMBrowser->entityDataModel().modelEntities();
 }
 
+/*
 void VoiceOverForm::saveVoiceExclusions()
 {
     VecIter it =  mMtoMBrowser->entityDataModel()->vecBegin();
@@ -105,6 +102,7 @@ void VoiceOverForm::saveVoiceExclusions()
             mVoiceExModel->deleteEntity(mtom);
     }
 }
+*/
 
 std::string VoiceOverForm::windowTitle()
 {
@@ -113,7 +111,7 @@ std::string VoiceOverForm::windowTitle()
 
 void VoiceOverForm::populateGrid()
 {
-    mDayPart = new DayPartGrid(ui->vlDayPart);
+    mDayPart = std::make_unique<DayPartGrid>(ui->vlDayPart);
 
     std::map<std::string, std::string> dayparts;
     dayparts["daypart1"] = mVoiceOver->daypart1()->valueToString();
@@ -127,14 +125,20 @@ void VoiceOverForm::populateGrid()
     mDayPart->updateGrid(dayparts);
 }
 
-
+/*
 ManyToMany* VoiceOverForm::getMtoM() const
 {
     return mVoiceOver->voiceEx();
 }
+*/
 
 void VoiceOverForm::comboChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbGender->model());
     mVoiceOver->gender()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+}
+
+int VoiceOverForm::parentId() const
+{
+    return mVoiceOver->id();
 }

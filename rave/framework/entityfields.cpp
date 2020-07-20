@@ -233,7 +233,7 @@ std::string BooleanField::dbValueFormatter()
     return mValue ? "true" : "false";
 }
 
-void BooleanField::stringToValue(const std::string val)
+void BooleanField::stringToValue(const std::string)
 {
 }
 
@@ -416,7 +416,7 @@ ForeignKeyField::ForeignKeyField()
 }
 
 ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLabel,
-                BaseEntity* fkEntity, const std::string displayField)
+                std::unique_ptr<BaseEntity> fkEntity, const std::string displayField)
         :Field{aName, aLabel}
         ,mValue{-1}
         ,mIndex{-1}
@@ -425,7 +425,7 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
 
     auto it = lookups.find(aName);
     if (it == lookups.end()){
-        lookups[aName]= std::make_unique<EntityDataModel>(fkEntity);
+        lookups[aName]= std::make_unique<EntityDataModel>(std::move(fkEntity));
         lookups[aName]->all();
     }
 

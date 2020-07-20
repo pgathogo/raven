@@ -1,5 +1,6 @@
 #include <QDebug>
 #include "databaseconnector.h"
+#include "ravenexception.h"
 
 DatabaseConnector::DatabaseConnector()
 {
@@ -19,11 +20,11 @@ PostgresConnector::PostgresConnector(std::string conninfo)
     ,mConnection{nullptr}
 {
     openConnection(conninfo);
+    qDebug() << "Connection to DB opened.";
 }
 
 PostgresConnector* PostgresConnector::instance(const std::string conninfo)
 {
-    // put a try catch!!
 
     if (mInstance == nullptr){
         mInstance = new PostgresConnector(conninfo);
@@ -36,17 +37,18 @@ PostgresConnector::~PostgresConnector()
     PQfinish(mConnection);
 }
 
-bool PostgresConnector::openConnection(const std::string conninfo)
+void PostgresConnector::openConnection(const std::string conninfo)
 {
+
     mConnection = PQconnectdb(conninfo.c_str());
     if (PQstatus(mConnection) != CONNECTION_OK){
-        qDebug() << "Connection to database failed! - " << PQerrorMessage(mConnection);
+        std::string errMsg =  "Connection to database failed! - ";
+        errMsg += PQerrorMessage(mConnection);
         PQfinish(mConnection);
-        return false;
+        throw PostgresException("CONNECT", errMsg);
+
     }
 
-    qDebug() << "Connection to DB opened. - " << PQerrorMessage(mConnection);
-    return true;
 }
 
 PGconn* PostgresConnector::connection()

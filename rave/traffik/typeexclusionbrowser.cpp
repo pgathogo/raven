@@ -5,7 +5,8 @@
 #include "typeexclusiondetails.h"
 
 TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent):
-    BaseEntityBrowserDlg(parent, new TypeExclusion),
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<TypeExclusion>()),
     ui(new Ui::TypeExclusionBrowser)
 {
     ui->setupUi(this);
@@ -21,10 +22,12 @@ TypeExclusionBrowser::~TypeExclusionBrowser()
 void TypeExclusionBrowser::addRecord()
 {
     std::unique_ptr<TypeExclusion> tex = std::make_unique<TypeExclusion>();
+
     std::unique_ptr<TypeExclusionDetails> texForm =
             std::make_unique<TypeExclusionDetails>(tex.get());
+
     if (texForm->exec() > 0)
-        entityDataModel()->createEntity(std::move(tex));
+        entityDataModel().createEntity(std::move(tex));
 }
 
 void TypeExclusionBrowser::updateRecord()

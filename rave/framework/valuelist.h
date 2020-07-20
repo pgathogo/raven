@@ -23,7 +23,7 @@ public:
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
-    std::list<std::string> tableViewColumns() override;
+    std::list<std::string> tableViewColumns() const override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 
@@ -34,6 +34,8 @@ public:
     void populateEntity() override;
 
     virtual std::string windowTitle() const;
+    std::unique_ptr<BaseEntity> cloneAsUnique() override;
+    void afterMapping(BaseEntity& entity) override;
 
 protected:
     virtual std::string valueListTableName() const;
@@ -50,7 +52,7 @@ private:
 class Gender : public ValueList{
     public:
         Gender():ValueList(){}
-        Gender(const Gender& rhs){qDebug() << "Gender::copy ctor"; }
+        Gender(const Gender&){qDebug() << "Gender::copy ctor"; }
         std::string windowTitle() const override;
         std::string tableName() const override;
 

@@ -5,7 +5,7 @@
 
 BaseEntity::BaseEntity()
         :mID{}
-        ,mEDM{}
+        ,mEDM{nullptr}
         ,mDBAction{DBAction::dbaNONE}
 {
     mID = createField<IntegerField>("id", "Unique identifier");
@@ -15,8 +15,6 @@ BaseEntity::BaseEntity()
 BaseEntity::~BaseEntity()
 {
     qDebug() << "BaseEntity::dtor";
-    //delete mID;
-    //mFields.clear();
 }
 
 int BaseEntity::id() const
@@ -122,10 +120,12 @@ FieldValues BaseEntity::mapping(StringMap* e)
        return flds;
 }
 
-void BaseEntity::getEntityById(BaseEntity& entity, int id)
+void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)
 {
-    mEDM = new EntityDataModel(entity);
+
+    mEDM = std::make_unique<EntityDataModel>(std::move(entity));
     mEDM->getById({"id", id});
+
 }
 
 void BaseEntity::setDBAction(DBAction dbact)
@@ -145,4 +145,11 @@ void BaseEntity::clearFields()
 std::vector<FieldMap> const& BaseEntity::fields()
 {
     return mFields;
+}
+
+void BaseEntity::baseMapFields(StringMap* map)
+{
+    FieldValues fval = mapping(map);
+    for(auto& v : fval)
+        this->setValueByField(std::get<0>(v), std::get<1>(v));
 }

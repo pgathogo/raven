@@ -19,7 +19,8 @@ VoiceOver::VoiceOver()
 
     mMobileNo = createField<StringField>("mobile_no", "Mobile No");
 
-    mGender = createField<ForeignKeyField>("gender", "Gender", new Gender(), "value");
+    mGender = createField<ForeignKeyField>("gender", "Gender",
+                                           std::make_unique<Gender>(), "value");
     mGender->setDBColumnName("gender_id");
 
     mDaypart1 = createField<StringField>("daypart1", "Daypart1");
@@ -72,7 +73,7 @@ std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
     return std::move(vo);
 }
 
-std::list<std::string> VoiceOver::tableViewColumns()
+std::list<std::string> VoiceOver::tableViewColumns() const
 {
 
     std::list<std::string> cols;
@@ -199,5 +200,16 @@ void VoiceOver::setDaypart7(std::string dp)
 
 VoiceExclusion* VoiceOver::voiceEx()
 {
+    //return new VoiceExclusion(this, new TypeExclusion);
     return mVoiceEx;
+}
+
+std::unique_ptr<BaseEntity> VoiceOver::cloneAsUnique()
+{
+    return std::make_unique<VoiceOver>();
+}
+
+void VoiceOver::afterMapping(BaseEntity &entity)
+{
+
 }

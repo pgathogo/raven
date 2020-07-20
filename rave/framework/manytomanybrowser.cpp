@@ -11,9 +11,8 @@ ManyToManyBrowser::ManyToManyBrowser(
         QVBoxLayout* layout,
         QWidget *parent
         ):
-    BaseEntityBrowserDlg(parent, mtom),
-    //BaseEntityBrowserDlg(parent,
-    //                     ManyToManyBrowser::createMtoM(mtom)),
+    BaseEntityBrowserDlg(parent,
+                        mtom->cloneAsUnique()),
     ui(new Ui::ManyToManyBrowser),
     plb{},
     mMtoM{mtom}
@@ -23,11 +22,11 @@ ManyToManyBrowser::ManyToManyBrowser(
     layout->addWidget(this);
 
     if (mMtoM->parentId()->value() > 0){
-        std::string columnName = mtom->parentId()->dbColumnName();
+        std::string columnName = mMtoM->parentId()->dbColumnName();
         int value = mMtoM->parentId()->value();
         auto needle = std::make_tuple(columnName, value);
         // VoiceExclusion...
-        entityDataModel()->searchById(needle);
+        entityDataModel().searchById(needle);
     }
 
 }
@@ -40,21 +39,24 @@ ManyToManyBrowser::~ManyToManyBrowser()
 
 void ManyToManyBrowser::addRecord()
 {
-    PickListSetting plset;
-    plset.listEntity = mMtoM->detailEntity();
-
+    PickListSetting plset(mMtoM->detailEntity()->cloneAsUnique());
     plb = new PickListBrowser(plset);
     plb->exec();
 
-    auto it = plset.selectedEntities.begin();
-    for(; it != plset.selectedEntities.end(); ++it){
-        BaseEntity* be = *it;
+
+    //auto it = plset.selectedEntities.begin();
+    //for(; it != plset.selectedEntities.end(); ++it){
+    for(const auto& entity : plset.selectedEntities){
+        BaseEntity* be = entity;
         if (be->dbAction() == DBAction::dbaCREATE){
-            auto m2m = createMtoM(mMtoM, be);
+            auto m2m =  mMtoM->copy(mMtoM->parentEntity(), be);
+
+            //auto m2m = createMtoM(mMtoM->mtomEntity(), be);
             m2m->setParentId(mMtoM->parentId()->value());
             m2m->setDetailId(be->id());
-            m2m->setTableName(mMtoM->tableName());
-            entityDataModel()->cacheEntity(m2m);
+            m2m->setT(mMtoM->tableName());
+            m2m->setDBAction(be->dbAction());
+            entityDataModel().cacheEntity(std::move(m2m));
         }
     }
 }
@@ -66,7 +68,7 @@ void ManyToManyBrowser::updateRecord()
 void ManyToManyBrowser::deleteRecord()
 {
    std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = entityDataModel()->findEntityByName(searchName);
+   BaseEntity* entity = entityDataModel().findEntityByName(searchName);
    entity->setDBAction(DBAction::dbaDELETE);
    bui->tvEntity->hideRow(selectedRowId());
    //removeSelectedRow();

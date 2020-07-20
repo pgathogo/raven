@@ -149,7 +149,7 @@ class ForeignKeyField : public Field {
 public:
         ForeignKeyField();
         ForeignKeyField(const std::string aName, const std::string aLabel,
-                        BaseEntity* fkEntity, const std::string displayField);
+                        std::unique_ptr<BaseEntity> fkEntity, const std::string displayField);
         ~ForeignKeyField() override;
 
         std::string valueToString() const override;

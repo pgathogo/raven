@@ -22,43 +22,46 @@ class BaseEntityBrowserDlg : public QDialog
 
 public:
     explicit BaseEntityBrowserDlg(QWidget *parent = nullptr);
-    BaseEntityBrowserDlg(QWidget* parent, BaseEntity* entity);
+    BaseEntityBrowserDlg(QWidget* parent,
+                         std::unique_ptr<BaseEntity> entity);
     ~BaseEntityBrowserDlg();
 
     void setDialogTitle(const QString title);
     void connectSlots();
-    void setMdiArea(QMdiArea* mdi);
 
     virtual void addRecord()=0;
     virtual void updateRecord()=0;
     virtual void deleteRecord();
     virtual void searchRecord();
 
-    virtual std::string typeID()=0;
-
-    void setEntityDataModel(BaseEntity* entity);
-    BaseEntity* baseEntity();
+    virtual std::string typeID();
 
     template <typename T1, typename T2>
-    void update()
+    std::unique_ptr<T2> update()
     {
+        std::unique_ptr<T2> dlg(nullptr);
+
         std::string searchName = selectedRowName().toStdString();
         if (!searchName.empty()){
             BaseEntity* be = mEntityDataModel->findEntityByName(searchName);
             if (be != nullptr){
                 T1* entity = dynamic_cast<T1*>(be);
-                std::unique_ptr<T2> dlg = std::make_unique<T2>(entity);
+                dlg = std::make_unique<T2>(entity);
                 if(dlg->exec() > 0){
                     try{
-                        updateTableViewRecord(entity);
+                        updateTableViewRecord(entity->tableViewValues());
                         mEntityDataModel->updateEntity(entity);
                     }
-                    catch(RavenException re){
-                        showMessage(re.errorMessage());
+                    catch(DatabaseException& de){
+                        showMessage(de.errorMessage());
                     }
+                }else{
+                    dlg = nullptr;
                 }
             }
         }
+
+        return std::move(dlg);
     }
 
     /*
@@ -87,12 +90,14 @@ public:
     }
     */
 
-    EntityDataModel* entityDataModel() const;
+    EntityDataModel& entityDataModel() const;
+    void setMdiArea(QMdiArea* mdi);
 protected:
     QMdiArea* mMdiArea;
     int selectedRowId() const;
     QString selectedRowName();
-    void updateTableViewRecord(BaseEntity* entity);
+    //void updateTableViewRecord(BaseEntity* entity);
+    void updateTableViewRecord(const std::vector<std::string> values);
     void removeSelectedRow();
     void hideAddButton();
     void hideEditButton();
@@ -107,7 +112,7 @@ public slots:
     void searchBtnClicked();
 
 private:
-    BaseEntity* mBaseEntity;
+    //BaseEntity* mBaseEntity;
     //EntityDataModel* mEntityDataModel;
     std::unique_ptr<EntityDataModel> mEntityDataModel;
     void populateFilterCombo();

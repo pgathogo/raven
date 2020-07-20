@@ -111,7 +111,7 @@ std::unique_ptr<BaseEntity> TimeBand::mapFields(StringMap* raw_entity)
     return std::move(timeBand);
 }
 
-std::list<std::string> TimeBand::tableViewColumns()
+std::list<std::string> TimeBand::tableViewColumns() const
 {
     std::list<std::string> cols;
 
@@ -430,4 +430,14 @@ IntegerField* TimeBand::percent9() const
 void TimeBand::setPercent9(int val)
 {
     mPercent9->setValue( val );
+}
+
+std::unique_ptr<BaseEntity> TimeBand::cloneAsUnique()
+{
+    return std::make_unique<TimeBand>();
+}
+
+void TimeBand::afterMapping(BaseEntity &entity)
+{
+
 }

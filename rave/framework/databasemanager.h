@@ -20,7 +20,7 @@ public:
     virtual int deleteEntity(BaseEntity* entity) = 0;
 
     virtual int deleteEntityByValue(
-            BaseEntity* entity,
+            const std::string table_name,
             std::tuple<ColumnName, ColumnValue>) = 0; // make it generic
 
     virtual int fetchAll(BaseEntity* entity) = 0;
@@ -53,8 +53,8 @@ public:
     void updateEntity(BaseEntity* entity) override;
     int createEntity(BaseEntity* entity) override;
     int deleteEntity(BaseEntity* entity)override;
-    virtual int deleteEntityByValue(
-            BaseEntity* entity,
+    int deleteEntityByValue(
+            const std::string tabale_name,
             std::tuple<ColumnName, ColumnValue>) override;
     int fetchAll(BaseEntity* entity) override;
     int searchByField(BaseEntity* entity,

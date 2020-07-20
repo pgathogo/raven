@@ -8,15 +8,6 @@ RavenException::~RavenException()
 {
 };
 
-std::string RavenException::errorMessage()
-{
-    return "raven exceptions";
-}
-std::string RavenException::which()
-{
-    return "RavenException";
-}
-
 // ------ DatabaseException -----
 DatabaseException::DatabaseException()
 {
@@ -26,9 +17,16 @@ DatabaseException::~DatabaseException()
 {
 }
 
+
+std::string DatabaseException::errorMessage(){}
+std::string DatabaseException::which(){}
+std::string DatabaseException::action(){}
+void DatabaseException::setAction(const std::string act){}
+
 // ------ PostgresException -----
-PostgresException::PostgresException(const char* errorMsg)
+PostgresException::PostgresException(const std::string action, const std::string errorMsg)
 {
+    mAction = action;
     mErrorMsg = errorMsg;
 }
 
@@ -44,4 +42,14 @@ std::string PostgresException::errorMessage()
 std::string PostgresException::which()
 {
     return "PostgresException";
+}
+
+std::string PostgresException::action()
+{
+    return mAction;
+}
+
+void PostgresException::setAction(const std::string act)
+{
+    mAction = act;
 }

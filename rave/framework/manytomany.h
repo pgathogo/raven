@@ -11,37 +11,22 @@ class IntegerField;
 class ManyToMany : public BaseEntity
 {
 public:
-    ManyToMany();
-    ManyToMany(BaseEntity* parentEntity, BaseEntity* detailEntity);
-    ~ManyToMany() override;
+    ManyToMany(){}
+    virtual ~ManyToMany();
 
-    ManyToMany(const ManyToMany& other);
-    ManyToMany& operator=(const ManyToMany& other);
+    virtual std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const = 0;
 
-    IntegerField* parentId() const;
-    void setParentId(int id);
-    IntegerField* detailId() const;
-    void setDetailId(int id);
+    virtual IntegerField* parentId() const = 0;
+    virtual void setParentId(int id) = 0;
+    virtual IntegerField* detailId() const = 0;
+    virtual void setDetailId(int id) = 0;
 
-    std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
+    virtual std::string typeInfo() const = 0;
 
-    std::list<std::string> tableViewColumns() override;
-    std::vector<std::string> tableViewValues() override;
-    QStringList tableHeaders() const override;
+    virtual BaseEntity* parentEntity() const = 0;
+    virtual BaseEntity* detailEntity() const = 0;
 
-    std::string tableName() const override;
-    void setTableName(std::string table_name) override;
-    std::string searchColumn() const override;
-    void populateEntity() override;
-
-    virtual std::string windowTitle() const;
-    virtual std::string typeInfo() const;
-
-    void setParentEntity(BaseEntity* pEntity);
-    void setDetailEntity(BaseEntity* dEntity);
-
-    BaseEntity* parentEntity() const;
-    BaseEntity* detailEntity() const;
+    virtual BaseEntity* mtomEntity() = 0;
 
     void addEntity(BaseEntity* entity);
     std::size_t getSize(){ return mEntities.size(); }
@@ -49,33 +34,48 @@ public:
     ConstVecIter cVecBegin();
     ConstVecIter cVecEnd();
 
+    virtual void setTable(const std::string t) = 0;
+    void setT(const std::string tabname){ this->setTable(tabname); }
+    virtual std::string tableN() = 0;
+    std::string tabN(){ return this->tableN(); }
+
     std::vector<std::unique_ptr<BaseEntity>> const& entities() const;
 
-protected:
-    BaseEntity* mParentEntity;
-    BaseEntity* mDetailEntity;
-
-    IntegerField* mParentId;
-    IntegerField* mDetailId;
 private:
     std::vector<std::unique_ptr<BaseEntity>> mEntities;
-    QStringList mHeader;
-    std::string mTableName;
-
 };
+
+
 
 class VoiceExclusion : public ManyToMany{
     public:
         VoiceExclusion();
         VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt);
+
+        VoiceExclusion(const VoiceExclusion& other);
+        VoiceExclusion& operator=(const VoiceExclusion& other);
+
         ~VoiceExclusion() override;
 
-        std::string windowTitle() const override;
-        std::string typeInfo() const override;
+        std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const override;
+        void setTable(const std::string tablename) override { setTableName(tablename); }
+        std::string tableN() override{ return tableName(); }
 
+        IntegerField* parentId() const override;
+        void setParentId(int id) override;
+        IntegerField* detailId() const override;
+        void setDetailId(int id) override;
+
+        BaseEntity* parentEntity() const override;
+        BaseEntity* detailEntity() const override;
+        void setDetailEntity(BaseEntity* other);
+
+        //std::string windowTitle() const override;
+
+        std::string typeInfo() const override;
         std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
 
-        std::list<std::string> tableViewColumns() override;
+        std::list<std::string> tableViewColumns() const override;
         std::vector<std::string> tableViewValues() override;
         QStringList tableHeaders() const override;
 
@@ -84,9 +84,20 @@ class VoiceExclusion : public ManyToMany{
         std::string searchColumn() const override;
         void populateEntity() override;
 
+        BaseEntity* mtomEntity() override;
+
+        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        void afterMapping(BaseEntity& entity) override;
+
     private:
-         QStringList mHeader;
-         std::string mTableName;
+        BaseEntity* mParentEntity;
+        BaseEntity* mDetailEntity;
+
+        IntegerField* mParentId;
+        IntegerField* mDetailId;
+
+        QStringList mHeader;
+        std::string mTableName;
 };
 
 #endif // MANYTOMANY_H

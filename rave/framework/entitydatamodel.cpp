@@ -2,7 +2,6 @@
 #include "entitydatamodel.h"
 #include "baseentity.h"
 #include "manytomany.h"
-#include "postgreserror.h"
 #include "../utils/tools.h"
 
 EntityModel::EntityModel()
@@ -12,20 +11,13 @@ EntityModel::EntityModel()
 
 EntityModel::~EntityModel()
 {
-    delete mEntity;
     mEntities.clear();
     clear();
     qDebug() << "EntityModel::dtor";
 }
 
-EntityModel::EntityModel(BaseEntity* entity)
-    :mEntity{entity}
-{
-    setHeader();
-}
-
 EntityModel::EntityModel(std::unique_ptr<BaseEntity> entity)
-    :mUEntity{std::move(entity)}
+    :mEntity{std::move(entity)}
 {
     setHeader();
 }
@@ -38,36 +30,25 @@ void EntityModel::setHeader()
 void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
 {
     BaseEntity* be = entity.get();
-    addRow(be);
+    addRow(be->tableViewColumns());
     std::string key = entity->searchColumn();
     // we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
     mEntities.push_back(std::move(record));
 }
 
-void EntityModel::addEntity(BaseEntity* entity)
-{
-    //BaseEntity* be = entity.get();
-    addRow(entity);
-    std::string key = entity->searchColumn();
-    // we need a way to check that key is not empty!!
-    std::unique_ptr<BaseEntity> uPtr(entity);
-    EntityRecord record = make_tuple(key, std::move(uPtr));
-    mEntities.push_back(std::move(record));
-}
 
-
-void EntityModel::addRow(BaseEntity* entity)
+void EntityModel::addRow(const std::list<std::string> entity_cols)
 {
-    std::list names = entity->tableViewColumns();
     QList<QStandardItem*> view_names;
-    for (std::string c : names)
+    for (std::string c : entity_cols)
         view_names << new QStandardItem(QString::fromStdString(c));
     appendRow(view_names);
 }
 
 BaseEntity* EntityModel::findEntityByName(const std::string name)
 {
+    // Returns a stored pointer of BaseEntity
     BaseEntity* be = nullptr;
 
     for (auto& record : mEntities){
@@ -120,49 +101,35 @@ std::vector<EntityRecord> const& EntityModel::modelEntities() const
     return mEntities;
 }
 
-/* ----------- EntityDataModel ------------------ */
-
-
-EntityDataModel::EntityDataModel():
-    EntityModel{},
-    mEntity{},
-    dbManager{}
+std::string EntityModel::entityTableName() const
 {
-    dbManager = new PostgresDatabaseManager;
+    return mEntity->tableName();
 }
 
-EntityDataModel::EntityDataModel(BaseEntity* baseEntity)
-    :EntityModel{baseEntity},
-     mEntity{baseEntity},
-     dbManager{}
+BaseEntity& EntityModel::getEntity()
 {
-    dbManager = new PostgresDatabaseManager;
+    return *mEntity;
+}
+
+/* ----------- EntityDataModel ------------------ */
+
+EntityDataModel::EntityDataModel():
+    EntityModel{}
+{
+    dbManager = std::make_unique<PostgresDatabaseManager>();
 }
 
 EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
     :EntityModel{std::move(baseEntity)},
-     mUEntity{std::move(baseEntity)},
      dbManager{}
 {
-    dbManager = new PostgresDatabaseManager;
+    dbManager = std::make_unique<PostgresDatabaseManager>();
 }
 
-EntityDataModel::EntityDataModel(BaseEntity& baseEntity)
-    :EntityModel{}
-    ,mEntity{&baseEntity}
-    ,dbManager{}
-{
-    dbManager = new PostgresDatabaseManager;
-}
 
 EntityDataModel::~EntityDataModel()
 {
-    delete dbManager;
-}
-
-void EntityDataModel::populateFields(BaseEntity* baseEntity)
-{
-    qDebug() << "EntityDataModel::PopulateFields" ;
+    //delete dbManager;
 }
 
 void EntityDataModel::populateEntities()
@@ -171,8 +138,16 @@ void EntityDataModel::populateEntities()
     dbManager->provider()->cache()->first();
     do{
        auto e = dbManager->provider()->cache()->currentElement();
-       auto eptr = mEntity->mapFields(e);
-       addEntity(std::move(eptr));
+       auto ent = getEntity().cloneAsUnique();
+
+       ent->baseMapFields(e);
+
+       ent->afterMapping(*ent.get());
+
+       //auto eptr = getEntity().mapFields(e);
+       //addEntity(std::move(eptr));
+
+       addEntity(std::move(ent));
        dbManager->provider()->cache()->next();
     }while(!dbManager->provider()->cache()->isLast());
 
@@ -189,35 +164,13 @@ void EntityDataModel::populateMToMDetails()
 
 }
 
-bool EntityDataModel::createEntity(BaseEntity* entity)
+void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
-    // This code need to be split into three!!
-    bool succeded = false;
-    int id = dbManager->createEntity(entity);
+    int id = dbManager->createEntity(entity.get());
     if (id > 0){
         entity->setId(id);
-        addEntity(entity);
-        succeded = true;
+        addEntity(std::move(entity)); // entity final resting place
     }
-    return succeded;
-}
-
-bool EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
-{
-    bool succeded = false;
-    //try{
-        int id = dbManager->createEntity(entity.get());
-        if (id > 0){
-            entity->setId(id);
-            addEntity(std::move(entity)); // entity final resting place
-            succeded = true;
-        }
-
-        return succeded;
-   //}
-   // catch(PostgresError pe){
-   //     throw;
-   // }
 }
 
 int EntityDataModel::createEntityDB(BaseEntity* entity)
@@ -236,24 +189,22 @@ void EntityDataModel::deleteEntity(BaseEntity* entity)
     // entities with ids>0 have already been save in database
     if (entity->id() > 0)
         dbManager->deleteEntity(entity);
-    //deleteFromModel(); // No need for this!
 }
 
-//void EntityDataModel::deleteEntityById(BaseEntity* entity, int id)
 void EntityDataModel::deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value)
 {
-    dbManager->deleteEntityByValue(mEntity, value);
+    dbManager->deleteEntityByValue(entityTableName(), value);
 }
 
 void EntityDataModel::all()
 {
-    if (dbManager->fetchAll(mEntity) > 0)
+    if (dbManager->fetchAll(&getEntity()) > 0)
         populateEntities();
 }
 
-void EntityDataModel::cacheEntity(BaseEntity* entity)
+void EntityDataModel::cacheEntity(std::unique_ptr<BaseEntity> entity)
 {
-    addEntity(entity);
+    addEntity(std::move(entity));
 }
 
 size_t EntityDataModel::count()
@@ -263,23 +214,23 @@ size_t EntityDataModel::count()
 
 void EntityDataModel::searchByField(std::tuple<std::string, std::string> searchItem)
 {
-    if (dbManager->searchByField(mEntity, searchItem) > 0)
+    if (dbManager->searchByField(&getEntity(), searchItem) > 0)
         populateEntities();
 
 }
 
 void EntityDataModel::searchById(std::tuple<std::string, int> searchItem)
 {
-    if (dbManager->searchById(mEntity, searchItem) > 0)
+    if (dbManager->searchById(&getEntity(), searchItem) > 0)
         populateEntities();
 }
 
 void EntityDataModel::getById(std::tuple<std::string, int> searchItem)
 {
-    if (dbManager->searchById(mEntity, searchItem) > 0){
+    if (dbManager->searchById(&getEntity(), searchItem) > 0){
         dbManager->provider()->cache()->first();
         auto e = dbManager->provider()->cache()->currentElement();
-        mapEntity(e, *mEntity);
+        mapEntity(e, getEntity());
     }
 }
 

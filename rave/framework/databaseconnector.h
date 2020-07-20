@@ -9,7 +9,7 @@ class DatabaseConnector
 public:
     DatabaseConnector();
     virtual ~DatabaseConnector();
-    virtual bool openConnection(const std::string conninfo)=0;
+    virtual void openConnection(const std::string conninfo)=0;
 };
 
 class PostgresConnector : public DatabaseConnector
@@ -17,7 +17,7 @@ class PostgresConnector : public DatabaseConnector
     public:
         static PostgresConnector* instance(const std::string conninfo);
         ~PostgresConnector() override;
-        bool openConnection(const std::string conninfo) override;
+        void openConnection(const std::string conninfo) override;
         PGconn* connection();
     protected:
         PostgresConnector(const std::string conninfo);

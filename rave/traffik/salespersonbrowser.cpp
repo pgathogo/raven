@@ -5,7 +5,8 @@
 #include "salespersonform.h"
 
 SalesPersonBrowser::SalesPersonBrowser(QWidget *parent) :
-    BaseEntityBrowserDlg(parent, new SalesPerson),
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<SalesPerson>()),
     ui(new Ui::SalesPersonBrowser)
 {
     ui->setupUi(this);
@@ -20,9 +21,11 @@ SalesPersonBrowser::~SalesPersonBrowser()
 void SalesPersonBrowser::addRecord()
 {
     std::unique_ptr<SalesPerson> sp = std::make_unique<SalesPerson>();
+
     std::unique_ptr<SalesPersonForm> spForm = std::make_unique<SalesPersonForm>(sp.get());
+
     if (spForm->exec() > 0)
-        entityDataModel()->createEntity(std::move(sp));
+        entityDataModel().createEntity(std::move(sp));
 }
 
 void SalesPersonBrowser::updateRecord()

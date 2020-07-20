@@ -90,7 +90,7 @@ std::unique_ptr<BaseEntity> ValueList::mapFields(StringMap* sm)
 }
 
 
-std::list<std::string> ValueList::tableViewColumns()
+std::list<std::string> ValueList::tableViewColumns() const
 {
     std::list<std::string> cols;
 
@@ -137,6 +137,16 @@ void ValueList::populateEntity()
 {
     //mCode->setValueFromWidget();
     //mListValue->setValueFromWidget();
+}
+
+std::unique_ptr<BaseEntity> ValueList::cloneAsUnique()
+{
+    return std::make_unique<ValueList>();
+}
+
+void ValueList::afterMapping(BaseEntity &entity)
+{
+
 }
 
 std::string ValueList::windowTitle() const

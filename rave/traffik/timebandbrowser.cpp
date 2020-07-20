@@ -8,7 +8,8 @@
 #include "../utils/tools.h"
 
 TimeBandBrowser::TimeBandBrowser(QWidget* parent) :
-    BaseEntityBrowserDlg(parent, new TimeBand),
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<TimeBand>()),
     ui(new Ui::TimeBandBrowser)
 {
     ui->setupUi(this);
@@ -23,14 +24,16 @@ TimeBandBrowser::~TimeBandBrowser()
 void TimeBandBrowser::addRecord()
 {
     std::unique_ptr<TimeBand> tband = std::make_unique<TimeBand>();
+
     std::unique_ptr<TimeBandForm> tbandForm =
             std::make_unique<TimeBandForm>(tband.get());
+
     if (tbandForm->exec() > 0){
         try{
-        entityDataModel()->createEntity(std::move(tband));
+        entityDataModel().createEntity(std::move(tband));
         }
-        catch(RavenException& re){
-            showMessage(re.errorMessage());
+        catch(DatabaseException& de){
+            showMessage(de.errorMessage());
         }
     }
 }

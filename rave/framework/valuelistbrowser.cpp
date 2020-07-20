@@ -27,14 +27,14 @@ ValueListBrowser::~ValueListBrowser()
 
 void ValueListBrowser::addRecord()
 {
-    ValueList* ent = ValueListBrowser::createValueList(vtype);
+    auto ent = ValueListBrowser::createValueList(vtype);
+
     std::unique_ptr<ValueListDetailDlg> vdd =
-            std::make_unique<ValueListDetailDlg>(ent);
-    if (vdd->exec() > 0){
-        entityDataModel()->createEntity(ent);
-    }else{
-        delete ent;
-    }
+            std::make_unique<ValueListDetailDlg>(ent.get());
+
+    if (vdd->exec() > 0)
+        entityDataModel().createEntity(std::move(ent));
+
 }
 
 void ValueListBrowser::updateRecord()

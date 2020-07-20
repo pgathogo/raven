@@ -10,10 +10,12 @@
 class EntityDataModel;
 class QVBoxLayout;
 class PickListBrowser;
+class IntegerField;
 
 namespace Ui {
 class ManyToManyBrowser;
 }
+
 
 class ManyToManyBrowser : public BaseEntityBrowserDlg
 {
@@ -37,6 +39,7 @@ public:
     std::string typeID() override;
 
     //createMToM(const std::string typeInfo, BaseEntity* pEnt, BaseEntity* dEnt)
+    /*
     static ManyToMany*
     createMtoM(ManyToMany* mtom)
     {
@@ -48,23 +51,23 @@ public:
         }
         return nullptr;
     }
+    */
 
-    ManyToMany* createMtoM(ManyToMany* mtom, BaseEntity* detail)
+    std::unique_ptr<ManyToMany> createMtoM(ManyToMany* mtom, BaseEntity* detail)
     {
         if (mtom->typeInfo() == "voice_type_exclusion"){
             TypeExclusion* dte = dynamic_cast<TypeExclusion*>(detail);
-            //TypeExclusion te(*dte);
-            VoiceExclusion* ve = new VoiceExclusion(
+
+            auto ve = std::make_unique<VoiceExclusion>(
                         mtom->parentEntity(), dte);
+
             ve->setDBAction(detail->dbAction());
-            return ve;
+            return std::move(ve);
         }
         return nullptr;
-
     }
 
     size_t cnt(){ return mMtoM->getSize(); }
-    ManyToMany* getManyToMany() const{ return mMtoM; }
 
 private slots:
     void selectedItem(BaseEntity* entity);

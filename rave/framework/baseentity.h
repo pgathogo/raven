@@ -16,7 +16,6 @@ class QStandardItem;
 
 class EntityDataModel;
 
-//using FieldMap = std::map<std::string, std::unique_ptr<Field>>;
 using FieldMap = std::tuple<std::string, std::unique_ptr<Field>>;
 using StringMap = std::map<std::string, std::string>;
 using FieldValue = std::tuple<Field*, std::string>;
@@ -39,8 +38,7 @@ public:
     std::vector<FieldMap>::iterator beginIter();
     std::vector<FieldMap>::iterator endIter();
 
-    //virtual QList<QStandardItem*> tableViewColumns() = 0;
-    virtual std::list<std::string> tableViewColumns() = 0;
+    virtual std::list<std::string> tableViewColumns() const = 0;
     virtual std::vector<std::string> tableViewValues() = 0;
 
     virtual QStringList tableHeaders() const = 0;
@@ -61,7 +59,7 @@ public:
 
     virtual void populateEntity()=0;
 
-    void getEntityById(BaseEntity& entity, int id);
+    void getEntityById(std::unique_ptr<BaseEntity> entity, int id);
 
     void setDBAction(DBAction dbact);
     DBAction dbAction() const;
@@ -70,37 +68,20 @@ public:
 
     std::vector<FieldMap> const& fields();
 
+    virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
+
+    virtual void afterMapping(BaseEntity& entity) = 0;
+
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");
         auto uPtr = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
-
-        /*
-        auto fldname = uPtr->fieldName();
-        auto iter = std::find_if(mFields.begin(), mFields.end(),
-                                [fldname](FieldMap fm)
-                    {return (fldname == std::get<0>(fm)) ? true : false; });
-        static_assert(iter != mFields.end(), "Field name already exists!");
-        */
-
         FieldMap fm;
         auto ptr(uPtr.get());
         fm = std::make_tuple(uPtr->fieldName(), std::move(uPtr));
         mFields.emplace_back(std::move(fm));
         return ptr;
     }
-
-    /*
-    template<typename T>
-    std::unique_ptr<T> entityFieldMap(StringMap* map)
-    {
-        FieldValues fval = mapping(map);
-        std::unique_ptr<T> uT = std::make_unique<T>();
-        for(auto& v : fval)
-            uT->setValueByField(std::get<0>(v), std::get<1>(v));
-        return std::move(uT);
-    }
-    */
 
     template<typename T, typename... TArgs>
     std::unique_ptr<T> entityFieldMap(StringMap* map, TArgs...mArgs)
@@ -112,11 +93,13 @@ public:
         return std::move(uT);
     }
 
+    void baseMapFields(StringMap* map);
+
 
 private:
     IntegerField* mID;
     std::vector<FieldMap> mFields;
-    EntityDataModel* mEDM;
+    std::unique_ptr<EntityDataModel> mEDM;
     DBAction mDBAction;
 
 };

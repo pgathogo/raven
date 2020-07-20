@@ -102,10 +102,10 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
-        char* cmdError = "BEGIN command failed!\n";
-        char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
+        std::string errorMsg = "BEGIN command failed!\n";
+        errorMsg += PQerrorMessage(conn);
         cleanFinish(conn, res);
-        throw PostgresException(errorMsg);
+        throw PostgresException("EXCUTE-BEGIN", errorMsg);
     }
 
     PQclear(res);
@@ -113,19 +113,19 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     res = PQexec(conn, query.c_str());
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
-        char* cmdError = "EXECUTE command failed!\n";
-        char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
+        std::string errorMsg = "EXECUTE command failed!\n";
+        errorMsg += PQerrorMessage(conn);
         cleanFinish(conn, res);
-        throw PostgresException(errorMsg);
+        throw PostgresException("EXCEUTE", errorMsg);
     }
 
     res = PQexec(conn, "COMMIT");
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        char* cmdError = "COMMIT command failed!\n";
-        char* errorMsg = make_error_message(cmdError, PQerrorMessage(conn));
+        std::string errorMsg = "COMMIT command failed!\n";
+        errorMsg += PQerrorMessage(conn);
         cleanFinish(conn, res);
-        throw PostgresException(errorMsg);
+        throw PostgresException("COMMIT", errorMsg);
     }
 
     cleanFinish(conn, res);
@@ -148,9 +148,11 @@ int PostgresDataProvider::read(const std::string query)
 
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
-        qDebug() << "BEGIN command failed! "<< PQerrorMessage(conn);
+        std::string errorMsg = "BEGIN command failed!\n";
+        errorMsg += PQerrorMessage(conn);
         cleanFinish(conn, res);
-        return -1;
+        throw PostgresException("READ-BEGIN", errorMsg);
+        //return -1;
     }
 
     PQclear(res);
@@ -160,18 +162,22 @@ int PostgresDataProvider::read(const std::string query)
     res = PQexec(conn, sql);
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
-        qDebug() << "DECLARE CURSOR failed! " << PQerrorMessage(conn);
+        std::string errorMsg = "DECLARE command failed!\n";
+        errorMsg += PQerrorMessage(conn);
         cleanFinish(conn, res);
-        return -1;
+        throw PostgresException("READ-DECLARE-CURSOR", errorMsg);
+        //return -1;
     }
 
     PQclear(res);
 
     res = PQexec(conn, "FETCH ALL in mcursor");
     if (PQresultStatus(res) != PGRES_TUPLES_OK){
-        qDebug() << "FETCH ALL failed! " << PQerrorMessage(conn);
+        std::string errorMsg = "FETCH ALL command failed!\n";
+        errorMsg += PQerrorMessage(conn);
         cleanFinish(conn, res);
-        return -1;
+        throw PostgresException("READ-FETCH-ALL", errorMsg);
+        //return -1;
     }
 
     nFields = PQnfields(res);
@@ -188,7 +194,6 @@ int PostgresDataProvider::read(const std::string query)
         // cache results
         append(record);
 
-        //vm.push_back(record);
     }
 
     PQclear(res);

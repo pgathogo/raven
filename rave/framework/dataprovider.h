@@ -7,18 +7,21 @@
 #include <libpq-fe.h>
 #include "queryset.h"
 
+
+
 //using VectorMapped = std::vector<std::map<std::string, std::string>>;
 using StringMapped = std::map<std::string, std::string>;
 using RecordTuple = std::tuple<std::string, std::string>;
 
 class PostgresConnector;
+class DatabaseException;
 
 class BaseDataProvider
 {
 public:
     BaseDataProvider();
     virtual ~BaseDataProvider();
-    virtual bool executeQuery(const std::string query) = 0;
+    virtual bool executeQuery(const std::string query)=0;
     virtual int read(const std::string query) = 0;
     virtual int fetchLastId(const std::string tableName)=0;
     void append(StringMapped* data);

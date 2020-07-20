@@ -5,10 +5,12 @@
 #include "voiceoverform.h"
 #include "typeexclusion.h"
 #include "../framework/manytomany.h"
-
+#include "../framework/ravenexception.h"
+#include "../utils/tools.h"
 
 VoiceOverBrowser::VoiceOverBrowser(QWidget *parent):
-    BaseEntityBrowserDlg(parent, new VoiceOver())
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<VoiceOver>())
     ,ui(new Ui::VoiceOverBrowser)
 {
     ui->setupUi(this);
@@ -29,41 +31,61 @@ void VoiceOverBrowser::addRecord()
            std::make_unique<VoiceOverForm>(vo.get(), this);
 
     if (voForm->exec() > 0){
-        if (entityDataModel()->createEntity(vo.get()) ) {
 
-            std::unique_ptr<EntityDataModel> edm =
-                   std::make_unique<EntityDataModel>();
+        try{
+            // create header record
+            entityDataModel().createEntity(std::move(vo));
 
-            auto& exlusions = voForm->typeExclusions();
-            for(auto& type : exlusions){
+            saveVoiceExclusions(*voForm);
 
-                ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(type).get());
-                if (mtom->dbAction() == DBAction::dbaCREATE){
-                    mtom->setParentId(vo->id());
-                    edm->createEntityDB(mtom);
-                }
-
-                if (mtom->dbAction() == DBAction::dbaDELETE)
-                    edm->deleteEntity(mtom);
-
-            }
          }
+        catch(DatabaseException& de){
+            showMessage(de.errorMessage());
+        }
     }
 
 }
 
 void VoiceOverBrowser::updateRecord()
 {
-   update<VoiceOver, VoiceOverForm>();
+   auto vof = update<VoiceOver, VoiceOverForm>();
+   if (vof != nullptr)
+       saveVoiceExclusions(*vof);
 }
+
+void VoiceOverBrowser::saveVoiceExclusions(const VoiceOverForm& vof)
+{
+    std::unique_ptr<EntityDataModel> edm =
+           std::make_unique<EntityDataModel>();
+
+    auto& exlusions = vof.typeExclusions();
+    for(auto& type : exlusions){
+        ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(type).get());
+
+        if (mtom->dbAction() == DBAction::dbaCREATE){
+            mtom->setParentId(vof.parentId());
+            edm->createEntityDB(mtom);
+        }
+
+        if (mtom->dbAction() == DBAction::dbaDELETE)
+            edm->deleteEntity(mtom);
+    }
+}
+
+
 
 void VoiceOverBrowser::deleteRecord()
 {
-    BaseEntity* entity = findSelectedEntity();
-    EntityDataModel edm(new VoiceExclusion);
-    edm.deleteEntityByValue({"parent_id", entity->id()});
-    entityDataModel()->deleteEntity(entity);
-    removeSelectedRow();
+    try{
+        BaseEntity* entity = findSelectedEntity();
+        EntityDataModel edm(std::make_unique<VoiceExclusion>());
+        edm.deleteEntityByValue({"parent_id", entity->id()});
+        entityDataModel().deleteEntity(entity);
+        removeSelectedRow();
+    }
+    catch(DatabaseException& de){
+       showMessage(de.errorMessage());
+    }
 }
 
 std::string VoiceOverBrowser::typeID()

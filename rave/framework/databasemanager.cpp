@@ -3,7 +3,6 @@
 #include "databasemanager.h"
 #include "baseentity.h"
 #include "dataprovider.h"
-#include "postgreserror.h"
 
 #include <QDebug>
 #include "../utils/tools.h"
@@ -106,15 +105,10 @@ int PostgresDatabaseManager::createEntity(BaseEntity* entity)
 
     sqlQuery = makeInsertString(entity);
 
-    try{
-        provider()->executeQuery(sqlQuery);
-        // Get id of the created record.
-        int lastId = provider()->fetchLastId(entity->tableName());
-        return lastId;
-    }
-    catch (PostgresError pe){
-        throw;
-    }
+    provider()->executeQuery(sqlQuery);
+    // Get id of the created record.
+    int lastId = provider()->fetchLastId(entity->tableName());
+    return lastId;
 }
 
 void PostgresDatabaseManager::updateEntity(BaseEntity* entity)
@@ -155,15 +149,14 @@ int PostgresDatabaseManager::deleteEntity(BaseEntity* entity)
 {
     std::string sql;
     sql = "DELETE FROM "+entity->tableName()+" WHERE ID ="+std::to_string(entity->id());
-    qDebug() << stoq(sql);
     return provider()->executeQuery(sql);
 }
 
-int PostgresDatabaseManager::deleteEntityByValue( BaseEntity* entity,
+int PostgresDatabaseManager::deleteEntityByValue(const std::string table_name,
             std::tuple<ColumnName, ColumnValue> column)
 {
     std::string sql;
-    sql = "DELETE FROM "+entity->tableName()+" WHERE "+
+    sql = "DELETE FROM "+table_name+" WHERE "+
             std::get<0>(column)+" = "+
            std::to_string(std::get<1>(column));
     return provider()->executeQuery(sql);

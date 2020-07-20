@@ -83,7 +83,7 @@ std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
 }
 
 
-std::list<std::string> ClientGroup::tableViewColumns()
+std::list<std::string> ClientGroup::tableViewColumns() const
 {
     std::list<std::string> cols;
 
@@ -125,4 +125,14 @@ void ClientGroup::populateEntity()
 {
     //mName->setValueFromWidget();
     //mDescription->setValueFromWidget();
+}
+
+std::unique_ptr<BaseEntity> ClientGroup::cloneAsUnique()
+{
+    return std::make_unique<ClientGroup>();
+}
+
+void ClientGroup::afterMapping(BaseEntity &entity)
+{
+
 }

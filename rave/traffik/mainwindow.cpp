@@ -18,6 +18,7 @@
 #include "agentbrowser.h"
 #include "clientbrowser.h"
 #include "timebandbrowser.h"
+#include "brandbrowser.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -128,6 +129,11 @@ void MainWindow::createActions()
     agentAction->setStatusTip(tr("Maintain Agents details"));
     connect(agentAction, &QAction::triggered, this, &MainWindow::browseAgent);
 
+    QAction* brandAction = new QAction(tr("&Brands"));
+    setupMenu->addAction(brandAction);
+    brandAction->setStatusTip(tr("Maintain Client Brands"));
+    connect(brandAction, &QAction::triggered, this, &MainWindow::browseBrands);
+
     setupMenu->addSeparator();
 
     QAction* tbandAction = new QAction(tr("&Time Bands"));
@@ -183,6 +189,12 @@ void MainWindow::browseAgent()
 {
     AgentBrowser* agentBrowser = createSubWindow<AgentBrowser>();
     agentBrowser->exec();
+}
+
+void MainWindow::browseBrands()
+{
+    BrandBrowser* brandBrowser = createSubWindow<BrandBrowser>();
+    brandBrowser->exec();
 }
 
 

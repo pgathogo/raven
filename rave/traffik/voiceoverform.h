@@ -31,10 +31,13 @@ public:
     std::string windowTitle() override;
     void populateGrid();
 
-    ManyToMany* getMtoM() const;
+    //ManyToMany* getMtoM() const;
     void saveVoiceExclusions();
     void populateEntityFields() override;
     void populateFormWidgets() override;
+
+    //VoiceOver* voiceOver();
+    int parentId() const;
 
     std::vector<EntityRecord> const& typeExclusions() const;
 
@@ -44,10 +47,10 @@ private slots:
 private:
     Ui::VoiceOverForm *ui;
     VoiceOver* mVoiceOver;
-    DayPartGrid* mDayPart;
-    ManyToManyBrowser* mMtoMBrowser;
+    std::unique_ptr<DayPartGrid> mDayPart;
+    std::unique_ptr<ManyToManyBrowser> mMtoMBrowser;
     //EntityDataModel* mGenderModel;
-    EntityDataModel* mVoiceExModel;
+    ////EntityDataModel* mVoiceExModel;
 
 };
 

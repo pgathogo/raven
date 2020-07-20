@@ -32,11 +32,11 @@ public:
 
     std::string typeID() override;
 
-  static ValueList*
+  static std::unique_ptr<ValueList>
   createValueList(const std::string& vlType)
   {
       if (vlType =="gender")
-          return new Gender();
+          return std::make_unique<Gender>();
 
       return nullptr;
   }

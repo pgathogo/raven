@@ -56,7 +56,7 @@ std::unique_ptr<BaseEntity> Agent::mapFields(StringMap* raw_entity)
     return std::move(agent);
 }
 
-std::list<std::string> Agent::tableViewColumns()
+std::list<std::string> Agent::tableViewColumns() const
 {
     std::list<std::string> cols;
 
@@ -65,18 +65,6 @@ std::list<std::string> Agent::tableViewColumns()
     cols.push_back(mobileNo()->displayName());
 
     return cols;
-
-    /*
-    QString nm = QString::fromStdString(name()->displayName());
-    QString contact_name = QString::fromStdString(contactName()->displayName());
-    QString mobile_no = QString::fromStdString(mobileNo()->displayName());
-
-    QStandardItem* qname = new QStandardItem(nm);
-    QStandardItem* qcontact = new QStandardItem(contact_name);
-    QStandardItem* qmobile = new QStandardItem(mobile_no);
-
-    return {qname, qcontact, qmobile};
-    */
 }
 
 std::vector<std::string> Agent::tableViewValues()
@@ -162,4 +150,14 @@ TextField* Agent::address() const
 void Agent::setAddress(std::string paddress)
 {
     mAddress->setValue(paddress);
+}
+
+std::unique_ptr<BaseEntity> Agent::cloneAsUnique()
+{
+    return std::make_unique<Agent>();
+}
+
+void Agent::afterMapping(BaseEntity &entity)
+{
+
 }

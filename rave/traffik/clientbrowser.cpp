@@ -5,7 +5,8 @@
 #include "clientform.h"
 
 ClientBrowser::ClientBrowser(QWidget *parent) :
-    BaseEntityBrowserDlg(parent, new Client),
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<Client>()),
     ui(new Ui::ClientBrowser)
 {
     ui->setupUi(this);
@@ -20,10 +21,12 @@ ClientBrowser::~ClientBrowser()
 void ClientBrowser::addRecord()
 {
     std::unique_ptr<Client> client = std::make_unique<Client>();
+
     std::unique_ptr<ClientForm> cForm =
             std::make_unique<ClientForm>(client.get());
+
     if (cForm->exec() > 0)
-        entityDataModel()->createEntity(std::move(client));
+        entityDataModel().createEntity(std::move(client));
 }
 
 void ClientBrowser::updateRecord()

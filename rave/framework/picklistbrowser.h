@@ -13,10 +13,19 @@ namespace Ui {
 class PickListBrowser;
 }
 
-struct PickListSetting {
-    BaseEntity* listEntity;
-    std::vector<BaseEntity*> selectedEntities;
+enum class PickListMode{
+    plmSINGLE_SELECT,
+    plmMULTIPLE_SELECT
 };
+
+struct PickListSetting {
+    PickListSetting(std::unique_ptr<BaseEntity> entity,
+                    PickListMode plm = PickListMode::plmSINGLE_SELECT);
+    std::unique_ptr<BaseEntity> listEntity;
+    std::vector<BaseEntity*> selectedEntities;
+    PickListMode pickMode;
+};
+
 
 class PickListBrowser : public BaseEntityBrowserDlg
 {
@@ -45,10 +54,6 @@ private:
     Ui::PickListBrowser *ui;
     SelectCloseWidget* scw;
     PickListSetting& mPickListSetting;
-    //BaseEntity* mEntity;
-    //EntityDataModel* destModel;
-    //ManyToMany& mMtoM;
-    //std::vector<BaseEntity*> cont;
 };
 
 #endif // PICKLISTBROWSER_H
