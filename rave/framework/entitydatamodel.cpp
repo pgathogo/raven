@@ -166,28 +166,28 @@ void EntityDataModel::populateMToMDetails()
 
 void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
-    int id = dbManager->createEntity(entity.get());
+    int id = dbManager->createEntity(*entity.get());
     if (id > 0){
         entity->setId(id);
         addEntity(std::move(entity)); // entity final resting place
     }
 }
 
-int EntityDataModel::createEntityDB(BaseEntity* entity)
+int EntityDataModel::createEntityDB(const BaseEntity& entity)
 {
     return dbManager->createEntity(entity);
 }
 
-void EntityDataModel::updateEntity(BaseEntity* entity)
+void EntityDataModel::updateEntity(const BaseEntity& entity)
 {
-    if (entity->id() > 0)
+    if (entity.id() > 0)
         dbManager->updateEntity(entity);
 }
 
-void EntityDataModel::deleteEntity(BaseEntity* entity)
+void EntityDataModel::deleteEntity(const BaseEntity& entity)
 {
     // entities with ids>0 have already been save in database
-    if (entity->id() > 0)
+    if (entity.id() > 0)
         dbManager->deleteEntity(entity);
 }
 
@@ -198,7 +198,7 @@ void EntityDataModel::deleteEntityByValue(std::tuple<ColumnName, ColumnValue> va
 
 void EntityDataModel::all()
 {
-    if (dbManager->fetchAll(&getEntity()) > 0)
+    if (dbManager->fetchAll(getEntity()) > 0)
         populateEntities();
 }
 
@@ -212,22 +212,28 @@ size_t EntityDataModel::count()
     return entitiesCount();
 }
 
-void EntityDataModel::searchByField(std::tuple<std::string, std::string> searchItem)
+void EntityDataModel::searchByStr(std::tuple<std::string, std::string> searchItem)
 {
-    if (dbManager->searchByField(&getEntity(), searchItem) > 0)
+    if (dbManager->searchByStr(getEntity(), searchItem) > 0)
         populateEntities();
 
 }
 
-void EntityDataModel::searchById(std::tuple<std::string, int> searchItem)
+void EntityDataModel::searchByInt(std::tuple<std::string, int> searchItem)
 {
-    if (dbManager->searchById(&getEntity(), searchItem) > 0)
+    if (dbManager->searchByInt(getEntity(), searchItem) > 0)
+        populateEntities();
+}
+
+void EntityDataModel::search(const std::string searchFilter)
+{
+    if (dbManager->search(getEntity(), searchFilter) > 0)
         populateEntities();
 }
 
 void EntityDataModel::getById(std::tuple<std::string, int> searchItem)
 {
-    if (dbManager->searchById(&getEntity(), searchItem) > 0){
+    if (dbManager->searchByInt(getEntity(), searchItem) > 0){
         dbManager->provider()->cache()->first();
         auto e = dbManager->provider()->cache()->currentElement();
         mapEntity(e, getEntity());
@@ -236,7 +242,6 @@ void EntityDataModel::getById(std::tuple<std::string, int> searchItem)
 
 void EntityDataModel::mapEntity(StringMap* map, BaseEntity& entity)
 {
-        FieldValues fval = entity.mapping(map);
-        for(auto& v : fval)
-            entity.setValueByField(std::get<0>(v), std::get<1>(v));
+        for(auto& [field, name] : entity.mapping(map))
+            entity.setValueByField(*field, name);
 }

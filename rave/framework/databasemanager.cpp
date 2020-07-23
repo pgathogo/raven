@@ -14,12 +14,12 @@ void BaseDatabaseManager::setObjectID(BaseEntity& entity, int id)
 
 BaseDatabaseManager::~BaseDatabaseManager(){}
 
-std::string BaseDatabaseManager::columnsForSelection(BaseEntity* entity)
+std::string BaseDatabaseManager::columnsForSelection(const BaseEntity& entity)
 {
 
     std::string flds;
     std::size_t i = 1;
-    auto cols = entity->dbColumnNames();
+    auto cols = entity.dbColumnNames();
     for (auto& col : cols){
            flds += col;
            if (i<cols.size())
@@ -30,11 +30,11 @@ std::string BaseDatabaseManager::columnsForSelection(BaseEntity* entity)
     return flds;
 }
 
-std::string BaseDatabaseManager::commaSepColumns(BaseEntity* entity)
+std::string BaseDatabaseManager::commaSepColumns(const BaseEntity& entity)
 {
     std::string flds;
     std::size_t i = 1;
-    auto cols = entity->dbColumnNames();
+    auto cols = entity.dbColumnNames();
     for (auto& col : cols){
         if (col != "id"){
            flds += col;
@@ -47,18 +47,20 @@ std::string BaseDatabaseManager::commaSepColumns(BaseEntity* entity)
     return flds;
 }
 
-std::string BaseDatabaseManager::commaSepValues(BaseEntity* entity)
+std::string BaseDatabaseManager::commaSepValues(const BaseEntity& entity)
 {
     std::string vals;
 
     size_t i = 1;
 
-    auto cIter = entity->cBeginIter();
-    for(; cIter != entity->cEndIter(); ++cIter){
-        auto ptr(std::get<1>(*cIter).get());
+    //auto cIter = entity.cBeginIter();
+    //for(; cIter != entity.xl->cEndIter(); ++cIter){
+
+    for (auto& flds : entity.fields()){
+        auto ptr(std::get<1>(flds).get());
         if (ptr->fieldName() != "id"){
              vals += ptr->dbValueFormatter();
-             if(i<entity->fieldsCount())
+             if(i<entity.fieldsCount())
                  vals +=",";
         }
 
@@ -68,22 +70,22 @@ std::string BaseDatabaseManager::commaSepValues(BaseEntity* entity)
     return vals;
 }
 
-std::string BaseDatabaseManager::makeInsertString(BaseEntity* entity)
+std::string BaseDatabaseManager::makeInsertString(const BaseEntity& entity)
 {
     std::string flds = commaSepColumns(entity);
     std::string vals = commaSepValues(entity);
-    std::string in_a = "INSERT INTO "+entity->tableName()+"( "+flds+")";
+    std::string in_a = "INSERT INTO "+entity.tableName()+"( "+flds+")";
     std::string in_b = " VALUES ("+vals+") ";
     std::string insert_stmt = in_a + in_b;
     return insert_stmt;
 }
 
-std::string BaseDatabaseManager::makeUpdateString(BaseEntity* entity)
+std::string BaseDatabaseManager::makeUpdateString(const BaseEntity& entity)
 {
     std::string flds = commaSepColumns(entity);
     std::string vals = commaSepValues(entity);
-    std::string in_a = "UPDATE "+entity->tableName()+" SET ("+flds+")";
-    std::string in_b = "=("+vals+") WHERE id ="+std::to_string(entity->id());
+    std::string in_a = "UPDATE "+entity.tableName()+" SET ("+flds+")";
+    std::string in_b = "=("+vals+") WHERE id ="+std::to_string(entity.id());
     std::string update_stmt = in_a + in_b;
     return update_stmt;
 }
@@ -99,7 +101,7 @@ PostgresDatabaseManager::~PostgresDatabaseManager()
     //delete dataProvider;
 }
 
-int PostgresDatabaseManager::createEntity(BaseEntity* entity)
+int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 {
     std::string sqlQuery;
 
@@ -107,48 +109,57 @@ int PostgresDatabaseManager::createEntity(BaseEntity* entity)
 
     provider()->executeQuery(sqlQuery);
     // Get id of the created record.
-    int lastId = provider()->fetchLastId(entity->tableName());
+    int lastId = provider()->fetchLastId(entity.tableName());
     return lastId;
 }
 
-void PostgresDatabaseManager::updateEntity(BaseEntity* entity)
+void PostgresDatabaseManager::updateEntity(const BaseEntity& entity)
 {
     std::string sqlQuery;
     sqlQuery = makeUpdateString(entity);
      provider()->executeQuery(sqlQuery);
 }
 
-int PostgresDatabaseManager::fetchAll(BaseEntity* entity)
+int PostgresDatabaseManager::fetchAll(const BaseEntity& entity)
 {
     std::string sql;
     std::string flds = columnsForSelection(entity);
-    sql = "SELECT " + flds + " FROM "+entity->tableName();
+    sql = "SELECT " + flds + " FROM "+entity.tableName();
     return provider()->read(sql);
 }
 
-int PostgresDatabaseManager::searchByField(BaseEntity* entity, std::tuple<std::string, std::string> sf)
+int PostgresDatabaseManager::searchByStr(const BaseEntity& entity, std::tuple<std::string, std::string> sf)
 {
     std::string sql;
     std::string flds = columnsForSelection(entity);
-    sql = "SELECT "+flds+" FROM "+entity->tableName()+
+    sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE LOWER("+ std::get<0>(sf)+") LIKE '%"+
                     std::get<1>(sf)+"%'";
     return provider()->read(sql);
 }
 
-int PostgresDatabaseManager::searchById(BaseEntity* entity, std::tuple<std::string, int> field_value)
+int PostgresDatabaseManager::searchByInt(const BaseEntity& entity, std::tuple<std::string, int> field_value)
 {
     std::string sql;
     std::string flds = columnsForSelection(entity);
-    sql = "SELECT "+flds+" FROM "+entity->tableName()+
+    sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ std::get<0>(field_value)+" = "+std::to_string(std::get<1>(field_value));
     return provider()->read(sql);
 }
 
-int PostgresDatabaseManager::deleteEntity(BaseEntity* entity)
+int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string filter)
 {
     std::string sql;
-    sql = "DELETE FROM "+entity->tableName()+" WHERE ID ="+std::to_string(entity->id());
+    std::string flds = columnsForSelection(entity);
+    sql = "SELECT "+flds+" FROM "+entity.tableName()+
+                    " WHERE "+ filter;
+    return provider()->read(sql);
+}
+
+int PostgresDatabaseManager::deleteEntity(const BaseEntity& entity)
+{
+    std::string sql;
+    sql = "DELETE FROM "+entity.tableName()+" WHERE ID ="+std::to_string(entity.id());
     return provider()->executeQuery(sql);
 }
 

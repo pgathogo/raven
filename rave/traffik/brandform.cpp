@@ -11,9 +11,11 @@
 #include "brand.h"
 #include "client.h"
 
-BrandForm::BrandForm(Brand* brand, QDialog *parent)
+BrandForm::BrandForm(Client* client, Brand* brand,
+                     QDialog *parent)
     :BaseEntityDetailDlg(parent),
      ui(new Ui::BrandForm),
+     mClient{client},
      mBrand{brand},
      mPlb{nullptr}
 {
@@ -22,9 +24,13 @@ BrandForm::BrandForm(Brand* brand, QDialog *parent)
 
     populateFormWidgets();
 
-    connect(ui->btnClient, &QPushButton::clicked, this, &BrandForm::selectClient);
+    //connect(ui->btnClient, &QPushButton::clicked, this, &BrandForm::selectClient);
     connect(ui->cbBrandManager, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &BrandForm::brandManagerComboChanged);
+
+    QPalette* palette = new QPalette();
+    palette->setColor(QPalette::Base, Qt::gray);
+    ui->edtClient->setPalette(*palette);
 }
 
 BrandForm::~BrandForm()
@@ -45,13 +51,13 @@ std::string BrandForm::windowTitle()
 void BrandForm::populateEntityFields()
 {
     mBrand->setBrandName(ui->edtBrandName->text().toStdString());
+    mBrand->setClient(mClient->id());
 }
 
 void BrandForm::populateFormWidgets()
 {
     ui->edtBrandName->setText(QString::fromStdString(mBrand->brandName()->value()));
-    ui->edtClient->setText(QString::fromStdString(
-                               getClientName()));
+    ui->edtClient->setText(QString::fromStdString(mClient->name()->value()));
 
     ui->cbBrandManager->setModel(mBrand->brandManager()->dataModel());
     ui->cbBrandManager->setCurrentIndex(ui->cbBrandManager->findText(
@@ -60,9 +66,9 @@ void BrandForm::populateFormWidgets()
 
 std::string BrandForm::getClientName()
 {
-    for(auto& client : mBrand->client()->dataModel()->modelEntities()){
-        if (mBrand->client()->value() == std::get<1>(client)->id()){
-            Client* c = dynamic_cast<Client*>(std::get<1>(client).get());
+    for(auto& base_entity : mBrand->client()->dataModel()->modelEntities()){
+        if (mBrand->client()->value() == std::get<1>(base_entity)->id()){
+            Client* c = dynamic_cast<Client*>(std::get<1>(base_entity).get());
             return c->name()->displayName();
         }
     }

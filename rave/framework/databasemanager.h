@@ -15,31 +15,35 @@ class BaseDatabaseManager
 {
 public:
     virtual ~BaseDatabaseManager();
-    virtual void updateEntity(BaseEntity* entity) = 0;
-    virtual int createEntity(BaseEntity* entity) = 0;
-    virtual int deleteEntity(BaseEntity* entity) = 0;
+    virtual void updateEntity(const BaseEntity& entity) = 0;
+    virtual int createEntity(const BaseEntity& entity) = 0;
+    virtual int deleteEntity(const BaseEntity& entity) = 0;
 
     virtual int deleteEntityByValue(
             const std::string table_name,
             std::tuple<ColumnName, ColumnValue>) = 0; // make it generic
 
-    virtual int fetchAll(BaseEntity* entity) = 0;
-    virtual int searchById(BaseEntity* entity,
+    virtual int fetchAll(const BaseEntity& entity) = 0;
+    virtual int searchByInt(const BaseEntity& entity,
                            std::tuple<std::string, int> field_value) = 0;
-    virtual int searchByField(BaseEntity* entity,
+    virtual int searchByStr(const BaseEntity& entity,
                           std::tuple<std::string, std::string> sf) = 0;
+
+    virtual int search(const BaseEntity& entity,
+                       const std::string filter) = 0;
+
     virtual BaseDataProvider* provider() = 0;
 protected:
     virtual void loadEntity(BaseEntity& entity) = 0;
 
     void setObjectID(BaseEntity& entity, int id);
 
-    std::string columnsForSelection(BaseEntity* entity);
-    std::string commaSepColumns(BaseEntity* entity);
-    std::string commaSepValues(BaseEntity* entity);
+    std::string columnsForSelection(const BaseEntity& entity);
+    std::string commaSepColumns(const BaseEntity& entity);
+    std::string commaSepValues(const BaseEntity& entity);
 
-    virtual std::string makeInsertString(BaseEntity* entity);
-    virtual std::string makeUpdateString(BaseEntity* entity);
+    virtual std::string makeInsertString(const BaseEntity& entity);
+    virtual std::string makeUpdateString(const BaseEntity& entity);
 };
 
 class PostgresDatabaseManager : public BaseDatabaseManager
@@ -50,17 +54,18 @@ public:
     virtual void populateFields(BaseEntity* /*entity*/){}
     virtual void populateObject(const BaseEntity& /*entity*/){}
 
-    void updateEntity(BaseEntity* entity) override;
-    int createEntity(BaseEntity* entity) override;
-    int deleteEntity(BaseEntity* entity)override;
+    void updateEntity(const BaseEntity& entity) override;
+    int createEntity(const BaseEntity& entity) override;
+    int deleteEntity(const BaseEntity& entity)override;
     int deleteEntityByValue(
             const std::string tabale_name,
             std::tuple<ColumnName, ColumnValue>) override;
-    int fetchAll(BaseEntity* entity) override;
-    int searchByField(BaseEntity* entity,
+    int fetchAll(const BaseEntity& entity) override;
+    int searchByStr(const BaseEntity& entity,
                           std::tuple<std::string, std::string> sf) override;
-    int searchById(BaseEntity* entity,
+    int searchByInt(const BaseEntity& entity,
                            std::tuple<std::string, int> field_value) override;
+    int search(const BaseEntity& entity, const std::string filter) override;
     BaseDataProvider* provider() override;
 protected:
     void loadEntity(BaseEntity& entity)override;

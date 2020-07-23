@@ -50,60 +50,76 @@ class EntityDataModel : public EntityModel
 {
 public:
     EntityDataModel();
-    //EntityDataModel(BaseEntity* baseEntity);
     EntityDataModel(std::unique_ptr<BaseEntity> baseEntity);
-    //EntityDataModel(BaseEntity& baseEntity);
     ~EntityDataModel();
-
-    //void populateFields(std::unique_ptr<BaseEntity> baseEntity);
 
     void createEntity(std::unique_ptr<BaseEntity> entity);
     void cacheEntity(std::unique_ptr<BaseEntity> entity);
 
-    //bool createEntity(BaseEntity* entity);
-    void updateEntity(BaseEntity* entity);
-    void deleteEntity(BaseEntity* entity);
+    void updateEntity(const BaseEntity& entity);
+    void deleteEntity(const BaseEntity& entity);
     void deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value);
 
-
-    int createEntityDB(BaseEntity* entity);
+    int createEntityDB(const BaseEntity& entity);
 
     void all();
-    void searchByField(std::tuple<std::string, std::string>);
-    void searchById(std::tuple<std::string, int>);
+    void searchByStr(std::tuple<std::string, std::string>);
+    void searchByInt(std::tuple<std::string, int>);
     void getById(std::tuple<std::string, int>);
-
-    //BaseEntity* entity() const { return mEntity; }
+    void search(const std::string searchFilter);
 
     size_t count();
 
     void mapEntity(StringMap* map, BaseEntity& entity);
     void populateMToMDetails();
 
-    class detail{
-        public:
-            template<typename Field, typename... Args, std::size_t... Indices>
-                static auto create(const std::tuple<Field, Args...>& t, std::index_sequence<Indices...> seq){
-                    return std::make_unique<Field>(std::get<Indices + 1>(t)...);
-            }
-    };
+    void searchFilter(){}
 
-    template<typename Field, typename... Args>
-    auto create(const std::tuple<Field, Args...>& t)->std::enable_if_t<std::is_constructible_v<Field, Args...>, std::unique_ptr<Field>>{
-        return detail::create(t, std::index_sequence_for<Args...>{});
-    }
-
-    template<typename... Types>
-    void filter(Types... args)
+    template<typename T, typename... Types>
+    void searchFilter(T firstArg, Types... args)
     {
-        auto res = std::make_tuple( create (std::forward<Types>(args) )...);
+        auto [column, value] = firstArg;
+
+        std::string filter = column;
+
+        if constexpr(std::is_integral_v<decltype(value)>){
+            filter +=" = ";
+            filter += std::to_string(value);
+        }else{
+            filter += " LIKE ";
+            std::string str_value = value;
+            for(auto s : str_value)
+                std::tolower(s);
+            filter += "'%"+str_value+"%'";
+        }
+
+        filterCache.push_back(filter);
+
+        searchFilter(args...);
     }
 
+    template<typename T, typename...Types>
+    std::string prepareFilter(T firstArg, Types... args)
+    {
+        filterCache.clear();
+        searchFilter(firstArg, std::forward<Types>(args)...);
+
+        size_t n = 1;
+        std::string sf{""};
+        for (auto f : filterCache){
+            sf += f;
+            if ( n < filterCache.size())
+                sf += " and ";
+            ++n;
+        }
+
+        return sf;
+    }
 
 private:
-    //std::unique_ptr<BaseEntity> mEntity;   // deleted at the base class
     std::unique_ptr<BaseDatabaseManager> dbManager;
     void populateEntities();
+    std::vector<std::string> filterCache;
 };
 
 

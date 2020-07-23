@@ -8,20 +8,23 @@ namespace Ui {
 class BrandBrowser;
 }
 
+class Client;
+
 class BrandBrowser : public BaseEntityBrowserDlg
 {
     Q_OBJECT
 
 public:
-    explicit BrandBrowser(QWidget *parent = nullptr);
+    explicit BrandBrowser(Client* client, QWidget *parent = nullptr);
     ~BrandBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
-    void deleteRecord() override;
+    void searchRecord() override;
 
 private:
     Ui::BrandBrowser *ui;
+    Client* mClient;
 };
 
 #endif // BRANDBROWSER_H

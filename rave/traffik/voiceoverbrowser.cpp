@@ -64,14 +64,13 @@ void VoiceOverBrowser::saveVoiceExclusions(const VoiceOverForm& vof)
 
         if (mtom->dbAction() == DBAction::dbaCREATE){
             mtom->setParentId(vof.parentId());
-            edm->createEntityDB(mtom);
+            edm->createEntityDB(*mtom);
         }
 
         if (mtom->dbAction() == DBAction::dbaDELETE)
-            edm->deleteEntity(mtom);
+            edm->deleteEntity(*mtom);
     }
 }
-
 
 
 void VoiceOverBrowser::deleteRecord()
@@ -80,7 +79,7 @@ void VoiceOverBrowser::deleteRecord()
         BaseEntity* entity = findSelectedEntity();
         EntityDataModel edm(std::make_unique<VoiceExclusion>());
         edm.deleteEntityByValue({"parent_id", entity->id()});
-        entityDataModel().deleteEntity(entity);
+        entityDataModel().deleteEntity(*entity);
         removeSelectedRow();
     }
     catch(DatabaseException& de){

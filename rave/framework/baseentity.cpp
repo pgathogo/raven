@@ -27,36 +27,15 @@ void BaseEntity::setId(int i)
     mID->setValue(i);
 }
 
-std::vector<FieldMap>::const_iterator BaseEntity::cBeginIter()
-{
-    return mFields.cbegin();
-}
-
-std::vector<FieldMap>::const_iterator BaseEntity::cEndIter()
-{
-    return mFields.cend();
-}
-
-std::vector<FieldMap>::iterator BaseEntity::beginIter()
-{
-    return mFields.begin();
-}
-
-std::vector<FieldMap>::iterator BaseEntity::endIter()
-{
-    return mFields.end();
-}
-
-
-std::vector<std::string> BaseEntity::dbColumnNames()
+std::vector<std::string> BaseEntity::dbColumnNames() const
 {
     // All fields are database columns, unless they are marked
     // formOnly.
     std::vector<std::string> cols;
-    auto& flds = fields();
-    for (auto& f : flds){
-        if (!std::get<1>(f)->formOnly())
-            cols.push_back(std::get<1>(f)->dbColumnName());
+
+    for (auto& [name, field] : fields()){
+        if ( !field->formOnly() )
+            cols.push_back(field->dbColumnName());
     }
 
     return cols;
@@ -66,12 +45,12 @@ ActionResult BaseEntity::validate()
 {
     // Fields marked as mandatory should have values
     ActionResult ar = std::make_tuple(ActionResultType::arSUCCESS,"");
-    auto cIter = cBeginIter();
-    for(; cIter != cEndIter(); ++cIter){
-        if (std::get<1>(*cIter)->mandatory()){
-            if (std::get<1>(*cIter)->valueToString().empty()){
+
+    for (auto& [name, field] : fields()){
+        if (field->mandatory()){
+            if (field->valueToString().empty()){
                 ar = std::make_tuple(ActionResultType::arERROR,
-                                     "`"+std::get<1>(*cIter)->fieldLabel()+"` has no value!");
+                                     "`"+field->fieldLabel()+"` has no value!");
                 break;
             }
         }
@@ -80,12 +59,11 @@ ActionResult BaseEntity::validate()
     return ar;
 }
 
-void BaseEntity::setValueByField(Field* fld, const std::string& val)
+void BaseEntity::setValueByField(const Field& fld, const std::string& val)
 {
-    std::vector<FieldMap>::iterator iter;
-    for (iter=beginIter(); iter != endIter(); ++iter){
-        if (std::get<0>(*iter) == fld->fieldName())
-           std::get<1>(*iter)->stringToValue(val);
+    for (auto& [name, field] : fields()){
+        if (name == fld.fieldName())
+           field->stringToValue(val);
     }
 
 }
@@ -93,36 +71,36 @@ void BaseEntity::setValueByField(Field* fld, const std::string& val)
 FieldValues BaseEntity::mapping(StringMap* e)
 {
     std::map<std::string, std::string>::const_iterator it;
-    std::vector<FieldMap>::iterator iter;
-    FieldValues flds;
+    FieldValues mapped_fields;
 
     std::tuple<Field*, std::string> fieldVal;
 
     for(it=e->cbegin(); it != e->cend(); ++it){
 
-       for(iter=beginIter(); iter != endIter(); ++iter){
+        for (auto& [name, field] : fields()){
 
-           if ((std::get<1>(*iter)->dbColumnName() == it->first) &&
-           (std::get<1>(*iter)->visible())){
+           if ((field->dbColumnName() == it->first) &&
+           (field->visible())){
 
-               std::string col = std::get<1>(*iter)->dbColumnName();
+               std::string col = field->dbColumnName();
                std::string val = it->second;
 
-            Field* ptr(std::get<1>(*iter).get());
+            Field* ptr(field.get());
             fieldVal = std::make_tuple(ptr, it->second);
-            flds.push_back(fieldVal);
+            mapped_fields.push_back(fieldVal);
            }
 
          }
 
       }
 
-       return flds;
+       return mapped_fields;
 }
 
 void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)
 {
 
+    // To be refactored
     mEDM = std::make_unique<EntityDataModel>(std::move(entity));
     mEDM->getById({"id", id});
 
@@ -142,14 +120,13 @@ void BaseEntity::clearFields()
     mFields.clear();
 }
 
-std::vector<FieldMap> const& BaseEntity::fields()
+std::vector<FieldMap> const& BaseEntity::fields() const
 {
     return mFields;
 }
 
 void BaseEntity::baseMapFields(StringMap* map)
 {
-    FieldValues fval = mapping(map);
-    for(auto& v : fval)
-        this->setValueByField(std::get<0>(v), std::get<1>(v));
+    for(auto& [field, name] : mapping(map))
+        this->setValueByField(*field, name);
 }

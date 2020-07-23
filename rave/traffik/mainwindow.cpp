@@ -18,7 +18,6 @@
 #include "agentbrowser.h"
 #include "clientbrowser.h"
 #include "timebandbrowser.h"
-#include "brandbrowser.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -193,8 +192,8 @@ void MainWindow::browseAgent()
 
 void MainWindow::browseBrands()
 {
-    BrandBrowser* brandBrowser = createSubWindow<BrandBrowser>();
-    brandBrowser->exec();
+    //BrandBrowser* brandBrowser = createSubWindow<BrandBrowser>();
+    //brandBrowser->exec();
 }
 
 

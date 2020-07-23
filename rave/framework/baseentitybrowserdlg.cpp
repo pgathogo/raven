@@ -115,14 +115,12 @@ void BaseEntityBrowserDlg::searchRecord()
     if (bui->edtFilter->text().isEmpty()){
         entityDataModel().all();
     }else{
-        printstr("BaseEntityBrowserDlg::searchRecord");
-        std::tuple<std::string, std::string> searchItem;
         auto data = bui->cbFilter->itemData(
                             bui->cbFilter->currentIndex()).value<QVariant>();
         std::string columnName = data.toString().toStdString();
         std::string item = bui->edtFilter->text().toStdString();
-        searchItem = std::make_tuple(columnName, item);
-        entityDataModel().searchByField(searchItem);
+        auto searchItem = std::make_tuple(columnName, item);
+        entityDataModel().searchByStr(searchItem);
     }
 }
 
@@ -132,7 +130,7 @@ void BaseEntityBrowserDlg::deleteRecord()
    entity->setDBAction(DBAction::dbaDELETE);
 
    try{
-       entityDataModel().deleteEntity(entity);
+       entityDataModel().deleteEntity(*entity);
        removeSelectedRow();
    }
    catch (DatabaseException& de){

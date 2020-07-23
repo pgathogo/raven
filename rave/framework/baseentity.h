@@ -32,12 +32,6 @@ public:
 
     virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
 
-    std::vector<FieldMap>::const_iterator cBeginIter();
-    std::vector<FieldMap>::const_iterator cEndIter();
-
-    std::vector<FieldMap>::iterator beginIter();
-    std::vector<FieldMap>::iterator endIter();
-
     virtual std::list<std::string> tableViewColumns() const = 0;
     virtual std::vector<std::string> tableViewValues() = 0;
 
@@ -46,15 +40,15 @@ public:
     virtual std::string tableName() const = 0;
     virtual void setTableName(const std::string table_name)=0;
 
-    std::vector<std::string> dbColumnNames();
+    std::vector<std::string> dbColumnNames() const;
 
-    size_t fieldsCount(){ return mFields.size(); }
+    size_t fieldsCount() const { return mFields.size(); }
 
     virtual std::string searchColumn() const = 0;
 
     [[nodiscard]] virtual ActionResult validate();
 
-    void setValueByField(Field* fld, const std::string& val);
+    void setValueByField(const Field& fld, const std::string& val);
     FieldValues mapping(StringMap* e);
 
     virtual void populateEntity()=0;
@@ -66,7 +60,7 @@ public:
 
     void clearFields();
 
-    std::vector<FieldMap> const& fields();
+    std::vector<FieldMap> const& fields() const;
 
     virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
 
@@ -86,15 +80,15 @@ public:
     template<typename T, typename... TArgs>
     std::unique_ptr<T> entityFieldMap(StringMap* map, TArgs...mArgs)
     {
-        FieldValues fval = mapping(map);
         std::unique_ptr<T> uT = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
-        for(auto& v : fval)
-            uT->setValueByField(std::get<0>(v), std::get<1>(v));
-        return std::move(uT);
+
+        for(auto& [field, name] : mapping(map))
+            uT->setValueByField(*field, name);
+
+        return std::move(uT); // Evil !! - transfering ownership from local
     }
 
     void baseMapFields(StringMap* map);
-
 
 private:
     IntegerField* mID;

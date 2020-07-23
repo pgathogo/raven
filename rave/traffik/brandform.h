@@ -19,7 +19,8 @@ class BrandForm : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit BrandForm(Brand* brand, QDialog *parent = nullptr);
+    explicit BrandForm(Client* client, Brand* brand,
+                       QDialog *parent = nullptr);
     ~BrandForm() override;
 
     ActionResult saveRecord() override;
@@ -33,6 +34,7 @@ private slots:
 
 private:
     Ui::BrandForm *ui;
+    Client* mClient;
     Brand* mBrand;
     std::unique_ptr<PickListBrowser> mPlb;
 

@@ -26,7 +26,7 @@ ManyToManyBrowser::ManyToManyBrowser(
         int value = mMtoM->parentId()->value();
         auto needle = std::make_tuple(columnName, value);
         // VoiceExclusion...
-        entityDataModel().searchById(needle);
+        entityDataModel().searchByInt(needle);
     }
 
 }

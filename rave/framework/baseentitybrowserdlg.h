@@ -16,6 +16,12 @@ namespace Ui {
 class BaseEntityBrowserDlg;
 }
 
+template<typename T1, typename T2>
+std::tuple<T1, T2> searchItem(T1 col, T2 val)
+{
+    return std::make_tuple(col, val);
+}
+
 class BaseEntityBrowserDlg : public QDialog
 {
     Q_OBJECT
@@ -50,7 +56,7 @@ public:
                 if(dlg->exec() > 0){
                     try{
                         updateTableViewRecord(entity->tableViewValues());
-                        mEntityDataModel->updateEntity(entity);
+                        mEntityDataModel->updateEntity(*entity);
                     }
                     catch(DatabaseException& de){
                         showMessage(de.errorMessage());
@@ -61,34 +67,8 @@ public:
             }
         }
 
-        return std::move(dlg);
+        return std::move(dlg);  // Nasty - never move from local
     }
-
-    /*
-    template <typename T1, typename T2>
-    void addEntity()
-    {
-        std::unique_ptr<T1> uT1 = std::make_unique<T1>();
-        auto ptr(uT1.get());
-        //T2* dlg = new T2(ptr);
-        std::unique_ptr<T2> dlg = std::make_unique<T2>(ptr);
-        if (dlg->exec() > 0)
-            entityDataModel()->createEntity(std::move(uT1));
-    }
-
-    template <typename T1, typename T2, typename T3>
-    void addEntity(T1* e)
-    {
-        std::unique_ptr<T1> uT1 = std::make_unique<T1>();
-        auto ptr(uT1.get());
-        ptr = e;
-        T2* dlg = new T2(ptr);
-        if (dlg->exec() > 0){
-            std::unique_ptr<T3> uT3 = std::make_unique<T3>(*ptr);
-            //entityDataModel()->createEntity(std::move(uT3));
-        }
-    }
-    */
 
     EntityDataModel& entityDataModel() const;
     void setMdiArea(QMdiArea* mdi);
@@ -96,7 +76,6 @@ protected:
     QMdiArea* mMdiArea;
     int selectedRowId() const;
     QString selectedRowName();
-    //void updateTableViewRecord(BaseEntity* entity);
     void updateTableViewRecord(const std::vector<std::string> values);
     void removeSelectedRow();
     void hideAddButton();
@@ -112,8 +91,6 @@ public slots:
     void searchBtnClicked();
 
 private:
-    //BaseEntity* mBaseEntity;
-    //EntityDataModel* mEntityDataModel;
     std::unique_ptr<EntityDataModel> mEntityDataModel;
     void populateFilterCombo();
 };

@@ -23,6 +23,11 @@ public:
     void updateRecord() override;
     std::string typeID() override;
 
+    void createBrandButton();
+
+private slots:
+    void openBrandBrowser();
+
 private:
     Ui::ClientBrowser *ui;
 };

@@ -1,8 +1,13 @@
+#include <QPushButton>
+
 #include "clientbrowser.h"
 #include "ui_clientbrowser.h"
+#include "ui_baseentitybrowserdlg.h"
 
 #include "client.h"
 #include "clientform.h"
+
+#include "brandbrowser.h"
 
 ClientBrowser::ClientBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
@@ -11,6 +16,7 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
 {
     ui->setupUi(this);
     setDialogTitle("Clients");
+    createBrandButton();
 }
 
 ClientBrowser::~ClientBrowser()
@@ -38,3 +44,27 @@ std::string ClientBrowser::typeID()
 {
     return "ClientBrowser";
 }
+
+void ClientBrowser::createBrandButton()
+{
+    QPushButton* btnBrand = new QPushButton("Brand");
+    btnBrand->setObjectName("btnBrand");
+    connect(btnBrand, &QPushButton::clicked, this, &ClientBrowser::openBrandBrowser);
+    bui->hlExtra->addWidget(btnBrand);
+}
+
+void ClientBrowser::openBrandBrowser()
+{
+    if (selectedRowId() < 0){
+        showMessage("Select a Client to view Brands");
+    }else{
+
+       BaseEntity* be = findSelectedEntity();
+       Client* client = dynamic_cast<Client*>(be);
+       auto bb = std::make_unique<BrandBrowser>(client, this);
+       bb->exec();
+    }
+
+
+}
+
