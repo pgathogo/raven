@@ -5,6 +5,7 @@
 #include "../framework/baseentitybrowserdlg.h"
 
 class EntityDataModel;
+class Client;
 
 namespace Ui {
 class ClientBrowser;
@@ -24,9 +25,24 @@ public:
     std::string typeID() override;
 
     void createBrandButton();
+    void createSpotButton();
+
+    template<typename T1, typename T2>
+    void openBrowserWindow()
+    {
+        if (selectedRowId() < 0){
+            showMessage("Select a Client to view Bla Bla Bla");
+        }else{
+           BaseEntity* be = findSelectedEntity();
+           T1* entity = dynamic_cast<T1*>(be);
+           auto browser = std::make_unique<T2>(entity, this);
+           browser->exec();
+        }
+    }
 
 private slots:
     void openBrandBrowser();
+    void openSpotBrowser();
 
 private:
     Ui::ClientBrowser *ui;

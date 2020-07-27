@@ -24,8 +24,7 @@ BrandBrowser::~BrandBrowser()
 
 void BrandBrowser::addRecord()
 {
-    std::unique_ptr<Brand> brand =
-            std::make_unique<Brand>();
+    auto brand = std::make_unique<Brand>();
 
     std::unique_ptr<BrandForm> brandForm =
             std::make_unique<BrandForm>(mClient, brand.get(), this);
@@ -43,7 +42,6 @@ void BrandBrowser::addRecord()
 
 void BrandBrowser::updateRecord()
 {
-
     std::string searchName = selectedRowName().toStdString();
 
     if (!searchName.empty()){

@@ -25,6 +25,9 @@ std::vector<std::unique_ptr<BaseEntity>> const& ManyToMany::entities() const
     return mEntities;
 }
 
+std::string ManyToMany::typeInfo() const
+{
+}
 
 /* ---------------- VoiceExclusion -----------------*/
 VoiceExclusion::VoiceExclusion()
@@ -39,9 +42,8 @@ VoiceExclusion::VoiceExclusion(BaseEntity* pEnt, BaseEntity* dEnt)
     mParentId = createField<IntegerField>("parent_id","Parent ID");
     mDetailId = createField<IntegerField>("detail_id","Detail ID");
 
-    //TypeExclusion* te = dynamic_cast<TypeExclusion*>(dEnt);
     mHeader = dEnt->tableHeaders();
-    setTableName("rave_typeexclusion");
+    setTableName("rave_voiceexclusion");
 }
 
 VoiceExclusion::VoiceExclusion(const VoiceExclusion& other)

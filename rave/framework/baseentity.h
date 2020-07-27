@@ -66,6 +66,12 @@ public:
 
     virtual void afterMapping(BaseEntity& entity) = 0;
 
+    template<typename T>
+    std::unique_ptr<T> clone()
+    {
+        return std::make_unique<T>();
+    }
+
     template<typename T, typename... TArgs>
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");

@@ -25,7 +25,6 @@ class Gender(ValueList):
 class ManyToMany(models.Model):
     parent_id = models.IntegerField()
     detail_id = models.IntegerField()
-
     class Meta:
         abstract = True
 
@@ -120,6 +119,19 @@ class Daypart(models.Model):
     daypart7 = models.CharField(max_length=96, null=True, blank=True)
     class Meta:
         abstract = True
+
+class Spot(Daypart):
+    name = models.CharField(max_length=255)
+    spot_duration = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    real_duration = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    client = models.ForeignKey(Client)
+    brand = models.ForeignKey(Brand, blank=True, null=True)
+
+class SpotVoiceOver(ManyToMany):
+    pass
+
+class SpotTypeExclusion(ManyToMany):
+    pass
 
 class TypeExclusion(Daypart):
     name = models.CharField(max_length=255)

@@ -28,7 +28,6 @@ public:
     std::string typeID() override;
 private:
     Ui::VoiceOverBrowser *ui;
-
 };
 
 #endif // VOICEOVERBROWSER_H

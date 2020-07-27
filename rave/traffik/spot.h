@@ -1,20 +1,24 @@
-#ifndef VOICEOVER_H
-#define VOICEOVER_H
+#ifndef SPOT_H
+#define SPOT_H
 
 #include "../framework/baseentity.h"
 
-class VoiceExclusion;
+class Client;
+class VoiceOver;
+class SpotVoiceOver;
 class TypeExclusion;
+class SpotTypeExclusion;
 
-class VoiceOver : public BaseEntity
+class Spot : public BaseEntity
 {
 public:
-    VoiceOver();
-    ~VoiceOver() override;
+    Spot();
+    Spot(const Client& client);
+    ~Spot() override;
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
-    std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
+    std::unique_ptr<BaseEntity> mapFields(StringMap*) override;
 
     std::list<std::string> tableViewColumns() const override;
     std::vector<std::string> tableViewValues() override;
@@ -27,13 +31,15 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
     StringField* name() const;
-    void setName(std::string aName);
-
-    StringField* mobileno() const;
-    void setMobileNo(std::string mobileno);
-
-    ForeignKeyField* gender() const;
-    void setGender( int i);
+    void setName(const std::string n);
+    DecimalField* spotDuration() const;
+    void setSpotDuration(double dur);
+    DecimalField* realDuration() const;
+    void setRealDuration(double dur);
+    ForeignKeyField* client() const;
+    void setClient(int client_id);
+    ForeignKeyField* brand() const;
+    void setBrand(int brand_id);
 
     StringField* daypart1() const;
     void setDaypart1(std::string dp);
@@ -56,11 +62,15 @@ public:
     StringField* daypart7() const;
     void setDaypart7(std::string dp);
 
-    VoiceExclusion& voiceEx();
+    SpotVoiceOver& spotVoiceOver();
+    SpotTypeExclusion& spotTypeExclusion();
 
 private:
     StringField* mName;
-    StringField* mMobileNo;
+    DecimalField* mSpotDuration;
+    DecimalField* mRealDuration;
+    ForeignKeyField* mClient;
+    ForeignKeyField* mBrand;
 
     StringField* mDaypart1;
     StringField* mDaypart2;
@@ -69,13 +79,17 @@ private:
     StringField* mDaypart5;
     StringField* mDaypart6;
     StringField* mDaypart7;
-    ForeignKeyField* mGender;
-
-    std::unique_ptr<VoiceExclusion> mVoiceEx;
-    std::unique_ptr<TypeExclusion> mTypeEx;
 
     QStringList mHeader;
     std::string mTableName;
+
+    std::unique_ptr<VoiceOver> mVoiceOver;
+    std::unique_ptr<SpotVoiceOver> mSpotVoiceOver;
+
+    std::unique_ptr<TypeExclusion> mTypeEx;
+    std::unique_ptr<SpotTypeExclusion> mSpotTypeEx;
+
+
 };
 
-#endif // VOICEOVER_H
+#endif // SPOT_H

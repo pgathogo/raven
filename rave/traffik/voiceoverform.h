@@ -29,14 +29,12 @@ public:
 
     ActionResult saveRecord() override;
     std::string windowTitle() override;
-    void populateGrid();
 
-    //ManyToMany* getMtoM() const;
-    void saveVoiceExclusions();
     void populateEntityFields() override;
     void populateFormWidgets() override;
 
-    //VoiceOver* voiceOver();
+    void populateGrid();
+    void saveVoiceExclusions();
     int parentId() const;
 
     std::vector<EntityRecord> const& typeExclusions() const;

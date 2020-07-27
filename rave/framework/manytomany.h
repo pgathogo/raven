@@ -21,7 +21,7 @@ public:
     virtual IntegerField* detailId() const = 0;
     virtual void setDetailId(int id) = 0;
 
-    virtual std::string typeInfo() const = 0;
+    virtual std::string typeInfo() const;
 
     virtual BaseEntity* parentEntity() const = 0;
     virtual BaseEntity* detailEntity() const = 0;
@@ -36,8 +36,6 @@ public:
 
     virtual void setTable(const std::string t) = 0;
     void setT(const std::string tabname){ this->setTable(tabname); }
-    virtual std::string tableN() = 0;
-    std::string tabN(){ return this->tableN(); }
 
     std::vector<std::unique_ptr<BaseEntity>> const& entities() const;
 
@@ -59,7 +57,6 @@ class VoiceExclusion : public ManyToMany{
 
         std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const override;
         void setTable(const std::string tablename) override { setTableName(tablename); }
-        std::string tableN() override{ return tableName(); }
 
         IntegerField* parentId() const override;
         void setParentId(int id) override;

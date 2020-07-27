@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QMdiArea>
 #include "entitydatamodel.h"
+#include "ui_baseentitybrowserdlg.h"
 
 #include "../framework/ravenexception.h"
 #include "../utils/tools.h"

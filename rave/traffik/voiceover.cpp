@@ -41,7 +41,8 @@ VoiceOver::VoiceOver()
     mDaypart7 = createField<StringField>("daypart7", "Daypart6");
     mDaypart7->setSearchable(false);
 
-    mVoiceEx = new VoiceExclusion(this, new TypeExclusion);
+    mTypeEx = std::make_unique<TypeExclusion>();
+    mVoiceEx = std::make_unique<VoiceExclusion>(this, mTypeEx.get());
 
     mHeader << QString::fromStdString(mName->fieldLabel())
             << QString::fromStdString(mGender->fieldLabel());
@@ -68,9 +69,11 @@ void VoiceOver::setTableName(const std::string table_name)
 
 std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
 {
+    /*
     std::unique_ptr<VoiceOver> vo = entityFieldMap<VoiceOver>(e);
-    vo->voiceEx()->setParentId(vo->id());
+    vo->voiceEx().setParentId(vo->id());
     return std::move(vo);
+    */
 }
 
 std::list<std::string> VoiceOver::tableViewColumns() const
@@ -198,11 +201,12 @@ void VoiceOver::setDaypart7(std::string dp)
     mDaypart7->setValue(dp);
 }
 
-VoiceExclusion* VoiceOver::voiceEx()
+
+VoiceExclusion& VoiceOver::voiceEx()
 {
-    //return new VoiceExclusion(this, new TypeExclusion);
-    return mVoiceEx;
+    return *mVoiceEx;
 }
+
 
 std::unique_ptr<BaseEntity> VoiceOver::cloneAsUnique()
 {
@@ -211,5 +215,5 @@ std::unique_ptr<BaseEntity> VoiceOver::cloneAsUnique()
 
 void VoiceOver::afterMapping(BaseEntity &entity)
 {
-
+    mVoiceEx->setParentId(entity.id());
 }

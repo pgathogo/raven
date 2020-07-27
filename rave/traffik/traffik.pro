@@ -54,6 +54,11 @@ SOURCES += \
     salesperson.cpp \
     salespersonbrowser.cpp \
     salespersonform.cpp \
+    spot.cpp \
+    spotbrowser.cpp \
+    spotform.cpp \
+    spottypeexclusion.cpp \
+    spotvoiceover.cpp \
     timeband.cpp \
     timebandbrowser.cpp \
     timebandform.cpp \
@@ -105,6 +110,11 @@ HEADERS += \
     salesperson.h \
     salespersonbrowser.h \
     salespersonform.h \
+    spot.h \
+    spotbrowser.h \
+    spotform.h \
+    spottypeexclusion.h \
+    spotvoiceover.h \
     timeband.h \
     timebandbrowser.h \
     timebandform.h \
@@ -137,6 +147,8 @@ FORMS += \
     mainwindow.ui \
     salespersonbrowser.ui \
     salespersonform.ui \
+    spotbrowser.ui \
+    spotform.ui \
     timebandbrowser.ui \
     timebandform.ui \
     typeexclusionbrowser.ui \

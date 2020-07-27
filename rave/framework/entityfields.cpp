@@ -171,6 +171,7 @@ std::string IntegerField::displayName() const
 
 /* ------- DecimalField ------------ */
 DecimalField::DecimalField()
+    :mValue{0.0}
 {
 }
 
@@ -416,7 +417,9 @@ ForeignKeyField::ForeignKeyField()
 }
 
 ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLabel,
-                std::unique_ptr<BaseEntity> fkEntity, const std::string displayField)
+                std::unique_ptr<BaseEntity> fkEntity,
+                                 const std::string displayField,
+                                 const std::string filter)
         :Field{aName, aLabel}
         ,mValue{-1}
         ,mIndex{-1}
@@ -426,9 +429,15 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
     auto it = lookups.find(aName);
     if (it == lookups.end()){
         lookups[aName]= std::make_unique<EntityDataModel>(std::move(fkEntity));
-        lookups[aName]->all();
+        if (filter.empty()){
+            lookups[aName]->all();
+        }else{
+            lookups[aName]->search(filter);
+        }
+    }else{
+        if (!filter.empty())
+            lookups[aName]->search(filter);
     }
-
 
 }
 

@@ -30,11 +30,8 @@ VoiceOverForm::VoiceOverForm(
 
     populateFormWidgets();
 
-    auto te = std::make_unique<TypeExclusion>();
-    auto ve = std::make_unique<VoiceExclusion>(mVoiceOver, te.get());
-    ve->setParentId(vo->id());
     mMtoMBrowser =
-            std::make_unique<ManyToManyBrowser>(ve.get(),
+            std::make_unique<ManyToManyBrowser>(&mVoiceOver->voiceEx(),
                                                 ui->vlTypeEx,
                                                 this);
 
@@ -44,8 +41,6 @@ VoiceOverForm::VoiceOverForm(
 
 VoiceOverForm::~VoiceOverForm()
 {
-    //delete mMtoMBrowser;
-    //delete mVoiceExModel;
     qDebug() << "VoiceOverForm::dtor";
     delete ui;
 }
@@ -54,8 +49,7 @@ ActionResult VoiceOverForm::saveRecord()
 {
     populateEntityFields();
 
-    ActionResult ar = mVoiceOver->validate();
-    return ar;
+    return mVoiceOver->validate();
 }
 
 void VoiceOverForm::populateFormWidgets()
@@ -87,23 +81,6 @@ std::vector<EntityRecord> const& VoiceOverForm::typeExclusions() const
     return mMtoMBrowser->entityDataModel().modelEntities();
 }
 
-/*
-void VoiceOverForm::saveVoiceExclusions()
-{
-    VecIter it =  mMtoMBrowser->entityDataModel()->vecBegin();
-    VecIter vend = mMtoMBrowser->entityDataModel()->vecEnd();
-    for(; it!= vend; ++it){
-        ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(*it).get());
-
-        if (mtom->dbAction() == DBAction::dbaCREATE)
-            mVoiceExModel->createEntityDB(mtom);
-
-        if (mtom->dbAction() == DBAction::dbaDELETE)
-            mVoiceExModel->deleteEntity(mtom);
-    }
-}
-*/
-
 std::string VoiceOverForm::windowTitle()
 {
     return "Voice Over Details";
@@ -124,13 +101,6 @@ void VoiceOverForm::populateGrid()
 
     mDayPart->updateGrid(dayparts);
 }
-
-/*
-ManyToMany* VoiceOverForm::getMtoM() const
-{
-    return mVoiceOver->voiceEx();
-}
-*/
 
 void VoiceOverForm::comboChanged(int i)
 {
