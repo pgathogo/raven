@@ -176,4 +176,24 @@ class TimeBand(Daypart):
     ip_duration12 = models.IntegerField(null=True)
     ip_percent12 = models.IntegerField(null=True)
 
+COMM_TYPE = (
+        ('F', 'Fixed'),
+        ('P', 'Percentage'),
+        )
+class Setup(models.Model):
+    station_name = models.CharField(max_length=255, null=True, blank=True)
+    station_logo = models.CharField(max_length=255, null=True, blank=True)
+    address1 = models.CharField(max_length=255, null=True, blank=True)
+    address2 = models.CharField(max_length=255, null=True, blank=True)
+    max_spot_per_break = models.IntegerField(null=True)
+    agency_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    agency_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    sale_rep_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    sale_rep_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    billing_cycle = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
+    late_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    pay_grace_period = models.IntegerField(null=True)
+    order_approval_levels = models.IntegerField(null=True)
+    
 

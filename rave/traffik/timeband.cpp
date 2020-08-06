@@ -439,5 +439,19 @@ std::unique_ptr<BaseEntity> TimeBand::cloneAsUnique()
 
 void TimeBand::afterMapping(BaseEntity &entity)
 {
+}
 
+std::map<std::string, std::string> TimeBand::dayParts()
+{
+    std::map<std::string, std::string> dp;
+
+    dp[daypart1()->fieldName()] = daypart1()->value();
+    dp[daypart2()->fieldName()] = daypart2()->value();
+    dp[daypart3()->fieldName()] = daypart3()->value();
+    dp[daypart4()->fieldName()] = daypart4()->value();
+    dp[daypart5()->fieldName()] = daypart5()->value();
+    dp[daypart6()->fieldName()] = daypart6()->value();
+    dp[daypart7()->fieldName()] = daypart7()->value();
+
+    return dp;
 }

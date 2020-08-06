@@ -18,8 +18,9 @@ class EntityDataModel;
 
 using FieldMap = std::tuple<std::string, std::unique_ptr<Field>>;
 using StringMap = std::map<std::string, std::string>;
-using FieldValue = std::tuple<Field*, std::string>;
+//using FieldValue = std::tuple<Field*, std::string>;
 using FieldValues = std::vector<std::tuple<Field*, std::string>>;
+
 
 class BaseEntity
 {
@@ -52,6 +53,8 @@ public:
     FieldValues mapping(StringMap* e);
 
     virtual void populateEntity()=0;
+
+    //virtual std::string classDisplayName() const;
 
     void getEntityById(std::unique_ptr<BaseEntity> entity, int id);
 

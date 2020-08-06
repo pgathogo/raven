@@ -79,8 +79,7 @@ FieldValues BaseEntity::mapping(StringMap* e)
 
         for (auto& [name, field] : fields()){
 
-           if ((field->dbColumnName() == it->first) &&
-           (field->visible())){
+           if ( (field->dbColumnName() == it->first) && (field->visible()) ){
 
                std::string col = field->dbColumnName();
                std::string val = it->second;

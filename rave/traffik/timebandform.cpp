@@ -19,6 +19,8 @@ TimeBandForm::TimeBandForm(TimeBand* tband,
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
     ui->tabWidget->setCurrentIndex(0);
+
+    std::map<std::string, std::string> preset;
     mDPG = std::make_unique<DayPartGrid>(ui->vlDaypart);
 
     connect(ui->rbIncPercent, &QRadioButton::toggled, this, &TimeBandForm::onIncPercent);

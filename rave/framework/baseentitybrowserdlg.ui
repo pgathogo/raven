@@ -39,6 +39,10 @@
        <property name="text">
         <string>Add</string>
        </property>
+       <property name="icon">
+        <iconset resource="../traffik/traffik.qrc">
+         <normaloff>:/images/icons/images/icons/add.png</normaloff>:/images/icons/images/icons/add.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
@@ -46,12 +50,20 @@
        <property name="text">
         <string>Edit</string>
        </property>
+       <property name="icon">
+        <iconset resource="../traffik/traffik.qrc">
+         <normaloff>:/images/icons/images/icons/edit.png</normaloff>:/images/icons/images/icons/edit.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btnDelete">
        <property name="text">
         <string>Delete</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../traffik/traffik.qrc">
+         <normaloff>:/images/icons/images/icons/remove.png</normaloff>:/images/icons/images/icons/remove.png</iconset>
        </property>
       </widget>
      </item>
@@ -126,6 +138,10 @@
        <property name="text">
         <string>Search</string>
        </property>
+       <property name="icon">
+        <iconset resource="../traffik/traffik.qrc">
+         <normaloff>:/images/icons/images/icons/search.png</normaloff>:/images/icons/images/icons/search.png</iconset>
+       </property>
       </widget>
      </item>
     </layout>
@@ -135,6 +151,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../traffik/traffik.qrc"/>
+ </resources>
  <connections/>
 </ui>

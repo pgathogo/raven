@@ -8,9 +8,12 @@
 
 #include "voiceover.h"
 #include "typeexclusion.h"
+#include "timeband.h"
+
 #include "../framework/picklistbrowser.h"
 #include "../framework/valuelist.h"
 #include "../utils/tools.h"
+
 
 VoiceOverForm::VoiceOverForm(){}
 
@@ -26,7 +29,7 @@ VoiceOverForm::VoiceOverForm(
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
 
-    populateGrid();
+   setDayPart();
 
     populateFormWidgets();
 
@@ -37,6 +40,8 @@ VoiceOverForm::VoiceOverForm(
 
     connect(ui->cbGender, SIGNAL(currentIndexChanged(int)),
             this, SLOT(comboChanged(int)));
+
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 VoiceOverForm::~VoiceOverForm()
@@ -86,10 +91,22 @@ std::string VoiceOverForm::windowTitle()
     return "Voice Over Details";
 }
 
-void VoiceOverForm::populateGrid()
+void VoiceOverForm::setDayPart()
 {
-    mDayPart = std::make_unique<DayPartGrid>(ui->vlDayPart);
+   auto edm = std::make_unique<EntityDataModel>(std::make_unique<TimeBand>());
+   edm->all();
+   TimeBandDayParts tbDaypart;
+   for (auto& [name, entity] :edm->modelEntities()){
+       TimeBand* tb = dynamic_cast<TimeBand*>(entity.get());
+       tbDaypart[tb->name()->displayName()] = tb->dayParts();
+   }
+   mDayPart = std::make_unique<DayPartGrid>(ui->vlDayPart, tbDaypart);
+   populateDayPart(*mDayPart);
 
+}
+
+void VoiceOverForm::populateDayPart(DayPartGrid& dp)
+{
     std::map<std::string, std::string> dayparts;
     dayparts["daypart1"] = mVoiceOver->daypart1()->valueToString();
     dayparts["daypart2"] = mVoiceOver->daypart2()->valueToString();
@@ -99,7 +116,7 @@ void VoiceOverForm::populateGrid()
     dayparts["daypart6"] = mVoiceOver->daypart6()->valueToString();
     dayparts["daypart7"] = mVoiceOver->daypart7()->valueToString();
 
-    mDayPart->updateGrid(dayparts);
+    dp.updateGrid(dayparts);
 }
 
 void VoiceOverForm::comboChanged(int i)

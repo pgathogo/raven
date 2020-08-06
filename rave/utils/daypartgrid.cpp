@@ -1,14 +1,23 @@
+#include <QDebug>
+#include <QMenu>
+#include <QMouseEvent>
+
 #include <QTableWidgetItem>
 #include <QPalette>
 #include "daypartgrid.h"
 #include "ui_daypartgrid.h"
 
-DayPartGrid::DayPartGrid(QVBoxLayout* layout, QWidget *parent) :
+#include "tools.h"
+
+DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets, QWidget *parent) :
     QWidget{parent},
     ui{new Ui::DayPartGrid},
     mDayParts{},
     mLayout{layout},
-    sp{0,0}
+    sp{0,0},
+    rightClicked{false},
+    mContextMenu{},
+    mPreset{psets}
 {
     ui->setupUi(this);
     //connect(ui->twDaypart, SIGNAL(cellEntered(int, int)), this, SLOT(cell_entered(int, int)));
@@ -17,8 +26,15 @@ DayPartGrid::DayPartGrid(QVBoxLayout* layout, QWidget *parent) :
 
     prepareGrid();
 
-
     mLayout->addWidget(this);
+
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    //connect(this, &QTableWidget::customContextMenuRequested(QPoint), this, &DayPartGrid::showContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+
+    mContextMenu = std::make_unique<QMenu>(tr("Grid menu"), this);
+
 }
 
 DayPartGrid::~DayPartGrid()
@@ -51,10 +67,17 @@ void DayPartGrid::prepareGrid()
     ui->twDaypart->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->twDaypart->setFocusPolicy(Qt::NoFocus);
     ui->twDaypart->setSelectionMode(QAbstractItemView::NoSelection);
+
+    //ui->twDaypart->viewport()->setMouseTracking(true);
+    ui->twDaypart->viewport()->installEventFilter(this);
 }
 
 void DayPartGrid::cell_entered(int row, int col)
 {
+
+    if (rightClicked)
+        return;
+
     QTableWidgetItem* cell = ui->twDaypart->item(row, col);
     this->update_cell_state<Selected>(cell);
 
@@ -65,17 +88,13 @@ void DayPartGrid::cell_entered(int row, int col)
         }
     }
 
-    /*
-    if (is_cell_selected(cell)){
-        this->update_cell_state<Unselected>(cell);
-    }else{
-        this->update_cell_state<Selected>(cell);
-    }
-    */
 }
 
 void DayPartGrid::cell_clicked(int row, int col)
 {
+    if (rightClicked)
+        return;
+
     // save start point
     setStartPoint(row, col);
 
@@ -90,18 +109,18 @@ void DayPartGrid::cell_clicked(int row, int col)
 
 void DayPartGrid::updateGrid(std::map<std::string, std::string> dayparts)
 {
+
     QTableWidgetItem* cell;
-    int r=0;
-    for (auto& [key, value] : dayparts){
-        //for (size_t c=0; c <= hrs_in_day-1; ++c){
-        for(std::string::iterator it=value.begin(); it != value.end(); ++it){
+    int row=0;
+    for (auto& [dpname, daypart] : dayparts){
+        for(std::string::iterator it=daypart.begin(); it != daypart.end(); ++it){
             if (*it=='1'){
-                auto pos = it-value.begin();
-                cell = ui->twDaypart->item(r, pos);
+                auto col = it-daypart.begin();
+                cell = ui->twDaypart->item(row, col);
                 update_cell_state<Selected>(cell);
             }
         }
-        ++r;
+        ++row;
     }
 }
 
@@ -139,4 +158,63 @@ std::map<std::string, std::string> DayPartGrid::readGrid()
       mDayParts[key] = day;
     }
       return mDayParts;
+}
+
+void DayPartGrid::showContextMenu(QPoint pos)
+{
+    QAction actSelectAll("Select all", this);
+    connect(&actSelectAll, &QAction::triggered, this, &DayPartGrid::selectAllHours);
+    mContextMenu->addAction(&actSelectAll);
+
+    QAction actClearAll("Clear all", this);
+    connect(&actClearAll, &QAction::triggered, this, &DayPartGrid::clearAllHours);
+    mContextMenu->addAction(&actClearAll);
+
+    mContextMenu->addSeparator();
+
+    int i=1;
+    for(auto& [band_name, dayparts]:mPreset){
+        QAction* act = new QAction(stoq(band_name), this);
+        act->setData(stoq(band_name));
+        connect(act, &QAction::triggered, this, &DayPartGrid::selectPreset);
+        mContextMenu->addAction(act);
+    }
+
+    mContextMenu->exec(mapToGlobal(pos));
+}
+
+void DayPartGrid::selectAllHours()
+{
+   set_all_cells<Selected>(ui->twDaypart);
+}
+
+void DayPartGrid::clearAllHours()
+{
+   set_all_cells<Unselected>(ui->twDaypart);
+}
+
+void DayPartGrid::selectPreset()
+{
+    QAction* act = qobject_cast<QAction*>(sender());
+    if (act){
+        updateGrid(mPreset[act->data().toString().toStdString()]);
+    }
+}
+
+
+bool DayPartGrid::eventFilter(QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::MouseButtonPress){
+        //obj is of type "qt_scrollarea_viewport" so we look for its parent
+        if (obj->parent() == ui->twDaypart){
+            auto mbe = dynamic_cast<QMouseEvent*>(event);
+            if (mbe->button() == Qt::RightButton)
+                rightClicked = true;
+            else if (mbe->button() == Qt::LeftButton)
+                rightClicked = false;
+        }
+
+    }
+    return QWidget::eventFilter(obj, event);
+
 }

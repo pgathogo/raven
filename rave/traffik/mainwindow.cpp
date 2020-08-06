@@ -69,11 +69,6 @@ void MainWindow::createActions()
     clientAction->setStatusTip("Client details");
     connect(clientAction, &QAction::triggered, this, &MainWindow::browseClients);
 
-    // Spots
-    spotAction = traffikMenu->addAction("&Client Spots");
-    spotAction->setStatusTip("Client Spots details");
-    //connect(spotAction, &QAction::triggered, this, &MainWindow::openClientSpotBrowser);
-
     // Quick Reports SubMenu
     qreportAction = reportMenu->addAction("&Quick Reports");
     qreportSubMenu = new QMenu();

@@ -13,6 +13,7 @@ class ManyToManyBrowser;
 class EntityDataModel;
 
 using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
+using TimeBandDayParts = std::map<std::string, std::map<std::string, std::string>>;
 
 namespace Ui {
 class VoiceOverForm;
@@ -33,9 +34,10 @@ public:
     void populateEntityFields() override;
     void populateFormWidgets() override;
 
-    void populateGrid();
+    void populateDayPart(DayPartGrid&);
     void saveVoiceExclusions();
     int parentId() const;
+    void setDayPart();
 
     std::vector<EntityRecord> const& typeExclusions() const;
 

@@ -38,6 +38,8 @@ public:
     ChoiceField<std::string>* billMethod();
     void setBillMethod(const std::string val);
 
+    std::map<std::string, std::string> dayParts();
+
     IntegerField* baseDuration() const;
     void setBaseDuration(int val);
     DecimalField* basePrice() const;
