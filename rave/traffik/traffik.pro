@@ -65,6 +65,9 @@ SOURCES += \
     typeexclusion.cpp \
     typeexclusionbrowser.cpp \
     typeexclusiondetails.cpp \
+    user.cpp \
+    userbrowser.cpp \
+    userform.cpp \
     voiceover.cpp \
     voiceoverbrowser.cpp \
     voiceoverform.cpp
@@ -121,6 +124,9 @@ HEADERS += \
     typeexclusion.h \
     typeexclusionbrowser.h \
     typeexclusiondetails.h  \
+    user.h \
+    userbrowser.h \
+    userform.h \
     voiceover.h \
     voiceoverbrowser.h \
     voiceoverform.h
@@ -153,6 +159,8 @@ FORMS += \
     timebandform.ui \
     typeexclusionbrowser.ui \
     typeexclusiondetails.ui \
+    userbrowser.ui \
+    userform.ui \
     voiceoverbrowser.ui \
     voiceoverform.ui
 

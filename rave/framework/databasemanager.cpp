@@ -156,6 +156,11 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     return provider()->read(sql);
 }
 
+void PostgresDatabaseManager::executeRawSQL(const std::string sql)
+{
+    provider()->executeQuery(sql);
+}
+
 int PostgresDatabaseManager::deleteEntity(const BaseEntity& entity)
 {
     std::string sql;

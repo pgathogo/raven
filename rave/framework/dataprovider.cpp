@@ -74,18 +74,11 @@ void PostgresDataProvider::openConnection()
 
     conn = mPGConnector->connection();
 
+}
 
-    /*
-    conn = PQconnectdb(conninfo);
-    if (PQstatus(conn) != CONNECTION_OK){
-        qDebug() << "Connection to database failed! - " << PQerrorMessage(conn);
-        PQfinish(conn);
-        return false;
-    }
-    qDebug() << "Connection opened. - " << PQerrorMessage(conn);
-    return true;
-    */
-
+void PostgresDataProvider::closeConnection()
+{
+    PQfinish(conn);
 }
 
 bool PostgresDataProvider::executeQuery(const std::string query)
@@ -93,7 +86,7 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 
     PGresult* res = nullptr;
 
-    static auto cleanFinish = [](PGconn* conn, PGresult* res){
+    static auto cleanFinish = [](PGresult* res){
         PQclear(res);
     };
 
@@ -104,7 +97,8 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
         std::string errorMsg = "BEGIN command failed!\n";
         errorMsg += PQerrorMessage(conn);
-        cleanFinish(conn, res);
+        PQexec(conn, "ROLLBACK");
+        cleanFinish(res);
         throw PostgresException("EXCUTE-BEGIN", errorMsg);
     }
 
@@ -115,7 +109,8 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
         std::string errorMsg = "EXECUTE command failed!\n";
         errorMsg += PQerrorMessage(conn);
-        cleanFinish(conn, res);
+        PQexec(conn, "ROLLBACK");
+        cleanFinish(res);
         throw PostgresException("EXCEUTE", errorMsg);
     }
 
@@ -124,11 +119,12 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         std::string errorMsg = "COMMIT command failed!\n";
         errorMsg += PQerrorMessage(conn);
-        cleanFinish(conn, res);
+        PQexec(conn, "ROLLBACK");
+        cleanFinish(res);
         throw PostgresException("COMMIT", errorMsg);
     }
 
-    cleanFinish(conn, res);
+    cleanFinish(res);
 
     return true;
 }

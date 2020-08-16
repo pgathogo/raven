@@ -30,6 +30,7 @@ public:
 
     [[nodiscard]] int id() const;
     void setId(int i);
+    IntegerField& getId();
 
     virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
 

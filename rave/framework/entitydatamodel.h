@@ -68,6 +68,8 @@ public:
     void getById(std::tuple<std::string, int>);
     void search(const std::string searchFilter);
 
+    void executeRawSQL(const std::string sql);
+
     size_t count();
 
     void mapEntity(StringMap* map, BaseEntity& entity);

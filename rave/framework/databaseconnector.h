@@ -19,6 +19,7 @@ class PostgresConnector : public DatabaseConnector
         ~PostgresConnector() override;
         void openConnection(const std::string conninfo) override;
         PGconn* connection();
+        void connRollback();
     protected:
         PostgresConnector(const std::string conninfo);
     private:

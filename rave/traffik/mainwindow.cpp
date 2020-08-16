@@ -18,6 +18,7 @@
 #include "agentbrowser.h"
 #include "clientbrowser.h"
 #include "timebandbrowser.h"
+#include "userbrowser.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -136,6 +137,13 @@ void MainWindow::createActions()
     connect(tbandAction, &QAction::triggered, this, &MainWindow::browseTimeBands);
 
     setupMenu->addSeparator();
+    QAction* userAction = new QAction(tr("&System Users"));
+    setupMenu->addAction(userAction);
+    userAction->setStatusTip(tr("Maintain system users details"));
+    connect(userAction, &QAction::triggered, this, &MainWindow::browseUsers);
+
+
+    setupMenu->addSeparator();
 
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     plainFormAction = new QAction(tr("&Test"), setupMenu);
@@ -207,6 +215,12 @@ void MainWindow::browseTimeBands()
 {
     TimeBandBrowser* tbBrowser = createSubWindow<TimeBandBrowser>();
     tbBrowser->exec();
+}
+
+void MainWindow::browseUsers()
+{
+    UserBrowser* userBrowser = createSubWindow<UserBrowser>();
+    userBrowser->exec();
 }
 
 MainWindow::~MainWindow()

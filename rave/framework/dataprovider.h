@@ -45,6 +45,7 @@ class PostgresDataProvider: public BaseDataProvider
         int read(const std::string query) override;
         void test() {}
         void openConnection();
+        void closeConnection();
         char* make_error_message(char*, char*);
     private:
         PostgresConnector* mPGConnector;

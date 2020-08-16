@@ -27,6 +27,11 @@ void BaseEntity::setId(int i)
     mID->setValue(i);
 }
 
+IntegerField& BaseEntity::getId()
+{
+    return *mID;
+}
+
 std::vector<std::string> BaseEntity::dbColumnNames() const
 {
     // All fields are database columns, unless they are marked

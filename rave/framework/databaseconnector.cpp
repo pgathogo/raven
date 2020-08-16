@@ -55,3 +55,4 @@ PGconn* PostgresConnector::connection()
 {
     return mConnection;
 }
+

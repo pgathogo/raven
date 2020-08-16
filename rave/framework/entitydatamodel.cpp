@@ -231,6 +231,11 @@ void EntityDataModel::search(const std::string searchFilter)
         populateEntities();
 }
 
+void EntityDataModel::executeRawSQL(const std::string sql)
+{
+    dbManager->executeRawSQL( sql );
+}
+
 void EntityDataModel::getById(std::tuple<std::string, int> searchItem)
 {
     if (dbManager->searchByInt(getEntity(), searchItem) > 0){

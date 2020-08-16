@@ -108,6 +108,7 @@ void VoiceOverForm::setDayPart()
 void VoiceOverForm::populateDayPart(DayPartGrid& dp)
 {
     std::map<std::string, std::string> dayparts;
+
     dayparts["daypart1"] = mVoiceOver->daypart1()->valueToString();
     dayparts["daypart2"] = mVoiceOver->daypart2()->valueToString();
     dayparts["daypart3"] = mVoiceOver->daypart3()->valueToString();
@@ -121,6 +122,7 @@ void VoiceOverForm::populateDayPart(DayPartGrid& dp)
 
 void VoiceOverForm::comboChanged(int i)
 {
+    // Set the gender id with the id of the selected entity from the model.
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbGender->model());
     mVoiceOver->gender()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }

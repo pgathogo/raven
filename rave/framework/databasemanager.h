@@ -31,6 +31,7 @@ public:
 
     virtual int search(const BaseEntity& entity,
                        const std::string filter) = 0;
+    virtual void executeRawSQL(const std::string sql)=0;
 
     virtual BaseDataProvider* provider() = 0;
 protected:
@@ -66,6 +67,7 @@ public:
     int searchByInt(const BaseEntity& entity,
                            std::tuple<std::string, int> field_value) override;
     int search(const BaseEntity& entity, const std::string filter) override;
+    void executeRawSQL(const std::string sql) override;
     BaseDataProvider* provider() override;
 protected:
     void loadEntity(BaseEntity& entity)override;
