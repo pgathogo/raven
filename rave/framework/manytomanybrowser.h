@@ -5,7 +5,7 @@
 
 #include "baseentitybrowserdlg.h"
 #include "manytomany.h"
-#include "typeexclusion.h"
+//#include "typeexclusion.h"
 
 class EntityDataModel;
 class QVBoxLayout;
@@ -51,7 +51,6 @@ public:
         }
         return nullptr;
     }
-    */
 
     std::unique_ptr<ManyToMany> createMtoM(ManyToMany* mtom, BaseEntity* detail)
     {
@@ -66,6 +65,7 @@ public:
         }
         return nullptr;
     }
+    */
 
     size_t cnt(){ return mMtoM->getSize(); }
 

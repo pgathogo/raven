@@ -70,6 +70,7 @@ private slots:
     void browseTimeBands();
     void browseBrands();
     void browseUsers();
+    void browseRoles();
 
 private:
     PlainForm* pf;

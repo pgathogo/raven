@@ -68,7 +68,9 @@ public:
     void getById(std::tuple<std::string, int>);
     void search(const std::string searchFilter);
 
+    std::string make_insert_stmt(const BaseEntity& entity);
     void executeRawSQL(const std::string sql);
+    void readRaw(const std::string sql);
 
     size_t count();
 
@@ -77,6 +79,8 @@ public:
 
     void searchFilter(){}
 
+    std::unique_ptr<BaseDatabaseManager> const& getDBManager() const;
+
     template<typename T, typename... Types>
     void searchFilter(T firstArg, Types... args)
     {
@@ -84,9 +88,23 @@ public:
 
         std::string filter = column;
 
-        if constexpr(std::is_integral_v<decltype(value)>){
+        if constexpr(std::is_integral_v<decltype(value)> &&
+                !std::is_same_v<decltype(value), bool>){
             filter +=" = ";
             filter += std::to_string(value);
+        }else if constexpr(std::is_integral_v<decltype(value)> &&
+                           std::is_same_v<decltype(value), bool>){
+            filter += " = ";
+            switch (value){
+             case 0:
+                filter += "false";
+                break;
+             case 1:
+                filter += "true";
+                break;
+            default:
+                filter += "false";
+            }
         }else{
             filter += " LIKE ";
             std::string str_value = value;

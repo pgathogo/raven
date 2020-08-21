@@ -164,6 +164,11 @@ void EntityDataModel::populateMToMDetails()
 
 }
 
+const std::unique_ptr<BaseDatabaseManager> &EntityDataModel::getDBManager() const
+{
+    return dbManager;
+}
+
 void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
     int id = dbManager->createEntity(*entity.get());
@@ -231,9 +236,20 @@ void EntityDataModel::search(const std::string searchFilter)
         populateEntities();
 }
 
+std::string EntityDataModel::make_insert_stmt(const BaseEntity &entity)
+{
+    return dbManager->make_insert_stmt(entity);
+}
+
 void EntityDataModel::executeRawSQL(const std::string sql)
 {
     dbManager->executeRawSQL( sql );
+}
+
+void EntityDataModel::readRaw(const std::string sql)
+{
+    dbManager->readRaw( sql );
+
 }
 
 void EntityDataModel::getById(std::tuple<std::string, int> searchItem)

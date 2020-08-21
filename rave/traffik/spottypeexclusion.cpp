@@ -17,6 +17,7 @@ SpotTypeExclusion::SpotTypeExclusion(BaseEntity *pEnt, BaseEntity *dEnt)
     mDetailId = createField<IntegerField>("detail_id","Detail ID");
 
     mHeader = mDetailEntity->tableHeaders();
+    setTableName("rave_spottypeexclusion");
 }
 
 SpotTypeExclusion::~SpotTypeExclusion()
@@ -96,8 +97,7 @@ QStringList SpotTypeExclusion::tableHeaders() const
 
 std::string SpotTypeExclusion::tableName() const
 {
-    return "rave_spottypeexclusion";
-
+    return mTableName;
 }
 
 void SpotTypeExclusion::setTableName(std::string table_name)

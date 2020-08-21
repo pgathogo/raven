@@ -1,4 +1,5 @@
 #include <QVBoxLayout>
+#include <QDebug>
 
 #include "manytomanybrowser.h"
 #include "ui_manytomanybrowser.h"
@@ -25,8 +26,13 @@ ManyToManyBrowser::ManyToManyBrowser(
         std::string columnName = mMtoM->parentId()->dbColumnName();
         int value = mMtoM->parentId()->value();
         auto needle = std::make_tuple(columnName, value);
-        // VoiceExclusion...
-        entityDataModel().searchByInt(needle);
+
+        try{
+            entityDataModel().searchByInt(needle);
+
+        } catch (DatabaseException& de) {
+            showMessage(de.errorMessage());
+        }
     }
 
 }
@@ -50,6 +56,7 @@ void ManyToManyBrowser::addRecord()
         BaseEntity* be = entity;
         if (be->dbAction() == DBAction::dbaCREATE){
             auto m2m =  mMtoM->copy(mMtoM->parentEntity(), be);
+
 
             //auto m2m = createMtoM(mMtoM->mtomEntity(), be);
             m2m->setParentId(mMtoM->parentId()->value());

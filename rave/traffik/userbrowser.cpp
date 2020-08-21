@@ -8,10 +8,12 @@ UserBrowser::UserBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
                          std::make_unique<User>()),
     ui(new Ui::UserBrowser)
+
 {
     ui->setupUi(this);
     setDialogTitle("System Users");
 }
+
 
 UserBrowser::~UserBrowser()
 {
@@ -20,16 +22,20 @@ UserBrowser::~UserBrowser()
 
 void UserBrowser::addRecord()
 {
+    rawAdd<User, UserForm>();
+
+    /*
     std::unique_ptr<User> user = std::make_unique<User>();
     std::unique_ptr<UserForm> userForm =
             std::make_unique<UserForm>(user.get());
+
     if (userForm->exec() > 0)
     {
-        std::string role_stmt = user->make_role_stmt();
+        std::string create_stmt = user->make_create_stmt();
 
         try{
 
-            entityDataModel().executeRawSQL( role_stmt);
+            entityDataModel().executeRawSQL( create_stmt );
             entityDataModel().cacheEntity(std::move(user));
 
         }catch (DatabaseException& de){
@@ -37,11 +43,15 @@ void UserBrowser::addRecord()
         }
 
     }
+    */
 
 }
 
 void UserBrowser::updateRecord()
 {
+    rawUpdate<User, UserForm>();
+
+    /*
    BaseEntity* entity = findSelectedEntity();
    User* user = dynamic_cast<User*>(entity);
     std::unique_ptr<UserForm> userForm =
@@ -60,11 +70,15 @@ void UserBrowser::updateRecord()
         }
 
     }
+    */
 
 }
 
 void UserBrowser::deleteRecord()
 {
+    rawDelete<User>();
+
+    /*
    BaseEntity* entity = findSelectedEntity();
    User* user = dynamic_cast<User*>(entity);
 
@@ -77,4 +91,5 @@ void UserBrowser::deleteRecord()
     }catch (DatabaseException& de){
         showMessage(de.errorMessage());
     }
+    */
 }

@@ -5,6 +5,9 @@ User::User()
     :mUserName{nullptr},
      mPassword{nullptr}
 {
+    mUseSysId = createField<IntegerField>("usesysid", "User System ID");
+    mUseSysId->setReadOnly(true);
+
     mUserName = createField<StringField>("usename","User Name");
     mUserName->setMandatory(true);
     mPassword = createField<StringField>("password","Password");
@@ -30,6 +33,21 @@ User::User()
 
 User::~User()
 {
+}
+
+IntegerField* User::useSysId() const
+{
+    return mUseSysId;
+}
+
+void User::setUseSysId(int val)
+{
+    mUseSysId->setValue( val );
+}
+
+int User::id() const
+{
+   return useSysId()->value();
 }
 
 StringField* User::userName() const
@@ -93,7 +111,7 @@ std::string User::password_validity()
     return validity;
 }
 
-std::string User::make_role_stmt()
+std::string User::make_create_user_stmt()
 {
     std::string s1 = "CREATE USER "+userName()->value()+
             " WITH LOGIN PASSWORD '"+password()->value()+"'";
@@ -106,12 +124,12 @@ std::string User::role_rights()
     return " NOSUPERUSER INHERIT NOCREATEDB CREATEROLE NOREPLICATION;";
 }
 
-std::string User::make_drop_stmt(const std::string username)
+std::string User::make_drop_user_stmt(const std::string username)
 {
     return "DROP USER "+username+";";
 }
 
-std::string User::make_alter_stmt(const std::string username)
+std::string User::make_alter_user_stmt(const std::string username)
 {
    std::string s1 = "ALTER USER "+username+" WITH LOGIN PASSWORD "+
            "'"+password()->value()+"'";
@@ -166,4 +184,29 @@ std::unique_ptr<BaseEntity> User::cloneAsUnique()
 
 void User::afterMapping(BaseEntity &entity)
 {
+}
+
+IntegerField* User::uniqueId() const
+{
+    return useSysId();
+}
+
+std::string User::displayName()
+{
+    return userName()->value();
+}
+
+std::string User::make_create_stmt()
+{
+    return make_create_user_stmt();
+}
+
+std::string User::make_alter_stmt(const std::string name)
+{
+    return make_alter_user_stmt(name);
+}
+
+std::string User::make_drop_stmt(const std::string name)
+{
+    return make_drop_user_stmt( name );
 }

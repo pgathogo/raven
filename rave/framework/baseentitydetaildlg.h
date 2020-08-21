@@ -1,10 +1,13 @@
 #ifndef BASEENTITYDETAILDLG_H
 #define BASEENTITYDETAILDLG_H
 
+#include <memory>
+
 #include <QDialog>
 #include <QKeyEvent>
 
 #include "../utils/types.h"
+#include "manytomanybrowser.h"
 
 //class EntityDataModel;
 class BaseEntity;
@@ -13,6 +16,8 @@ class NotificationBar;
 namespace Ui {
 class BaseEntityDetailDlg;
 }
+
+using BrowserForms = std::vector<std::unique_ptr<ManyToManyBrowser>>;
 
 class BaseEntityDetailDlg : public QDialog
 {
@@ -33,6 +38,17 @@ public:
 
         void closeEvent(QCloseEvent* event);
 
+        template<typename T, typename... TArgs>
+        T* createMtoM(TArgs... mArgs){
+            //static_assert(std::is_base_of<BaseEntityBrowserDlg, T>::value, "`T` must be derived from BaseEntityBrowserDlg");
+            auto uPtr = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
+            auto ptr(uPtr.get());
+            mForms.emplace_back(std::move(uPtr));
+            return ptr;
+        }
+
+       BrowserForms const& getForms() const;
+
 private slots:
     void btnSaveClicked();
     void btnCloseClicked();
@@ -46,6 +62,7 @@ protected:
 private:
    NotificationBar* mNoticeBar;
    bool mOkClose;
+   std::vector<std::unique_ptr<ManyToManyBrowser>> mForms;
 };
 
 #endif // BASEENTITYDETAILDLG_H

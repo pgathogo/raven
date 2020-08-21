@@ -1,12 +1,16 @@
 #ifndef BASEENTITYBROWSERDLG_H
 #define BASEENTITYBROWSERDLG_H
 
+#include <QDebug>
+
 #include <QDialog>
 #include <QMdiArea>
 #include "entitydatamodel.h"
 #include "ui_baseentitybrowserdlg.h"
 
-#include "../framework/ravenexception.h"
+#include "ravenexception.h"
+#include "manytomany.h"
+
 #include "../utils/tools.h"
 
 class BaseEntity;
@@ -71,6 +75,111 @@ public:
         return std::move(dlg);  // Nasty - never move from local
     }
 
+    template<typename T1, typename T2>
+    void rawAdd()
+    {
+        std::unique_ptr<T1> t1 = std::make_unique<T1>();
+        std::unique_ptr<T2> form =
+                std::make_unique<T2>(t1.get());
+        if (form->exec() > 0){
+
+            std::string create_stmt =
+                    t1->make_create_stmt();
+            try{
+                entityDataModel().executeRawSQL( create_stmt );
+                entityDataModel().cacheEntity( std::move(t1) );
+
+            } catch (DatabaseException& de){
+                showMessage(de.errorMessage());
+            }
+        }
+
+    }
+
+    template<typename T>
+    class HasParentId
+    {
+        private:
+            typedef char YesType[1];
+            typedef char NoType[2];
+
+            template <typename C>
+            static YesType& test(decltype(&C::parentId));
+            template <typename C>
+            static NoType& test(...);
+        public:
+            enum{ value = sizeof(test<T>(0)) == sizeof(YesType) };
+    };
+
+   // typename std::enable_if<HasParentId<T1>::value, int>::type
+    template<typename T1>
+    void save_detail_item(int parentId,  T1* mtom)
+    {
+        std::unique_ptr<EntityDataModel> edm =
+           std::make_unique<EntityDataModel>();
+
+        if (mtom->dbAction() == DBAction::dbaCREATE){
+            mtom->setParentId(parentId);
+            auto insert_stmt = edm->make_insert_stmt(*mtom);
+            entityDataModel().executeRawSQL( insert_stmt );
+            //edm->createEntityDB(*mtom);
+        }
+
+        if (mtom->dbAction() == DBAction::dbaDELETE)
+            edm->deleteEntity(*mtom);
+    }
+
+    int save_detail_item(...){ return 0; }
+
+    template<typename T1, typename T2, typename T3 = void>
+    void rawUpdate()
+    {
+        BaseEntity* entity = findSelectedEntity();
+        T1* t1 = dynamic_cast<T1*>(entity);
+
+        std::unique_ptr<T2> form =
+                std::make_unique<T2>(t1, this);
+
+        if (form->exec() > 0){
+            std::string alter_stmt =
+                    t1->make_alter_stmt(t1->displayName());
+            try{
+                entityDataModel().executeRawSQL( alter_stmt );
+                //updateTableViewRecord(t1->tableViewValues());
+                //entityDataModel().updateEntity(*t1);
+
+                for(auto& mtomForm : form->getForms()){
+                    auto& items = mtomForm->entityDataModel().modelEntities();
+                    for (auto&[name, entity] : items){
+                        //ManyToMany* mtom = dynamic_cast<ManyToMany*>(entity.get());
+                        T3* mtom = dynamic_cast<T3*>(entity.get());
+                       if constexpr(HasParentId<T2>::value > 0)
+                            save_detail_item<T3>(t1->id(),  mtom);
+                    }
+                }
+
+            }catch (DatabaseException& de){
+                showMessage(de.errorMessage());
+            }
+        }
+    }
+
+    template<typename T1>
+    void rawDelete()
+    {
+        BaseEntity* entity = findSelectedEntity();
+        T1* t1 = dynamic_cast<T1*>(entity);
+
+        std::string drop_stmt = t1->make_drop_stmt(
+                    t1->displayName());
+        try{
+            entityDataModel().executeRawSQL( drop_stmt );
+            removeSelectedRow();
+
+        } catch (DatabaseException& de) {
+            showMessage(de.errorMessage());
+        }
+    }
     EntityDataModel& entityDataModel() const;
     void setMdiArea(QMdiArea* mdi);
 protected:

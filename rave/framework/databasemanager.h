@@ -32,14 +32,17 @@ public:
     virtual int search(const BaseEntity& entity,
                        const std::string filter) = 0;
     virtual void executeRawSQL(const std::string sql)=0;
+    virtual int readRaw(const std::string sql)=0;
 
     virtual BaseDataProvider* provider() = 0;
+    virtual std::string make_insert_stmt(const BaseEntity& entity) =0;
 protected:
     virtual void loadEntity(BaseEntity& entity) = 0;
 
     void setObjectID(BaseEntity& entity, int id);
 
     std::string columnsForSelection(const BaseEntity& entity);
+    std::string columnsForInsert(const BaseEntity& entity);
     std::string commaSepColumns(const BaseEntity& entity);
     std::string commaSepValues(const BaseEntity& entity);
 
@@ -68,7 +71,9 @@ public:
                            std::tuple<std::string, int> field_value) override;
     int search(const BaseEntity& entity, const std::string filter) override;
     void executeRawSQL(const std::string sql) override;
+    int readRaw(const std::string sql) override;
     BaseDataProvider* provider() override;
+    std::string make_insert_stmt(const BaseEntity& entity) override;
 protected:
     void loadEntity(BaseEntity& entity)override;
 private:

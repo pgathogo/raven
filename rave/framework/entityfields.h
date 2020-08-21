@@ -30,6 +30,9 @@ class Field{
         bool formOnly() const;
         void setFormOnly(bool value);
 
+        bool readOnly() const;
+        void setReadOnly(bool value);
+
         void setSearchable(bool value);
         bool searchable();
 
@@ -52,6 +55,7 @@ class Field{
         bool mFormOnly;
         bool mSearchable;
         bool mMandatory;
+        bool mReadOnly;
 };
 
 class IntegerField : public Field{

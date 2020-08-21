@@ -32,6 +32,11 @@ IntegerField& BaseEntity::getId()
     return *mID;
 }
 
+IntegerField* BaseEntity::uniqueId() const
+{
+    return mID;
+}
+
 std::vector<std::string> BaseEntity::dbColumnNames() const
 {
     // All fields are database columns, unless they are marked
@@ -39,7 +44,7 @@ std::vector<std::string> BaseEntity::dbColumnNames() const
     std::vector<std::string> cols;
 
     for (auto& [name, field] : fields()){
-        if ( !field->formOnly() )
+        if ( !field->formOnly())
             cols.push_back(field->dbColumnName());
     }
 
@@ -105,8 +110,9 @@ void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)
 {
 
     // To be refactored
+    std::string id_column = entity->uniqueId()->dbColumnName();
     mEDM = std::make_unique<EntityDataModel>(std::move(entity));
-    mEDM->getById({"id", id});
+    mEDM->getById({id_column, id});
 
 }
 
@@ -127,6 +133,26 @@ void BaseEntity::clearFields()
 std::vector<FieldMap> const& BaseEntity::fields() const
 {
     return mFields;
+}
+
+std::string BaseEntity::displayName()
+{
+    return "BaseEntity";
+}
+
+std::string BaseEntity::make_create_stmt()
+{
+   return "";
+}
+
+std::string BaseEntity::make_alter_stmt(const std::string name)
+{
+    return "";
+}
+
+std::string BaseEntity::make_drop_stmt(const std::string name)
+{
+    return "";
 }
 
 void BaseEntity::baseMapFields(StringMap* map)

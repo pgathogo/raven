@@ -16,153 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-    ../framework/baseentity.cpp \
-    ../framework/baseentitybrowserdlg.cpp \
-    ../framework/baseentitydetaildlg.cpp \
-    ../framework/databaseconnector.cpp \
-    ../framework/databasemanager.cpp \
-    ../framework/dataprovider.cpp \
-    ../framework/entitydatamodel.cpp \
-    ../framework/entityfields.cpp \
-    ../framework/manytomany.cpp \
-    ../framework/manytomanybrowser.cpp \
-    ../framework/picklistbrowser.cpp \
-    ../framework/ravenexception.cpp \
-    ../framework/selectclosewidget.cpp \
-    ../framework/valuelist.cpp \
-    ../framework/valuelistbrowser.cpp \
-    ../framework/valuelistdetaildlg.cpp \
-    ../utils/daypartgrid.cpp \
-    ../utils/notificationbar.cpp \
-    ../utils/notificationitem.cpp \
-    ../utils/plainform.cpp \
-    agent.cpp \
-    agentbrowser.cpp \
-    agentform.cpp \
-    brand.cpp \
-    brandbrowser.cpp \
-    brandform.cpp \
-    client.cpp \
-    clientbrowser.cpp \
-    clientform.cpp \
-    clientgroup.cpp \
-    clientgroupdetaildlg.cpp \
-    clientgroupdlg.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    salesperson.cpp \
-    salespersonbrowser.cpp \
-    salespersonform.cpp \
-    spot.cpp \
-    spotbrowser.cpp \
-    spotform.cpp \
-    spottypeexclusion.cpp \
-    spotvoiceover.cpp \
-    timeband.cpp \
-    timebandbrowser.cpp \
-    timebandform.cpp \
-    typeexclusion.cpp \
-    typeexclusionbrowser.cpp \
-    typeexclusiondetails.cpp \
-    user.cpp \
-    userbrowser.cpp \
-    userform.cpp \
-    voiceover.cpp \
-    voiceoverbrowser.cpp \
-    voiceoverform.cpp
-
-HEADERS += \
-    ../framework/baseentity.h \
-    ../framework/baseentitybrowserdlg.h \
-    ../framework/baseentitydetaildlg.h \
-    ../framework/choicefield.h \
-    ../framework/databaseconnector.h \
-    ../framework/databasemanager.h \
-    ../framework/dataprovider.h \
-    ../framework/entitydatamodel.h \
-    ../framework/entityfields.h \
-    ../framework/manytomany.h \
-    ../framework/manytomanybrowser.h \
-    ../framework/picklistbrowser.h \
-    ../framework/queryset.h \
-    ../framework/ravenexception.h \
-    ../framework/selectclosewidget.h \
-    ../framework/valuelist.h \
-    ../framework/valuelistbrowser.h \
-    ../framework/valuelistdetaildlg.h \
-    ../utils/daypartgrid.h \
-    ../utils/notificationbar.h \
-    ../utils/notificationitem.h \
-    ../utils/plainform.h \
-    ../utils/tools.h \
-    ../utils/types.h \
-    agent.h \
-    agentbrowser.h \
-    agentform.h \
-    brand.h \
-    brandbrowser.h \
-    brandform.h \
-    client.h \
-    clientbrowser.h \
-    clientform.h \
-    clientgroup.h \
-    clientgroupdetaildlg.h \
-    clientgroupdlg.h \
-    mainwindow.h \
-    salesperson.h \
-    salespersonbrowser.h \
-    salespersonform.h \
-    spot.h \
-    spotbrowser.h \
-    spotform.h \
-    spottypeexclusion.h \
-    spotvoiceover.h \
-    timeband.h \
-    timebandbrowser.h \
-    timebandform.h \
-    typeexclusion.h \
-    typeexclusionbrowser.h \
-    typeexclusiondetails.h  \
-    user.h \
-    userbrowser.h \
-    userform.h \
-    voiceover.h \
-    voiceoverbrowser.h \
-    voiceoverform.h
-
-FORMS += \
-    ../framework/baseentitybrowserdlg.ui \
-    ../framework/baseentitydetaildlg.ui \
-    ../framework/manytomanybrowser.ui \
-    ../framework/picklistbrowser.ui \
-    ../framework/selectclosewidget.ui \
-    ../framework/valuelistbrowser.ui \
-    ../framework/valuelistdetaildlg.ui \
-    ../utils/daypartgrid.ui \
-    ../utils/notificationitem.ui \
-    ../utils/plainform.ui \
-    agentbrowser.ui \
-    agentform.ui \
-    brandbrowser.ui \
-    brandform.ui \
-    clientbrowser.ui \
-    clientform.ui \
-    clientgroupdetaildlg.ui \
-    clientgroupdlg.ui \
-    mainwindow.ui \
-    salespersonbrowser.ui \
-    salespersonform.ui \
-    spotbrowser.ui \
-    spotform.ui \
-    timebandbrowser.ui \
-    timebandform.ui \
-    typeexclusionbrowser.ui \
-    typeexclusiondetails.ui \
-    userbrowser.ui \
-    userform.ui \
-    voiceoverbrowser.ui \
-    voiceoverform.ui
+include(../raven.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -181,3 +35,17 @@ DEPENDPATH += 'C:/Program Files/PostgreSQL/9.5/include'
 
 #INCLUDEPATH += 'D:/home/PMS/Raven/rave/lib/fmt'
 #DEFINES += FMT_HEADER_ONLY
+
+FORMS += \
+    rolebrowser.ui \
+    roleform.ui
+
+HEADERS += \
+    rolebrowser.h \
+    roleform.h \
+    rolemember.h
+
+SOURCES += \
+    rolebrowser.cpp \
+    roleform.cpp \
+    rolemember.cpp

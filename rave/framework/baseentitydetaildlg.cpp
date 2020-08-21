@@ -45,6 +45,11 @@ void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
         event->ignore();
 }
 
+const BrowserForms &BaseEntityDetailDlg::getForms() const
+{
+    return mForms;
+}
+
 void BaseEntityDetailDlg::btnSaveClicked()
 {
     ActionResult ar = saveRecord();

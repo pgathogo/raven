@@ -4,6 +4,8 @@
 #include <QDialog>
 #include "../framework/baseentitybrowserdlg.h"
 
+class Role;
+
 
 namespace Ui {
 class UserBrowser;
@@ -14,7 +16,7 @@ class UserBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
-    explicit UserBrowser(QWidget *parent = nullptr);
+    UserBrowser(QWidget *parent = nullptr);
     ~UserBrowser() override;
 
     void addRecord() override;

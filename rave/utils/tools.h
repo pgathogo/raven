@@ -26,6 +26,20 @@ inline void printstr(std::string s)
     qDebug() << stoq(s);
 }
 
+inline std::tuple<int, int, int> ymd(const std::string date_str)
+{
+        char  yr[5];
+        char mth[3];
+        char day[3];
+
+        date_str.copy(yr, 4, 0);
+        date_str.copy(mth, 2, 5);
+        date_str.copy(day, 2, 8);
+
+        return std::make_tuple(std::atoi(yr), std::atoi(mth),
+                               std::atoi(day));
+}
+
 namespace uuid {
     static std::random_device              rd;
     static std::mt19937                    gen(rd());

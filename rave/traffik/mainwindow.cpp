@@ -19,6 +19,7 @@
 #include "clientbrowser.h"
 #include "timebandbrowser.h"
 #include "userbrowser.h"
+#include "rolebrowser.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -137,6 +138,12 @@ void MainWindow::createActions()
     connect(tbandAction, &QAction::triggered, this, &MainWindow::browseTimeBands);
 
     setupMenu->addSeparator();
+
+    QAction* roleAction = new QAction(tr("&System Roles"));
+    setupMenu->addAction(roleAction);
+    roleAction->setStatusTip(tr("Maintain system roles details"));
+    connect(roleAction, &QAction::triggered, this, &MainWindow::browseRoles);
+
     QAction* userAction = new QAction(tr("&System Users"));
     setupMenu->addAction(userAction);
     userAction->setStatusTip(tr("Maintain system users details"));
@@ -221,6 +228,12 @@ void MainWindow::browseUsers()
 {
     UserBrowser* userBrowser = createSubWindow<UserBrowser>();
     userBrowser->exec();
+}
+
+void MainWindow::browseRoles()
+{
+    RoleBrowser* roleBrowser = createSubWindow<RoleBrowser>();
+    roleBrowser->exec();
 }
 
 MainWindow::~MainWindow()

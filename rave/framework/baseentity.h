@@ -28,9 +28,11 @@ public:
     BaseEntity();
     virtual ~BaseEntity();
 
-    [[nodiscard]] int id() const;
+    [[nodiscard]] virtual int id() const;
     void setId(int i);
     IntegerField& getId();
+
+    virtual IntegerField* uniqueId() const;
 
     virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
 
@@ -69,6 +71,11 @@ public:
     virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
 
     virtual void afterMapping(BaseEntity& entity) = 0;
+
+    virtual std::string displayName();
+    virtual std::string make_create_stmt();
+    virtual std::string make_alter_stmt(const std::string name);
+    virtual std::string make_drop_stmt(const std::string name);
 
     template<typename T>
     std::unique_ptr<T> clone()

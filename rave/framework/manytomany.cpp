@@ -1,7 +1,7 @@
 #include <QDebug>
 #include <QStandardItem>
 #include "manytomany.h"
-#include "typeexclusion.h"
+#include "../traffik/typeexclusion.h"
 
 ManyToMany::~ManyToMany()
 {

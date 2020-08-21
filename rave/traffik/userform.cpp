@@ -4,6 +4,7 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/entitydatamodel.h"
 #include "user.h"
+#include "role.h"
 #include "../utils/tools.h"
 
 UserForm::UserForm(User* user, QDialog *parent) :
@@ -17,6 +18,7 @@ UserForm::UserForm(User* user, QDialog *parent) :
     connect(ui->cbExpiry, &QCheckBox::stateChanged, this, &UserForm::updateValidity);
 
     populateFormWidgets();
+
 }
 
 UserForm::~UserForm()
@@ -47,17 +49,8 @@ void UserForm::populateFormWidgets()
 
     if (!mUser->validUntil()->value().empty() &&
             mUser->validUntil()->value() != "infinity"){
-        char yr[5];
-        char mth[3];
-        char day[3];
 
-        mUser->validUntil()->value().copy(yr, 4, 0);
-        mUser->validUntil()->value().copy(mth, 2, 5);
-        mUser->validUntil()->value().copy(day, 2, 8);
-
-        int y = std::atoi(yr);
-        int m = std::atoi(mth);
-        int d = std::atoi(day);
+        auto [y, m, d] = ymd(mUser->validUntil()->value());
 
         QDate qdate = QDate(y, m, d);
 

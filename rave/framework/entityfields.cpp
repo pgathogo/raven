@@ -16,7 +16,8 @@ Field::Field()
      mVisible{true},
      mFormOnly{false},
      mSearchable{true},
-     mMandatory{false}
+     mMandatory{false},
+     mReadOnly{false}
 {
 }
 
@@ -27,7 +28,8 @@ Field::Field(const std::string aName, const std::string aLabel)
      mVisible{true},
      mFormOnly{false},
      mSearchable{true},
-     mMandatory{false}
+     mMandatory{false},
+     mReadOnly{false}
 {
 }
 
@@ -82,6 +84,16 @@ bool Field::formOnly() const
 void Field::setFormOnly(bool value)
 {
     mFormOnly = value;
+}
+
+bool Field::readOnly() const
+{
+    return mReadOnly;
+}
+
+void Field::setReadOnly(bool value)
+{
+    mReadOnly = value;
 }
 void Field::setSearchable(bool value)
 {

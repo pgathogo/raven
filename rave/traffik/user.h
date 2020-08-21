@@ -11,6 +11,11 @@ public:
     User();
     ~User() override;
 
+    IntegerField* useSysId() const;
+    void setUseSysId(int val);
+
+    int id() const override;
+
     StringField* userName() const;
     void setUserName(const std::string uname);
 
@@ -27,10 +32,10 @@ public:
     void setPasswordExpire(bool val);
 
     std::string password_validity();
-    std::string make_role_stmt();
+    std::string make_create_user_stmt();
     std::string role_rights();
-    std::string make_drop_stmt(const std::string username);
-    std::string make_alter_stmt(const std::string username);
+    std::string make_drop_user_stmt(const std::string username);
+    std::string make_alter_user_stmt(const std::string username);
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
@@ -46,7 +51,15 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 
+    IntegerField* uniqueId() const override;
+
+    std::string displayName() override;
+    std::string make_create_stmt() override;
+    std::string make_alter_stmt(const std::string name) override;
+    std::string make_drop_stmt(const std::string name) override;
+
 private:
+    IntegerField* mUseSysId;
     StringField* mUserName;
     StringField* mPassword;
     StringField* mConfirmPassword;

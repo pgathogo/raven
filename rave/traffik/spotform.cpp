@@ -34,6 +34,7 @@ SpotForm::SpotForm(Client* client, Spot* spot,
                                                 ui->vlTypeEx,
                                                 this);
 
+
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
 

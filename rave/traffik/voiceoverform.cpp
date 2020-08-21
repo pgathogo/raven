@@ -29,7 +29,7 @@ VoiceOverForm::VoiceOverForm(
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
 
-   setDayPart();
+    setDayPart();
 
     populateFormWidgets();
 

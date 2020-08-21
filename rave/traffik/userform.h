@@ -21,7 +21,6 @@ public:
     ~UserForm() override;
 
     std::string windowTitle() override;
-
     void populateEntityFields() override;
     void populateFormWidgets() override;
     ActionResult saveRecord() override;

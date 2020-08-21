@@ -146,9 +146,9 @@ int PostgresDataProvider::read(const std::string query)
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
         std::string errorMsg = "BEGIN command failed!\n";
         errorMsg += PQerrorMessage(conn);
+        PQexec(conn, "ROLLBACK");
         cleanFinish(conn, res);
         throw PostgresException("READ-BEGIN", errorMsg);
-        //return -1;
     }
 
     PQclear(res);
@@ -160,9 +160,9 @@ int PostgresDataProvider::read(const std::string query)
     if (PQresultStatus(res) != PGRES_COMMAND_OK){
         std::string errorMsg = "DECLARE command failed!\n";
         errorMsg += PQerrorMessage(conn);
+        PQexec(conn, "ROLLBACK");
         cleanFinish(conn, res);
         throw PostgresException("READ-DECLARE-CURSOR", errorMsg);
-        //return -1;
     }
 
     PQclear(res);
@@ -171,9 +171,9 @@ int PostgresDataProvider::read(const std::string query)
     if (PQresultStatus(res) != PGRES_TUPLES_OK){
         std::string errorMsg = "FETCH ALL command failed!\n";
         errorMsg += PQerrorMessage(conn);
+        PQexec(conn, "ROLLBACK");
         cleanFinish(conn, res);
         throw PostgresException("READ-FETCH-ALL", errorMsg);
-        //return -1;
     }
 
     nFields = PQnfields(res);

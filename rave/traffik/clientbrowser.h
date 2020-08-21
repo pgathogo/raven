@@ -27,6 +27,7 @@ public:
     void createBrandButton();
     void createSpotButton();
 
+
     template<typename T1, typename T2>
     void openBrowserWindow()
     {
@@ -39,6 +40,7 @@ public:
            browser->exec();
         }
     }
+
 
 private slots:
     void openBrandBrowser();
