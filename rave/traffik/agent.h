@@ -3,10 +3,11 @@
 
 #include "../framework/baseentity.h"
 
-class Agent : public BaseEntity
+class Agent : public BaseEntity::Registrar<Agent>
 {
 public:
     Agent();
+    Agent(int);
     Agent(const Agent& other);
     ~Agent() override;
 

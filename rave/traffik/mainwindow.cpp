@@ -20,6 +20,9 @@
 #include "timebandbrowser.h"
 #include "userbrowser.h"
 #include "rolebrowser.h"
+#include "contentbrowser.h"
+
+#include "../framework/entityregister.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -149,6 +152,17 @@ void MainWindow::createActions()
     userAction->setStatusTip(tr("Maintain system users details"));
     connect(userAction, &QAction::triggered, this, &MainWindow::browseUsers);
 
+    QAction* regAction = new QAction(tr("&Show Register"));
+    setupMenu->addAction(regAction);
+    regAction->setStatusTip(tr("Show registered entities"));
+    connect(regAction, &QAction::triggered, this, &MainWindow::showRegister);
+
+    setupMenu->addSeparator();
+
+    QAction* contentAction = new QAction(tr("&App Content"));
+    setupMenu->addAction(contentAction);
+    contentAction->setStatusTip(tr("Maintain applicaion content"));
+    connect(contentAction, &QAction::triggered, this, &MainWindow::contentBrowser);
 
     setupMenu->addSeparator();
 
@@ -234,6 +248,19 @@ void MainWindow::browseRoles()
 {
     RoleBrowser* roleBrowser = createSubWindow<RoleBrowser>();
     roleBrowser->exec();
+}
+
+void MainWindow::showRegister()
+{
+    for (auto& [k, v] : Factory<BaseEntity, int>::_data()){
+        qDebug() << QString::fromStdString(k);
+    }
+}
+
+void MainWindow::contentBrowser()
+{
+    ContentBrowser* contentBrowser = createSubWindow<ContentBrowser>();
+    contentBrowser->exec();
 }
 
 MainWindow::~MainWindow()

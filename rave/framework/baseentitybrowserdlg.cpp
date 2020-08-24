@@ -26,6 +26,9 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
         ,bui(new Ui::BaseEntityBrowserDlg)
         ,mEntityDataModel{nullptr}
 {
+    std::string class_name = demangle(typeid(entity).name());
+    qDebug() << QString::fromStdString(class_name);
+
     mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
     bui->setupUi(this);
     connectSlots();

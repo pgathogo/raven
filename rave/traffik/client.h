@@ -6,10 +6,11 @@
 template<typename T>
 class ChoiceField;
 
-class Client : public BaseEntity
+class Client : public BaseEntity::Registrar<Client>
 {
 public:
     Client();
+    Client(int);
     ~Client() override;
 
     std::string tableName() const override;

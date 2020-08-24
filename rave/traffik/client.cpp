@@ -8,9 +8,7 @@
 
 
 Client::Client()
-    :BaseEntity{}
 {
-
     mName = createField<StringField>("name", "Client Name:");
     mName->setMandatory(true);
 
@@ -61,6 +59,10 @@ Client::Client()
             << QString::fromStdString(mContactMobile->fieldLabel());
 
     setTableName("rave_client");
+}
+
+Client::Client(int)
+{
 }
 
 Client::~Client()

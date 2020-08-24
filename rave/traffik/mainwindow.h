@@ -71,6 +71,8 @@ private slots:
     void browseBrands();
     void browseUsers();
     void browseRoles();
+    void showRegister();
+    void contentBrowser();
 
 private:
     PlainForm* pf;

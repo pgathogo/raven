@@ -1,31 +1,25 @@
-#ifndef CLIENTGROUP_H
-#define CLIENTGROUP_H
+#ifndef CONTENT_H
+#define CONTENT_H
 
-#include <string>
 #include "../framework/baseentity.h"
 
-#include <QDebug>
+class StringField;
 
-class Field;
-class IntegerField;
-class TextField;
 
-class ClientGroup : public BaseEntity::Registrar<ClientGroup>
+class Content : public BaseEntity
 {
 public:
-    ClientGroup();
-    ClientGroup(int);
-    ~ClientGroup() override;
-
-    ClientGroup(const ClientGroup& other);
-    ClientGroup& operator=(const ClientGroup& other);
+    Content();
+    ~Content() override;
 
     StringField* name() const;
-    void setName(std::string aName);
+    void setName(const std::string val);
 
-    TextField* description() const;
-    void setDescription(std::string aDescription);
+    StringField* contentDisplayName() const;
+    void setDisplayName(const std::string val);
 
+    StringField* code() const;
+    void setCode(const std::string val);
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     std::list<std::string> tableViewColumns() const override;
@@ -42,9 +36,10 @@ public:
 
 private:
     StringField* mName;
-    TextField* mDescription;
+    StringField* mContentDisplayName;
+    StringField* mCode;
     QStringList mHeader;
     std::string mTableName;
 };
 
-#endif // CLIENTGROUP_H
+#endif // CONTENT_H

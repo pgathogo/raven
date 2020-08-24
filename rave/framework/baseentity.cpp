@@ -12,6 +12,15 @@ BaseEntity::BaseEntity()
     mID->setSearchable(false);
 }
 
+BaseEntity::BaseEntity(Key)
+    :mID{}
+    ,mEDM{nullptr}
+    ,mDBAction{DBAction::dbaNONE}
+{
+    mID = createField<IntegerField>("id", "Unique identifier");
+    mID->setSearchable(false);
+}
+
 BaseEntity::~BaseEntity()
 {
     qDebug() << "BaseEntity::dtor";

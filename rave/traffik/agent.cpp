@@ -1,8 +1,8 @@
 #include <QDebug>
 #include "agent.h"
 
-Agent::Agent()
-    :mName{}
+Agent::Agent():
+    mName{}
     ,mTown{}
     ,mTelephone{}
     ,mEmail{}
@@ -29,6 +29,9 @@ Agent::Agent()
     setTableName("rave_agent");
 
 }
+
+Agent::Agent(int)
+{}
 
 Agent::Agent(const Agent& /*other*/)
 {

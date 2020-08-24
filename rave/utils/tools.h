@@ -4,10 +4,14 @@
 #include <string>
 #include <random>
 #include <sstream>
+#include <memory>
 
 #include <QString>
 #include <QMessageBox>
 #include <QDebug>
+
+#include <cstdlib>
+#include <cxxabi.h>
 
 inline QString stoq(std::string s)
 {
@@ -38,6 +42,14 @@ inline std::tuple<int, int, int> ymd(const std::string date_str)
 
         return std::make_tuple(std::atoi(yr), std::atoi(mth),
                                std::atoi(day));
+}
+inline std::string demangle(const char* name){
+    int status = 4; // some abitrary value to eliminate the compiler warning
+
+    std::unique_ptr<char, void (*)(void *)> res{
+        abi::__cxa_demangle(name, NULL, NULL, &status), std::free};
+
+    return (status == 0) ? res.get() : name ;
 }
 
 namespace uuid {

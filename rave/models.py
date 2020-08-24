@@ -196,3 +196,11 @@ class Setup(models.Model):
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     pay_grace_period = models.IntegerField(null=True)
     order_approval_levels = models.IntegerField(null=True)
+
+class Content(models.Model):
+    name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255, null=True, blank=True)
+    code = models.CharField(max_length=255, null=True, blank=True)
+
+class ContentAuth(ManyToMany):
+    access_bit = models.CharField(max_length=8, default='00000000')

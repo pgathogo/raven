@@ -27,7 +27,6 @@ public:
     std::string windowTitle() override;
     void populateEntityFields() override;
     void populateFormWidgets() override;
-
 private slots:
     void selectClient();
     void brandManagerComboChanged(int i);

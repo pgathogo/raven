@@ -10,6 +10,8 @@
 
 #include "../utils/types.h"
 
+#include "entityregister.h"
+
 class QString;
 class QStringList;
 class QStandardItem;
@@ -22,10 +24,11 @@ using StringMap = std::map<std::string, std::string>;
 using FieldValues = std::vector<std::tuple<Field*, std::string>>;
 
 
-class BaseEntity
+class BaseEntity : public Factory<BaseEntity, int>
 {
 public:
     BaseEntity();
+    BaseEntity(Key);
     virtual ~BaseEntity();
 
     [[nodiscard]] virtual int id() const;
@@ -56,8 +59,6 @@ public:
     FieldValues mapping(StringMap* e);
 
     virtual void populateEntity()=0;
-
-    //virtual std::string classDisplayName() const;
 
     void getEntityById(std::unique_ptr<BaseEntity> entity, int id);
 

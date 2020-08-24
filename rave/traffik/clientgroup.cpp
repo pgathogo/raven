@@ -5,8 +5,7 @@
 #include "../framework/choicefield.h"
 
 ClientGroup::ClientGroup()
-    :BaseEntity(),
-     mName{},
+     :mName{},
      mDescription{}
 {
     mName = createField<StringField>("group_name","Group Name");
@@ -19,6 +18,10 @@ ClientGroup::ClientGroup()
             << QString::fromStdString(mDescription->fieldLabel());
 
     setTableName("rave_clientgroup");
+}
+
+ClientGroup::ClientGroup(int)
+{
 }
 
 ClientGroup::ClientGroup(const ClientGroup& other)

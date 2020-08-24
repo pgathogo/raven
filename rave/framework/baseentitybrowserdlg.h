@@ -10,7 +10,6 @@
 
 #include "ravenexception.h"
 #include "manytomany.h"
-
 #include "../utils/tools.h"
 
 class BaseEntity;
