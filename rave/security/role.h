@@ -71,6 +71,7 @@ private:
     BooleanField* mRoleExpire;
     StringField* mComment;
     BooleanField* mRoleCanLogin;
+
     QStringList mHeader;
     std::string mTableName;
 

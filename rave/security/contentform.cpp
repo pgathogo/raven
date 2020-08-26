@@ -36,7 +36,6 @@ ActionResult ContentForm::saveRecord()
 {
     compare_temp_list();
     return std::make_tuple(ActionResultType::arSUCCESS,"");
-
 }
 
 std::string ContentForm::windowTitle()

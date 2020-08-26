@@ -182,8 +182,6 @@ void BaseEntityBrowserDlg::updateTableViewRecord(const std::vector<std::string> 
 
 void BaseEntityBrowserDlg::populateFilterCombo()
 {
-    //auto cIter = mBaseEntity->cBeginIter();
-    //for(; cIter != mBaseEntity->cEndIter(); ++cIter){
     for (auto& fld : entityDataModel().getEntity().fields()){
         auto ptr(std::get<1>(fld).get());
         if (ptr->searchable())

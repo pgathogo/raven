@@ -33,7 +33,7 @@ SOURCES += \
     ../traffik/clientgroupdlg.cpp \
     ../traffik/main.cpp \
     ../traffik/mainwindow.cpp \
-    ../traffik/role.cpp \
+    ../security/role.cpp \
     ../traffik/salesperson.cpp \
     ../traffik/salespersonbrowser.cpp \
     ../traffik/salespersonform.cpp \
@@ -48,12 +48,22 @@ SOURCES += \
     ../traffik/typeexclusion.cpp \
     ../traffik/typeexclusionbrowser.cpp \
     ../traffik/typeexclusiondetails.cpp \
-    ../traffik/user.cpp \
+    ../security/user.cpp \
     ../traffik/userbrowser.cpp \
     ../traffik/userform.cpp \
     ../traffik/voiceover.cpp \
     ../traffik/voiceoverbrowser.cpp \
-    ../traffik/voiceoverform.cpp
+    ../traffik/voiceoverform.cpp \
+    ../security/rolemember.cpp \
+    ../security/content.cpp \
+    ../security/contentauth.cpp \
+    ../security/contentauthbrowser.cpp \
+    ../security/contentauthform.cpp \
+    ../security/contentbrowser.cpp \
+    ../security/contentdetailform.cpp \
+    ../security/contentform.cpp \
+    ../security/rolebrowser.cpp \
+    ../security/roleform.cpp
 
 HEADERS += \
     ../framework/baseentity.h \
@@ -93,7 +103,7 @@ HEADERS += \
     ../traffik/clientgroupdetaildlg.h \
     ../traffik/clientgroupdlg.h \
     ../traffik/mainwindow.h \
-    ../traffik/role.h \
+    ../security/role.h \
     ../traffik/salesperson.h \
     ../traffik/salespersonbrowser.h \
     ../traffik/salespersonform.h \
@@ -108,12 +118,22 @@ HEADERS += \
     ../traffik/typeexclusion.h \
     ../traffik/typeexclusionbrowser.h \
     ../traffik/typeexclusiondetails.h  \
-    ../traffik/user.h \
+    ../security/user.h \
     ../traffik/userbrowser.h \
     ../traffik/userform.h \
     ../traffik/voiceover.h \
     ../traffik/voiceoverbrowser.h \
-    ../traffik/voiceoverform.h
+    ../traffik/voiceoverform.h \
+    ../security/rolemember.h \
+    ../security/content.h \
+    ../security/contentauth.h \
+    ../security/contentauthbrowser.h \
+    ../security/contentauthform.h \
+    ../security/contentbrowser.h \
+    ../security/contentdetailform.h \
+    ../security/contentform.h \
+    ../security/rolebrowser.h \
+    ../security/roleform.h
 
 FORMS += \
     ../framework/baseentitybrowserdlg.ui \
@@ -146,4 +166,11 @@ FORMS += \
     ../traffik/userbrowser.ui \
     ../traffik/userform.ui \
     ../traffik/voiceoverbrowser.ui \
-    ../traffik/voiceoverform.ui
+    ../traffik/voiceoverform.ui \
+    ../security/contentauthbrowser.ui \
+    ../security/contentauthform.ui \
+    ../security/contentbrowser.ui \
+    ../security/contentdetailform.ui \
+    ../security/contentform.ui \
+    ../security/rolebrowser.ui \
+    ../security/roleform.ui

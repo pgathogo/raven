@@ -36,28 +36,5 @@ DEPENDPATH += 'C:/Program Files/PostgreSQL/9.5/include'
 #INCLUDEPATH += 'D:/home/PMS/Raven/rave/lib/fmt'
 #DEFINES += FMT_HEADER_ONLY
 
-FORMS += \
-    contentbrowser.ui \
-    contentdetailform.ui \
-    contentform.ui \
-    rolebrowser.ui \
-    roleform.ui
-
 HEADERS += \
     ../framework/entityregister.h \
-    content.h \
-    contentbrowser.h \
-    contentdetailform.h \
-    contentform.h \
-    rolebrowser.h \
-    roleform.h \
-    rolemember.h
-
-SOURCES += \
-    content.cpp \
-    contentbrowser.cpp \
-    contentdetailform.cpp \
-    contentform.cpp \
-    rolebrowser.cpp \
-    roleform.cpp \
-    rolemember.cpp

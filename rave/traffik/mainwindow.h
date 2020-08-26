@@ -73,6 +73,7 @@ private slots:
     void browseRoles();
     void showRegister();
     void contentBrowser();
+    void contentAuthBrowser();
 
 private:
     PlainForm* pf;

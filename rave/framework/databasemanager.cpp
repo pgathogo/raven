@@ -36,16 +36,22 @@ std::string BaseDatabaseManager::columnsForInsert(const BaseEntity &entity)
     std::size_t i = 1;
 
     for (auto& [name, field] : entity.fields()){
+
         if ( name == "id" ){
             ++i;
             continue;
         }
-        if (!field->formOnly() || !field->readOnly() ){
-            cols += field->dbColumnName();
-            if (i < entity.fields().size())
-                cols +=",";
+
+        if ( field->formOnly() || field->readOnly() ){
             ++i;
+            continue;
         }
+
+        if (!cols.empty())
+            cols += ",";
+        cols += field->dbColumnName();
+        ++i;
+
     }
 
     return cols;
@@ -76,18 +82,22 @@ std::string BaseDatabaseManager::commaSepValues(const BaseEntity& entity)
 
     size_t i = 1;
 
-    for (auto& flds : entity.fields()){
-        auto ptr(std::get<1>(flds).get());
-        if ( ptr->fieldName() == "id") {
+    for (auto& [name, field] : entity.fields()){
+
+        if ( name == "id") {
             ++i;
             continue;
         }
-        if (!ptr->formOnly() || !ptr->readOnly()) {
-            vals += ptr->dbValueFormatter();
-            if(i<entity.fieldsCount())
-                vals +=",";
+
+        if (field->formOnly() || field->readOnly()) {
             ++i;
+            continue;
         }
+
+        if (!vals.empty())
+            vals +=",";
+        vals += field->dbValueFormatter();
+        ++i;
     }
 
     return vals;
@@ -101,6 +111,7 @@ std::string BaseDatabaseManager::makeInsertString(const BaseEntity& entity)
     std::string in_a = "INSERT INTO "+entity.tableName()+"( "+flds+")";
     std::string in_b = " VALUES ("+vals+") ";
     std::string insert_stmt = in_a + in_b;
+    qDebug() << QString::fromStdString(insert_stmt);
     return insert_stmt;
 }
 

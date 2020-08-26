@@ -21,6 +21,7 @@
 #include "userbrowser.h"
 #include "rolebrowser.h"
 #include "contentbrowser.h"
+#include "contentauthbrowser.h"
 
 #include "../framework/entityregister.h"
 
@@ -164,6 +165,11 @@ void MainWindow::createActions()
     contentAction->setStatusTip(tr("Maintain applicaion content"));
     connect(contentAction, &QAction::triggered, this, &MainWindow::contentBrowser);
 
+    QAction* contentAuthAction = new QAction(tr("&Content Authorization"));
+    setupMenu->addAction(contentAuthAction);
+    contentAuthAction->setStatusTip(tr("Maintain content authorization"));
+    connect(contentAuthAction, &QAction::triggered, this, &MainWindow::contentAuthBrowser);
+
     setupMenu->addSeparator();
 
     plainFormAction = new QAction(tr("&Test"), setupMenu);
@@ -261,6 +267,12 @@ void MainWindow::contentBrowser()
 {
     ContentBrowser* contentBrowser = createSubWindow<ContentBrowser>();
     contentBrowser->exec();
+}
+
+void MainWindow::contentAuthBrowser()
+{
+    ContentAuthBrowser* contentAuthBrowser = createSubWindow<ContentAuthBrowser>();
+    contentAuthBrowser->exec();
 }
 
 MainWindow::~MainWindow()
