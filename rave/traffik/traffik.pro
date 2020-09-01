@@ -37,4 +37,17 @@ DEPENDPATH += 'C:/Program Files/PostgreSQL/9.5/include'
 #DEFINES += FMT_HEADER_ONLY
 
 HEADERS += \
-    ../framework/entityregister.h \
+    ../framework/entityregister.h \ \
+    ../security/accesscontroller.h \
+    ../security/authentication.h \
+    setupform.h \
+    traffiksetup.h
+
+SOURCES += \
+    ../security/accesscontroller.cpp \
+    ../security/authentication.cpp \
+    setupform.cpp \
+    traffiksetup.cpp
+
+FORMS += \
+    setupform.ui

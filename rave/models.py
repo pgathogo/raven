@@ -200,6 +200,7 @@ class Setup(models.Model):
 class Content(models.Model):
     name = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255, null=True, blank=True)
+    table_name = models.CharField(max_length=255, null=True, blank=True)
     code = models.CharField(max_length=255, null=True, blank=True)
 
 class ContentAuth(ManyToMany):

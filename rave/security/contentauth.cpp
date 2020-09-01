@@ -202,8 +202,8 @@ Bits ContentAuth::getAccessBit(std::string abit)
 
 std::string ContentAuth::access_bit_tostring()
 {
-        return std::to_string(createBit()->value())+
-                std::to_string(readBit()->value())+
-                std::to_string(updateBit()->value())+
-                std::to_string(deleteBit()->value());
+    return std::to_string(createBit()->value())+
+            std::to_string(readBit()->value())+
+            std::to_string(updateBit()->value())+
+            std::to_string(deleteBit()->value());
 }

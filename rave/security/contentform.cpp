@@ -60,9 +60,17 @@ void ContentForm::populateAppContent()
 
     for (auto& [name, func] : Factory<BaseEntity, int>::_data()){
         auto nn = name;
+        // Only show content that has not yet been registered
         if ( std::find_if(ibegin, iend, [&nn](EntityRecord const& er){
-                         return ( nn==std::get<0>(er) );  } ) == iend )
-            ui->lvAppContent->addItem(QString::fromStdString(name));
+                         return ( nn==std::get<0>(er) );  } ) == iend ){
+
+            QListWidgetItem* wItem = new QListWidgetItem();
+            QString entityTableName = stoq(func(0)->tableName());
+            wItem->setData(Qt::UserRole, entityTableName);
+            wItem->setText(stoq(name));
+            ui->lvAppContent->addItem(wItem);
+            //ui->lvAppContent->addItem(QString::fromStdString(name));
+        }
     }
 }
 
@@ -96,8 +104,14 @@ void ContentForm::registerContent()
     auto content = std::make_unique<Content>();
 
     if (ui->lvAppContent->selectedItems().size() > 0){
+
         content->name()->setValue(
                     ui->lvAppContent->currentItem()->text().toStdString());
+
+        QVariant data = ui->lvAppContent->currentItem()->data(Qt::UserRole);
+        content->contentTableName()->setValue(
+                    data.toString().toStdString() );
+
         auto cd = std::make_unique<ContentDetailForm>(content.get());
         if (cd->exec() > 0){
             content->setDBAction(DBAction::dbaCREATE);

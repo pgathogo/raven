@@ -20,6 +20,8 @@ namespace Ui {
 class BaseEntityBrowserDlg;
 }
 
+using AccessMap = std::map<std::string, std::string>;
+
 template<typename T1, typename T2>
 std::tuple<T1, T2> searchItem(T1 col, T2 val)
 {
@@ -45,6 +47,8 @@ public:
     virtual void searchRecord();
 
     virtual std::string typeID();
+
+    void setAccess(std::string access_bit);
 
     template <typename T1, typename T2>
     std::unique_ptr<T2> update()
@@ -202,6 +206,7 @@ public slots:
 private:
     std::unique_ptr<EntityDataModel> mEntityDataModel;
     void populateFilterCombo();
+
 };
 
 #endif // BASEENTITYBROWSERDLG_H

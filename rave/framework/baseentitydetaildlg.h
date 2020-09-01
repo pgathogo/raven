@@ -59,6 +59,11 @@ protected:
     void save(BaseEntity* entity);
     void setTitle(std::string title);
 
+    void disableSaveBtn();
+    void hideSaveBtn();
+    void disableSaveNewBtn();
+    void hideSaveNewBtn();
+
 private:
    NotificationBar* mNoticeBar;
    bool mOkClose;

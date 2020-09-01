@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <QDebug>
 #include <map>
 #include <libpq-fe.h>
 #include "queryset.h"
@@ -43,8 +44,9 @@ class PostgresDataProvider: public BaseDataProvider
         bool executeQuery(const std::string query) override;
         int fetchLastId(const std::string tableName) override;
         int read(const std::string query) override;
-        void test() {}
+        void test() { qDebug() << "XXXX->" << "PostgresDataProvider"; }
         void openConnection();
+        void openConnection(const std::string conninfo);
         void closeConnection();
         char* make_error_message(char*, char*);
     private:

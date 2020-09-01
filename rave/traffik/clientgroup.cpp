@@ -22,6 +22,7 @@ ClientGroup::ClientGroup()
 
 ClientGroup::ClientGroup(int)
 {
+    setTableName("rave_clientgroup");
 }
 
 ClientGroup::ClientGroup(const ClientGroup& other)
@@ -135,4 +136,9 @@ std::unique_ptr<BaseEntity> ClientGroup::cloneAsUnique()
 void ClientGroup::afterMapping(BaseEntity &entity)
 {
 
+}
+
+std::string ClientGroup::className()
+{
+    return  demangle(typeid(this).name());
 }

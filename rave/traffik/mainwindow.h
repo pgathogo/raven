@@ -5,6 +5,7 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include "../framework/baseentitybrowserdlg.h"
+#include "../security/authentication.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,7 +22,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(std::unique_ptr<Authentication> auth,
+               QWidget *parent = nullptr);
     ~MainWindow();
 
     template<typename T>
@@ -57,6 +59,7 @@ public:
         mdiArea->addSubWindow(win);
         return win;
     }
+    void showEvent(QShowEvent*);
 
 private slots:
     void browseClients();
@@ -74,6 +77,7 @@ private slots:
     void showRegister();
     void contentBrowser();
     void contentAuthBrowser();
+    void openSetupForm();
 
 private:
     PlainForm* pf;
@@ -100,5 +104,7 @@ private:
 
     PostgresDatabaseManager* mPGManager;
     void createActions();
+    std::unique_ptr<Authentication> mAuth;
+    static AccessMap access_map;
 };
 #endif // MAINWINDOW_H

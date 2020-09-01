@@ -63,6 +63,7 @@ Client::Client()
 
 Client::Client(int)
 {
+    setTableName("rave_client");
 }
 
 Client::~Client()

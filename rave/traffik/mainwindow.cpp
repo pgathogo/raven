@@ -18,15 +18,20 @@
 #include "agentbrowser.h"
 #include "clientbrowser.h"
 #include "timebandbrowser.h"
-#include "userbrowser.h"
-#include "rolebrowser.h"
-#include "contentbrowser.h"
-#include "contentauthbrowser.h"
+#include "traffiksetup.h"
+#include "setupform.h"
+
+#include "../security/userbrowser.h"
+#include "../security/rolebrowser.h"
+#include "../security/contentbrowser.h"
+#include "../security/contentauthbrowser.h"
 
 #include "../framework/entityregister.h"
 
+AccessMap MainWindow::access_map;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(std::unique_ptr<Authentication> auth,
+                       QWidget *parent)
     : QMainWindow(parent)
     , pf{}
     , ui(new Ui::MainWindow)
@@ -49,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     ,clientRptAction{}
     ,plainFormAction{}
     ,mPGManager{}
+    ,mAuth{std::move(auth)}
 {
     ui->setupUi(this);
 
@@ -58,7 +64,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     createActions();
 
-    mPGManager = new PostgresDatabaseManager;
+    //mPGManager = new PostgresDatabaseManager;
+    //mPGManager->pgProvider()->openConnection();
+   // mPGManager = auth->dbManager();
 
     this->setWindowTitle("Raven - Traffik");
 }
@@ -172,6 +180,13 @@ void MainWindow::createActions()
 
     setupMenu->addSeparator();
 
+    QAction* setupAction = new QAction(tr("&Traffik Setup"));
+    setupMenu->addAction(setupAction);
+    setupAction->setStatusTip(tr("Traffki Default Setup"));
+    connect(setupAction, &QAction::triggered, this, &MainWindow::openSetupForm);
+
+    setupMenu->addSeparator();
+
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     plainFormAction = new QAction(tr("&Test"), setupMenu);
     setupMenu->addAction(plainFormAction);
@@ -275,6 +290,17 @@ void MainWindow::contentAuthBrowser()
     contentAuthBrowser->exec();
 }
 
+void MainWindow::openSetupForm()
+{
+    auto setup = std::make_unique<TraffikSetup>();
+    std::unique_ptr<SetupForm> setupForm =
+            std::make_unique<SetupForm>(setup.get());
+
+    if (setupForm->exec() > 0 ){
+    }
+
+}
+
 MainWindow::~MainWindow()
 {
     delete mdiArea;
@@ -287,7 +313,12 @@ MainWindow::~MainWindow()
     delete clientRptSubMenu;
     delete setupMenu;
     delete helpMenu;
-    delete mPGManager;
+    //delete mPGManager;
 
 }
+
+void MainWindow::showEvent(QShowEvent*)
+{
+}
+
 

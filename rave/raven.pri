@@ -1,4 +1,5 @@
 SOURCES += \
+    $$PWD/security/loginform.cpp \
     ../framework/baseentity.cpp \
     ../framework/baseentitybrowserdlg.cpp \
     ../framework/baseentitydetaildlg.cpp \
@@ -49,8 +50,8 @@ SOURCES += \
     ../traffik/typeexclusionbrowser.cpp \
     ../traffik/typeexclusiondetails.cpp \
     ../security/user.cpp \
-    ../traffik/userbrowser.cpp \
-    ../traffik/userform.cpp \
+    ../security/userbrowser.cpp \
+    ../security/userform.cpp \
     ../traffik/voiceover.cpp \
     ../traffik/voiceoverbrowser.cpp \
     ../traffik/voiceoverform.cpp \
@@ -66,6 +67,7 @@ SOURCES += \
     ../security/roleform.cpp
 
 HEADERS += \
+    $$PWD/security/loginform.h \
     ../framework/baseentity.h \
     ../framework/baseentitybrowserdlg.h \
     ../framework/baseentitydetaildlg.h \
@@ -119,8 +121,8 @@ HEADERS += \
     ../traffik/typeexclusionbrowser.h \
     ../traffik/typeexclusiondetails.h  \
     ../security/user.h \
-    ../traffik/userbrowser.h \
-    ../traffik/userform.h \
+    ../security/userbrowser.h \
+    ../security/userform.h \
     ../traffik/voiceover.h \
     ../traffik/voiceoverbrowser.h \
     ../traffik/voiceoverform.h \
@@ -136,6 +138,7 @@ HEADERS += \
     ../security/roleform.h
 
 FORMS += \
+    $$PWD/security/loginform.ui \
     ../framework/baseentitybrowserdlg.ui \
     ../framework/baseentitydetaildlg.ui \
     ../framework/manytomanybrowser.ui \
@@ -163,8 +166,8 @@ FORMS += \
     ../traffik/timebandform.ui \
     ../traffik/typeexclusionbrowser.ui \
     ../traffik/typeexclusiondetails.ui \
-    ../traffik/userbrowser.ui \
-    ../traffik/userform.ui \
+    ../security/userbrowser.ui \
+    ../security/userform.ui \
     ../traffik/voiceoverbrowser.ui \
     ../traffik/voiceoverform.ui \
     ../security/contentauthbrowser.ui \

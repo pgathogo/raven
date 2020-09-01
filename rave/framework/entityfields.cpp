@@ -455,7 +455,6 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
 
 ForeignKeyField::~ForeignKeyField()
 {
-    qDebug() << "LookupField::dtor";
 }
 
 std::string ForeignKeyField::valueToString() const
@@ -480,6 +479,7 @@ std::string ForeignKeyField::dbValueFormatter()
 void ForeignKeyField::setValue(int val)
 {
     mValue = val;
+    setCurrentText();
 }
 
 void ForeignKeyField::stringToValue(std::string val)
@@ -498,6 +498,25 @@ EntityDataModel* ForeignKeyField::dataModel() const
     return lookups[fieldName()].get();
 }
 
+std::string ForeignKeyField::sourceTableName() const
+{
+    return dataModel()->entityTableName();
+}
+
+BaseEntity *ForeignKeyField::currentEntity()
+{
+    BaseEntity* ent = nullptr;
+
+    for (auto&[name, entity] : dataModel()->modelEntities()){
+        if (name == currText()){
+            ent = entity.get();
+            break;
+        }
+    }
+
+    return ent;
+}
+
 void ForeignKeyField::setIndex(int i)
 {
     mIndex = i;
@@ -510,10 +529,22 @@ void ForeignKeyField::setCurrText(std::string txt)
 {
     mCurrText = txt;
 }
+
+
 std::string ForeignKeyField::currText() const
 {
     return mCurrText;
 }
+
+void ForeignKeyField::setCurrentText()
+{
+    for (auto&[name, entity] : dataModel()->modelEntities()){
+        if (entity->id() == value()){
+            setCurrText(name);
+        }
+    }
+}
+
 
 void ForeignKeyField::cacheData()
 {

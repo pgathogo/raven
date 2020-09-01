@@ -40,6 +40,9 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 
+    std::string className() override;
+
+
 private:
     StringField* mName;
     TextField* mDescription;

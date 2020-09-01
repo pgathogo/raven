@@ -45,6 +45,8 @@ public:
 
     TextField* address() const;
     void setAddress(std::string paddress);
+
+    std::string className() override;
 private:
     StringField* mName;
     StringField* mTown;

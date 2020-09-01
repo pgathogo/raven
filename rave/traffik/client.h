@@ -111,6 +111,7 @@ private:
     ChoiceField<std::string>* mContactSalute;
     ChoiceField<std::string>* mRevenueType;
     ChoiceField<std::string>* mBillCycle;
+
     QStringList mHeader;
     std::string mTableName;
 

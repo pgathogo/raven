@@ -1,13 +1,13 @@
 #include <QMessageBox>
 
 #include "baseentitybrowserdlg.h"
-//#include "ui_baseentitybrowserdlg.h"
 
 #include "baseentity.h"
 #include "entitydatamodel.h"
 
 #include "../utils/tools.h"
 #include "../framework/ravenexception.h"
+#include "../security/authentication.h"
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
     QDialog(parent),
@@ -20,34 +20,26 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
 }
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
-                                           std::unique_ptr<BaseEntity> entity)
+                                           std::unique_ptr<BaseEntity> entity
+                                           )
         :QDialog(parent)
         ,mMdiArea{nullptr}
         ,bui(new Ui::BaseEntityBrowserDlg)
         ,mEntityDataModel{nullptr}
 {
-    std::string class_name = demangle(typeid(entity).name());
-    qDebug() << QString::fromStdString(class_name);
 
-    mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
     bui->setupUi(this);
     connectSlots();
+
+    //auto access_bit = Authentication::mAccessMap[entity->className()];
+    //setAccess(access_bit);
+
+    mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
     bui->tvEntity->setModel(mEntityDataModel.get());
     bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
-}
 
-/*
-void BaseEntityBrowserDlg::setEntityDataModel(BaseEntity* entity)
-{
-    if (mEntityDataModel){
-        //delete mEntityDataModel;
-        delete mBaseEntity;
-    }
-    mEntityDataModel = std::make_unique<EntityDataModel>(entity);
-    mBaseEntity = entity;
 }
-*/
 
 BaseEntityBrowserDlg::~BaseEntityBrowserDlg()
 {
@@ -206,4 +198,18 @@ void BaseEntityBrowserDlg::hideDeleteButton()
 std::string BaseEntityBrowserDlg::typeID()
 {
     return "BaseEntityBrowserDlg";
+}
+
+void BaseEntityBrowserDlg::setAccess(std::string access_bit)
+{
+    if (access_bit.empty()) return;
+
+    std::string create{access_bit.at(0)};
+    std::string read{access_bit.at(1)};
+    std::string update{access_bit.at(2)};
+    std::string del{access_bit.at(3)};
+    bui->btnAdd->setEnabled(std::atoi(create.c_str()));
+    bui->btnSearch->setEnabled(std::atoi(read.c_str()));
+    bui->btnEdit->setEnabled(std::atoi(update.c_str()));
+    bui->btnDelete->setEnabled(std::atoi(del.c_str()));
 }

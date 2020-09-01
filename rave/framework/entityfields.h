@@ -173,10 +173,16 @@ public:
         void setCurrText(std::string txt);
         std::string currText() const;
 
+        void setCurrentText();
+
         void cacheData();
         std::size_t cacheCount();
 
         EntityDataModel* dataModel() const;
+
+        std::string sourceTableName() const;
+
+        BaseEntity* currentEntity();
 
     private:
         int mValue;

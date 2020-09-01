@@ -20,6 +20,10 @@ public:
 
     StringField* code() const;
     void setCode(const std::string val);
+
+    StringField* contentTableName() const;
+    void setContentTableName(const std::string table_name);
+
     std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
     std::list<std::string> tableViewColumns() const override;
@@ -38,6 +42,7 @@ private:
     StringField* mName;
     StringField* mContentDisplayName;
     StringField* mCode;
+    StringField* mContentTableName;
     QStringList mHeader;
     std::string mTableName;
 };

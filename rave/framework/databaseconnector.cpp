@@ -46,7 +46,6 @@ void PostgresConnector::openConnection(const std::string conninfo)
         errMsg += PQerrorMessage(mConnection);
         PQfinish(mConnection);
         throw PostgresException("CONNECT", errMsg);
-
     }
 
 }

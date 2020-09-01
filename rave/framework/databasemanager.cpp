@@ -130,7 +130,15 @@ std::string BaseDatabaseManager::makeUpdateString(const BaseEntity& entity)
 PostgresDatabaseManager::PostgresDatabaseManager()
 {
     dataProvider =  new PostgresDataProvider;
-    dataProvider->openConnection();
+    dataProvider->openConnection(mConninfo);
+}
+
+PostgresDatabaseManager::PostgresDatabaseManager(const std::string conninfo)
+{
+
+    dataProvider =  new PostgresDataProvider;
+    dataProvider->openConnection(conninfo);
+    mConninfo = conninfo;
 }
 
 PostgresDatabaseManager::~PostgresDatabaseManager()
@@ -190,6 +198,7 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter;
+    qDebug() << stoq(sql) ;
     return provider()->read(sql);
 }
 
@@ -239,5 +248,11 @@ BaseDataProvider* PostgresDatabaseManager::provider()
 
 std::string PostgresDatabaseManager::make_insert_stmt(const BaseEntity &entity)
 {
-   return makeInsertString( entity );
+    return makeInsertString( entity );
 }
+
+PostgresDataProvider *PostgresDatabaseManager::pgProvider()
+{
+    return dataProvider;
+}
+

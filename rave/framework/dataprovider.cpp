@@ -45,7 +45,7 @@ PostgresDataProvider::PostgresDataProvider()
     ,mPGConnector{nullptr}
 {
     qDebug() << "Open connection ...";
-    openConnection();
+    //openConnection();
 }
 
 PostgresDataProvider::~PostgresDataProvider()
@@ -64,6 +64,7 @@ PostgresDataProvider* PostgresDataProvider::instance()
 }
 */
 
+
 void PostgresDataProvider::openConnection()
 {
     // read this values from registry
@@ -71,9 +72,14 @@ void PostgresDataProvider::openConnection()
     std::string conninfo = "user=postgres password=abc123 dbname=raven port=5433";
 
     mPGConnector = PostgresConnector::instance(conninfo);
-
     conn = mPGConnector->connection();
+}
 
+
+void PostgresDataProvider::openConnection(const std::string conninfo)
+{
+    mPGConnector = PostgresConnector::instance(conninfo);
+    conn = mPGConnector->connection();
 }
 
 void PostgresDataProvider::closeConnection()

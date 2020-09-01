@@ -19,7 +19,11 @@ public:
 
     void addRecord() override;
     void updateRecord() override;
+    void deleteRecord() override;
     //void searchRecord() override;
+
+    bool roles_attached(const BaseEntity* entity);
+
 private:
     Ui::ContentBrowser *ui;
 };

@@ -39,7 +39,6 @@ void BaseEntityDetailDlg::connectSlots()
 
 void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
 {
-    qDebug() << "mOkClose: "<< mOkClose;
     done(0);
     if(!mOkClose)
         event->ignore();
@@ -83,3 +82,24 @@ void BaseEntityDetailDlg::setTitle(std::string title)
     setWindowTitle(qtitle);
     bui->lblTitle->setText(qtitle);
 }
+
+void BaseEntityDetailDlg::disableSaveBtn()
+{
+    bui->btnSave->setEnabled(false);
+}
+
+void BaseEntityDetailDlg::hideSaveBtn()
+{
+    bui->btnSave->setVisible(false);
+}
+
+void BaseEntityDetailDlg::disableSaveNewBtn()
+{
+    bui->btnSaveNew->setEnabled(false);
+}
+
+void BaseEntityDetailDlg::hideSaveNewBtn()
+{
+    bui->btnSaveNew->setVisible(false);
+}
+

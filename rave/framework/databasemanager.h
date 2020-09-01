@@ -54,6 +54,7 @@ class PostgresDatabaseManager : public BaseDatabaseManager
 {
 public:
     PostgresDatabaseManager();
+    PostgresDatabaseManager(const std::string conninfo);
      ~PostgresDatabaseManager() override;
     virtual void populateFields(BaseEntity* /*entity*/){}
     virtual void populateObject(const BaseEntity& /*entity*/){}
@@ -74,11 +75,12 @@ public:
     int readRaw(const std::string sql) override;
     BaseDataProvider* provider() override;
     std::string make_insert_stmt(const BaseEntity& entity) override;
+    PostgresDataProvider* pgProvider();
 protected:
     void loadEntity(BaseEntity& entity)override;
 private:
     PostgresDataProvider* dataProvider;
-
+    std::string mConninfo;
 };
 
 

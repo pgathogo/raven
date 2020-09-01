@@ -62,8 +62,6 @@ void ContentAuthForm::populateFormWidgets()
     ui->cbRead->setCheckState(cs(mContentAuth->readBit()->value()));
     ui->cbUpdate->setCheckState(cs(mContentAuth->updateBit()->value()));
     ui->cbDelete->setCheckState(cs(mContentAuth->deleteBit()->value()));
-
-
 }
 
 ActionResult ContentAuthForm::saveRecord()

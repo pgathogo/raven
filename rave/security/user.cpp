@@ -31,6 +31,37 @@ User::User()
 
 }
 
+User::User(const std::string username, const std::string password)
+{
+    mUseSysId = createField<IntegerField>("usesysid", "User System ID");
+    mUseSysId->setReadOnly(true);
+
+    mUserName = createField<StringField>("usename","User Name");
+    mUserName->setValue(username);
+    mUserName->setMandatory(true);
+
+    mPassword = createField<StringField>("passwd","Password");
+    mPassword->setValue(password);
+    mPassword->setMandatory(true);
+    mPassword->setFormOnly(true);
+
+    mConfirmPassword = createField<StringField>("confirm_password","Confirm Password");
+    mConfirmPassword->setMandatory(true);
+    mConfirmPassword->setFormOnly(true);
+    mValidUntil = createField<StringField>("valuntil","Valid Until");
+
+    mPasswordExpire = createField<BooleanField>("password_expire", "Password Expire");
+    mPasswordExpire->setFormOnly(true);
+
+    mHeader << QString::fromStdString(mUserName->fieldLabel());
+
+    setTableName("pg_user");
+
+    // pg_user table does not have an Id column
+    getId().setFormOnly(true);
+
+}
+
 User::~User()
 {
 }

@@ -78,6 +78,8 @@ public:
     virtual std::string make_alter_stmt(const std::string name);
     virtual std::string make_drop_stmt(const std::string name);
 
+    virtual std::string className();
+
     template<typename T>
     std::unique_ptr<T> clone()
     {

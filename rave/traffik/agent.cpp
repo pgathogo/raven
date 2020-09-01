@@ -31,7 +31,9 @@ Agent::Agent():
 }
 
 Agent::Agent(int)
-{}
+{
+    setTableName("rave_agent");
+}
 
 Agent::Agent(const Agent& /*other*/)
 {
@@ -163,4 +165,11 @@ std::unique_ptr<BaseEntity> Agent::cloneAsUnique()
 void Agent::afterMapping(BaseEntity &entity)
 {
 
+}
+
+std::string Agent::className()
+{
+    std::string cname = demangle(typeid(this).name());
+    cname.erase(cname.end()-1);
+    return cname;
 }

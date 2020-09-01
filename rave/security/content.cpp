@@ -5,9 +5,11 @@ Content::Content()
     mName = createField<StringField>("name","Name");
     mContentDisplayName = createField<StringField>("display_name", "Display Name");
     mCode = createField<StringField>("code", "Code");
+    mContentTableName = createField<StringField>("table_name", "Table Name");
 
     mHeader << QString::fromStdString(mName->fieldLabel())
-            << QString::fromStdString(mContentDisplayName->fieldLabel());
+            << QString::fromStdString(mContentDisplayName->fieldLabel())
+            << QString::fromStdString(mContentTableName->fieldLabel());
 
     setTableName("rave_content");
 }
@@ -45,6 +47,16 @@ StringField *Content::code() const
 void Content::setCode(const std::string val)
 {
     mCode->setValue( val );
+}
+
+StringField *Content::contentTableName() const
+{
+    return mContentTableName;
+}
+
+void Content::setContentTableName(const std::string table_name)
+{
+    mContentTableName->setValue( table_name );
 }
 
 std::unique_ptr<BaseEntity> Content::mapFields(StringMap *e)
