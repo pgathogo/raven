@@ -34,6 +34,7 @@ class EntityModel : public QStandardItemModel{
 
         BaseEntity& getEntity();
 
+        BaseEntity* firstEntity();
 
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
@@ -73,6 +74,7 @@ public:
     void readRaw(const std::string sql);
 
     size_t count();
+
 
     void mapEntity(StringMap* map, BaseEntity& entity);
     void populateMToMDetails();

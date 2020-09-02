@@ -30,6 +30,11 @@ public:
 
     void populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf);
 
+private slots:
+      void agencyCommTypeChanged(int);
+      void saleRepCommTypeChanged(int);
+      void billCycleChanged(int);
+
 private:
     Ui::SetupForm *ui;
     TraffikSetup* mSetup;

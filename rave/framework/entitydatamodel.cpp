@@ -111,6 +111,11 @@ BaseEntity& EntityModel::getEntity()
     return *mEntity;
 }
 
+BaseEntity* EntityModel::firstEntity()
+{
+     return std::get<1>(mEntities[0]).get();
+}
+
 /* ----------- EntityDataModel ------------------ */
 
 EntityDataModel::EntityDataModel():

@@ -68,7 +68,11 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QDoubleSpinBox" name="sbAgencyComm"/>
+          <widget class="QDoubleSpinBox" name="sbAgencyComm">
+           <property name="maximum">
+            <double>999999.989999999990687</double>
+           </property>
+          </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_7">
@@ -78,7 +82,11 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QDoubleSpinBox" name="sbSaleRepComm"/>
+          <widget class="QDoubleSpinBox" name="sbSaleRepComm">
+           <property name="maximum">
+            <double>999999.989999999990687</double>
+           </property>
+          </widget>
          </item>
          <item row="1" column="2">
           <widget class="QComboBox" name="cbSaleRepCommType"/>
@@ -145,7 +153,11 @@
           <widget class="QDoubleSpinBox" name="edtIntRate"/>
          </item>
          <item row="1" column="1">
-          <widget class="QDoubleSpinBox" name="edtLateFee"/>
+          <widget class="QDoubleSpinBox" name="edtLateFee">
+           <property name="maximum">
+            <double>999999.989999999990687</double>
+           </property>
+          </widget>
          </item>
          <item row="0" column="1">
           <widget class="QComboBox" name="cbBillCycle"/>

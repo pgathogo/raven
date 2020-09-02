@@ -15,7 +15,18 @@ SetupForm::SetupForm(TraffikSetup* setup,
     setTitle(windowTitle());
     populateFormWidgets();
 
+    connect(ui->cbAgencyCommType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &SetupForm::agencyCommTypeChanged);
+
+    connect(ui->cbSaleRepCommType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &SetupForm::saleRepCommTypeChanged);
+
+    connect(ui->cbBillCycle, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &SetupForm::billCycleChanged);
+
     hideSaveNewBtn();
+
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 SetupForm::~SetupForm()
@@ -25,6 +36,7 @@ SetupForm::~SetupForm()
 
 ActionResult SetupForm::saveRecord()
 {
+    populateEntityFields();
     return mSetup->validate();
 }
 
@@ -35,6 +47,18 @@ std::string SetupForm::windowTitle()
 
 void SetupForm::populateEntityFields()
 {
+    mSetup->stationName()->setValue(ui->edtStationName->text().toStdString());
+    mSetup->address1()->setValue(ui->edtAddress1->text().toStdString());
+    mSetup->address2()->setValue(ui->edtAddress2->text().toStdString());
+
+    mSetup->agencyComm()->setValue(ui->sbAgencyComm->value());
+    mSetup->saleRepComm()->setValue(ui->sbSaleRepComm->value());
+
+    mSetup->lateFee()->setValue(ui->edtLateFee->value());
+    mSetup->interestRate()->setValue(ui->edtIntRate->value());
+    mSetup->gracePeriod()->setValue(ui->edtGracePeriod->value());
+    mSetup->orderApprovalLevels()->setValue(ui->edtAprvLevels->value());
+    mSetup->maxBreakSpots()->setValue(ui->edtMaxSpots->value());
 
 }
 
@@ -57,7 +81,6 @@ void SetupForm::populateFormWidgets()
     ui->edtGracePeriod->setValue(mSetup->gracePeriod()->value());
     ui->edtAprvLevels->setValue(mSetup->orderApprovalLevels()->value());
     ui->edtMaxSpots->setValue(mSetup->maxBreakSpots()->value());
-
 }
 
 void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -66,4 +89,22 @@ void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::stri
         cbox->addItem(stoq(std::get<1>(c)), stoq(std::get<0>(c)));
 
     cbox->setCurrentIndex( cbox->findData(QVariant(stoq(cf->value()))) );
+}
+
+void SetupForm::agencyCommTypeChanged(int i)
+{
+    mSetup->agencyCommType()->setValue(
+                ui->cbAgencyCommType->itemData(i).toString().toStdString());
+}
+
+void SetupForm::saleRepCommTypeChanged(int i)
+{
+    mSetup->saleRepCommType()->setValue(
+                ui->cbSaleRepCommType->itemData(i).toString().toStdString());
+}
+
+void SetupForm::billCycleChanged(int i)
+{
+    mSetup->billingCycle()->setValue(
+                ui->cbBillCycle->itemData(i).toString().toStdString());
 }

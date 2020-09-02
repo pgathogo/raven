@@ -27,6 +27,7 @@
 #include "../security/contentauthbrowser.h"
 
 #include "../framework/entityregister.h"
+#include "../framework/entitydatamodel.h"
 
 AccessMap MainWindow::access_map;
 
@@ -292,13 +293,24 @@ void MainWindow::contentAuthBrowser()
 
 void MainWindow::openSetupForm()
 {
-    auto setup = std::make_unique<TraffikSetup>();
-    std::unique_ptr<SetupForm> setupForm =
-            std::make_unique<SetupForm>(setup.get());
+    std::unique_ptr<SetupForm> setupForm;
 
-    if (setupForm->exec() > 0 ){
+    EntityDataModel edm(std::make_unique<TraffikSetup>());
+    edm.all();
+    if (edm.count() > 0){
+        BaseEntity* be = edm.firstEntity();
+        TraffikSetup* ts = dynamic_cast<TraffikSetup*>(be);
+        setupForm = std::make_unique<SetupForm>(ts);
+        if (setupForm->exec() > 0 ){
+            edm.updateEntity(*ts);
+        }
+    }else{
+        auto ts = std::make_unique<TraffikSetup>();
+        setupForm = std::make_unique<SetupForm>(ts.get());
+        if (setupForm->exec() > 0 ){
+            edm.createEntityDB(*ts);
+        }
     }
-
 }
 
 MainWindow::~MainWindow()
