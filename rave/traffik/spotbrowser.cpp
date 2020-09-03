@@ -75,6 +75,9 @@ void SpotBrowser::updateRecord()
 
 void SpotBrowser::searchRecord()
 {
+    search_related<Spot, Client>(mClient);
+
+    /*
     if (bui->edtFilter->text().isEmpty()){
         Spot& spot = dynamic_cast<Spot&>(entityDataModel().getEntity());
         auto si = searchItem(spot.client()->dbColumnName(), mClient->id());
@@ -92,6 +95,7 @@ void SpotBrowser::searchRecord()
         std::string filter = entityDataModel().prepareFilter(brand_filter, client_filter);
         entityDataModel().search(filter);
     }
+    */
 }
 
 void SpotBrowser::saveVoiceOvers(const SpotForm& sf)

@@ -50,6 +50,9 @@ public:
 
     void setAccess(std::string access_bit);
 
+    EntityDataModel& entityDataModel() const;
+    void setMdiArea(QMdiArea* mdi);
+
     template <typename T1, typename T2>
     std::unique_ptr<T2> update()
     {
@@ -183,8 +186,49 @@ public:
             showMessage(de.errorMessage());
         }
     }
-    EntityDataModel& entityDataModel() const;
-    void setMdiArea(QMdiArea* mdi);
+
+    template<typename T>
+    class HasClientId
+    {
+        private:
+            typedef char YesType[1];
+            typedef char NoType[2];
+
+            template <typename C>
+            static YesType& test(decltype(&C::client));
+            template <typename C>
+            static NoType& test(...);
+        public:
+            enum{ value = sizeof(test<T>(0)) == sizeof(YesType) };
+    };
+
+
+    template<typename T, typename T2>
+    void search_related(T2* parent)
+    {
+        if (bui->edtFilter->text().isEmpty()){
+            T& t = dynamic_cast<T&>(entityDataModel().getEntity());
+           if constexpr(HasClientId<T>::value > 0){
+                auto si = searchItem(t.client()->dbColumnName(), parent->id());
+                entityDataModel().searchByInt(si);
+           }
+        }else{
+            auto data = bui->cbFilter->itemData(
+                                bui->cbFilter->currentIndex()).value<QVariant>();
+            std::string columnName = data.toString().toStdString();
+            std::string item = bui->edtFilter->text().toStdString();
+            auto brand_filter = std::make_tuple(columnName, item);
+
+            T& t = dynamic_cast<T&>(entityDataModel().getEntity());
+            if constexpr(HasClientId<T>::value > 0){
+                auto parent_filter = searchItem(t.client()->dbColumnName(), parent->id());
+                std::string filter = entityDataModel().prepareFilter(brand_filter, parent_filter);
+                entityDataModel().search(filter);
+            }
+        }
+
+    }
+
 protected:
     QMdiArea* mMdiArea;
     int selectedRowId() const;

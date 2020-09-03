@@ -64,22 +64,5 @@ void BrandBrowser::updateRecord()
 
 void BrandBrowser::searchRecord()
 {
-    if (bui->edtFilter->text().isEmpty()){
-        Brand& brand = dynamic_cast<Brand&>(entityDataModel().getEntity());
-        auto si = searchItem(brand.client()->dbColumnName(), mClient->id());
-        entityDataModel().searchByInt(si);
-    }else{
-        auto data = bui->cbFilter->itemData(
-                            bui->cbFilter->currentIndex()).value<QVariant>();
-        std::string columnName = data.toString().toStdString();
-        std::string item = bui->edtFilter->text().toStdString();
-        auto brand_filter = std::make_tuple(columnName, item);
-
-        Brand& brand = dynamic_cast<Brand&>(entityDataModel().getEntity());
-        auto client_filter = searchItem(brand.client()->dbColumnName(), mClient->id());
-
-        std::string filter = entityDataModel().prepareFilter(brand_filter, client_filter);
-        entityDataModel().search(filter);
-    }
-
+    search_related<Brand, Client>(mClient);
 }

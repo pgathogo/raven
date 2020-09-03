@@ -40,12 +40,16 @@ HEADERS += \
     ../framework/entityregister.h \ \
     ../security/accesscontroller.h \
     ../security/authentication.h \
+    order.h \
+    orderpackage.h \
     setupform.h \
     traffiksetup.h
 
 SOURCES += \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
+    order.cpp \
+    orderpackage.cpp \
     setupform.cpp \
     traffiksetup.cpp
 

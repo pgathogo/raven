@@ -205,3 +205,66 @@ class Content(models.Model):
 
 class ContentAuth(ManyToMany):
     access_bit = models.CharField(max_length=8, default='00000000')
+
+class OrderPackage(models.Model):
+    name = models.CharField(max_length=255)
+    spot_count = models.IntegerField(null=True)
+    mention_count = models.IntegerField(null=True)
+
+REVENUE_TYPE = (
+        ('C', 'Cash'),
+        ('T', 'Trade'),
+        )
+
+ORDER_BILLING_TYPE = (
+        ('G', 'Gross'),
+        ('N', 'Net'),
+        )
+
+BILLING_BASIS = (
+        ('STD', 'Standard'),
+        ('DAY', 'Daily'),
+        ('PRD', 'Billing Period'),
+        )
+class Order(models.Model):
+    title = models.CharField(max_length=255)
+    order_number = models.IntegerField(null=True)
+    client = models.ForeignKey(Client)
+    order_date = models.DateField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    package = models.ForeignKey(OrderPackage, null=True)
+    revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE)
+    billing_type = models.CharField(max_length=1, blank=True, null=True, choices=ORDER_BILLING_TYPE)
+    billing_period = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
+    account_rep = models.ForeignKey(SalesPerson, null=True, blank=True)
+    brand = models.ForeignKey(Brand, null=True, blank=True)
+    agency = models.ForeignKey(Agent, null=True, blank=True)
+    spots_ordered = models.IntegerField(null=True)
+    spots_booked = models.IntegerField(null=True)
+    spots_played = models.IntegerField(null=True)
+    discount = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    agency_comm = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    agency_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    sales_rep_comm = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    sales_rep_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    trade_credit = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    trade_credit_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    late_fee = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    grace_period = models.IntegerField(null=True)
+    billing_basis = models.CharField(max_length=1, blank=True, null=True, choices=BILLING_BASIS)
+    approval_count = models.IntegerField(null=True, default=0)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+
+class OrderApprover(models.Model):
+    user_id = models.CharField(max_length=15)
+    user_title = models.CharField(max_length=255, null=True, blank=True)
+    level = models.IntegerField(null=True)
+
+class OrderApprovals(models.Model):
+    order = models.ForeignKey(Order)
+    approver = models.ForeignKey(OrderApprover)
+    level = models.IntegerField(null=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+

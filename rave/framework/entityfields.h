@@ -4,6 +4,7 @@
 #include<string>
 #include<variant>
 #include<QVariant>
+#include<QDate>
 #include<memory>
 
 using FieldValueType = std::variant<std::string, int>;
@@ -113,8 +114,8 @@ class StringField : public Field{
         typedef std::string type;
 
         StringField();
-        ~StringField() override;
         StringField(const std::string aName, const std::string aLabel);
+        ~StringField() override;
 
         StringField(const StringField& sf);
         StringField& operator=(const StringField& sf);
@@ -135,8 +136,8 @@ class TextField :public Field{
     public:
         typedef std::string type;
         TextField();
-        ~TextField() override;
         TextField(const std::string aName, const std::string aLabel);
+        ~TextField() override;
         std::string valueToString() const override;
         std::string dbValueFormatter() override;
 
@@ -190,6 +191,42 @@ public:
         std::string mCurrText;
         std::string mDisplayField;
         static std::map<std::string, std::unique_ptr<EntityDataModel>> lookups;
+};
+
+class DateField : public Field{
+public:
+    DateField();
+    DateField(const std::string aName, const std::string aLabel);
+    ~DateField() override;
+
+    std::string valueToString() const override;
+    std::string dbValueFormatter() override;
+
+    void setValue(QDate);
+    void stringToValue(std::string val) override;
+    QDate value();
+
+    std::string displayName() const override;
+private:
+    QDate mValue;
+};
+
+class DateTimeField : public Field{
+public:
+    DateTimeField();
+    DateTimeField(const std::string aName, const std::string aLabel);
+    ~DateTimeField() override;
+
+    std::string valueToString() const override;
+    std::string dbValueFormatter() override;
+
+    void setValue(QDateTime);
+    void stringToValue(std::string val) override;
+    QDateTime value();
+
+    std::string displayName() const override;
+private:
+    QDateTime mValue;
 };
 
 

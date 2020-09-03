@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include <QDebug>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -8,6 +10,7 @@
 #include "valuelist.h"
 
 #include "../utils/tools.h"
+#include "../lib/date/date.h"
 
 Field::Field()
     :mFieldName{"FieldName"},
@@ -591,3 +594,105 @@ std::string ForeignKeyField::displayName() const
 
 
 
+
+DateField::DateField()
+{
+}
+
+DateField::~DateField()
+{
+}
+
+DateField::DateField(const std::string aName, const std::string aLabel)
+    :Field(aName, aLabel)
+    ,mValue{QDate::currentDate()}
+{
+    /*
+    auto now = std::chrono::system_clock::now();
+    auto today = date::floor<date::days>(now);
+    date::year_month_day ymd = date::year_month_day(today);
+
+    int y = int(ymd.year());
+    int m = static_cast<int>(unsigned(ymd.month()));
+    int d = static_cast<int>(unsigned(ymd.day()));
+
+    mValue.setDate(y, m, d);
+    */
+}
+
+std::string DateField::valueToString() const
+{
+    return mValue.toString().toStdString();
+}
+
+std::string DateField::dbValueFormatter()
+{
+    return valueToString();
+}
+
+void DateField::setValue(QDate dt)
+{
+    mValue.setDate(dt.year(), dt.month(), dt.day());
+}
+
+void DateField::stringToValue(std::string val)
+{
+    QDate dt = QDate::fromString(stoq(val));
+    mValue.setDate(dt.year(), dt.month(), dt.day());
+}
+
+QDate DateField::value()
+{
+    return mValue;
+}
+
+std::string DateField::displayName() const
+{
+    return valueToString();
+}
+
+DateTimeField::DateTimeField()
+{
+}
+
+DateTimeField::~DateTimeField()
+{
+}
+
+DateTimeField::DateTimeField(const std::string aName, const std::string aLabel)
+    :Field(aName, aLabel)
+    ,mValue{QDateTime::currentDateTime()}
+{
+}
+
+std::string DateTimeField::valueToString() const
+{
+    return mValue.toString().toStdString();
+}
+
+std::string DateTimeField::dbValueFormatter()
+{
+    return valueToString();
+}
+
+void DateTimeField::setValue(QDateTime dt)
+{
+    mValue.setDate(dt.date());
+    mValue.setTime(dt.time());
+}
+
+void DateTimeField::stringToValue(std::string val)
+{
+    mValue.setDate(QDateTime::fromString(stoq(val)).date());
+    mValue.setTime(QDateTime::fromString(stoq(val)).time());
+}
+
+QDateTime DateTimeField::value()
+{
+    return mValue;
+}
+
+std::string DateTimeField::displayName() const
+{
+    return valueToString();
+}

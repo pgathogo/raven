@@ -190,7 +190,7 @@ void TraffikSetup::setTableName(const std::string table_name)
    mTableName = table_name;
 }
 
-std::unique_ptr<BaseEntity> TraffikSetup::mapFields(StringMap *raw_entity)
+std::unique_ptr<BaseEntity> TraffikSetup::mapFields(StringMap*)
 {
 }
 
