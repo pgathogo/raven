@@ -13,7 +13,7 @@ class Spot : public BaseEntity
 {
 public:
     Spot();
-    Spot(const Client& client);
+    Spot(const Client* client);
     ~Spot() override;
 
     std::string tableName() const override;

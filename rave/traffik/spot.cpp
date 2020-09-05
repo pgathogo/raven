@@ -56,7 +56,7 @@ Spot::Spot()
     setTableName("rave_spot");
 }
 
-Spot::Spot(const Client& client)
+Spot::Spot(const Client* client)
     :mName{}
     ,mSpotDuration{}
     ,mRealDuration{}
@@ -72,7 +72,7 @@ Spot::Spot(const Client& client)
 
    //auto filter = std::make_tuple("client_id", client.id());
     EntityDataModel edm;
-    auto filter = std::make_tuple("client_id", client.id());
+    auto filter = std::make_tuple("client_id", client->id());
     std::string fstr = edm.prepareFilter(filter);
 
 
@@ -83,6 +83,7 @@ Spot::Spot(const Client& client)
 
     mClient = createField<ForeignKeyField>("client_id", "Client",
                                            std::make_unique<Client>(), "name");
+    mClient->setValue(client->id());
 
     mDaypart1 = createField<StringField>("daypart1", "Daypart1");
     mDaypart1->setSearchable(false);

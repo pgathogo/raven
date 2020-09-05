@@ -181,36 +181,6 @@ COMM_TYPE = (
         ('P', 'Percentage'),
         )
 
-class Setup(models.Model):
-    station_name = models.CharField(max_length=255, null=True, blank=True)
-    station_logo = models.CharField(max_length=255, null=True, blank=True)
-    address1 = models.CharField(max_length=255, null=True, blank=True)
-    address2 = models.CharField(max_length=255, null=True, blank=True)
-    max_spot_per_break = models.IntegerField(null=True)
-    agency_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    agency_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
-    sales_rep_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    sales_rep_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
-    billing_cycle = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
-    late_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    pay_grace_period = models.IntegerField(null=True)
-    order_approval_levels = models.IntegerField(null=True)
-
-class Content(models.Model):
-    name = models.CharField(max_length=255)
-    display_name = models.CharField(max_length=255, null=True, blank=True)
-    table_name = models.CharField(max_length=255, null=True, blank=True)
-    code = models.CharField(max_length=255, null=True, blank=True)
-
-class ContentAuth(ManyToMany):
-    access_bit = models.CharField(max_length=8, default='00000000')
-
-class OrderPackage(models.Model):
-    name = models.CharField(max_length=255)
-    spot_count = models.IntegerField(null=True)
-    mention_count = models.IntegerField(null=True)
-
 REVENUE_TYPE = (
         ('C', 'Cash'),
         ('T', 'Trade'),
@@ -226,6 +196,41 @@ BILLING_BASIS = (
         ('DAY', 'Daily'),
         ('PRD', 'Billing Period'),
         )
+
+class Setup(models.Model):
+    station_name = models.CharField(max_length=255, null=True, blank=True)
+    station_logo = models.CharField(max_length=255, null=True, blank=True)
+    address1 = models.CharField(max_length=255, null=True, blank=True)
+    address2 = models.CharField(max_length=255, null=True, blank=True)
+    max_spot_per_break = models.IntegerField(null=True)
+    agency_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    agency_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    sales_rep_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    sales_rep_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
+    billing_cycle = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
+    billing_type = models.CharField(max_length=1, blank=True, null=True, choices=ORDER_BILLING_TYPE)
+    billing_basis = models.CharField(max_length=3, blank=True, null=True, choices=BILLING_BASIS)
+    late_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    pay_grace_period = models.IntegerField(null=True)
+    revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE);
+    order_approval_levels = models.IntegerField(null=True)
+    order_number_sequence = models.IntegerField(null=True);
+
+class Content(models.Model):
+    name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255, null=True, blank=True)
+    table_name = models.CharField(max_length=255, null=True, blank=True)
+    code = models.CharField(max_length=255, null=True, blank=True)
+
+class ContentAuth(ManyToMany):
+    access_bit = models.CharField(max_length=8, default='00000000')
+
+class OrderPackage(models.Model):
+    name = models.CharField(max_length=255)
+    spot_count = models.IntegerField(null=True)
+    mention_count = models.IntegerField(null=True)
+
 class Order(models.Model):
     title = models.CharField(max_length=255)
     order_number = models.IntegerField(null=True)
@@ -243,7 +248,7 @@ class Order(models.Model):
     spots_ordered = models.IntegerField(null=True)
     spots_booked = models.IntegerField(null=True)
     spots_played = models.IntegerField(null=True)
-    discount = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    discount = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     agency_comm = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     agency_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
     sales_rep_comm = models.DecimalField(max_digits=16, decimal_places=2, null=True)
@@ -252,7 +257,7 @@ class Order(models.Model):
     trade_credit_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
     late_fee = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     grace_period = models.IntegerField(null=True)
-    billing_basis = models.CharField(max_length=1, blank=True, null=True, choices=BILLING_BASIS)
+    billing_basis = models.CharField(max_length=3, blank=True, null=True, choices=BILLING_BASIS)
     approval_count = models.IntegerField(null=True, default=0)
     add_login = models.CharField(max_length=15, null=True, blank=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)

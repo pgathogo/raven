@@ -34,6 +34,9 @@ private slots:
       void agencyCommTypeChanged(int);
       void saleRepCommTypeChanged(int);
       void billCycleChanged(int);
+      void revenueTypeChanged(int);
+      void billingTypeChanged(int);
+      void billingBasisChanged(int);
 
 private:
     Ui::SetupForm *ui;

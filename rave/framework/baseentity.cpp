@@ -174,3 +174,8 @@ void BaseEntity::baseMapFields(StringMap* map)
     for(auto& [field, name] : mapping(map))
         this->setValueByField(*field, name);
 }
+
+bool BaseEntity::isNew()
+{
+    return (id() == -1) ? true : false;
+}

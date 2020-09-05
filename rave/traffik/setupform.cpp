@@ -24,6 +24,15 @@ SetupForm::SetupForm(TraffikSetup* setup,
     connect(ui->cbBillCycle, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &SetupForm::billCycleChanged);
 
+    connect(ui->cbRevenueType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &SetupForm::revenueTypeChanged);
+
+    connect(ui->cbBillingType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &SetupForm::billingTypeChanged);
+
+    connect(ui->cbBillingBasis, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &SetupForm::billingBasisChanged);
+
     hideSaveNewBtn();
 
     ui->tabWidget->setCurrentIndex(0);
@@ -60,6 +69,7 @@ void SetupForm::populateEntityFields()
     mSetup->orderApprovalLevels()->setValue(ui->edtAprvLevels->value());
     mSetup->maxBreakSpots()->setValue(ui->edtMaxSpots->value());
 
+    mSetup->orderNumberSequence()->setValue(ui->sbOrderSequence->value());
 }
 
 void SetupForm::populateFormWidgets()
@@ -75,12 +85,16 @@ void SetupForm::populateFormWidgets()
     populateChoiceCombo(ui->cbSaleRepCommType, mSetup->saleRepCommType());
 
     populateChoiceCombo(ui->cbBillCycle, mSetup->billingCycle());
+    populateChoiceCombo(ui->cbRevenueType, mSetup->revenueType());
+    populateChoiceCombo(ui->cbBillingType, mSetup->billingType());
+    populateChoiceCombo(ui->cbBillingBasis, mSetup->billingBasis());
 
     ui->edtLateFee->setValue(mSetup->lateFee()->value());
     ui->edtIntRate->setValue(mSetup->interestRate()->value());
     ui->edtGracePeriod->setValue(mSetup->gracePeriod()->value());
     ui->edtAprvLevels->setValue(mSetup->orderApprovalLevels()->value());
     ui->edtMaxSpots->setValue(mSetup->maxBreakSpots()->value());
+    ui->sbOrderSequence->setValue(mSetup->orderNumberSequence()->value());
 }
 
 void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -107,4 +121,24 @@ void SetupForm::billCycleChanged(int i)
 {
     mSetup->billingCycle()->setValue(
                 ui->cbBillCycle->itemData(i).toString().toStdString());
+}
+
+void SetupForm::revenueTypeChanged(int i)
+{
+    mSetup->revenueType()->setValue(
+                ui->cbRevenueType->itemData(i).toString().toStdString());
+
+}
+
+void SetupForm::billingTypeChanged(int i)
+{
+    mSetup->billingType()->setValue(
+                ui->cbBillingType->itemData(i).toString().toStdString());
+
+}
+
+void SetupForm::billingBasisChanged(int i)
+{
+    mSetup->billingBasis()->setValue(
+                ui->cbBillingBasis->itemData(i).toString().toStdString());
 }

@@ -20,6 +20,28 @@ Brand::Brand()
     setTableName("rave_brand");
 }
 
+Brand::Brand(const Client* client)
+    :mBrandName{nullptr}
+    ,mClient{}
+    ,mBrandManager{nullptr}
+{
+    mBrandName = createField<StringField>("brand_name", "Brand Name");
+    mBrandName->setMandatory(true);
+    mClient = createField<ForeignKeyField>("client_id", "Client",
+                                           std::make_unique<Client>(), "name");
+    mClient->setValue(client->id());
+    mClient->setMandatory(true);
+
+    mBrandManager = createField<ForeignKeyField>("brand_manager_id", "Brand Manager",
+                                                 std::make_unique<SalesPerson>(), "salesperson_name");
+
+    mHeader << QString::fromStdString(mBrandName->fieldLabel());
+
+    setTableName("rave_brand");
+}
+
+
+
 Brand::~Brand()
 {
 }

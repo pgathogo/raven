@@ -46,6 +46,15 @@ public:
     ChoiceField<std::string>* billingCycle() const;
     void setBillingCycle(const std::string bill_cycle);
 
+    ChoiceField<std::string>* revenueType() const;
+    void setRevenueType(const std::string rev_type);
+
+    ChoiceField<std::string>* billingType() const;
+    void setBillingType(const std::string bill_type) const;
+
+    ChoiceField<std::string>* billingBasis() const;
+    void setBillingBasis(const std::string bill_basis);
+
     DecimalField* lateFee() const;
     void setLateFee(double late_fee);
 
@@ -57,6 +66,9 @@ public:
 
     IntegerField* orderApprovalLevels() const;
     void setOrderApprovalLevels(int aprv_levels);
+
+    IntegerField* orderNumberSequence();
+    void setOrderNumberSequence(int seq);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -82,10 +94,14 @@ private:
     DecimalField* mSaleRepComm;
     ChoiceField<std::string>* mSaleRepCommType;
     ChoiceField<std::string>* mBillingCycle;
+    ChoiceField<std::string>* mRevenueType;
+    ChoiceField<std::string>* mBillingType;
+    ChoiceField<std::string>* mBillingBasis;
     DecimalField* mLateFee;
     DecimalField* mInterestRate;
     IntegerField* mGracePeriod;
     IntegerField* mOrderApprovalLevels;
+    IntegerField* mOrderNumberSequence;
 
     QStringList mHeader;
     std::string mTableName;

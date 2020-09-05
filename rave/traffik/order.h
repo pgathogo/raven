@@ -8,6 +8,7 @@ class IntegerField;
 class ForeignKeyField;
 class DateField;
 class DateTimeField;
+class Client;
 
 template<typename T>
 class ChoiceField;
@@ -17,6 +18,7 @@ class Order : public BaseEntity
 {
 public:
     Order();
+    Order(const Client* client);
     ~Order() override;
 
     StringField* title()const;
@@ -93,6 +95,8 @@ public:
 
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
+
+    [[nodiscard]] ActionResult validate() override;
 
 
 private:

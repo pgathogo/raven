@@ -4,11 +4,13 @@
 #include "../framework/baseentity.h"
 
 class StringField;
+class Client;
 
 class Brand : public BaseEntity
 {
 public:
     Brand();
+    Brand(const Client* client);
     ~Brand() override;
 
     void setBrandName(std::string brand_name);

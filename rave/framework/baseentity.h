@@ -110,6 +110,8 @@ public:
 
     void baseMapFields(StringMap* map);
 
+    bool isNew();
+
 private:
     IntegerField* mID;
     std::vector<FieldMap> mFields;

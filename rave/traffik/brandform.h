@@ -36,8 +36,6 @@ private:
     Client* mClient;
     Brand* mBrand;
     std::unique_ptr<PickListBrowser> mPlb;
-
-    std::string getClientName();
 };
 
 #endif // BRANDFORM_H

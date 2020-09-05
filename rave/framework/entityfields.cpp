@@ -622,12 +622,12 @@ DateField::DateField(const std::string aName, const std::string aLabel)
 
 std::string DateField::valueToString() const
 {
-    return mValue.toString().toStdString();
+    return mValue.toString("yyyy-MM-dd").toStdString();
 }
 
 std::string DateField::dbValueFormatter()
 {
-    return valueToString();
+    return "'"+valueToString()+"'";
 }
 
 void DateField::setValue(QDate dt)
@@ -667,12 +667,12 @@ DateTimeField::DateTimeField(const std::string aName, const std::string aLabel)
 
 std::string DateTimeField::valueToString() const
 {
-    return mValue.toString().toStdString();
+    return mValue.toString("yyyy-MM-dd hh:mm").toStdString();
 }
 
 std::string DateTimeField::dbValueFormatter()
 {
-    return valueToString();
+    return "'"+valueToString()+"'";
 }
 
 void DateTimeField::setValue(QDateTime dt)

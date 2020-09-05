@@ -16,6 +16,7 @@ TraffikSetup::TraffikSetup()
     mAgencyCommType->addChoice({"F", "Fixed"});
 
     mSaleRepComm = createField<DecimalField>("sales_rep_comm", "Sale Rep Commission");
+
     mSaleRepCommType = createField<ChoiceField<std::string>>("sales_rep_comm_type", "Sales Commission Type");
     mSaleRepCommType->addChoice({"P", "Percentage"});
     mSaleRepCommType->addChoice({"F", "Fixed"});
@@ -25,14 +26,27 @@ TraffikSetup::TraffikSetup()
     mBillingCycle->addChoice({"B", "Bi-Weekly"});
     mBillingCycle->addChoice({"M", "Monthly"});
 
+    mRevenueType = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
+    mRevenueType->addChoice({"C", "Cash"});
+    mRevenueType->addChoice({"T", "Trade"});
+
+    mBillingType = createField<ChoiceField<std::string>>("billing_type", "Billing Type");
+    mBillingType->addChoice({"G", "Gross"});
+    mBillingType->addChoice({"N", "Net"});
+
+    mBillingBasis = createField<ChoiceField<std::string>>("billing_basis", "Billing Basis");
+    mBillingBasis->addChoice({"STD", "Standard"});
+    mBillingBasis->addChoice({"DAY", "Daily"});
+    mBillingBasis->addChoice({"PRD", "Billing Period"});
+
     mLateFee = createField<DecimalField>("late_fee", "Late Fee");
     mInterestRate = createField<DecimalField>("interest_rate", "Interest Rate");
     mGracePeriod = createField<IntegerField>("pay_grace_period", "Grace Period");
     mOrderApprovalLevels = createField<IntegerField>("order_approval_levels", "Approval Levels");
+    mOrderNumberSequence = createField<IntegerField>("order_number_sequence", "Order Num Sequence");
 
     mHeader << stoq(mStationName->fieldName());
     setTableName("rave_setup");
-
 }
 
 TraffikSetup::~TraffikSetup()
@@ -140,6 +154,36 @@ void TraffikSetup::setBillingCycle(const std::string bill_cycle)
     mBillingCycle->setValue( bill_cycle );
 }
 
+ChoiceField<std::string> *TraffikSetup::revenueType() const
+{
+    return mRevenueType;
+}
+
+void TraffikSetup::setRevenueType(const std::string rev_type)
+{
+    mRevenueType->setValue( rev_type );
+}
+
+ChoiceField<std::string> *TraffikSetup::billingType() const
+{
+    return mBillingType;
+}
+
+void TraffikSetup::setBillingType(const std::string bill_type) const
+{
+    mBillingType->setValue( bill_type );
+}
+
+ChoiceField<std::string> *TraffikSetup::billingBasis() const
+{
+    return mBillingBasis;
+}
+
+void TraffikSetup::setBillingBasis(const std::string bill_basis)
+{
+    mBillingBasis->setValue( bill_basis );
+}
+
 DecimalField *TraffikSetup::lateFee() const
 {
     return mLateFee;
@@ -178,6 +222,16 @@ IntegerField *TraffikSetup::orderApprovalLevels() const
 void TraffikSetup::setOrderApprovalLevels(int aprv_levels)
 {
     mOrderApprovalLevels->setValue(aprv_levels);
+}
+
+IntegerField *TraffikSetup::orderNumberSequence()
+{
+    return mOrderNumberSequence;
+}
+
+void TraffikSetup::setOrderNumberSequence(int seq)
+{
+    mOrderNumberSequence->setValue(seq);
 }
 
 std::string TraffikSetup::tableName() const

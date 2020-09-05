@@ -41,6 +41,8 @@ HEADERS += \
     ../security/accesscontroller.h \
     ../security/authentication.h \
     order.h \
+    orderbrowser.h \
+    orderform.h \
     orderpackage.h \
     setupform.h \
     traffiksetup.h
@@ -49,9 +51,13 @@ SOURCES += \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     order.cpp \
+    orderbrowser.cpp \
+    orderform.cpp \
     orderpackage.cpp \
     setupform.cpp \
     traffiksetup.cpp
 
 FORMS += \
+    orderbrowser.ui \
+    orderform.ui \
     setupform.ui

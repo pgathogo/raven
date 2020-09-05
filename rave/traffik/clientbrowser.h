@@ -26,6 +26,7 @@ public:
 
     void createBrandButton();
     void createSpotButton();
+    void createOrderButton();
 
 
     template<typename T1, typename T2>
@@ -45,6 +46,7 @@ public:
 private slots:
     void openBrandBrowser();
     void openSpotBrowser();
+    void openOrderBrowser();
 
 private:
     Ui::ClientBrowser *ui;

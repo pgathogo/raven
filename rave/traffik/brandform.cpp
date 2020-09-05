@@ -64,17 +64,6 @@ void BrandForm::populateFormWidgets()
                                  stoq(mBrand->brandManager()->displayName())));
 }
 
-std::string BrandForm::getClientName()
-{
-    for(auto& base_entity : mBrand->client()->dataModel()->modelEntities()){
-        if (mBrand->client()->value() == std::get<1>(base_entity)->id()){
-            Client* c = dynamic_cast<Client*>(std::get<1>(base_entity).get());
-            return c->name()->displayName();
-        }
-    }
-    return "";
-}
-
 void BrandForm::selectClient()
 {
     PickListSetting set(std::make_unique<Client>());

@@ -1,5 +1,6 @@
 #include "order.h"
 #include "../framework/choicefield.h"
+#include "../framework/entitydatamodel.h"
 #include "client.h"
 #include "salesperson.h"
 #include "brand.h"
@@ -9,7 +10,10 @@
 Order::Order()
 {
     mTitle = createField<StringField>("title", "Title");
+    mTitle->setMandatory(true);
+
     mOrderNumber = createField<IntegerField>("order_number", "Order Number");
+    mOrderNumber->setReadOnly(true);
 
     mClient = createField<ForeignKeyField>("client_id", "Client",
                                     std::make_unique<Client>(), "name");
@@ -18,7 +22,7 @@ Order::Order()
     mStartDate = createField<DateField>("start_date", "Start Date");
     mEndDate = createField<DateField>("end_date", "End Date");
 
-    mPackage = createField<ForeignKeyField>("package", "Package",
+    mPackage = createField<ForeignKeyField>("package_id", "Package",
                                     std::make_unique<OrderPackage>(), "name");
 
     mRevenueType = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
@@ -34,20 +38,21 @@ Order::Order()
     mBillingPeriod->addChoice({"B", "Bi-Weekly"});
     mBillingPeriod->addChoice({"M", "Monthly"});
 
-    mAccountRep = createField<ForeignKeyField>("account_rep", "Account Rep",
+    mAccountRep = createField<ForeignKeyField>("account_rep_id", "Account Rep",
                                        std::make_unique<SalesPerson>(), "salesperson_name");
 
-    mBrand = createField<ForeignKeyField>("brand", "Brand",
+    mBrand = createField<ForeignKeyField>("brand_id", "Brand",
                                        std::make_unique<Brand>(), "brand_name");
 
-    mAgency = createField<ForeignKeyField>("agency", "Agency",
+    mAgency = createField<ForeignKeyField>("agency_id", "Agency",
                                        std::make_unique<Agent>(), "agent_name");
 
     mSpotsOrdered = createField<IntegerField>("spots_ordered", "Spots Ordered");
     mSpotsBooked = createField<IntegerField>("spots_booked", "Spots Booked");
     mSpotsPlayed = createField<IntegerField>("Spots_played", "Spots Played");
     mDiscount = createField<DecimalField>("discount", "Discount");
-    mAgencyComm = createField<DecimalField>("agency_com", "Agency Commission");
+
+    mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commission");
 
     mAgencyCommType = createField<ChoiceField<std::string>>("agency_comm_type", "Agency Comm Type");
     mAgencyCommType->addChoice({"F","Fixed"});
@@ -79,6 +84,91 @@ Order::Order()
 
     mHeader << QString::fromStdString(mTitle->fieldLabel());
     setTableName("rave_order");
+}
+
+Order::Order(const Client* client)
+{
+    mTitle = createField<StringField>("title", "Title");
+    mTitle->setMandatory(true);
+
+    mOrderNumber = createField<IntegerField>("order_number", "Order Number");
+
+    mClient = createField<ForeignKeyField>("client_id", "Client",
+                                    std::make_unique<Client>(), "name");
+    mClient->setValue(client->id());
+
+    mOrderDate = createField<DateField>("order_date", "Order Date");
+    mStartDate = createField<DateField>("start_date", "Start Date");
+    mEndDate = createField<DateField>("end_date", "End Date");
+
+    mPackage = createField<ForeignKeyField>("package_id", "Package",
+                                    std::make_unique<OrderPackage>(), "name");
+
+    mRevenueType = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
+    mRevenueType->addChoice({"C", "Cash"});
+    mRevenueType->addChoice({"T", "Trade"});
+
+    mBillingType = createField<ChoiceField<std::string>>("billing_type", "Billing Type");
+    mBillingType->addChoice({"G", "Gross"});
+    mBillingType->addChoice({"N", "Net"});
+
+    mBillingPeriod = createField<ChoiceField<std::string>>("billing_period", "Billing Period");
+    mBillingPeriod->addChoice({"W", "Weekly"});
+    mBillingPeriod->addChoice({"B", "Bi-Weekly"});
+    mBillingPeriod->addChoice({"M", "Monthly"});
+
+    mAccountRep = createField<ForeignKeyField>("account_rep_id", "Account Rep",
+                                       std::make_unique<SalesPerson>(), "salesperson_name");
+
+    EntityDataModel edm;
+    auto filter = std::make_tuple("client_id", client->id());
+    std::string fstr = edm.prepareFilter(filter);
+    mBrand = createField<ForeignKeyField>("brand_id", "Brand",
+                                       std::make_unique<Brand>(),
+                                       "brand_name",
+                                        fstr);
+
+    mAgency = createField<ForeignKeyField>("agency_id", "Agency",
+                                       std::make_unique<Agent>(), "agent_name");
+
+    mSpotsOrdered = createField<IntegerField>("spots_ordered", "Spots Ordered");
+    mSpotsBooked = createField<IntegerField>("spots_booked", "Spots Booked");
+    mSpotsPlayed = createField<IntegerField>("Spots_played", "Spots Played");
+    mDiscount = createField<DecimalField>("discount", "Discount");
+
+    mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commission");
+
+    mAgencyCommType = createField<ChoiceField<std::string>>("agency_comm_type", "Agency Comm Type");
+    mAgencyCommType->addChoice({"F","Fixed"});
+    mAgencyCommType->addChoice({"P","Percentage"});
+
+    mSalesRepComm = createField<DecimalField>("sales_rep_comm", "Sales Rep Commission");
+
+    mSalesRepCommType = createField<ChoiceField<std::string>>("sales_rep_comm_type", "Sales Rep Comm Type");
+    mSalesRepCommType->addChoice({"F","Fixed"});
+    mSalesRepCommType->addChoice({"P","Percentage"});
+
+    mTradeCredit = createField<DecimalField>("trade_credit", "Trade Credit");
+
+    mTradeCreditType = createField<ChoiceField<std::string>>("trade_credit_type", "Trade Credit Type");
+    mTradeCreditType->addChoice({"F","Fixed"});
+    mTradeCreditType->addChoice({"P","Percentage"});
+
+    mLateFee = createField<DecimalField>("late_fee", "Late Fee");
+    mGracePeriod = createField<IntegerField>("grace_period", "Grace Period");
+
+    mBillingBasis = createField<ChoiceField<std::string>>("billing_basis", "Billing Basis");
+    mBillingBasis->addChoice({"STD", "Standard"});
+    mBillingBasis->addChoice({"DAY", "Daily"});
+    mBillingBasis->addChoice({"PRD", "Billing Period"});
+
+    mApprovalCount = createField<IntegerField>("approval_count", "Approval Count");
+    mAddLogin = createField<StringField>("add_login", "Add Login");
+    mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
+
+    mHeader << QString::fromStdString(mTitle->fieldLabel());
+    setTableName("rave_order");
+
 }
 
 Order::~Order()
@@ -377,7 +467,7 @@ void Order::setAddLogin(const std::string val)
 
 void Order::setAddDtime(QDateTime dt)
 {
-    //mAddDtime->setValue(dt);
+    mAddDtime->setValue(dt);
 
 }
 
@@ -429,4 +519,24 @@ std::unique_ptr<BaseEntity> Order::cloneAsUnique()
 void Order::afterMapping(BaseEntity &entity)
 {
 
+}
+
+ActionResult Order::validate()
+{
+    if (mStartDate->value() < mOrderDate->value()){
+        return std::make_tuple(ActionResultType::arERROR,
+                               "Start date less than Order Date!");
+    }
+
+    if (mEndDate->value() < mStartDate->value()){
+        return std::make_tuple(ActionResultType::arERROR,
+                               "End Date less than Order Date!");
+    }
+
+    if (mSpotsOrdered->value() == 0 ){
+        return std::make_tuple(ActionResultType::arERROR,
+                               "No spots ordered!");
+    }
+
+    return BaseEntity::validate();
 }

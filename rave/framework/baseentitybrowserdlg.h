@@ -53,6 +53,26 @@ public:
     EntityDataModel& entityDataModel() const;
     void setMdiArea(QMdiArea* mdi);
 
+    template<typename T1, typename T2, typename T3 >
+    bool add_related_record(T3* parent)
+    {
+        std::unique_ptr<T1> entity = std::make_unique<T1>(parent);
+        std::unique_ptr<T2> form = std::make_unique<T2>(parent, entity.get());
+
+        bool created = false;
+
+        if (form->exec() > 0){
+            try{
+                entityDataModel().createEntity(std::move(entity));
+                created = true;
+            } catch (DatabaseException& de) {
+                showMessage(de.errorMessage());
+            }
+        }
+
+        return created;
+    }
+
     template <typename T1, typename T2>
     std::unique_ptr<T2> update()
     {

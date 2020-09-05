@@ -75,7 +75,6 @@ std::string BaseDatabaseManager::commaSepColumns(const BaseEntity& entity)
 }
 
 
-
 std::string BaseDatabaseManager::commaSepValues(const BaseEntity& entity)
 {
     std::string vals{};

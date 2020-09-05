@@ -24,6 +24,9 @@ BrandBrowser::~BrandBrowser()
 
 void BrandBrowser::addRecord()
 {
+    add_related_record<Brand, BrandForm, Client>(mClient);
+
+    /*
     auto brand = std::make_unique<Brand>();
 
     std::unique_ptr<BrandForm> brandForm =
@@ -37,6 +40,7 @@ void BrandBrowser::addRecord()
             showMessage(de.errorMessage());
         }
     }
+    */
 
 }
 

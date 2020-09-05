@@ -9,6 +9,7 @@
 
 #include "brandbrowser.h"
 #include "spotbrowser.h"
+#include "orderbrowser.h"
 
 ClientBrowser::ClientBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
@@ -19,6 +20,7 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
     setDialogTitle("Clients");
     createBrandButton();
     createSpotButton();
+    createOrderButton();
 }
 
 ClientBrowser::~ClientBrowser()
@@ -57,19 +59,32 @@ void ClientBrowser::createBrandButton()
 
 void ClientBrowser::createSpotButton()
 {
-    QPushButton* btnSpot = new QPushButton("Spot");
+    QPushButton* btnSpot = new QPushButton("Spots");
     btnSpot->setObjectName("btnSpot");
     connect(btnSpot, &QPushButton::clicked, this, &ClientBrowser::openSpotBrowser);
     bui->hlExtra->addWidget(btnSpot);
 }
 
+void ClientBrowser::createOrderButton()
+{
+    QPushButton* btnOrder = new QPushButton("Orders");
+    btnOrder->setObjectName("btnOrder");
+    connect(btnOrder, &QPushButton::clicked, this, &ClientBrowser::openOrderBrowser);
+    bui->hlExtra->addWidget(btnOrder);
+}
+
 void ClientBrowser::openBrandBrowser()
 {
-    openBrowserWindow<Client, SpotBrowser>();
+    openBrowserWindow<Client, BrandBrowser>();
 }
 
 void ClientBrowser::openSpotBrowser()
 {
     openBrowserWindow<Client, SpotBrowser>();
+}
+
+void ClientBrowser::openOrderBrowser()
+{
+    openBrowserWindow<Client, OrderBrowser>();
 }
 

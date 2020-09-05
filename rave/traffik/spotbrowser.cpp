@@ -10,7 +10,7 @@
 
 SpotBrowser::SpotBrowser(Client* client, QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<Spot>(*client)),
+                         std::make_unique<Spot>(client)),
     ui(new Ui::SpotBrowser),
     mClient{client}
 {
