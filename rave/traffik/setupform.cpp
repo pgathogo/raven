@@ -1,9 +1,13 @@
+#include <algorithm>
 #include "setupform.h"
 #include "ui_setupform.h"
 #include "ui_baseentitydetaildlg.h"
 
 #include "traffiksetup.h"
 #include "../framework/choicefield.h"
+#include "orderapprover.h"
+#include "approverform.h"
+
 
 SetupForm::SetupForm(TraffikSetup* setup,
                      QDialog* parent) :
@@ -33,9 +37,17 @@ SetupForm::SetupForm(TraffikSetup* setup,
     connect(ui->cbBillingBasis, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &SetupForm::billingBasisChanged);
 
+
     hideSaveNewBtn();
 
     ui->tabWidget->setCurrentIndex(0);
+
+
+    connect(ui->btnAdd, &QPushButton::clicked, this, &SetupForm::addApprover);
+    connect(ui->btnDelete, &QPushButton::clicked, this, &SetupForm::deleteApprover);
+
+    ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    loadOrderApprovers();
 }
 
 SetupForm::~SetupForm()
@@ -56,20 +68,24 @@ std::string SetupForm::windowTitle()
 
 void SetupForm::populateEntityFields()
 {
-    mSetup->stationName()->setValue(ui->edtStationName->text().toStdString());
-    mSetup->address1()->setValue(ui->edtAddress1->text().toStdString());
-    mSetup->address2()->setValue(ui->edtAddress2->text().toStdString());
+    mSetup->setStationName(ui->edtStationName->text().toStdString());
+    mSetup->setAddress1(ui->edtAddress1->text().toStdString());
+    mSetup->setAddress2(ui->edtAddress2->text().toStdString());
 
-    mSetup->agencyComm()->setValue(ui->sbAgencyComm->value());
-    mSetup->saleRepComm()->setValue(ui->sbSaleRepComm->value());
+    mSetup->setAgencyComm(ui->sbAgencyComm->value());
+    mSetup->setSaleRepComm(ui->sbSaleRepComm->value());
 
-    mSetup->lateFee()->setValue(ui->edtLateFee->value());
-    mSetup->interestRate()->setValue(ui->edtIntRate->value());
-    mSetup->gracePeriod()->setValue(ui->edtGracePeriod->value());
-    mSetup->orderApprovalLevels()->setValue(ui->edtAprvLevels->value());
-    mSetup->maxBreakSpots()->setValue(ui->edtMaxSpots->value());
+    mSetup->setLateFee(ui->edtLateFee->value());
+    mSetup->setInterestRate(ui->edtIntRate->value());
+    mSetup->setGracePeriod(ui->edtGracePeriod->value());
+    mSetup->setOrderApprovalLevels(ui->sbAprvLevels->value());
 
-    mSetup->orderNumberSequence()->setValue(ui->sbOrderSequence->value());
+    mSetup->setOrderNumberSequence(ui->sbOrderSequence->value());
+
+    mSetup->setBreakTimeInterval(ui->sbTimeInterval->value());
+    mSetup->setBreakDuration(ui->sbBreakDuration->value());
+
+    mSetup->setBreakMaxSpots(ui->edtMaxSpots->value());
 }
 
 void SetupForm::populateFormWidgets()
@@ -92,9 +108,12 @@ void SetupForm::populateFormWidgets()
     ui->edtLateFee->setValue(mSetup->lateFee()->value());
     ui->edtIntRate->setValue(mSetup->interestRate()->value());
     ui->edtGracePeriod->setValue(mSetup->gracePeriod()->value());
-    ui->edtAprvLevels->setValue(mSetup->orderApprovalLevels()->value());
-    ui->edtMaxSpots->setValue(mSetup->maxBreakSpots()->value());
+    ui->sbAprvLevels->setValue(mSetup->orderApprovalLevels()->value());
     ui->sbOrderSequence->setValue(mSetup->orderNumberSequence()->value());
+
+    ui->sbTimeInterval->setValue(mSetup->breakTimeInterval()->value());
+    ui->sbBreakDuration->setValue(mSetup->breakDuration()->value());
+    ui->edtMaxSpots->setValue(mSetup->breakMaxSpots()->value());
 }
 
 void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -103,6 +122,44 @@ void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::stri
         cbox->addItem(stoq(std::get<1>(c)), stoq(std::get<0>(c)));
 
     cbox->setCurrentIndex( cbox->findData(QVariant(stoq(cf->value()))) );
+}
+
+void SetupForm::loadOrderApprovers()
+{
+    edmApprover = std::make_unique<EntityDataModel>(
+                std::make_unique<OrderApprover>());
+    edmApprover->all();
+    ui->tvApprovers->setModel(edmApprover.get());
+
+}
+
+std::set<int> SetupForm::make_aprv_levels()
+{
+    std::set<int> levels;
+    for(int i=1; i<=ui->sbAprvLevels->value(); ++i)
+        levels.insert(i);
+
+        for (auto& [name, entity] : edmApprover->modelEntities()){
+            OrderApprover* op = dynamic_cast<OrderApprover*>(entity.get());
+            if (levels.find(op->level()->value()) != levels.end() ){
+                levels.erase(op->level()->value());
+            }
+        }
+
+        return levels;
+}
+
+void SetupForm::saveApprovers()
+{
+    EntityDataModel edm(std::make_unique<OrderApprover>());
+    for (auto& [name, entity] : edmApprover->modelEntities()){
+        if (entity->dbAction() == DBAction::dbaCREATE){
+            edm.createEntityDB(*entity);
+        }
+        if (entity->dbAction() == DBAction::dbaDELETE){
+            edm.deleteEntity(*entity);
+        }
+    }
 }
 
 void SetupForm::agencyCommTypeChanged(int i)
@@ -141,4 +198,56 @@ void SetupForm::billingBasisChanged(int i)
 {
     mSetup->billingBasis()->setValue(
                 ui->cbBillingBasis->itemData(i).toString().toStdString());
+}
+
+void SetupForm::addApprover()
+{
+    if (ui->sbAprvLevels->value() > 0 &&
+            edmApprover->count() < ui->sbAprvLevels->value() ) {
+
+        auto approver = std::make_unique<OrderApprover>();
+
+        auto levels = make_aprv_levels();
+
+        auto aprvForm = std::make_unique<ApproverForm>(
+                    approver.get(), levels,
+                    edmApprover->keys());
+
+        if (aprvForm->exec() > 0)
+            edmApprover->cacheEntity(std::move(approver));
+    }else{
+        showMessage("Approval Levels not set!");
+    }
+
+}
+
+void SetupForm::deleteApprover()
+{
+    if (confirmationMessage("Delete Approver?")) {
+        auto entity = findSelectedEntity();
+        entity->setDBAction(DBAction::dbaDELETE);
+        ui->tvApprovers->model()->removeRow(selectedRowId());
+    }
+
+}
+
+BaseEntity* SetupForm::findSelectedEntity()
+{
+   std::string searchName = selectedRowName().toStdString();
+   BaseEntity* entity = edmApprover->findEntityByName(searchName);
+   return entity;
+}
+
+QString SetupForm::selectedRowName()
+{
+
+    QVariant col_name = ui->tvApprovers->model()->data(
+                            ui->tvApprovers->model()->index(
+                                    selectedRowId(), 0));
+    return col_name.toString();
+}
+
+int SetupForm::selectedRowId() const
+{
+    return ui->tvApprovers->currentIndex().row();
 }

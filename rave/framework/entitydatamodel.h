@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <list>
 
 #include <QStandardItemModel>
 #include <QDebug>
@@ -19,7 +20,7 @@ class EntityModel : public QStandardItemModel{
         EntityModel();
         //EntityModel(BaseEntity* entity);
         EntityModel(std::unique_ptr<BaseEntity> entity);
-        ~EntityModel();
+        ~EntityModel() override;
         size_t entitiesCount();
         BaseEntity* findEntityByName(const std::string name);
         void clearEntities();
@@ -36,10 +37,14 @@ class EntityModel : public QStandardItemModel{
 
         BaseEntity* firstEntity();
 
+        std::list<std::string> keys();
+        void deleteFromModel();
+
+        bool removeRows(int position, int rows, const QModelIndex& parent) override;
+
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
         //void addEntity(BaseEntity* entity);
-        void deleteFromModel();
     private:
         std::unique_ptr<BaseEntity> mEntity;
         std::vector<EntityRecord> mEntities;
@@ -54,12 +59,14 @@ public:
     EntityDataModel(std::unique_ptr<BaseEntity> baseEntity);
     ~EntityDataModel();
 
-    void createEntity(std::unique_ptr<BaseEntity> entity);
+    int createEntity(std::unique_ptr<BaseEntity> entity);
     void cacheEntity(std::unique_ptr<BaseEntity> entity);
 
     void updateEntity(const BaseEntity& entity);
     void deleteEntity(const BaseEntity& entity);
     void deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value);
+
+    void deleteMarkedEntities();
 
     int createEntityDB(const BaseEntity& entity);
 

@@ -202,7 +202,6 @@ class Setup(models.Model):
     station_logo = models.CharField(max_length=255, null=True, blank=True)
     address1 = models.CharField(max_length=255, null=True, blank=True)
     address2 = models.CharField(max_length=255, null=True, blank=True)
-    max_spot_per_break = models.IntegerField(null=True)
     agency_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     agency_comm_type = models.CharField(max_length=1, blank=True, null=True, choices=COMM_TYPE)
     sales_rep_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
@@ -216,6 +215,11 @@ class Setup(models.Model):
     revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE);
     order_approval_levels = models.IntegerField(null=True)
     order_number_sequence = models.IntegerField(null=True);
+    order_approved_before_booking = models.BooleanField(default=False)
+    break_time_interval = models.IntegerField(default=15)
+    break_duration = models.IntegerField(default=120)
+    break_max_spots = models.IntegerField(default=4)
+
 
 class Content(models.Model):
     name = models.CharField(max_length=255)
@@ -263,13 +267,36 @@ class Order(models.Model):
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
 
 class OrderApprover(models.Model):
-    user_id = models.CharField(max_length=15)
+    user_id = models.IntegerField(null=True)
+    username = models.CharField(max_length=15, null=True, blank=True)
     user_title = models.CharField(max_length=255, null=True, blank=True)
     level = models.IntegerField(null=True)
 
 class OrderApprovals(models.Model):
     order = models.ForeignKey(Order)
     approver = models.ForeignKey(OrderApprover)
+    username = models.CharField(max_length=15, null=True, blank=True)
     level = models.IntegerField(null=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+
+
+TIME_INTERVAL = (
+        (15, '15 Mins'),
+        (10, '10 Mins'),
+        (5,   '5 Mins'),
+        (1,   '1 Min'),
+        )
+class BreakLayout(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    time_interval = models.IntegerField(choices=TIME_INTERVAL, default=15)
+    week_days = models.CharField(max_length=7)
+
+class BreakLayoutLine(models.Model):
+    break_layout = models.ForeignKey(BreakLayout)
+    week_day = models.IntegerField()
+    break_time = models.TimeField(auto_now=False, auto_now_add=False)
+    break_hour = models.IntegerField(default=0)
+    duration = models.IntegerField()
+    max_spots = models.IntegerField()
 

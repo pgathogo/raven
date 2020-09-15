@@ -20,6 +20,7 @@
 #include "timebandbrowser.h"
 #include "traffiksetup.h"
 #include "setupform.h"
+#include "breaklayoutbrowser.h"
 
 #include "../security/userbrowser.h"
 #include "../security/rolebrowser.h"
@@ -186,6 +187,11 @@ void MainWindow::createActions()
     setupAction->setStatusTip(tr("Traffki Default Setup"));
     connect(setupAction, &QAction::triggered, this, &MainWindow::openSetupForm);
 
+    QAction* breakAction = new QAction(tr("&Breaks"));
+    setupMenu->addAction(breakAction);
+    breakAction->setStatusTip(tr("Breaks Setup"));
+    connect(breakAction, &QAction::triggered, this, &MainWindow::openBreakBrowser);
+
     setupMenu->addSeparator();
 
     plainFormAction = new QAction(tr("&Test"), setupMenu);
@@ -303,14 +309,22 @@ void MainWindow::openSetupForm()
         setupForm = std::make_unique<SetupForm>(ts);
         if (setupForm->exec() > 0 ){
             edm.updateEntity(*ts);
+            setupForm->saveApprovers();
         }
     }else{
         auto ts = std::make_unique<TraffikSetup>();
         setupForm = std::make_unique<SetupForm>(ts.get());
         if (setupForm->exec() > 0 ){
             edm.createEntityDB(*ts);
+            setupForm->saveApprovers();
         }
     }
+}
+
+void MainWindow::openBreakBrowser()
+{
+    BreakLayoutBrowser* breakBrowser = createSubWindow<BreakLayoutBrowser>();
+    breakBrowser->exec();
 }
 
 MainWindow::~MainWindow()

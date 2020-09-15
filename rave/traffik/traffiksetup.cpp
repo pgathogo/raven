@@ -8,7 +8,6 @@ TraffikSetup::TraffikSetup()
     mStationLogo = createField<StringField>("station_logo","Station Logo");
     mAddress1 = createField<StringField>("address1", "Address 1");
     mAddress2 = createField<StringField>("address2", "Address 2");
-    mMaxBreakSpots = createField<IntegerField>("max_spot_per_break", "Max Spots");
     mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commision");
 
     mAgencyCommType = createField<ChoiceField<std::string>>("agency_comm_type", "Agency Commision Type");
@@ -44,6 +43,12 @@ TraffikSetup::TraffikSetup()
     mGracePeriod = createField<IntegerField>("pay_grace_period", "Grace Period");
     mOrderApprovalLevels = createField<IntegerField>("order_approval_levels", "Approval Levels");
     mOrderNumberSequence = createField<IntegerField>("order_number_sequence", "Order Num Sequence");
+
+    mOrderAprvdBB = createField<BooleanField>("order_approved_before_booking", "Approve Before Booking");
+
+    mBreakTimeInterval = createField<IntegerField>("break_time_interval", "Break Interval");
+    mBreakDuration = createField<IntegerField>("break_duration", "Break Duration");
+    mBreakMaxSpots = createField<IntegerField>("break_max_spots", "Break Max Spots");
 
     mHeader << stoq(mStationName->fieldName());
     setTableName("rave_setup");
@@ -91,16 +96,6 @@ StringField *TraffikSetup::address2() const
 void TraffikSetup::setAddress2(const std::string addr2)
 {
     mAddress2->setValue( addr2 );
-}
-
-IntegerField *TraffikSetup::maxBreakSpots() const
-{
-    return mMaxBreakSpots;
-}
-
-void TraffikSetup::setMaxBreakSpots(int max_spots)
-{
-    mMaxBreakSpots->setValue( max_spots );
 }
 
 DecimalField *TraffikSetup::agencyComm() const
@@ -232,6 +227,47 @@ IntegerField *TraffikSetup::orderNumberSequence()
 void TraffikSetup::setOrderNumberSequence(int seq)
 {
     mOrderNumberSequence->setValue(seq);
+}
+
+BooleanField *TraffikSetup::orderAprvdBB() const
+{
+    return mOrderAprvdBB;
+
+}
+
+void TraffikSetup::setOrderAprvdBB(bool val) const
+{
+    mOrderAprvdBB->setValue( val );
+}
+
+IntegerField *TraffikSetup::breakTimeInterval() const
+{
+    return mBreakTimeInterval;
+}
+
+void TraffikSetup::setBreakTimeInterval(int bi)
+{
+    mBreakTimeInterval->setValue( bi );
+}
+
+IntegerField *TraffikSetup::breakDuration() const
+{
+    return mBreakDuration;
+}
+
+void TraffikSetup::setBreakDuration(int bd)
+{
+    mBreakDuration->setValue( bd );
+}
+
+IntegerField *TraffikSetup::breakMaxSpots() const
+{
+    return mBreakMaxSpots;
+}
+
+void TraffikSetup::setBreakMaxSpots(int max_spots)
+{
+    mBreakMaxSpots->setValue( max_spots );
 }
 
 std::string TraffikSetup::tableName() const

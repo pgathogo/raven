@@ -23,7 +23,6 @@ BaseEntity::BaseEntity(Key)
 
 BaseEntity::~BaseEntity()
 {
-    qDebug() << "BaseEntity::dtor";
 }
 
 int BaseEntity::id() const
@@ -112,7 +111,12 @@ FieldValues BaseEntity::mapping(StringMap* e)
 
       }
 
-       return mapped_fields;
+    return mapped_fields;
+}
+
+void BaseEntity::populateEntity()
+{
+
 }
 
 void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)

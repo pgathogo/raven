@@ -78,6 +78,7 @@ private slots:
     void contentBrowser();
     void contentAuthBrowser();
     void openSetupForm();
+    void openBreakBrowser();
 
 private:
     PlainForm* pf;

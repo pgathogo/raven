@@ -58,7 +58,7 @@ public:
     void setValueByField(const Field& fld, const std::string& val);
     FieldValues mapping(StringMap* e);
 
-    virtual void populateEntity()=0;
+    virtual void populateEntity();
 
     void getEntityById(std::unique_ptr<BaseEntity> entity, int id);
 

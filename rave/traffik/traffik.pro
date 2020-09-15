@@ -40,7 +40,13 @@ HEADERS += \
     ../framework/entityregister.h \ \
     ../security/accesscontroller.h \
     ../security/authentication.h \
+    approverform.h \
+    breaklayout.h \
+    breaklayoutbrowser.h \
+    breaklayoutform.h \
+    breaklayoutline.h \
     order.h \
+    orderapprover.h \
     orderbrowser.h \
     orderform.h \
     orderpackage.h \
@@ -50,7 +56,13 @@ HEADERS += \
 SOURCES += \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
+    approverform.cpp \
+    breaklayout.cpp \
+    breaklayoutbrowser.cpp \
+    breaklayoutform.cpp \
+    breaklayoutline.cpp \
     order.cpp \
+    orderapprover.cpp \
     orderbrowser.cpp \
     orderform.cpp \
     orderpackage.cpp \
@@ -58,6 +70,9 @@ SOURCES += \
     traffiksetup.cpp
 
 FORMS += \
+    approverform.ui \
+    breaklayoutbrowser.ui \
+    breaklayoutform.ui \
     orderbrowser.ui \
     orderform.ui \
     setupform.ui

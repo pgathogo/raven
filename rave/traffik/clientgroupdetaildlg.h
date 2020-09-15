@@ -19,8 +19,6 @@ public:
     ~ClientGroupDetailDlg() override;
 
     ActionResult saveRecord() override;
-    //void bindWidgets() override;
-
     std::string windowTitle() override;
 
     void populateEntityFields() override;

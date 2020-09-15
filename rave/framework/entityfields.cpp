@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QComboBox>
+#include <QTime>
 
 #include "entityfields.h"
 #include "entitydatamodel.h"
@@ -108,10 +109,6 @@ bool Field::searchable()
     return mSearchable;
 }
 
-//void Field::setDisplayName(const std::string dispName)
-//{
-//    mDisplayName = dispName;
-//}
 
 void Field::setMandatory(bool value)
 {
@@ -128,21 +125,17 @@ bool Field::mandatory() const
 IntegerField::IntegerField()
     :Field()
     ,mValue{-1}
-    //,mWidget{new QLineEdit}
 {
 }
 
 IntegerField::IntegerField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel)
     ,mValue{-1}
-    //,mWidget{new QLineEdit}
 {
 }
 
 IntegerField::~IntegerField()
 {
-    qDebug() << "IntgerField::dtor";
-   // delete mWidget;
 }
 
 
@@ -172,12 +165,6 @@ int IntegerField::value()
     return mValue;
 }
 
-/*
-QLineEdit* IntegerField::widget()
-{
-    return mWidget;
-}
-*/
 
 std::string IntegerField::displayName() const
 {
@@ -273,7 +260,6 @@ std::string BooleanField::displayName() const
 
 StringField::StringField()
 {
-    qDebug() << "StringField::ctor";
 }
 
 StringField::StringField(const std::string aName, const std::string aLabel)
@@ -283,18 +269,12 @@ StringField::StringField(const std::string aName, const std::string aLabel)
 
 StringField::StringField(const StringField& sf)
 {
-//    if (sf.mWidget)
-//        mWidget->setText(sf.mWidget->text());
     mValue = sf.mValue;
 }
 
 StringField& StringField::operator=(const StringField& sf)
 {
-    qDebug() << "StringField::operator=";
     if (this != &sf){
-        //delete mWidget;
-        //mWidget = new QLineEdit();
-       // mWidget->setText(sf.mWidget->text());
         mValue = sf.mValue;
     }
     return *this;
@@ -303,8 +283,6 @@ StringField& StringField::operator=(const StringField& sf)
 
 StringField::~StringField()
 {
-    qDebug() << "StringField::dtor";
-   // delete mWidget;
 }
 
 
@@ -333,20 +311,6 @@ std::string StringField::value()
     return mValue;
 }
 
-/*
-void StringField::setWidget(QLineEdit* lineEdit)
-{
-    delete mWidget;
-    mWidget = lineEdit;
-    mWidget->setText(QString::fromStdString(mValue));
-}
-
-void StringField::setValueFromWidget()
-{
-    mValue = mWidget->text().toStdString();
-}
-*/
-
 std::string StringField::displayName() const
 {
     return valueToString();
@@ -355,18 +319,14 @@ std::string StringField::displayName() const
 /* ---- TextField ---- */
 TextField::TextField()
         :Field()
-        //,mWidget{ new QTextEdit }
 {
 }
 TextField::TextField(const std::string aName, const std::string aLabel)
         :Field(aName, aLabel)
-        //,mWidget{ new QTextEdit }
 {
 }
 TextField::~TextField()
 {
-    qDebug() << "TextField::dtor";
-    //delete mWidget;
 }
 
 std::string TextField::valueToString() const
@@ -393,25 +353,6 @@ std::string TextField::value()
 {
     return mValue;
 }
-
-/*
-QTextEdit* TextField::widget()
-{
-    return mWidget;
-}
-
-void TextField::setWidget(QTextEdit* textEdit)
-{
-    delete mWidget;
-    mWidget = textEdit;
-    mWidget->insertPlainText(QString::fromStdString(mValue));
-}
-
-void TextField::setValueFromWidget()
-{
-    mValue = mWidget->toPlainText().toStdString();
-}
-*/
 
 std::string TextField::displayName() const
 {
@@ -551,9 +492,6 @@ void ForeignKeyField::setCurrentText()
 
 void ForeignKeyField::cacheData()
 {
-    /*
-    }
-    */
 }
 
 std::size_t ForeignKeyField::cacheCount()
@@ -588,11 +526,6 @@ std::string ForeignKeyField::displayName() const
 
     return name;
 }
-
-
-
-
-
 
 
 DateField::DateField()
@@ -693,6 +626,50 @@ QDateTime DateTimeField::value()
 }
 
 std::string DateTimeField::displayName() const
+{
+    return valueToString();
+}
+
+TimeField::TimeField()
+{
+}
+
+TimeField::TimeField(const std::string aName, const std::string aLabel)
+    :Field(aName, aLabel)
+    ,mValue{0,0}
+{
+}
+
+TimeField::~TimeField()
+{
+}
+
+std::string TimeField::valueToString() const
+{
+    return mValue.toString("hh:mm").toStdString();
+}
+
+std::string TimeField::dbValueFormatter()
+{
+    return "'"+valueToString()+"'";
+}
+
+void TimeField::setValue(QTime tm)
+{
+    mValue.setHMS(tm.hour(), tm.minute(), 0);
+}
+
+void TimeField::stringToValue(std::string val)
+{
+    mValue = QTime::fromString(QString::fromStdString(val));
+}
+
+QTime TimeField::value()
+{
+    return mValue;
+}
+
+std::string TimeField::displayName() const
 {
     return valueToString();
 }

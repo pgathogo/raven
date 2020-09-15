@@ -25,6 +25,34 @@ inline void showMessage(std::string msg)
     msgBox.exec();
 }
 
+inline bool confirmationMessage(const std::string msg)
+{
+    bool result = false;
+
+    QMessageBox msgBox;
+    msgBox.setText("Confirmation Message");
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setInformativeText(stoq(msg));
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Discard);
+    msgBox.setDefaultButton(QMessageBox::Discard);
+    int ret = msgBox.exec();
+
+    switch (ret){
+        case QMessageBox::Ok:
+        result = true;
+        break;
+        case QMessageBox::Cancel:
+        result = false;
+        break;
+        default:
+        result = false;
+        break;
+    }
+
+    return result;
+}
+
+
 inline void printstr(std::string s)
 {
     qDebug() << stoq(s);

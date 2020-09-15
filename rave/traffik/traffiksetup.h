@@ -5,6 +5,7 @@
 
 class StringField;
 class DecimalField;
+class BooleanField;
 
 template<typename T>
 class ChoiceField;
@@ -27,9 +28,6 @@ public:
 
     StringField* address2() const;
     void setAddress2(const std::string addr2);
-
-    IntegerField* maxBreakSpots() const;
-    void setMaxBreakSpots(int max_spots);
 
     DecimalField* agencyComm() const;
     void setAgencyComm(double aComm);
@@ -70,6 +68,18 @@ public:
     IntegerField* orderNumberSequence();
     void setOrderNumberSequence(int seq);
 
+    BooleanField* orderAprvdBB() const;
+    void setOrderAprvdBB(bool val) const;
+
+    IntegerField* breakTimeInterval() const;
+    void setBreakTimeInterval(int bi);
+
+    IntegerField* breakDuration() const;
+    void setBreakDuration(int bd);
+
+    IntegerField* breakMaxSpots() const;
+    void setBreakMaxSpots(int max_spots);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -88,7 +98,6 @@ private:
     StringField* mStationLogo;
     StringField* mAddress1;
     StringField* mAddress2;
-    IntegerField* mMaxBreakSpots;
     DecimalField* mAgencyComm;
     ChoiceField<std::string>* mAgencyCommType;
     DecimalField* mSaleRepComm;
@@ -102,6 +111,11 @@ private:
     IntegerField* mGracePeriod;
     IntegerField* mOrderApprovalLevels;
     IntegerField* mOrderNumberSequence;
+    BooleanField* mOrderAprvdBB; // Order Approved before booking
+
+    IntegerField* mBreakTimeInterval;
+    IntegerField* mBreakDuration;
+    IntegerField* mBreakMaxSpots;
 
     QStringList mHeader;
     std::string mTableName;

@@ -136,19 +136,19 @@ std::string ClientForm::windowTitle()
 
 void ClientForm::saluteComboChanged(int i)
 {
-    mClient->contactSalute()->setValue(
+    mClient->setContactSalute(
                 ui->cbSalute->itemData(i).toString().toStdString());
 }
 
 void ClientForm::revenueTypeComboChanged(int i)
 {
-    mClient->revenueType()->setValue(
+    mClient->setRevenueType(
                 ui->cbRevenueType->itemData(i).toString().toStdString());
 }
 
 void ClientForm::billCycleComboChanged(int i)
 {
-    mClient->billCycle()->setValue(
+    mClient->setBillCycle(
                 ui->cbBillCycle->itemData(i).toString().toStdString());
 }
 

@@ -1,6 +1,7 @@
 #ifndef SETUPFORM_H
 #define SETUPFORM_H
 
+#include <set>
 #include <QWidget>
 #include "../framework/baseentitydetaildlg.h"
 
@@ -9,6 +10,7 @@ class SetupForm;
 }
 
 class TraffikSetup;
+class OrderApprover;
 
 template<typename T>
 class ChoiceField;
@@ -30,6 +32,11 @@ public:
 
     void populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf);
 
+    void loadOrderApprovers();
+    std::set<int> make_aprv_levels();
+
+    void saveApprovers();
+
 private slots:
       void agencyCommTypeChanged(int);
       void saleRepCommTypeChanged(int);
@@ -37,10 +44,16 @@ private slots:
       void revenueTypeChanged(int);
       void billingTypeChanged(int);
       void billingBasisChanged(int);
+      void addApprover();
+      void deleteApprover();
+      BaseEntity* findSelectedEntity();
+      QString selectedRowName();
+      int selectedRowId() const;
 
 private:
     Ui::SetupForm *ui;
     TraffikSetup* mSetup;
+    std::unique_ptr<EntityDataModel> edmApprover;
 };
 
 #endif // SETUPFORM_H

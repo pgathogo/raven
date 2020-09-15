@@ -13,7 +13,6 @@ EntityModel::~EntityModel()
 {
     mEntities.clear();
     clear();
-    qDebug() << "EntityModel::dtor";
 }
 
 EntityModel::EntityModel(std::unique_ptr<BaseEntity> entity)
@@ -64,15 +63,21 @@ BaseEntity* EntityModel::findEntityByName(const std::string name)
 
 void EntityModel::deleteFromModel()
 {
-    int i=0;
-    for (auto& record : mEntities){
-        if (std::get<1>(record)->dbAction() == DBAction::dbaDELETE)
-            break;
-        ++i;
-    }
-
-    mEntities.erase(mEntities.begin()+i);
+    mEntities.erase(std::remove_if(
+                         mEntities.begin(), mEntities.end(),
+                         [](const EntityRecord& er){
+                        return (std::get<1>(er)->dbAction() == DBAction::dbaDELETE);
+    }), mEntities.end());
 }
+
+
+bool EntityModel::removeRows(int position, int rows, const QModelIndex &parent)
+{
+    beginRemoveRows(QModelIndex(), position, position+rows-1);
+    endRemoveRows();
+    return true;
+}
+
 
 void EntityModel::clearEntities()
 {
@@ -113,7 +118,19 @@ BaseEntity& EntityModel::getEntity()
 
 BaseEntity* EntityModel::firstEntity()
 {
-     return std::get<1>(mEntities[0]).get();
+    return std::get<1>(mEntities[0]).get();
+}
+
+std::list<std::string> EntityModel::keys()
+{
+    std::list<std::string> keys;
+
+    for (auto& [key, val] : modelEntities()){
+        keys.push_back(key);
+    }
+
+    return keys;
+
 }
 
 /* ----------- EntityDataModel ------------------ */
@@ -174,13 +191,14 @@ const std::unique_ptr<BaseDatabaseManager> &EntityDataModel::getDBManager() cons
     return dbManager;
 }
 
-void EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
+int EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
 {
     int id = dbManager->createEntity(*entity.get());
     if (id > 0){
         entity->setId(id);
         addEntity(std::move(entity)); // entity final resting place
     }
+    return id;
 }
 
 int EntityDataModel::createEntityDB(const BaseEntity& entity)
@@ -204,6 +222,10 @@ void EntityDataModel::deleteEntity(const BaseEntity& entity)
 void EntityDataModel::deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value)
 {
     dbManager->deleteEntityByValue(entityTableName(), value);
+}
+
+void EntityDataModel::deleteMarkedEntities()
+{
 }
 
 void EntityDataModel::all()

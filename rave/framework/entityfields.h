@@ -229,6 +229,22 @@ private:
     QDateTime mValue;
 };
 
+class TimeField : public Field{
+public:
+    TimeField();
+    TimeField(const std::string aName, const std::string aLabel);
+    ~TimeField() override;
+
+    std::string valueToString() const override;
+    std::string dbValueFormatter() override;
+
+    void setValue(QTime);
+    void stringToValue(std::string val) override;
+    QTime value();
+    std::string displayName() const override;
+private:
+    QTime mValue;
+};
 
 using IF = std::tuple<IntegerField, int>;
 using SF = std::tuple<StringField, std::string>;
