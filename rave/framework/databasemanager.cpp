@@ -79,24 +79,17 @@ std::string BaseDatabaseManager::commaSepValues(const BaseEntity& entity)
 {
     std::string vals{};
 
-    size_t i = 1;
-
     for (auto& [name, field] : entity.fields()){
 
-        if ( name == "id") {
-            ++i;
+        if ( name == "id")
             continue;
-        }
 
-        if (field->formOnly() || field->readOnly()) {
-            ++i;
+        if (field->formOnly() || field->readOnly())
             continue;
-        }
 
         if (!vals.empty())
             vals +=",";
         vals += field->dbValueFormatter();
-        ++i;
     }
 
     return vals;
@@ -110,7 +103,6 @@ std::string BaseDatabaseManager::makeInsertString(const BaseEntity& entity)
     std::string in_a = "INSERT INTO "+entity.tableName()+"( "+flds+")";
     std::string in_b = " VALUES ("+vals+") ";
     std::string insert_stmt = in_a + in_b;
-    qDebug() << QString::fromStdString(insert_stmt);
     return insert_stmt;
 }
 
@@ -197,7 +189,6 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter;
-    qDebug() << stoq(sql) ;
     return provider()->read(sql);
 }
 

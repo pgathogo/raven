@@ -21,6 +21,7 @@
 #include "traffiksetup.h"
 #include "setupform.h"
 #include "breaklayoutbrowser.h"
+#include "scheduleform.h"
 
 #include "../security/userbrowser.h"
 #include "../security/rolebrowser.h"
@@ -192,6 +193,11 @@ void MainWindow::createActions()
     breakAction->setStatusTip(tr("Breaks Setup"));
     connect(breakAction, &QAction::triggered, this, &MainWindow::openBreakBrowser);
 
+    QAction* scheduleAction = new QAction(tr("&Schedule"));
+    setupMenu->addAction(scheduleAction);
+    scheduleAction->setStatusTip(tr("Schedule Mngmt"));
+    connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
+
     setupMenu->addSeparator();
 
     plainFormAction = new QAction(tr("&Test"), setupMenu);
@@ -325,6 +331,12 @@ void MainWindow::openBreakBrowser()
 {
     BreakLayoutBrowser* breakBrowser = createSubWindow<BreakLayoutBrowser>();
     breakBrowser->exec();
+}
+
+void MainWindow::openSchedule()
+{
+    ScheduleForm* schedForm = createSubWindow<ScheduleForm>();
+    schedForm->exec();
 }
 
 MainWindow::~MainWindow()

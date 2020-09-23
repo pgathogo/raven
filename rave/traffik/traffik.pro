@@ -41,6 +41,7 @@ HEADERS += \
     ../security/accesscontroller.h \
     ../security/authentication.h \
     approverform.h \
+    breakcreateform.h \
     breaklayout.h \
     breaklayoutbrowser.h \
     breaklayoutform.h \
@@ -50,6 +51,8 @@ HEADERS += \
     orderbrowser.h \
     orderform.h \
     orderpackage.h \
+    schedule.h \
+    scheduleform.h \
     setupform.h \
     traffiksetup.h
 
@@ -57,6 +60,7 @@ SOURCES += \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     approverform.cpp \
+    breakcreateform.cpp \
     breaklayout.cpp \
     breaklayoutbrowser.cpp \
     breaklayoutform.cpp \
@@ -66,13 +70,17 @@ SOURCES += \
     orderbrowser.cpp \
     orderform.cpp \
     orderpackage.cpp \
+    schedule.cpp \
+    scheduleform.cpp \
     setupform.cpp \
     traffiksetup.cpp
 
 FORMS += \
     approverform.ui \
+    breakcreateform.ui \
     breaklayoutbrowser.ui \
     breaklayoutform.ui \
     orderbrowser.ui \
     orderform.ui \
+    scheduleform.ui \
     setupform.ui

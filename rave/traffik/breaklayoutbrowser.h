@@ -23,6 +23,11 @@ public:
     void deleteRecord() override;
     void saveBreakLayoutLines(const BreakLayoutForm& blf, int headerId);
 
+    void addCreateBreakButton();
+
+private slots:
+    void openCreateBreaks();
+
 private:
     Ui::BreakLayoutBrowser *ui;
 };

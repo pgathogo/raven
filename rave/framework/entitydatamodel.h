@@ -4,9 +4,11 @@
 #include <vector>
 #include <memory>
 #include <list>
+#include <type_traits>
 
 #include <QStandardItemModel>
 #include <QDebug>
+#include <QDate>
 
 #include "databasemanager.h"
 #include "baseentity.h"
@@ -90,9 +92,19 @@ public:
 
     std::unique_ptr<BaseDatabaseManager> const& getDBManager() const;
 
+    template<typename T>
+    struct is_string :
+            public std::disjunction<
+            std::is_same<char*, typename std::decay<T>::type>,
+            std::is_same<const char*, typename std::decay<T>::type>,
+            std::is_same<std::string, typename std::decay<T>::type>
+            >{
+    };
+
     template<typename T, typename... Types>
     void searchFilter(T firstArg, Types... args)
     {
+        // binding from a tuple
         auto [column, value] = firstArg;
 
         std::string filter = column;
@@ -114,12 +126,18 @@ public:
             default:
                 filter += "false";
             }
-        }else{
+        }else if constexpr(is_string<decltype(value)>::value){
             filter += " LIKE ";
             std::string str_value = value;
             for(auto s : str_value)
                 std::tolower(s);
             filter += "'%"+str_value+"%'";
+        }else if constexpr(std::is_same_v<decltype(value), QDate>){
+            filter += " = ";
+            std::string str_value = value.toString("yyyy-MM-dd").toStdString();
+            for(auto s : str_value)
+                std::tolower(s);
+            filter += "'"+str_value+"'";
         }
 
         filterCache.push_back(filter);

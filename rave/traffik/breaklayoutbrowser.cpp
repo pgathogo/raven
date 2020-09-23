@@ -15,6 +15,8 @@ BreakLayoutBrowser::BreakLayoutBrowser(QWidget *parent) :
 {
     ui->setupUi(this);
     setDialogTitle("Breaks Layout");
+
+    addCreateBreakButton();
 }
 
 BreakLayoutBrowser::~BreakLayoutBrowser()
@@ -83,6 +85,23 @@ void BreakLayoutBrowser::saveBreakLayoutLines(const BreakLayoutForm& blf, int he
         BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(std::get<1>(breakLine).get());
         bll->setBreakLayout(headerId);
         edm->createEntityDB(*bll);
+    }
+
+}
+
+void BreakLayoutBrowser::addCreateBreakButton()
+{
+    QPushButton* btnCreateBreaks = new QPushButton("Create Schedule Breaks");
+    btnCreateBreaks->setObjectName("btnCreateBreaks");
+    connect(btnCreateBreaks, &QPushButton::clicked, this, &BreakLayoutBrowser::openCreateBreaks);
+    bui->hlExtra->addWidget(btnCreateBreaks);
+}
+
+void BreakLayoutBrowser::openCreateBreaks()
+{
+    if (selectedRowId() < 0){
+        showMessage("Please select a Break Layout.");
+    } else {
     }
 
 }

@@ -300,3 +300,65 @@ class BreakLayoutLine(models.Model):
     duration = models.IntegerField()
     max_spots = models.IntegerField()
 
+ARTIST_TYPE = (
+        ('F','FEMALE'),
+        ('M','MALE'),
+        ('G','GROUP'),
+       )
+
+class Artist(models.Model):
+    first_name = models.CharField(max_length=255, blank=True, null=True)
+    surname = models.CharField(max_length=255, blank=True, null=True)
+    fullname = models.CharField(max_length=255, blank=True, null=True)
+    artist_type = models.CharField(max_length=1, choices=ARTIST_TYPE)
+    notes = models.TextField(blank=True, null=True)
+
+class Track(Daypart):
+    title = models.CharField(max_length=255)
+    artist = models.ForeignKey(Artist)
+    filepath = models.CharField(max_length=255)
+
+PLAY_STATUS = (
+        ('CUED','CUED'),
+        ('PLAYED','PLAYED'),
+        ('CANCELLED','CANCELLED'),
+        )
+
+SCHEDULE_TYPE = (
+        ('SONG','SONG'),
+        ('COMM','COMMERCIAL'),
+        )
+
+BREAK_MODE = (
+        ('SINGLE','SINGLE'),
+        ('MIXED','MIXED'),
+        )
+
+BREAK_STATUS = (
+        ('LOCKED','LOCKED'),
+        ('OPEN','OPEN'),
+        )
+
+class Schedule(models.Model):
+    schedule_date = models.DateField()
+    schedule_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+    schedule_hour = models.IntegerField(default=0, null=True)
+    track = models.ForeignKey(Track, null=True)
+    fade_in = models.IntegerField(default=0, null=True)
+    fade_out = models.IntegerField(default=0, null=True)
+    fade_delay = models.IntegerField(default=0, null=True)
+    play_status = models.CharField(max_length=15, choices=PLAY_STATUS, blank=True, null=True)
+    play_date = models.DateField(null=True)
+    play_time = models.TimeField(null=True)
+    auto_transition = models.IntegerField(default=0, null=True)
+    live_transition = models.IntegerField(default=0, null=True)
+    track_type = models.CharField(max_length=8, choices=SCHEDULE_TYPE, default='SONG')
+    break_duration = models.IntegerField(default=0, null=True)
+    break_start_win = models.IntegerField(default=0, null=True)
+    break_end_win = models.IntegerField(default=0, null=True)
+    break_max_spots = models.IntegerField(default=0, null=True)
+    booked_spots = models.IntegerField(default=0, null=True)
+    break_duration_left = models.IntegerField(default=0, null=True)
+    break_mode = models.CharField(max_length=8, choices=BREAK_MODE, default='MIXED', null=True, blank=True)
+    break_status = models.CharField(max_length=6, choices=BREAK_STATUS, default='OPEN', null=True, blank=True)
+    comment = models.CharField(max_length=255, blank=True, null=True)

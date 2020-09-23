@@ -3,7 +3,7 @@
 
 BreakLayout::BreakLayout()
 {
-    mName = createField<StringField>("name", "Name");
+    mName = createField<StringField>("name", "Break Layout");
     mName->setMandatory(true);
 
     mDescription = createField<TextField>("description", "Description");
