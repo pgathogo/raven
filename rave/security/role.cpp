@@ -185,11 +185,9 @@ std::unique_ptr<BaseEntity> Role::mapFields(StringMap *e)
 
 }
 
-std::list<std::string> Role::tableViewColumns() const
+std::vector<std::string> Role::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(roleName()->displayName());
-    return cols;
+    return tableViewCols<std::string>(roleName()->displayName());
 }
 
 std::vector<std::string> Role::tableViewValues()

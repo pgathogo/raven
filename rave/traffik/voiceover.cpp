@@ -76,22 +76,18 @@ std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
     */
 }
 
-std::list<std::string> VoiceOver::tableViewColumns() const
+std::vector<std::string> VoiceOver::tableViewColumns() const
 {
 
-    std::list<std::string> cols;
-
-    cols.push_back(name()->displayName());
-    cols.push_back(gender()->displayName());
-
-    return cols;
-
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                gender()->displayName()
+                );
 }
+
 std::vector<std::string> VoiceOver::tableViewValues()
 {
-    std::string gname  = name()->displayName();
-    std::string gen = gender()->displayName();
-    return{gname, gen};
+    return tableViewColumns();
 }
 
 QStringList VoiceOver::tableHeaders() const

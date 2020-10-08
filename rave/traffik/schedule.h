@@ -87,7 +87,7 @@ public:
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
 
-    std::list<std::string> tableViewColumns() const override;
+    std::vector<std::string> tableViewColumns() const override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 
@@ -98,7 +98,7 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
     void setDefaults();
-    void setTableViewColumns(const std::list<std::string> cols);
+    void setTableViewColumns(const std::vector<std::string> cols);
     void setTableViewValues(const std::vector<std::string> vals);
 
     std::string make_insert_stmt(const std::vector<Field*>& fields);
@@ -131,7 +131,7 @@ private:
 
     QStringList mHeader;
     std::string mTableName;
-    std::list<std::string> viewColumns;
+    std::vector<std::string> viewColumns;
     std::vector<std::string> viewValues;
 };
 

@@ -54,6 +54,7 @@ HEADERS += \
     schedule.h \
     scheduleform.h \
     setupform.h \
+    spotaudio.h \
     traffiksetup.h
 
 SOURCES += \
@@ -73,6 +74,7 @@ SOURCES += \
     schedule.cpp \
     scheduleform.cpp \
     setupform.cpp \
+    spotaudio.cpp \
     traffiksetup.cpp
 
 FORMS += \

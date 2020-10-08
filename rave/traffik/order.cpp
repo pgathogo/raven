@@ -485,11 +485,9 @@ std::unique_ptr<BaseEntity> Order::mapFields(StringMap *raw_entity)
 {
 }
 
-std::list<std::string> Order::tableViewColumns() const
+std::vector<std::string> Order::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(title()->displayName());
-    return cols;
+    return tableViewCols<std::string>(title()->displayName());
 }
 
 std::vector<std::string> Order::tableViewValues()

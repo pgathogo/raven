@@ -76,22 +76,18 @@ std::unique_ptr<BaseEntity> OrderApprover::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> OrderApprover::tableViewColumns() const
+std::vector<std::string> OrderApprover::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(userName()->displayName());
-    cols.push_back(userTitle()->displayName());
-    cols.push_back(level()->displayName());
-    return cols;
+    return tableViewCols<std::string>(
+                userName()->displayName(),
+                userTitle()->displayName(),
+                level()->displayName()
+                );
 }
 
 std::vector<std::string> OrderApprover::tableViewValues()
 {
-    return {
-        userName()->displayName(),
-        userTitle()->displayName(),
-        level()->displayName()
-    };
+    return  tableViewColumns();
 }
 
 QStringList OrderApprover::tableHeaders() const

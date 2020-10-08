@@ -1,25 +1,29 @@
-#ifndef ORDERAPPROVER_H
-#define ORDERAPPROVER_H
+#ifndef SPOTAUDIO_H
+#define SPOTAUDIO_H
 
 #include "../framework/baseentity.h"
 
-class OrderApprover : public BaseEntity
+
+class SpotAudio : public BaseEntity
 {
 public:
-    OrderApprover();
-    ~OrderApprover() override;
+    SpotAudio();
+    ~SpotAudio() override;
 
-    ForeignKeyField* userId();
-    void setUserId(int);
+    ForeignKeyField* spot() const;
+    void setSpot(int val);
 
-    StringField* userName() const;
-    void setUserName(const std::string username);
+    ForeignKeyField* track() const;
+    void setTrack(int val);
 
-    StringField* userTitle() const;
-    void setUserTitle(const std::string title);
+    IntegerField* playCount() const;
+    void setPlayCount(int val);
 
-    IntegerField* level() const;
-    void setLevel(int lvl);
+    IntegerField* weight() const;
+    void setWeight(int val);
+
+    IntegerField* seqNo() const;
+    void setSeqNo(int val);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -36,13 +40,15 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
 private:
-    ForeignKeyField* mUserId;
-    StringField* mUserName;
-    StringField* mUserTitle;
-    IntegerField* mLevel;
+    ForeignKeyField* mSpot;
+    ForeignKeyField* mTrack;
+    IntegerField* mPlayCount;
+    IntegerField* mWeight;
+    IntegerField* mSeqNo;
 
     QStringList mHeader;
     std::string mTableName;
+
 };
 
-#endif // ORDERAPPROVER_H
+#endif // SPOTAUDIO_H

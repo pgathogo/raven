@@ -39,7 +39,7 @@ public:
 
     virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
 
-    virtual std::list<std::string> tableViewColumns() const = 0;
+    virtual std::vector<std::string> tableViewColumns() const = 0;
     virtual std::vector<std::string> tableViewValues() = 0;
 
     virtual QStringList tableHeaders() const = 0;
@@ -105,7 +105,15 @@ public:
         for(auto& [field, name] : mapping(map))
             uT->setValueByField(*field, name);
 
-        return std::move(uT); // Evil !! - transfering ownership from local
+        return std::move(uT); // Evil !! - transfering ownership from a local
+    }
+
+    template<typename T, typename... Args>
+    std::vector<T> tableViewCols(Args&& ...args) const
+    {
+        std::vector<T> cols;
+        (cols.push_back(args), ...);
+        return cols;
     }
 
     void baseMapFields(StringMap* map);

@@ -120,24 +120,23 @@ void VoiceExclusion::afterMapping(BaseEntity& entity)
     getEntityById(std::move(te), ve.detailId()->value());
 }
 
-std::list<std::string> VoiceExclusion::tableViewColumns() const
+std::vector<std::string> VoiceExclusion::tableViewColumns() const
 {
-    std::list<std::string> cols;
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
 
-    cols.push_back(te->name()->displayName());
-    cols.push_back(te->description()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                te->name()->displayName(),
+                te->description()->displayName()
+                );
 
 }
 std::vector<std::string> VoiceExclusion::tableViewValues()
 {
     TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
-    std::string pname = te->name()->valueToString();
-    std::string pdesc = te->description()->valueToString();
-    return {pname, pdesc};
-
+    return tableViewCols<std::string>(
+                te->name()->valueToString(),
+                te->description()->valueToString()
+                );
 }
 QStringList VoiceExclusion::tableHeaders() const
 {

@@ -102,18 +102,14 @@ std::unique_ptr<BaseEntity> Brand::mapFields(StringMap* e)
     return std::move(brand);
 }
 
-std::list<std::string> Brand::tableViewColumns() const
+std::vector<std::string> Brand::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(brandName()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(brandName()->displayName());
 }
 
 std::vector<std::string> Brand::tableViewValues()
 {
-    std::string bname = brandName()->displayName();
-    return {bname};
+    return{brandName()->displayName()};
 }
 
 QStringList Brand::tableHeaders() const

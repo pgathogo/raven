@@ -84,25 +84,18 @@ std::unique_ptr<BaseEntity> Client::mapFields(StringMap* raw_entity)
     return std::move(client);
 }
 
-std::list<std::string> Client::tableViewColumns() const
+std::vector<std::string> Client::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(name()->displayName());
-    cols.push_back(telephone()->displayName());
-    cols.push_back(contactName()->displayName());
-    cols.push_back(contactMobile()->displayName());
-
-    return cols;
-
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                telephone()->displayName(),
+                contactName()->displayName(),
+                contactMobile()->displayName());
 }
 
 std::vector<std::string> Client::tableViewValues()
 {
-    return{name()->displayName(),
-                telephone()->displayName(),
-                contactName()->displayName(),
-                contactMobile()->displayName() };
+    return tableViewColumns();
 
 }
 

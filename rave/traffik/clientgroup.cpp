@@ -84,22 +84,20 @@ std::unique_ptr<BaseEntity> ClientGroup::mapFields(StringMap* sm)
 }
 
 
-std::list<std::string> ClientGroup::tableViewColumns() const
+std::vector<std::string> ClientGroup::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(name()->displayName());
-    cols.push_back(description()->displayName());
-
-    return cols;
-
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                description()->displayName()
+                );
 }
 
 std::vector<std::string> ClientGroup::tableViewValues()
 {
-    std::string gname  = name()->valueToString();
-    std::string desc = description()->valueToString();
-    return{gname, desc};
+    return tableViewCols<std::string>(
+                name()->valueToString(),
+                description()->valueToString()
+                );
 }
 
 QStringList ClientGroup::tableHeaders() const

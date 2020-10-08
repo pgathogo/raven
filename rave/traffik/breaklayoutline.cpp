@@ -110,21 +110,18 @@ std::unique_ptr<BaseEntity> BreakLayoutLine::mapFields(StringMap *raw_entity)
 {
 }
 
-std::list<std::string> BreakLayoutLine::tableViewColumns() const
+std::vector<std::string> BreakLayoutLine::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(breakTime()->displayName());
-    cols.push_back(duration()->displayName());
-    cols.push_back(maxSpots()->displayName());
-    return cols;
+    return tableViewCols<std::string>(
+                breakTime()->displayName(),
+                duration()->displayName(),
+                maxSpots()->displayName()
+                );
 }
 
 std::vector<std::string> BreakLayoutLine::tableViewValues()
 {
-    return { breakTime()->displayName(),
-             duration()->displayName(),
-             maxSpots()->displayName()
-    };
+    return tableViewColumns();
 }
 
 QStringList BreakLayoutLine::tableHeaders() const

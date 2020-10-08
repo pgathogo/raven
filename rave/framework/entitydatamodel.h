@@ -50,7 +50,7 @@ class EntityModel : public QStandardItemModel{
     private:
         std::unique_ptr<BaseEntity> mEntity;
         std::vector<EntityRecord> mEntities;
-        void addRow(const std::list<std::string> entity_cols);
+        void addRow(const std::vector<std::string> entity_cols);
         //bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);
 };
 

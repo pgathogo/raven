@@ -213,11 +213,9 @@ std::unique_ptr<BaseEntity> BreakLayout::mapFields(StringMap *raw_entity)
 {
 }
 
-std::list<std::string> BreakLayout::tableViewColumns() const
+std::vector<std::string> BreakLayout::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(name()->displayName());
-    return cols;
+    return tableViewCols<std::string>(name()->displayName());
 }
 
 std::vector<std::string> BreakLayout::tableViewValues()

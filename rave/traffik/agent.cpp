@@ -61,23 +61,22 @@ std::unique_ptr<BaseEntity> Agent::mapFields(StringMap* raw_entity)
     return std::move(agent);
 }
 
-std::list<std::string> Agent::tableViewColumns() const
+std::vector<std::string> Agent::tableViewColumns() const
 {
     std::list<std::string> cols;
 
-    cols.push_back(name()->displayName());
-    cols.push_back(contactName()->displayName());
-    cols.push_back(mobileNo()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                contactName()->displayName(),
+                mobileNo()->displayName()
+                );
 }
 
 std::vector<std::string> Agent::tableViewValues()
 {
-    return {name()->displayName(),
-                contactName()->displayName(),
-                mobileNo()->displayName() };
+    return  tableViewColumns();
 }
+
 QStringList Agent::tableHeaders() const
 {
     return mHeader;
@@ -89,9 +88,6 @@ std::string Agent::searchColumn() const
 }
 void Agent::populateEntity()
 {
-    //mName->setValueFromWidget();
-    //mContactName->setValueFromWidget();
-    //mMobileNo->setValueFromWidget();
 }
 
 StringField* Agent::name() const

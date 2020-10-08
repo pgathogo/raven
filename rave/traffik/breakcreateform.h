@@ -24,7 +24,7 @@ public:
 
     template<typename T>
     struct Vectored{
-        Vectored():vec{}{}
+        //Vectored():vec{}{}
         Vectored& operator<<(T* t)
         {
             vec.push_back(t);

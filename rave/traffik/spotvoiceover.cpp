@@ -67,25 +67,24 @@ std::unique_ptr<BaseEntity> SpotVoiceOver::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> SpotVoiceOver::tableViewColumns() const
+std::vector<std::string> SpotVoiceOver::tableViewColumns() const
 {
-    std::list<std::string> cols;
     VoiceOver* vo = dynamic_cast<VoiceOver*>(mDetailEntity);
 
-    cols.push_back(vo->name()->displayName());
-    cols.push_back(vo->gender()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                vo->name()->displayName(),
+                vo->gender()->displayName()
+                );
 }
 
 std::vector<std::string> SpotVoiceOver::tableViewValues()
 {
     VoiceOver* vo = dynamic_cast<VoiceOver*>(mDetailEntity);
 
-    std::string name = vo->name()->valueToString();
-    std::string gender = vo->gender()->valueToString();
-
-    return {name, gender};
+    return tableViewCols<std::string>(
+                vo->name()->valueToString(),
+                vo->gender()->valueToString()
+                );
 }
 
 QStringList SpotVoiceOver::tableHeaders() const

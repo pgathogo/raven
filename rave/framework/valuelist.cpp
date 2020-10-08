@@ -90,22 +90,17 @@ std::unique_ptr<BaseEntity> ValueList::mapFields(StringMap* sm)
 }
 
 
-std::list<std::string> ValueList::tableViewColumns() const
+std::vector<std::string> ValueList::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(listValue()->valueToString());
-    cols.push_back(code()->valueToString());
-
-    return cols;
-
+    return tableViewCols<std::string>(
+                listValue()->valueToString(),
+                code()->valueToString()
+                );
 }
 
 std::vector<std::string> ValueList::tableViewValues()
 {
-    std::string vValue = listValue()->valueToString();
-    std::string vCode = code()->valueToString();
-    return {vValue, vCode};
+    return tableViewColumns();
 }
 
 QStringList ValueList::tableHeaders() const

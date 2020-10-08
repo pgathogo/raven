@@ -1,25 +1,23 @@
-#ifndef ORDERAPPROVER_H
-#define ORDERAPPROVER_H
+#ifndef TRACK_H
+#define TRACK_H
 
 #include "../framework/baseentity.h"
 
-class OrderApprover : public BaseEntity
+
+class Track : public BaseEntity
 {
 public:
-    OrderApprover();
-    ~OrderApprover() override;
+    Track();
+    ~Track() override;
 
-    ForeignKeyField* userId();
-    void setUserId(int);
+    StringField* title() const;
+    void setTitle(const std::string track_title);
 
-    StringField* userName() const;
-    void setUserName(const std::string username);
+    StringField* filepath() const;
+    void setFilepath(const std::string fpath);
 
-    StringField* userTitle() const;
-    void setUserTitle(const std::string title);
-
-    IntegerField* level() const;
-    void setLevel(int lvl);
+    ForeignKeyField* artist() const;
+    void setArtist(int val);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -36,13 +34,12 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
 private:
-    ForeignKeyField* mUserId;
-    StringField* mUserName;
-    StringField* mUserTitle;
-    IntegerField* mLevel;
+    StringField* mTitle;
+    StringField* mFilepath;
+    ForeignKeyField* mArtist;
 
     QStringList mHeader;
     std::string mTableName;
 };
 
-#endif // ORDERAPPROVER_H
+#endif // TRACK_H

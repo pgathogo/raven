@@ -59,11 +59,9 @@ std::unique_ptr<BaseEntity> OrderPackage::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> OrderPackage::tableViewColumns() const
+std::vector<std::string> OrderPackage::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(name()->displayName());
-    return cols;
+    tableViewCols<std::string>(name()->displayName());
 }
 
 std::vector<std::string> OrderPackage::tableViewValues()

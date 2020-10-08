@@ -130,21 +130,19 @@ std::unique_ptr<BaseEntity> Spot::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> Spot::tableViewColumns() const
+std::vector<std::string> Spot::tableViewColumns() const
 {
     std::list<std::string> cols;
 
-    cols.push_back(name()->displayName());
-    cols.push_back(spotDuration()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                spotDuration()->displayName()
+                );
 }
 
 std::vector<std::string> Spot::tableViewValues()
 {
-    return { name()->displayName(),
-             spotDuration()->displayName()
-           };
+    return  tableViewColumns();
 }
 
 QStringList Spot::tableHeaders() const

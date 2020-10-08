@@ -362,3 +362,37 @@ class Schedule(models.Model):
     break_mode = models.CharField(max_length=8, choices=BREAK_MODE, default='MIXED', null=True, blank=True)
     break_status = models.CharField(max_length=6, choices=BREAK_STATUS, default='OPEN', null=True, blank=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
+
+class SpotAudio(models.Model):
+    spot = models.ForeignKey(Spot)
+    track = models.ForeignKey(Track)
+    play_count = models.IntegerField(default=0, null=True)
+    weight = models.IntegerField(default=100, null=True)
+    seq_no = models.IntegerField(default=1, null=True)
+
+class BookingSegment(models.Model):
+    order = models.ForeignKey(Order)
+    spot = models.ForeignKey(Spot)
+    booking_date = models.DateField(null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    booking_count = models.IntegerField(default=0, null=True)
+    segment_value = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    comments =  models.TextField(null=True, blank=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+
+BOOKING_STATUS = (
+        ('READY','READY'),
+        ('PLAYED','PLAYED'),
+        ('CANCEL','CANCEL'),
+        )
+
+class OrderBooking(models.Model):
+    booking_segment = models.ForeignKey(BookingSegment)
+    schedule = models.ForeignKey(Schedule)
+    booking_status = models.CharField(max_length=8, choices=BOOKING_STATUS, default='READY', null=True, blank=True)
+    play_date = models.DateField(null=True)
+    play_time = models.DateTimeField(default=now(), null=True, blank=True)
+    audio = models.ForeignKey(SpotAudio)
+

@@ -26,7 +26,7 @@ public:
 
     std::unique_ptr<BaseEntity> mapFields(StringMap* sm) override;
 
-    std::list<std::string> tableViewColumns() const override;
+    std::vector<std::string> tableViewColumns() const override;
     std::vector<std::string> tableViewValues() override;
     QStringList tableHeaders() const override;
 

@@ -172,11 +172,9 @@ std::unique_ptr<BaseEntity> User::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> User::tableViewColumns() const
+std::vector<std::string> User::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(userName()->displayName());
-    return cols;
+    return tableViewCols<std::string>(userName()->displayName());
 }
 
 std::vector<std::string> User::tableViewValues()

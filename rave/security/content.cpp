@@ -63,22 +63,20 @@ std::unique_ptr<BaseEntity> Content::mapFields(StringMap *e)
 {
 }
 
-std::list<std::string> Content::tableViewColumns() const
+std::vector<std::string> Content::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(name()->displayName());
-    cols.push_back(contentDisplayName()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                contentDisplayName()->displayName()
+                );
 }
 
 std::vector<std::string> Content::tableViewValues()
 {
-    std::string nm = name()->valueToString();
-    std::string content = contentDisplayName()->valueToString();
-
-    return{nm, content};
+    return tableViewCols<std::string>(
+                name()->valueToString(),
+                contentDisplayName()->valueToString()
+                );
 }
 
 QStringList Content::tableHeaders() const

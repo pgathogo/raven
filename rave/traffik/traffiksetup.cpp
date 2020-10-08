@@ -284,11 +284,10 @@ std::unique_ptr<BaseEntity> TraffikSetup::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> TraffikSetup::tableViewColumns() const
+std::vector<std::string> TraffikSetup::tableViewColumns() const
 {
-    std::list<std::string> cols;
-    cols.push_back(stationName()->displayName());
-    return cols;
+    return tableViewCols<std::string>(stationName()->displayName());
+
 }
 
 std::vector<std::string> TraffikSetup::tableViewValues()

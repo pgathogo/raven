@@ -306,7 +306,7 @@ std::unique_ptr<BaseEntity> Schedule::mapFields(StringMap*)
 {
 }
 
-std::list<std::string> Schedule::tableViewColumns() const
+std::vector<std::string> Schedule::tableViewColumns() const
 {
     return viewColumns;
 }
@@ -342,7 +342,7 @@ void Schedule::afterMapping(BaseEntity&)
 
 void Schedule::setDefaults()
 {
-    std::list<std::string> cols;
+    std::vector<std::string> cols;
     cols.push_back(scheduleTime()->displayName());
     cols.push_back(breakMaxSpots()->displayName());
     cols.push_back(breakDurationLeft()->displayName());
@@ -355,7 +355,7 @@ void Schedule::setDefaults()
                 bookedSpots()->displayName()});
 }
 
-void Schedule::setTableViewColumns(const std::list<std::string> cols)
+void Schedule::setTableViewColumns(const std::vector<std::string> cols)
 {
     viewColumns = cols;
 }

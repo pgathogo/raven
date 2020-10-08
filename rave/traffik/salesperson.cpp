@@ -46,19 +46,17 @@ std::unique_ptr<BaseEntity> SalesPerson::mapFields(StringMap* raw_entity)
     return std::move(sp);
 }
 
-std::list<std::string> SalesPerson::tableViewColumns() const
+std::vector<std::string> SalesPerson::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(name()->displayName());
-    cols.push_back(name()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                name()->displayName(),
+                name()->displayName()
+                );
 }
 
 std::vector<std::string> SalesPerson::tableViewValues()
 {
-    return {name()->displayName(), gender()->displayName()};
+    return tableViewColumns();
 }
 
 QStringList SalesPerson::tableHeaders() const

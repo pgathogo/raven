@@ -97,14 +97,12 @@ std::unique_ptr<BaseEntity> RoleMember::mapFields(StringMap *sm)
 {
 }
 
-std::list<std::string> RoleMember::tableViewColumns() const
+std::vector<std::string> RoleMember::tableViewColumns() const
 {
-    std::list<std::string> cols;
     User* user = dynamic_cast<User*>(mDetailEntity);
 
-    cols.push_back(user->userName()->displayName());
+    return tableViewCols<std::string>(user->userName()->displayName());
 
-    return cols;
 }
 
 std::vector<std::string> RoleMember::tableViewValues()

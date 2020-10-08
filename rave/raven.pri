@@ -1,4 +1,6 @@
 SOURCES += \
+    $$PWD/core/artist.cpp \
+    $$PWD/core/track.cpp \
     $$PWD/security/loginform.cpp \
     ../framework/baseentity.cpp \
     ../framework/baseentitybrowserdlg.cpp \
@@ -67,6 +69,8 @@ SOURCES += \
     ../security/roleform.cpp
 
 HEADERS += \
+    $$PWD/core/artist.h \
+    $$PWD/core/track.h \
     $$PWD/security/loginform.h \
     ../framework/baseentity.h \
     ../framework/baseentitybrowserdlg.h \

@@ -111,13 +111,9 @@ std::unique_ptr<BaseEntity> TimeBand::mapFields(StringMap* raw_entity)
     return std::move(timeBand);
 }
 
-std::list<std::string> TimeBand::tableViewColumns() const
+std::vector<std::string> TimeBand::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(name()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(name()->displayName());
 }
 
 std::vector<std::string> TimeBand::tableViewValues()

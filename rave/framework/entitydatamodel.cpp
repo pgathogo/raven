@@ -37,7 +37,7 @@ void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
 }
 
 
-void EntityModel::addRow(const std::list<std::string> entity_cols)
+void EntityModel::addRow(const std::vector<std::string> entity_cols)
 {
     QList<QStandardItem*> view_names;
     for (std::string c : entity_cols)

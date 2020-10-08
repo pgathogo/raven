@@ -129,30 +129,21 @@ std::unique_ptr<BaseEntity> ContentAuth::mapFields(StringMap *raw_entity)
 {
 }
 
-std::list<std::string> ContentAuth::tableViewColumns() const
+std::vector<std::string> ContentAuth::tableViewColumns() const
 {
-    std::list<std::string> cols;
-
-    cols.push_back(content()->displayName());
-    cols.push_back(role()->displayName());
-    cols.push_back(createBit()->displayName());
-    cols.push_back(readBit()->displayName());
-    cols.push_back(updateBit()->displayName());
-    cols.push_back(deleteBit()->displayName());
-
-    return cols;
+    return tableViewCols<std::string>(
+                content()->displayName(),
+                role()->displayName(),
+                createBit()->displayName(),
+                readBit()->displayName(),
+                updateBit()->displayName(),
+                deleteBit()->displayName()
+                );
 }
 
 std::vector<std::string> ContentAuth::tableViewValues()
 {
-    return {
-            content()->displayName(),
-            role()->displayName(),
-            createBit()->displayName(),
-            readBit()->displayName(),
-            updateBit()->displayName(),
-            deleteBit()->displayName()
-       };
+    return tableViewColumns();
 }
 
 QStringList ContentAuth::tableHeaders() const
