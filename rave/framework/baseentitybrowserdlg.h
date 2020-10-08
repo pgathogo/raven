@@ -98,7 +98,7 @@ public:
             }
         }
 
-        return std::move(dlg);  // Nasty - never move from local
+        return dlg;
     }
 
     template<typename T1, typename T2>

@@ -105,7 +105,7 @@ public:
         for(auto& [field, name] : mapping(map))
             uT->setValueByField(*field, name);
 
-        return std::move(uT); // Evil !! - transfering ownership from a local
+        return uT; // Evil !! - transfering ownership from a local
     }
 
     template<typename T, typename... Args>

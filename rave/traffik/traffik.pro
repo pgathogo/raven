@@ -41,6 +41,7 @@ HEADERS += \
     ../security/accesscontroller.h \
     ../security/authentication.h \
     approverform.h \
+    bookingsegment.h \
     breakcreateform.h \
     breaklayout.h \
     breaklayoutbrowser.h \
@@ -61,6 +62,7 @@ SOURCES += \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     approverform.cpp \
+    bookingsegment.cpp \
     breakcreateform.cpp \
     breaklayout.cpp \
     breaklayoutbrowser.cpp \
