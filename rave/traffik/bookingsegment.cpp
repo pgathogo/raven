@@ -4,22 +4,22 @@
 
 BookingSegment::BookingSegment()
 {
-     mOrder = createField<ForeignKeyField>("order_id", "Order",
+    mOrder = createField<ForeignKeyField>("order_id", "Order",
                                            std::make_unique<Order>(), "title");
-    mSpot = createField<ForeignKeyField>("spot_id", "Spot",
-                                         std::make_unique<Spot>(), "name");
+
     mBookingDate = createField<DateField>("booking_date", "Booking Date");
     mStartDate = createField<DateField>("start_date", "Start Date");
     mEndDate = createField<DateField>("end_date", "End Date");
+
     mBookingCount = createField<IntegerField>("booking_count", "Booking Count");
     mSegmentValue = createField<DecimalField>("segment_value", "Segment Value");
     mComments = createField<TextField>("comments", "Comments");
     mAddLogin = createField<StringField>("add_login", "Add Login");
+
     mAddDateTime = createField<DateTimeField>("add_dtime", "Add Date Time");
 
-    mHeader << QString::fromStdString(order()->fieldLabel())
-            << QString::fromStdString(spot()->fieldLabel())
-            << QString::fromStdString(bookingCount()->fieldLabel());
+    mHeader << stoq(order()->fieldLabel())
+            << stoq(bookingCount()->fieldLabel());
 
     setTableName("rave_bookingsegment");
 
@@ -29,7 +29,7 @@ BookingSegment::~BookingSegment()
 {
 }
 
-ForeignKeyField *BookingSegment::order() const
+ForeignKeyField* BookingSegment::order() const
 {
     return mOrder;
 }
@@ -37,16 +37,6 @@ ForeignKeyField *BookingSegment::order() const
 void BookingSegment::setOrder(int val)
 {
     mOrder->setValue(val);
-}
-
-ForeignKeyField *BookingSegment::spot() const
-{
-    return mSpot;
-}
-
-void BookingSegment::setSpot(int val)
-{
-    mSpot->setValue(val);
 }
 
 DateField *BookingSegment::bookingDate() const
@@ -147,10 +137,7 @@ std::vector<std::string> BookingSegment::tableViewColumns() const
 {
     return tableViewCols<std::string>(
                order()->displayName(),
-               spot()->displayName(),
-               bookingCount()->displayName()
-                );
-
+               bookingCount()->displayName());
 }
 
 std::vector<std::string> BookingSegment::tableViewValues()

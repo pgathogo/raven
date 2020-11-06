@@ -79,6 +79,7 @@ ActionResult BaseEntity::validate()
 
 void BaseEntity::setValueByField(const Field& fld, const std::string& val)
 {
+
     for (auto& [name, field] : fields()){
         if (name == fld.fieldName())
            field->stringToValue(val);
@@ -121,11 +122,10 @@ void BaseEntity::populateEntity()
 
 void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)
 {
-
     // To be refactored
     std::string id_column = entity->uniqueId()->dbColumnName();
     mEDM = std::make_unique<EntityDataModel>(std::move(entity));
-    mEDM->getById({id_column, id});
+    mEDM->getById({id_column, "=", id});
 
 }
 
@@ -158,14 +158,19 @@ std::string BaseEntity::make_create_stmt()
    return "";
 }
 
-std::string BaseEntity::make_alter_stmt(const std::string name)
+std::string BaseEntity::make_alter_stmt(const std::string /*name*/)
 {
     return "";
 }
 
-std::string BaseEntity::make_drop_stmt(const std::string name)
+std::string BaseEntity::make_drop_stmt(const std::string /*name*/)
 {
     return "";
+}
+
+std::string BaseEntity::orderBy() const
+{
+    return "ID";
 }
 
 std::string BaseEntity::className()

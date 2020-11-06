@@ -3,6 +3,7 @@
 #include "baseentity.h"
 #include "manytomany.h"
 #include "../utils/tools.h"
+#include "../framework/ravenexception.h"
 
 EntityModel::EntityModel()
     :mEntity{nullptr}
@@ -47,7 +48,6 @@ void EntityModel::addRow(const std::vector<std::string> entity_cols)
 
 BaseEntity* EntityModel::findEntityByName(const std::string name)
 {
-    // Returns a stored pointer of BaseEntity
     BaseEntity* be = nullptr;
 
     for (auto& record : mEntities){
@@ -251,7 +251,7 @@ void EntityDataModel::searchByStr(std::tuple<std::string, std::string> searchIte
 
 }
 
-void EntityDataModel::searchByInt(std::tuple<std::string, int> searchItem)
+void EntityDataModel::searchByInt(std::tuple<std::string, std::string, int> searchItem)
 {
     if (dbManager->searchByInt(getEntity(), searchItem) > 0)
         populateEntities();
@@ -279,7 +279,7 @@ void EntityDataModel::readRaw(const std::string sql)
 
 }
 
-void EntityDataModel::getById(std::tuple<std::string, int> searchItem)
+void EntityDataModel::getById(std::tuple<std::string, std::string, int> searchItem)
 {
     if (dbManager->searchByInt(getEntity(), searchItem) > 0){
         dbManager->provider()->cache()->first();

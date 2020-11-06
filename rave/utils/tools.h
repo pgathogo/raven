@@ -55,8 +55,20 @@ inline bool confirmationMessage(const std::string msg)
 
 inline void printstr(std::string s)
 {
-    qDebug() << stoq(s);
+    qDebug() << ">>>> " << stoq(s);
 }
+
+inline void printint(int i)
+{
+    qDebug() << ">>> " << i;
+}
+
+inline void printdouble(double d)
+{
+    qDebug() << ">>> " << d;
+}
+
+
 
 inline std::tuple<int, int, int> ymd(const std::string date_str)
 {

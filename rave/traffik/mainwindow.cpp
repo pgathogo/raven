@@ -22,6 +22,7 @@
 #include "setupform.h"
 #include "breaklayoutbrowser.h"
 #include "scheduleform.h"
+#include "orderbookingbrowser.h"
 
 #include "../security/userbrowser.h"
 #include "../security/rolebrowser.h"
@@ -30,6 +31,9 @@
 
 #include "../framework/entityregister.h"
 #include "../framework/entitydatamodel.h"
+
+#include "orderbooking.h"
+#include "bookingsegment.h"
 
 AccessMap MainWindow::access_map;
 
@@ -206,10 +210,15 @@ void MainWindow::createActions()
     plainFormAction->setStatusTip(tr("Maintain Gender value list"));
     connect(plainFormAction, &QAction::triggered, this, &MainWindow::plainForm);
 
+    QAction* orderBookingAction = new QAction(tr("&Order Booking"));
+    orderBookingAction->setStatusTip(tr("Book Orders"));
+    connect(orderBookingAction, &QAction::triggered, this, &MainWindow::openOrderBooking);
+
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->addAction(clientAction);
-    mainToolBar->addAction(spotAction);
+    mainToolBar->addAction(orderBookingAction);
+    //mainToolBar->addAction(spotAction);
 }
 
 void MainWindow::newClientGroup()
@@ -337,6 +346,12 @@ void MainWindow::openSchedule()
 {
     ScheduleForm* schedForm = createSubWindow<ScheduleForm>();
     schedForm->exec();
+}
+
+void MainWindow::openOrderBooking()
+{
+    OrderBookingBrowser* obBrowser = createSubWindow<OrderBookingBrowser>();
+    obBrowser->exec();
 }
 
 MainWindow::~MainWindow()

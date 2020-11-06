@@ -41,7 +41,10 @@ void ScheduleForm::loadSchedule(const QDate &date)
     edmSchedule->clearEntities();
 
     Schedule sched;
-    auto date_filter = std::make_tuple(sched.scheduleDate()->dbColumnName(), date);
+    auto date_filter = std::make_tuple(
+                sched.scheduleDate()->dbColumnName(),
+                "=",
+                date);
     std::string filter = edmSchedule->prepareFilter(date_filter);
 
     edmSchedule->search(filter);

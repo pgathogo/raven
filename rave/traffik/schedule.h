@@ -82,6 +82,9 @@ public:
     TextField* comment()const;
     void setComment(const std::string val);
 
+    int selected() const;
+    void setSelected(int i);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
 
@@ -128,6 +131,8 @@ private:
     ChoiceField<std::string>* mBreakMode;
     ChoiceField<std::string>* mBreakStatus;
     TextField* mComment;
+
+    int mSelected;
 
     QStringList mHeader;
     std::string mTableName;

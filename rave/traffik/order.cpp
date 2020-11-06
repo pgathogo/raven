@@ -121,7 +121,7 @@ Order::Order(const Client* client)
                                        std::make_unique<SalesPerson>(), "salesperson_name");
 
     EntityDataModel edm;
-    auto filter = std::make_tuple("client_id", client->id());
+    auto filter = std::make_tuple("client_id", "=", client->id());
     std::string fstr = edm.prepareFilter(filter);
     mBrand = createField<ForeignKeyField>("brand_id", "Brand",
                                        std::make_unique<Brand>(),

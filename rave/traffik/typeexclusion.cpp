@@ -107,18 +107,6 @@ TypeExclusion& TypeExclusion::operator=(const TypeExclusion& other)
 
 TypeExclusion::~TypeExclusion()
 {
-    qDebug() << "TypeExclusion::dtor";
-    /*
-    delete mName;
-    delete mDescription;
-    delete mDaypart1;
-    delete mDaypart2;
-    delete mDaypart3;
-    delete mDaypart4;
-    delete mDaypart5;
-    delete mDaypart6;
-    delete mDaypart7;
-    */
 };
 
 StringField* TypeExclusion::name() const
@@ -243,8 +231,6 @@ std::string TypeExclusion::searchColumn() const
 
 void TypeExclusion::populateEntity()
 {
-    //mName->setValueFromWidget();
-    //mDescription->setValueFromWidget();
 }
 
 std::unique_ptr<BaseEntity> TypeExclusion::cloneAsUnique()

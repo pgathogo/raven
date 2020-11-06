@@ -78,7 +78,6 @@ VoiceExclusion& VoiceExclusion::operator=(const VoiceExclusion& other)
 
 VoiceExclusion::~VoiceExclusion()
 {
-    qDebug() << "VoiceExxclusion::dtor";
 }
 
 std::unique_ptr<ManyToMany> VoiceExclusion::copy(BaseEntity* pEnt, BaseEntity* dEnt) const

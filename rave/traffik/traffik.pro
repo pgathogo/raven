@@ -42,6 +42,7 @@ HEADERS += \
     ../security/authentication.h \
     approverform.h \
     bookingsegment.h \
+    bookingwizard.h \
     breakcreateform.h \
     breaklayout.h \
     breaklayoutbrowser.h \
@@ -49,6 +50,8 @@ HEADERS += \
     breaklayoutline.h \
     order.h \
     orderapprover.h \
+    orderbooking.h \
+    orderbookingbrowser.h \
     orderbrowser.h \
     orderform.h \
     orderpackage.h \
@@ -63,6 +66,7 @@ SOURCES += \
     ../security/authentication.cpp \
     approverform.cpp \
     bookingsegment.cpp \
+    bookingwizard.cpp \
     breakcreateform.cpp \
     breaklayout.cpp \
     breaklayoutbrowser.cpp \
@@ -70,6 +74,8 @@ SOURCES += \
     breaklayoutline.cpp \
     order.cpp \
     orderapprover.cpp \
+    orderbooking.cpp \
+    orderbookingbrowser.cpp \
     orderbrowser.cpp \
     orderform.cpp \
     orderpackage.cpp \
@@ -81,9 +87,11 @@ SOURCES += \
 
 FORMS += \
     approverform.ui \
+    bookingwizard.ui \
     breakcreateform.ui \
     breaklayoutbrowser.ui \
     breaklayoutform.ui \
+    orderbookingbrowser.ui \
     orderbrowser.ui \
     orderform.ui \
     scheduleform.ui \

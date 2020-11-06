@@ -86,6 +86,8 @@ void SetupForm::populateEntityFields()
     mSetup->setBreakDuration(ui->sbBreakDuration->value());
 
     mSetup->setBreakMaxSpots(ui->edtMaxSpots->value());
+
+    mSetup->setOrderAprvdBB(ui->cbAprvdBB->isChecked());
 }
 
 void SetupForm::populateFormWidgets()

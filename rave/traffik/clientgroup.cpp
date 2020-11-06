@@ -52,7 +52,6 @@ ClientGroup& ClientGroup::operator=(const ClientGroup& other)
 
 ClientGroup::~ClientGroup()
 {
-    qDebug() << "ClientGroup::dtor";
 }
 
 void ClientGroup::setName(std::string aName)

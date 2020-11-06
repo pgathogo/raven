@@ -60,6 +60,7 @@ void BreakCreateForm::breakLayoutSelected(const QModelIndex &index)
 
         BreakLayoutLine bbl;
         auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),
+                                                 "=",
                                                  breakLayout->id());
         std::string filter = edmBreakLine->prepareFilter(break_line_filter);
         edmBreakLine->search(filter);

@@ -110,6 +110,8 @@ void DayPartGrid::cell_clicked(int row, int col)
 void DayPartGrid::updateGrid(std::map<std::string, std::string> dayparts)
 {
 
+    clearAllHours();
+
     QTableWidgetItem* cell;
     int row=0;
     for (auto& [dpname, daypart] : dayparts){

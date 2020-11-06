@@ -6,5 +6,6 @@
         <file>images/icons/add.png</file>
         <file>images/icons/edit.png</file>
         <file>images/icons/search.png</file>
+        <file>images/icons/info_small.png</file>
     </qresource>
 </RCC>

@@ -195,7 +195,10 @@ std::string DecimalField::dbValueFormatter()
 }
 void DecimalField::stringToValue(const std::string val)
 {
-    mValue = std::stod(val);
+    if (val.empty())
+        mValue = 0.0;
+    else
+        mValue = std::stod(val);
 }
 void DecimalField::setValue(double val)
 {
@@ -236,8 +239,19 @@ std::string BooleanField::dbValueFormatter()
     return mValue ? "true" : "false";
 }
 
-void BooleanField::stringToValue(const std::string)
+void BooleanField::stringToValue(const std::string val)
 {
+    if (val.empty()) return;
+
+    std::locale loc;
+
+    for(auto s: val)
+        std::tolower(s);
+
+    if (val == "t" || val == "true")
+        mValue = true;
+    else
+        mValue = false;
 }
 
 void BooleanField::setValue(bool val)
@@ -381,7 +395,6 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
         ,mIndex{-1}
         ,mDisplayField{displayField}
 {
-
     auto it = lookups.find(aName);
     if (it == lookups.end()){
         lookups[aName]= std::make_unique<EntityDataModel>(std::move(fkEntity));
@@ -570,8 +583,8 @@ void DateField::setValue(QDate dt)
 
 void DateField::stringToValue(std::string val)
 {
-    QDate dt = QDate::fromString(stoq(val));
-    mValue.setDate(dt.year(), dt.month(), dt.day());
+    QDate dt = QDate::fromString(stoq(val), "yyyy-MM-dd");
+    setValue(dt);
 }
 
 QDate DateField::value()

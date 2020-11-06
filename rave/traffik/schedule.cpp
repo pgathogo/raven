@@ -3,6 +3,7 @@
 #include "../framework/entitydatamodel.h"
 
 Schedule::Schedule()
+    :mSelected{1}
 {
     // create fields
     mScheduleDate = createField<DateField>("schedule_date", "Schedule Date:");
@@ -290,6 +291,16 @@ TextField *Schedule::comment() const
 void Schedule::setComment(const std::string val)
 {
     mComment->setValue(val);
+}
+
+int Schedule::selected() const
+{
+    return mSelected;
+}
+
+void Schedule::setSelected(int i)
+{
+    mSelected = i;
 }
 
 std::string Schedule::tableName() const

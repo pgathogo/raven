@@ -122,8 +122,8 @@ class Daypart(models.Model):
 
 class Spot(Daypart):
     name = models.CharField(max_length=255)
-    spot_duration = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    real_duration = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    spot_duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    real_duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     client = models.ForeignKey(Client)
     brand = models.ForeignKey(Brand, blank=True, null=True)
 
@@ -313,10 +313,19 @@ class Artist(models.Model):
     artist_type = models.CharField(max_length=1, choices=ARTIST_TYPE)
     notes = models.TextField(blank=True, null=True)
 
+TRACK_TYPE = (
+        ('SONG', 'Song'),
+        ('COMM', 'Commercial'),
+        ('JING', 'Jingle'),
+        ('DROP', 'Drop'),
+        ('NBITE', 'News Bite')
+        )
+
 class Track(Daypart):
     title = models.CharField(max_length=255)
     artist = models.ForeignKey(Artist)
     filepath = models.CharField(max_length=255)
+    track_type = models.CharField(max_length=6, choices=TRACK_TYPE)
 
 PLAY_STATUS = (
         ('CUED','CUED'),
@@ -371,8 +380,7 @@ class SpotAudio(models.Model):
     seq_no = models.IntegerField(default=1, null=True)
 
 class BookingSegment(models.Model):
-    order = models.ForeignKey(Order)
-    spot = models.ForeignKey(Spot)
+    order = models.ForeignKey(Order, default=-1)
     booking_date = models.DateField(null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
@@ -389,10 +397,11 @@ BOOKING_STATUS = (
         )
 
 class OrderBooking(models.Model):
-    booking_segment = models.ForeignKey(BookingSegment)
     schedule = models.ForeignKey(Schedule)
+    bookingsegment = models.ForeignKey(BookingSegment, default=-1)
     booking_status = models.CharField(max_length=8, choices=BOOKING_STATUS, default='READY', null=True, blank=True)
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
+    spot = models.ForeignKey(Spot, default=-1)
     audio = models.ForeignKey(SpotAudio)
 

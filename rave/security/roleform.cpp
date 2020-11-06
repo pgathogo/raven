@@ -88,6 +88,7 @@ ActionResult RoleForm::saveRecord()
     if (ui->edtRoleName->isEnabled()){
         EntityDataModel edm = EntityDataModel(std::make_unique<Role>());
         auto role_filter = std::make_tuple(mRole->roleName()->dbColumnName(),
+                                           "=",
                                            mRole->roleName()->value());
         std::string filter = edm.prepareFilter(role_filter);
         edm.search(filter);

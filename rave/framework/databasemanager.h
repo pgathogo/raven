@@ -25,7 +25,7 @@ public:
 
     virtual int fetchAll(const BaseEntity& entity) = 0;
     virtual int searchByInt(const BaseEntity& entity,
-                           std::tuple<std::string, int> field_value) = 0;
+                           std::tuple<std::string, std::string, int> field_value) = 0;
     virtual int searchByStr(const BaseEntity& entity,
                           std::tuple<std::string, std::string> sf) = 0;
 
@@ -69,13 +69,14 @@ public:
     int searchByStr(const BaseEntity& entity,
                           std::tuple<std::string, std::string> sf) override;
     int searchByInt(const BaseEntity& entity,
-                           std::tuple<std::string, int> field_value) override;
+                           std::tuple<std::string,std::string,  int> field_value) override;
     int search(const BaseEntity& entity, const std::string filter) override;
     void executeRawSQL(const std::string sql) override;
     int readRaw(const std::string sql) override;
     BaseDataProvider* provider() override;
     std::string make_insert_stmt(const BaseEntity& entity) override;
     PostgresDataProvider* pgProvider();
+
 protected:
     void loadEntity(BaseEntity& entity)override;
 private:

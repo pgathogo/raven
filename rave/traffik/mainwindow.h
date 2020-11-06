@@ -80,6 +80,7 @@ private slots:
     void openSetupForm();
     void openBreakBrowser();
     void openSchedule();
+    void openOrderBooking();
 
 private:
     PlainForm* pf;

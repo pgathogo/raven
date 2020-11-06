@@ -72,7 +72,7 @@ Spot::Spot(const Client* client)
 
    //auto filter = std::make_tuple("client_id", client.id());
     EntityDataModel edm;
-    auto filter = std::make_tuple("client_id", client->id());
+    auto filter = std::make_tuple("client_id", "=", client->id());
     std::string fstr = edm.prepareFilter(filter);
 
 

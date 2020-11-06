@@ -97,6 +97,7 @@ ActionResult UserForm::saveRecord()
     if (ui->edtUserName->isEnabled()){
         EntityDataModel edm = EntityDataModel(std::make_unique<User>());
         auto user_filter = std::make_tuple(mUser->userName()->dbColumnName(),
+                                           "=",
                                            mUser->userName()->value());
         std::string filter = edm.prepareFilter(user_filter);
         edm.search(filter);

@@ -160,7 +160,7 @@ int PostgresDatabaseManager::fetchAll(const BaseEntity& entity)
 {
     std::string sql{};
     std::string flds = columnsForSelection(entity);
-    sql = "SELECT " + flds + " FROM "+entity.tableName();
+    sql = "SELECT " + flds + " FROM "+entity.tableName()+" ORDER BY "+entity.orderBy();
     return provider()->read(sql);
 }
 
@@ -174,12 +174,13 @@ int PostgresDatabaseManager::searchByStr(const BaseEntity& entity, std::tuple<st
     return provider()->read(sql);
 }
 
-int PostgresDatabaseManager::searchByInt(const BaseEntity& entity, std::tuple<std::string, int> field_value)
+int PostgresDatabaseManager::searchByInt(const BaseEntity& entity, std::tuple<std::string, std::string, int> field_value)
 {
     std::string sql{};
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
-                    " WHERE "+ std::get<0>(field_value)+" = "+std::to_string(std::get<1>(field_value));
+                    " WHERE "+ std::get<0>(field_value)+
+             std::get<1>(field_value)+std::to_string(std::get<2>(field_value));
     return provider()->read(sql);
 }
 
@@ -245,4 +246,5 @@ PostgresDataProvider *PostgresDatabaseManager::pgProvider()
 {
     return dataProvider;
 }
+
 

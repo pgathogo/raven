@@ -85,7 +85,10 @@ void Authentication::access_controller(const std::string uname)
 std::tuple<std::string, std::string> Authentication::get_user_details(const std::string uname)
 {
     std::unique_ptr<User> user = std::make_unique<User>();
-    auto filter_username = std::make_tuple(user->userName()->dbColumnName(), uname);
+    auto filter_username = std::make_tuple(
+                user->userName()->dbColumnName(),
+                "=",
+                uname);
     EntityDataModel edm(std::move(user));
 
     std::string filter = edm.prepareFilter(filter_username);

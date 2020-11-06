@@ -12,9 +12,6 @@ public:
     ForeignKeyField* order() const;
     void setOrder(int val);
 
-    ForeignKeyField* spot() const;
-    void setSpot(int val);
-
     DateField* bookingDate() const;
     void setBookingDate(QDate val);
 
@@ -55,7 +52,6 @@ public:
 
 private:
     ForeignKeyField* mOrder;
-    ForeignKeyField* mSpot;
     DateField* mBookingDate;
     DateField* mStartDate;
     DateField* mEndDate;

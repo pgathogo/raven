@@ -37,12 +37,10 @@ Agent::Agent(int)
 
 Agent::Agent(const Agent& /*other*/)
 {
-    qDebug() << "Agent::copy ctor";
 }
 
 Agent::~Agent()
 {
-    qDebug() << "Agent::dtor" ;
 }
 
 std::string Agent::tableName() const

@@ -71,7 +71,7 @@ bool ContentBrowser::roles_attached(const BaseEntity *entity)
     auto cauth = std::make_unique<ContentAuth>();
     std::string fname = cauth->content()->dbColumnName();
     EntityDataModel edm(std::move(cauth));
-    auto auth_filter = std::make_tuple(fname, entity->id());
+    auto auth_filter = std::make_tuple(fname, "=", entity->id());
     std::string filter = edm.prepareFilter(auth_filter);
     edm.search(filter);
 

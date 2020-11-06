@@ -74,8 +74,8 @@ public:
 
     void all();
     void searchByStr(std::tuple<std::string, std::string>);
-    void searchByInt(std::tuple<std::string, int>);
-    void getById(std::tuple<std::string, int>);
+    void searchByInt(std::tuple<std::string, std::string, int>);
+    void getById(std::tuple<std::string, std::string, int>);
     void search(const std::string searchFilter);
 
     std::string make_insert_stmt(const BaseEntity& entity);
@@ -105,17 +105,19 @@ public:
     void searchFilter(T firstArg, Types... args)
     {
         // binding from a tuple
-        auto [column, value] = firstArg;
+        auto [column, op, value] = firstArg;
 
         std::string filter = column;
 
         if constexpr(std::is_integral_v<decltype(value)> &&
                 !std::is_same_v<decltype(value), bool>){
-            filter +=" = ";
+            //filter +=" = ";
+            filter += op;
             filter += std::to_string(value);
         }else if constexpr(std::is_integral_v<decltype(value)> &&
                            std::is_same_v<decltype(value), bool>){
-            filter += " = ";
+            //filter += " = ";
+            filter += op;
             switch (value){
              case 0:
                 filter += "false";
@@ -127,13 +129,20 @@ public:
                 filter += "false";
             }
         }else if constexpr(is_string<decltype(value)>::value){
-            filter += " LIKE ";
-            std::string str_value = value;
-            for(auto s : str_value)
-                std::tolower(s);
-            filter += "'%"+str_value+"%'";
+            if (op == "LIKE"){
+                filter += " LIKE ";
+                std::string str_value = value;
+                for(auto s : str_value)
+                    std::tolower(s);
+                filter += "'%"+str_value+"%'";
+            }else{
+                filter += op;
+                filter += value;
+            }
+
         }else if constexpr(std::is_same_v<decltype(value), QDate>){
-            filter += " = ";
+            //filter += " = ";
+            filter += op;
             std::string str_value = value.toString("yyyy-MM-dd").toStdString();
             for(auto s : str_value)
                 std::tolower(s);

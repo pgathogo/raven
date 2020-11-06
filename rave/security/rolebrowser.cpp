@@ -61,7 +61,7 @@ void RoleBrowser::searchRecord()
 {
     if (bui->edtFilter->text().isEmpty()){
         Role& role = dynamic_cast<Role&>(entityDataModel().getEntity());
-        auto si = searchItem(role.roleCanLogin()->dbColumnName(), false);
+        auto si = searchItem(role.roleCanLogin()->dbColumnName(), "=", false);
         std::string filter = entityDataModel().prepareFilter(si);
         entityDataModel().search(filter);
     }else{
@@ -70,10 +70,10 @@ void RoleBrowser::searchRecord()
         std::string columnName = data.toString().toStdString();
         std::string item = bui->edtFilter->text().toStdString();
 
-        auto role_name = std::make_tuple(columnName, item);
+        auto role_name = std::make_tuple(columnName, "=", item);
 
         Role& role = dynamic_cast<Role&>(entityDataModel().getEntity());
-        auto role_filter = searchItem(role.roleCanLogin()->dbColumnName(), false);
+        auto role_filter = searchItem(role.roleCanLogin()->dbColumnName(), "=", false);
 
         std::string filter = entityDataModel().prepareFilter(role_name, role_filter);
         entityDataModel().search(filter);

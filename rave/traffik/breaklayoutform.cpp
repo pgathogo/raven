@@ -115,7 +115,10 @@ void BreakLayoutForm::populateBreakLine()
         addBreakLines(0, mBreakLayout->timeInterval()->value());
     }else{
         BreakLayoutLine bll;
-        auto fk_filter = std::make_tuple(bll.breakLayout()->dbColumnName(), mBreakLayout->id());
+        auto fk_filter = std::make_tuple(
+                    bll.breakLayout()->dbColumnName(),
+                    "=",
+                    mBreakLayout->id());
         std::string filter = mEDMBreakLine->prepareFilter(fk_filter);
         mEDMBreakLine->search(filter);
     }

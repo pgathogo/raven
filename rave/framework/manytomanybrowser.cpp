@@ -25,7 +25,7 @@ ManyToManyBrowser::ManyToManyBrowser(
     if (mMtoM->parentId()->value() > 0){
         std::string columnName = mMtoM->parentId()->dbColumnName();
         int value = mMtoM->parentId()->value();
-        auto needle = std::make_tuple(columnName, value);
+        auto needle = std::make_tuple(columnName, "=", value);
 
         try{
             entityDataModel().searchByInt(needle);

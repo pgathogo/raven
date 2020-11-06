@@ -9,7 +9,6 @@ ValueList::ValueList()
         ,mCode{}
         ,mListValue{}
 {
-    qDebug() << "ValueList::ctor" ;
 
     mCode = createField<StringField>("code", "Code");
     mListValue = createField<StringField>("value", "Value");
@@ -22,7 +21,6 @@ ValueList::ValueList()
 
 ValueList::ValueList(const ValueList& rhs)
 {
-    qDebug() << "ValueList::copy ctor";
     if (rhs.mCode)
         *mCode = *rhs.mCode;
     if (rhs.mListValue)
@@ -33,7 +31,6 @@ ValueList::ValueList(const ValueList& rhs)
 
 ValueList& ValueList::operator=(const ValueList& rhs)
 {
-    qDebug() << "ValueList::operator=";
 
     if (this != &rhs){
         //delete mCode;
@@ -56,7 +53,6 @@ ValueList& ValueList::operator=(const ValueList& rhs)
 
 ValueList::~ValueList()
 {
-    qDebug() << "ValueList::dtor";
 }
 
 

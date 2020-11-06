@@ -22,10 +22,10 @@ class BaseEntityBrowserDlg;
 
 using AccessMap = std::map<std::string, std::string>;
 
-template<typename T1, typename T2>
-std::tuple<T1, T2> searchItem(T1 col, T2 val)
+template<typename T1, typename T2, typename T3>
+std::tuple<T1, T2, T3> searchItem(T1 col, T2 op, T3 val)
 {
-    return std::make_tuple(col, val);
+    return std::make_tuple(col, op, val);
 }
 
 class BaseEntityBrowserDlg : public QDialog
@@ -229,7 +229,8 @@ public:
         if (bui->edtFilter->text().isEmpty()){
             T& t = dynamic_cast<T&>(entityDataModel().getEntity());
            if constexpr(HasClientId<T>::value > 0){
-                auto si = searchItem(t.client()->dbColumnName(), parent->id());
+                //auto si = searchItem(t.client()->dbColumnName(), "=", parent->id());
+                auto si = std::make_tuple(t.client()->dbColumnName(), "=", parent->id());
                 entityDataModel().searchByInt(si);
            }
         }else{
@@ -237,11 +238,12 @@ public:
                                 bui->cbFilter->currentIndex()).value<QVariant>();
             std::string columnName = data.toString().toStdString();
             std::string item = bui->edtFilter->text().toStdString();
-            auto brand_filter = std::make_tuple(columnName, item);
+            auto brand_filter = std::make_tuple(columnName, "=", item);
 
             T& t = dynamic_cast<T&>(entityDataModel().getEntity());
             if constexpr(HasClientId<T>::value > 0){
-                auto parent_filter = searchItem(t.client()->dbColumnName(), parent->id());
+                //auto parent_filter = searchItem(t.client()->dbColumnName(), "=", parent->id());
+                auto parent_filter = std::make_tuple(t.client()->dbColumnName(), "=", parent->id());
                 std::string filter = entityDataModel().prepareFilter(brand_filter, parent_filter);
                 entityDataModel().search(filter);
             }

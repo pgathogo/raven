@@ -47,11 +47,11 @@ public:
     virtual std::string tableName() const = 0;
     virtual void setTableName(const std::string table_name)=0;
 
+    virtual std::string searchColumn() const = 0;
+
     std::vector<std::string> dbColumnNames() const;
 
     size_t fieldsCount() const { return mFields.size(); }
-
-    virtual std::string searchColumn() const = 0;
 
     [[nodiscard]] virtual ActionResult validate();
 
@@ -77,6 +77,8 @@ public:
     virtual std::string make_create_stmt();
     virtual std::string make_alter_stmt(const std::string name);
     virtual std::string make_drop_stmt(const std::string name);
+
+    std::string orderBy() const;
 
     virtual std::string className();
 
@@ -105,7 +107,7 @@ public:
         for(auto& [field, name] : mapping(map))
             uT->setValueByField(*field, name);
 
-        return uT; // Evil !! - transfering ownership from a local
+        return uT;
     }
 
     template<typename T, typename... Args>
@@ -126,6 +128,10 @@ private:
     std::unique_ptr<EntityDataModel> mEDM;
     DBAction mDBAction;
 
+};
+
+template<typename T, typename... Args>
+class EntityView : public BaseEntity{
 };
 
 #endif // BASEENTITY_H
