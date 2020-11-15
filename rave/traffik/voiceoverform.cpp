@@ -71,14 +71,15 @@ void VoiceOverForm::populateEntityFields()
     mVoiceOver->name()->setValue(ui->edtName->text().toStdString());
     mVoiceOver->mobileno()->setValue(ui->edtMobile->text().toStdString());
 
-    auto dayparts = mDayPart->readGrid();
-    mVoiceOver->setDaypart1(dayparts["daypart1"]);
-    mVoiceOver->setDaypart2(dayparts["daypart2"]);
-    mVoiceOver->setDaypart3(dayparts["daypart3"]);
-    mVoiceOver->setDaypart4(dayparts["daypart4"]);
-    mVoiceOver->setDaypart5(dayparts["daypart5"]);
-    mVoiceOver->setDaypart6(dayparts["daypart6"]);
-    mVoiceOver->setDaypart7(dayparts["daypart7"]);
+    auto dayparts = mDayPart->read_grid();
+
+    mVoiceOver->setDaypart1(dayparts[1]);
+    mVoiceOver->setDaypart2(dayparts[2]);
+    mVoiceOver->setDaypart3(dayparts[3]);
+    mVoiceOver->setDaypart4(dayparts[4]);
+    mVoiceOver->setDaypart5(dayparts[5]);
+    mVoiceOver->setDaypart6(dayparts[6]);
+    mVoiceOver->setDaypart7(dayparts[7]);
 }
 
 std::vector<EntityRecord> const& VoiceOverForm::typeExclusions() const
@@ -107,17 +108,17 @@ void VoiceOverForm::setDayPart()
 
 void VoiceOverForm::populateDayPart(DayPartGrid& dp)
 {
-    std::map<std::string, std::string> dayparts;
+    std::map<int, std::string> dayparts;
 
-    dayparts["daypart1"] = mVoiceOver->daypart1()->valueToString();
-    dayparts["daypart2"] = mVoiceOver->daypart2()->valueToString();
-    dayparts["daypart3"] = mVoiceOver->daypart3()->valueToString();
-    dayparts["daypart4"] = mVoiceOver->daypart4()->valueToString();
-    dayparts["daypart5"] = mVoiceOver->daypart5()->valueToString();
-    dayparts["daypart6"] = mVoiceOver->daypart6()->valueToString();
-    dayparts["daypart7"] = mVoiceOver->daypart7()->valueToString();
+    dayparts[1] = mVoiceOver->daypart1()->valueToString();
+    dayparts[2] = mVoiceOver->daypart2()->valueToString();
+    dayparts[3] = mVoiceOver->daypart3()->valueToString();
+    dayparts[4] = mVoiceOver->daypart4()->valueToString();
+    dayparts[5] = mVoiceOver->daypart5()->valueToString();
+    dayparts[6] = mVoiceOver->daypart6()->valueToString();
+    dayparts[7] = mVoiceOver->daypart7()->valueToString();
 
-    dp.updateGrid(dayparts);
+    dp.update_grid(dayparts);
 }
 
 void VoiceOverForm::comboChanged(int i)

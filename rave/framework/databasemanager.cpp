@@ -66,7 +66,7 @@ std::string BaseDatabaseManager::commaSepColumns(const BaseEntity& entity)
         if (col != "id"){
            flds += col;
            if (i<cols.size())
-           flds +=",";
+               flds +=",";
         }
            ++i;
     }
@@ -189,7 +189,7 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string sql{};
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
-                    " WHERE "+ filter;
+                    " WHERE "+ filter+" ORDER BY "+entity.orderBy();
     return provider()->read(sql);
 }
 

@@ -20,7 +20,6 @@ DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets, QWidget *parent) :
     mPreset{psets}
 {
     ui->setupUi(this);
-    //connect(ui->twDaypart, SIGNAL(cellEntered(int, int)), this, SLOT(cell_entered(int, int)));
     connect(ui->twDaypart, &QTableWidget::cellEntered, this, &DayPartGrid::cell_entered);
     connect(ui->twDaypart, SIGNAL(cellClicked(int, int)), this, SLOT(cell_clicked(int, int)));
 
@@ -107,10 +106,9 @@ void DayPartGrid::cell_clicked(int row, int col)
     }
 }
 
-void DayPartGrid::updateGrid(std::map<std::string, std::string> dayparts)
+void DayPartGrid::update_grid(std::map<int, std::string> dayparts)
 {
-
-    clearAllHours();
+    clear_all_cells();
 
     QTableWidgetItem* cell;
     int row=0;
@@ -137,39 +135,48 @@ StartPoint DayPartGrid::startPoint()
     return sp;
 }
 
-std::map<std::string, std::string> DayPartGrid::getDayparts()
-{
-        return mDayParts;
-}
-
 bool DayPartGrid::is_cell_selected(QTableWidgetItem* cell)
 {
      return(cell->background() == Qt::green) ? true : false;
 }
 
-std::map<std::string, std::string> DayPartGrid::readGrid()
+std::map<int, std::string> DayPartGrid::read_grid()
 {
     mDayParts.clear();
-    std::string prefix= "daypart";
     for(int r=0; r< days_in_week; ++r){
       std::string day{};
       for (int c=0; c<= hrs_in_day-1; ++c){
           day += std::to_string(gridCells[r][c]);
       }
-      std::string key = prefix+std::to_string(r+1);
-      mDayParts[key] = day;
+      mDayParts[r+1] = day;
     }
-      return mDayParts;
+    return mDayParts;
+}
+
+std::set<int> DayPartGrid::daypart_to_hours()
+{
+    std::set<int> hours;
+    auto dayparts = read_grid();
+    for (auto& [day, daypart] : dayparts){
+        int hr = 0;
+        for(std::string::iterator it=daypart.begin(); it != daypart.end(); ++it){
+            if (*it=='1')
+                hours.insert(hr);
+            ++hr;
+        }
+    }
+
+    return hours;
 }
 
 void DayPartGrid::showContextMenu(QPoint pos)
 {
     QAction actSelectAll("Select all", this);
-    connect(&actSelectAll, &QAction::triggered, this, &DayPartGrid::selectAllHours);
+    connect(&actSelectAll, &QAction::triggered, this, &DayPartGrid::select_all_cells);
     mContextMenu->addAction(&actSelectAll);
 
     QAction actClearAll("Clear all", this);
-    connect(&actClearAll, &QAction::triggered, this, &DayPartGrid::clearAllHours);
+    connect(&actClearAll, &QAction::triggered, this, &DayPartGrid::clear_all_cells);
     mContextMenu->addAction(&actClearAll);
 
     mContextMenu->addSeparator();
@@ -185,12 +192,12 @@ void DayPartGrid::showContextMenu(QPoint pos)
     mContextMenu->exec(mapToGlobal(pos));
 }
 
-void DayPartGrid::selectAllHours()
+void DayPartGrid::select_all_cells()
 {
    set_all_cells<Selected>(ui->twDaypart);
 }
 
-void DayPartGrid::clearAllHours()
+void DayPartGrid::clear_all_cells()
 {
    set_all_cells<Unselected>(ui->twDaypart);
 }
@@ -199,7 +206,7 @@ void DayPartGrid::selectPreset()
 {
     QAction* act = qobject_cast<QAction*>(sender());
     if (act){
-        updateGrid(mPreset[act->data().toString().toStdString()]);
+        update_grid(mPreset[act->data().toString().toStdString()]);
     }
 }
 

@@ -76,16 +76,16 @@ void SpotForm::populateGrid()
 {
     mDaypart = std::make_unique<DayPartGrid>(ui->vlDaypart);
 
-    std::map<std::string, std::string> dayparts;
-    dayparts["daypart1"] = mSpot->daypart1()->valueToString();
-    dayparts["daypart2"] = mSpot->daypart2()->valueToString();
-    dayparts["daypart3"] = mSpot->daypart3()->valueToString();
-    dayparts["daypart4"] = mSpot->daypart4()->valueToString();
-    dayparts["daypart5"] = mSpot->daypart5()->valueToString();
-    dayparts["daypart6"] = mSpot->daypart6()->valueToString();
-    dayparts["daypart7"] = mSpot->daypart7()->valueToString();
+    std::map<int, std::string> dayparts;
+    dayparts[1] = mSpot->daypart1()->valueToString();
+    dayparts[2] = mSpot->daypart2()->valueToString();
+    dayparts[3] = mSpot->daypart3()->valueToString();
+    dayparts[4] = mSpot->daypart4()->valueToString();
+    dayparts[5] = mSpot->daypart5()->valueToString();
+    dayparts[6] = mSpot->daypart6()->valueToString();
+    dayparts[7] = mSpot->daypart7()->valueToString();
 
-    mDaypart->updateGrid(dayparts);
+    mDaypart->update_grid(dayparts);
 
 }
 
@@ -97,14 +97,14 @@ void SpotForm::populateEntityFields()
     mSpot->setBrand(mClient->id());
     mSpot->setClient(mClient->id());
 
-    auto dayparts = mDaypart->readGrid();
-    mSpot->setDaypart1(dayparts["daypart1"]);
-    mSpot->setDaypart2(dayparts["daypart2"]);
-    mSpot->setDaypart3(dayparts["daypart3"]);
-    mSpot->setDaypart4(dayparts["daypart4"]);
-    mSpot->setDaypart5(dayparts["daypart5"]);
-    mSpot->setDaypart6(dayparts["daypart6"]);
-    mSpot->setDaypart7(dayparts["daypart7"]);
+    auto dayparts = mDaypart->read_grid();
+    mSpot->setDaypart1(dayparts[1]);
+    mSpot->setDaypart2(dayparts[2]);
+    mSpot->setDaypart3(dayparts[3]);
+    mSpot->setDaypart4(dayparts[4]);
+    mSpot->setDaypart5(dayparts[5]);
+    mSpot->setDaypart6(dayparts[6]);
+    mSpot->setDaypart7(dayparts[7]);
 
 
 }

@@ -48,15 +48,15 @@ std::string TimeBandForm::windowTitle()
 
 void TimeBandForm::populateGrid()
 {
-    std::map<std::string, std::string> dayparts;
-    dayparts["daypart1"] = mTimeBand->daypart1()->valueToString();
-    dayparts["daypart2"] = mTimeBand->daypart2()->valueToString();
-    dayparts["daypart3"] = mTimeBand->daypart3()->valueToString();
-    dayparts["daypart4"] = mTimeBand->daypart4()->valueToString();
-    dayparts["daypart5"] = mTimeBand->daypart5()->valueToString();
-    dayparts["daypart6"] = mTimeBand->daypart6()->valueToString();
-    dayparts["daypart7"] = mTimeBand->daypart7()->valueToString();
-    mDPG->updateGrid(dayparts);
+    std::map<int, std::string> dayparts;
+    dayparts[1] = mTimeBand->daypart1()->valueToString();
+    dayparts[2] = mTimeBand->daypart2()->valueToString();
+    dayparts[3] = mTimeBand->daypart3()->valueToString();
+    dayparts[4] = mTimeBand->daypart4()->valueToString();
+    dayparts[5] = mTimeBand->daypart5()->valueToString();
+    dayparts[6] = mTimeBand->daypart6()->valueToString();
+    dayparts[7] = mTimeBand->daypart7()->valueToString();
+    mDPG->update_grid(dayparts);
 }
 
 void TimeBandForm::populateEntityFields()
@@ -107,14 +107,14 @@ void TimeBandForm::populateEntityFields()
     mTimeBand->setPercent12(ui->sbP12->value());
 
 
-    auto dayparts = mDPG->readGrid();
-    mTimeBand->setDaypart1(dayparts["daypart1"]);
-    mTimeBand->setDaypart2(dayparts["daypart2"]);
-    mTimeBand->setDaypart3(dayparts["daypart3"]);
-    mTimeBand->setDaypart4(dayparts["daypart4"]);
-    mTimeBand->setDaypart5(dayparts["daypart5"]);
-    mTimeBand->setDaypart6(dayparts["daypart6"]);
-    mTimeBand->setDaypart7(dayparts["daypart7"]);
+    auto dayparts = mDPG->read_grid();
+    mTimeBand->setDaypart1(dayparts[1]);
+    mTimeBand->setDaypart2(dayparts[2]);
+    mTimeBand->setDaypart3(dayparts[3]);
+    mTimeBand->setDaypart4(dayparts[4]);
+    mTimeBand->setDaypart5(dayparts[5]);
+    mTimeBand->setDaypart6(dayparts[6]);
+    mTimeBand->setDaypart7(dayparts[7]);
 
 }
 

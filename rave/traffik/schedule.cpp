@@ -3,7 +3,7 @@
 #include "../framework/entitydatamodel.h"
 
 Schedule::Schedule()
-    :mSelected{1}
+    :mIsBad{false}
 {
     // create fields
     mScheduleDate = createField<DateField>("schedule_date", "Schedule Date:");
@@ -195,7 +195,6 @@ ChoiceField<std::string>* Schedule::setTrackType(std::string val)
 {
     mTrackType->setValue(val);
     return mTrackType;
-
 }
 
 IntegerField *Schedule::breakDuration() const
@@ -293,14 +292,14 @@ void Schedule::setComment(const std::string val)
     mComment->setValue(val);
 }
 
-int Schedule::selected() const
+bool Schedule::isBad() const
 {
-    return mSelected;
+    return mIsBad;
 }
 
-void Schedule::setSelected(int i)
+void Schedule::setIsBad(bool flag)
 {
-    mSelected = i;
+    mIsBad = flag;
 }
 
 std::string Schedule::tableName() const

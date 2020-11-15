@@ -527,7 +527,14 @@
      <number>20</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="label_33">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -562,7 +569,14 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_16">
+     <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="imgFullBreaks">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_10">
         <property name="text">
@@ -597,7 +611,14 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="imgTypeExcl">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
@@ -632,7 +653,14 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="imgVoiceExcl">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_5">
         <property name="text">

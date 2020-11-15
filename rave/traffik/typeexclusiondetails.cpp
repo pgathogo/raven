@@ -55,26 +55,26 @@ void TypeExclusionDetails::populateEntityFields()
     typeEx->name()->setValue(ui->edtName->text().toStdString());
     typeEx->description()->setValue(ui->edtDesc->toPlainText().toStdString());
 
-    auto dayparts = dpg->readGrid();
-    typeEx->setDaypart1(dayparts["daypart1"]);
-    typeEx->setDaypart2(dayparts["daypart2"]);
-    typeEx->setDaypart3(dayparts["daypart3"]);
-    typeEx->setDaypart4(dayparts["daypart4"]);
-    typeEx->setDaypart5(dayparts["daypart5"]);
-    typeEx->setDaypart6(dayparts["daypart6"]);
-    typeEx->setDaypart7(dayparts["daypart7"]);
+    auto dayparts = dpg->read_grid();
+    typeEx->setDaypart1(dayparts[1]);
+    typeEx->setDaypart2(dayparts[2]);
+    typeEx->setDaypart3(dayparts[3]);
+    typeEx->setDaypart4(dayparts[4]);
+    typeEx->setDaypart5(dayparts[5]);
+    typeEx->setDaypart6(dayparts[6]);
+    typeEx->setDaypart7(dayparts[7]);
 
 }
 
 void TypeExclusionDetails::populateGrid()
 {
-    std::map<std::string, std::string> dayparts;
-    dayparts["daypart1"] = typeEx->daypart1()->valueToString();
-    dayparts["daypart2"] = typeEx->daypart2()->valueToString();
-    dayparts["daypart3"] = typeEx->daypart3()->valueToString();
-    dayparts["daypart4"] = typeEx->daypart4()->valueToString();
-    dayparts["daypart5"] = typeEx->daypart5()->valueToString();
-    dayparts["daypart6"] = typeEx->daypart6()->valueToString();
-    dayparts["daypart7"] = typeEx->daypart7()->valueToString();
-    dpg->updateGrid(dayparts);
+    std::map<int, std::string> dayparts;
+    dayparts[1] = typeEx->daypart1()->valueToString();
+    dayparts[2] = typeEx->daypart2()->valueToString();
+    dayparts[3] = typeEx->daypart3()->valueToString();
+    dayparts[4] = typeEx->daypart4()->valueToString();
+    dayparts[5] = typeEx->daypart5()->valueToString();
+    dayparts[6] = typeEx->daypart6()->valueToString();
+    dayparts[7] = typeEx->daypart7()->valueToString();
+    dpg->update_grid(dayparts);
 }

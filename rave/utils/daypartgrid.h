@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTableWidgetItem>
 #include <memory>
+#include <set>
 
 class QVBoxLayout;
 
@@ -34,7 +35,7 @@ struct StartPoint{
     int col;
 };
 
-using Presets = std::map<std::string, std::map<std::string, std::string>>;
+using Presets = std::map<std::string, std::map<int, std::string>>;
 
 class DayPartGrid : public QWidget
 {
@@ -42,25 +43,41 @@ class DayPartGrid : public QWidget
 
 public:
     explicit DayPartGrid(QVBoxLayout* layout, Presets psets = {}, QWidget *parent = nullptr);
-    ~DayPartGrid();
+    ~DayPartGrid() override;
 
-    constexpr static int days_in_week=7;
-    constexpr static int hrs_in_day=24;
+    void update_grid(std::map<int, std::string> dayparts);
 
-    std::array<std::array<int, hrs_in_day>, days_in_week> gridCells = {};
+    std::map<int, std::string> read_grid();
 
-    bool is_cell_selected(QTableWidgetItem* cell);
+    std::set<int> daypart_to_hours();
 
-    void updateGrid(std::map<std::string, std::string> dayparts);
 
-    std::map<std::string, std::string> getDayparts();
+private slots:
+    //void saveGrid();
+    void cell_entered(int row, int col);
+    void cell_clicked(int row, int col);
+    void showContextMenu(QPoint);
+    void select_all_cells();
+    void clear_all_cells();
+    void selectPreset();
+private:
+    Ui::DayPartGrid *ui;
+    std::map<int, std::string> mDayParts;
+    QVBoxLayout* mLayout;
+    StartPoint sp;
+    bool rightClicked;
+    std::unique_ptr<QMenu> mContextMenu;
+    Presets mPreset;
 
-    void prepareGrid();
+    constexpr static int days_in_week{7};
+    constexpr static int hrs_in_day{24};
 
-    std::map<std::string, std::string> readGrid();
+    std::array<std::array<int, hrs_in_day>, days_in_week> gridCells{};
 
     void setStartPoint(int row, int col);
     StartPoint startPoint();
+    bool is_cell_selected(QTableWidgetItem* cell);
+    void prepareGrid();
 
     bool eventFilter(QObject* obj, QEvent* event) override;
 
@@ -87,23 +104,6 @@ public:
         }
     }
 
-
-private slots:
-    //void saveGrid();
-    void cell_entered(int row, int col);
-    void cell_clicked(int row, int col);
-    void showContextMenu(QPoint);
-    void selectAllHours();
-    void clearAllHours();
-    void selectPreset();
-private:
-    Ui::DayPartGrid *ui;
-    std::map<std::string, std::string> mDayParts;
-    QVBoxLayout* mLayout;
-    StartPoint sp;
-    bool rightClicked;
-    std::unique_ptr<QMenu> mContextMenu;
-    Presets mPreset;
 };
 
 #endif // DAYPARTGRID_H

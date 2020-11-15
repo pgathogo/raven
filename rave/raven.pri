@@ -22,6 +22,7 @@ SOURCES += \
     ../utils/notificationbar.cpp \
     ../utils/notificationitem.cpp \
     ../utils/plainform.cpp \
+    ../traffik/traffikrules.cpp \
     ../traffik/agent.cpp \
     ../traffik/agentbrowser.cpp \
     ../traffik/agentform.cpp \
@@ -96,6 +97,7 @@ HEADERS += \
     ../utils/plainform.h \
     ../utils/tools.h \
     ../utils/types.h \
+    ../traffik/traffikrules.h \
     ../traffik/agent.h \
     ../traffik/agentbrowser.h \
     ../traffik/agentform.h \

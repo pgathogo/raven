@@ -11,25 +11,25 @@
 BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     QWizard(parent),
     ui(new Ui::BookingWizard),
-    mOrder{order},
-    spotEDM{nullptr},
-    timeBandEDM{nullptr},
-    mDPG{nullptr},
-    scheduleEDM{nullptr},
-    bookingEDM{nullptr}
+    m_order{order},
+    m_spot_EDM{nullptr},
+    m_timeband_EDM{nullptr},
+    m_daypart_grid{nullptr},
+    m_schedule_EDM{nullptr},
+    m_booking_EDM{nullptr}
 {
     ui->setupUi(this);
 
-    populateSpotsTable(mOrder->client()->value());
+    populate_spots_table(m_order->client()->value());
 
     ui->tvSpots->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tvSpots->setModel(spotEDM.get());
+    ui->tvSpots->setModel(m_spot_EDM.get());
 
-    timeBandEDM = new EntityDataModel(
+    m_timeband_EDM = new EntityDataModel(
                 std::make_unique<TimeBand>());
 
-    timeBandEDM->all();
-    ui->cbTimeband->setModel(timeBandEDM);
+    m_timeband_EDM->all();
+    ui->cbTimeband->setModel(m_timeband_EDM);
 
     connect(ui->cbTimeband, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &BookingWizard::timeBandChanged);
@@ -38,7 +38,7 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     connect(ui->rbTimeband, &QRadioButton::toggled, this, &BookingWizard::toggleTimeBand);
     connect(ui->btnBuildBreaks, &QPushButton::clicked, this, &BookingWizard::buildBreaks);
 
-    mDPG = std::make_unique<DayPartGrid>(ui->vlDaypart);
+    m_daypart_grid = std::make_unique<DayPartGrid>(ui->vlDaypart);
 
     timeBandChanged(0);
     ui->rbTimeband->toggle();
@@ -46,6 +46,7 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     ui->edtStartDate->setDate(order->startDate()->value());
     ui->edtEndDate->setDate(order->endDate()->value());
 
+    m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
 }
 
 BookingWizard::~BookingWizard()
@@ -53,10 +54,10 @@ BookingWizard::~BookingWizard()
     delete ui;
 }
 
-void BookingWizard::populateSpotsTable(int client_id)
+void BookingWizard::populate_spots_table(int client_id)
 {
 
-    spotEDM = std::make_unique<EntityDataModel>(
+    m_spot_EDM = std::make_unique<EntityDataModel>(
                 std::make_unique<Spot>());
 
     auto spot = std::make_unique<Spot>();
@@ -66,52 +67,68 @@ void BookingWizard::populateSpotsTable(int client_id)
                 " = ",
                 client_id);
 
-    spotEDM->search(spotEDM->prepareFilter(spotFilter));
+    m_spot_EDM->search(m_spot_EDM->prepareFilter(spotFilter));
 
 }
 
-void BookingWizard::populateGrid(TimeBand* timeBand)
+void BookingWizard::populate_grid(TimeBand* timeBand)
 {
 
-    std::map<std::string, std::string> dayparts;
-    dayparts["daypart1"] = timeBand->daypart1()->valueToString();
-    dayparts["daypart2"] = timeBand->daypart2()->valueToString();
-    dayparts["daypart3"] = timeBand->daypart3()->valueToString();
-    dayparts["daypart4"] = timeBand->daypart4()->valueToString();
-    dayparts["daypart5"] = timeBand->daypart5()->valueToString();
-    dayparts["daypart6"] = timeBand->daypart6()->valueToString();
-    dayparts["daypart7"] = timeBand->daypart7()->valueToString();
+    std::map<int, std::string> dayparts;
+    dayparts[1] = timeBand->daypart1()->valueToString();
+    dayparts[2] = timeBand->daypart2()->valueToString();
+    dayparts[3] = timeBand->daypart3()->valueToString();
+    dayparts[4] = timeBand->daypart4()->valueToString();
+    dayparts[5] = timeBand->daypart5()->valueToString();
+    dayparts[6] = timeBand->daypart6()->valueToString();
+    dayparts[7] = timeBand->daypart7()->valueToString();
 
-    mDPG->updateGrid(dayparts);
+    m_daypart_grid->update_grid(dayparts);
 
 }
 
-std::size_t BookingWizard::fetchBreaks(QDate start_date, QDate end_date)
+std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date)
 {
-    scheduleEDM = std::make_unique<EntityDataModel>(
+    m_schedule_EDM = std::make_unique<EntityDataModel>(
                 std::make_unique<Schedule>());
 
     Schedule schedule;
     QString DATE_FORMAT = "yyyy-MM-dd";
     QString date_range = "'"+start_date.toString(DATE_FORMAT)+"' and '"+end_date.toString(DATE_FORMAT)+"'";
 
-
     auto date_range_filter = std::make_tuple(
                 schedule.scheduleDate()->dbColumnName(),
                 " between ",
                 date_range.toStdString()
                 );
+    auto hours = m_daypart_grid->daypart_to_hours();
 
-    scheduleEDM->search(scheduleEDM->prepareFilter(date_range_filter));
+    std::size_t i = 0;
+    std::string  hr_str;
+    for (auto it=hours.begin(); it != hours.end(); ++it){
+        hr_str += std::to_string(*it);
+        if (i < hours.size()-1)
+            hr_str += ",";
+        ++i;
+    }
+    hr_str = "("+hr_str+")";
 
-    return scheduleEDM->count();
+    auto hours_filter = std::make_tuple(
+                schedule.scheduleHour()->dbColumnName(),
+                " in ",
+                hr_str);
+
+    m_schedule_EDM->search(m_schedule_EDM->prepareFilter(date_range_filter, hours_filter));
+
+    return m_schedule_EDM->count();
 }
 
 void BookingWizard::timeBandChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbTimeband->model());
     TimeBand* tband = dynamic_cast<TimeBand*>(std::get<1>(*(edm->vecBegin()+i)).get());
-    populateGrid(tband);
+    populate_grid(tband);
+    m_engine_data.target_daypart = m_daypart_grid->read_grid();
 }
 
 void BookingWizard::allBreaks(bool state)
@@ -126,38 +143,46 @@ void BookingWizard::toggleTimeBand(bool state)
 
 void BookingWizard::buildBreaks()
 {
-    Spot* spot = selectedSpot();
-    wizardData.current_spot.spot_id = spot->id();
-    wizardData.current_spot.spot_name = spot->name()->value();
-    wizardData.current_spot.spot_duration = spot->spotDuration()->value();
-    wizardData.current_spot.real_duration = spot->realDuration()->value();
 
-    fetchTypeExclusions(spot->id());
+    init_rules_state();
 
+    Spot* spot = selected_spot();
+    m_engine_data.spot_to_book.spot_id = spot->id();
+    m_engine_data.spot_to_book.spot_name = spot->name()->value();
+    m_engine_data.spot_to_book.spot_duration = spot->spotDuration()->value();
+    m_engine_data.spot_to_book.real_duration = spot->realDuration()->value();
 
-    wizardData.break_count = fetchBreaks(ui->edtStartDate->date(), ui->edtEndDate->date());
+    fetch_type_exclusions(spot->id());
 
-    if (wizardData.break_count == 0){
+    fetch_voice_exclusions(spot->id());
+
+    m_engine_data.break_count = fetch_breaks(ui->edtStartDate->date(), ui->edtEndDate->date());
+
+    if (m_engine_data.break_count == 0){
         showMessage("No Breaks for the selected data range!");
         return;
     }
 
-    findExistingBookings();
+    find_existing_bookings(m_engine_data);
 
-    //print_exclusions(breakSum.existingBookings[0].spotRecord.type_exclusions);
+    find_available_breaks();
 
-    findAvailableBreaks();
+    available_breaks_summary();
+}
+
+void BookingWizard::breakDuration(int state)
+{
+
 }
 
 
-void BookingWizard::findExistingBookings()
+void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
 {
     std::string schedule_ids;
     std::size_t i = 0;
-    for(auto& [name, entity] : scheduleEDM->modelEntities()){
-        // get bookings for a given schedule line
+    for(auto& [name, entity] : m_schedule_EDM->modelEntities()){
         schedule_ids += std::to_string(entity->id());
-        if ( i<scheduleEDM->modelEntities().size()-1)
+        if ( i<m_schedule_EDM->modelEntities().size()-1)
             schedule_ids += ",";
         ++i;
     }
@@ -180,8 +205,7 @@ void BookingWizard::findExistingBookings()
         << " left join rave_spotvoiceover d on a.spot_id = d.parent_id "
         << " left join rave_typeexclusion e on c.detail_id = e.id "
         << " left join rave_voiceover f on d.detail_id = f.id "
-        << "WHERE a.schedule_id in " + schedule_ids ;
-
+        << "WHERE a.schedule_id in " + schedule_ids+" ORDER BY a.id " ;
 
     EntityDataModel edm;
     edm.readRaw(sql.str());
@@ -195,7 +219,7 @@ void BookingWizard::findExistingBookings()
             auto itB = provider->cache()->currentElement()->begin();
             auto itE = provider->cache()->currentElement()->end();
 
-            BookingRecord br;
+            TRAFFIK::BookingRecord br;
             Daypart typeDaypart;
             Daypart voDaypart;
             int sd = 1; // spot daypart postfix
@@ -208,8 +232,6 @@ void BookingWizard::findExistingBookings()
             for (; itB != itE; ++itB){
                 std::string field = (*itB).first;
                 std::string value = (*itB).second;
-
-                printstr(field);
 
                 if (field == "booking_id")
                     br.booking_id = to_int(value);
@@ -228,33 +250,33 @@ void BookingWizard::findExistingBookings()
                     vo_excl_id = to_int(value);
 
                 if (field == "spot_id")
-                    br.spotRecord.spot_id = to_int(value);
+                    br.booked_spot.spot_id = to_int(value);
                 if (field == "name")
-                    br.spotRecord.spot_name = value;
+                    br.booked_spot.spot_name = value;
 
                 if (field == "spot_duration"){
-                    br.spotRecord.spot_duration = to_double(value);
+                    br.booked_spot.spot_duration = to_double(value);
                 }
 
                 if (field == "real_duration"){
-                    br.spotRecord.real_duration = to_double(value);
+                    br.booked_spot.real_duration = to_double(value);
                 }
 
                 if (field == "spotdp"+std::to_string(sd))
-                    br.spotRecord.spot_daypart[sd++] = value;
+                    br.booked_spot.spot_daypart[sd++] = value;
                 if (field == "typedp"+std::to_string(td))
                     typeDaypart[td++] = value;
                 if (field == "vodp"+std::to_string(vdp))
                     voDaypart[vdp++] = value;
             }
 
-            br.spotRecord.type_ex_keys.push_back(type_excl_id);
-            br.spotRecord.type_exclusions.push_back(std::make_tuple(type_excl_id, typeDaypart));
+            br.booked_spot.type_ex_keys.push_back(type_excl_id);
+            br.booked_spot.type_exclusions.push_back(std::make_tuple(type_excl_id, typeDaypart));
 
-            br.spotRecord.voice_ex_keys.push_back(vo_excl_id);
-            br.spotRecord.voice_exclusions.push_back(std::make_tuple(vo_excl_id, voDaypart));
+            br.booked_spot.voice_ex_keys.push_back(vo_excl_id);
+            br.booked_spot.voice_exclusions.push_back(std::make_tuple(vo_excl_id, voDaypart));
 
-            wizardData.prev_bookings.push_back(br);
+            engine_data.prev_bookings.push_back(br);
 
             provider->cache()->next();
 
@@ -264,61 +286,17 @@ void BookingWizard::findExistingBookings()
 
 }
 
-int BookingWizard::findAvailableBreaks()
+int BookingWizard::find_available_breaks()
 {
-    /*
-      - Breaks Checked
-      - Full Breaks
-      - Type Exclusion collusions
-      - Voice Exclusion collusions
-      - Type Daypart collusions
-      - Voice Daypart collusions
-      - Spot Daypart collusions
-      - Same Client collusions
-      - Override Same Client for Different brands **
 
-      */
+    m_engine_data.failed_breaks.clear();
 
-    for (auto& [name, entity] : scheduleEDM->modelEntities()){
+    for (auto& [name, entity] : m_schedule_EDM->modelEntities()){
+
         auto schedule = dynamic_cast<Schedule*>(entity.get());
 
-        if (schedule->breakDurationLeft()->value() <
-                wizardData.current_spot.spot_duration){
-            wizardData.full_breaks += 1;
-
-            log_failed_break(schedule, FailedBreakCode::BreakFull);
-
-            continue;
-        }
-
-
-
-        for (auto& booking : wizardData.prev_bookings){
-
-            if (booking.schedule_id == schedule->id()){
-
-                if (ui->cbEnforceTypeExRule->isChecked()){
-
-                    for (int& k : wizardData.current_spot.type_ex_keys){
-                        if (std::find(booking.spotRecord.type_ex_keys.begin(),
-                                                 booking.spotRecord.type_ex_keys.end(), k) !=
-                                booking.spotRecord.type_ex_keys.end()) {
-
-                            wizardData.type_excl_collusion += 1;
-                            log_failed_break(schedule, FailedBreakCode::TypeExcl);
-                        }
-                    }
-
-                }
-            }
-
-
-        }
-
-
-
+        m_rule_engine->run(schedule);
     }
-
 
     return 0;
 }
@@ -334,7 +312,7 @@ bool BookingWizard::validateCurrentPage()
     }
 }
 
-Spot* BookingWizard::selectedSpot()
+Spot* BookingWizard::selected_spot()
 {
     Spot* spot{nullptr};
 
@@ -345,7 +323,7 @@ Spot* BookingWizard::selectedSpot()
     std::string spot_name = q_col_name.toString().toStdString();
 
     if (!spot_name.empty()){
-        BaseEntity* be = spotEDM->findEntityByName(spot_name);
+        BaseEntity* be = m_spot_EDM->findEntityByName(spot_name);
         if (be != nullptr){
             spot = dynamic_cast<Spot*>(be);
         }
@@ -354,7 +332,7 @@ Spot* BookingWizard::selectedSpot()
     return spot;
 }
 
-void BookingWizard::fetchTypeExclusions(int spot_id)
+void BookingWizard::fetch_type_exclusions(int spot_id)
 {
 
     std::stringstream sql;
@@ -363,12 +341,12 @@ void BookingWizard::fetchTypeExclusions(int spot_id)
        << " WHERE rave_spottypeexclusion.detail_id = rave_typeexclusion.id "
        << " AND rave_spottypeexclusion.parent_id = "+std::to_string(spot_id);
 
-    fetchSpotExclusions(sql.str(),
-                        wizardData.current_spot.type_exclusions,
-                        wizardData.current_spot.type_ex_keys);
+    fetch_spot_exclusions(sql.str(),
+                        m_engine_data.spot_to_book.type_exclusions,
+                        m_engine_data.spot_to_book.type_ex_keys);
 }
 
-void BookingWizard::fetchVoiceExclusions(int spot_id)
+void BookingWizard::fetch_voice_exclusions(int spot_id)
 {
     std::stringstream sql;
     sql << "SELECT rave_voiceover.* "
@@ -376,12 +354,14 @@ void BookingWizard::fetchVoiceExclusions(int spot_id)
        << " WHERE rave_spotvoiceover.detail_id = rave_voiceover.id "
        << " AND rave_spotvoiceover.parent_id = "+std::to_string(spot_id);
 
-    fetchSpotExclusions(sql.str(),
-                        wizardData.current_spot.voice_exclusions,
-                        wizardData.current_spot.voice_ex_keys);
+    fetch_spot_exclusions(sql.str(),
+                        m_engine_data.spot_to_book.voice_exclusions,
+                        m_engine_data.spot_to_book.voice_ex_keys);
 }
 
-void BookingWizard::fetchSpotExclusions(const std::string query, std::vector<Exclusion>& exclusions, std::list<int> keys)
+void BookingWizard::fetch_spot_exclusions(const std::string query,
+                                        std::vector<Exclusion>& exclusions,
+                                        std::list<int>& keys)
 {
     EntityDataModel edm;
     edm.readRaw(query);
@@ -425,25 +405,40 @@ void BookingWizard::fetchSpotExclusions(const std::string query, std::vector<Exc
 
 }
 
-void BookingWizard::print_exclusions(std::vector<BookingWizard::Exclusion>& exclusions)
+void BookingWizard::init_rules_state()
 {
-    qDebug() << "printing ... ";
-    for (auto& excl :  exclusions){
-        auto& [key, dayparts] = excl;
-        qDebug() << "ID: " << key;
-
-        for (auto& [dow, daypart] : dayparts){
-            qDebug() << "DOW: " << dow << ":" << stoq(daypart);
-
-        }
-    }
+    TRAFFIK::FullBreakRule::enable_or_disable(ui->cbBreakDuration->checkState());
+    TRAFFIK::TypeExclusionRule::enable_or_disable(ui->cbEnforceTypeExRule->checkState());
+    TRAFFIK::VoiceExclusionRule::enable_or_disable(ui->cbVoiceExclusion->checkState());
 }
 
-void BookingWizard::log_failed_break(Break* sched, FailedBreakCode fbc)
+void BookingWizard::available_breaks_summary()
 {
-    wizardData.failed_breaks.push_back(
-                std::make_tuple(sched->id(), fbc));
-    sched->setSelected(0);
+    QPixmap pm_breaks(":/images/icons/images/icons/error_mark.png");
 
+    ui->lblBreaksChecked->setText(
+                stoq(std::to_string(m_engine_data.break_count)));
+
+    ui->lblFullBreaks->setText(
+                stoq(std::to_string(TRAFFIK::FullBreakRule::failed_break_count())));
+    if (TRAFFIK::FullBreakRule::failed_break_count() > 0)
+        ui->imgFullBreaks->setPixmap(pm_breaks);
+
+    ui->lblTypeExclusion->setText(
+                stoq(std::to_string(TRAFFIK::TypeExclusionRule::failed_break_count())));
+
+    if (TRAFFIK::TypeExclusionRule::failed_break_count() > 0)
+        ui->imgTypeExcl->setPixmap(pm_breaks);
+
+    ui->lblVoiceExclusion->setText(
+                stoq(std::to_string(TRAFFIK::VoiceExclusionRule::failed_break_count())));
+
+    if (TRAFFIK::VoiceExclusionRule::failed_break_count() > 0)
+        ui->imgVoiceExcl->setPixmap(pm_breaks);
+
+
+    ui->lblTotalBreaks->setText(
+                stoq(std::to_string(m_engine_data.break_count-m_engine_data.failed_breaks.size())));
 }
+
 

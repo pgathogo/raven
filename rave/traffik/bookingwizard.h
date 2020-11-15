@@ -4,9 +4,11 @@
 #include <QWizard>
 #include "../framework/entitydatamodel.h"
 #include "timeband.h"
+#include "schedule.h"
+#include "traffikrules.h"
 
 namespace Ui {
-class BookingWizard;
+    class BookingWizard;
 }
 
 class Order;
@@ -14,77 +16,36 @@ class Spot;
 class EntityDataModel;
 class DayPartGrid;
 class Schedule;
+class WizardData;
 
-enum FailedBreakCode {BreakFull=1, TypeExcl, VoiceExcl,
-                    TypeDaypart, VoiceDaypart, SpotDaypart, SameClient};
-
-using ScheduleId = int;
-using FailedBreak = std::tuple<ScheduleId, FailedBreakCode>;
 
 class BookingWizard : public QWizard
 {
     Q_OBJECT
 
 public:
-    using ExclusionID = int;
-    using DayOfWeek = int;
-    using Daypart = std::map<DayOfWeek, std::string>;
-    using Exclusion = std::tuple<ExclusionID, Daypart>;
     using Break = Schedule;
 
     explicit BookingWizard(Order* order, QWidget* parent = nullptr);
     ~BookingWizard();
 
-    void populateSpotsTable(int client_id);
-    void populateGrid(TimeBand*);
-    std::size_t fetchBreaks(QDate, QDate);
-    void findExistingBookings();
-    int findAvailableBreaks();
+    void populate_spots_table(int client_id);
+    void populate_grid(TimeBand*);
+    std::size_t fetch_breaks(QDate, QDate);
+    void find_existing_bookings(TRAFFIK::EngineData&);
+    int find_available_breaks();
 
     bool validateCurrentPage() override;
-    Spot* selectedSpot();
+    Spot* selected_spot();
 
-    void fetchTypeExclusions(int);
-    void fetchVoiceExclusions(int);
-    void fetchSpotExclusions(const std::string, std::vector<Exclusion>&, std::list<int> keys);
-    void print_exclusions(std::vector<Exclusion>&);
-    void log_failed_break(Break*, FailedBreakCode);
+    void fetch_type_exclusions(int);
+    void fetch_voice_exclusions(int);
+    void fetch_spot_exclusions(const std::string,
+                             std::vector<Exclusion>&,
+                             std::list<int>& keys);
 
-    //bool check_collusion(type_exclusion);
-
-    struct SpotRecord{
-        int spot_id;
-        std::string spot_name;
-        double spot_duration;
-        double real_duration;
-        Daypart spot_daypart;
-        std::list<int> type_ex_keys;
-        std::list<int> voice_ex_keys;
-        std::vector<Exclusion> type_exclusions;
-        std::vector<Exclusion> voice_exclusions;
-    };
-
-    struct BookingRecord{
-        int booking_id;
-        int schedule_id;
-        int bookingsegment_id;
-        int brand_id;
-        int client_id;
-        SpotRecord spotRecord;
-    };
-
-    struct WizardData{
-        std::size_t break_count = 0;
-        int full_breaks = 0;
-        int type_excl_collusion = 0;
-        SpotRecord current_spot;
-        std::vector<BookingRecord> prev_bookings;
-        std::vector<FailedBreak> failed_breaks;
-
-        void log_failed_breaks(Schedule* sched, FailedBreakCode fbc){
-
-        }
-    };
+    void init_rules_state();
+    void available_breaks_summary();
 
     int to_int(std::string s){
         return (s.empty()) ? 0 : std::stoi(s);
@@ -107,18 +68,24 @@ private slots:
     void allBreaks(bool);
     void toggleTimeBand(bool);
     void buildBreaks();
+    void breakDuration(int state);
 
 private:
     Ui::BookingWizard *ui;
-    Order* mOrder;
-    std::unique_ptr<EntityDataModel> spotEDM;
-    EntityDataModel* timeBandEDM;
-    std::unique_ptr<DayPartGrid> mDPG;
-    std::unique_ptr<EntityDataModel> scheduleEDM;
-    std::unique_ptr<EntityDataModel> bookingEDM;
+    Order* m_order;
+    std::unique_ptr<EntityDataModel> m_spot_EDM;
+    EntityDataModel* m_timeband_EDM;
+    std::unique_ptr<DayPartGrid> m_daypart_grid;
+    std::unique_ptr<EntityDataModel> m_schedule_EDM;
+    std::unique_ptr<EntityDataModel> m_booking_EDM;
 
-    WizardData wizardData;
+    TRAFFIK::EngineData m_engine_data;
+
+    std::unique_ptr<TRAFFIK::RuleEngine> m_rule_engine;
 
 };
+
+
+
 
 #endif // BOOKINGWIZARD_H

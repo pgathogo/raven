@@ -38,7 +38,7 @@ public:
     ChoiceField<std::string>* billMethod();
     void setBillMethod(const std::string val);
 
-    std::map<std::string, std::string> dayParts();
+    std::map<int, std::string> dayParts();
 
     IntegerField* baseDuration() const;
     void setBaseDuration(int val);

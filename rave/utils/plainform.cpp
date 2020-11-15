@@ -43,20 +43,15 @@ void PlainForm::onClose()
 
 void PlainForm::fillGrid()
 {
-    std::map<std::string, std::string> dayparts;
-    std::string dp1 {"000000001100011000000000"};
-    std::string dp2 {"000000001100011000000000"};
-    std::string dp3 {"000000001100011000000000"};
-    std::string dp4 {"000000001100011000000000"};
-    std::string dp5 {"000000001100011000000000"};
-    std::string dp6 {"000000001100011000000000"};
-    std::string dp7 {"000000001100011000000000"};
-    dayparts["daypart1"]=dp1;
-    dayparts["daypart2"]=dp2;
-    dayparts["daypart3"]=dp3;
-    dayparts["daypart4"]=dp4;
-    dayparts["daypart5"]=dp5;
-    dayparts["daypart6"]=dp6;
-    dayparts["daypart7"]=dp7;
-    dpg->updateGrid(dayparts);
+    std::map<int, std::string> dayparts;
+
+    dayparts[1]= "000000001100011000000000";
+    dayparts[2]= "000000001100011000000000";
+    dayparts[3]= "000000001100011000000000";
+    dayparts[4]= "000000001100011000000000";
+    dayparts[5]= "000000001100011000000000";
+    dayparts[6]= "000000001100011000000000";
+    dayparts[7]= "000000001100011000000000";
+
+    dpg->update_grid(dayparts);
 }

@@ -82,8 +82,8 @@ public:
     TextField* comment()const;
     void setComment(const std::string val);
 
-    int selected() const;
-    void setSelected(int i);
+    bool isBad() const;
+    void setIsBad(bool flag);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -132,7 +132,7 @@ private:
     ChoiceField<std::string>* mBreakStatus;
     TextField* mComment;
 
-    int mSelected;
+    bool mIsBad;
 
     QStringList mHeader;
     std::string mTableName;
