@@ -9,8 +9,8 @@
 
 Order::Order()
 {
-    mTitle = createField<StringField>("title", "Title");
-    mTitle->setMandatory(true);
+    m_title = createField<StringField>("title", "Title");
+    m_title->setMandatory(true);
 
     mOrderNumber = createField<IntegerField>("order_number", "Order Number");
     mOrderNumber->setReadOnly(true);
@@ -82,14 +82,14 @@ Order::Order()
     mAddLogin = createField<StringField>("add_login", "Add Login");
     mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
 
-    mHeader << QString::fromStdString(mTitle->fieldLabel());
+    mHeader << QString::fromStdString(m_title->fieldLabel());
     setTableName("rave_order");
 }
 
 Order::Order(const Client* client)
 {
-    mTitle = createField<StringField>("title", "Title");
-    mTitle->setMandatory(true);
+    m_title = createField<StringField>("title", "Title");
+    m_title->setMandatory(true);
 
     mOrderNumber = createField<IntegerField>("order_number", "Order Number");
 
@@ -166,7 +166,7 @@ Order::Order(const Client* client)
     mAddLogin = createField<StringField>("add_login", "Add Login");
     mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
 
-    mHeader << QString::fromStdString(mTitle->fieldLabel());
+    mHeader << QString::fromStdString(m_title->fieldLabel());
     setTableName("rave_order");
 
 }
@@ -178,7 +178,7 @@ Order::~Order()
 
 StringField *Order::title() const
 {
-    return mTitle;
+    return m_title;
 }
 
 IntegerField *Order::orderNumber() const
@@ -324,7 +324,7 @@ DateTimeField *Order::addDtime() const
 
 void Order::setTitle(const std::string val)
 {
-    mTitle->setValue(val);
+    m_title->setValue(val);
 }
 
 void Order::setOrderNumber(int i)

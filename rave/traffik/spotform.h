@@ -42,12 +42,12 @@ private slots:
     void brandsComboChanged(int);
 
 private:
-    Ui::SpotForm *ui;
-    Client* mClient;
-    Spot* mSpot;
-    std::unique_ptr<DayPartGrid> mDaypart;
-    std::unique_ptr<ManyToManyBrowser> mMtoMVoiceOverBrowser;
-    std::unique_ptr<ManyToManyBrowser> mMtoMTypeExBrowser;
+    Ui::SpotForm* ui;
+    Client* m_client;
+    Spot* m_spot;
+    std::unique_ptr<DayPartGrid> m_daypart;
+    std::unique_ptr<ManyToManyBrowser> m_MtoMVoiceOverBrowser;
+    std::unique_ptr<ManyToManyBrowser> m_MtoMTypeExBrowser;
 };
 
 #endif // SPOTFORM_H

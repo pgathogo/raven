@@ -9,19 +9,20 @@
 #include "typeexclusion.h"
 
 Spot::Spot()
-    :mName{}
+    :m_name{}
     ,mSpotDuration{}
     ,mRealDuration{}
-    ,mClient{}
+    ,m_client{}
     ,mBrand{}
 {
-    mName = createField<StringField>("name","Spot Name");
-    mName->setMandatory(true);
+    m_name = createField<StringField>("name","Spot Name");
+    m_name->setMandatory(true);
 
     mSpotDuration = createField<DecimalField>("spot_duration", "Spot Duration");
     mRealDuration = createField<DecimalField>("real_duration", "Real Duration");
-    mClient = createField<ForeignKeyField>("client_id", "Client",
+    m_client = createField<ForeignKeyField>("client_id", "Client",
                                            std::make_unique<Client>(), "name");
+
     mBrand = createField<ForeignKeyField>("brand_id", "Brand",
                                           std::make_unique<Brand>(),
                                           "brand_name");
@@ -44,7 +45,7 @@ Spot::Spot()
     mDaypart7 = createField<StringField>("daypart7", "Daypart6");
     mDaypart7->setSearchable(false);
 
-    mHeader << QString::fromStdString(mName->fieldLabel())
+    mHeader << QString::fromStdString(m_name->fieldLabel())
              <<QString::fromStdString(mSpotDuration->fieldLabel());
 
     mVoiceOver = std::make_unique<VoiceOver>();
@@ -57,20 +58,21 @@ Spot::Spot()
 }
 
 Spot::Spot(const Client* client)
-    :mName{}
+    :m_name{}
     ,mSpotDuration{}
     ,mRealDuration{}
-    ,mClient{}
+    ,m_client{}
     ,mBrand{}
 {
-    mName = createField<StringField>("name","Spot Name");
-    mName->setMandatory(true);
+    m_name = createField<StringField>("name","Spot Name");
+    m_name->setMandatory(true);
 
     mSpotDuration = createField<DecimalField>("spot_duration", "Spot Duration");
     mRealDuration = createField<DecimalField>("real_duration", "Real Duration");
 
 
-   //auto filter = std::make_tuple("client_id", client.id());
+    printint(client->id());
+
     EntityDataModel edm;
     auto filter = std::make_tuple("client_id", "=", client->id());
     std::string fstr = edm.prepareFilter(filter);
@@ -81,9 +83,9 @@ Spot::Spot(const Client* client)
                                           "brand_name",
                                           fstr);
 
-    mClient = createField<ForeignKeyField>("client_id", "Client",
+    m_client = createField<ForeignKeyField>("client_id", "Client",
                                            std::make_unique<Client>(), "name");
-    mClient->setValue(client->id());
+    m_client->setValue(client->id());
 
     mDaypart1 = createField<StringField>("daypart1", "Daypart1");
     mDaypart1->setSearchable(false);
@@ -103,7 +105,7 @@ Spot::Spot(const Client* client)
     mDaypart7 = createField<StringField>("daypart7", "Daypart6");
     mDaypart7->setSearchable(false);
 
-    mHeader << QString::fromStdString(mName->fieldLabel())
+    mHeader << QString::fromStdString(m_name->fieldLabel())
              <<QString::fromStdString(mSpotDuration->fieldLabel());
 
     mVoiceOver = std::make_unique<VoiceOver>();
@@ -173,12 +175,12 @@ void Spot::afterMapping(BaseEntity &entity)
 
 StringField* Spot::name() const
 {
-    return mName;
+    return m_name;
 }
 
 void Spot::setName(const std::string n)
 {
-    mName->setValue(n);
+    m_name->setValue(n);
 }
 
 DecimalField* Spot::spotDuration() const
@@ -203,12 +205,12 @@ void Spot::setRealDuration(double dur)
 
 ForeignKeyField* Spot::client() const
 {
-    return mClient;
+    return m_client;
 }
 
 void Spot::setClient(int client_id)
 {
-    mClient->setValue( client_id );
+    m_client->setValue( client_id );
 }
 
 ForeignKeyField* Spot::brand() const

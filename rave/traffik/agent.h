@@ -48,10 +48,10 @@ public:
 
     std::string className() override;
 private:
-    StringField* mName;
-    StringField* mTown;
-    StringField* mTelephone;
-    StringField* mEmail;
+    StringField* m_name;
+    StringField* m_town;
+    StringField* m_telephone;
+    StringField* m_email;
     StringField* mContactName;
     StringField* mMobileNo;
     TextField* mAddress;

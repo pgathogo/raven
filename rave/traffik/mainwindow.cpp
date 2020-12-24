@@ -33,6 +33,10 @@
 #include "../framework/entitydatamodel.h"
 
 #include "orderbooking.h"
+
+#include "bookingwizard.h"
+#include "order.h"
+
 #include "bookingsegment.h"
 
 AccessMap MainWindow::access_map;
@@ -350,6 +354,11 @@ void MainWindow::openSchedule()
 
 void MainWindow::openOrderBooking()
 {
+
+    //auto order = new Order();
+    //auto bw = std::make_unique<BookingWizard>(order);
+    //bw->exec();
+
     OrderBookingBrowser* obBrowser = createSubWindow<OrderBookingBrowser>();
     obBrowser->exec();
 }

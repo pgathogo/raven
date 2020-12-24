@@ -1,6 +1,7 @@
 #ifndef BOOKINGWIZARD_H
 #define BOOKINGWIZARD_H
 
+#include <set>
 #include <QWizard>
 #include "../framework/entitydatamodel.h"
 #include "timeband.h"
@@ -26,26 +27,31 @@ class BookingWizard : public QWizard
 public:
     using Break = Schedule;
 
-    explicit BookingWizard(Order* order, QWidget* parent = nullptr);
-    ~BookingWizard();
+    enum {Page_Spots=0, Page_Dates, Page_Rules, Page_Build_Breaks,
+          Page_Select_By_Day, Page_Select_By_Date, Page_Final};
 
-    void populate_spots_table(int client_id);
-    void populate_grid(TimeBand*);
-    std::size_t fetch_breaks(QDate, QDate);
+    explicit BookingWizard(Order* order, QWidget* parent = nullptr);
+    ~BookingWizard() override;
+
+    std::size_t fetch_breaks(QDate, QDate, std::set<int>);
     void find_existing_bookings(TRAFFIK::EngineData&);
     int find_available_breaks();
 
     bool validateCurrentPage() override;
     Spot* selected_spot();
 
-    void fetch_type_exclusions(int);
-    void fetch_voice_exclusions(int);
+    void fetch_type_exclusions(TRAFFIK::EngineData&);
+    void fetch_voice_exclusions(TRAFFIK::EngineData&);
     void fetch_spot_exclusions(const std::string,
                              std::vector<Exclusion>&,
                              std::list<int>& keys);
+    Daypart fetch_spot_daypart(Spot&);
 
     void init_rules_state();
-    void available_breaks_summary();
+    void show_available_breaks();
+    std::vector<int> selected_hours(const std::string&);
+
+    void test_booking();
 
     int to_int(std::string s){
         return (s.empty()) ? 0 : std::stoi(s);
@@ -65,10 +71,9 @@ public:
 
 private slots:
     void timeBandChanged(int i);
-    void allBreaks(bool);
+    void all_breaks(bool);
     void toggleTimeBand(bool);
-    void buildBreaks();
-    void breakDuration(int state);
+    void build_breaks();
 
 private:
     Ui::BookingWizard *ui;
@@ -76,16 +81,23 @@ private:
     std::unique_ptr<EntityDataModel> m_spot_EDM;
     EntityDataModel* m_timeband_EDM;
     std::unique_ptr<DayPartGrid> m_daypart_grid;
-    std::unique_ptr<EntityDataModel> m_schedule_EDM;
+//    std::unique_ptr<EntityDataModel> m_schedule_EDM;
     std::unique_ptr<EntityDataModel> m_booking_EDM;
 
     TRAFFIK::EngineData m_engine_data;
 
     std::unique_ptr<TRAFFIK::RuleEngine> m_rule_engine;
 
+    std::set<int> selected_unique_hours();
+
+    void populate_spots_table(int client_id);
+    void populate_grid(TimeBand*);
+
+    void setup_break_select_grid();
+    bool make_booking();
+    void commit_booking();
+    void show_order_details(Order*);
 };
-
-
 
 
 #endif // BOOKINGWIZARD_H

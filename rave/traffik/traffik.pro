@@ -59,7 +59,9 @@ HEADERS += \
     scheduleform.h \
     setupform.h \
     spotaudio.h \
-    traffiksetup.h
+    traffiksetup.h \
+    tree.h \
+    treeviewmodel.h
 
 SOURCES += \
     ../security/accesscontroller.cpp \
@@ -83,7 +85,9 @@ SOURCES += \
     scheduleform.cpp \
     setupform.cpp \
     spotaudio.cpp \
-    traffiksetup.cpp
+    traffiksetup.cpp \
+    tree.cpp \
+    treeviewmodel.cpp
 
 FORMS += \
     approverform.ui \

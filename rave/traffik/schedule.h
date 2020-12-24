@@ -13,6 +13,8 @@ class ChoiceField;
 class Schedule : public BaseEntity
 {
 public:
+    enum BreakAvailability{Break_Not_Available, Break_Available};
+
     Schedule();
     ~Schedule() override;
 
@@ -85,6 +87,9 @@ public:
     bool isBad() const;
     void setIsBad(bool flag);
 
+    void set_break_availability(BreakAvailability break_availability);
+    BreakAvailability break_availability() const;
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
 
@@ -109,28 +114,30 @@ public:
     std::string make_values(const std::vector<Field*>& fields);
 
 private:
-    DateField* mScheduleDate;
-    TimeField* mScheduleTime;
-    IntegerField* mScheduleHour;
-    IntegerField* mTrack;   // ** to be changed to ForeignKeyField
-    IntegerField* mFadeIn;
-    IntegerField* mFadeOut;
-    IntegerField* mFadeDelay;
-    ChoiceField<std::string>* mPlayStatus;
-    DateField* mPlayDate;
-    TimeField* mPlayTime;
-    IntegerField* mAutoTransition;
-    IntegerField* mLiveTransition;
-    ChoiceField<std::string>* mTrackType;
-    IntegerField* mBreakDuration;
-    IntegerField* mBreakStartWin;
-    IntegerField* mBreakEndWin;
-    IntegerField* mBreakMaxSpots;
-    IntegerField* mBookedSpots;
-    IntegerField* mBreakDurationLeft;
-    ChoiceField<std::string>* mBreakMode;
-    ChoiceField<std::string>* mBreakStatus;
-    TextField* mComment;
+    DateField* m_schedule_date;
+    TimeField* m_schedule_time;
+    IntegerField* m_schedule_hour;
+    IntegerField* m_track;   // ** to be changed to ForeignKeyField
+    IntegerField* m_fade_in;
+    IntegerField* m_fade_out;
+    IntegerField* m_fade_delay;
+    ChoiceField<std::string>* m_play_status;
+    DateField* m_play_date;
+    TimeField* m_play_time;
+    IntegerField* m_auto_transition;
+    IntegerField* m_live_transition;
+    ChoiceField<std::string>* m_track_type;
+    IntegerField* m_break_duration;
+    IntegerField* m_break_start_win;
+    IntegerField* m_break_end_win;
+    IntegerField* m_break_max_spots;
+    IntegerField* m_booked_spots;
+    IntegerField* m_break_duration_left;
+    ChoiceField<std::string>* m_break_mode;
+    ChoiceField<std::string>* m_break_status;
+    TextField* m_comment;
+
+    int m_break_availability;
 
     bool mIsBad;
 

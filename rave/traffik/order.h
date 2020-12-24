@@ -100,7 +100,7 @@ public:
 
 
 private:
-    StringField* mTitle;
+    StringField* m_title;
     IntegerField* mOrderNumber;
     ForeignKeyField* mClient;
     DateField* mOrderDate;

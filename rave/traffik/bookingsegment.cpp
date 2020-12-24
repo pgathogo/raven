@@ -4,22 +4,22 @@
 
 BookingSegment::BookingSegment()
 {
-    mOrder = createField<ForeignKeyField>("order_id", "Order",
+    m_order = createField<ForeignKeyField>("order_id", "Order",
                                            std::make_unique<Order>(), "title");
 
-    mBookingDate = createField<DateField>("booking_date", "Booking Date");
-    mStartDate = createField<DateField>("start_date", "Start Date");
-    mEndDate = createField<DateField>("end_date", "End Date");
+    m_booking_date = createField<DateField>("booking_date", "Booking Date");
+    m_start_date = createField<DateField>("start_date", "Start Date");
+    m_end_date = createField<DateField>("end_date", "End Date");
 
-    mBookingCount = createField<IntegerField>("booking_count", "Booking Count");
-    mSegmentValue = createField<DecimalField>("segment_value", "Segment Value");
-    mComments = createField<TextField>("comments", "Comments");
-    mAddLogin = createField<StringField>("add_login", "Add Login");
+    m_booking_count = createField<IntegerField>("booking_count", "Booking Count");
+    m_segment_value = createField<DecimalField>("segment_value", "Segment Value");
+    m_comments = createField<TextField>("comments", "Comments");
+    m_add_login = createField<StringField>("add_login", "Add Login");
 
-    mAddDateTime = createField<DateTimeField>("add_dtime", "Add Date Time");
+    m_add_date_time = createField<DateTimeField>("add_dtime", "Add Date Time");
 
     mHeader << stoq(order()->fieldLabel())
-            << stoq(bookingCount()->fieldLabel());
+            << stoq(booking_count()->fieldLabel());
 
     setTableName("rave_bookingsegment");
 
@@ -31,92 +31,92 @@ BookingSegment::~BookingSegment()
 
 ForeignKeyField* BookingSegment::order() const
 {
-    return mOrder;
+    return m_order;
 }
 
-void BookingSegment::setOrder(int val)
+void BookingSegment::set_order(int val)
 {
-    mOrder->setValue(val);
+    m_order->setValue(val);
 }
 
-DateField *BookingSegment::bookingDate() const
+DateField *BookingSegment::booking_date() const
 {
-    return mBookingDate;
+    return m_booking_date;
 }
 
-void BookingSegment::setBookingDate(QDate val)
+void BookingSegment::set_booking_date(QDate val)
 {
-    mBookingDate->setValue(val);
+    m_booking_date->setValue(val);
 }
 
-DateField *BookingSegment::startDate() const
+DateField *BookingSegment::start_date() const
 {
-    return mStartDate;
+    return m_start_date;
 }
 
-void BookingSegment::setStartDate(QDate val)
+void BookingSegment::set_start_date(QDate val)
 {
-    mStartDate->setValue(val);
+    m_start_date->setValue(val);
 }
 
-DateField *BookingSegment::endDate() const
+DateField *BookingSegment::end_date() const
 {
-    return mEndDate;
+    return m_end_date;
 }
 
-void BookingSegment::setEndDate(QDate val)
+void BookingSegment::set_end_date(QDate val)
 {
-    mEndDate->setValue(val);
+    m_end_date->setValue(val);
 }
 
-IntegerField *BookingSegment::bookingCount() const
+IntegerField *BookingSegment::booking_count() const
 {
-    return mBookingCount;
+    return m_booking_count;
 }
 
-void BookingSegment::setBookingCount(int val)
+void BookingSegment::set_booking_count(int val)
 {
-    mBookingCount->setValue(val);
+    m_booking_count->setValue(val);
 }
 
-DecimalField *BookingSegment::segmentValue() const
+DecimalField *BookingSegment::segment_value() const
 {
-   return mSegmentValue;
+   return m_segment_value;
 }
 
-void BookingSegment::setSegmentValue(double val)
+void BookingSegment::set_segment_value(double val)
 {
-    mSegmentValue->setValue(val);
+    m_segment_value->setValue(val);
 }
 
 TextField *BookingSegment::comments() const
 {
-    return mComments;
+    return m_comments;
 }
 
-void BookingSegment::setComments(const std::string val)
+void BookingSegment::set_comments(const std::string val)
 {
-    mComments->setValue(val);
+    m_comments->setValue(val);
 }
 
-StringField *BookingSegment::addLogin() const
+StringField *BookingSegment::add_login() const
 {
-    return mAddLogin;
+    return m_add_login;
 }
 
-void BookingSegment::setAddLogin(const std::string val)
+void BookingSegment::set_add_login(const std::string val)
 {
-    mAddLogin->setValue(val);
+    m_add_login->setValue(val);
 }
 
-DateTimeField *BookingSegment::addDateTime() const
+DateTimeField *BookingSegment::add_date_time() const
 {
-    return mAddDateTime;
+    return m_add_date_time;
 }
 
-void BookingSegment::setAddDateTime(QDateTime val)
+void BookingSegment::set_add_date_time(QDateTime val)
 {
-    mAddDateTime->setValue(val);
+    m_add_date_time->setValue(val);
 }
 
 std::string BookingSegment::tableName() const
@@ -137,7 +137,7 @@ std::vector<std::string> BookingSegment::tableViewColumns() const
 {
     return tableViewCols<std::string>(
                order()->displayName(),
-               bookingCount()->displayName());
+               booking_count()->displayName());
 }
 
 std::vector<std::string> BookingSegment::tableViewValues()

@@ -8,11 +8,11 @@
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
 
-SpotBrowser::SpotBrowser(Client* client, QWidget *parent) :
+SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
     BaseEntityBrowserDlg(parent,
                          std::make_unique<Spot>(client)),
-    ui(new Ui::SpotBrowser),
-    mClient{client}
+    ui{new Ui::SpotBrowser},
+    m_client{client}
 {
     ui->setupUi(this);
     setDialogTitle("Client Spots");
@@ -27,7 +27,7 @@ SpotBrowser::~SpotBrowser()
 void SpotBrowser::addRecord()
 {
     auto spot = std::make_unique<Spot>();
-    auto spotForm = std::make_unique<SpotForm>(mClient, spot.get(), this);
+    auto spotForm = std::make_unique<SpotForm>(m_client, spot.get(), this);
 
     if (spotForm->exec() > 0){
         try{
@@ -48,15 +48,17 @@ void SpotBrowser::addRecord()
 
 void SpotBrowser::updateRecord()
 {
-    std::string searchName = selectedRowName().toStdString();
+    std::string search_name = selectedRowName().toStdString();
 
-    if (!searchName.empty()){
+    if (!search_name.empty()){
 
-        BaseEntity* be = entityDataModel().findEntityByName(searchName);
+        BaseEntity* be = entityDataModel().findEntityByName(search_name);
 
         Spot* spot = dynamic_cast<Spot*>(be);
+        spot->client()->setValue(m_client->id());
+
         std::unique_ptr<SpotForm> spotForm =
-                std::make_unique<SpotForm>(mClient, spot, this);
+                std::make_unique<SpotForm>(m_client, spot, this);
         if (spotForm->exec() > 0){
             try{
                 updateTableViewRecord(spot->tableViewValues());
@@ -75,12 +77,12 @@ void SpotBrowser::updateRecord()
 
 void SpotBrowser::searchRecord()
 {
-    search_related<Spot, Client>(mClient);
+    search_related<Spot, Client>(m_client);
 
     /*
     if (bui->edtFilter->text().isEmpty()){
         Spot& spot = dynamic_cast<Spot&>(entityDataModel().getEntity());
-        auto si = searchItem(spot.client()->dbColumnName(), mClient->id());
+        auto si = searchItem(spot.client()->dbColumnName(), m_client->id());
         entityDataModel().searchByInt(si);
     }else{
         auto data = bui->cbFilter->itemData(
@@ -90,7 +92,7 @@ void SpotBrowser::searchRecord()
         auto brand_filter = std::make_tuple(columnName, item);
 
         Spot& spot = dynamic_cast<Spot&>(entityDataModel().getEntity());
-        auto client_filter = searchItem(spot.client()->dbColumnName(), mClient->id());
+        auto client_filter = searchItem(spot.client()->dbColumnName(), m_client->id());
 
         std::string filter = entityDataModel().prepareFilter(brand_filter, client_filter);
         entityDataModel().search(filter);

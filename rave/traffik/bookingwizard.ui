@@ -454,9 +454,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cbSameClient">
+       <widget class="QCheckBox" name="cbNoSameClient">
         <property name="text">
-         <string>Enforce Same Client Rule</string>
+         <string>Enforce No Same Client Rule</string>
         </property>
        </widget>
       </item>
@@ -492,7 +492,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QCheckBox" name="cbOverrideNoSameClient">
         <property name="text">
          <string>Override Same Client Rule for Different Brands</string>
         </property>
@@ -695,7 +695,14 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_12">
+     <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="imgTypeDaypart">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_6">
         <property name="text">
@@ -730,7 +737,14 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_13">
+     <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="imgVoiceDaypart">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_7">
         <property name="text">
@@ -765,7 +779,14 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_14">
+     <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1,1">
+      <item>
+       <widget class="QLabel" name="imgSpotDaypart">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="label_8">
         <property name="text">
@@ -800,16 +821,23 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_15">
+     <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,1,1">
       <item>
-       <widget class="QLabel" name="label_9">
+       <widget class="QLabel" name="imgNoSameClient">
         <property name="text">
-         <string>Same Client Collusion:</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="lblSameClient">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>No Same Client Collusion:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblNoSameClient">
         <property name="font">
          <font>
           <pointsize>10</pointsize>
@@ -1011,7 +1039,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QListWidget" name="listWidget"/>
+       <widget class="QListWidget" name="lwSelBreaks">
+        <property name="gridSize">
+         <size>
+          <width>10</width>
+          <height>10</height>
+         </size>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -1099,15 +1134,35 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="edtSelBreaks">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="lblAvilBreaks">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -1122,35 +1177,38 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_18">
+        <item row="3" column="1">
+         <widget class="QLabel" name="lblSpotsPending">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>Order #:</string>
+           <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="lblOrderNo">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>TextLabel</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="label_19">
-          <property name="text">
-           <string>Order Name:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="lblOrderName">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
          <widget class="QLabel" name="label_20">
           <property name="text">
            <string>Spots Ordered:</string>
@@ -1158,37 +1216,57 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="lblSpotsOrdered">
+         <widget class="QLabel" name="lblSpotsBooked">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="label_21">
           <property name="text">
            <string>Spots Booked:</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="lblSpotsBooked">
+        <item row="1" column="1">
+         <widget class="QLabel" name="lblSpotsOrdered">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="3" column="0">
          <widget class="QLabel" name="label_22">
           <property name="text">
            <string>Spots Pending:</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="lblSptosPending">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_18">
           <property name="text">
-           <string>0</string>
+           <string>Order #:</string>
           </property>
          </widget>
         </item>
@@ -1197,7 +1275,14 @@
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidget_2"/>
+     <widget class="QTableWidget" name="twBreakSelect">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1237,11 +1322,15 @@
     <string>Summary</string>
    </property>
    <property name="subTitle">
-    <string>Verify break selection is right before confirming the booking.</string>
+    <string>Verify break selection is okay before confirming the booking.</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_12">
     <item>
-     <widget class="QTableWidget" name="tableWidget_3"/>
+     <widget class="QTreeView" name="tvSummary">
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_23">

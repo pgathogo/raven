@@ -99,6 +99,7 @@ void Field::setReadOnly(bool value)
 {
     mReadOnly = value;
 }
+
 void Field::setSearchable(bool value)
 {
     mSearchable = value;
@@ -108,7 +109,6 @@ bool Field::searchable()
 {
     return mSearchable;
 }
-
 
 void Field::setMandatory(bool value)
 {
@@ -396,6 +396,7 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
         ,mDisplayField{displayField}
 {
     auto it = lookups.find(aName);
+
     if (it == lookups.end()){
         lookups[aName]= std::make_unique<EntityDataModel>(std::move(fkEntity));
         if (filter.empty()){
@@ -404,8 +405,10 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
             lookups[aName]->search(filter);
         }
     }else{
-        if (!filter.empty())
+        if (!filter.empty()){
+            lookups[aName]->clear();
             lookups[aName]->search(filter);
+        }
     }
 
 }
@@ -436,7 +439,7 @@ std::string ForeignKeyField::dbValueFormatter()
 void ForeignKeyField::setValue(int val)
 {
     mValue = val;
-    setCurrentText();
+    //setCurrentText();
 }
 
 void ForeignKeyField::stringToValue(std::string val)
@@ -551,7 +554,7 @@ DateField::~DateField()
 
 DateField::DateField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel)
-    ,mValue{QDate::currentDate()}
+    ,mValue{QDate()}
 {
     /*
     auto now = std::chrono::system_clock::now();
@@ -568,7 +571,10 @@ DateField::DateField(const std::string aName, const std::string aLabel)
 
 std::string DateField::valueToString() const
 {
-    return mValue.toString("yyyy-MM-dd").toStdString();
+    if (!mValue.isNull())
+        return mValue.toString("yyyy-MM-dd").toStdString();
+    else
+        return "null";
 }
 
 std::string DateField::dbValueFormatter()
@@ -607,7 +613,7 @@ DateTimeField::~DateTimeField()
 
 DateTimeField::DateTimeField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel)
-    ,mValue{QDateTime::currentDateTime()}
+    ,mValue{QDateTime()}
 {
 }
 

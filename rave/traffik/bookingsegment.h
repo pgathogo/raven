@@ -10,31 +10,31 @@ public:
     ~BookingSegment() override;
 
     ForeignKeyField* order() const;
-    void setOrder(int val);
+    void set_order(int val);
 
-    DateField* bookingDate() const;
-    void setBookingDate(QDate val);
+    DateField* booking_date() const;
+    void set_booking_date(QDate val);
 
-    DateField* startDate() const;
-    void setStartDate(QDate val);
+    DateField* start_date() const;
+    void set_start_date(QDate val);
 
-    DateField* endDate() const;
-    void setEndDate(QDate val);
+    DateField* end_date() const;
+    void set_end_date(QDate val);
 
-    IntegerField* bookingCount() const;
-    void setBookingCount(int val);
+    IntegerField* booking_count() const;
+    void set_booking_count(int val);
 
-    DecimalField* segmentValue() const;
-    void setSegmentValue(double val);
+    DecimalField* segment_value() const;
+    void set_segment_value(double val);
 
     TextField* comments() const;
-    void setComments(const std::string val);
+    void set_comments(const std::string val);
 
-    StringField* addLogin() const;
-    void setAddLogin(const std::string val);
+    StringField* add_login() const;
+    void set_add_login(const std::string val);
 
-    DateTimeField* addDateTime() const;
-    void setAddDateTime(QDateTime val);
+    DateTimeField* add_date_time() const;
+    void set_add_date_time(QDateTime val);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -51,15 +51,15 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
 private:
-    ForeignKeyField* mOrder;
-    DateField* mBookingDate;
-    DateField* mStartDate;
-    DateField* mEndDate;
-    IntegerField* mBookingCount;
-    DecimalField* mSegmentValue;
-    TextField* mComments;
-    StringField* mAddLogin;
-    DateTimeField* mAddDateTime;
+    ForeignKeyField* m_order;
+    DateField* m_booking_date;
+    DateField* m_start_date;
+    DateField* m_end_date;
+    IntegerField* m_booking_count;
+    DecimalField* m_segment_value;
+    TextField* m_comments;
+    StringField* m_add_login;
+    DateTimeField* m_add_date_time;
 
     QStringList mHeader;
     std::string mTableName;

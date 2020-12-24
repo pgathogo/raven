@@ -12,26 +12,26 @@ public:
     OrderBooking();
     ~OrderBooking() override;
 
-    ForeignKeyField* bookingSegment() const;
-    void setBookingSegment(int val);
+    ForeignKeyField* booking_segment() const;
+    void set_booking_segment(int val);
 
     ForeignKeyField* schedule() const;
-    void setSchedule(int val);
+    void set_schedule(int val);
 
-    ChoiceField<std::string>* bookingStatus() const;
-    void setBookingStatus(std::string val);
+    ChoiceField<std::string>* booking_status() const;
+    void set_booking_status(std::string val);
 
-    DateField* playDate() const;
-    void setPlayDate(QDate val);
+    DateField* play_date() const;
+    void set_play_date(QDate val);
 
-    TimeField* playTime() const;
-    void setPlayTime(QTime val);
+    DateTimeField* play_time() const;
+    void set_play_time(QDateTime val);
 
     ForeignKeyField* spot() const;
-    void setSpot(int val);
+    void set_spot(int val);
 
     ForeignKeyField* audio() const;
-    void setAudio(int val);
+    void set_audio(int val);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -47,13 +47,13 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 private:
-    ForeignKeyField* mBookingSegment;
-    ForeignKeyField* mSchedule;
-    ChoiceField<std::string>* mBookingStatus;
-    DateField* mPlayDate;
-    TimeField* mPlayTime;
-    ForeignKeyField* mSpot;
-    ForeignKeyField* mAudio;
+    ForeignKeyField* m_booking_segment;
+    ForeignKeyField* m_schedule;
+    ChoiceField<std::string>* m_booking_status;
+    DateField* m_play_date;
+    DateTimeField* m_play_time;
+    ForeignKeyField* m_spot;
+    ForeignKeyField* m_audio;
 
     QStringList mHeader;
     std::string mTableName;

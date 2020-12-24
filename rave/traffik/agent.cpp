@@ -2,27 +2,27 @@
 #include "agent.h"
 
 Agent::Agent():
-    mName{}
-    ,mTown{}
-    ,mTelephone{}
-    ,mEmail{}
+    m_name{}
+    ,m_town{}
+    ,m_telephone{}
+    ,m_email{}
     ,mContactName{}
     ,mMobileNo{}
     ,mAddress{}
 {
 
-    mName = createField<StringField>("agent_name", "Agents Name");
-    mName->setDBColumnName("name");
-    mName->setMandatory(true);
+    m_name = createField<StringField>("agent_name", "Agents Name");
+    m_name->setDBColumnName("name");
+    m_name->setMandatory(true);
 
-    mTown = createField<StringField>("town", "Town");
-    mTelephone = createField<StringField>("telephone", "Telephone");
-    mEmail = createField<StringField>("email", "Email");
+    m_town = createField<StringField>("town", "Town");
+    m_telephone = createField<StringField>("telephone", "Telephone");
+    m_email = createField<StringField>("email", "Email");
     mContactName = createField<StringField>("contact_name","Contact Name");
     mMobileNo = createField<StringField>("contact_mobile_no", "Mobile No");
     mAddress = createField<TextField>("address", "Address");
 
-    mHeader << QString::fromStdString(mName->fieldLabel())
+    mHeader << QString::fromStdString(m_name->fieldLabel())
             << QString::fromStdString(mContactName->fieldLabel())
             << QString::fromStdString(mMobileNo->fieldLabel());
 
@@ -90,38 +90,38 @@ void Agent::populateEntity()
 
 StringField* Agent::name() const
 {
-    return mName;
+    return m_name;
 }
 void Agent::setName(std::string pname)
 {
-    mName->setValue(pname);
+    m_name->setValue(pname);
 }
 
 StringField* Agent::town() const
 {
-    return mTown;
+    return m_town;
 }
 void Agent::setTown(std::string ptown)
 {
-    mTown->setValue(ptown);
+    m_town->setValue(ptown);
 }
 
 StringField* Agent::telephone() const
 {
-    return mTelephone;
+    return m_telephone;
 }
 void Agent::setTelephone(std::string ptele)
 {
-    mTelephone->setValue(ptele);
+    m_telephone->setValue(ptele);
 }
 
 StringField* Agent::email() const
 {
-    return mEmail;
+    return m_email;
 }
 void Agent::setEmail(std::string pemail)
 {
-    mEmail->setValue(pemail);
+    m_email->setValue(pemail);
 }
 
 StringField* Agent::contactName() const

@@ -143,6 +143,8 @@ int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 
     sqlQuery = makeInsertString(entity);
 
+    printstr(sqlQuery);
+
     provider()->executeQuery(sqlQuery);
     // Get id of the created record.
     int lastId = provider()->fetchLastId(entity.tableName());

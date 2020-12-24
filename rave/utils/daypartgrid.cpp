@@ -12,27 +12,27 @@
 DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets, QWidget *parent) :
     QWidget{parent},
     ui{new Ui::DayPartGrid},
-    mDayParts{},
-    mLayout{layout},
-    sp{0,0},
-    rightClicked{false},
-    mContextMenu{},
-    mPreset{psets}
+    m_dayparts{},
+    m_layout{layout},
+    m_start_point{0,0},
+    m_right_clicked{false},
+    m_context_menu{},
+    m_preset{psets}
 {
     ui->setupUi(this);
     connect(ui->twDaypart, &QTableWidget::cellEntered, this, &DayPartGrid::cell_entered);
     connect(ui->twDaypart, SIGNAL(cellClicked(int, int)), this, SLOT(cell_clicked(int, int)));
 
-    prepareGrid();
+    prepare_grid();
 
-    mLayout->addWidget(this);
+    m_layout->addWidget(this);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 
     //connect(this, &QTableWidget::customContextMenuRequested(QPoint), this, &DayPartGrid::showContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
-    mContextMenu = std::make_unique<QMenu>(tr("Grid menu"), this);
+    m_context_menu = std::make_unique<QMenu>(tr("Grid menu"), this);
 
 }
 
@@ -41,7 +41,7 @@ DayPartGrid::~DayPartGrid()
     delete ui;
 }
 
-void DayPartGrid::prepareGrid()
+void DayPartGrid::prepare_grid()
 {
     for(int hr=0; hr<=hrs_in_day-1; ++hr){
      ui->twDaypart->setHorizontalHeaderItem(hr, new QTableWidgetItem(QString::number(hr)));
@@ -74,28 +74,28 @@ void DayPartGrid::prepareGrid()
 void DayPartGrid::cell_entered(int row, int col)
 {
 
-    if (rightClicked)
+    if (m_right_clicked)
         return;
 
     QTableWidgetItem* cell = ui->twDaypart->item(row, col);
-    this->update_cell_state<Selected>(cell);
+    if ( !is_cell_selected(cell) ){
+        this->update_cell_state<Selected>(cell);
+        update_multiple_cells<Selected>(row, col, ui->twDaypart);
+    }else{
+        this->update_cell_state<Unselected>(cell);
+        update_multiple_cells<Unselected>(row, col, ui->twDaypart);
 
-    if (col > sp.col){
-        for(int r=sp.row; r<row; ++r){
-            QTableWidgetItem* cell = ui->twDaypart->item(r, col);
-            this->update_cell_state<Selected>(cell);
-        }
     }
 
 }
 
 void DayPartGrid::cell_clicked(int row, int col)
 {
-    if (rightClicked)
+    if (m_right_clicked)
         return;
 
     // save start point
-    setStartPoint(row, col);
+    set_start_point(row, col);
 
     QTableWidgetItem* cell = ui->twDaypart->item(row, col);
 
@@ -124,15 +124,15 @@ void DayPartGrid::update_grid(std::map<int, std::string> dayparts)
     }
 }
 
-void DayPartGrid::setStartPoint(int row, int col)
+void DayPartGrid::set_start_point(int row, int col)
 {
-    sp.row = row;
-    sp.col = col;
+    m_start_point.row = row;
+    m_start_point.col = col;
 }
 
-StartPoint DayPartGrid::startPoint()
+StartPoint DayPartGrid::start_point()
 {
-    return sp;
+    return m_start_point;
 }
 
 bool DayPartGrid::is_cell_selected(QTableWidgetItem* cell)
@@ -142,54 +142,69 @@ bool DayPartGrid::is_cell_selected(QTableWidgetItem* cell)
 
 std::map<int, std::string> DayPartGrid::read_grid()
 {
-    mDayParts.clear();
+    m_dayparts.clear();
     for(int r=0; r< days_in_week; ++r){
       std::string day{};
       for (int c=0; c<= hrs_in_day-1; ++c){
-          day += std::to_string(gridCells[r][c]);
+          day += std::to_string(m_grid_cells[r][c]);
       }
-      mDayParts[r+1] = day;
+      m_dayparts[r+1] = day;
     }
-    return mDayParts;
+    return m_dayparts;
 }
 
-std::set<int> DayPartGrid::daypart_to_hours()
+DaypartExt DayPartGrid::daypart_to_hours(std::map<int,std::string>&& dayparts)
 {
-    std::set<int> hours;
-    auto dayparts = read_grid();
+    DaypartExt hours;
     for (auto& [day, daypart] : dayparts){
         int hr = 0;
+        std::vector<int> hrs;
         for(std::string::iterator it=daypart.begin(); it != daypart.end(); ++it){
             if (*it=='1')
-                hours.insert(hr);
+                hrs.push_back(hr);
             ++hr;
         }
+
+        hours[day] = std::make_tuple(daypart, hrs);
     }
 
     return hours;
+}
+
+std::vector<int> DayPartGrid::daypart_str_to_hours(const std::string& dp_str)
+{
+    int hr = 0;
+    std::vector<int> hrs;
+    for(std::string::const_iterator it=dp_str.begin(); it != dp_str.end(); ++it){
+        if (*it=='1')
+            hrs.push_back(hr);
+        ++hr;
+    }
+
+    return hrs;
 }
 
 void DayPartGrid::showContextMenu(QPoint pos)
 {
     QAction actSelectAll("Select all", this);
     connect(&actSelectAll, &QAction::triggered, this, &DayPartGrid::select_all_cells);
-    mContextMenu->addAction(&actSelectAll);
+    m_context_menu->addAction(&actSelectAll);
 
     QAction actClearAll("Clear all", this);
     connect(&actClearAll, &QAction::triggered, this, &DayPartGrid::clear_all_cells);
-    mContextMenu->addAction(&actClearAll);
+    m_context_menu->addAction(&actClearAll);
 
-    mContextMenu->addSeparator();
+    m_context_menu->addSeparator();
 
     int i=1;
-    for(auto& [band_name, dayparts]:mPreset){
+    for(auto& [band_name, dayparts]:m_preset){
         QAction* act = new QAction(stoq(band_name), this);
         act->setData(stoq(band_name));
         connect(act, &QAction::triggered, this, &DayPartGrid::selectPreset);
-        mContextMenu->addAction(act);
+        m_context_menu->addAction(act);
     }
 
-    mContextMenu->exec(mapToGlobal(pos));
+    m_context_menu->exec(mapToGlobal(pos));
 }
 
 void DayPartGrid::select_all_cells()
@@ -206,7 +221,7 @@ void DayPartGrid::selectPreset()
 {
     QAction* act = qobject_cast<QAction*>(sender());
     if (act){
-        update_grid(mPreset[act->data().toString().toStdString()]);
+        update_grid(m_preset[act->data().toString().toStdString()]);
     }
 }
 
@@ -218,12 +233,13 @@ bool DayPartGrid::eventFilter(QObject* obj, QEvent* event)
         if (obj->parent() == ui->twDaypart){
             auto mbe = dynamic_cast<QMouseEvent*>(event);
             if (mbe->button() == Qt::RightButton)
-                rightClicked = true;
+                m_right_clicked = true;
             else if (mbe->button() == Qt::LeftButton)
-                rightClicked = false;
+                m_right_clicked = false;
         }
 
     }
     return QWidget::eventFilter(obj, event);
 
 }
+

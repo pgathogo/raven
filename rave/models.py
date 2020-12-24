@@ -325,7 +325,7 @@ class Track(Daypart):
     title = models.CharField(max_length=255)
     artist = models.ForeignKey(Artist)
     filepath = models.CharField(max_length=255)
-    track_type = models.CharField(max_length=6, choices=TRACK_TYPE)
+    track_type = models.CharField(max_length=6, choices=TRACK_TYPE, default='SONG')
 
 PLAY_STATUS = (
         ('CUED','CUED'),
@@ -403,5 +403,5 @@ class OrderBooking(models.Model):
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
     spot = models.ForeignKey(Spot, default=-1)
-    audio = models.ForeignKey(SpotAudio)
+    audio = models.ForeignKey(SpotAudio, null=True)
 

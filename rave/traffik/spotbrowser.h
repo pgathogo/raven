@@ -26,7 +26,7 @@ public:
     void saveTypeExclusions(const SpotForm& sf);
 private:
     Ui::SpotBrowser *ui;
-    Client* mClient;
+    Client* m_client;
 };
 
 #endif // SPOTBROWSER_H

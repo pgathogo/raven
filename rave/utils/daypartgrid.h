@@ -36,12 +36,14 @@ struct StartPoint{
 };
 
 using Presets = std::map<std::string, std::map<int, std::string>>;
+using DaypartExt = std::map<int, std::tuple<std::string, std::vector<int>>>;
 
 class DayPartGrid : public QWidget
 {
     Q_OBJECT
 
 public:
+
     explicit DayPartGrid(QVBoxLayout* layout, Presets psets = {}, QWidget *parent = nullptr);
     ~DayPartGrid() override;
 
@@ -49,7 +51,9 @@ public:
 
     std::map<int, std::string> read_grid();
 
-    std::set<int> daypart_to_hours();
+    DaypartExt daypart_to_hours(std::map<int,std::string>&&);
+
+    std::vector<int> daypart_str_to_hours(const std::string&);
 
 
 private slots:
@@ -62,22 +66,22 @@ private slots:
     void selectPreset();
 private:
     Ui::DayPartGrid *ui;
-    std::map<int, std::string> mDayParts;
-    QVBoxLayout* mLayout;
-    StartPoint sp;
-    bool rightClicked;
-    std::unique_ptr<QMenu> mContextMenu;
-    Presets mPreset;
+    std::map<int, std::string> m_dayparts;
+    QVBoxLayout* m_layout;
+    StartPoint m_start_point;
+    bool m_right_clicked;
+    std::unique_ptr<QMenu> m_context_menu;
+    Presets m_preset;
 
     constexpr static int days_in_week{7};
     constexpr static int hrs_in_day{24};
 
-    std::array<std::array<int, hrs_in_day>, days_in_week> gridCells{};
+    std::array<std::array<int, hrs_in_day>, days_in_week> m_grid_cells{};
 
-    void setStartPoint(int row, int col);
-    StartPoint startPoint();
+    void set_start_point(int row, int col);
+    StartPoint start_point();
     bool is_cell_selected(QTableWidgetItem* cell);
-    void prepareGrid();
+    void prepare_grid();
 
     bool eventFilter(QObject* obj, QEvent* event) override;
 
@@ -90,7 +94,7 @@ private:
         static_assert(std::is_base_of<CellSelectionState, T>::value, "`T` must be derived from `CellSelectionState`");
         T state;
         cell->setBackground(state.color());
-        gridCells[cell->row()][cell->column()] = state.toggle();
+        m_grid_cells[cell->row()][cell->column()] = state.toggle();
     }
 
     template<typename T>
@@ -102,6 +106,18 @@ private:
                this->update_cell_state<T>(cell);
             }
         }
+    }
+
+    template<typename T>
+    void update_multiple_cells(int row, int col, QTableWidget* table_widget)
+    {
+        if (col > m_start_point.col){
+            for(int r=m_start_point.row; r<row; ++r){
+                QTableWidgetItem* cell = table_widget->item(r, col);
+                this->update_cell_state<T>(cell);
+            }
+        }
+
     }
 
 };

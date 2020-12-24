@@ -3,25 +3,29 @@
 #include "bookingsegment.h"
 #include "schedule.h"
 #include "spotaudio.h"
+#include "spot.h"
 
 OrderBooking::OrderBooking()
 {
-    mSchedule = createField<ForeignKeyField>("schedule_id", "Schedule",
+    m_schedule = createField<ForeignKeyField>("schedule_id", "Schedule",
                                              std::make_unique<Schedule>(), "schedule_date");
 
-    mBookingSegment = createField<ForeignKeyField>("bookingsegment_id", "Booking Segment",
+    m_booking_segment = createField<ForeignKeyField>("bookingsegment_id", "Booking Segment",
                                                    std::make_unique<BookingSegment>(), "booking_date");
 
-    mBookingStatus = createField<ChoiceField<std::string>>("booking_status", "Booking Status");
-    mBookingStatus->addChoice({"READY","READY"});
-    mBookingStatus->addChoice({"PLAYED","PLAYED"});
-    mBookingStatus->addChoice({"CANCEL","CANCEL"});
+    m_booking_status = createField<ChoiceField<std::string>>("booking_status", "Booking Status");
+    m_booking_status->addChoice({"READY","READY"});
+    m_booking_status->addChoice({"PLAYED","PLAYED"});
+    m_booking_status->addChoice({"CANCEL","CANCEL"});
 
-    mPlayDate = createField<DateField>("play_date", "Play Date");
+    m_play_date = createField<DateField>("play_date", "Play Date");
 
-    mPlayTime = createField<TimeField>("play_time", "Play Time");
+    m_play_time = createField<DateTimeField>("play_time", "Play Time");
 
-    mAudio = createField<ForeignKeyField>("audio_id", "Audio",
+    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
+                                          std::make_unique<Spot>(), "name");
+
+    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
                                           std::make_unique<SpotAudio>(), "spot_id");
 
     mHeader << QString::fromStdString(schedule()->displayName());
@@ -35,74 +39,74 @@ OrderBooking::~OrderBooking()
 
 }
 
-ForeignKeyField *OrderBooking::bookingSegment() const
+ForeignKeyField *OrderBooking::booking_segment() const
 {
-    return mBookingSegment;
+    return m_booking_segment;
 }
 
-void OrderBooking::setBookingSegment(int val)
+void OrderBooking::set_booking_segment(int val)
 {
-    mBookingSegment->setValue(val);
+    m_booking_segment->setValue(val);
 }
 
 ForeignKeyField *OrderBooking::schedule() const
 {
-    return mSchedule;
+    return m_schedule;
 }
 
-void OrderBooking::setSchedule(int val)
+void OrderBooking::set_schedule(int val)
 {
-    mSchedule->setValue(val);
+    m_schedule->setValue(val);
 }
 
-ChoiceField<std::string>* OrderBooking::bookingStatus() const
+ChoiceField<std::string>* OrderBooking::booking_status() const
 {
-    return mBookingStatus;
+    return m_booking_status;
 }
 
-void OrderBooking::setBookingStatus(std::string val)
+void OrderBooking::set_booking_status(std::string val)
 {
-    mBookingStatus->setValue(val);
+    m_booking_status->setValue(val);
 }
 
-DateField *OrderBooking::playDate() const
+DateField *OrderBooking::play_date() const
 {
-    return mPlayDate;
+    return m_play_date;
 }
 
-void OrderBooking::setPlayDate(QDate val)
+void OrderBooking::set_play_date(QDate val)
 {
-    mPlayDate->setValue(val);
+    m_play_date->setValue(val);
 }
 
-TimeField *OrderBooking::playTime() const
+DateTimeField *OrderBooking::play_time() const
 {
-    return mPlayTime;
+    return m_play_time;
 }
 
-void OrderBooking::setPlayTime(QTime val)
+void OrderBooking::set_play_time(QDateTime val)
 {
-    mPlayTime->setValue(val);
+    m_play_time->setValue(val);
 }
 
 ForeignKeyField *OrderBooking::spot() const
 {
-    return mSpot;
+    return m_spot;
 }
 
-void OrderBooking::setSpot(int val)
+void OrderBooking::set_spot(int val)
 {
-    mSpot->setValue(val);
+    m_spot->setValue(val);
 }
 
 ForeignKeyField *OrderBooking::audio() const
 {
-    return mAudio;
+    return m_audio;
 }
 
-void OrderBooking::setAudio(int val)
+void OrderBooking::set_audio(int val)
 {
-    mAudio->setValue(val);
+    m_audio->setValue(val);
 }
 
 std::string OrderBooking::tableName() const

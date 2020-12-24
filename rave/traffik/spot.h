@@ -66,10 +66,10 @@ public:
     SpotTypeExclusion& spotTypeExclusion();
 
 private:
-    StringField* mName;
+    StringField* m_name;
     DecimalField* mSpotDuration;
     DecimalField* mRealDuration;
-    ForeignKeyField* mClient;
+    ForeignKeyField* m_client;
     ForeignKeyField* mBrand;
 
     StringField* mDaypart1;

@@ -66,8 +66,6 @@ void OrderBookingBrowser::searchRecord()
                        order.spotsOrdered()->dbColumnName()
                        );
 
-
-           //std::string filter = entityDataModel().prepareFilter(approvedFilter, bookCountFilter);
            entityDataModel().search(entityDataModel().prepareFilter(
                        approvedFilter, bookCountFilter));
         }
