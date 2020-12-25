@@ -10,6 +10,7 @@
 class QCheckBox;
 class Schedule;
 class EntityDataModel;
+class TimeBand;
 
 using ExclusionID = int;
 using DayOfWeek = int;
@@ -58,6 +59,7 @@ namespace TRAFFIK {
         int type_excl_collusion{0};
         SpotRecord spot_to_book;
         BookingRecord booked_record;
+        TimeBand* current_time_band{nullptr};
         std::vector<BookingRecord> prev_bookings;
         std::vector<FailedBreak> failed_breaks;
         std::unique_ptr<EntityDataModel> m_schedule_EDM;

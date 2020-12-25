@@ -61,6 +61,15 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
 
     show_order_details(order);
+
+    ui->lwSelBreaks->setSpacing(5);
+
+    connect(ui->btnBreakSelApply, &QPushButton::clicked, this, &BookingWizard::apply_selection);
+    connect(ui->btnClearSel, &QPushButton::clicked, this, &BookingWizard::clear_selection);
+
+    connect(ui->btnBreakSelect, &QPushButton::clicked, this, [this](){ this->toggle_selection(true);} );
+    connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [this](){ this->toggle_selection(false);} );
+
 }
 
 BookingWizard::~BookingWizard()
@@ -123,7 +132,7 @@ void BookingWizard::setup_break_select_grid()
         if (comm_break->break_availability() == Schedule::BreakAvailability::Break_Available){
 
             QString date_str = comm_break->scheduleDate()->value().toString();
-            QString time_str = comm_break->scheduleTime()->value().toString();
+            QString time_str = comm_break->scheduleTime()->value().toString("HH:mm");
             QString dur_str = QString::number(comm_break->breakDurationLeft()->value());
 
             QTableWidgetItem* date_item = new QTableWidgetItem(date_str);
@@ -143,6 +152,9 @@ void BookingWizard::setup_break_select_grid()
             QTableWidgetItem* dur_item = new QTableWidgetItem(dur_str);
             ui->twBreakSelect->setItem(row, 2, dur_item);
             dur_item->setTextAlignment(Qt::AlignCenter);
+            dur_item->setData(Qt::UserRole, comm_break->scheduleDate()->value().dayOfWeek());
+
+            m_selected_breaks.insert(time_str);
 
             ++row;
         }
@@ -273,8 +285,8 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
 void BookingWizard::timeBandChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbTimeband->model());
-    TimeBand* tband = dynamic_cast<TimeBand*>(std::get<1>(*(edm->vecBegin()+i)).get());
-    populate_grid(tband);
+    m_engine_data.current_time_band = dynamic_cast<TimeBand*>(std::get<1>(*(edm->vecBegin()+i)).get());
+    populate_grid(m_engine_data.current_time_band);
     m_engine_data.target_daypart =  m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
 }
 
@@ -324,6 +336,39 @@ void BookingWizard::build_breaks()
     show_available_breaks();
 
     setup_break_select_grid();
+}
+
+void BookingWizard::apply_selection()
+{
+
+    m_dow_selection.clear();
+
+    auto sel_days = ui->twDOW->selectedItems();
+
+    for (int j=0; j < sel_days.count(); ++j){
+
+        auto day_of_week = sel_days.at(j);
+
+        QComboBox* combo = (QComboBox*)ui->twDOW->cellWidget(day_of_week->row(), 1);
+
+        auto sel_items = ui->lwSelBreaks->selectedItems();
+
+        for (int i=0; i < sel_items.size(); ++i){
+            auto time_str = sel_items[i]->text();
+            combo->addItem(time_str);
+            m_dow_selection[day_of_week->row()+1].push_back(time_str.toStdString());
+        }
+    }
+}
+
+void BookingWizard::clear_selection()
+{
+    auto sel_days = ui->twDOW->selectedItems();
+    for (int i=0; i < sel_days.count(); ++i){
+        auto item = sel_days.at(i);
+        QComboBox* combo = (QComboBox*)ui->twDOW->cellWidget(item->row() , 1);
+        combo->clear();
+    }
 }
 
 std::set<int> BookingWizard::selected_unique_hours()
@@ -382,6 +427,70 @@ void BookingWizard::test_booking()
     show_available_breaks();
 
     setup_break_select_grid();
+}
+
+void BookingWizard::add_days_of_week()
+{
+    int i=1;
+    int row = 0;
+
+    ui->twDOW->clear();
+    QStringList header;
+    header << "DOW" <<	"Breaks";
+    ui->twDOW->setHorizontalHeaderLabels(header);
+
+    ui->twDOW->setRowCount(days_of_week.size());
+    for (std::string dow : days_of_week){
+
+        QTableWidgetItem* dow_item = new QTableWidgetItem(QString::fromStdString(dow));
+        //QTableWidgetItem* dow_breaks = new QTableWidgetItem();
+
+        dow_item->setData(Qt::UserRole, i++);
+        ui->twDOW->setItem(row, 0, dow_item);
+
+        QComboBox* cb = new QComboBox();
+        ui->twDOW->setCellWidget(row, 1, cb);
+        //ui->twDOW->setItem(row, 1, dow_breaks);
+        ++row;
+    }
+}
+
+void BookingWizard::show_breaks_for_current_timeband()
+{
+    ui->lwSelBreaks->clear();
+    for (auto break_time : m_selected_breaks){
+        QListWidgetItem* item = new QListWidgetItem(break_time);
+        ui->lwSelBreaks->addItem(item);
+    }
+}
+
+void BookingWizard::toggle_selection(bool mode)
+{
+    auto breaks = ui->lwSelBreaks;
+
+    for (int i=0; i < ui->lwSelBreaks->count(); ++i){
+        auto item = breaks->item(i);
+        item->setSelected(mode);
+    }
+
+}
+
+void BookingWizard::auto_select_breaks_by_dow()
+{
+    for (auto [dow, breaks] : m_dow_selection){
+        for (auto brk : breaks){
+            for (int i=0; i < ui->twBreakSelect->rowCount(); ++i){
+                auto item = ui->twBreakSelect->item(i, 2);
+                if (item->data(Qt::UserRole).toInt() == dow){
+                    auto time_str = ui->twBreakSelect->item(i, 1)->text().toStdString();
+                    if (brk == time_str){
+                        ui->twBreakSelect->selectRow(i);
+                    }
+                }
+
+            }
+        }
+    }
 }
 
 void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
@@ -517,6 +626,17 @@ bool BookingWizard::validateCurrentPage()
 //          return (ui->tvSpots->selectionModel()->selectedRows().size() > 0) ? true : false;
         case 1:
           break;
+        case BookingWizard::Page_Build_Breaks:
+        {
+            add_days_of_week();
+            show_breaks_for_current_timeband();
+            break;
+        }
+        case BookingWizard::Page_Select_By_Day:
+        {
+            auto_select_breaks_by_dow();
+            break;
+        }
         case BookingWizard::Page_Select_By_Date:
         {
             TreeViewModel* tvm  = new TreeViewModel(ui->twBreakSelect->selectedItems());

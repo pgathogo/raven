@@ -30,6 +30,8 @@ public:
     enum {Page_Spots=0, Page_Dates, Page_Rules, Page_Build_Breaks,
           Page_Select_By_Day, Page_Select_By_Date, Page_Final};
 
+    std::vector<std::string> days_of_week{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
     explicit BookingWizard(Order* order, QWidget* parent = nullptr);
     ~BookingWizard() override;
 
@@ -53,6 +55,7 @@ public:
 
     void test_booking();
 
+
     int to_int(std::string s){
         return (s.empty()) ? 0 : std::stoi(s);
     }
@@ -74,6 +77,8 @@ private slots:
     void all_breaks(bool);
     void toggleTimeBand(bool);
     void build_breaks();
+    void apply_selection();
+    void clear_selection();
 
 private:
     Ui::BookingWizard *ui;
@@ -85,8 +90,10 @@ private:
     std::unique_ptr<EntityDataModel> m_booking_EDM;
 
     TRAFFIK::EngineData m_engine_data;
-
     std::unique_ptr<TRAFFIK::RuleEngine> m_rule_engine;
+    std::set<QString> m_selected_breaks;
+
+    std::map<int, std::vector<std::string>> m_dow_selection;
 
     std::set<int> selected_unique_hours();
 
@@ -97,6 +104,11 @@ private:
     bool make_booking();
     void commit_booking();
     void show_order_details(Order*);
+    void add_days_of_week();
+    void show_breaks_for_current_timeband();
+    void toggle_selection(bool mode);
+
+    void auto_select_breaks_by_dow();
 };
 
 

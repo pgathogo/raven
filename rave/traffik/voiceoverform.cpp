@@ -99,7 +99,7 @@ void VoiceOverForm::setDayPart()
    TimeBandDayParts tbDaypart;
    for (auto& [name, entity] :edm->modelEntities()){
        TimeBand* tb = dynamic_cast<TimeBand*>(entity.get());
-       tbDaypart[tb->name()->displayName()] = tb->dayParts();
+       tbDaypart[tb->name()->displayName()] = tb->dayparts();
    }
    mDayPart = std::make_unique<DayPartGrid>(ui->vlDayPart, tbDaypart);
    populateDayPart(*mDayPart);

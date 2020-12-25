@@ -3,89 +3,89 @@
 
 TimeBand::TimeBand()
 {
-    mName = createField<StringField>("name", "Band Name");
-    mName->setMandatory(true);
+    m_name = createField<StringField>("name", "Band Name");
+    m_name->setMandatory(true);
 
-    mLocked = createField<BooleanField>("locked", "is Band Locked");
-    mLocked->setSearchable(false);
+    m_locked = createField<BooleanField>("locked", "is Band Locked");
+    m_locked->setSearchable(false);
 
-    mBillMethod = createField<ChoiceField<std::string>>("bill_method", "Bill Method");
-    mBillMethod->setSearchable(false);
-    mBillMethod->addChoice({"FF","Flat Fee"});
-    mBillMethod->addChoice({"IP","Increment By Percentage"});
-    mBillMethod->setValue("FF");
+    m_bill_method = createField<ChoiceField<std::string>>("bill_method", "Bill Method");
+    m_bill_method->setSearchable(false);
+    m_bill_method->addChoice({"FF","Flat Fee"});
+    m_bill_method->addChoice({"IP","Increment By Percentage"});
+    m_bill_method->setValue("FF");
 
-    mBasePrice  = createField<DecimalField>("base_price", "Base Price");
-    mBasePrice->setSearchable(false);
-    mBaseDuration  = createField<IntegerField>("base_duration", "Base Duration");
-    mBaseDuration->setSearchable(false);
+    m_base_price  = createField<DecimalField>("base_price", "Base Price");
+    m_base_price->setSearchable(false);
+    m_base_duration  = createField<IntegerField>("base_duration", "Base Duration");
+    m_base_duration->setSearchable(false);
 
-    mIPDuration1  = createField<IntegerField>("ip_duration1","");
-    mIPDuration1->setSearchable(false);
-    mPercent1  = createField<IntegerField>("ip_percent1","");
-    mPercent1->setSearchable(false);
+    m_ip_duration1  = createField<IntegerField>("ip_duration1","");
+    m_ip_duration1->setSearchable(false);
+    m_percent1  = createField<IntegerField>("ip_percent1","");
+    m_percent1->setSearchable(false);
 
-    mIPDuration2  = createField<IntegerField>("ip_duration2","");
-    mIPDuration2->setSearchable(false);
-    mPercent2  = createField<IntegerField>("ip_percent2","");
-    mPercent2->setSearchable(false);
-    mIPDuration3  = createField<IntegerField>("ip_duration3","");
-    mIPDuration3->setSearchable(false);
-    mPercent3  = createField<IntegerField>("ip_percent3","");
-    mPercent3->setSearchable(false);
-    mIPDuration4  = createField<IntegerField>("ip_duration4","");
-    mIPDuration4->setSearchable(false);
-    mPercent4  = createField<IntegerField>("ip_percent4","");
-    mPercent4->setSearchable(false);
-    mIPDuration5  = createField<IntegerField>("ip_duration5","");
-    mIPDuration5->setSearchable(false);
-    mPercent5  = createField<IntegerField>("ip_percent5","");
-    mPercent5->setSearchable(false);
-    mIPDuration6  = createField<IntegerField>("ip_duration6","");
-    mIPDuration6->setSearchable(false);
-    mPercent6  = createField<IntegerField>("ip_percent6","");
-    mPercent6->setSearchable(false);
-    mIPDuration7  = createField<IntegerField>("ip_duration7","");
-    mIPDuration7->setSearchable(false);
-    mPercent7  = createField<IntegerField>("ip_percent7","");
-    mPercent7->setSearchable(false);
-    mIPDuration8  = createField<IntegerField>("ip_duration8","");
-    mIPDuration8->setSearchable(false);
-    mPercent8  = createField<IntegerField>("ip_percent8","");
-    mPercent8->setSearchable(false);
-    mIPDuration9  = createField<IntegerField>("ip_duration9","");
-    mIPDuration9->setSearchable(false);
-    mPercent9  = createField<IntegerField>("ip_percent9","");
-    mPercent9->setSearchable(false);
-    mIPDuration10  = createField<IntegerField>("ip_duration10","");
-    mIPDuration10->setSearchable(false);
-    mPercent10  = createField<IntegerField>("ip_percent10","");
-    mPercent10->setSearchable(false);
-    mIPDuration11  = createField<IntegerField>("ip_duration11","");
-    mIPDuration11->setSearchable(false);
-    mPercent11  = createField<IntegerField>("ip_percent11","");
-    mPercent11->setSearchable(false);
-    mIPDuration12  = createField<IntegerField>("ip_duration12","");
-    mIPDuration12->setSearchable(false);
-    mPercent12  = createField<IntegerField>("ip_percent12","");
-    mPercent12->setSearchable(false);
+    m_ip_duration2  = createField<IntegerField>("ip_duration2","");
+    m_ip_duration2->setSearchable(false);
+    m_percent2  = createField<IntegerField>("ip_percent2","");
+    m_percent2->setSearchable(false);
+    m_ip_duration3  = createField<IntegerField>("ip_duration3","");
+    m_ip_duration3->setSearchable(false);
+    m_percent3  = createField<IntegerField>("ip_percent3","");
+    m_percent3->setSearchable(false);
+    m_ip_duration4  = createField<IntegerField>("ip_duration4","");
+    m_ip_duration4->setSearchable(false);
+    m_percent4  = createField<IntegerField>("ip_percent4","");
+    m_percent4->setSearchable(false);
+    m_ip_duration5  = createField<IntegerField>("ip_duration5","");
+    m_ip_duration5->setSearchable(false);
+    m_percent5  = createField<IntegerField>("ip_percent5","");
+    m_percent5->setSearchable(false);
+    m_ip_duration6  = createField<IntegerField>("ip_duration6","");
+    m_ip_duration6->setSearchable(false);
+    m_percent6  = createField<IntegerField>("ip_percent6","");
+    m_percent6->setSearchable(false);
+    m_ip_duration7  = createField<IntegerField>("ip_duration7","");
+    m_ip_duration7->setSearchable(false);
+    m_percent7  = createField<IntegerField>("ip_percent7","");
+    m_percent7->setSearchable(false);
+    m_ip_duration8  = createField<IntegerField>("ip_duration8","");
+    m_ip_duration8->setSearchable(false);
+    m_percent8  = createField<IntegerField>("ip_percent8","");
+    m_percent8->setSearchable(false);
+    m_ip_duration9  = createField<IntegerField>("ip_duration9","");
+    m_ip_duration9->setSearchable(false);
+    m_percent9  = createField<IntegerField>("ip_percent9","");
+    m_percent9->setSearchable(false);
+    m_ip_duration10  = createField<IntegerField>("ip_duration10","");
+    m_ip_duration10->setSearchable(false);
+    m_percent10  = createField<IntegerField>("ip_percent10","");
+    m_percent10->setSearchable(false);
+    m_ip_duration11  = createField<IntegerField>("ip_duration11","");
+    m_ip_duration11->setSearchable(false);
+    m_percent11  = createField<IntegerField>("ip_percent11","");
+    m_percent11->setSearchable(false);
+    m_ip_duration12  = createField<IntegerField>("ip_duration12","");
+    m_ip_duration12->setSearchable(false);
+    m_percent12  = createField<IntegerField>("ip_percent12","");
+    m_percent12->setSearchable(false);
 
-    mDaypart1  = createField<StringField>("daypart1", "");
-    mDaypart1->setSearchable(false);
-    mDaypart2  = createField<StringField>("daypart2", "");
-    mDaypart2->setSearchable(false);
-    mDaypart3  = createField<StringField>("daypart3", "");
-    mDaypart3->setSearchable(false);
-    mDaypart4  = createField<StringField>("daypart4", "");
-    mDaypart4->setSearchable(false);
-    mDaypart5  = createField<StringField>("daypart5", "");
-    mDaypart5->setSearchable(false);
-    mDaypart6  = createField<StringField>("daypart6", "");
-    mDaypart6->setSearchable(false);
-    mDaypart7  = createField<StringField>("daypart7", "");
-    mDaypart7->setSearchable(false);
+    m_daypart1  = createField<StringField>("daypart1", "");
+    m_daypart1->setSearchable(false);
+    m_daypart2  = createField<StringField>("daypart2", "");
+    m_daypart2->setSearchable(false);
+    m_daypart3  = createField<StringField>("daypart3", "");
+    m_daypart3->setSearchable(false);
+    m_daypart4  = createField<StringField>("daypart4", "");
+    m_daypart4->setSearchable(false);
+    m_daypart5  = createField<StringField>("daypart5", "");
+    m_daypart5->setSearchable(false);
+    m_daypart6  = createField<StringField>("daypart6", "");
+    m_daypart6->setSearchable(false);
+    m_daypart7  = createField<StringField>("daypart7", "");
+    m_daypart7->setSearchable(false);
 
-    mHeader << QString::fromStdString(mName->fieldLabel());
+    mHeader << QString::fromStdString(m_name->fieldLabel());
 
     setTableName("rave_timeband");
 
@@ -135,297 +135,297 @@ void TimeBand::populateEntity() {}
 
 StringField* TimeBand::name() const
 {
-    return mName;
+    return m_name;
 }
 
 void TimeBand::setName(std::string val)
 {
-    mName->setValue( val );
+    m_name->setValue( val );
 }
 
 BooleanField* TimeBand::locked()
 {
-    return mLocked;
+    return m_locked;
 }
 
 void TimeBand::setLocked(bool val)
 {
-    mLocked->setValue( val );
+    m_locked->setValue( val );
 }
 
 ChoiceField<std::string>* TimeBand::billMethod()
 {
-    return mBillMethod;
+    return m_bill_method;
 }
 
 void TimeBand::setBillMethod(const std::string val)
 {
-    mBillMethod->setValue( val );
+    m_bill_method->setValue( val );
 }
 
 IntegerField* TimeBand::baseDuration() const
 {
-    return mBaseDuration;
+    return m_base_duration;
 }
 void TimeBand::setBaseDuration(int val)
 {
-    mBaseDuration->setValue( val );
+    m_base_duration->setValue( val );
 }
 DecimalField* TimeBand::basePrice() const
 {
-    return mBasePrice;
+    return m_base_price;
 }
 void TimeBand::setBasePrice(double val)
 {
-    mBasePrice->setValue( val );
+    m_base_price->setValue( val );
 }
 StringField* TimeBand::daypart1() const
 {
-    return mDaypart1;
+    return m_daypart1;
 }
 void TimeBand::setDaypart1(std::string val)
 {
-    mDaypart1->setValue( val );
+    m_daypart1->setValue( val );
 }
 StringField* TimeBand::daypart2() const
 {
-    return mDaypart2;
+    return m_daypart2;
 }
 void TimeBand::setDaypart2(std::string val)
 {
-    mDaypart2->setValue( val );
+    m_daypart2->setValue( val );
 }
 StringField* TimeBand::daypart3() const
 {
-    return mDaypart3;
+    return m_daypart3;
 }
 void TimeBand::setDaypart3(std::string val)
 {
-    mDaypart3->setValue( val );
+    m_daypart3->setValue( val );
 }
 StringField* TimeBand::daypart4() const
 {
-    return mDaypart4;
+    return m_daypart4;
 }
 void TimeBand::setDaypart4(std::string val)
 {
-    mDaypart4->setValue( val );
+    m_daypart4->setValue( val );
 }
 StringField* TimeBand::daypart5() const
 {
-    return mDaypart5;
+    return m_daypart5;
 }
 void TimeBand::setDaypart5(std::string val)
 {
-    mDaypart5->setValue( val );
+    m_daypart5->setValue( val );
 }
 StringField* TimeBand::daypart6() const
 {
-    return mDaypart6;
+    return m_daypart6;
 }
 void TimeBand::setDaypart6(std::string val)
 {
-    mDaypart6->setValue( val );
+    m_daypart6->setValue( val );
 }
 StringField* TimeBand::daypart7() const
 {
-    return mDaypart7;
+    return m_daypart7;
 }
 void TimeBand::setDaypart7(std::string val)
 {
-    mDaypart7->setValue( val );
+    m_daypart7->setValue( val );
 }
 IntegerField* TimeBand::iPDuration1() const
 {
-    return mIPDuration1;
+    return m_ip_duration1;
 }
 void TimeBand::setIPDuration1(int val)
 {
-    mIPDuration1->setValue( val );
+    m_ip_duration1->setValue( val );
 }
 IntegerField* TimeBand::iPDuration10() const
 {
-    return mIPDuration10;
+    return m_ip_duration10;
 }
 void TimeBand::setIPDuration10(int val)
 {
-    mIPDuration10->setValue( val );
+    m_ip_duration10->setValue( val );
 }
 IntegerField* TimeBand::iPDuration11() const
 {
-    return mIPDuration11;
+    return m_ip_duration11;
 }
 void TimeBand::setIPDuration11(int val)
 {
-    mIPDuration11->setValue( val );
+    m_ip_duration11->setValue( val );
 }
 IntegerField* TimeBand::iPDuration12() const
 {
-    return mIPDuration12;
+    return m_ip_duration12;
 }
 void TimeBand::setIPDuration12(int val)
 {
-    mIPDuration12->setValue( val );
+    m_ip_duration12->setValue( val );
 }
 IntegerField* TimeBand::iPDuration2() const
 {
-    return mIPDuration2;
+    return m_ip_duration2;
 }
 void TimeBand::setIPDuration2(int val)
 {
-    mIPDuration2->setValue( val );
+    m_ip_duration2->setValue( val );
 }
 IntegerField* TimeBand::iPDuration3() const
 {
-    return mIPDuration3;
+    return m_ip_duration3;
 }
 void TimeBand::setIPDuration3(int val)
 {
-    mIPDuration3->setValue( val );
+    m_ip_duration3->setValue( val );
 }
 IntegerField* TimeBand::iPDuration4() const
 {
-    return mIPDuration4;
+    return m_ip_duration4;
 }
 void TimeBand::setIPDuration4(int val)
 {
-    mIPDuration4->setValue( val );
+    m_ip_duration4->setValue( val );
 }
 IntegerField* TimeBand::iPDuration5() const
 {
-    return mIPDuration5;
+    return m_ip_duration5;
 }
 void TimeBand::setIPDuration5(int val)
 {
-    mIPDuration5->setValue( val );
+    m_ip_duration5->setValue( val );
 }
 IntegerField* TimeBand::iPDuration6() const
 {
-    return mIPDuration6;
+    return m_ip_duration6;
 }
 void TimeBand::setIPDuration6(int val)
 {
-    mIPDuration6->setValue( val );
+    m_ip_duration6->setValue( val );
 }
 IntegerField* TimeBand::iPDuration7() const
 {
-    return mIPDuration7;
+    return m_ip_duration7;
 }
 void TimeBand::setIPDuration7(int val)
 {
-    mIPDuration7->setValue( val );
+    m_ip_duration7->setValue( val );
 }
 IntegerField* TimeBand::iPDuration8() const
 {
-    return mIPDuration8;
+    return m_ip_duration8;
 }
 void TimeBand::setIPDuration8(int val)
 {
-    mIPDuration8->setValue( val );
+    m_ip_duration8->setValue( val );
 }
 IntegerField* TimeBand::iPDuration9() const
 {
-    return mIPDuration9;
+    return m_ip_duration9;
 }
 void TimeBand::setIPDuration9(int val)
 {
-    mIPDuration9->setValue( val );
+    m_ip_duration9->setValue( val );
 }
 IntegerField* TimeBand::percent1() const
 {
-    return mPercent1;
+    return m_percent1;
 }
 void TimeBand::setPercent1(int val)
 {
-    mPercent1->setValue( val );
+    m_percent1->setValue( val );
 }
 IntegerField* TimeBand::percent10() const
 {
-    return mPercent10;
+    return m_percent10;
 }
 void TimeBand::setPercent10(int val)
 {
-    mPercent10->setValue( val );
+    m_percent10->setValue( val );
 }
 IntegerField* TimeBand::percent11() const
 {
-    return mPercent11;
+    return m_percent11;
 }
 void TimeBand::setPercent11(int val)
 {
-    mPercent11->setValue( val );
+    m_percent11->setValue( val );
 }
 IntegerField* TimeBand::percent12() const
 {
-    return mPercent12;
+    return m_percent12;
 }
 void TimeBand::setPercent12(int val)
 {
-    mPercent12->setValue( val );
+    m_percent12->setValue( val );
 }
 IntegerField* TimeBand::percent2() const
 {
-    return mPercent2;
+    return m_percent2;
 }
 void TimeBand::setPercent2(int val)
 {
-    mPercent2->setValue( val );
+    m_percent2->setValue( val );
 }
 IntegerField* TimeBand::percent3() const
 {
-    return mPercent3;
+    return m_percent3;
 }
 void TimeBand::setPercent3(int val)
 {
-    mPercent3->setValue( val );
+    m_percent3->setValue( val );
 }
 IntegerField* TimeBand::percent4() const
 {
-    return mPercent4;
+    return m_percent4;
 }
 void TimeBand::setPercent4(int val)
 {
-    mPercent4->setValue( val );
+    m_percent4->setValue( val );
 }
 IntegerField* TimeBand::percent5() const
 {
-    return mPercent5;
+    return m_percent5;
 }
 void TimeBand::setPercent5(int val)
 {
-    mPercent5->setValue( val );
+    m_percent5->setValue( val );
 }
 IntegerField* TimeBand::percent6() const
 {
-    return mPercent6;
+    return m_percent6;
 }
 void TimeBand::setPercent6(int val)
 {
-    mPercent6->setValue( val );
+    m_percent6->setValue( val );
 }
 IntegerField* TimeBand::percent7() const
 {
-    return mPercent7;
+    return m_percent7;
 }
 void TimeBand::setPercent7(int val)
 {
-    mPercent7->setValue( val );
+    m_percent7->setValue( val );
 }
 IntegerField* TimeBand::percent8() const
 {
-    return mPercent8;
+    return m_percent8;
 }
 void TimeBand::setPercent8(int val)
 {
-    mPercent8->setValue( val );
+    m_percent8->setValue( val );
 }
 IntegerField* TimeBand::percent9() const
 {
-    return mPercent9;
+    return m_percent9;
 }
 void TimeBand::setPercent9(int val)
 {
-    mPercent9->setValue( val );
+    m_percent9->setValue( val );
 }
 
 std::unique_ptr<BaseEntity> TimeBand::cloneAsUnique()
@@ -437,17 +437,9 @@ void TimeBand::afterMapping(BaseEntity &entity)
 {
 }
 
-std::map<int, std::string> TimeBand::dayParts()
+std::map<int, std::string> TimeBand::dayparts()
 {
     std::map<int, std::string> dp;
-
-//    dp[daypart1()->fieldName()] = daypart1()->value();
-//    dp[daypart2()->fieldName()] = daypart2()->value();
-//    dp[daypart3()->fieldName()] = daypart3()->value();
-//    dp[daypart4()->fieldName()] = daypart4()->value();
-//    dp[daypart5()->fieldName()] = daypart5()->value();
-//    dp[daypart6()->fieldName()] = daypart6()->value();
-//    dp[daypart7()->fieldName()] = daypart7()->value();
 
     dp[1] = daypart1()->value();
     dp[2] = daypart2()->value();
@@ -459,3 +451,25 @@ std::map<int, std::string> TimeBand::dayParts()
 
     return dp;
 }
+
+std::vector<int> TimeBand::hours_in_dow(int dow)
+{
+    auto all_dayparts = dayparts();
+    return daypart_to_hours(all_dayparts[dow]);
+}
+
+std::vector<int> TimeBand::daypart_to_hours(const std::string& dp_str)
+{
+    int hr = 0;
+    std::vector<int> hrs;
+    for(std::string::const_iterator it=dp_str.begin(); it != dp_str.end(); ++it){
+        if (*it=='1')
+            hrs.push_back(hr);
+        ++hr;
+    }
+
+    return hrs;
+}
+
+
+
