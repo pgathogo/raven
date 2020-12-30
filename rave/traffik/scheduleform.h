@@ -22,8 +22,6 @@ public:
 
     void loadSchedule(const QDate& date);
     void setMdiArea(QMdiArea* mdi);
-    void setupScheduleGrid();
-    void populateScheduleGrid(int hr);
 
 private slots:
     void scheduleDateChanged(const QDate& date);
@@ -32,8 +30,10 @@ private slots:
 
 private:
     Ui::ScheduleForm *ui;
-    std::unique_ptr<EntityDataModel> edmSchedule;
+    std::unique_ptr<EntityDataModel> m_edm_schedule;
     QMdiArea* mMdiArea;
+
+    void build_tree_view();
 };
 
 #endif // SCHEDULEFORM_H

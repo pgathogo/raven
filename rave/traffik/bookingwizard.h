@@ -109,6 +109,8 @@ private:
     void toggle_selection(bool mode);
 
     void auto_select_breaks_by_dow();
+
+    void make_combo_checkbox();
 };
 
 

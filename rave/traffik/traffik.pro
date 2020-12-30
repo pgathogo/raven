@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui printsupport xml qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -48,6 +48,7 @@ HEADERS += \
     breaklayoutbrowser.h \
     breaklayoutform.h \
     breaklayoutline.h \
+    commlogform.h \
     order.h \
     orderapprover.h \
     orderbooking.h \
@@ -57,6 +58,7 @@ HEADERS += \
     orderpackage.h \
     schedule.h \
     scheduleform.h \
+    schedulemantreeviewmodel.h \
     setupform.h \
     spotaudio.h \
     traffiksetup.h \
@@ -74,6 +76,7 @@ SOURCES += \
     breaklayoutbrowser.cpp \
     breaklayoutform.cpp \
     breaklayoutline.cpp \
+    commlogform.cpp \
     order.cpp \
     orderapprover.cpp \
     orderbooking.cpp \
@@ -83,6 +86,7 @@ SOURCES += \
     orderpackage.cpp \
     schedule.cpp \
     scheduleform.cpp \
+    schedulemantreeviewmodel.cpp \
     setupform.cpp \
     spotaudio.cpp \
     traffiksetup.cpp \
@@ -95,8 +99,16 @@ FORMS += \
     breakcreateform.ui \
     breaklayoutbrowser.ui \
     breaklayoutform.ui \
+    commlogform.ui \
     orderbookingbrowser.ui \
     orderbrowser.ui \
     orderform.ui \
     scheduleform.ui \
     setupform.ui
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/limereport/ -llimereport
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/limereport/ -llimereportd
+else:unix: LIBS += -L$$PWD/../lib/limereport/ -llimereport
+
+INCLUDEPATH += $$PWD/../lib/limereport/include
+DEPENDPATH += $$PWD/../lib/limereport/include

@@ -38,6 +38,7 @@
 #include "order.h"
 
 #include "bookingsegment.h"
+#include "commlogform.h"
 
 AccessMap MainWindow::access_map;
 
@@ -75,9 +76,8 @@ MainWindow::MainWindow(std::unique_ptr<Authentication> auth,
 
     createActions();
 
-    //mPGManager = new PostgresDatabaseManager;
-    //mPGManager->pgProvider()->openConnection();
-   // mPGManager = auth->dbManager();
+    m_report = new LimeReport::ReportEngine(this);
+
 
     this->setWindowTitle("Raven - Traffik");
 }
@@ -101,7 +101,7 @@ void MainWindow::createActions()
 
     QAction* commlogAction = new QAction(tr("&Commercial Logs"));
     qreportSubMenu->addAction(commlogAction);
-    //connect(commlogAction, &QAction::triggered, this, &MainWindow::printCommLog);
+    connect(commlogAction, &QAction::triggered, this, &MainWindow::print_comm_log);
 
     QAction* viewBreaksAction = new QAction(tr("&View Breaks"));
     qreportSubMenu->addAction(viewBreaksAction);
@@ -361,6 +361,14 @@ void MainWindow::openOrderBooking()
 
     OrderBookingBrowser* obBrowser = createSubWindow<OrderBookingBrowser>();
     obBrowser->exec();
+}
+
+void MainWindow::print_comm_log()
+{
+    CommLogForm* comm_log_form = createSubWindow<CommLogForm>();
+    comm_log_form->exec();
+    //m_report->loadFromFile( "D:/home/Lab/qtcreator/LimeReport/Reports/Test01.lrxml");
+    //m_report->previewReport();
 }
 
 MainWindow::~MainWindow()

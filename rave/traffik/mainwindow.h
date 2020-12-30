@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QMdiArea>
 #include <QMdiSubWindow>
+#include <LimeReport>
+
 #include "../framework/baseentitybrowserdlg.h"
 #include "../security/authentication.h"
 
@@ -82,6 +84,8 @@ private slots:
     void openSchedule();
     void openOrderBooking();
 
+    void print_comm_log();
+
 private:
     PlainForm* pf;
     Ui::MainWindow *ui;
@@ -109,5 +113,7 @@ private:
     void createActions();
     std::unique_ptr<Authentication> mAuth;
     static AccessMap access_map;
+
+    LimeReport::ReportEngine* m_report;
 };
 #endif // MAINWINDOW_H

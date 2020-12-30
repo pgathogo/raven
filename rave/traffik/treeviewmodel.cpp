@@ -13,7 +13,7 @@ TreeViewModel::TreeViewModel(QList<QTableWidgetItem*> items, QObject *parent)
     m_root_item = invisibleRootItem();
     read_tree_data(items);
     build_tree(m_nodes);
-    print_tree(m_tree, 0);
+    //print_tree(m_tree, 0);
 }
 
 int TreeViewModel::read_tree_data(const SelectedItems& items)
@@ -97,9 +97,6 @@ int TreeViewModel::read_tree_data(const SelectedItems& items)
         }
 
     }
-
-    std::sort(m_nodes.begin(), m_nodes.end(),
-            [](const Node* lhs,  const Node* rhs){ return (lhs->parent_id() < rhs->parent_id()); });
 
  return 1;
 

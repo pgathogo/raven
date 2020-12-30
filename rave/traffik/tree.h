@@ -25,26 +25,17 @@ public:
     int parent_id() const { return m_parent_id; }
     TreeNode children(){ return m_children; }
 
+    void add_column(QStandardItem* column);
+    QList<QStandardItem*> columns() const;
+
 private:
     std::string m_node_name;
     std::string m_parent_name;
     int m_node_id;
     int m_parent_id;
     TreeNode m_children;
-};
+    QList<QStandardItem*> m_columns;
 
-/*
-class Tree
-{
-public:
-    //const std::string tree_data_file{"tree.txt"};
-
-    Tree();
-    int read_tree_data();
-    void insert_node(TreeNode tree_node, Node* node);
-    void print_tree(TreeNode tree_node, int level=0);
-    TreeData tokenize(std::string line);
 };
-*/
 
 #endif // TREE_H

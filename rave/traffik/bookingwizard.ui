@@ -16,6 +16,9 @@
   <property name="wizardStyle">
    <enum>QWizard::ModernStyle</enum>
   </property>
+  <property name="options">
+   <set>QWizard::ExtendedWatermarkPixmap|QWizard::HelpButtonOnRight</set>
+  </property>
   <widget class="QWizardPage" name="wpSpots">
    <property name="title">
     <string>Client Spots</string>
@@ -121,7 +124,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <layout class="QVBoxLayout" name="vlBreaks">
       <property name="spacing">
        <number>15</number>
       </property>
@@ -149,7 +152,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_20" stretch="0,1,0">
+     <layout class="QHBoxLayout" name="hlTimeband" stretch="0,1,0">
       <item>
        <widget class="QLabel" name="label_13">
         <property name="text">

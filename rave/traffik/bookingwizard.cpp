@@ -11,6 +11,7 @@
 #include "treeviewmodel.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravenexception.h"
+#include "../utils/qchecklist.h"
 
 #define DEBUG_MODE
 
@@ -70,6 +71,10 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     connect(ui->btnBreakSelect, &QPushButton::clicked, this, [this](){ this->toggle_selection(true);} );
     connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [this](){ this->toggle_selection(false);} );
 
+    make_combo_checkbox();
+
+    //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
+    //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
 }
 
 BookingWizard::~BookingWizard()
@@ -493,6 +498,13 @@ void BookingWizard::auto_select_breaks_by_dow()
     }
 }
 
+void BookingWizard::make_combo_checkbox()
+{
+    QCheckList* qlist = new QCheckList(this);
+    qlist->addCheckItem("Item1", QVariant(1), Qt::Unchecked);
+    ui->vlBreaks->addWidget(qlist);
+}
+
 void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
 {
     std::string schedule_ids;
@@ -531,7 +543,6 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
 
     if (provider->cacheSize() > 0 ) {
         provider->cache()->first();
-
         do {
             auto itB = provider->cache()->currentElement()->begin();
             auto itE = provider->cache()->currentElement()->end();

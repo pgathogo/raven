@@ -2,6 +2,7 @@ SOURCES += \
     $$PWD/core/artist.cpp \
     $$PWD/core/track.cpp \
     $$PWD/security/loginform.cpp \
+    $$PWD/traffik/commlogtreeviewmodel.cpp \
     ../framework/baseentity.cpp \
     ../framework/baseentitybrowserdlg.cpp \
     ../framework/baseentitydetaildlg.cpp \
@@ -73,6 +74,8 @@ HEADERS += \
     $$PWD/core/artist.h \
     $$PWD/core/track.h \
     $$PWD/security/loginform.h \
+    $$PWD/traffik/commlogtreeviewmodel.h \
+    $$PWD/utils/qchecklist.h \
     ../framework/baseentity.h \
     ../framework/baseentitybrowserdlg.h \
     ../framework/baseentitydetaildlg.h \
