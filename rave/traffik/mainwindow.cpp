@@ -39,6 +39,7 @@
 
 #include "bookingsegment.h"
 #include "commlogform.h"
+#include "bookingorderbrowser.h"
 
 AccessMap MainWindow::access_map;
 
@@ -359,8 +360,10 @@ void MainWindow::openOrderBooking()
     //auto bw = std::make_unique<BookingWizard>(order);
     //bw->exec();
 
-    OrderBookingBrowser* obBrowser = createSubWindow<OrderBookingBrowser>();
-    obBrowser->exec();
+//    OrderBookingBrowser* obBrowser = createSubWindow<OrderBookingBrowser>();
+//    obBrowser->exec();
+    BookingOrderBrowser* book_order_browser = createSubWindow<BookingOrderBrowser>();
+    book_order_browser->exec();
 }
 
 void MainWindow::print_comm_log()

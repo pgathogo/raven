@@ -90,7 +90,6 @@ void OrderBookingBrowser::newBooking()
         BaseEntity* be = entityDataModel().findEntityByName(order_name);
         if (be != nullptr){
             Order* order = dynamic_cast<Order*>(be);
-            qDebug() << "ORDER: "<<order->startDate()->value();
             auto bw = std::make_unique<BookingWizard>(order);
             bw->exec();
         }

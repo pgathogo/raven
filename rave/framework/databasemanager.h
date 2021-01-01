@@ -7,7 +7,7 @@ class BaseEntity;
 class BaseDataProvider;
 class PostgresDataProvider;
 
-using SearchField = std::tuple<std::string, std::string>;
+using FilterField = std::tuple<std::string, std::string>;
 using ColumnName = std::string;
 using ColumnValue = int;
 

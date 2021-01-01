@@ -53,12 +53,13 @@ SOURCES += \
     ../traffik/typeexclusion.cpp \
     ../traffik/typeexclusionbrowser.cpp \
     ../traffik/typeexclusiondetails.cpp \
-    ../security/user.cpp \
-    ../security/userbrowser.cpp \
-    ../security/userform.cpp \
     ../traffik/voiceover.cpp \
     ../traffik/voiceoverbrowser.cpp \
     ../traffik/voiceoverform.cpp \
+    ../traffik/bookingorderbrowser.cpp \
+    ../security/user.cpp \
+    ../security/userbrowser.cpp \
+    ../security/userform.cpp \
     ../security/rolemember.cpp \
     ../security/content.cpp \
     ../security/contentauth.cpp \
@@ -114,6 +115,7 @@ HEADERS += \
     ../traffik/clientgroupdetaildlg.h \
     ../traffik/clientgroupdlg.h \
     ../traffik/mainwindow.h \
+    ../traffik/bookingorderbrowser.h \
     ../security/role.h \
     ../traffik/salesperson.h \
     ../traffik/salespersonbrowser.h \
@@ -175,6 +177,7 @@ FORMS += \
     ../traffik/timebandform.ui \
     ../traffik/typeexclusionbrowser.ui \
     ../traffik/typeexclusiondetails.ui \
+    ../traffik/bookingorderbrowser.ui \
     ../security/userbrowser.ui \
     ../security/userform.ui \
     ../traffik/voiceoverbrowser.ui \
