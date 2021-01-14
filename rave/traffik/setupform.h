@@ -30,12 +30,7 @@ public:
     void populateEntityFields() override;
     void populateFormWidgets() override;
 
-    void populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf);
-
-    void loadOrderApprovers();
-    std::set<int> make_aprv_levels();
-
-    void saveApprovers();
+    void save_approvers();
 
 private slots:
       void agencyCommTypeChanged(int);
@@ -49,11 +44,17 @@ private slots:
       BaseEntity* findSelectedEntity();
       QString selectedRowName();
       int selectedRowId() const;
+      void set_audio_path();
+      void set_comm_audio_path();
 
 private:
     Ui::SetupForm *ui;
-    TraffikSetup* mSetup;
-    std::unique_ptr<EntityDataModel> edmApprover;
+    TraffikSetup* m_setup;
+    std::unique_ptr<EntityDataModel> m_edm_approver;
+
+    void load_order_approvers();
+    std::set<int> make_aprv_levels();
+    void populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf);
 };
 
 #endif // SETUPFORM_H

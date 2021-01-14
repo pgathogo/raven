@@ -5,6 +5,8 @@
 #include "../utils/tools.h"
 
 #include "client.h"
+#include "traffiksetup.h"
+
 #include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
 
@@ -12,7 +14,7 @@ ClientForm::ClientForm(Client* client,
                        QDialog *parent) :
     BaseEntityDetailDlg(parent),
     ui(new Ui::ClientForm)
-  ,mClient{client}
+  ,m_client{client}
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
@@ -39,6 +41,16 @@ ClientForm::ClientForm(Client* client,
     connect(ui->cbAccountManager, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &ClientForm::accountManagerChanged);
 
+    m_edm_setup = std::make_unique<EntityDataModel>(
+                std::make_unique<TraffikSetup>());
+    m_edm_setup->all();
+
+    if (m_edm_setup->count() > 0)
+        m_traffik_setup = dynamic_cast<TraffikSetup*>(m_edm_setup->firstEntity());
+
+    if (m_client->isNew())
+        set_defaults();
+
 }
 
 ClientForm::~ClientForm()
@@ -49,51 +61,51 @@ ClientForm::~ClientForm()
 ActionResult ClientForm::saveRecord()
 {
     populateEntityFields();
-    ActionResult ar = mClient->validate();
+    ActionResult ar = m_client->validate();
     return ar;
 }
 
 void ClientForm::populateFormWidgets()
 {
 
-    ui->edtName->setText(stoq(mClient->name()->value()));
-    ui->edtBillName->setText(stoq(mClient->billName()->value()));
-    ui->edtAddress2->setText(stoq(mClient->address2()->value()));
-    ui->edtPostNo->setText(stoq(mClient->postalNo()->value()));
-    ui->edtAddress1->setText(stoq(mClient->address1()->value()));
-    ui->edtTown->setText(stoq(mClient->town()->value()));
-    ui->edtEmail->setText(stoq(mClient->clientEmail()->value()));
-    ui->edtPostCode->setText(stoq(mClient->postalCode()->value()));
-    ui->edtTele->setText(stoq(mClient->telephone()->value()));
-    ui->edtMobile->setText(stoq(mClient->clientMobile()->value()));
+    ui->edtName->setText(stoq(m_client->name()->value()));
+    ui->edtBillName->setText(stoq(m_client->bill_name()->value()));
+    ui->edtAddress2->setText(stoq(m_client->address2()->value()));
+    ui->edtPostNo->setText(stoq(m_client->postalNo()->value()));
+    ui->edtAddress1->setText(stoq(m_client->address1()->value()));
+    ui->edtTown->setText(stoq(m_client->town()->value()));
+    ui->edtEmail->setText(stoq(m_client->client_email()->value()));
+    ui->edtPostCode->setText(stoq(m_client->postal_code()->value()));
+    ui->edtTele->setText(stoq(m_client->telephone()->value()));
+    ui->edtMobile->setText(stoq(m_client->client_mobile()->value()));
 
-    ui->edtContactName->setText(stoq(mClient->contactName()->value()));
-    ui->edtContactEmail->setText(stoq(mClient->contactEmail()->value()));
-    ui->edtContactMobile->setText(stoq(mClient->contactMobile()->value()));
+    ui->edtContactName->setText(stoq(m_client->contact_name()->value()));
+    ui->edtContactEmail->setText(stoq(m_client->contact_email()->value()));
+    ui->edtContactMobile->setText(stoq(m_client->contact_mobile()->value()));
 
-    ui->sbAgencyComm->setValue(mClient->agencyComm()->value());
-    ui->spSaleRepComm->setValue(mClient->saleRepComm()->value());
+    ui->sbAgencyComm->setValue(m_client->agency_comm()->value());
+    ui->sbSaleRepComm->setValue(m_client->sale_rep_comm()->value());
 
-    ui->spIntRate->setValue(mClient->interestRate()->value());
-    ui->spGracePeriod->setValue(mClient->gracePeriod()->value());
-    ui->spLateFee->setValue(mClient->lateFee()->value());
-    ui->sbDiscount->setValue(mClient->discountPercent()->value());
+    ui->sbIntRate->setValue(m_client->interest_rate()->value());
+    ui->sbGracePeriod->setValue(m_client->grace_period()->value());
+    ui->sbLateFee->setValue(m_client->late_fee()->value());
+    ui->sbDiscount->setValue(m_client->discount_percent()->value());
 
-    populateChoiceCombo(ui->cbSalute, mClient->contactSalute());
-    populateChoiceCombo(ui->cbRevenueType, mClient->revenueType());
-    populateChoiceCombo(ui->cbBillCycle, mClient->billCycle());
+    populateChoiceCombo(ui->cbSalute, m_client->contact_salute());
+    populateChoiceCombo(ui->cbRevenueType, m_client->revenue_type());
+    populateChoiceCombo(ui->cbBillCycle, m_client->bill_cycle());
 
-    ui->cbAgency->setModel(mClient->agency()->dataModel());
+    ui->cbAgency->setModel(m_client->agency()->dataModel());
     ui->cbAgency->setCurrentIndex(ui->cbAgency->findText(
-                                 stoq(mClient->agency()->displayName())));
+                                 stoq(m_client->agency()->displayName())));
 
-    ui->cbClientGroup->setModel(mClient->clientGroup()->dataModel());
+    ui->cbClientGroup->setModel(m_client->group_manager()->dataModel());
     ui->cbClientGroup->setCurrentIndex(ui->cbClientGroup->findText(
-                                 stoq(mClient->clientGroup()->displayName())));
+                                 stoq(m_client->group_manager()->displayName())));
 
-    ui->cbAccountManager->setModel(mClient->accountManager()->dataModel());
+    ui->cbAccountManager->setModel(m_client->account_manager()->dataModel());
     ui->cbAccountManager->setCurrentIndex(ui->cbAccountManager->findText(
-                                 stoq(mClient->accountManager()->displayName())));
+                                 stoq(m_client->account_manager()->displayName())));
 
 }
 
@@ -107,26 +119,26 @@ void ClientForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::str
 
 void ClientForm::populateEntityFields()
 {
-    mClient->setName(ui->edtName->text().toStdString());
-    mClient->setBillName(ui->edtBillName->text().toStdString());
-    mClient->setAddress2(ui->edtAddress2->text().toStdString());
-    mClient->setPostalNo(ui->edtPostNo->text().toStdString());
-    mClient->setAddress1(ui->edtAddress1->text().toStdString());
-    mClient->setTown(ui->edtTown->text().toStdString());
-    mClient->setClientEmail(ui->edtEmail->text().toStdString());
-    mClient->setPostalCode(ui->edtPostCode->text().toStdString());
-    mClient->setTelephone(ui->edtTele->text().toStdString());
-    mClient->setClientMobile(ui->edtMobile->text().toStdString());
-    mClient->setContactName(ui->edtContactName->text().toStdString());
-    mClient->setContactEmail(ui->edtContactEmail->text().toStdString());
-    mClient->setContactMobile(ui->edtContactMobile->text().toStdString());
+    m_client->set_name(ui->edtName->text().toStdString());
+    m_client->set_bill_name(ui->edtBillName->text().toStdString());
+    m_client->set_address2(ui->edtAddress2->text().toStdString());
+    m_client->set_postal_no(ui->edtPostNo->text().toStdString());
+    m_client->set_address1(ui->edtAddress1->text().toStdString());
+    m_client->set_town(ui->edtTown->text().toStdString());
+    m_client->set_client_email(ui->edtEmail->text().toStdString());
+    m_client->set_postal_code(ui->edtPostCode->text().toStdString());
+    m_client->set_telepone(ui->edtTele->text().toStdString());
+    m_client->set_client_mobile(ui->edtMobile->text().toStdString());
+    m_client->set_contact_name(ui->edtContactName->text().toStdString());
+    m_client->set_contact_email(ui->edtContactEmail->text().toStdString());
+    m_client->set_contact_mobile(ui->edtContactMobile->text().toStdString());
 
-    mClient->setAgencyComm(ui->sbAgencyComm->value());
-    mClient->setSaleRepComm(ui->spSaleRepComm->value());
-    mClient->setInterestRate(ui->spIntRate->value());
-    mClient->setGracePeriod(ui->spGracePeriod->value());
-    mClient->setLateFee(ui->spLateFee->value());
-    mClient->setDiscountPercent(ui->sbDiscount->value());
+    m_client->set_agency_comm(ui->sbAgencyComm->value());
+    m_client->set_sale_rep_comm(ui->sbSaleRepComm->value());
+    m_client->set_interest_rate(ui->sbIntRate->value());
+    m_client->set_grace_period(ui->sbGracePeriod->value());
+    m_client->set_late_fee(ui->sbLateFee->value());
+    m_client->set_discount_percent(ui->sbDiscount->value());
 }
 
 std::string ClientForm::windowTitle()
@@ -136,36 +148,52 @@ std::string ClientForm::windowTitle()
 
 void ClientForm::saluteComboChanged(int i)
 {
-    mClient->setContactSalute(
+    m_client->set_contact_salute(
                 ui->cbSalute->itemData(i).toString().toStdString());
 }
 
 void ClientForm::revenueTypeComboChanged(int i)
 {
-    mClient->setRevenueType(
+    m_client->set_revenue_type(
                 ui->cbRevenueType->itemData(i).toString().toStdString());
 }
 
 void ClientForm::billCycleComboChanged(int i)
 {
-    mClient->setBillCycle(
+    m_client->set_bill_cycle(
                 ui->cbBillCycle->itemData(i).toString().toStdString());
 }
 
 void ClientForm::agentComboChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbAgency->model());
-    mClient->agency()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+    m_client->agency()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }
 
 void ClientForm::clientGroupChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbClientGroup->model());
-    mClient->clientGroup()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+    m_client->group_manager()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }
 
 void ClientForm::accountManagerChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbAccountManager->model());
-    mClient->accountManager()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+    m_client->account_manager()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+}
+
+void ClientForm::set_defaults()
+{
+    set_choice_field_default(ui->cbRevenueType, m_traffik_setup->revenueType()->value());
+    set_choice_field_default(ui->cbBillCycle, m_traffik_setup->billingCycle()->value());
+    ui->sbAgencyComm->setValue(m_traffik_setup->agencyComm()->value());
+    ui->sbSaleRepComm->setValue(m_traffik_setup->saleRepComm()->value());
+    ui->sbIntRate->setValue(m_traffik_setup->interestRate()->value());
+    ui->sbLateFee->setValue(m_traffik_setup->lateFee()->value());
+    ui->sbGracePeriod->setValue(m_traffik_setup->gracePeriod()->value());
+}
+
+void ClientForm::set_choice_field_default(QComboBox *cbox, std::string value)
+{
+    cbox->setCurrentIndex( cbox->findData(QVariant(stoq(value))) );
 }

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <QFileDialog>
 #include "setupform.h"
 #include "ui_setupform.h"
 #include "ui_baseentitydetaildlg.h"
@@ -13,7 +14,7 @@ SetupForm::SetupForm(TraffikSetup* setup,
                      QDialog* parent) :
     BaseEntityDetailDlg(parent),
     ui(new Ui::SetupForm),
-    mSetup{ setup }
+    m_setup{ setup }
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
@@ -46,8 +47,13 @@ SetupForm::SetupForm(TraffikSetup* setup,
     connect(ui->btnAdd, &QPushButton::clicked, this, &SetupForm::addApprover);
     connect(ui->btnDelete, &QPushButton::clicked, this, &SetupForm::deleteApprover);
 
+    connect(ui->btnAudioPath, &QPushButton::clicked, this, &SetupForm::set_audio_path);
+    connect(ui->btnCommAudioPath, &QPushButton::clicked, this, &SetupForm::set_comm_audio_path);
+
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    loadOrderApprovers();
+
+    load_order_approvers();
+
 }
 
 SetupForm::~SetupForm()
@@ -58,7 +64,7 @@ SetupForm::~SetupForm()
 ActionResult SetupForm::saveRecord()
 {
     populateEntityFields();
-    return mSetup->validate();
+    return m_setup->validate();
 }
 
 std::string SetupForm::windowTitle()
@@ -68,57 +74,66 @@ std::string SetupForm::windowTitle()
 
 void SetupForm::populateEntityFields()
 {
-    mSetup->setStationName(ui->edtStationName->text().toStdString());
-    mSetup->setAddress1(ui->edtAddress1->text().toStdString());
-    mSetup->setAddress2(ui->edtAddress2->text().toStdString());
+    m_setup->setStationName(ui->edtStationName->text().toStdString());
+    m_setup->setAddress1(ui->edtAddress1->text().toStdString());
+    m_setup->setAddress2(ui->edtAddress2->text().toStdString());
 
-    mSetup->setAgencyComm(ui->sbAgencyComm->value());
-    mSetup->setSaleRepComm(ui->sbSaleRepComm->value());
+    m_setup->setAgencyComm(ui->sbAgencyComm->value());
+    m_setup->setSaleRepComm(ui->sbSaleRepComm->value());
 
-    mSetup->setLateFee(ui->edtLateFee->value());
-    mSetup->setInterestRate(ui->edtIntRate->value());
-    mSetup->setGracePeriod(ui->edtGracePeriod->value());
-    mSetup->setOrderApprovalLevels(ui->sbAprvLevels->value());
+    m_setup->setLateFee(ui->edtLateFee->value());
+    m_setup->setInterestRate(ui->edtIntRate->value());
+    m_setup->setGracePeriod(ui->edtGracePeriod->value());
+    m_setup->setOrderApprovalLevels(ui->sbAprvLevels->value());
 
-    mSetup->setOrderNumberSequence(ui->sbOrderSequence->value());
+    m_setup->setOrderNumberSequence(ui->sbOrderSequence->value());
 
-    mSetup->setBreakTimeInterval(ui->sbTimeInterval->value());
-    mSetup->setBreakDuration(ui->sbBreakDuration->value());
+    m_setup->setBreakTimeInterval(ui->sbTimeInterval->value());
+    m_setup->setBreakDuration(ui->sbBreakDuration->value());
 
-    mSetup->setBreakMaxSpots(ui->edtMaxSpots->value());
+    m_setup->setBreakMaxSpots(ui->edtMaxSpots->value());
 
-    mSetup->setOrderAprvdBB(ui->cbAprvdBB->isChecked());
+    m_setup->setOrderAprvdBB(ui->cbAprvdBB->isChecked());
+
+    m_setup->set_audio_path(ui->edtAudioPath->text().toStdString());
+    m_setup->set_comm_audio_path(ui->edtCommAudioPath->text().toStdString());
 }
 
 void SetupForm::populateFormWidgets()
 {
-    ui->edtStationName->setText(stoq(mSetup->stationName()->value()));
-    ui->edtAddress1->setText(stoq(mSetup->address1()->value()));
-    ui->edtAddress2->setText(stoq(mSetup->address2()->value()));
+    ui->edtStationName->setText(stoq(m_setup->stationName()->value()));
+    ui->edtAddress1->setText(stoq(m_setup->address1()->value()));
+    ui->edtAddress2->setText(stoq(m_setup->address2()->value()));
 
-    ui->sbAgencyComm->setValue(mSetup->agencyComm()->value());
-    populateChoiceCombo(ui->cbAgencyCommType, mSetup->agencyCommType());
+    ui->sbAgencyComm->setValue(m_setup->agencyComm()->value());
+    populate_choice_combo(ui->cbAgencyCommType, m_setup->agencyCommType());
 
-    ui->sbSaleRepComm->setValue(mSetup->saleRepComm()->value());
-    populateChoiceCombo(ui->cbSaleRepCommType, mSetup->saleRepCommType());
+    ui->sbSaleRepComm->setValue(m_setup->saleRepComm()->value());
+    populate_choice_combo(ui->cbSaleRepCommType, m_setup->saleRepCommType());
 
-    populateChoiceCombo(ui->cbBillCycle, mSetup->billingCycle());
-    populateChoiceCombo(ui->cbRevenueType, mSetup->revenueType());
-    populateChoiceCombo(ui->cbBillingType, mSetup->billingType());
-    populateChoiceCombo(ui->cbBillingBasis, mSetup->billingBasis());
+    populate_choice_combo(ui->cbBillCycle, m_setup->billingCycle());
+    populate_choice_combo(ui->cbRevenueType, m_setup->revenueType());
+    populate_choice_combo(ui->cbBillingType, m_setup->billingType());
+    populate_choice_combo(ui->cbBillingBasis, m_setup->billingBasis());
 
-    ui->edtLateFee->setValue(mSetup->lateFee()->value());
-    ui->edtIntRate->setValue(mSetup->interestRate()->value());
-    ui->edtGracePeriod->setValue(mSetup->gracePeriod()->value());
-    ui->sbAprvLevels->setValue(mSetup->orderApprovalLevels()->value());
-    ui->sbOrderSequence->setValue(mSetup->orderNumberSequence()->value());
+    ui->edtLateFee->setValue(m_setup->lateFee()->value());
+    ui->edtIntRate->setValue(m_setup->interestRate()->value());
+    ui->edtGracePeriod->setValue(m_setup->gracePeriod()->value());
+    ui->sbAprvLevels->setValue(m_setup->orderApprovalLevels()->value());
+    ui->sbOrderSequence->setValue(m_setup->orderNumberSequence()->value());
 
-    ui->sbTimeInterval->setValue(mSetup->breakTimeInterval()->value());
-    ui->sbBreakDuration->setValue(mSetup->breakDuration()->value());
-    ui->edtMaxSpots->setValue(mSetup->breakMaxSpots()->value());
+    ui->sbTimeInterval->setValue(m_setup->breakTimeInterval()->value());
+    ui->sbBreakDuration->setValue(m_setup->breakDuration()->value());
+    ui->edtMaxSpots->setValue(m_setup->breakMaxSpots()->value());
+
+    auto check_state = [](bool state){ return (state) ? Qt::Checked : Qt::Unchecked; };
+    ui->cbAprvdBB->setCheckState(check_state(m_setup->orderAprvdBB()->value()));
+
+    ui->edtAudioPath->setText(stoq(m_setup->audio_path()->value()));
+    ui->edtCommAudioPath->setText(stoq(m_setup->comm_audio_path()->value()));
 }
 
-void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf)
+void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
 {
     for (const auto& c : cf->choices())
         cbox->addItem(stoq(std::get<1>(c)), stoq(std::get<0>(c)));
@@ -126,12 +141,12 @@ void SetupForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::stri
     cbox->setCurrentIndex( cbox->findData(QVariant(stoq(cf->value()))) );
 }
 
-void SetupForm::loadOrderApprovers()
+void SetupForm::load_order_approvers()
 {
-    edmApprover = std::make_unique<EntityDataModel>(
+    m_edm_approver = std::make_unique<EntityDataModel>(
                 std::make_unique<OrderApprover>());
-    edmApprover->all();
-    ui->tvApprovers->setModel(edmApprover.get());
+    m_edm_approver->all();
+    ui->tvApprovers->setModel(m_edm_approver.get());
 
 }
 
@@ -141,20 +156,20 @@ std::set<int> SetupForm::make_aprv_levels()
     for(int i=1; i<=ui->sbAprvLevels->value(); ++i)
         levels.insert(i);
 
-        for (auto& [name, entity] : edmApprover->modelEntities()){
-            OrderApprover* op = dynamic_cast<OrderApprover*>(entity.get());
-            if (levels.find(op->level()->value()) != levels.end() ){
-                levels.erase(op->level()->value());
-            }
+    for (auto& [name, entity] : m_edm_approver->modelEntities()){
+        OrderApprover* op = dynamic_cast<OrderApprover*>(entity.get());
+        if (levels.find(op->level()->value()) != levels.end() ){
+            levels.erase(op->level()->value());
         }
+    }
 
-        return levels;
+    return levels;
 }
 
-void SetupForm::saveApprovers()
+void SetupForm::save_approvers()
 {
     EntityDataModel edm(std::make_unique<OrderApprover>());
-    for (auto& [name, entity] : edmApprover->modelEntities()){
+    for (auto& [name, entity] : m_edm_approver->modelEntities()){
         if (entity->dbAction() == DBAction::dbaCREATE){
             edm.createEntityDB(*entity);
         }
@@ -166,46 +181,46 @@ void SetupForm::saveApprovers()
 
 void SetupForm::agencyCommTypeChanged(int i)
 {
-    mSetup->agencyCommType()->setValue(
+    m_setup->agencyCommType()->setValue(
                 ui->cbAgencyCommType->itemData(i).toString().toStdString());
 }
 
 void SetupForm::saleRepCommTypeChanged(int i)
 {
-    mSetup->saleRepCommType()->setValue(
+    m_setup->saleRepCommType()->setValue(
                 ui->cbSaleRepCommType->itemData(i).toString().toStdString());
 }
 
 void SetupForm::billCycleChanged(int i)
 {
-    mSetup->billingCycle()->setValue(
+    m_setup->billingCycle()->setValue(
                 ui->cbBillCycle->itemData(i).toString().toStdString());
 }
 
 void SetupForm::revenueTypeChanged(int i)
 {
-    mSetup->revenueType()->setValue(
+    m_setup->revenueType()->setValue(
                 ui->cbRevenueType->itemData(i).toString().toStdString());
 
 }
 
 void SetupForm::billingTypeChanged(int i)
 {
-    mSetup->billingType()->setValue(
+    m_setup->billingType()->setValue(
                 ui->cbBillingType->itemData(i).toString().toStdString());
 
 }
 
 void SetupForm::billingBasisChanged(int i)
 {
-    mSetup->billingBasis()->setValue(
+    m_setup->billingBasis()->setValue(
                 ui->cbBillingBasis->itemData(i).toString().toStdString());
 }
 
 void SetupForm::addApprover()
 {
     if (ui->sbAprvLevels->value() > 0 &&
-            edmApprover->count() < ui->sbAprvLevels->value() ) {
+            m_edm_approver->count() < ui->sbAprvLevels->value() ) {
 
         auto approver = std::make_unique<OrderApprover>();
 
@@ -213,10 +228,10 @@ void SetupForm::addApprover()
 
         auto aprvForm = std::make_unique<ApproverForm>(
                     approver.get(), levels,
-                    edmApprover->keys());
+                    m_edm_approver->keys());
 
         if (aprvForm->exec() > 0)
-            edmApprover->cacheEntity(std::move(approver));
+            m_edm_approver->cacheEntity(std::move(approver));
     }else{
         showMessage("Approval Levels not set!");
     }
@@ -236,7 +251,7 @@ void SetupForm::deleteApprover()
 BaseEntity* SetupForm::findSelectedEntity()
 {
    std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = edmApprover->findEntityByName(searchName);
+   BaseEntity* entity = m_edm_approver->findEntityByName(searchName);
    return entity;
 }
 
@@ -252,4 +267,23 @@ QString SetupForm::selectedRowName()
 int SetupForm::selectedRowId() const
 {
     return ui->tvApprovers->currentIndex().row();
+}
+
+void SetupForm::set_audio_path()
+{
+   auto audio_folder = QFileDialog::getExistingDirectory(this,
+                                                   tr("Audio Folder"), "/d/home/audio",
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+    ui->edtAudioPath->setText(audio_folder);
+
+}
+
+void SetupForm::set_comm_audio_path()
+{
+   auto comm_audio_folder = QFileDialog::getExistingDirectory(this,
+                                                   tr("Audio Folder"), "/d/home/audio",
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+    ui->edtCommAudioPath->setText(comm_audio_folder);
 }

@@ -1,3 +1,5 @@
+#include <sstream>
+#include <QFileDialog>
 #include "spotform.h"
 #include "ui_spotform.h"
 #include "ui_baseentitydetaildlg.h"
@@ -5,14 +7,14 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/manytomanybrowser.h"
 #include "../framework/manytomany.h"
+#include "../framework/entitydatamodel.h"
 #include "../utils/tools.h"
 
 #include "client.h"
-#include "spot.h"
 #include "spotvoiceover.h"
 #include "spottypeexclusion.h"
 
-SpotForm::SpotForm(Client* client, Spot* spot,
+SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
                    QDialog *parent) :
     BaseEntityDetailDlg{parent},
     ui{new Ui::SpotForm},
@@ -25,17 +27,19 @@ SpotForm::SpotForm(Client* client, Spot* spot,
     populateFormWidgets();
 
     m_MtoMVoiceOverBrowser =
-            std::make_unique<ManyToManyBrowser>(&m_spot->spotVoiceOver(),
+            std::make_unique<ManyToManyBrowser>(&m_spot->set_voice_over(),
                                                 ui->vlVoiceOver,
                                                 this);
 
     m_MtoMTypeExBrowser =
-            std::make_unique<ManyToManyBrowser>(&m_spot->spotTypeExclusion(),
+            std::make_unique<ManyToManyBrowser>(&m_spot->set_type_exclusion(),
                                                 ui->vlTypeEx,
                                                 this);
 
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
+
+    connect(ui->btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
 
     ui->tabWidget->setCurrentIndex(0);
 }
@@ -68,7 +72,7 @@ int SpotForm::parentId() const
 
 std::string SpotForm::windowTitle()
 {
-    return "Client Spot - "+m_client->name()->displayName();
+    return "Client:" +m_client->name()->displayName();
 }
 
 void SpotForm::populateGrid()
@@ -89,39 +93,60 @@ void SpotForm::populateGrid()
 
 void SpotForm::populateEntityFields()
 {
-    m_spot->setName(ui->edtName->text().toStdString());
-    m_spot->setSpotDuration(ui->edtSpotDuration->value());
-    m_spot->setRealDuration(ui->edtRealDuration->value());
-    m_spot->setBrand(m_client->id());
-    m_spot->setClient(m_client->id());
+    brandsComboChanged(ui->cbBrands->currentIndex());
+    m_spot->set_name(ui->edtName->text().toStdString());
+    m_spot->set_spot_duration(ui->edtSpotDuration->value());
+    m_spot->set_real_duration(ui->edtRealDuration->value());
+    m_spot->set_client(m_client->id());
 
     auto dayparts = m_daypart->read_grid();
-    m_spot->setDaypart1(dayparts[1]);
-    m_spot->setDaypart2(dayparts[2]);
-    m_spot->setDaypart3(dayparts[3]);
-    m_spot->setDaypart4(dayparts[4]);
-    m_spot->setDaypart5(dayparts[5]);
-    m_spot->setDaypart6(dayparts[6]);
-    m_spot->setDaypart7(dayparts[7]);
+    m_spot->set_daypart1(dayparts[1]);
+    m_spot->set_daypart2(dayparts[2]);
+    m_spot->set_daypart3(dayparts[3]);
+    m_spot->set_daypart4(dayparts[4]);
+    m_spot->set_daypart5(dayparts[5]);
+    m_spot->set_daypart6(dayparts[6]);
+    m_spot->set_daypart7(dayparts[7]);
 
 }
 
 void SpotForm::populateFormWidgets()
 {
     ui->edtName->setText(stoq(m_spot->name()->value()));
-    ui->edtSpotDuration->setValue(m_spot->spotDuration()->value());
-    ui->edtRealDuration->setValue(m_spot->realDuration()->value());
+    ui->edtSpotDuration->setValue(m_spot->spot_duration()->value());
+    ui->edtRealDuration->setValue(m_spot->real_duration()->value());
 
     ui->cbBrands->setModel(m_spot->brand()->dataModel());
+    EntityDataModel edm;
+
     ui->edtClient->setText(stoq(m_client->name()->value()));
 }
 
 void SpotForm::brandsComboChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbBrands->model());
-    //auto index = std::get<1>(*(edm->vecBegin()+i))->id();
-    //qDebug() << "Brand index: " << index;
-    //m_spot->brand()->setValue(index);
     m_spot->brand()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+}
+
+void SpotForm::on_import_audio()
+{
+    auto audio_file = QFileDialog::getOpenFileName(this,
+                                                   tr("Import Audio"), "/d/home/audio",
+                                                   tr("Audio Files (*.ogg *.mp3 *.wav)"));
+
+    EntityDataModel edm;
+
+    std::stringstream sql;
+
+    sql << "Insert into rave_track (title, filepath, artist_id, track_type) "
+        << " Values ('Main Comm Audio', 'd:\\home\\pms\\raven\\audio\\', 2, 'COMM') RETURNING id;";
+
+    try{
+        int id = edm.insert_returning_id(sql.str());
+        qDebug() << "Last Id: "<< id;
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
 }
 

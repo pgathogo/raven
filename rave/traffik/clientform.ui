@@ -35,7 +35,7 @@
    <item>
     <widget class="QTabWidget" name="twClient">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -248,7 +248,7 @@
          <widget class="QDoubleSpinBox" name="sbAgencyComm"/>
         </item>
         <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="spSaleRepComm"/>
+         <widget class="QDoubleSpinBox" name="sbSaleRepComm"/>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_21">
@@ -261,7 +261,7 @@
          <widget class="QComboBox" name="cbBillCycle"/>
         </item>
         <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="spIntRate"/>
+         <widget class="QDoubleSpinBox" name="sbIntRate"/>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_17">
@@ -285,10 +285,10 @@
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QSpinBox" name="spGracePeriod"/>
+         <widget class="QSpinBox" name="sbGracePeriod"/>
         </item>
         <item row="5" column="1">
-         <widget class="QDoubleSpinBox" name="spLateFee"/>
+         <widget class="QDoubleSpinBox" name="sbLateFee"/>
         </item>
         <item row="7" column="0">
          <widget class="QLabel" name="label_24">
@@ -365,10 +365,10 @@
   <tabstop>cbRevenueType</tabstop>
   <tabstop>sbDiscount</tabstop>
   <tabstop>sbAgencyComm</tabstop>
-  <tabstop>spSaleRepComm</tabstop>
-  <tabstop>spIntRate</tabstop>
-  <tabstop>spLateFee</tabstop>
-  <tabstop>spGracePeriod</tabstop>
+  <tabstop>sbSaleRepComm</tabstop>
+  <tabstop>sbIntRate</tabstop>
+  <tabstop>sbLateFee</tabstop>
+  <tabstop>sbGracePeriod</tabstop>
   <tabstop>cbBillCycle</tabstop>
   <tabstop>twClient</tabstop>
  </tabstops>

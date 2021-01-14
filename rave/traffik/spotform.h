@@ -6,12 +6,13 @@
 #include <QWidget>
 #include "../framework/baseentitydetaildlg.h"
 
+#include "spot.h"
+
 namespace Ui {
 class SpotForm;
 }
 
 class Client;
-class Spot;
 class DayPartGrid;
 class ManyToManyBrowser;
 class EntityDataModel;
@@ -23,7 +24,7 @@ class SpotForm : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit SpotForm(Client* client, Spot* spot,
+    explicit SpotForm(Client* client, TRAFFIK::Spot* spot,
                       QDialog* parent = nullptr);
     ~SpotForm() override;
 
@@ -40,11 +41,12 @@ public:
 
 private slots:
     void brandsComboChanged(int);
+    void on_import_audio();
 
 private:
     Ui::SpotForm* ui;
     Client* m_client;
-    Spot* m_spot;
+    TRAFFIK::Spot* m_spot;
     std::unique_ptr<DayPartGrid> m_daypart;
     std::unique_ptr<ManyToManyBrowser> m_MtoMVoiceOverBrowser;
     std::unique_ptr<ManyToManyBrowser> m_MtoMTypeExBrowser;

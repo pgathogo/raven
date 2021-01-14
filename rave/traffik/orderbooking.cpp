@@ -16,14 +16,14 @@ OrderBooking::OrderBooking()
     m_booking_status = createField<ChoiceField<std::string>>("booking_status", "Booking Status");
     m_booking_status->addChoice({"READY","READY"});
     m_booking_status->addChoice({"PLAYED","PLAYED"});
-    m_booking_status->addChoice({"CANCEL","CANCEL"});
+    m_booking_status->addChoice({"CANCELLED","CANCEL"});
 
     m_play_date = createField<DateField>("play_date", "Play Date");
 
     m_play_time = createField<DateTimeField>("play_time", "Play Time");
 
     m_spot = createField<ForeignKeyField>("spot_id", "Spot",
-                                          std::make_unique<Spot>(), "name");
+                                          std::make_unique<TRAFFIK::Spot>(), "name");
 
     m_audio = createField<ForeignKeyField>("audio_id", "Audio",
                                           std::make_unique<SpotAudio>(), "spot_id");

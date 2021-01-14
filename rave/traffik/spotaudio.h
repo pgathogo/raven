@@ -40,11 +40,11 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
 private:
-    ForeignKeyField* mSpot;
-    ForeignKeyField* mTrack;
-    IntegerField* mPlayCount;
-    IntegerField* mWeight;
-    IntegerField* mSeqNo;
+    ForeignKeyField* m_spot;
+    ForeignKeyField* m_track;
+    IntegerField* m_play_count;
+    IntegerField* m_weight;
+    IntegerField* m_seq_no;
 
     QStringList mHeader;
     std::string mTableName;

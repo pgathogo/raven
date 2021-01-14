@@ -6,7 +6,7 @@
 
 TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent):
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<TypeExclusion>()),
+                         std::make_unique<TRAFFIK::TypeExclusion>()),
     ui(new Ui::TypeExclusionBrowser)
 {
     ui->setupUi(this);
@@ -21,7 +21,7 @@ TypeExclusionBrowser::~TypeExclusionBrowser()
 
 void TypeExclusionBrowser::addRecord()
 {
-    std::unique_ptr<TypeExclusion> tex = std::make_unique<TypeExclusion>();
+    std::unique_ptr<TRAFFIK::TypeExclusion> tex = std::make_unique<TRAFFIK::TypeExclusion>();
 
     std::unique_ptr<TypeExclusionDetails> texForm =
             std::make_unique<TypeExclusionDetails>(tex.get());
@@ -32,7 +32,7 @@ void TypeExclusionBrowser::addRecord()
 
 void TypeExclusionBrowser::updateRecord()
 {
-   update<TypeExclusion, TypeExclusionDetails>();
+   update<TRAFFIK::TypeExclusion, TypeExclusionDetails>();
 }
 
 std::string TypeExclusionBrowser::typeID()

@@ -4,53 +4,56 @@
 
 TraffikSetup::TraffikSetup()
 {
-    mStationName = createField<StringField>("station_name", "Station Name");
-    mStationLogo = createField<StringField>("station_logo","Station Logo");
-    mAddress1 = createField<StringField>("address1", "Address 1");
-    mAddress2 = createField<StringField>("address2", "Address 2");
-    mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commision");
+    m_station_name = createField<StringField>("station_name", "Station Name");
+    m_station_logo = createField<StringField>("station_logo","Station Logo");
+    m_address1 = createField<StringField>("address1", "Address 1");
+    m_address2 = createField<StringField>("address2", "Address 2");
+    m_agency_comm = createField<DecimalField>("agency_comm", "Agency Commision");
 
-    mAgencyCommType = createField<ChoiceField<std::string>>("agency_comm_type", "Agency Commision Type");
-    mAgencyCommType->addChoice({"P", "Percentage"});
-    mAgencyCommType->addChoice({"F", "Fixed"});
+    m_agency_comm_type = createField<ChoiceField<std::string>>("agency_comm_type", "Agency Commision Type");
+    m_agency_comm_type->addChoice({"P", "Percentage"});
+    m_agency_comm_type->addChoice({"F", "Fixed"});
 
-    mSaleRepComm = createField<DecimalField>("sales_rep_comm", "Sale Rep Commission");
+    m_sale_rep_comm = createField<DecimalField>("sales_rep_comm", "Sale Rep Commission");
 
-    mSaleRepCommType = createField<ChoiceField<std::string>>("sales_rep_comm_type", "Sales Commission Type");
-    mSaleRepCommType->addChoice({"P", "Percentage"});
-    mSaleRepCommType->addChoice({"F", "Fixed"});
+    m_sale_rep_comm_type = createField<ChoiceField<std::string>>("sales_rep_comm_type", "Sales Commission Type");
+    m_sale_rep_comm_type->addChoice({"P", "Percentage"});
+    m_sale_rep_comm_type->addChoice({"F", "Fixed"});
 
-    mBillingCycle = createField<ChoiceField<std::string>>("billing_cycle", "Billing Cycle");
-    mBillingCycle->addChoice({"W", "Weekly"});
-    mBillingCycle->addChoice({"B", "Bi-Weekly"});
-    mBillingCycle->addChoice({"M", "Monthly"});
+    m_billing_cycle = createField<ChoiceField<std::string>>("billing_cycle", "Billing Cycle");
+    m_billing_cycle->addChoice({"W", "Weekly"});
+    m_billing_cycle->addChoice({"B", "Bi-Weekly"});
+    m_billing_cycle->addChoice({"M", "Monthly"});
 
-    mRevenueType = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
-    mRevenueType->addChoice({"C", "Cash"});
-    mRevenueType->addChoice({"T", "Trade"});
+    m_revenue_type = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
+    m_revenue_type->addChoice({"C", "Cash"});
+    m_revenue_type->addChoice({"T", "Trade"});
 
-    mBillingType = createField<ChoiceField<std::string>>("billing_type", "Billing Type");
-    mBillingType->addChoice({"G", "Gross"});
-    mBillingType->addChoice({"N", "Net"});
+    m_billing_type = createField<ChoiceField<std::string>>("billing_type", "Billing Type");
+    m_billing_type->addChoice({"G", "Gross"});
+    m_billing_type->addChoice({"N", "Net"});
 
-    mBillingBasis = createField<ChoiceField<std::string>>("billing_basis", "Billing Basis");
-    mBillingBasis->addChoice({"STD", "Standard"});
-    mBillingBasis->addChoice({"DAY", "Daily"});
-    mBillingBasis->addChoice({"PRD", "Billing Period"});
+    m_billing_basis = createField<ChoiceField<std::string>>("billing_basis", "Billing Basis");
+    m_billing_basis->addChoice({"STD", "Standard"});
+    m_billing_basis->addChoice({"DAY", "Daily"});
+    m_billing_basis->addChoice({"PRD", "Billing Period"});
 
-    mLateFee = createField<DecimalField>("late_fee", "Late Fee");
-    mInterestRate = createField<DecimalField>("interest_rate", "Interest Rate");
-    mGracePeriod = createField<IntegerField>("pay_grace_period", "Grace Period");
-    mOrderApprovalLevels = createField<IntegerField>("order_approval_levels", "Approval Levels");
-    mOrderNumberSequence = createField<IntegerField>("order_number_sequence", "Order Num Sequence");
+    m_late_fee = createField<DecimalField>("late_fee", "Late Fee");
+    m_interest_rate = createField<DecimalField>("interest_rate", "Interest Rate");
+    m_grace_period = createField<IntegerField>("pay_grace_period", "Grace Period");
+    m_order_approval_levels = createField<IntegerField>("order_approval_levels", "Approval Levels");
+    m_order_number_sequence = createField<IntegerField>("order_number_sequence", "Order Num Sequence");
 
-    mOrderAprvdBB = createField<BooleanField>("order_approved_before_booking", "Approve Before Booking");
+    m_order_aprvd_before_booking = createField<BooleanField>("order_approved_before_booking", "Approve Before Booking");
 
-    mBreakTimeInterval = createField<IntegerField>("break_time_interval", "Break Interval");
-    mBreakDuration = createField<IntegerField>("break_duration", "Break Duration");
-    mBreakMaxSpots = createField<IntegerField>("break_max_spots", "Break Max Spots");
+    m_break_time_interval = createField<IntegerField>("break_time_interval", "Break Interval");
+    m_break_duration = createField<IntegerField>("break_duration", "Break Duration");
+    m_break_max_spots = createField<IntegerField>("break_max_spots", "Break Max Spots");
 
-    mHeader << stoq(mStationName->fieldName());
+    m_audio_path = createField<StringField>("audio_path", "Audio Path");
+    m_comm_audio_path = createField<StringField>("comm_audio_path", "Comm Audio Path");
+
+    mHeader << stoq(m_station_name->fieldName());
     setTableName("rave_setup");
 }
 
@@ -60,214 +63,234 @@ TraffikSetup::~TraffikSetup()
 
 StringField *TraffikSetup::stationName() const
 {
-    return mStationName;
+    return m_station_name;
 }
 
 void TraffikSetup::setStationName(const std::string station_name)
 {
-    mStationName->setValue( station_name );
+    m_station_name->setValue( station_name );
 }
 
 StringField *TraffikSetup::stationLogo() const
 {
-    return mStationLogo;
+    return m_station_logo;
 }
 
 void TraffikSetup::setStationLogo(const std::string station_logo)
 {
-    mStationLogo->setValue( station_logo );
+    m_station_logo->setValue( station_logo );
 }
 
 StringField *TraffikSetup::address1() const
 {
-    return mAddress1;
+    return m_address1;
 }
 
 void TraffikSetup::setAddress1(const std::string addr1)
 {
-    mAddress1->setValue( addr1 );
+    m_address1->setValue( addr1 );
 }
 
 StringField *TraffikSetup::address2() const
 {
-    return mAddress2;
+    return m_address2;
 }
 
 void TraffikSetup::setAddress2(const std::string addr2)
 {
-    mAddress2->setValue( addr2 );
+    m_address2->setValue( addr2 );
 }
 
 DecimalField *TraffikSetup::agencyComm() const
 {
-    return mAgencyComm;
+    return m_agency_comm;
 }
 
 void TraffikSetup::setAgencyComm(double aComm)
 {
-    mAgencyComm->setValue( aComm );
+    m_agency_comm->setValue( aComm );
 }
 
 ChoiceField<std::string> *TraffikSetup::agencyCommType() const
 {
-    return mAgencyCommType;
+    return m_agency_comm_type;
 }
 
 void TraffikSetup::setAgencyCommType(const std::string comm_type)
 {
-    mAgencyCommType->setValue( comm_type );
+    m_agency_comm_type->setValue( comm_type );
 }
 
 DecimalField *TraffikSetup::saleRepComm() const
 {
-    return mSaleRepComm;
+    return m_sale_rep_comm;
 }
 
 void TraffikSetup::setSaleRepComm(double rep_comm)
 {
-    mSaleRepComm->setValue( rep_comm );
+    m_sale_rep_comm->setValue( rep_comm );
 
 }
 
 ChoiceField<std::string> *TraffikSetup::saleRepCommType() const
 {
-    return mSaleRepCommType;
+    return m_sale_rep_comm_type;
 }
 
 void TraffikSetup::setSaleRepCommType(const std::string rep_type)
 {
-    mSaleRepCommType->setValue( rep_type );
+    m_sale_rep_comm_type->setValue( rep_type );
 }
 
 ChoiceField<std::string> *TraffikSetup::billingCycle() const
 {
-    return mBillingCycle;
+    return m_billing_cycle;
 }
 
 void TraffikSetup::setBillingCycle(const std::string bill_cycle)
 {
-    mBillingCycle->setValue( bill_cycle );
+    m_billing_cycle->setValue( bill_cycle );
 }
 
 ChoiceField<std::string> *TraffikSetup::revenueType() const
 {
-    return mRevenueType;
+    return m_revenue_type;
 }
 
 void TraffikSetup::setRevenueType(const std::string rev_type)
 {
-    mRevenueType->setValue( rev_type );
+    m_revenue_type->setValue( rev_type );
 }
 
 ChoiceField<std::string> *TraffikSetup::billingType() const
 {
-    return mBillingType;
+    return m_billing_type;
 }
 
 void TraffikSetup::setBillingType(const std::string bill_type) const
 {
-    mBillingType->setValue( bill_type );
+    m_billing_type->setValue( bill_type );
 }
 
 ChoiceField<std::string> *TraffikSetup::billingBasis() const
 {
-    return mBillingBasis;
+    return m_billing_basis;
 }
 
 void TraffikSetup::setBillingBasis(const std::string bill_basis)
 {
-    mBillingBasis->setValue( bill_basis );
+    m_billing_basis->setValue( bill_basis );
 }
 
 DecimalField *TraffikSetup::lateFee() const
 {
-    return mLateFee;
+    return m_late_fee;
 }
 
 void TraffikSetup::setLateFee(double late_fee)
 {
-    mLateFee->setValue( late_fee );
+    m_late_fee->setValue( late_fee );
 }
 
 DecimalField *TraffikSetup::interestRate() const
 {
-    return mInterestRate;
+    return m_interest_rate;
 }
 
 void TraffikSetup::setInterestRate(double int_rate)
 {
-    mInterestRate->setValue( int_rate );
+    m_interest_rate->setValue( int_rate );
 }
 
 IntegerField *TraffikSetup::gracePeriod() const
 {
-    return mGracePeriod;
+    return m_grace_period;
 }
 
 void TraffikSetup::setGracePeriod(int grace_period)
 {
-    mGracePeriod->setValue( grace_period );
+    m_grace_period->setValue( grace_period );
 }
 
 IntegerField *TraffikSetup::orderApprovalLevels() const
 {
-    return mOrderApprovalLevels;
+    return m_order_approval_levels;
 }
 
 void TraffikSetup::setOrderApprovalLevels(int aprv_levels)
 {
-    mOrderApprovalLevels->setValue(aprv_levels);
+    m_order_approval_levels->setValue(aprv_levels);
 }
 
 IntegerField *TraffikSetup::orderNumberSequence()
 {
-    return mOrderNumberSequence;
+    return m_order_number_sequence;
 }
 
 void TraffikSetup::setOrderNumberSequence(int seq)
 {
-    mOrderNumberSequence->setValue(seq);
+    m_order_number_sequence->setValue(seq);
 }
 
 BooleanField *TraffikSetup::orderAprvdBB() const
 {
-    return mOrderAprvdBB;
+    return m_order_aprvd_before_booking;
 
 }
 
 void TraffikSetup::setOrderAprvdBB(bool val) const
 {
-    mOrderAprvdBB->setValue( val );
+    m_order_aprvd_before_booking->setValue( val );
 }
 
 IntegerField *TraffikSetup::breakTimeInterval() const
 {
-    return mBreakTimeInterval;
+    return m_break_time_interval;
 }
 
 void TraffikSetup::setBreakTimeInterval(int bi)
 {
-    mBreakTimeInterval->setValue( bi );
+    m_break_time_interval->setValue( bi );
 }
 
 IntegerField *TraffikSetup::breakDuration() const
 {
-    return mBreakDuration;
+    return m_break_duration;
 }
 
 void TraffikSetup::setBreakDuration(int bd)
 {
-    mBreakDuration->setValue( bd );
+    m_break_duration->setValue( bd );
 }
 
 IntegerField *TraffikSetup::breakMaxSpots() const
 {
-    return mBreakMaxSpots;
+    return m_break_max_spots;
 }
 
 void TraffikSetup::setBreakMaxSpots(int max_spots)
 {
-    mBreakMaxSpots->setValue( max_spots );
+    m_break_max_spots->setValue( max_spots );
+}
+
+StringField *TraffikSetup::audio_path() const
+{
+    return m_audio_path;
+}
+
+void TraffikSetup::set_audio_path(const std::string path)
+{
+    m_audio_path->setValue(path);
+}
+
+StringField *TraffikSetup::comm_audio_path() const
+{
+    return m_comm_audio_path;
+}
+
+void TraffikSetup::set_comm_audio_path(const std::string path)
+{
+    m_comm_audio_path->setValue(path);
 }
 
 std::string TraffikSetup::tableName() const

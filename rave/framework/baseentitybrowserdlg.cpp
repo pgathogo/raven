@@ -119,18 +119,30 @@ void BaseEntityBrowserDlg::searchRecord()
     }
 }
 
+bool BaseEntityBrowserDlg::okay_to_delete(BaseEntity* /*entity*/)
+{
+    return true;
+}
+
 void BaseEntityBrowserDlg::deleteRecord()
 {
-   BaseEntity* entity = findSelectedEntity();
-   entity->setDBAction(DBAction::dbaDELETE);
+  if (selectedRowId() < 0)
+      return;
 
-   try{
-       entityDataModel().deleteEntity(*entity);
-       removeSelectedRow();
-   }
-   catch (DatabaseException& de){
-       showMessage(de.errorMessage());
-    }
+  BaseEntity* entity = findSelectedEntity();
+
+  if (okay_to_delete(entity) ){
+
+       entity->setDBAction(DBAction::dbaDELETE);
+
+       try{
+           entityDataModel().deleteEntity(*entity);
+           removeSelectedRow();
+       }
+       catch (DatabaseException& de){
+           showMessage(de.errorMessage());
+        }
+  }
 }
 
 BaseEntity* BaseEntityBrowserDlg::findSelectedEntity()
@@ -142,7 +154,10 @@ BaseEntity* BaseEntityBrowserDlg::findSelectedEntity()
 
 int BaseEntityBrowserDlg::selectedRowId() const
 {
-    return bui->tvEntity->currentIndex().row();
+    if (bui->tvEntity->selectionModel()->selectedRows().size() > 0)
+        return bui->tvEntity->selectionModel()->selectedRows()[0].row();
+
+    return -1;
 }
 
 QString BaseEntityBrowserDlg::selectedRowName()

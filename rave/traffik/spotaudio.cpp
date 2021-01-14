@@ -5,16 +5,16 @@
 SpotAudio::SpotAudio()
 {
 
-    mSpot = createField<ForeignKeyField>("spot_id", "Spot",
-                                         std::make_unique<Spot>(), "name");
-    mTrack = createField<ForeignKeyField>("track_id", "Track",
+    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
+                                         std::make_unique<TRAFFIK::Spot>(), "name");
+    m_track = createField<ForeignKeyField>("track_id", "Track",
                                           std::make_unique<Track>(), "title");
-    mPlayCount = createField<IntegerField>("play_count", "Play Count");
-    mWeight = createField<IntegerField>("weight", "Weight");
-    mSeqNo = createField<IntegerField>("seq_no", "Seq No");
+    m_play_count = createField<IntegerField>("play_count", "Play Count");
+    m_weight = createField<IntegerField>("weight", "Weight");
+    m_seq_no = createField<IntegerField>("seq_no", "Seq No");
 
-    mHeader << QString::fromStdString(mTrack->fieldLabel())
-            << QString::fromStdString(mSpot->fieldLabel());
+    mHeader << QString::fromStdString(m_track->fieldLabel())
+            << QString::fromStdString(m_spot->fieldLabel());
 
     setTableName("rave_spotaudio");
 }
@@ -25,52 +25,52 @@ SpotAudio::~SpotAudio()
 
 ForeignKeyField *SpotAudio::spot() const
 {
-    return mSpot;
+    return m_spot;
 }
 
 void SpotAudio::setSpot(int val)
 {
-    mSpot->setValue(val);
+    m_spot->setValue(val);
 }
 
 ForeignKeyField *SpotAudio::track() const
 {
-    return mTrack;
+    return m_track;
 }
 
 void SpotAudio::setTrack(int val)
 {
-    mTrack->setValue(val);
+    m_track->setValue(val);
 }
 
 IntegerField *SpotAudio::playCount() const
 {
-    return mPlayCount;
+    return m_play_count;
 }
 
 void SpotAudio::setPlayCount(int val)
 {
-    mPlayCount->setValue(val);
+    m_play_count->setValue(val);
 }
 
 IntegerField *SpotAudio::weight() const
 {
-    return mWeight;
+    return m_weight;
 }
 
 void SpotAudio::setWeight(int val)
 {
-    mWeight->setValue(val);
+    m_weight->setValue(val);
 }
 
 IntegerField *SpotAudio::seqNo() const
 {
-    return mSeqNo;
+    return m_seq_no;
 }
 
 void SpotAudio::setSeqNo(int val)
 {
-    mSeqNo->setValue(val);
+    m_seq_no->setValue(val);
 }
 
 std::string SpotAudio::tableName() const

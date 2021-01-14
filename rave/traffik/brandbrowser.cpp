@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "brandbrowser.h"
 #include "ui_brandbrowser.h"
 #include "brandform.h"
@@ -7,14 +9,17 @@
 
 #include "client.h"
 #include "brand.h"
+#include "spot.h"
 
 BrandBrowser::BrandBrowser(Client* client, QWidget *parent) :
-    BaseEntityBrowserDlg(parent, std::make_unique<Brand>()),
+    BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Brand>()),
     ui(new Ui::BrandBrowser),
     mClient{client}
 {
     ui->setupUi(this);
     setDialogTitle("Client Brands");
+    if (client != nullptr)
+        searchRecord();
 }
 
 BrandBrowser::~BrandBrowser()
@@ -24,24 +29,7 @@ BrandBrowser::~BrandBrowser()
 
 void BrandBrowser::addRecord()
 {
-    add_related_record<Brand, BrandForm, Client>(mClient);
-
-    /*
-    auto brand = std::make_unique<Brand>();
-
-    std::unique_ptr<BrandForm> brandForm =
-            std::make_unique<BrandForm>(mClient, brand.get(), this);
-
-    if (brandForm->exec() > 0){
-        try{
-            entityDataModel().createEntity(std::move(brand));
-        }
-        catch(DatabaseException& de){
-            showMessage(de.errorMessage());
-        }
-    }
-    */
-
+    add_related_record<TRAFFIK::Brand, BrandForm, Client>(mClient);
 }
 
 void BrandBrowser::updateRecord()
@@ -51,7 +39,7 @@ void BrandBrowser::updateRecord()
     if (!searchName.empty()){
 
         BaseEntity* be = entityDataModel().findEntityByName(searchName);
-        Brand* brand = dynamic_cast<Brand*>(be);
+        TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(be);
         std::unique_ptr<BrandForm> brandForm =
                 std::make_unique<BrandForm>(mClient, brand, this);
         if (brandForm->exec() > 0){
@@ -68,5 +56,34 @@ void BrandBrowser::updateRecord()
 
 void BrandBrowser::searchRecord()
 {
-    search_related<Brand, Client>(mClient);
+    search_related<TRAFFIK::Brand, Client>(mClient);
+}
+
+bool BrandBrowser::okay_to_delete(BaseEntity *entity)
+{
+   TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(entity);
+   //edm.searchByInt({"order_id", "=", order->id()});
+
+    std::stringstream sql;
+    qDebug() << ">>" << entity->id() << "<<";
+
+    sql << "Select a.id "
+        << " From rave_orderbooking a, rave_spot b, rave_brand c"
+        << " Where a.spot_id = b.id "
+        << " and b.brand_id = c.id "
+        << " and c.id = "+std::to_string(brand->id());
+
+    EntityDataModel edm;
+    edm.readRaw(sql.str());
+    auto provider = edm.getDBManager()->provider();
+
+    qDebug() << "**" << provider->cacheSize() << "***";
+
+    if (provider->cacheSize() > 0 ) {
+        showMessage("Cannot delete order with existing bookings!");
+        return false;
+    }
+
+    return false;
+
 }

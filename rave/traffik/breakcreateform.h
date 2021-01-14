@@ -39,7 +39,7 @@ public:
 private slots:
     void breakLayoutSelected(const QModelIndex& index);
     void closeForm();
-    void createBreaks();
+    void create_breaks();
 
 private:
     Ui::BreakCreateForm *ui;

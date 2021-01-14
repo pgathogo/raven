@@ -49,14 +49,13 @@ void ManyToManyBrowser::addRecord()
     plb = new PickListBrowser(plset);
     plb->exec();
 
-
     //auto it = plset.selectedEntities.begin();
     //for(; it != plset.selectedEntities.end(); ++it){
+
     for(const auto& entity : plset.selectedEntities){
         BaseEntity* be = entity;
         if (be->dbAction() == DBAction::dbaCREATE){
             auto m2m =  mMtoM->copy(mMtoM->parentEntity(), be);
-
 
             //auto m2m = createMtoM(mMtoM->mtomEntity(), be);
             m2m->setParentId(mMtoM->parentId()->value());

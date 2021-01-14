@@ -42,7 +42,7 @@ Order::Order()
                                        std::make_unique<SalesPerson>(), "salesperson_name");
 
     mBrand = createField<ForeignKeyField>("brand_id", "Brand",
-                                       std::make_unique<Brand>(), "brand_name");
+                                       std::make_unique<TRAFFIK::Brand>(), "brand_name");
 
     mAgency = createField<ForeignKeyField>("agency_id", "Agency",
                                        std::make_unique<Agent>(), "agent_name");
@@ -124,7 +124,7 @@ Order::Order(const Client* client)
     auto filter = std::make_tuple("client_id", "=", client->id());
     std::string fstr = edm.prepareFilter(filter);
     mBrand = createField<ForeignKeyField>("brand_id", "Brand",
-                                       std::make_unique<Brand>(),
+                                       std::make_unique<TRAFFIK::Brand>(),
                                        "brand_name",
                                         fstr);
 

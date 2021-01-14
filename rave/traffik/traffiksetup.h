@@ -80,6 +80,12 @@ public:
     IntegerField* breakMaxSpots() const;
     void setBreakMaxSpots(int max_spots);
 
+    StringField* audio_path() const;
+    void set_audio_path(const std::string path);
+
+    StringField* comm_audio_path() const;
+    void set_comm_audio_path(const std::string path);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -94,28 +100,31 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 private:
-    StringField* mStationName;
-    StringField* mStationLogo;
-    StringField* mAddress1;
-    StringField* mAddress2;
-    DecimalField* mAgencyComm;
-    ChoiceField<std::string>* mAgencyCommType;
-    DecimalField* mSaleRepComm;
-    ChoiceField<std::string>* mSaleRepCommType;
-    ChoiceField<std::string>* mBillingCycle;
-    ChoiceField<std::string>* mRevenueType;
-    ChoiceField<std::string>* mBillingType;
-    ChoiceField<std::string>* mBillingBasis;
-    DecimalField* mLateFee;
-    DecimalField* mInterestRate;
-    IntegerField* mGracePeriod;
-    IntegerField* mOrderApprovalLevels;
-    IntegerField* mOrderNumberSequence;
-    BooleanField* mOrderAprvdBB; // Order Approved before booking
+    StringField* m_station_name;
+    StringField* m_station_logo;
+    StringField* m_address1;
+    StringField* m_address2;
+    DecimalField* m_agency_comm;
+    ChoiceField<std::string>* m_agency_comm_type;
+    DecimalField* m_sale_rep_comm;
+    ChoiceField<std::string>* m_sale_rep_comm_type;
+    ChoiceField<std::string>* m_billing_cycle;
+    ChoiceField<std::string>* m_revenue_type;
+    ChoiceField<std::string>* m_billing_type;
+    ChoiceField<std::string>* m_billing_basis;
+    DecimalField* m_late_fee;
+    DecimalField* m_interest_rate;
+    IntegerField* m_grace_period;
+    IntegerField* m_order_approval_levels;
+    IntegerField* m_order_number_sequence;
+    BooleanField* m_order_aprvd_before_booking; // Order Approved before booking
 
-    IntegerField* mBreakTimeInterval;
-    IntegerField* mBreakDuration;
-    IntegerField* mBreakMaxSpots;
+    IntegerField* m_break_time_interval;
+    IntegerField* m_break_duration;
+    IntegerField* m_break_max_spots;
+
+    StringField* m_audio_path;
+    StringField* m_comm_audio_path;
 
     QStringList mHeader;
     std::string mTableName;

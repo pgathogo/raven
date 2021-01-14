@@ -17,7 +17,7 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &ScheduleForm::scheduleDateChanged);
-    connect(ui->btnCreate, &QPushButton::clicked, this, &ScheduleForm::createBreaks);
+    connect(ui->btnCreate, &QPushButton::clicked, this, &ScheduleForm::create_breaks);
 
 //    connect(ui->lwHours, &QListWidget::itemClicked, this, &ScheduleForm::hourClicked);
 
@@ -34,7 +34,7 @@ ScheduleForm::~ScheduleForm()
     delete ui;
 }
 
-void ScheduleForm::loadSchedule(const QDate &date)
+void ScheduleForm::load_schedule(const QDate &date)
 {
     m_edm_schedule->clearEntities();
 
@@ -53,16 +53,16 @@ void ScheduleForm::loadSchedule(const QDate &date)
 
 void ScheduleForm::scheduleDateChanged(const QDate& date)
 {
-    loadSchedule(date);
+    load_schedule(date);
 }
 
-void ScheduleForm::createBreaks()
+void ScheduleForm::create_breaks()
 {
     auto bcForm = std::make_unique<BreakCreateForm>(this);
     bcForm->exec();
 }
 
-void ScheduleForm::hourClicked(QListWidgetItem *item)
+void ScheduleForm::hour_clicked(QListWidgetItem *item)
 {
 }
 

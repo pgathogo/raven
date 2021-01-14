@@ -23,6 +23,12 @@ public:
      */
     static const int StateUnknown = 3;
 
+
+    void hidePopup() override{
+        QComboBox::hidePopup();
+        emit signalPopupHidden();
+    }
+
 private:
     QStandardItemModel* m_model;
     /**
@@ -40,6 +46,7 @@ private:
 
 signals:
     void globalCheckStateChanged(int);
+    void signalPopupHidden();
 
 public:
     QCheckList(QWidget* _parent = 0) : QComboBox(_parent)

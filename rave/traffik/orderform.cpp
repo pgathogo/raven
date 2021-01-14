@@ -90,7 +90,7 @@ std::string OrderForm::windowTitle()
 void OrderForm::populateEntityFields()
 {
     mOrder->setTitle(ui->edtTitle->text().toStdString());
-    mClient->setName(ui->edtClient->text().toStdString());
+    mClient->set_name(ui->edtClient->text().toStdString());
 
     mOrder->setOrderNumber(ui->sbOrderNumber->value());
     mOrder->setOrderDate(ui->dtOrderDate->date());
@@ -207,6 +207,10 @@ void OrderForm::setDefaults()
     ui->cbAgency->setCurrentIndex(-1);
     ui->cbAccountRep->setCurrentIndex(-1);
     ui->cbPackage->setCurrentIndex(-1);
+
+    ui->dtOrderDate->setDate(QDate::currentDate());
+    ui->dtStartDate->setDate(QDate::currentDate());
+    ui->dtEndDate->setDate(QDate::currentDate());
 }
 
 void OrderForm::setChoiceFieldDefault(QComboBox *cbox, const std::string val)

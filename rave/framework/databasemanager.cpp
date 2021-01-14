@@ -162,7 +162,7 @@ int PostgresDatabaseManager::fetchAll(const BaseEntity& entity)
 {
     std::string sql{};
     std::string flds = columnsForSelection(entity);
-    sql = "SELECT " + flds + " FROM "+entity.tableName()+" ORDER BY "+entity.orderBy();
+    sql = "SELECT " + flds + " FROM "+entity.tableName();  //+" ORDER BY "+entity.orderBy();
     return provider()->read(sql);
 }
 
@@ -183,6 +183,7 @@ int PostgresDatabaseManager::searchByInt(const BaseEntity& entity, std::tuple<st
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ std::get<0>(field_value)+
              std::get<1>(field_value)+std::to_string(std::get<2>(field_value));
+
     return provider()->read(sql);
 }
 
@@ -203,6 +204,11 @@ void PostgresDatabaseManager::executeRawSQL(const std::string sql)
 int PostgresDatabaseManager::readRaw(const std::string sql)
 {
     return provider()->read(sql);
+}
+
+int PostgresDatabaseManager::insert_returning_id(const std::string sql)
+{
+    return provider()->insert_returning_id(sql);
 }
 
 int PostgresDatabaseManager::deleteEntity(const BaseEntity& entity)

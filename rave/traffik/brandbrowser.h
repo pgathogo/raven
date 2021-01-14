@@ -22,6 +22,8 @@ public:
     void updateRecord() override;
     void searchRecord() override;
 
+    bool okay_to_delete(BaseEntity* entity) override;
+
 private:
     Ui::BrandBrowser *ui;
     Client* mClient;

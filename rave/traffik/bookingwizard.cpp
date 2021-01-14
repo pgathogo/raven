@@ -3,7 +3,7 @@
 #include "ui_bookingwizard.h"
 
 #include "order.h"
-#include "spot.h"
+
 #include "../utils/daypartgrid.h"
 #include "schedule.h"
 #include "orderbooking.h"
@@ -56,7 +56,7 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     timeBandChanged(0);
     ui->rbTimeband->toggle();
 
-    ui->edtStartDate->setDate(order->startDate()->value());
+    ui->edtStartDate->setDate(QDate::currentDate());
     ui->edtEndDate->setDate(order->endDate()->value());
 
     m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
@@ -68,10 +68,8 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent) :
     connect(ui->btnBreakSelApply, &QPushButton::clicked, this, &BookingWizard::apply_selection);
     connect(ui->btnClearSel, &QPushButton::clicked, this, &BookingWizard::clear_selection);
 
-    connect(ui->btnBreakSelect, &QPushButton::clicked, this, [this](){ this->toggle_selection(true);} );
-    connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [this](){ this->toggle_selection(false);} );
-
-    make_combo_checkbox();
+    connect(ui->btnBreakSelect, &QPushButton::clicked, this, [&](){ this->toggle_selection(true);} );
+    connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [&](){ this->toggle_selection(false);} );
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
@@ -86,9 +84,9 @@ void BookingWizard::populate_spots_table(int client_id)
 {
 
     m_spot_EDM = std::make_unique<EntityDataModel>(
-                std::make_unique<Spot>());
+                std::make_unique<TRAFFIK::Spot>());
 
-    auto spot = std::make_unique<Spot>();
+   auto spot = std::make_unique<TRAFFIK::Spot>();
 
     auto spotFilter = std::make_tuple(
                 spot->client()->dbColumnName(),
@@ -312,13 +310,13 @@ void BookingWizard::build_breaks()
 
     init_rules_state();
 
-    Spot* spot = selected_spot();
+    TRAFFIK::Spot* spot = selected_spot();
     m_engine_data.spot_to_book.spot_id = spot->id();
     m_engine_data.spot_to_book.client_id = spot->client()->value();
     m_engine_data.spot_to_book.brand_id = spot->brand()->value();
     m_engine_data.spot_to_book.spot_name = spot->name()->value();
-    m_engine_data.spot_to_book.spot_duration = spot->spotDuration()->value();
-    m_engine_data.spot_to_book.real_duration = spot->realDuration()->value();
+    m_engine_data.spot_to_book.spot_duration = spot->spot_duration()->value();
+    m_engine_data.spot_to_book.real_duration = spot->real_duration()->value();
     m_engine_data.spot_to_book.spot_daypart = fetch_spot_daypart(*spot);
 
     fetch_type_exclusions(m_engine_data);
@@ -399,7 +397,7 @@ void BookingWizard::test_booking()
 
     //populate_spots_table(5);
     //ui->tvSpots->selectRow(0);
-    Spot* spot = selected_spot();
+    TRAFFIK::Spot* spot = selected_spot();
     m_engine_data.spot_to_book.spot_id = 3;
     m_engine_data.spot_to_book.client_id = spot->client()->value();
     m_engine_data.spot_to_book.brand_id = spot->brand()->value();
@@ -496,13 +494,6 @@ void BookingWizard::auto_select_breaks_by_dow()
             }
         }
     }
-}
-
-void BookingWizard::make_combo_checkbox()
-{
-    QCheckList* qlist = new QCheckList(this);
-    qlist->addCheckItem("Item1", QVariant(1), Qt::Unchecked);
-    ui->vlBreaks->addWidget(qlist);
 }
 
 void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
@@ -635,8 +626,16 @@ bool BookingWizard::validateCurrentPage()
             return true;
             //break;
 //          return (ui->tvSpots->selectionModel()->selectedRows().size() > 0) ? true : false;
-        case 1:
-          break;
+        case BookingWizard::Page_Dates:
+            if (ui->edtStartDate->date() < QDate::currentDate()){
+                showMessage("Bookings for past dates not allowed!");
+                return false;
+            }
+            if (ui->edtStartDate->date() > ui->edtEndDate->date()){
+                showMessage("Start date greater than End date");
+                return false;
+            }
+            break;
         case BookingWizard::Page_Build_Breaks:
         {
             add_days_of_week();
@@ -663,9 +662,9 @@ bool BookingWizard::validateCurrentPage()
     return true;
 }
 
-Spot* BookingWizard::selected_spot()
+TRAFFIK::Spot* BookingWizard::selected_spot()
 {
-    Spot* spot{nullptr};
+    TRAFFIK::Spot* spot{nullptr};
 
     QVariant q_col_name = ui->tvSpots->model()->data(
                             ui->tvSpots->model()->index(
@@ -676,14 +675,14 @@ Spot* BookingWizard::selected_spot()
     if (!spot_name.empty()){
         BaseEntity* be = m_spot_EDM->findEntityByName(spot_name);
         if (be != nullptr){
-            spot = dynamic_cast<Spot*>(be);
+            spot = dynamic_cast<TRAFFIK::Spot*>(be);
         }
     }
 
     return spot;
 }
 
-Daypart BookingWizard::fetch_spot_daypart(Spot& spot)
+Daypart BookingWizard::fetch_spot_daypart(TRAFFIK::Spot& spot)
 {
     Daypart daypart;
     daypart[1] = std::make_tuple(spot.daypart1()->value(),

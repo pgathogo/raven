@@ -2,94 +2,97 @@
 #define SPOT_H
 
 #include "../framework/baseentity.h"
+#include "typeexclusion.h"
 
 class Client;
 class VoiceOver;
 class SpotVoiceOver;
-class TypeExclusion;
 class SpotTypeExclusion;
 
-class Spot : public BaseEntity
-{
-public:
-    Spot();
-    Spot(const Client* client);
-    ~Spot() override;
+namespace TRAFFIK {
 
-    std::string tableName() const override;
-    void setTableName(const std::string table_name) override;
-    std::unique_ptr<BaseEntity> mapFields(StringMap*) override;
+    class Spot : public BaseEntity
+    {
+    public:
+        Spot();
+        Spot(const Client* client);
+        ~Spot() override;
 
-    std::vector<std::string> tableViewColumns() const override;
-    std::vector<std::string> tableViewValues() override;
-    QStringList tableHeaders() const override;
+        std::string tableName() const override;
+        void setTableName(const std::string table_name) override;
+        std::unique_ptr<BaseEntity> mapFields(StringMap*) override;
 
-    std::string searchColumn() const override;
-    void populateEntity() override;
+        std::vector<std::string> tableViewColumns() const override;
+        std::vector<std::string> tableViewValues() override;
+        QStringList tableHeaders() const override;
 
-    std::unique_ptr<BaseEntity> cloneAsUnique() override;
-    void afterMapping(BaseEntity& entity) override;
+        std::string searchColumn() const override;
+        void populateEntity() override;
 
-    StringField* name() const;
-    void setName(const std::string n);
-    DecimalField* spotDuration() const;
-    void setSpotDuration(double dur);
-    DecimalField* realDuration() const;
-    void setRealDuration(double dur);
-    ForeignKeyField* client() const;
-    void setClient(int client_id);
-    ForeignKeyField* brand() const;
-    void setBrand(int brand_id);
+        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        void afterMapping(BaseEntity& entity) override;
 
-    StringField* daypart1() const;
-    void setDaypart1(std::string dp);
+        StringField* name() const;
+        void set_name(const std::string n);
+        DecimalField* spot_duration() const;
+        void set_spot_duration(double dur);
+        DecimalField* real_duration() const;
+        void set_real_duration(double dur);
+        ForeignKeyField* client() const;
+        void set_client(int client_id);
+        ForeignKeyField* brand() const;
+        void set_brand(int brand_id);
 
-    StringField* daypart2() const;
-    void setDaypart2(std::string dp);
+        StringField* daypart1() const;
+        void set_daypart1(std::string dp);
 
-    StringField* daypart3() const;
-    void setDaypart3(std::string dp);
+        StringField* daypart2() const;
+        void set_daypart2(std::string dp);
 
-    StringField* daypart4() const;
-    void setDaypart4(std::string dp);
+        StringField* daypart3() const;
+        void set_daypart3(std::string dp);
 
-    StringField* daypart5() const;
-    void setDaypart5(std::string dp);
+        StringField* daypart4() const;
+        void set_daypart4(std::string dp);
 
-    StringField* daypart6() const;
-    void setDaypart6(std::string dp);
+        StringField* daypart5() const;
+        void set_daypart5(std::string dp);
 
-    StringField* daypart7() const;
-    void setDaypart7(std::string dp);
+        StringField* daypart6() const;
+        void set_daypart6(std::string dp);
 
-    SpotVoiceOver& spotVoiceOver();
-    SpotTypeExclusion& spotTypeExclusion();
+        StringField* daypart7() const;
+        void set_daypart7(std::string dp);
 
-private:
-    StringField* m_name;
-    DecimalField* mSpotDuration;
-    DecimalField* mRealDuration;
-    ForeignKeyField* m_client;
-    ForeignKeyField* mBrand;
+        SpotVoiceOver& set_voice_over();
+        SpotTypeExclusion& set_type_exclusion();
 
-    StringField* mDaypart1;
-    StringField* mDaypart2;
-    StringField* mDaypart3;
-    StringField* mDaypart4;
-    StringField* mDaypart5;
-    StringField* mDaypart6;
-    StringField* mDaypart7;
+    private:
+        StringField* m_name;
+        DecimalField* m_spot_duration;
+        DecimalField* m_real_duration;
+        ForeignKeyField* m_client;
+        ForeignKeyField* m_brand;
 
-    QStringList mHeader;
-    std::string mTableName;
+        StringField* m_daypart1;
+        StringField* m_daypart2;
+        StringField* m_daypart3;
+        StringField* m_daypart4;
+        StringField* m_daypart5;
+        StringField* m_daypart6;
+        StringField* m_daypart7;
 
-    std::unique_ptr<VoiceOver> mVoiceOver;
-    std::unique_ptr<SpotVoiceOver> mSpotVoiceOver;
+        QStringList mHeader;
+        std::string mTableName;
 
-    std::unique_ptr<TypeExclusion> mTypeEx;
-    std::unique_ptr<SpotTypeExclusion> mSpotTypeEx;
+        std::unique_ptr<VoiceOver> m_voice_over;
+        std::unique_ptr<SpotVoiceOver> m_spot_voice_over;
+
+        std::unique_ptr<TRAFFIK::TypeExclusion> m_type_ex;
+        std::unique_ptr<SpotTypeExclusion> m_spot_type_ex;
 
 
-};
+    };
+}
 
 #endif // SPOT_H

@@ -22,7 +22,6 @@
 #include "setupform.h"
 #include "breaklayoutbrowser.h"
 #include "scheduleform.h"
-#include "orderbookingbrowser.h"
 
 #include "../security/userbrowser.h"
 #include "../security/rolebrowser.h"
@@ -329,14 +328,14 @@ void MainWindow::openSetupForm()
         setupForm = std::make_unique<SetupForm>(ts);
         if (setupForm->exec() > 0 ){
             edm.updateEntity(*ts);
-            setupForm->saveApprovers();
+            setupForm->save_approvers();
         }
     }else{
         auto ts = std::make_unique<TraffikSetup>();
         setupForm = std::make_unique<SetupForm>(ts.get());
         if (setupForm->exec() > 0 ){
             edm.createEntityDB(*ts);
-            setupForm->saveApprovers();
+            setupForm->save_approvers();
         }
     }
 }

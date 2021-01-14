@@ -5,9 +5,11 @@
 #include "bookingorderbrowser.h"
 #include "ui_bookingorderbrowser.h"
 #include "traffiksetup.h"
-#include "../framework/entitydatamodel.h"
-#include "../framework/picklistbrowser.h"
 #include "client.h"
+#include "order.h"
+#include "bookingwizard.h"
+#include "../framework/entitydatamodel.h"
+#include "../utils/tools.h"
 
 BookingOrderBrowser::BookingOrderBrowser(QWidget *parent) :
     QDialog(parent),
@@ -18,9 +20,27 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent) :
             this, &BookingOrderBrowser::search_field_changed);
     connect(ui->btnSearch, &QPushButton::clicked, this, &BookingOrderBrowser::search);
     connect(ui->btnSelectFilter, &QPushButton::clicked, this, &BookingOrderBrowser::select_filter);
+    connect(ui->btnClearFilter, &QPushButton::clicked, this, &BookingOrderBrowser::clear_filter);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &BookingOrderBrowser::cancel_query);
+    connect(ui->btnNew, &QPushButton::clicked, this, &BookingOrderBrowser::new_booking);
+
     ui->cbBookPeriod->setCurrentIndex(1);
     ui->swSearch->setCurrentIndex(0);
     setWindowTitle("Order Booking");
+
+    //ui->twOrders->setAlternatingRowColors(true);
+    m_item_delegate.setHeight(30);
+    ui->twOrders->setItemDelegate(&m_item_delegate);
+
+    PrintBookingMenu* menu = new PrintBookingMenu(ui->btnPrint, this);
+    QAction* actReady = new QAction(tr("&Ready"), this);
+    QAction* actPlayed = new QAction(tr("&Played"), this);
+    QAction* actCancelled = new QAction(tr("&Cancelled"), this);
+    menu->addAction(actReady);
+    menu->addAction(actPlayed);
+    menu->addAction(actCancelled);
+
+    ui->btnPrint->setMenu(menu);
 
 }
 
@@ -44,24 +64,27 @@ void BookingOrderBrowser::search_field_changed(int i)
 
 void BookingOrderBrowser::search()
 {
+    ui->twOrders->clear();
+
     std::stringstream sql;
 
-    sql << "select a.name AS client_name, f.title AS order_title, f.id AS order_id, f.order_number, "
-        << " f.order_date, f.start_date, f.end_date, "
-        << " f.spots_ordered, f.spots_booked, "
-        << " b.id AS spot_id, b.name AS spot_name, b.spot_duration, "
-        << " c.booking_status, c.play_date, c.play_time, "
-        << " e.schedule_date, e.schedule_time"
-        << " from rave_client a, rave_spot b, rave_orderbooking c, rave_bookingsegment d, rave_schedule e,"
-        << " rave_order f "
-        << "where c.bookingsegment_id = d.id "
-        << " and c.spot_id = b.id "
-        << " and c.schedule_id = e.id "
-        << " and b.client_id = a.id "
-        << " and f.id = d.order_id "
+    sql << " select a.name AS client_name, f.title AS order_title, f.id AS order_id, f.order_number, "
+        << " f.order_date, f.start_date, f.end_date,  f.spots_ordered, f.spots_booked, "
+        << " b.id AS spot_id, b.name AS spot_name, b.spot_duration,  c.id AS booking_id, c.booking_status, "
+        << " c.play_date, c.play_time,  e.id AS schedule_id, "
+        << " e.schedule_date, e.schedule_time "
+        << " From rave_order f "
+        << " left outer join rave_bookingsegment d on f.id = d.order_id "
+        << " left outer join rave_orderbooking c on c.bookingsegment_id = d.id "
+        << " left outer join rave_spot b on b.id = c.spot_id "
+        << " left outer join rave_client a on a.id = f.client_id "
+        << " left outer join rave_schedule e on e.id = c.schedule_id "
+        << " where f.spots_booked < f.spots_ordered "
         << " and f.spots_booked < f.spots_ordered ";
 
         sql << make_filter();
+
+        sql << order_by();
 
         qDebug() << stoq(sql.str());
 
@@ -91,7 +114,7 @@ void BookingOrderBrowser::search()
                     if (field == "order_id")
                         booking.order_id = std::stoi(value);
                     if (field == "order_number")
-                        booking.order_number = std::stoi(value);
+                        booking.order_number = str_to_int(value);
                     if (field == "order_date")
                         booking.order_date = value;
                     if (field == "start_date")
@@ -99,21 +122,25 @@ void BookingOrderBrowser::search()
                     if (field == "end_date")
                         booking.end_date = value;
                     if (field == "spots_ordered")
-                        booking.spots_ordered = std::stoi(value);
+                        booking.spots_ordered = str_to_int(value);
                     if (field == "spots_booked")
-                        booking.spots_booked = std::stoi(value);
+                        booking.spots_booked = str_to_int(value);
                     if (field == "spot_id")
-                        booking.spot_id = std::stoi(value);
+                        booking.spot_id = str_to_int(value);
                     if (field == "spot_name")
                         booking.spot_name = value;
                     if (field == "spot_duration")
-                        booking.spot_duration = std::stod(value);
+                        booking.spot_duration = str_to_double(value);
+                    if (field == "booking_id")
+                        booking.booking_id = str_to_int(value);
                     if (field == "booking_status")
                         booking.booking_status = value;
                     if (field == "play_date")
                         booking.play_date = value;
                     if (field == "play_time")
                         booking.play_time = value;
+                    if (field == "schedule_id")
+                        booking.schedule_id = str_to_int(value);
                     if (field == "schedule_date")
                         booking.schedule_date = value;
                     if (field == "schedule_time")
@@ -127,17 +154,131 @@ void BookingOrderBrowser::search()
       }
 
     if (bookings.size() > 0){
+        sort_bookings(bookings);
         set_treewidget(bookings);
     }
-
 }
 
 void BookingOrderBrowser::select_filter()
 {
+    std::tuple<int, std::string> results;
+
     if (ui->cbFilter->currentIndex() == FilterField::Client_Name_Field)
-        filter_by_client();
+        results = filter_query<Client>();
+
     if (ui->cbFilter->currentIndex() == FilterField::Order_Title_Field)
-        filter_by_order();
+        results = filter_query<Order>();
+
+    m_id = std::get<0>(results);
+    m_label = std::get<1>(results);
+
+    ui->edtFilter->setText(stoq(m_label));
+
+}
+
+void BookingOrderBrowser::clear_filter()
+{
+    ui->edtFilter->clear();
+    m_id = -1;
+    m_label = "";
+}
+
+void BookingOrderBrowser::cancel_query()
+{
+    if (m_grid_tables.size() > 0){
+
+        int ret = QMessageBox::warning(this, tr("Booking Order"),
+                                       tr("Cancel selected bookings?"),
+                                       QMessageBox::Yes | QMessageBox::No) ;
+        switch(ret){
+        case QMessageBox::Yes:
+            cancel_booking();
+            break;
+        case QMessageBox::No:
+            break;
+        }
+
+    }
+}
+
+void BookingOrderBrowser::new_booking()
+{
+    if (ui->twOrders->selectedItems().size() > 0){
+
+        int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
+        auto order_edm = std::make_unique<EntityDataModel>(std::make_unique<Order>());
+
+        order_edm->getById({"id", "=", order_id});
+
+        Order& order_ref = dynamic_cast<Order&>(order_edm->getEntity());
+
+        Order* order = &order_ref;
+
+        if (order != nullptr){
+            auto bw = std::make_unique<BookingWizard>(order);
+            bw->exec();
+        }
+    }
+}
+
+void BookingOrderBrowser::cancel_booking()
+{
+    QStringList ids;
+
+    std::map<int, int> revert_counter;
+
+    for (auto table : m_grid_tables){
+        auto selected_bookings =  table->selectedItems();
+
+        int order_id = -1;
+
+        for (int i=0; i < selected_bookings.count(); ++i){
+            auto item = selected_bookings.at(i);
+
+            if (item->column() == 0){
+                if (order_id == -1)
+                    order_id = item->data(Qt::UserRole).toInt();
+            }
+
+            if (item->column() == 1){
+                int booking_id = item->data(Qt::UserRole).toInt();
+                ids << QString::number(booking_id);
+                ++revert_counter[order_id];
+            }
+        }
+    }
+
+    QString selected_ids = ids.join(",");
+
+    std::stringstream sql;
+
+
+    sql << "Update rave_orderbooking set booking_status = 'CANCELLED'"
+        << " Where id in ( "+ selected_ids.toStdString()+ ")";
+
+    EntityDataModel edm;
+
+    try{
+       edm.executeRawSQL(sql.str());
+    }catch(DatabaseException de){
+        showMessage(de.errorMessage());
+    }
+
+    std::stringstream revert_spots_booked;
+
+    for (auto [order_id, count] : revert_counter){
+
+        revert_spots_booked << "Update rave_order set "
+                            << " spots_booked = spots_booked - "+ std::to_string(count)
+                            << " where id = "+ std::to_string(order_id);
+        try{
+           edm.executeRawSQL(revert_spots_booked.str());
+        }catch(DatabaseException de){
+            showMessage(de.errorMessage());
+            break;
+        }
+
+    }
 
 }
 
@@ -154,20 +295,30 @@ std::string BookingOrderBrowser::make_filter()
         order_approval_filter = " and f.approval_count = "+ std::to_string(setup->orderApprovalLevels()->value());
     }
 
-    std::string client_name_filter;
-    if (ui->cbFilter->currentIndex() ==  FilterField::Client_Name_Field){
-        if (!ui->edtFilter->text().isEmpty())
-            client_name_filter = " and a.id = "+std::to_string(m_client_id);
+    std::string client_id_filter;
+    std::string order_id_filter{};
+
+    if (m_id > -1 ){
+        if (ui->cbFilter->currentIndex() ==  FilterField::Client_Name_Field)
+                client_id_filter = " and a.id = "+std::to_string(m_id);
+
+        if (ui->cbFilter->currentIndex() == FilterField::Order_Title_Field)
+                order_id_filter = " and f.id = "+std::to_string(m_id);
     }
 
-    std::string order_title_filter{};
-    if (ui->cbFilter->currentIndex() == FilterField::Order_Title_Field){
-        if (!ui->edtFilter->text().isEmpty())
-            order_title_filter = " and lower(f.title) like '%"+ui->edtFilter->text().toStdString()+"%'";
+    return  order_approval_filter+client_id_filter+order_id_filter;
+
+}
+
+std::string BookingOrderBrowser::order_by()
+{
+    std::string order_by_str{};
+
+    if (m_id > -1){
+        order_by_str = " Order By f.order_date DESC ";
     }
 
-    return  order_approval_filter+client_name_filter+order_title_filter;
-
+    return order_by_str;
 }
 
 void BookingOrderBrowser::set_treewidget(Bookings& records)
@@ -199,6 +350,8 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
                 order_node->setText(5, QString::number(booking.spots_ordered));
                 order_node->setText(6, QString::number(booking.spots_booked));
 
+                order_node->setData(0, Qt::UserRole, booking.order_id);
+
                 parent_is_created = true;
                 booking_node = new QTreeWidgetItem(order_node);
 
@@ -226,10 +379,18 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
                 ui->twOrders->setItemWidget(booking_node, 0, table);
 
                 booking_node->setFirstColumnSpanned(true);
+
+                m_grid_tables.push_back(table);
             }
+            if (booking.schedule_date.empty())
+                continue;
 
             QTableWidgetItem* book_date = new QTableWidgetItem(stoq(booking.schedule_date));
+            book_date->setData(Qt::UserRole, booking.order_id);
+
             QTableWidgetItem* book_time = new QTableWidgetItem(stoq(booking.schedule_time));
+            book_time->setData(Qt::UserRole, booking.booking_id);
+
             QTableWidgetItem* client_name = new QTableWidgetItem(stoq(booking.client_name));
             QTableWidgetItem* spot_title = new QTableWidgetItem(stoq(booking.spot_name));
             QTableWidgetItem* spot_duration = new QTableWidgetItem(QString::number(booking.spot_duration));
@@ -270,21 +431,24 @@ void BookingOrderBrowser::resizeColumnsToContents(QTreeWidget& tree_widget)
   }
 }
 
-void BookingOrderBrowser::filter_by_client()
+void BookingOrderBrowser::sort_bookings(Bookings& orders)
 {
-    PickListSetting set(std::make_unique<Client>());
-    m_picklist_browser = std::make_unique<PickListBrowser>(set);
-    m_picklist_browser->exec();
-
-    for (const auto& base_entity : set.selectedEntities){
-        auto entity = dynamic_cast<Client*>(base_entity);
-        m_client_id = entity->id();
-        ui->edtFilter->setText(QString::fromStdString(entity->name()->displayName()));
+    for (auto& [key, bookings] : orders){
+        std::sort(bookings.begin(), bookings.end(),
+                  [](const Booking& lhs, Booking& rhs ){
+            return (lhs.schedule_id < rhs.schedule_id );
+        });
     }
-
 }
 
-void BookingOrderBrowser::filter_by_order()
+PrintBookingMenu::PrintBookingMenu(QPushButton* button, QWidget* parent)
+    :QMenu{parent},
+     m_push_button{button}{}
+
+void PrintBookingMenu::showEvent(QShowEvent* event)
 {
-
+    QPoint p = this->pos();
+    QRect geo = m_push_button->geometry();
+    this->move(p.x()+geo.width()-this->geometry().width(), p.y());
 }
+

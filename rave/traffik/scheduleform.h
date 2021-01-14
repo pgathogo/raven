@@ -20,13 +20,13 @@ public:
     explicit ScheduleForm(QWidget *parent = nullptr);
     ~ScheduleForm();
 
-    void loadSchedule(const QDate& date);
+    void load_schedule(const QDate& date);
     void setMdiArea(QMdiArea* mdi);
 
 private slots:
     void scheduleDateChanged(const QDate& date);
-    void createBreaks();
-    void hourClicked(QListWidgetItem* item);
+    void create_breaks();
+    void hour_clicked(QListWidgetItem* item);
 
 private:
     Ui::ScheduleForm *ui;

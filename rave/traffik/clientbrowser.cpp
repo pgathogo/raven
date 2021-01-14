@@ -5,6 +5,7 @@
 #include "ui_baseentitybrowserdlg.h"
 
 #include "client.h"
+#include "order.h"
 #include "clientform.h"
 
 #include "brandbrowser.h"
@@ -41,7 +42,23 @@ void ClientBrowser::addRecord()
 
 void ClientBrowser::updateRecord()
 {
-   update<Client, ClientForm>();
+    update<Client, ClientForm>();
+}
+
+void ClientBrowser::deleteRecord()
+{
+    if (selectedRowId() > 0){
+       BaseEntity* entity = findSelectedEntity();
+       Client* client = dynamic_cast<Client*>(entity);
+       EntityDataModel edm = EntityDataModel(std::make_unique<Order>());
+       edm.searchByInt({"client_id", "=", client->id()});
+
+       if (edm.count() > 0){
+            showMessage("Cannot delete client with existing orders!");
+       }
+
+    }
+
 }
 
 std::string ClientBrowser::typeID()

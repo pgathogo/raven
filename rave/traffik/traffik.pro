@@ -52,7 +52,6 @@ HEADERS += \
     order.h \
     orderapprover.h \
     orderbooking.h \
-    orderbookingbrowser.h \
     orderbrowser.h \
     orderform.h \
     orderpackage.h \
@@ -80,7 +79,6 @@ SOURCES += \
     order.cpp \
     orderapprover.cpp \
     orderbooking.cpp \
-    orderbookingbrowser.cpp \
     orderbrowser.cpp \
     orderform.cpp \
     orderpackage.cpp \
@@ -100,7 +98,6 @@ FORMS += \
     breaklayoutbrowser.ui \
     breaklayoutform.ui \
     commlogform.ui \
-    orderbookingbrowser.ui \
     orderbrowser.ui \
     orderform.ui \
     scheduleform.ui \

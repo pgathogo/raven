@@ -2,9 +2,9 @@
 #define VOICEOVER_H
 
 #include "../framework/baseentity.h"
+#include "typeexclusion.h"
 
 class VoiceExclusion;
-class TypeExclusion;
 
 class VoiceOver : public BaseEntity
 {
@@ -72,7 +72,7 @@ private:
     ForeignKeyField* mGender;
 
     std::unique_ptr<VoiceExclusion> mVoiceEx;
-    std::unique_ptr<TypeExclusion> mTypeEx;
+    std::unique_ptr<TRAFFIK::TypeExclusion> mTypeEx;
 
     QStringList mHeader;
     std::string mTableName;

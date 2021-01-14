@@ -1,6 +1,5 @@
 #include <QStandardItem>
 #include "voiceover.h"
-#include "typeexclusion.h"
 #include "../framework/manytomany.h"
 #include "../framework/valuelist.h"
 #include "../framework/entitydatamodel.h"
@@ -41,7 +40,7 @@ VoiceOver::VoiceOver()
     mDaypart7 = createField<StringField>("daypart7", "Daypart6");
     mDaypart7->setSearchable(false);
 
-    mTypeEx = std::make_unique<TypeExclusion>();
+    mTypeEx = std::make_unique<TRAFFIK::TypeExclusion>();
     mVoiceEx = std::make_unique<VoiceExclusion>(this, mTypeEx.get());
 
     mHeader << QString::fromStdString(mName->fieldLabel())

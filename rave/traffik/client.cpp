@@ -9,54 +9,54 @@
 
 Client::Client()
 {
-    mName = createField<StringField>("name", "Client Name:");
-    mName->setMandatory(true);
+    m_name = createField<StringField>("name", "Client Name:");
+    m_name->setMandatory(true);
 
-    mBillName = createField<StringField>("bill_name", "Billing Name:");
-    mAddress1 = createField<StringField>("address1", "Address1:");
-    mAddress2 = createField<StringField>("address2", "Address2:");
-    mTown = createField<StringField>("town", "Town:");
-    mPostalNo = createField<StringField>("postal_no", "Postal No.");
-    mPostalCode = createField<StringField>("postal_code", "Postal Code:");
-    mTelephone = createField<StringField>("telephone", "Telephone");
-    mClientEmail = createField<StringField>("client_email", "Client Email");
-    mClientMobile = createField<StringField>("client_mobile", "Client Mobile");
-    mContactName = createField<StringField>("contact_name", "Contact Name");
-    mContactEmail = createField<StringField>("contact_email", "Contact Email");
-    mContactMobile = createField<StringField>("contact_mobile", "Contact Mobile");
-    mGracePeriod = createField<IntegerField>("grace_period", "Grace Period");
-    mDiscountPercent = createField<DecimalField>("discount_percent", "Discount Percentage");
-    mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commission");
-    mSaleRepComm = createField<DecimalField>("sales_rep_comm", "Sales Rep. Commission");
-    mInterestRate = createField<DecimalField>("interest_rate", "Interest Rate");
-    mLateFee = createField<DecimalField>("late_fee", "Late Fee");
+    m_biil_name = createField<StringField>("bill_name", "Billing Name:");
+    m_address1 = createField<StringField>("address1", "Address1:");
+    m_address2 = createField<StringField>("address2", "Address2:");
+    m_town = createField<StringField>("town", "Town:");
+    m_postal_no = createField<StringField>("postal_no", "Postal No.");
+    m_postal_code = createField<StringField>("postal_code", "Postal Code:");
+    m_telephone = createField<StringField>("telephone", "Telephone");
+    m_client_email = createField<StringField>("client_email", "Client Email");
+    m_client_mobile = createField<StringField>("client_mobile", "Client Mobile");
+    m_contact_name = createField<StringField>("contact_name", "Contact Name");
+    m_contact_email = createField<StringField>("contact_email", "Contact Email");
+    m_contact_mobile = createField<StringField>("contact_mobile", "Contact Mobile");
+    m_grace_period = createField<IntegerField>("grace_period", "Grace Period");
+    m_discount_percent = createField<DecimalField>("discount_percent", "Discount Percentage");
+    m_agency_comm = createField<DecimalField>("agency_comm", "Agency Commission");
+    m_sale_rep_comm = createField<DecimalField>("sales_rep_comm", "Sales Rep. Commission");
+    m_interest_rate = createField<DecimalField>("interest_rate", "Interest Rate");
+    m_late_fee = createField<DecimalField>("late_fee", "Late Fee");
 
-    mAgency = createField<ForeignKeyField>( "agency_id", "Agency",
+    m_agency = createField<ForeignKeyField>( "agency_id", "Agency",
                                             std::make_unique<Agent>(), "agent_name");
-    mClientGroup = createField<ForeignKeyField>("client_group_id", "Client Group",
+    m_client_group = createField<ForeignKeyField>("client_group_id", "Client Group",
                                                 std::make_unique<ClientGroup>(), "group_name" );
-    mAccountManager = createField<ForeignKeyField>("account_manager_id", "Account Manager",
+    m_account_manager = createField<ForeignKeyField>("account_manager_id", "Account Manager",
                                                    std::make_unique<SalesPerson>(), "salesperson_name");
 
-    mContactSalute = createField<ChoiceField<std::string>>("contact_salute", "Contact Salute");
-    mContactSalute->addChoice({"Miss","Miss."});
-    mContactSalute->addChoice({"MS","Ms."});
-    mContactSalute->addChoice({"MRS","Mrs."});
-    mContactSalute->addChoice({"MR","Mr."});
+    m_contact_salute = createField<ChoiceField<std::string>>("contact_salute", "Contact Salute");
+    m_contact_salute->addChoice({"Miss","Miss."});
+    m_contact_salute->addChoice({"MS","Ms."});
+    m_contact_salute->addChoice({"MRS","Mrs."});
+    m_contact_salute->addChoice({"MR","Mr."});
 
-    mRevenueType = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
-    mRevenueType->addChoice({"C", "Cash"});
-    mRevenueType->addChoice({"T", "Trade"});
+    m_revenue_type = createField<ChoiceField<std::string>>("revenue_type", "Revenue Type");
+    m_revenue_type->addChoice({"C", "Cash"});
+    m_revenue_type->addChoice({"T", "Trade"});
 
-    mBillCycle = createField<ChoiceField<std::string>>("bill_cycle", "Billing Cycle");
-    mBillCycle->addChoice({"W", "Weekly"});
-    mBillCycle->addChoice({"B", "Bi-Weekly"});
-    mBillCycle->addChoice({"M", "Monthly"});
+    m_bill_cycle = createField<ChoiceField<std::string>>("bill_cycle", "Billing Cycle");
+    m_bill_cycle->addChoice({"W", "Weekly"});
+    m_bill_cycle->addChoice({"B", "Bi-Weekly"});
+    m_bill_cycle->addChoice({"M", "Monthly"});
 
-    mHeader << QString::fromStdString(mName->fieldLabel())
-            << QString::fromStdString(mTelephone->fieldLabel())
-            << QString::fromStdString(mContactName->fieldLabel())
-            << QString::fromStdString(mContactMobile->fieldLabel());
+    mHeader << QString::fromStdString(m_name->fieldLabel())
+            << QString::fromStdString(m_telephone->fieldLabel())
+            << QString::fromStdString(m_contact_name->fieldLabel())
+            << QString::fromStdString(m_contact_mobile->fieldLabel());
 
     setTableName("rave_client");
 }
@@ -89,8 +89,8 @@ std::vector<std::string> Client::tableViewColumns() const
     return tableViewCols<std::string>(
                 name()->displayName(),
                 telephone()->displayName(),
-                contactName()->displayName(),
-                contactMobile()->displayName());
+                contact_name()->displayName(),
+                contact_mobile()->displayName());
 }
 
 std::vector<std::string> Client::tableViewValues()
@@ -113,232 +113,232 @@ void Client::populateEntity()
 }
 StringField* Client::name() const
 {
-    return mName;
+    return m_name;
 }
-void Client::setName(const std::string n)
+void Client::set_name(const std::string n)
 {
-    mName->setValue(n);
+    m_name->setValue(n);
 }
 StringField* Client::telephone() const
 {
-    return mTelephone;
+    return m_telephone;
 }
-void Client::setTelephone(const std::string tele)
+void Client::set_telepone(const std::string tele)
 {
-    mTelephone->setValue(tele);
+    m_telephone->setValue(tele);
 }
-StringField* Client::contactName() const
+StringField* Client::contact_name() const
 {
-    return mContactName;
+    return m_contact_name;
 }
-void Client::setContactName(const std::string contName)
+void Client::set_contact_name(const std::string contName)
 {
-    mContactName->setValue(contName);
+    m_contact_name->setValue(contName);
 }
-StringField* Client::contactMobile() const
+StringField* Client::contact_mobile() const
 {
-    return mContactMobile;
+    return m_contact_mobile;
 }
-void Client::setContactMobile(const std::string contMobile) const
+void Client::set_contact_mobile(const std::string contMobile) const
 {
-    mContactMobile->setValue(contMobile);
+    m_contact_mobile->setValue(contMobile);
 }
 
-StringField* Client::billName() const
+StringField* Client::bill_name() const
 {
-    return  mBillName;
+    return  m_biil_name;
 }
 StringField* Client::address1() const
 {
-    return  mAddress1;
+    return  m_address1;
 }
 StringField* Client::address2() const
 {
-    return  mAddress2;
+    return  m_address2;
 }
 StringField* Client::town() const
 {
-    return  mTown;
+    return  m_town;
 }
 StringField* Client::postalNo() const
 {
-    return  mPostalNo;
+    return  m_postal_no;
 }
-StringField* Client::postalCode() const
+StringField* Client::postal_code() const
 {
-    return  mPostalCode;
+    return  m_postal_code;
 }
-StringField* Client::clientMobile() const
+StringField* Client::client_mobile() const
 {
-    return mClientMobile;
+    return m_client_mobile;
 }
-StringField* Client::clientEmail() const
+StringField* Client::client_email() const
 {
-    return  mClientEmail;
+    return  m_client_email;
 }
-ChoiceField<std::string>* Client::contactSalute() const
+ChoiceField<std::string>* Client::contact_salute() const
 {
-    return  mContactSalute;
+    return  m_contact_salute;
 }
-StringField* Client::contactEmail() const
+StringField* Client::contact_email() const
 {
-    return  mContactEmail;
+    return  m_contact_email;
 }
 
 ForeignKeyField* Client::agency() const
 {
-    return  mAgency;
+    return  m_agency;
 }
 
-ForeignKeyField* Client::clientGroup() const
+ForeignKeyField* Client::group_manager() const
 {
-    return  mClientGroup;
+    return  m_client_group;
 }
 
-ForeignKeyField* Client::accountManager() const
+ForeignKeyField* Client::account_manager() const
 {
-    return  mAccountManager;
+    return  m_account_manager;
 }
 
-ChoiceField<std::string>* Client::revenueType() const
+ChoiceField<std::string>* Client::revenue_type() const
 {
-    return  mRevenueType;
+    return  m_revenue_type;
 }
-DecimalField* Client::discountPercent() const
+DecimalField* Client::discount_percent() const
 {
-    return  mDiscountPercent;
+    return  m_discount_percent;
 }
-DecimalField* Client::agencyComm () const
+DecimalField* Client::agency_comm () const
 {
-    return  mAgencyComm ;
+    return  m_agency_comm ;
 }
-DecimalField* Client::saleRepComm() const
+DecimalField* Client::sale_rep_comm() const
 {
-    return  mSaleRepComm;
+    return  m_sale_rep_comm;
 }
-DecimalField* Client::interestRate() const
+DecimalField* Client::interest_rate() const
 {
-    return  mInterestRate;
+    return  m_interest_rate;
 }
-DecimalField* Client::lateFee() const
+DecimalField* Client::late_fee() const
 {
-    return  mLateFee;
+    return  m_late_fee;
 }
-IntegerField* Client::gracePeriod() const
+IntegerField* Client::grace_period() const
 {
-    return  mGracePeriod;
+    return  m_grace_period;
 }
-ChoiceField<std::string>* Client::billCycle() const
+ChoiceField<std::string>* Client::bill_cycle() const
 {
-    return  mBillCycle;
-}
-
-void Client::setBillName(const std::string bn)
-{
-    mBillName->setValue(bn);
+    return  m_bill_cycle;
 }
 
-void Client::setAddress1(const std::string address1)
+void Client::set_bill_name(const std::string bn)
 {
-    mAddress1->setValue(address1);
+    m_biil_name->setValue(bn);
 }
 
-void Client::setAddress2(const std::string address2)
+void Client::set_address1(const std::string address1)
 {
-    mAddress2->setValue(address2);
+    m_address1->setValue(address1);
 }
 
-void Client::setTown(const std::string town)
+void Client::set_address2(const std::string address2)
 {
-    mTown->setValue(town);
+    m_address2->setValue(address2);
 }
 
-void Client::setPostalNo(const std::string pNo)
+void Client::set_town(const std::string town)
 {
-    mPostalNo->setValue(pNo);
+    m_town->setValue(town);
 }
 
-void Client::setPostalCode(const std::string pCode)
+void Client::set_postal_no(const std::string pNo)
 {
-    mPostalCode->setValue(pCode);
+    m_postal_no->setValue(pNo);
 }
 
-void Client::setClientEmail(const std::string cEmail)
+void Client::set_postal_code(const std::string pCode)
 {
-    mClientEmail->setValue(cEmail);
+    m_postal_code->setValue(pCode);
 }
 
-void Client::setClientMobile(const std::string cMobile)
+void Client::set_client_email(const std::string cEmail)
 {
-    mClientMobile->setValue(cMobile);
-}
-void Client::setContactSalute(const std::string cSalute)
-{
-    mContactSalute->setValue(cSalute);
-}
-void Client::setContactEmail(const std::string contEmail)
-{
-    mContactEmail->setValue(contEmail);
+    m_client_email->setValue(cEmail);
 }
 
-void Client::setContactMobile(const std::string contMobile)
+void Client::set_client_mobile(const std::string cMobile)
 {
-    mContactMobile->setValue(contMobile);
+    m_client_mobile->setValue(cMobile);
+}
+void Client::set_contact_salute(const std::string cSalute)
+{
+    m_contact_salute->setValue(cSalute);
+}
+void Client::set_contact_email(const std::string contEmail)
+{
+    m_contact_email->setValue(contEmail);
 }
 
-void Client::setAgency(int agent)
+void Client::set_contact_mobile(const std::string contMobile)
 {
-    mAgency->setValue(agent);
+    m_contact_mobile->setValue(contMobile);
 }
 
-void Client::setClientGroup(int cGroup)
+void Client::set_agency(int agent)
 {
-    mClientGroup->setValue(cGroup);
+    m_agency->setValue(agent);
 }
 
-void Client::setAccountManager(int aManager)
+void Client::set_client_group(int cGroup)
 {
-    mAccountManager->setValue(aManager);
+    m_client_group->setValue(cGroup);
 }
 
-void Client::setRevenueType(const std::string rType)
+void Client::set_account_manager(int aManager)
 {
-    mRevenueType->setValue(rType);
+    m_account_manager->setValue(aManager);
 }
 
-void Client::setDiscountPercent(double dPercent)
+void Client::set_revenue_type(const std::string rType)
 {
-    mDiscountPercent->setValue(dPercent);
+    m_revenue_type->setValue(rType);
 }
 
-void Client::setAgencyComm(double aComm )
+void Client::set_discount_percent(double dPercent)
 {
-    mAgencyComm->setValue(aComm);
+    m_discount_percent->setValue(dPercent);
 }
 
-void Client::setSaleRepComm(double sRepComm)
+void Client::set_agency_comm(double aComm )
 {
-    mSaleRepComm->setValue(sRepComm);
+    m_agency_comm->setValue(aComm);
 }
 
-void Client::setInterestRate(double iRate)
+void Client::set_sale_rep_comm(double sRepComm)
 {
-    mInterestRate->setValue(iRate);
+    m_sale_rep_comm->setValue(sRepComm);
 }
 
-void Client::setLateFee(double lFee)
+void Client::set_interest_rate(double iRate)
 {
-    mLateFee->setValue(lFee);
+    m_interest_rate->setValue(iRate);
 }
 
-void Client::setGracePeriod(int gPeriod)
+void Client::set_late_fee(double lFee)
 {
-    mGracePeriod->setValue(gPeriod);
+    m_late_fee->setValue(lFee);
 }
 
-void Client::setBillCycle(const std::string bCycle)
+void Client::set_grace_period(int gPeriod)
 {
-    mBillCycle->setValue(bCycle);
+    m_grace_period->setValue(gPeriod);
+}
+
+void Client::set_bill_cycle(const std::string bCycle)
+{
+    m_bill_cycle->setValue(bCycle);
 }
 
 std::unique_ptr<BaseEntity> Client::cloneAsUnique()

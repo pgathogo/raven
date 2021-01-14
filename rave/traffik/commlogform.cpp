@@ -16,6 +16,7 @@ CommLogForm::CommLogForm(QWidget *parent) :
     connect(ui->dtCommDate, &QDateEdit::dateChanged, this, &CommLogForm::comm_log_date_changed);
     connect(this->m_hours, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &CommLogForm::comm_log_hours_changed);
+    connect(this->m_hours, &QCheckList::signalPopupHidden, this, &CommLogForm::hours_popup_hidden);
 
     connect(ui->cbExpand, &QCheckBox::stateChanged, this, &CommLogForm::change_view_mode);
     connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
@@ -53,14 +54,21 @@ void CommLogForm::change_view_mode(int state)
 
 void CommLogForm::select_all_hours(int state)
 {
-        for (std::size_t i=0; i < m_check_items.size(); ++i){
-            if (state == 0){
-                m_check_items[i]->setCheckState(Qt::Unchecked);
-            } else {
-                m_check_items[i]->setCheckState(Qt::Checked);
-            }
+    for (std::size_t i=0; i < m_check_items.size(); ++i){
+        if (state == 0){
+            m_check_items[i]->setCheckState(Qt::Unchecked);
+        } else {
+            m_check_items[i]->setCheckState(Qt::Checked);
         }
+    }
 
+    hours_popup_hidden();
+
+}
+
+void CommLogForm::hours_popup_hidden()
+{
+    fetch_bookings();
 }
 
 void CommLogForm::set_hour_combobox()
@@ -83,10 +91,10 @@ void CommLogForm::set_hour_combobox()
 
 void CommLogForm::fetch_bookings()
 {
-    std::string selected_hours = "("+m_hours->currentText().toStdString()+")";
-
-    if (selected_hours.empty())
+    if (m_hours->currentText().isEmpty())
         return;
+
+    std::string selected_hours = "("+m_hours->currentText().toStdString()+")";
 
     std::stringstream sql;
 

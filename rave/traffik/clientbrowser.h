@@ -22,6 +22,8 @@ public:
 
     void addRecord() override;
     void updateRecord() override;
+    void deleteRecord()  override;
+
     std::string typeID() override;
 
     void createBrandButton();

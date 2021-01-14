@@ -135,6 +135,61 @@ bool PostgresDataProvider::executeQuery(const std::string query)
     return true;
 }
 
+int PostgresDataProvider::insert_returning_id(const std::string query)
+{
+
+    PGresult* res = nullptr;
+
+    static auto cleanFinish = [](PGresult* res){
+        PQclear(res);
+    };
+
+    if (res != nullptr)
+        PQclear(res);
+
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK){
+        std::string errorMsg = "BEGIN command failed!\n";
+        errorMsg += PQerrorMessage(conn);
+        PQexec(conn, "ROLLBACK");
+        cleanFinish(res);
+        throw PostgresException("EXCUTE-BEGIN", errorMsg);
+    }
+
+    PQclear(res);
+
+    char buffer[30];
+    char* p = buffer;
+
+    res = PQexecParams(conn, query.c_str(), 0, nullptr, &p, nullptr, nullptr, 0);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        std::string errorMsg = "EXECUTE command failed!\n";
+        errorMsg += PQerrorMessage(conn);
+        PQexec(conn, "ROLLBACK");
+        cleanFinish(res);
+        throw PostgresException("EXCEUTE", errorMsg);
+    }
+
+    std::string last_id(PQgetvalue(res, 0, 0));
+
+    res = PQexec(conn, "COMMIT");
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        std::string errorMsg = "COMMIT command failed!\n";
+        errorMsg += PQerrorMessage(conn);
+        PQexec(conn, "ROLLBACK");
+        cleanFinish(res);
+        throw PostgresException("COMMIT", errorMsg);
+    }
+
+    cleanFinish(res);
+
+    return std::stoi(last_id);
+
+}
+
+
 int PostgresDataProvider::read(const std::string query)
 {
 

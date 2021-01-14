@@ -8,6 +8,7 @@ class Client;
 class QComboBox;
 
 class ForeignKeyField;
+class TraffikSetup;
 
 template<typename T>
 class ChoiceField;
@@ -43,7 +44,12 @@ private slots:
 
 private:
     Ui::ClientForm *ui;
-    Client* mClient;
+    Client* m_client;
+    TraffikSetup* m_traffik_setup {nullptr};
+    std::unique_ptr<EntityDataModel> m_edm_setup {nullptr};
+
+    void set_defaults();
+    void set_choice_field_default(QComboBox* cbox, std::string value);
 };
 
 #endif // CLIENTFORM_H

@@ -3,12 +3,11 @@
 #include "ui_typeexclusiondetails.h"
 #include "ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
-#include "typeexclusion.h"
 #include "../utils/daypartgrid.h"
 #include "../utils/tools.h"
 
 TypeExclusionDetails::TypeExclusionDetails(
-        TypeExclusion* tex, QDialog *parent) :
+        TRAFFIK::TypeExclusion* tex, QDialog *parent) :
     BaseEntityDetailDlg(parent),
     ui(new Ui::TypeExclusionDetails),
     typeEx{tex},

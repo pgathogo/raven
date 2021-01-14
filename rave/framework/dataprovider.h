@@ -25,6 +25,7 @@ public:
     virtual bool executeQuery(const std::string query)=0;
     virtual int read(const std::string query) = 0;
     virtual int fetchLastId(const std::string tableName)=0;
+    virtual int insert_returning_id(const std::string query)=0;
     void append(StringMapped* data);
     void clear();
     int cacheSize() const;
@@ -43,6 +44,7 @@ class PostgresDataProvider: public BaseDataProvider
         ~PostgresDataProvider() override;
         bool executeQuery(const std::string query) override;
         int fetchLastId(const std::string tableName) override;
+        int insert_returning_id(const std::string query) override;
         int read(const std::string query) override;
         void test() { qDebug() << "XXXX->" << "PostgresDataProvider"; }
         void openConnection();

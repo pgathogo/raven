@@ -25,6 +25,7 @@ private slots:
     void comm_log_hours_changed(int i);
     void change_view_mode(int state);
     void select_all_hours(int state);
+    void hours_popup_hidden();
 
 private:
     Ui::CommLogForm *ui;

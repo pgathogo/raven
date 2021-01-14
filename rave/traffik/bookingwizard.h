@@ -7,13 +7,13 @@
 #include "timeband.h"
 #include "schedule.h"
 #include "traffikrules.h"
+#include "spot.h"
 
 namespace Ui {
     class BookingWizard;
 }
 
 class Order;
-class Spot;
 class EntityDataModel;
 class DayPartGrid;
 class Schedule;
@@ -40,14 +40,14 @@ public:
     int find_available_breaks();
 
     bool validateCurrentPage() override;
-    Spot* selected_spot();
+    TRAFFIK::Spot* selected_spot();
 
     void fetch_type_exclusions(TRAFFIK::EngineData&);
     void fetch_voice_exclusions(TRAFFIK::EngineData&);
     void fetch_spot_exclusions(const std::string,
                              std::vector<Exclusion>&,
                              std::list<int>& keys);
-    Daypart fetch_spot_daypart(Spot&);
+    Daypart fetch_spot_daypart(TRAFFIK::Spot&);
 
     void init_rules_state();
     void show_available_breaks();
@@ -110,7 +110,6 @@ private:
 
     void auto_select_breaks_by_dow();
 
-    void make_combo_checkbox();
 };
 
 

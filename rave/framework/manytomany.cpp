@@ -121,7 +121,7 @@ void VoiceExclusion::afterMapping(BaseEntity& entity)
 
 std::vector<std::string> VoiceExclusion::tableViewColumns() const
 {
-    TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
+    TRAFFIK::TypeExclusion* te = dynamic_cast<TRAFFIK::TypeExclusion*>(mDetailEntity);
 
     return tableViewCols<std::string>(
                 te->name()->displayName(),
@@ -131,7 +131,7 @@ std::vector<std::string> VoiceExclusion::tableViewColumns() const
 }
 std::vector<std::string> VoiceExclusion::tableViewValues()
 {
-    TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
+    TRAFFIK::TypeExclusion* te = dynamic_cast<TRAFFIK::TypeExclusion*>(mDetailEntity);
     return tableViewCols<std::string>(
                 te->name()->valueToString(),
                 te->description()->valueToString()

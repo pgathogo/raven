@@ -9,7 +9,7 @@ BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     QDialog(parent),
     bui(new Ui::BaseEntityDetailDlg),
     mNoticeBar{},
-    mOkClose{true}
+    m_okay_to_close{false}
 {
     bui->setupUi(this);
     connectSlots();
@@ -35,13 +35,17 @@ void BaseEntityDetailDlg::connectSlots()
     connect(bui->btnSave, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveClicked);
     connect(bui->btnClose, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnCloseClicked);
     connect(bui->btnSaveNew, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveNewClicked);
+    connect(this, SIGNAL(dialog_is_closing()), this, SLOT(onCloseDialog()));
 }
 
 void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
 {
-    done(0);
-    if(!mOkClose)
-        event->ignore();
+    if(!m_okay_to_close){
+        if (confirmationMessage("Exit without saving?"))
+            done(0);
+        else
+            event->ignore();
+    }
 }
 
 const BrowserForms &BaseEntityDetailDlg::getForms() const
@@ -54,23 +58,29 @@ void BaseEntityDetailDlg::btnSaveClicked()
     ActionResult ar = saveRecord();
 
     if (std::get<0>(ar) == ActionResultType::arSUCCESS){
-       mOkClose = true;
+       m_okay_to_close = true;
        done(1);
     }else{
        mNoticeBar->errorNotification(std::get<1>(ar));
-       mOkClose = false;
+       m_okay_to_close = false;
     }
 }
 
 void BaseEntityDetailDlg::btnCloseClicked()
 {
-    done(0);
+    if (confirmationMessage("Exit without saving?"))
+        done(0);
 }
 
 void BaseEntityDetailDlg::btnSaveNewClicked()
 {
    //mNoticeBar->errorNotification("Testing");
-   mNoticeBar->successNotification("Success");
+    mNoticeBar->successNotification("Success");
+}
+
+void BaseEntityDetailDlg::onCloseDialog()
+{
+
 }
 void BaseEntityDetailDlg::save(BaseEntity* entity)
 {

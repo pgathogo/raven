@@ -8,10 +8,9 @@
 
 #include "../framework/picklistbrowser.h"
 
-#include "brand.h"
 #include "client.h"
 
-BrandForm::BrandForm(Client* client, Brand* brand,
+BrandForm::BrandForm(Client* client, TRAFFIK::Brand* brand,
                      QDialog *parent)
     :BaseEntityDetailDlg(parent),
      ui(new Ui::BrandForm),
@@ -50,18 +49,18 @@ std::string BrandForm::windowTitle()
 }
 void BrandForm::populateEntityFields()
 {
-    mBrand->setBrandName(ui->edtBrandName->text().toStdString());
-    mBrand->setClient(mClient->id());
+    mBrand->set_brand_name(ui->edtBrandName->text().toStdString());
+    mBrand->set_client(mClient->id());
 }
 
 void BrandForm::populateFormWidgets()
 {
-    ui->edtBrandName->setText(QString::fromStdString(mBrand->brandName()->value()));
+    ui->edtBrandName->setText(QString::fromStdString(mBrand->brand_name()->value()));
     ui->edtClient->setText(QString::fromStdString(mClient->name()->value()));
 
-    ui->cbBrandManager->setModel(mBrand->brandManager()->dataModel());
+    ui->cbBrandManager->setModel(mBrand->brand_manager()->dataModel());
     ui->cbBrandManager->setCurrentIndex(ui->cbBrandManager->findText(
-                                 stoq(mBrand->brandManager()->displayName())));
+                                 stoq(mBrand->brand_manager()->displayName())));
 }
 
 void BrandForm::selectClient()
@@ -72,7 +71,7 @@ void BrandForm::selectClient()
 
     for (const auto& base_entity : set.selectedEntities){
         auto entity = dynamic_cast<Client*>(base_entity);
-        mBrand->setClient(entity->id());
+        mBrand->set_client(entity->id());
         ui->edtClient->setText(QString::fromStdString(entity->name()->displayName()));
     }
 }
@@ -80,5 +79,5 @@ void BrandForm::selectClient()
 void BrandForm::brandManagerComboChanged(int i)
 {
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbBrandManager->model());
-    mBrand->brandManager()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
+    mBrand->brand_manager()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }

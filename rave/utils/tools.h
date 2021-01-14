@@ -33,8 +33,8 @@ inline bool confirmationMessage(const std::string msg)
     msgBox.setText("Confirmation Message");
     msgBox.setIcon(QMessageBox::Question);
     msgBox.setInformativeText(stoq(msg));
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Discard);
-    msgBox.setDefaultButton(QMessageBox::Discard);
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
     int ret = msgBox.exec();
 
     switch (ret){
@@ -68,6 +68,13 @@ inline void printdouble(double d)
     qDebug() << "DBL: >> " << d;
 }
 
+inline int str_to_int(std::string s){
+    return (s.empty()) ? 0 : std::stoi(s);
+}
+
+inline double str_to_double(std::string s){
+    return (s.empty()) ? 0.0 : std::stod(s);
+}
 
 
 inline std::tuple<int, int, int> ymd(const std::string date_str)

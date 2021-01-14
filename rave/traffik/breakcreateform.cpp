@@ -28,7 +28,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     ui->tvBreakLines->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvBreakLines->setModel(edmBreakLine.get());
 
-    connect(ui->btnCreate, &QPushButton::clicked, this, &BreakCreateForm::createBreaks);
+    connect(ui->btnCreate, &QPushButton::clicked, this, &BreakCreateForm::create_breaks);
     connect(ui->btnCancel, &QPushButton::clicked, this, &BreakCreateForm::closeForm);
 
     setDefaults();
@@ -73,7 +73,7 @@ void BreakCreateForm::closeForm()
     done(0);
 }
 
-void BreakCreateForm::createBreaks()
+void BreakCreateForm::create_breaks()
 {
     if (ui->dtTo->date() < ui->dtFrom->date()){
         showMessage("`To` date less than `From` date!");
@@ -82,7 +82,7 @@ void BreakCreateForm::createBreaks()
 
     Schedule sched;
 
-    std::string inserts;
+    std::string insert_stmts;
 
     Vectored<Field> fields;
 
@@ -102,7 +102,7 @@ void BreakCreateForm::createBreaks()
                     << sched.setTrackType("COMM")
                     << sched.setBreakMode("MIXED");
 
-            inserts += sched.make_insert_stmt(fields.vec);
+            insert_stmts += sched.make_insert_stmt(fields.vec);
             fields.clear();
             }
 
@@ -110,7 +110,8 @@ void BreakCreateForm::createBreaks()
     }
 
     try{
-        edmBreakLine->executeRawSQL(inserts);
+        edmBreakLine->executeRawSQL(insert_stmts);
+        showMessage("Breaks created successfully.");
     } catch (DatabaseException& de) {
         showMessage(de.errorMessage());
     }

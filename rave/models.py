@@ -219,6 +219,8 @@ class Setup(models.Model):
     break_time_interval = models.IntegerField(default=15)
     break_duration = models.IntegerField(default=120)
     break_max_spots = models.IntegerField(default=4)
+    audio_path = models.CharField(max_length=255, null=True, blank=True)
+    comm_audio_path = models.CharField(max_length=255, null=True, blank=True)
 
 
 class Content(models.Model):
@@ -393,13 +395,13 @@ class BookingSegment(models.Model):
 BOOKING_STATUS = (
         ('READY','READY'),
         ('PLAYED','PLAYED'),
-        ('CANCEL','CANCEL'),
+        ('CANCELLED','CANCEL'),
         )
 
 class OrderBooking(models.Model):
     schedule = models.ForeignKey(Schedule)
     bookingsegment = models.ForeignKey(BookingSegment, default=-1)
-    booking_status = models.CharField(max_length=8, choices=BOOKING_STATUS, default='READY', null=True, blank=True)
+    booking_status = models.CharField(max_length=15, choices=BOOKING_STATUS, default='READY', null=True, blank=True)
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
     spot = models.ForeignKey(Spot, default=-1)

@@ -3,8 +3,8 @@
 
 #include <QDialog>
 #include "../framework/baseentitydetaildlg.h"
+#include "typeexclusion.h"
 
-class TypeExclusion;
 class DayPartGrid;
 
 namespace Ui {
@@ -16,7 +16,7 @@ class TypeExclusionDetails : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit TypeExclusionDetails(TypeExclusion* tex, QDialog *parent = nullptr);
+    explicit TypeExclusionDetails(TRAFFIK::TypeExclusion* tex, QDialog *parent = nullptr);
     ~TypeExclusionDetails() override;
 
     ActionResult saveRecord() override;
@@ -27,7 +27,7 @@ public:
 
 private:
     Ui::TypeExclusionDetails *ui;
-    TypeExclusion* typeEx;
+    TRAFFIK::TypeExclusion* typeEx;
     DayPartGrid* dpg;
 };
 

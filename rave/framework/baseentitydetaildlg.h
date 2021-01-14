@@ -49,10 +49,14 @@ public:
 
        BrowserForms const& getForms() const;
 
+signals:
+       void dialog_is_closing();
+
 private slots:
     void btnSaveClicked();
     void btnCloseClicked();
     void btnSaveNewClicked();
+    void onCloseDialog();
 
 protected:
     Ui::BaseEntityDetailDlg* bui;
@@ -66,7 +70,7 @@ protected:
 
 private:
    NotificationBar* mNoticeBar;
-   bool mOkClose;
+   bool m_okay_to_close;
    std::vector<std::unique_ptr<ManyToManyBrowser>> mForms;
 };
 

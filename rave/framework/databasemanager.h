@@ -32,6 +32,7 @@ public:
     virtual int search(const BaseEntity& entity,
                        const std::string filter) = 0;
     virtual void executeRawSQL(const std::string sql)=0;
+    virtual int insert_returning_id(const std::string sql)=0;
     virtual int readRaw(const std::string sql)=0;
 
     virtual BaseDataProvider* provider() = 0;
@@ -73,6 +74,7 @@ public:
     int search(const BaseEntity& entity, const std::string filter) override;
     void executeRawSQL(const std::string sql) override;
     int readRaw(const std::string sql) override;
+    int insert_returning_id(const std::string sql) override;
     BaseDataProvider* provider() override;
     std::string make_insert_stmt(const BaseEntity& entity) override;
     PostgresDataProvider* pgProvider();

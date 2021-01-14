@@ -71,7 +71,7 @@ std::unique_ptr<BaseEntity> SpotTypeExclusion::mapFields(StringMap*)
 
 std::vector<std::string> SpotTypeExclusion::tableViewColumns() const
 {
-    TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
+    TRAFFIK::TypeExclusion* te = dynamic_cast<TRAFFIK::TypeExclusion*>(mDetailEntity);
 
     return tableViewCols<std::string>(
                 te->name()->displayName(),
@@ -81,7 +81,7 @@ std::vector<std::string> SpotTypeExclusion::tableViewColumns() const
 
 std::vector<std::string> SpotTypeExclusion::tableViewValues()
 {
-    TypeExclusion* te = dynamic_cast<TypeExclusion*>(mDetailEntity);
+    TRAFFIK::TypeExclusion* te = dynamic_cast<TRAFFIK::TypeExclusion*>(mDetailEntity);
 
     return tableViewCols<std::string>(
                 te->name()->valueToString(),

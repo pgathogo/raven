@@ -45,6 +45,7 @@ public:
     virtual void updateRecord()=0;
     virtual void deleteRecord();
     virtual void searchRecord();
+    virtual bool okay_to_delete(BaseEntity* entity);
 
     virtual std::string typeID();
 

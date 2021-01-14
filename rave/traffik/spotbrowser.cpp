@@ -5,17 +5,20 @@
 #include "client.h"
 #include "spot.h"
 #include "spotform.h"
+#include "orderbooking.h"
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
 
 SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<Spot>(client)),
+                         std::make_unique<TRAFFIK::Spot>(client)),
     ui{new Ui::SpotBrowser},
     m_client{client}
 {
     ui->setupUi(this);
     setDialogTitle("Client Spots");
+    if (client != nullptr)
+        searchRecord();
 }
 
 SpotBrowser::~SpotBrowser()
@@ -26,7 +29,7 @@ SpotBrowser::~SpotBrowser()
 
 void SpotBrowser::addRecord()
 {
-    auto spot = std::make_unique<Spot>();
+    auto spot = std::make_unique<TRAFFIK::Spot>();
     auto spotForm = std::make_unique<SpotForm>(m_client, spot.get(), this);
 
     if (spotForm->exec() > 0){
@@ -54,7 +57,7 @@ void SpotBrowser::updateRecord()
 
         BaseEntity* be = entityDataModel().findEntityByName(search_name);
 
-        Spot* spot = dynamic_cast<Spot*>(be);
+        TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be);
         spot->client()->setValue(m_client->id());
 
         std::unique_ptr<SpotForm> spotForm =
@@ -77,27 +80,23 @@ void SpotBrowser::updateRecord()
 
 void SpotBrowser::searchRecord()
 {
-    search_related<Spot, Client>(m_client);
+    search_related<TRAFFIK::Spot, Client>(m_client);
+}
 
-    /*
-    if (bui->edtFilter->text().isEmpty()){
-        Spot& spot = dynamic_cast<Spot&>(entityDataModel().getEntity());
-        auto si = searchItem(spot.client()->dbColumnName(), m_client->id());
-        entityDataModel().searchByInt(si);
-    }else{
-        auto data = bui->cbFilter->itemData(
-                            bui->cbFilter->currentIndex()).value<QVariant>();
-        std::string columnName = data.toString().toStdString();
-        std::string item = bui->edtFilter->text().toStdString();
-        auto brand_filter = std::make_tuple(columnName, item);
 
-        Spot& spot = dynamic_cast<Spot&>(entityDataModel().getEntity());
-        auto client_filter = searchItem(spot.client()->dbColumnName(), m_client->id());
+bool SpotBrowser::okay_to_delete(BaseEntity* entity)
+{
+//   BaseEntity* entity = findSelectedEntity();
+   TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(entity);
+   EntityDataModel edm = EntityDataModel(std::make_unique<OrderBooking>());
+   edm.searchByInt({"spot_id", "=", spot->id()});
 
-        std::string filter = entityDataModel().prepareFilter(brand_filter, client_filter);
-        entityDataModel().search(filter);
-    }
-    */
+   if (edm.count() > 0){
+        showMessage("Cannot delete spot with existing bookings!");
+        return false;
+   }
+
+   return true;
 }
 
 void SpotBrowser::saveVoiceOvers(const SpotForm& sf)

@@ -22,6 +22,9 @@ public:
     void addRecord() override;
     void updateRecord() override;
     void searchRecord() override;
+
+    bool okay_to_delete(BaseEntity* entity) override;
+
     void saveVoiceOvers(const SpotForm& sf);
     void saveTypeExclusions(const SpotForm& sf);
 private:

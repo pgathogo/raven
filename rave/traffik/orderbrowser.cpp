@@ -5,6 +5,7 @@
 #include "order.h"
 #include "orderform.h"
 #include "client.h"
+#include "bookingsegment.h"
 
 OrderBrowser::OrderBrowser(Client* client, QWidget* parent) :
     BaseEntityBrowserDlg(parent, std::make_unique<Order>(client)),
@@ -13,6 +14,9 @@ OrderBrowser::OrderBrowser(Client* client, QWidget* parent) :
 {
     ui->setupUi(this);
     setDialogTitle("Client Orders: "+stoq(client->name()->value()));
+    if (client != nullptr)
+        searchRecord();
+
 }
 
 OrderBrowser::~OrderBrowser()
@@ -32,4 +36,19 @@ void OrderBrowser::updateRecord()
 void OrderBrowser::searchRecord()
 {
     search_related<Order, Client>(mClient);
+}
+
+bool OrderBrowser::okay_to_delete(BaseEntity* entity)
+{
+   Order* order = dynamic_cast<Order*>(entity);
+   EntityDataModel edm = EntityDataModel(std::make_unique<BookingSegment>());
+   edm.searchByInt({"order_id", "=", order->id()});
+
+   if (edm.count() > 0){
+        showMessage("Cannot delete order with existing bookings!");
+        return false;
+   }
+
+   return true;
+
 }
