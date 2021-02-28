@@ -8,7 +8,7 @@ CONFIG += c++17
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+#DEFINES += QT_DEPRECATED_WARNINGS
 
 
 # You can also make your code fail to compile if it uses deprecated APIs.
@@ -17,24 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 include(../raven.pri)
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-    traffik.qrc
-
-#win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
-win32:CONFIG(debug, debug|release): LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
-else:unix: LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
-
-INCLUDEPATH += 'C:/Program Files/PostgreSQL/9.5/include'
-DEPENDPATH += 'C:/Program Files/PostgreSQL/9.5/include'
-
-#INCLUDEPATH += 'D:/home/PMS/Raven/rave/lib/fmt'
-#DEFINES += FMT_HEADER_ONLY
 
 HEADERS += \
     ../framework/entityregister.h \ \
@@ -103,9 +85,45 @@ FORMS += \
     scheduleform.ui \
     setupform.ui
 
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    traffik.qrc
+
+#win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
+win32:CONFIG(debug, debug|release): LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
+else:unix: LIBS += -L'C:/Program Files/PostgreSQL/9.5/lib/' -llibpq
+
+INCLUDEPATH += 'C:/Program Files/PostgreSQL/9.5/include'
+DEPENDPATH += 'C:/Program Files/PostgreSQL/9.5/include'
+
+#INCLUDEPATH += 'D:/home/PMS/Raven/rave/lib/fmt'
+#DEFINES += FMT_HEADER_ONLY
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/limereport/ -llimereport
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/limereport/ -llimereportd
 else:unix: LIBS += -L$$PWD/../lib/limereport/ -llimereport
 
 INCLUDEPATH += $$PWD/../lib/limereport/include
 DEPENDPATH += $$PWD/../lib/limereport/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -laudiofile
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -laudiofiled
+else:unix: LIBS += -L$$PWD/../audiolib/lib_debug/ -laudiofile
+
+INCLUDEPATH += $$PWD/../audiolib/lib_debug
+DEPENDPATH += $$PWD/../audiolib/lib_debug
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditor
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditord
+else:unix: LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditor
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/BassLib/Lib/ -lbass
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/BassLib/Lib/ -lbass
+else:unix: LIBS += -L$$PWD/../lib/BassLib/Lib/ -lbass
+
+INCLUDEPATH += $$PWD/../lib/BassLib/Include
+DEPENDPATH += $$PWD/../lib/BassLib/Lib

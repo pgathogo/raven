@@ -273,22 +273,22 @@ void TraffikSetup::setBreakMaxSpots(int max_spots)
     m_break_max_spots->setValue( max_spots );
 }
 
-StringField *TraffikSetup::audio_path() const
+StringField *TraffikSetup::audio_folder() const
 {
     return m_audio_path;
 }
 
-void TraffikSetup::set_audio_path(const std::string path)
+void TraffikSetup::set_audio_folder(const std::string path)
 {
     m_audio_path->setValue(path);
 }
 
-StringField *TraffikSetup::comm_audio_path() const
+StringField *TraffikSetup::comm_audio_folder() const
 {
     return m_comm_audio_path;
 }
 
-void TraffikSetup::set_comm_audio_path(const std::string path)
+void TraffikSetup::set_comm_audio_folder(const std::string path)
 {
     m_comm_audio_path->setValue(path);
 }

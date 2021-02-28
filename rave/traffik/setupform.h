@@ -55,6 +55,8 @@ private:
     void load_order_approvers();
     std::set<int> make_aprv_levels();
     void populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf);
+
+    QString get_audio_folder(QString default_folder);
 };
 
 #endif // SETUPFORM_H

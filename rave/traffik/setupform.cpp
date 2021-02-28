@@ -95,8 +95,8 @@ void SetupForm::populateEntityFields()
 
     m_setup->setOrderAprvdBB(ui->cbAprvdBB->isChecked());
 
-    m_setup->set_audio_path(ui->edtAudioPath->text().toStdString());
-    m_setup->set_comm_audio_path(ui->edtCommAudioPath->text().toStdString());
+    m_setup->set_audio_folder(ui->edtAudioPath->text().toStdString());
+    m_setup->set_comm_audio_folder(ui->edtCommAudioPath->text().toStdString());
 }
 
 void SetupForm::populateFormWidgets()
@@ -129,8 +129,8 @@ void SetupForm::populateFormWidgets()
     auto check_state = [](bool state){ return (state) ? Qt::Checked : Qt::Unchecked; };
     ui->cbAprvdBB->setCheckState(check_state(m_setup->orderAprvdBB()->value()));
 
-    ui->edtAudioPath->setText(stoq(m_setup->audio_path()->value()));
-    ui->edtCommAudioPath->setText(stoq(m_setup->comm_audio_path()->value()));
+    ui->edtAudioPath->setText(stoq(m_setup->audio_folder()->value()));
+    ui->edtCommAudioPath->setText(stoq(m_setup->comm_audio_folder()->value()));
 }
 
 void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -139,6 +139,15 @@ void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::st
         cbox->addItem(stoq(std::get<1>(c)), stoq(std::get<0>(c)));
 
     cbox->setCurrentIndex( cbox->findData(QVariant(stoq(cf->value()))) );
+}
+
+QString SetupForm::get_audio_folder(QString default_folder)
+{
+   auto audio_folder = QFileDialog::getExistingDirectory(this,
+                                                   tr("Audio Folder"), default_folder,
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+   return audio_folder;
 }
 
 void SetupForm::load_order_approvers()
@@ -271,19 +280,14 @@ int SetupForm::selectedRowId() const
 
 void SetupForm::set_audio_path()
 {
-   auto audio_folder = QFileDialog::getExistingDirectory(this,
-                                                   tr("Audio Folder"), "/d/home/audio",
-                                                    QFileDialog::ShowDirsOnly
-                                                    | QFileDialog::DontResolveSymlinks);
-    ui->edtAudioPath->setText(audio_folder);
-
+    auto audio_folder = get_audio_folder(ui->edtAudioPath->text());
+    if (!audio_folder.isEmpty())
+         ui->edtAudioPath->setText(audio_folder);
 }
 
 void SetupForm::set_comm_audio_path()
 {
-   auto comm_audio_folder = QFileDialog::getExistingDirectory(this,
-                                                   tr("Audio Folder"), "/d/home/audio",
-                                                    QFileDialog::ShowDirsOnly
-                                                    | QFileDialog::DontResolveSymlinks);
-    ui->edtCommAudioPath->setText(comm_audio_folder);
+    auto comm_audio_folder = get_audio_folder(ui->edtCommAudioPath->text());
+    if (!comm_audio_folder.isEmpty())
+         ui->edtCommAudioPath->setText(comm_audio_folder);
 }

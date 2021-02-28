@@ -16,6 +16,9 @@ class Client;
 class DayPartGrid;
 class ManyToManyBrowser;
 class EntityDataModel;
+class TraffikSetup;
+class AudioFile;
+class CueEditor;
 
 using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 
@@ -39,6 +42,9 @@ public:
 
     int parentId() const;
 
+public slots:
+    void on_cue_edit();
+
 private slots:
     void brandsComboChanged(int);
     void on_import_audio();
@@ -50,6 +56,9 @@ private:
     std::unique_ptr<DayPartGrid> m_daypart;
     std::unique_ptr<ManyToManyBrowser> m_MtoMVoiceOverBrowser;
     std::unique_ptr<ManyToManyBrowser> m_MtoMTypeExBrowser;
+
+    std::unique_ptr<EntityDataModel> m_edm_setup;
+    TraffikSetup* m_setup;
 };
 
 #endif // SPOTFORM_H

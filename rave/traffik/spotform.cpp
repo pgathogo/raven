@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <sstream>
 #include <QFileDialog>
 #include "spotform.h"
@@ -13,6 +14,12 @@
 #include "client.h"
 #include "spotvoiceover.h"
 #include "spottypeexclusion.h"
+#include "traffiksetup.h"
+
+#include "../audiolib/headers/audiofile.h"
+#include "../audiolib/headers/cueeditor.h"
+
+namespace fs = std::filesystem;
 
 SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
                    QDialog *parent) :
@@ -40,8 +47,14 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
            this, &SpotForm::brandsComboChanged);
 
     connect(ui->btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
+    connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::on_cue_edit);
 
     ui->tabWidget->setCurrentIndex(0);
+
+    m_edm_setup = std::make_unique<EntityDataModel>(
+                std::make_unique<TraffikSetup>());
+    m_edm_setup->all();
+    m_setup = dynamic_cast<TraffikSetup*>(m_edm_setup->firstEntity());
 }
 
 SpotForm::~SpotForm()
@@ -130,22 +143,63 @@ void SpotForm::brandsComboChanged(int i)
 
 void SpotForm::on_import_audio()
 {
-    auto audio_file = QFileDialog::getOpenFileName(this,
+    auto audio_file_full_path = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), "/d/home/audio",
                                                    tr("Audio Files (*.ogg *.mp3 *.wav)"));
+
+    if (audio_file_full_path.isEmpty())
+        return;
+
+    QFileInfo file_info(audio_file_full_path);
+
+    QString audio_file = file_info.fileName();
+
+    auto comm_audio_folder = m_setup->comm_audio_folder()->value();
+
+
+    qDebug() << "Filename: " << audio_file;
+    qDebug() << "Folder: " << QString::fromStdString(comm_audio_folder);
+
+
+    /* Convert non-ogg audio files to ogg */
+
+
+    std::string dest_audio_file = comm_audio_folder+"\\"+audio_file.toStdString();
+
+    fs::copy(audio_file_full_path.toStdString(), dest_audio_file);
 
     EntityDataModel edm;
 
     std::stringstream sql;
 
     sql << "Insert into rave_track (title, filepath, artist_id, track_type) "
-        << " Values ('Main Comm Audio', 'd:\\home\\pms\\raven\\audio\\', 2, 'COMM') RETURNING id;";
+        << " Values ('Main Comm Audio', '"+comm_audio_folder+"', 2, 'COMM') RETURNING id;";
 
-    try{
-        int id = edm.insert_returning_id(sql.str());
-        qDebug() << "Last Id: "<< id;
-    } catch (DatabaseException& de) {
-        showMessage(de.errorMessage());
+//    try{
+//        int id = edm.insert_returning_id(sql.str());
+//        qDebug() << "Last Id: "<< id;
+//    } catch (DatabaseException& de) {
+//        showMessage(de.errorMessage());
+//    }
+
+}
+
+void SpotForm::on_cue_edit()
+{
+    AudioFile audio_file("D:\\home\\cpp\\audiowaveform_win\\stereo.mp3");
+
+    if (audio_file.is_valid()){
+
+        audio_file.set_wave_file("D:\\home\\cpp\\audiowaveform_win\\test.png");
+        audio_file.set_duration(7);
+        CueEditor* cue_editor = new CueEditor(audio_file);
+        auto mark = cue_editor->editor();
+        if (mark.is_marked){
+            qDebug() << "Start Marker: " <<  mark.start_marker;
+            qDebug() << "End Marker: " <<  mark.end_marker;
+        }
+
+
     }
 
 }

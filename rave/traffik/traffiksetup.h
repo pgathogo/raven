@@ -80,11 +80,11 @@ public:
     IntegerField* breakMaxSpots() const;
     void setBreakMaxSpots(int max_spots);
 
-    StringField* audio_path() const;
-    void set_audio_path(const std::string path);
+    StringField* audio_folder() const;
+    void set_audio_folder(const std::string path);
 
-    StringField* comm_audio_path() const;
-    void set_comm_audio_path(const std::string path);
+    StringField* comm_audio_folder() const;
+    void set_comm_audio_folder(const std::string path);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
