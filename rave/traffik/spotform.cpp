@@ -16,7 +16,7 @@
 #include "spottypeexclusion.h"
 #include "traffiksetup.h"
 
-#include "../audiolib/headers/audiofile.h"
+#include "../audio/audiofile.h"
 #include "../audiolib/headers/cueeditor.h"
 
 namespace fs = std::filesystem;
@@ -47,7 +47,7 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
            this, &SpotForm::brandsComboChanged);
 
     connect(ui->btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
-    connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::on_cue_edit);
+    connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::cue_edit);
 
     ui->tabWidget->setCurrentIndex(0);
 
@@ -184,7 +184,7 @@ void SpotForm::on_import_audio()
 
 }
 
-void SpotForm::on_cue_edit()
+void SpotForm::cue_edit()
 {
     AudioFile audio_file("D:\\home\\cpp\\audiowaveform_win\\stereo.mp3");
 
@@ -192,15 +192,11 @@ void SpotForm::on_cue_edit()
 
         audio_file.set_wave_file("D:\\home\\cpp\\audiowaveform_win\\test.png");
         audio_file.set_duration(7);
+        audio_file.set_artist_name("Nightwish");
+        audio_file.set_audio_title("Nemo");
         CueEditor* cue_editor = new CueEditor(audio_file);
         auto mark = cue_editor->editor();
-        if (mark.is_marked){
-            qDebug() << "Start Marker: " <<  mark.start_marker;
-            qDebug() << "End Marker: " <<  mark.end_marker;
         }
-
-
-    }
 
 }
 

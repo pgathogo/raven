@@ -15,6 +15,9 @@ class AudioThread : public QThread
         explicit AudioThread(QObject* parent=nullptr);
         bool playing;
         void run();
+        float audio_sample_rate(QString);
+        float audio_bitrate(QString audio_file);
+
     private:
         unsigned long m_channel;
         QTimer* timer;
@@ -24,6 +27,7 @@ class AudioThread : public QThread
         void current_peak(float fft[1024]);
     public slots:
         void play(QString filepath);
+        void play_from_position(QString filename, int position);
         void pause();
         void resume();
         void stop();
@@ -32,6 +36,7 @@ class AudioThread : public QThread
         void read_FFT(QString filename);
 
         DWORD audio_len(QString audio);
+
 
 };
 

@@ -7,17 +7,23 @@ CueEditor::CueEditor(AudioFile audio_file)
     m_audio_wave_form = new AUDIO::AudioWaveForm(m_audio_file);
 }
 
-Marker CueEditor::editor()
+CueEditor::~CueEditor()
 {
-    Marker marks;
+    delete static_cast<AUDIO::AudioWaveForm*>(m_audio_wave_form);
+}
 
+int CueEditor::editor()
+{
     AUDIO::AudioWaveForm* awf = static_cast<AUDIO::AudioWaveForm*>(m_audio_wave_form);
+    auto ret_id = awf->exec();
 
-    if (awf->exec() == DialogCloseResult::Save){
-        marks.start_marker = 2;
-        marks.end_marker = 42;
-        marks.is_marked = true;
-    }
+    if (ret_id == DialogCloseResult::Save)
+        m_marker = awf->marker();
 
-    return marks;
+    return ret_id;
+}
+
+Marker CueEditor::marker() const
+{
+    return m_marker;
 }

@@ -39,6 +39,25 @@ void AudioThread::play(QString filename)
 
 }
 
+void AudioThread::play_from_position(QString filename, int position)
+{
+    BASS_ChannelStop(m_channel);
+    if (!(m_channel = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0,
+        BASS_SAMPLE_LOOP)) &&
+        !(m_channel = BASS_MusicLoad(false, filename.toLatin1(), 0, 0, BASS_MUSIC_RAMP
+        | BASS_SAMPLE_LOOP, 1)))
+            qDebug() << "Can't play file";
+    else{
+        endOfMusic = false;
+        change_position(position);
+        BASS_ChannelPlay(m_channel, false);
+        timer->start(100);
+        BASS_ChannelSetSync(m_channel, BASS_SYNC_END, 0, &syncFunc, nullptr);
+        playing = true;
+    }
+
+}
+
 void AudioThread::read_FFT(QString filename)
 {
     BASS_ChannelStop(m_channel);
@@ -105,7 +124,25 @@ DWORD AudioThread::audio_len(QString audio)
     return (DWORD) BASS_ChannelBytes2Seconds(chan, len); // length of file in seconds
 }
 
+float AudioThread::audio_sample_rate(QString audio_file)
+{
+    float sample_rate;
+    DWORD chan = BASS_StreamCreateFile(false, audio_file.toLatin1(), 0L, 0L, BASS_STREAM_DECODE);
+    if (BASS_ChannelGetAttribute(chan, BASS_ATTRIB_FREQ, &sample_rate))
+        return sample_rate;
+    else
+        return 0.0;
+}
 
+float AudioThread::audio_bitrate(QString audio_file)
+{
+    float bit_rate;
+    DWORD chan = BASS_StreamCreateFile(false, audio_file.toLatin1(), 0L, 0L, BASS_STREAM_DECODE);
+    if (BASS_ChannelGetAttribute(chan, BASS_ATTRIB_BITRATE, &bit_rate))
+        return bit_rate;
+    else
+        return 0.0;
+}
 
 void AudioThread::pause()
 {
@@ -150,8 +187,9 @@ void AudioThread::signal_update()
 
 void AudioThread::change_position(int position)
 {
-    BASS_ChannelSetPosition(m_channel, BASS_ChannelSeconds2Bytes(m_channel, position),
-        BASS_POS_BYTE);
+    //BASS_ChannelSetPosition(m_channel, BASS_ChannelSeconds2Bytes(m_channel, position), BASS_POS_BYTE);
+    unsigned long bpp = BASS_ChannelGetLength(m_channel, BASS_POS_BYTE)/800;
+    BASS_ChannelSetPosition(m_channel, position*bpp, BASS_POS_BYTE);
 }
 
 void AudioThread::run()

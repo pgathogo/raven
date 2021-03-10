@@ -1,4 +1,5 @@
 SOURCES += \
+    $$PWD/audio/audiotool.cpp \
     $$PWD/core/artist.cpp \
     $$PWD/core/track.cpp \
     $$PWD/security/loginform.cpp \
@@ -72,6 +73,7 @@ SOURCES += \
     ../security/roleform.cpp
 
 HEADERS += \
+    $$PWD/audio/audiotool.h \
     $$PWD/core/artist.h \
     $$PWD/core/track.h \
     $$PWD/security/loginform.h \
@@ -189,3 +191,6 @@ FORMS += \
     ../security/contentform.ui \
     ../security/rolebrowser.ui \
     ../security/roleform.ui
+
+RESOURCES += \
+    $$PWD/raven.qrc

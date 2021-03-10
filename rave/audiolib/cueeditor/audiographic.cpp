@@ -1,3 +1,5 @@
+#include <map>
+
 #include <QDebug>
 #include <QGraphicsTextItem>
 #include <QGraphicsItem>
@@ -112,9 +114,7 @@ namespace AUDIO{
             return;
         }
 
-
         QGraphicsItem::mouseReleaseEvent(event);
-
     }
 
     Timeline::Timeline(int time)
@@ -253,7 +253,7 @@ namespace AUDIO{
     //    m_scene = new AudioWaveScene();
         this->setScene(m_scene);
         this->setMaximumHeight(300);
-        this->setMaximumWidth(800);
+        this->setMaximumWidth(803);
         m_time_in_secs = time_in_secs;
         draw_wave();
         m_scene->draw_indicator_line();
@@ -307,13 +307,15 @@ namespace AUDIO{
         m_scene->move_indicator_line(new_pos);
     }
 
-
-    AudioWaveScene::AudioWaveScene(QLabel* pos_counter)
-        :m_position_counter{pos_counter}
+    AudioWaveScene::AudioWaveScene(QLabel* pos_counter, double audio_length)
+        :m_position_counter{pos_counter},
+         m_start_marker{nullptr},
+         m_audio_length{audio_length}
     {
         m_pen = new QPen(Qt::red);
         m_pen->setWidth(5);
     }
+
 
     void AudioWaveScene::draw_indicator_line()
     {
@@ -344,6 +346,8 @@ namespace AUDIO{
 
         make_indicator_line(*m_scene_bound, *m_indicator_line_position);
 
+        //double secs = new_pos * m_seconds_per_pixel/ 100;
+        update_counter(pixel_to_seconds(dx));
     }
 
     void AudioWaveScene::add_text(QPointF pos)
@@ -368,8 +372,8 @@ namespace AUDIO{
         remove_indicator_line();
         make_indicator_line(*m_scene_bound, *m_indicator_line_position);
 
-        double secs = pos.x() * m_seconds_per_pixel/ 100;
-        update_counter(secs);
+//        double secs = pos.x() * m_seconds_per_pixel/ 100;
+        update_counter(pixel_to_seconds(pos.x()));
     }
 
     void AudioWaveScene::set_sec_per_px(double sec_per_px)
@@ -380,7 +384,7 @@ namespace AUDIO{
 
     void AudioWaveScene::update_counter(double time)
     {
-        const int msecs_per_second =  1000;
+        const int ms_per_second =  1000;
         QString mill_str;
         int mill_count=0;
 
@@ -391,7 +395,7 @@ namespace AUDIO{
 
         int msecs=0;
         if (time < 0){
-            msecs = time * msecs_per_second;
+            msecs = time * ms_per_second;
             msecs = msecs% 1000;
             time_str = time_format.arg(0)
                     .arg(0, 2, 10, QChar('0'))
@@ -425,9 +429,90 @@ namespace AUDIO{
         removeItem(m_indicator_line_item);
     }
 
-    QLineF *AudioWaveScene::indicator_line_pos() const
+    QLineF *AudioWaveScene::indicator_line() const
     {
         return m_indicator_line_position;
+    }
+
+    bool AudioWaveScene::is_marker_found(MarkerType marker_type)
+    {
+        std::map<MarkerType, MarkerIndicator*>::iterator it;
+        it = m_markers.find(marker_type);
+        return (it != m_markers.end()) ? true : false;
+    }
+
+    MarkerIndicator* AudioWaveScene::find_marker(MarkerType marker_type)
+    {
+        std::map<MarkerType, MarkerIndicator*>::iterator it;
+        it = m_markers.find(marker_type);
+        return (it != m_markers.end()) ? (*it).second : nullptr;
+    }
+
+
+    void AudioWaveScene::update_marker(MarkerIndicator* marker, QLineF line)
+    {
+        remove_marker_line(marker->marker_type());
+        update_marker_line(marker, line);
+    }
+
+    void AudioWaveScene::remove_marker_line(MarkerType marker_type)
+    {
+        removeItem(m_markers[marker_type]->line_item());
+    }
+
+    void AudioWaveScene::add_marker_line(MarkerIndicator* marker, QLineF line)
+    {
+        auto item = addLine(line, marker->marker_pen());
+        marker->set_line_item(item);
+        marker->set_line(line);
+        m_markers[marker->marker_type()] = marker;
+        update_marker_line_position(marker->marker_type(), line);
+    }
+
+    void AudioWaveScene::update_marker_line(MarkerIndicator* marker, QLineF line)
+    {
+        auto item = addLine(line, marker->marker_pen());
+        m_markers[marker->marker_type()]->set_line_item(item);
+        m_markers[marker->marker_type()]->set_line(line);
+        update_marker_line_position(marker->marker_type(), line);
+    }
+
+    void AudioWaveScene::update_marker_line_position(MarkerType marker_type, QLineF line)
+    {
+        m_markers[marker_type]->set_current_position_px(line.p1());
+        m_markers[marker_type]->set_current_position_sec(line.x1(), m_seconds_per_pixel);
+    }
+
+    void AudioWaveScene::display_marker_position_sec()
+    {
+        for (auto& [marker_type, marker] : m_markers){
+            qDebug() << marker_type << marker->current_position_sec();
+        }
+    }
+
+    QPointF AudioWaveScene::marker_position(MarkerType marker_type)
+    {
+        auto marker = find_marker(marker_type);
+        if (marker != nullptr){
+            return m_markers[marker_type]->current_position_px();
+        }else{
+            return QPointF();
+        }
+    }
+
+    double AudioWaveScene::pixel_to_seconds(double px)
+    {
+        return px * m_seconds_per_pixel/ 100;
+    }
+
+    double AudioWaveScene::seconds_to_pixel(double secs)
+    {
+        return ((secs * 100) / ((m_audio_length * 100)/800));
+    }
+
+    Markers AudioWaveScene::markers() const
+    {
+        return m_markers;
     }
 
     void AudioWaveScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -441,5 +526,163 @@ namespace AUDIO{
     {
 
     }
+
+
+   MarkerIndicator::MarkerIndicator(MarkerType marker_type)
+          :m_marker_type{marker_type},
+          m_line_item{nullptr}
+    {
+        m_pen = marker_pen();
+        m_pen.setWidth(5);
+    }
+
+    MarkerIndicator::~MarkerIndicator()
+    {
+    }
+
+    MarkerType MarkerIndicator::marker_type()
+    {
+        return m_marker_type;
+    }
+
+    QPen MarkerIndicator::marker_pen()
+    {
+        return QPen(marker_color(m_marker_type));
+    }
+
+    void MarkerIndicator::set_line_item(QGraphicsLineItem* line)
+    {
+        m_line_item = line;
+
+    }
+
+    QGraphicsLineItem* MarkerIndicator::line_item()
+    {
+        return m_line_item;
+    }
+
+    void MarkerIndicator::set_line(QLineF line)
+    {
+        m_line = line;
+    }
+
+    QLineF MarkerIndicator::line() const
+    {
+        return m_line;
+    }
+
+    QColor MarkerIndicator::marker_color(MarkerType marker_type)
+    {
+        switch (marker_type)
+        {
+          case MarkerType::Start:
+            return QColor(0, 255, 0);
+          case MarkerType::FadeIn:
+            return QColor(213, 213, 0);
+          case MarkerType::Intro:
+            return QColor(55, 55, 166);
+          case MarkerType::FadeOut:
+            return QColor(127, 127, 0);
+          case MarkerType::Extro:
+            return QColor(88, 176, 130);
+          case MarkerType::End:
+            return QColor(212, 0, 0);
+          default:
+            return QColor(Qt::green);
+        }
+    }
+
+    void MarkerIndicator::set_current_position_sec(qreal x_pos, qreal secs_per_px)
+    {
+        m_current_position_in_seconds =  x_pos * secs_per_px / 100;
+        this->notify(m_current_position_in_seconds);
+    }
+
+    void MarkerIndicator::set_current_position_px(QPointF pos)
+    {
+        m_current_position_pixels = pos;
+    }
+
+    double MarkerIndicator::current_position_sec() const
+    {
+        return m_current_position_in_seconds;
+    }
+
+    QPointF MarkerIndicator::current_position_px() const
+    {
+        return m_current_position_pixels;
+    }
+
+
+    MarkerDisplayUnit::MarkerDisplayUnit(MarkerIndicator* indicator)
+        : m_display_unit{nullptr},
+          m_indicator{indicator}
+    {
+        m_indicator->attach(this);
+
+    }
+
+    MarkerDisplayUnit::~MarkerDisplayUnit()
+    {
+    }
+
+    void MarkerDisplayUnit::update(Subject *changed_subject, double time)
+    {
+        qDebug() << "Update: "<< time;
+        //if (changed_subject == m_indicator){
+            if (m_display_unit != nullptr){
+                auto du = dynamic_cast<QLabel*>(m_display_unit);
+                du->setText(QString::fromStdString(format_message(time)));
+            }
+        //}
+    }
+
+    void MarkerDisplayUnit::set_display_unit(QWidget* display_unit)
+    {
+        m_display_unit = display_unit;
+    }
+
+    std::string MarkerDisplayUnit::format_message(Message time)
+    {
+        const int ms_per_second =  1000;
+        QString mill_str;
+        int mill_count=0;
+
+        QString time_format="%1:%2:%3:%4";
+        QString time_str;
+
+        int r_count=0;
+
+        int msecs=0;
+        if (time < 0){
+            msecs = time * ms_per_second;
+            msecs = msecs% 1000;
+            time_str = time_format.arg(0)
+                    .arg(0, 2, 10, QChar('0'))
+                    .arg(0, 2, 10, QChar('0'))
+                    .arg(msecs, 3, 10, QChar('0'));
+
+           return time_str.toStdString();
+        }
+
+        int msec_d = time * 1000;
+        msecs = msec_d % 1000;
+        int mins = time / 60;
+        int secs = (int)time % 60;
+
+        time_str = time_format.arg(0)
+                .arg(mins, 2, 10, QChar('0'))
+                .arg(secs, 2, 10, QChar('0'))
+                .arg(msecs, 3, 10, QChar('0'));
+
+        return time_str.toStdString();
+
+    }
+
+    std::string MarkerDisplayUnit::name()
+    {
+        return "Nemo";
+    }
+
 
 } // AUDIO

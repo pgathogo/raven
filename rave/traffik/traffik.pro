@@ -19,6 +19,7 @@ CONFIG += c++17
 include(../raven.pri)
 
 HEADERS += \
+    ../audio/audiofile.h \
     ../framework/entityregister.h \ \
     ../security/accesscontroller.h \
     ../security/authentication.h \
@@ -47,6 +48,7 @@ HEADERS += \
     treeviewmodel.h
 
 SOURCES += \
+    ../audio/audiofile.cpp \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     approverform.cpp \
@@ -108,13 +110,6 @@ else:unix: LIBS += -L$$PWD/../lib/limereport/ -llimereport
 
 INCLUDEPATH += $$PWD/../lib/limereport/include
 DEPENDPATH += $$PWD/../lib/limereport/include
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -laudiofile
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -laudiofiled
-else:unix: LIBS += -L$$PWD/../audiolib/lib_debug/ -laudiofile
-
-INCLUDEPATH += $$PWD/../audiolib/lib_debug
-DEPENDPATH += $$PWD/../audiolib/lib_debug
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditor
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditord

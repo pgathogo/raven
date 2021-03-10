@@ -43,7 +43,7 @@ public:
     int parentId() const;
 
 public slots:
-    void on_cue_edit();
+    void cue_edit();
 
 private slots:
     void brandsComboChanged(int);
