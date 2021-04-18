@@ -11,12 +11,12 @@ class CUEEDITOR_EXPORT CueEditor
 public:
     enum DialogCloseResult{Cancel, Save};
 
-    CueEditor(AudioFile audio_file);
+    CueEditor(AudioFile& audio_file);
     ~CueEditor();
     int editor();
     Marker marker() const;
 private:
-    AudioFile m_audio_file;
+    AudioFile& m_audio_file;
     void* m_audio_wave_form;
     Marker m_marker;
 };

@@ -165,12 +165,27 @@ void EntityDataModel::populateEntities()
        ent->baseMapFields(e);
 
        ent->afterMapping(*ent.get());
-
-       //auto eptr = getEntity().mapFields(e);
-       //addEntity(std::move(eptr));
-
        addEntity(std::move(ent));
+
        dbManager->provider()->cache()->next();
+    }while(!dbManager->provider()->cache()->isLast());
+
+}
+
+void EntityDataModel::populateEntities2()
+{
+    clearEntities();
+    dbManager->provider()->cache()->first();
+    do{
+       auto e = dbManager->provider()->cache()->currentElement();
+       auto ent = getEntity().cloneAsUnique();
+
+       ent->baseMapFields(e);
+       ent->afterMapping(*ent.get());
+       addEntity(std::move(ent));
+
+       dbManager->provider()->cache()->next();
+
     }while(!dbManager->provider()->cache()->isLast());
 
 }
@@ -254,7 +269,7 @@ void EntityDataModel::searchByStr(std::tuple<std::string, std::string> searchIte
 void EntityDataModel::searchByInt(std::tuple<std::string, std::string, int> searchItem)
 {
     if (dbManager->searchByInt(getEntity(), searchItem) > 0)
-        populateEntities();
+        populateEntities2();
 }
 
 void EntityDataModel::search(const std::string searchFilter)

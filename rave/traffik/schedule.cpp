@@ -2,6 +2,9 @@
 #include "../framework/choicefield.h"
 #include "../framework/entitydatamodel.h"
 
+#include "../audio/audio.h"
+
+
 Schedule::Schedule()
     :mIsBad{false},
      m_break_availability{Schedule::Break_Available}
@@ -10,7 +13,10 @@ Schedule::Schedule()
     m_schedule_date = createField<DateField>("schedule_date", "Schedule Date:");
     m_schedule_time = createField<TimeField>("schedule_time", "Schedule Time:");
     m_schedule_hour = createField<IntegerField>("schedule_hour", "Schedule Hour");
-    m_track = createField<IntegerField>("track_id", "Track Reference");
+
+    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+                                      std::make_unique<AUDIO::Audio>(""), "title");
+
     m_fade_in = createField<IntegerField>("fade_in", "Fade In");
     m_fade_out = createField<IntegerField>("fade_out", "Fade Out");
     m_fade_delay = createField<IntegerField>("fade_delay", "Fade Delay");
@@ -26,9 +32,9 @@ Schedule::Schedule()
     m_auto_transition = createField<IntegerField>("auto_transition", "Auto Transition");
     m_live_transition = createField<IntegerField>("live_transition", "Live Transition");
 
-    m_track_type = createField<ChoiceField<std::string>>("track_type", "Track Type");
-    m_track_type->addChoice({"SONG", "Song"});
-    m_track_type->addChoice({"COMM", "Commercial"});
+    m_audio_type = createField<ChoiceField<std::string>>("audio_type", "Audio Type");
+    m_audio_type->addChoice({"SONG", "Song"});
+    m_audio_type->addChoice({"COMM", "Commercial"});
 
     m_break_duration = createField<IntegerField>("break_duration", "Break Duration");
     m_break_start_win = createField<IntegerField>("break_start_win", "Break Start Win");
@@ -47,7 +53,7 @@ Schedule::Schedule()
 
     m_comment = createField<TextField>("comment", "Comment");
 
-    mHeader << stoq(m_schedule_time->fieldLabel())
+    m_header << stoq(m_schedule_time->fieldLabel())
             << stoq(m_break_mode->fieldLabel())
             << stoq(m_break_max_spots->fieldLabel())
             << stoq(m_break_duration->fieldLabel())
@@ -97,14 +103,14 @@ IntegerField* Schedule::setScheduleHour(int val)
     return m_schedule_hour;
 }
 
-IntegerField* Schedule::track() const
+ForeignKeyField* Schedule::audio() const
 {
-    return m_track;
+    return m_audio;
 }
 
-void Schedule::setTrack(int val)
+void Schedule::set_audio(int val)
 {
-    m_track->setValue( val );
+    m_audio->setValue( val );
 }
 
 IntegerField *Schedule::fadeIn() const
@@ -187,15 +193,15 @@ void Schedule::setLiveTransition(int val)
     m_live_transition->setValue( val );
 }
 
-ChoiceField<std::string> *Schedule::trackType() const
+ChoiceField<std::string> *Schedule::audio_type() const
 {
-    return m_track_type;
+    return m_audio_type;
 }
 
-ChoiceField<std::string>* Schedule::setTrackType(std::string val)
+ChoiceField<std::string>* Schedule::set_audio_type(std::string val)
 {
-    m_track_type->setValue(val);
-    return m_track_type;
+    m_audio_type->setValue(val);
+    return m_audio_type;
 }
 
 IntegerField *Schedule::breakDuration() const
@@ -319,12 +325,12 @@ Schedule::BreakAvailability Schedule::break_availability() const
 
 std::string Schedule::tableName() const
 {
-    return mTableName;
+    return m_table_name;
 }
 
 void Schedule::setTableName(const std::string table_name)
 {
-    mTableName = table_name;
+    m_table_name = table_name;
 }
 
 std::unique_ptr<BaseEntity> Schedule::mapFields(StringMap*)
@@ -333,17 +339,17 @@ std::unique_ptr<BaseEntity> Schedule::mapFields(StringMap*)
 
 std::vector<std::string> Schedule::tableViewColumns() const
 {
-    return viewColumns;
+    return m_view_columns;
 }
 
 std::vector<std::string> Schedule::tableViewValues()
 {
-    return viewValues;
+    return m_view_values;
 }
 
 QStringList Schedule::tableHeaders() const
 {
-    return mHeader;
+    return m_header;
 }
 
 std::string Schedule::searchColumn() const
@@ -382,12 +388,12 @@ void Schedule::setDefaults()
 
 void Schedule::setTableViewColumns(const std::vector<std::string> cols)
 {
-    viewColumns = cols;
+    m_view_columns = cols;
 }
 
 void Schedule::setTableViewValues(const std::vector<std::string> vals)
 {
-    viewValues = vals;
+    m_view_values = vals;
 }
 
 std::string Schedule::make_insert_stmt(const std::vector<Field*>& fields)

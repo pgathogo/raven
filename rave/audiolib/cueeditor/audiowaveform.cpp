@@ -1,12 +1,18 @@
+#include <filesystem>
 #include <math.h>
+
 #include <QDebug>
 #include "audiowaveform.h"
 #include "ui_audiowaveform.h"
+
 #include "audiothread.h"
+#include "../../audio/audiotool.h"
+
+namespace fs = std::filesystem;
 
 namespace AUDIO {
 
-    AudioWaveForm::AudioWaveForm(AudioFile audio_file, QDialog *parent) :
+    AudioWaveForm::AudioWaveForm(AudioFile& audio_file, QDialog *parent) :
         QDialog(parent),
         ui(new Ui::AudioWaveForm),
         m_audio_file{audio_file},
@@ -26,6 +32,9 @@ namespace AUDIO {
 
         // Audiothread
         m_audio_thread = new AudioThread(this);
+
+        m_audio_file.set_duration(m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())));
+
         connect(m_audio_thread, SIGNAL(current_position(double, double)), this, SLOT(audio_current_position(double, double)));
         connect(m_audio_thread, SIGNAL(current_peak(float[1024])), this, SLOT(audio_current_peak(float[1024])));
 
@@ -59,6 +68,7 @@ namespace AUDIO {
         connect(ui->btnPlayEndMarker, &QPushButton::clicked, this, &AudioWaveForm::play_end_marker);
 
         init_widgets();
+
     }
 
     AudioWaveForm::~AudioWaveForm()
@@ -71,12 +81,10 @@ namespace AUDIO {
 
     void AudioWaveForm::show_wave_file()
     {
+        // FIXME:
         QPixmap pixmap(QString::fromStdString(m_audio_file.wave_file()));
         m_scene->addPixmap(pixmap);
         QRectF scene_bounds = m_scene->itemsBoundingRect();
-
-        //qreal top = scene_bounds.top();
-        //qreal bottom = scene_bounds.bottomLeft().ry();
 
         scene_bounds.setWidth(scene_bounds.width()*0.9);
         scene_bounds.setHeight(scene_bounds.height()*0.9);
@@ -115,6 +123,28 @@ namespace AUDIO {
     void AudioWaveForm::save()
     {
         save_markers();
+
+        const std::string MP3 = ".mp3";
+        const std::string OGG = ".ogg";
+
+        if (m_audio_file.file_ext() == MP3){
+            AudioTool audio_tool;
+            std::string ogg_file = audio_tool.mp3_to_ogg(m_audio_file);
+            if (!ogg_file.empty())
+                m_audio_file.set_ogg_filename(ogg_file);
+            //	std::string audio_lib = m_audio_file.get_audio_lib();
+            //	audio_tool.copy_ogg_to_audiolib(ogg_file, std::string dest_ogg)
+
+        }
+
+//            if (m_audio_file.file_ext() == OGG){
+//                AudioTool audio_tool;
+//                if (!audio_tool.copy_file_to_audiolib()){
+//                    //audio_tool.copy_file_to_audiolib(file_name, audio_lib);
+//                }
+
+//            }
+
         done(1);
     }
 
@@ -402,6 +432,7 @@ namespace AUDIO {
         float sample_rate = audio_sample_rate(QString::fromStdString(m_audio_file.audio_file()));
         if (sample_rate > 0)
             sample_rate = sample_rate / 1000;
+
         ui->lblSampleRate->setText(QString::number(sample_rate)+" KHz");
 
         ui->lblFileSize->setText(QString::number(m_audio_file.file_size()/1000)+" Kb");

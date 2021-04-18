@@ -11,7 +11,8 @@ AudioFile::AudioFile(const std::string a_file)
      m_file_ext{""},
      m_short_filename{""},
      m_duration{0},
-     m_marker{}
+     m_marker{},
+     m_id{-1}
 {
     std::filesystem::path af{audio_file()};
     m_file_ext = af.extension().u8string();
@@ -24,6 +25,7 @@ AudioFile::AudioFile(const std::string a_file)
     m_wave_file = m_audio_path+m_short_filename+".png";
 
     m_adf_file = m_audio_path+m_short_filename+".adf";
+
 }
 
 std::string AudioFile::audio_title() const
@@ -81,12 +83,32 @@ std::string AudioFile::adf_file() const
     return m_adf_file;
 }
 
+std::string AudioFile::audio_lib_path() const
+{
+    return m_audio_lib_path;
+}
+
+std::string AudioFile::ogg_filename() const
+{
+    return m_ogg_filename;
+}
+
+int AudioFile::id() const
+{
+    return m_id;
+}
+
 int AudioFile::duration() const
 {
     return m_duration;
 }
 
-uintmax_t AudioFile::file_size()
+int AudioFile::temp_id() const
+{
+    return m_temp_id;
+}
+
+uintmax_t AudioFile::file_size() const
 {
     uintmax_t f_size;
     std::filesystem::path f{audio_file()};
@@ -140,15 +162,40 @@ void AudioFile::set_adf_file(const std::string adf_file)
     m_adf_file = adf_file;
 }
 
-bool AudioFile::is_valid()
+void AudioFile::set_audio_lib_path(const std::string lib_path)
+{
+    m_audio_lib_path = lib_path;
+}
+
+void AudioFile::set_id(int id)
+{
+    m_id = id;
+}
+
+void AudioFile::set_ogg_filename(const std::string name)
+{
+    m_ogg_filename = name;
+}
+
+void AudioFile::set_temp_id(int id)
+{
+    m_temp_id = id;
+}
+
+bool AudioFile::is_valid() const
 {
     // check if file is valid (exists ... and the likes)
     return true;
 }
 
-Marker AudioFile::marker()
+Marker AudioFile::marker() const
 {
     return m_marker;
+}
+
+std::string AudioFile::get_audio_lib()
+{
+    return (audio_lib_path().empty()) ? audio_path() : audio_lib_path();
 }
 
 void AudioFile::set_marker(Marker marker)

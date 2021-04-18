@@ -7,6 +7,9 @@
 #include "spotvoiceover.h"
 #include "spottypeexclusion.h"
 
+#include "../audio/audio.h"
+#include "spotaudio.h"
+
 namespace TRAFFIK {
 
     Spot::Spot()
@@ -16,13 +19,14 @@ namespace TRAFFIK {
         ,m_client{}
         ,m_brand{}
     {
+        m_client = createField<ForeignKeyField>("client_id", "Client",
+                                               std::make_unique<Client>(), "name");
+
         m_name = createField<StringField>("name","Spot Name");
         m_name->setMandatory(true);
 
         m_spot_duration = createField<DecimalField>("spot_duration", "Spot Duration");
         m_real_duration = createField<DecimalField>("real_duration", "Real Duration");
-        m_client = createField<ForeignKeyField>("client_id", "Client",
-                                               std::make_unique<Client>(), "name");
 
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
                                               std::make_unique<TRAFFIK::Brand>(),
@@ -55,6 +59,9 @@ namespace TRAFFIK {
         m_type_ex = std::make_unique<TRAFFIK::TypeExclusion>();
         m_spot_type_ex = std::make_unique<SpotTypeExclusion>(this, m_type_ex.get() );
 
+        m_audio = std::make_unique<AUDIO::Audio>("");
+        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
+
         setTableName("rave_spot");
     }
 
@@ -65,28 +72,24 @@ namespace TRAFFIK {
         ,m_client{}
         ,m_brand{}
     {
+        m_client = createField<ForeignKeyField>("client_id", "Client",
+                                               std::make_unique<Client>(), "name");
+        m_client->setValue(client->id());
+
         m_name = createField<StringField>("name","Spot Name");
         m_name->setMandatory(true);
 
         m_spot_duration = createField<DecimalField>("spot_duration", "Spot Duration");
         m_real_duration = createField<DecimalField>("real_duration", "Real Duration");
 
-
-        printint(client->id());
-
         EntityDataModel edm;
         auto filter = std::make_tuple("client_id", "=", client->id());
         std::string fstr = edm.prepareFilter(filter);
-
 
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
                                               std::make_unique<TRAFFIK::Brand>(),
                                               "brand_name",
                                               fstr);
-
-        m_client = createField<ForeignKeyField>("client_id", "Client",
-                                               std::make_unique<Client>(), "name");
-        m_client->setValue(client->id());
 
         m_daypart1 = createField<StringField>("daypart1", "Daypart1");
         m_daypart1->setSearchable(false);
@@ -112,7 +115,14 @@ namespace TRAFFIK {
         m_voice_over = std::make_unique<VoiceOver>();
         m_spot_voice_over = std::make_unique<SpotVoiceOver>(this, m_voice_over.get());
 
+        m_type_ex = std::make_unique<TRAFFIK::TypeExclusion>();
+        m_spot_type_ex = std::make_unique<SpotTypeExclusion>(this, m_type_ex.get() );
+
+        m_audio = std::make_unique<AUDIO::Audio>("");
+        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
+
         setTableName("rave_spot");
+
     }
 
     Spot::~Spot()
@@ -171,7 +181,7 @@ namespace TRAFFIK {
     {
         m_spot_voice_over->setParentId(entity.id());
         m_spot_type_ex->setParentId(entity.id());
-
+        m_spot_audio->setParentId(entity.id());
     }
 
     StringField* Spot::name() const
@@ -288,13 +298,19 @@ namespace TRAFFIK {
         m_daypart7->setValue(dp);
     }
 
-    SpotVoiceOver& Spot::set_voice_over()
+    SpotVoiceOver& Spot::voice_over()
     {
         return *m_spot_voice_over;
     }
 
-    SpotTypeExclusion& Spot::set_type_exclusion()
+    SpotTypeExclusion& Spot::type_exclusion()
     {
         return *m_spot_type_ex;
     }
+
+    SpotAudio& Spot::spot_audio()
+    {
+        return *m_spot_audio;
+    }
+
 }

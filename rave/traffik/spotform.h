@@ -19,6 +19,7 @@ class EntityDataModel;
 class TraffikSetup;
 class AudioFile;
 class CueEditor;
+class SpotAudioBrowser;
 
 using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 
@@ -56,6 +57,7 @@ private:
     std::unique_ptr<DayPartGrid> m_daypart;
     std::unique_ptr<ManyToManyBrowser> m_MtoMVoiceOverBrowser;
     std::unique_ptr<ManyToManyBrowser> m_MtoMTypeExBrowser;
+    std::unique_ptr<SpotAudioBrowser> m_spot_audio_browser;
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
     TraffikSetup* m_setup;

@@ -49,15 +49,11 @@ void ManyToManyBrowser::addRecord()
     plb = new PickListBrowser(plset);
     plb->exec();
 
-    //auto it = plset.selectedEntities.begin();
-    //for(; it != plset.selectedEntities.end(); ++it){
-
     for(const auto& entity : plset.selectedEntities){
         BaseEntity* be = entity;
         if (be->dbAction() == DBAction::dbaCREATE){
             auto m2m =  mMtoM->copy(mMtoM->parentEntity(), be);
 
-            //auto m2m = createMtoM(mMtoM->mtomEntity(), be);
             m2m->setParentId(mMtoM->parentId()->value());
             m2m->setDetailId(be->id());
             m2m->setT(mMtoM->tableName());
@@ -77,7 +73,6 @@ void ManyToManyBrowser::deleteRecord()
    BaseEntity* entity = entityDataModel().findEntityByName(searchName);
    entity->setDBAction(DBAction::dbaDELETE);
    bui->tvEntity->hideRow(selectedRowId());
-   //removeSelectedRow();
 }
 
 void ManyToManyBrowser::selectedItem(BaseEntity* entity)

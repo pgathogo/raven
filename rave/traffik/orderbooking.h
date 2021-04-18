@@ -53,7 +53,7 @@ private:
     DateField* m_play_date;
     DateTimeField* m_play_time;
     ForeignKeyField* m_spot;
-    ForeignKeyField* m_audio;
+    ForeignKeyField* m_spot_audio;
 
     QStringList mHeader;
     std::string mTableName;

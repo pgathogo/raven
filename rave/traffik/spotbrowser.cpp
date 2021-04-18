@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "spotbrowser.h"
 #include "ui_spotbrowser.h"
 #include "ui_baseentitybrowserdlg.h"
@@ -10,13 +12,13 @@
 #include "../framework/ravenexception.h"
 
 SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
-    BaseEntityBrowserDlg(parent,
-                         std::make_unique<TRAFFIK::Spot>(client)),
+    BaseEntityBrowserDlg(parent,std::make_unique<TRAFFIK::Spot>(client)),
     ui{new Ui::SpotBrowser},
     m_client{client}
 {
     ui->setupUi(this);
     setDialogTitle("Client Spots");
+
     if (client != nullptr)
         searchRecord();
 }
@@ -81,6 +83,7 @@ void SpotBrowser::updateRecord()
 void SpotBrowser::searchRecord()
 {
     search_related<TRAFFIK::Spot, Client>(m_client);
+    qDebug() << " <<< After searchRecord >>> ";
 }
 
 

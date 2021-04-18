@@ -25,7 +25,7 @@ OrderBooking::OrderBooking()
     m_spot = createField<ForeignKeyField>("spot_id", "Spot",
                                           std::make_unique<TRAFFIK::Spot>(), "name");
 
-    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+    m_spot_audio = createField<ForeignKeyField>("audio_id", "Audio",
                                           std::make_unique<SpotAudio>(), "spot_id");
 
     mHeader << QString::fromStdString(schedule()->displayName());
@@ -101,12 +101,12 @@ void OrderBooking::set_spot(int val)
 
 ForeignKeyField *OrderBooking::audio() const
 {
-    return m_audio;
+    return m_spot_audio;
 }
 
 void OrderBooking::set_audio(int val)
 {
-    m_audio->setValue(val);
+    m_spot_audio->setValue(val);
 }
 
 std::string OrderBooking::tableName() const

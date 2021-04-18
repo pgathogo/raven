@@ -31,7 +31,6 @@ namespace AUDIO{
     {
         //return m_bounding_rect;
         return QRectF(m_line.x1()-5, m_line.y1()-5, m_line.dx()+10, m_line.y2()).normalized();
-
     }
 
     void IndicatorLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -140,7 +139,6 @@ namespace AUDIO{
     {
         //delete m_scene;
     }
-
 
     void Timeline::draw_time_ticks()
     {
@@ -507,6 +505,9 @@ namespace AUDIO{
 
     double AudioWaveScene::seconds_to_pixel(double secs)
     {
+        if (secs == 0)
+            return 0;
+
         return ((secs * 100) / ((m_audio_length * 100)/800));
     }
 
@@ -526,7 +527,6 @@ namespace AUDIO{
     {
 
     }
-
 
    MarkerIndicator::MarkerIndicator(MarkerType marker_type)
           :m_marker_type{marker_type},
@@ -553,7 +553,6 @@ namespace AUDIO{
     void MarkerIndicator::set_line_item(QGraphicsLineItem* line)
     {
         m_line_item = line;
-
     }
 
     QGraphicsLineItem* MarkerIndicator::line_item()
@@ -619,7 +618,6 @@ namespace AUDIO{
           m_indicator{indicator}
     {
         m_indicator->attach(this);
-
     }
 
     MarkerDisplayUnit::~MarkerDisplayUnit()

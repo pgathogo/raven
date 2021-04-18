@@ -2,6 +2,7 @@
 #define AUDIOTOOL_H
 
 #include <QObject>
+#include <QProcess>
 
 #include "../audio/audiofile.h"
 
@@ -14,22 +15,27 @@ class AudioTool : public QObject
     Q_OBJECT
 public:
     QString AUDIO_WAVE_FILE_EXE = "audiowaveform.exe";
-
     QString FFMPEG_EXE = "ffmpeg.exe";
+    QString BATCH_EXEC = "test.bat";
+    QString TEMP_BATCH = "mp3_to_ogg.bat";
 
-    AudioTool(AudioFile& audio_file);
+    AudioTool();
     ~AudioTool();
-    AudioFile audio_file() const;
-    bool generate_wave_file();
-    bool mp3_to_ogg();
+
+    bool generate_wave_file(const std::string src_audio_file, const std::string dest_wave_file);
+    std::string mp3_to_ogg(AudioFile&);
+    std::string generate_ogg_filename(int audio_file_id);
+    bool copy_ogg_to_audiolib(std::string src_ogg, std::string dest_ogg);
 
 private slots:
     void wave_gen_finished();
+    void mp3_to_ogg_finished(int, QProcess::ExitStatus);
+    void mp3_ready();
 
 private:
-    AudioFile& m_audio_file;
     QString m_wave_form_exe;
     QProcess* m_wave_gen_proc;
+    QProcess* m_mp3_to_ogg_proc;
     QProgressDialog* m_progress_dialog;
 };
 
@@ -37,14 +43,12 @@ private:
 class ADFRepository
 {
     public:
-        ADFRepository(AudioFile& audio_file);
-        bool write();
-        bool read();
+        ADFRepository();
+        bool write(const AudioFile&);
+        bool read_markers(AudioFile&);
     protected:
-        void update_json_object(QJsonObject&);
-        void read_audio_marker(const QJsonObject&);
-    private:
-        AudioFile& m_audio_file;
+        void object_to_json(const AudioFile&, QJsonObject&);
+        Marker json_to_markers(const QJsonObject&);
 };
 
 #endif // AUDIOTOOL_H

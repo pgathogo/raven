@@ -17,6 +17,7 @@ CONFIG += c++17
 
 SOURCES += \
     ../../audio/audiofile.cpp \
+    ../../audio/audiotool.cpp \
     audiographic.cpp \
     audiothread.cpp \
     audiowaveform.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     ../../audio/audiofile.h \
+    ../../audio/audiotool.h \
     audiographic.h \
     audiothread.h \
     audiowaveform.h \

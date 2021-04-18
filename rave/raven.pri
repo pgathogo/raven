@@ -1,7 +1,6 @@
 SOURCES += \
-    $$PWD/audio/audiotool.cpp \
-    $$PWD/core/artist.cpp \
-    $$PWD/core/track.cpp \
+    $$PWD/audio/artist.cpp \
+    $$PWD/audio/audio.cpp \
     $$PWD/security/loginform.cpp \
     $$PWD/traffik/commlogtreeviewmodel.cpp \
     ../framework/baseentity.cpp \
@@ -73,9 +72,8 @@ SOURCES += \
     ../security/roleform.cpp
 
 HEADERS += \
-    $$PWD/audio/audiotool.h \
-    $$PWD/core/artist.h \
-    $$PWD/core/track.h \
+    $$PWD/audio/artist.h \
+    $$PWD/audio/audio.h \
     $$PWD/security/loginform.h \
     $$PWD/traffik/commlogtreeviewmodel.h \
     $$PWD/utils/qchecklist.h \

@@ -1,20 +1,21 @@
 #ifndef SPOTAUDIO_H
 #define SPOTAUDIO_H
 
-#include "../framework/baseentity.h"
+#include "../framework/manytomany.h"
 
 
-class SpotAudio : public BaseEntity
+class SpotAudio : public ManyToMany
 {
 public:
     SpotAudio();
+    SpotAudio(BaseEntity* pEnt, BaseEntity* dEnt);
     ~SpotAudio() override;
 
-    ForeignKeyField* spot() const;
-    void setSpot(int val);
+//    ForeignKeyField* spot() const;
+//    void setSpot(int val);
 
-    ForeignKeyField* track() const;
-    void setTrack(int val);
+    ForeignKeyField* audio() const;
+    void set_audio(int val);
 
     IntegerField* playCount() const;
     void setPlayCount(int val);
@@ -39,15 +40,36 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 
+    BaseEntity* mtomEntity() override;
+
+    std::unique_ptr<ManyToMany> copy(BaseEntity* parent_entity, BaseEntity* detail_entity) const override;
+    void setTable(const std::string tablename) override { setTableName(tablename); }
+    IntegerField* parentId() const override;
+    void setParentId(int id) override;
+
+    IntegerField* detailId() const override;
+    void setDetailId(int id) override;
+
+    BaseEntity* parentEntity() const override;
+    BaseEntity* detailEntity() const override;
+    void set_detail_entity(BaseEntity* other);
+
+
 private:
-    ForeignKeyField* m_spot;
-    ForeignKeyField* m_track;
+//    ForeignKeyField* m_spot;
+    ForeignKeyField* m_audio;
     IntegerField* m_play_count;
     IntegerField* m_weight;
     IntegerField* m_seq_no;
 
-    QStringList mHeader;
-    std::string mTableName;
+    BaseEntity* m_parent_entity;
+    BaseEntity* m_detail_entity;
+
+    IntegerField* m_parent_id;
+    IntegerField* m_detail_id;
+
+    QStringList m_header;
+    std::string m_table_name;
 
 };
 

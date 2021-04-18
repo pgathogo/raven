@@ -1,7 +1,7 @@
 #include "cueeditor.h"
 #include "audiowaveform.h"
 
-CueEditor::CueEditor(AudioFile audio_file)
+CueEditor::CueEditor(AudioFile& audio_file)
     :m_audio_file{audio_file}
 {
     m_audio_wave_form = new AUDIO::AudioWaveForm(m_audio_file);

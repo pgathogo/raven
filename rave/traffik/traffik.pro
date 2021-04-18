@@ -20,6 +20,7 @@ include(../raven.pri)
 
 HEADERS += \
     ../audio/audiofile.h \
+    ../audio/audiotool.h \
     ../framework/entityregister.h \ \
     ../security/accesscontroller.h \
     ../security/authentication.h \
@@ -43,12 +44,14 @@ HEADERS += \
     schedulemantreeviewmodel.h \
     setupform.h \
     spotaudio.h \
+    spotaudiobrowser.h \
     traffiksetup.h \
     tree.h \
     treeviewmodel.h
 
 SOURCES += \
     ../audio/audiofile.cpp \
+    ../audio/audiotool.cpp \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     approverform.cpp \
@@ -71,6 +74,7 @@ SOURCES += \
     schedulemantreeviewmodel.cpp \
     setupform.cpp \
     spotaudio.cpp \
+    spotaudiobrowser.cpp \
     traffiksetup.cpp \
     tree.cpp \
     treeviewmodel.cpp
@@ -85,7 +89,8 @@ FORMS += \
     orderbrowser.ui \
     orderform.ui \
     scheduleform.ui \
-    setupform.ui
+    setupform.ui \
+    spotaudiobrowser.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -110,6 +115,9 @@ else:unix: LIBS += -L$$PWD/../lib/limereport/ -llimereport
 
 INCLUDEPATH += $$PWD/../lib/limereport/include
 DEPENDPATH += $$PWD/../lib/limereport/include
+
+INCLUDEPATH += $$PWD/../../audiolib/lib_debug
+DEPENDPATH += $$PWD/../../audiolib/lib_debug
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditor
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../audiolib/lib_debug/ -lcueeditord

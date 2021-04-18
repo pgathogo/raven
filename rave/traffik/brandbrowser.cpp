@@ -62,7 +62,6 @@ void BrandBrowser::searchRecord()
 bool BrandBrowser::okay_to_delete(BaseEntity *entity)
 {
    TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(entity);
-   //edm.searchByInt({"order_id", "=", order->id()});
 
     std::stringstream sql;
     qDebug() << ">>" << entity->id() << "<<";

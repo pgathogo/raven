@@ -1,8 +1,8 @@
 #include <filesystem>
 #include <sstream>
+
 #include <QFileDialog>
-#include "spotform.h"
-#include "ui_spotform.h"
+
 #include "ui_baseentitydetaildlg.h"
 #include "../utils/daypartgrid.h"
 #include "../framework/baseentitydetaildlg.h"
@@ -11,13 +11,19 @@
 #include "../framework/entitydatamodel.h"
 #include "../utils/tools.h"
 
+#include "spotform.h"
+#include "ui_spotform.h"
 #include "client.h"
 #include "spotvoiceover.h"
 #include "spottypeexclusion.h"
 #include "traffiksetup.h"
 
 #include "../audio/audiofile.h"
+#include "../audio/audiotool.h"
 #include "../audiolib/headers/cueeditor.h"
+
+#include "spotaudiobrowser.h"
+#include "spotaudio.h"
 
 namespace fs = std::filesystem;
 
@@ -34,20 +40,24 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
     populateFormWidgets();
 
     m_MtoMVoiceOverBrowser =
-            std::make_unique<ManyToManyBrowser>(&m_spot->set_voice_over(),
+            std::make_unique<ManyToManyBrowser>(&m_spot->voice_over(),
                                                 ui->vlVoiceOver,
                                                 this);
-
     m_MtoMTypeExBrowser =
-            std::make_unique<ManyToManyBrowser>(&m_spot->set_type_exclusion(),
+            std::make_unique<ManyToManyBrowser>(&m_spot->type_exclusion(),
                                                 ui->vlTypeEx,
+                                                this);
+
+    m_spot_audio_browser =
+            std::make_unique<SpotAudioBrowser>(&m_spot->spot_audio(),
+                                                ui->vlSpotAudio,
                                                 this);
 
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
 
-    connect(ui->btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
-    connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::cue_edit);
+    //connect(ui->btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
+    //connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::cue_edit);
 
     ui->tabWidget->setCurrentIndex(0);
 
@@ -146,9 +156,22 @@ void SpotForm::on_import_audio()
     auto audio_file_full_path = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), "/d/home/audio",
                                                    tr("Audio Files (*.ogg *.mp3 *.wav)"));
-
     if (audio_file_full_path.isEmpty())
         return;
+
+    // open audio property dialog to enter basic audio details
+
+    AudioFile audio_file(audio_file_full_path.toStdString());
+    ADFRepository adf_repo;
+    AudioTool audio_tool;
+
+    CueEditor* cue_editor = new CueEditor(audio_file);
+    if (cue_editor->editor() == 1)
+        audio_file.set_marker(cue_editor->marker());
+
+
+
+    /*
 
     QFileInfo file_info(audio_file_full_path);
 
@@ -160,10 +183,13 @@ void SpotForm::on_import_audio()
     qDebug() << "Filename: " << audio_file;
     qDebug() << "Folder: " << QString::fromStdString(comm_audio_folder);
 
+    */
+
+
 
     /* Convert non-ogg audio files to ogg */
 
-
+    /*
     std::string dest_audio_file = comm_audio_folder+"\\"+audio_file.toStdString();
 
     fs::copy(audio_file_full_path.toStdString(), dest_audio_file);
@@ -175,6 +201,8 @@ void SpotForm::on_import_audio()
     sql << "Insert into rave_track (title, filepath, artist_id, track_type) "
         << " Values ('Main Comm Audio', '"+comm_audio_folder+"', 2, 'COMM') RETURNING id;";
 
+    */
+
 //    try{
 //        int id = edm.insert_returning_id(sql.str());
 //        qDebug() << "Last Id: "<< id;
@@ -182,10 +210,12 @@ void SpotForm::on_import_audio()
 //        showMessage(de.errorMessage());
 //    }
 
+
 }
 
 void SpotForm::cue_edit()
 {
+    /*
     AudioFile audio_file("D:\\home\\cpp\\audiowaveform_win\\stereo.mp3");
 
     if (audio_file.is_valid()){
@@ -197,6 +227,7 @@ void SpotForm::cue_edit()
         CueEditor* cue_editor = new CueEditor(audio_file);
         auto mark = cue_editor->editor();
         }
+        */
 
 }
 

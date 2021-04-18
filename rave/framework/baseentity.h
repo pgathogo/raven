@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include <QList>
+#include <QDebug>
 #include "entityfields.h"
 
 #include "../utils/types.h"

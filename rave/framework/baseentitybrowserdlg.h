@@ -230,9 +230,13 @@ public:
         if (bui->edtFilter->text().isEmpty()){
             T& t = dynamic_cast<T&>(entityDataModel().getEntity());
            if constexpr(HasClientId<T>::value > 0){
-                //auto si = searchItem(t.client()->dbColumnName(), "=", parent->id());
                 auto si = std::make_tuple(t.client()->dbColumnName(), "=", parent->id());
-                entityDataModel().searchByInt(si);
+                try{
+                    qDebug() << "<<< Going: searchByInt >>>";
+                    entityDataModel().searchByInt(si);
+                   } catch (DatabaseException& de) {
+                    showMessage(de.errorMessage());
+                }
            }
         }else{
             auto data = bui->cbFilter->itemData(
@@ -250,6 +254,7 @@ public:
             }
         }
 
+        qDebug() << "<<< END:searchRelated >>>";
     }
 
 protected:

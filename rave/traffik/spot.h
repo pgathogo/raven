@@ -8,6 +8,11 @@ class Client;
 class VoiceOver;
 class SpotVoiceOver;
 class SpotTypeExclusion;
+class SpotAudio;
+
+namespace AUDIO{
+    class Audio;
+}
 
 namespace TRAFFIK {
 
@@ -64,8 +69,10 @@ namespace TRAFFIK {
         StringField* daypart7() const;
         void set_daypart7(std::string dp);
 
-        SpotVoiceOver& set_voice_over();
-        SpotTypeExclusion& set_type_exclusion();
+        SpotVoiceOver& voice_over();
+        SpotTypeExclusion& type_exclusion();
+
+        SpotAudio& spot_audio();
 
     private:
         StringField* m_name;
@@ -91,6 +98,8 @@ namespace TRAFFIK {
         std::unique_ptr<TRAFFIK::TypeExclusion> m_type_ex;
         std::unique_ptr<SpotTypeExclusion> m_spot_type_ex;
 
+        std::unique_ptr<AUDIO::Audio> m_audio;
+        std::unique_ptr<SpotAudio> m_spot_audio;
 
     };
 }

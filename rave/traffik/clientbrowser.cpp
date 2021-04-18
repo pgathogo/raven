@@ -97,7 +97,11 @@ void ClientBrowser::openBrandBrowser()
 
 void ClientBrowser::openSpotBrowser()
 {
-    openBrowserWindow<Client, SpotBrowser>();
+    try{
+        openBrowserWindow<Client, SpotBrowser>();
+    } catch (DatabaseException& de) {
+        qDebug() << stoq(de.errorMessage());
+    }
 }
 
 void ClientBrowser::openOrderBrowser()

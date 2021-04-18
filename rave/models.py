@@ -308,6 +308,28 @@ ARTIST_TYPE = (
         ('G','GROUP'),
        )
 
+MOOD_TYPE = (
+        ('low','LOW'),
+        ('vlow','VERY LOW'),
+        ('medium', 'MEDIUM'),
+        ('high', 'HIGH'),
+        ('vhigh', 'VERY HIGH'),
+)
+
+class Genre(models.Model):
+    genre = models.CharField(max_length=255)
+
+class Mood(models.Model):
+    mood = models.CharField(max_length=100)
+    intensity = models.CharField(max_length=8, choices=MOOD_TYPE)
+    timbre = models.CharField(max_length=8, choices=MOOD_TYPE)
+    pitch = models.CharField(max_length=8, choices=MOOD_TYPE)
+    rhythm = models.CharField(max_length=8, choices=MOOD_TYPE)
+
+class Folder(models.Model):
+    folder_name = models.CharField(max_length=255)
+    parent = models.IntegerField()
+
 class Artist(models.Model):
     first_name = models.CharField(max_length=255, blank=True, null=True)
     surname = models.CharField(max_length=255, blank=True, null=True)
@@ -315,7 +337,7 @@ class Artist(models.Model):
     artist_type = models.CharField(max_length=1, choices=ARTIST_TYPE)
     notes = models.TextField(blank=True, null=True)
 
-TRACK_TYPE = (
+AUDIO_TYPE = (
         ('SONG', 'Song'),
         ('COMM', 'Commercial'),
         ('JING', 'Jingle'),
@@ -323,11 +345,29 @@ TRACK_TYPE = (
         ('NBITE', 'News Bite')
         )
 
-class Track(Daypart):
+class Audio(Daypart):
     title = models.CharField(max_length=255)
-    artist = models.ForeignKey(Artist)
+    artist = models.ForeignKey(Artist, null=True)
     filepath = models.CharField(max_length=255)
-    track_type = models.CharField(max_length=6, choices=TRACK_TYPE, default='SONG')
+    audio_type = models.CharField(max_length=6, choices=AUDIO_TYPE, default='SONG')
+    duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    start_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    fade_in_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    intro_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    extro_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    fade_out_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    end_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    genre = models.ForeignKey(Genre, blank=True, null=True)
+    mood = models.ForeignKey(Mood, blank=True, null=True)
+    folder = models.ForeignKey(Folder, blank=True, null=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    deleted = models.BooleanField(default=False)
+    play_count = models.IntegerField(null=True)
+    audio_year = models.IntegerField(null=True)
+    audio_month = models.IntegerField(null=True)
+    notes = models.TextField(blank=True, null=True)
 
 PLAY_STATUS = (
         ('CUED','CUED'),
@@ -354,7 +394,7 @@ class Schedule(models.Model):
     schedule_date = models.DateField()
     schedule_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
     schedule_hour = models.IntegerField(default=0, null=True)
-    track = models.ForeignKey(Track, null=True)
+    audio = models.ForeignKey(Audio, null=True)
     fade_in = models.IntegerField(default=0, null=True)
     fade_out = models.IntegerField(default=0, null=True)
     fade_delay = models.IntegerField(default=0, null=True)
@@ -363,7 +403,7 @@ class Schedule(models.Model):
     play_time = models.TimeField(null=True)
     auto_transition = models.IntegerField(default=0, null=True)
     live_transition = models.IntegerField(default=0, null=True)
-    track_type = models.CharField(max_length=8, choices=SCHEDULE_TYPE, default='SONG')
+    schedule_item_type = models.CharField(max_length=8, choices=SCHEDULE_TYPE, default='SONG')
     break_duration = models.IntegerField(default=0, null=True)
     break_start_win = models.IntegerField(default=0, null=True)
     break_end_win = models.IntegerField(default=0, null=True)
@@ -376,7 +416,7 @@ class Schedule(models.Model):
 
 class SpotAudio(models.Model):
     spot = models.ForeignKey(Spot)
-    track = models.ForeignKey(Track)
+    audio = models.ForeignKey(Audio)
     play_count = models.IntegerField(default=0, null=True)
     weight = models.IntegerField(default=100, null=True)
     seq_no = models.IntegerField(default=1, null=True)

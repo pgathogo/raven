@@ -37,9 +37,13 @@ public:
         if (selectedRowId() < 0){
             showMessage("Select a Client to view Bla Bla Bla");
         }else{
+
            BaseEntity* be = findSelectedEntity();
+
            T1* entity = dynamic_cast<T1*>(be);
+
            auto browser = std::make_unique<T2>(entity, this);
+
            browser->exec();
         }
     }

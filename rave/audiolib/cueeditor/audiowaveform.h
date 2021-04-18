@@ -22,7 +22,7 @@ namespace AUDIO {
         Q_OBJECT
 
     public:
-        explicit AudioWaveForm(AudioFile audio_file, QDialog* parent = nullptr);
+        explicit AudioWaveForm(AudioFile& audio_file, QDialog* parent = nullptr);
         ~AudioWaveForm() override;
 
         void show_wave_file();
@@ -79,7 +79,7 @@ namespace AUDIO {
 
     private:
         Ui::AudioWaveForm *ui;
-        AudioFile m_audio_file;
+        AudioFile& m_audio_file;
         double m_seconds_per_pixel;
         AudioWave* m_audio_wave;
         AudioWaveScene* m_scene;

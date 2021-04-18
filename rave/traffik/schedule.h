@@ -27,8 +27,8 @@ public:
     IntegerField* scheduleHour() const;
     IntegerField* setScheduleHour(int val);
 
-    IntegerField* track() const;
-    void setTrack(int val);
+    ForeignKeyField* audio() const;
+    void set_audio(int val);
 
     IntegerField* fadeIn() const;
     void setFadeIn(int val);
@@ -54,8 +54,8 @@ public:
     IntegerField* liveTransition() const;
     void setLiveTransition(int val);
 
-    ChoiceField<std::string>* trackType() const;
-    ChoiceField<std::string>* setTrackType(std::string val);
+    ChoiceField<std::string>* audio_type() const;
+    ChoiceField<std::string>* set_audio_type(std::string val);
 
     IntegerField* breakDuration() const;
     IntegerField* setBreakDuration(int val);
@@ -117,7 +117,7 @@ private:
     DateField* m_schedule_date;
     TimeField* m_schedule_time;
     IntegerField* m_schedule_hour;
-    IntegerField* m_track;   // ** to be changed to ForeignKeyField
+    ForeignKeyField* m_audio;   // ** to be changed to ForeignKeyField
     IntegerField* m_fade_in;
     IntegerField* m_fade_out;
     IntegerField* m_fade_delay;
@@ -126,7 +126,7 @@ private:
     TimeField* m_play_time;
     IntegerField* m_auto_transition;
     IntegerField* m_live_transition;
-    ChoiceField<std::string>* m_track_type;
+    ChoiceField<std::string>* m_audio_type;
     IntegerField* m_break_duration;
     IntegerField* m_break_start_win;
     IntegerField* m_break_end_win;
@@ -141,10 +141,10 @@ private:
 
     bool mIsBad;
 
-    QStringList mHeader;
-    std::string mTableName;
-    std::vector<std::string> viewColumns;
-    std::vector<std::string> viewValues;
+    QStringList m_header;
+    std::string m_table_name;
+    std::vector<std::string> m_view_columns;
+    std::vector<std::string> m_view_values;
 };
 
 #endif // SCHEDULE_H

@@ -99,7 +99,7 @@ void BreakCreateForm::create_breaks()
                     << sched.setBreakMaxSpots(bll->maxSpots()->value())
                     << sched.setBreakDurationLeft(bll->duration()->value())
                     << sched.setBookedSpots(0)
-                    << sched.setTrackType("COMM")
+                    << sched.set_audio_type("COMM")
                     << sched.setBreakMode("MIXED");
 
             insert_stmts += sched.make_insert_stmt(fields.vec);
