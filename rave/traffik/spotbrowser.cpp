@@ -8,6 +8,9 @@
 #include "spot.h"
 #include "spotform.h"
 #include "orderbooking.h"
+#include "spotaudio.h"
+#include "spotaudiobrowser.h"
+#include "../audio/audio.h"
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
 
@@ -32,16 +35,16 @@ SpotBrowser::~SpotBrowser()
 void SpotBrowser::addRecord()
 {
     auto spot = std::make_unique<TRAFFIK::Spot>();
-    auto spotForm = std::make_unique<SpotForm>(m_client, spot.get(), this);
+    auto spot_form = std::make_unique<SpotForm>(m_client, spot.get(), this);
 
-    if (spotForm->exec() > 0){
+    if (spot_form->exec() > 0){
         try{
 
             entityDataModel().createEntity(std::move(spot));
 
-            saveVoiceOvers(*spotForm);
+            saveVoiceOvers(*spot_form);
 
-            saveTypeExclusions(*spotForm);
+            saveTypeExclusions(*spot_form);
 
         }catch(DatabaseException& de){
 
@@ -62,16 +65,18 @@ void SpotBrowser::updateRecord()
         TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be);
         spot->client()->setValue(m_client->id());
 
-        std::unique_ptr<SpotForm> spotForm =
+        std::unique_ptr<SpotForm> spot_form =
                 std::make_unique<SpotForm>(m_client, spot, this);
-        if (spotForm->exec() > 0){
+        if (spot_form->exec() > 0){
             try{
                 updateTableViewRecord(spot->tableViewValues());
                 entityDataModel().updateEntity(*spot);
 
-                saveVoiceOvers(*spotForm);
+                saveVoiceOvers(*spot_form);
 
-                saveTypeExclusions(*spotForm);
+                saveTypeExclusions(*spot_form);
+
+                 save_spot_audio(*spot_form);
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -138,5 +143,30 @@ void SpotBrowser::saveTypeExclusions(const SpotForm& sf)
         if (mtom->dbAction() == DBAction::dbaDELETE)
             edm->deleteEntity(*mtom);
     }
+}
+
+void SpotBrowser::save_spot_audio(const SpotForm &sf)
+{
+    auto edm = std::make_unique<EntityDataModel>();
+
+    auto& spot_audios = sf.spot_audios();
+
+    for(auto& sa : spot_audios){
+        TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());
+
+        if (s_audio->dbAction() == DBAction::dbaCREATE){
+
+            auto& audio = s_audio->get_paudio();
+            int id = edm->createEntityDB(audio);
+            qDebug() << "<<< " << id << " >>> ";
+            s_audio->setDetailId(id);
+            qDebug() << "  *** After Detail Create ***";
+            s_audio->setParentId(sf.parentId());
+            qDebug() << "*** After SetParentId ***";
+            edm->createEntityDB(*s_audio);
+            qDebug() << "*** After Header Create *** ";
+        }
+    }
+
 }
 

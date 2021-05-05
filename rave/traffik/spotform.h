@@ -26,7 +26,6 @@ using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 class SpotForm : public BaseEntityDetailDlg
 {
     Q_OBJECT
-
 public:
     explicit SpotForm(Client* client, TRAFFIK::Spot* spot,
                       QDialog* parent = nullptr);
@@ -38,10 +37,14 @@ public:
 
     void populateEntityFields() override;
     void populateFormWidgets() override;
+
     std::vector<EntityRecord> const& voiceOvers() const;
     std::vector<EntityRecord> const& typeExclusions() const;
+    std::vector<EntityRecord> const& spot_audios() const;
 
     int parentId() const;
+
+    std::unique_ptr<SpotAudioBrowser> const& spot_browser() const;
 
 public slots:
     void cue_edit();

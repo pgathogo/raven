@@ -347,6 +347,7 @@ AUDIO_TYPE = (
 
 class Audio(Daypart):
     title = models.CharField(max_length=255)
+    short_desc = models.CharField(max_length=255, null=True, blank=True)
     artist = models.ForeignKey(Artist, null=True)
     filepath = models.CharField(max_length=255)
     audio_type = models.CharField(max_length=6, choices=AUDIO_TYPE, default='SONG')
@@ -366,7 +367,7 @@ class Audio(Daypart):
     deleted = models.BooleanField(default=False)
     play_count = models.IntegerField(null=True)
     audio_year = models.IntegerField(null=True)
-    audio_month = models.IntegerField(null=True)
+    creation_date = models.DateField(null=True)
     notes = models.TextField(blank=True, null=True)
 
 PLAY_STATUS = (
@@ -417,7 +418,6 @@ class Schedule(models.Model):
 class SpotAudio(models.Model):
     spot = models.ForeignKey(Spot)
     audio = models.ForeignKey(Audio)
-    play_count = models.IntegerField(default=0, null=True)
     weight = models.IntegerField(default=100, null=True)
     seq_no = models.IntegerField(default=1, null=True)
 

@@ -185,11 +185,14 @@ public:
 
         BaseEntity* currentEntity();
 
+        BaseEntity* fk_entity();
+
     private:
         int mValue;
         int mIndex;
         std::string mCurrText;
         std::string mDisplayField;
+        BaseEntity* m_fk_entity;
         static std::map<std::string, std::unique_ptr<EntityDataModel>> lookups;
 };
 

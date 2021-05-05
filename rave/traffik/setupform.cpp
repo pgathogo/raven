@@ -282,12 +282,12 @@ void SetupForm::set_audio_path()
 {
     auto audio_folder = get_audio_folder(ui->edtAudioPath->text());
     if (!audio_folder.isEmpty())
-         ui->edtAudioPath->setText(audio_folder);
+         ui->edtAudioPath->setText(audio_folder+"/");
 }
 
 void SetupForm::set_comm_audio_path()
 {
     auto comm_audio_folder = get_audio_folder(ui->edtCommAudioPath->text());
     if (!comm_audio_folder.isEmpty())
-         ui->edtCommAudioPath->setText(comm_audio_folder);
+         ui->edtCommAudioPath->setText(comm_audio_folder+"/");
 }

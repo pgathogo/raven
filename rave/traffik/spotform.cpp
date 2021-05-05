@@ -20,10 +20,12 @@
 
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
+#include "../audio/audio.h"
 #include "../audiolib/headers/cueeditor.h"
 
 #include "spotaudiobrowser.h"
 #include "spotaudio.h"
+#include "spotaudioform.h"
 
 namespace fs = std::filesystem;
 
@@ -56,7 +58,6 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
 
-    //connect(ui->btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
     //connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::cue_edit);
 
     ui->tabWidget->setCurrentIndex(0);
@@ -88,9 +89,19 @@ std::vector<EntityRecord> const& SpotForm::typeExclusions() const
     return m_MtoMTypeExBrowser->entityDataModel().modelEntities();
 }
 
+const std::vector<EntityRecord> &SpotForm::spot_audios() const
+{
+    return  m_spot_audio_browser->entityDataModel().modelEntities();
+}
+
 int SpotForm::parentId() const
 {
     return m_spot->id();
+}
+
+const std::unique_ptr<SpotAudioBrowser> &SpotForm::spot_browser() const
+{
+    return m_spot_audio_browser;
 }
 
 std::string SpotForm::windowTitle()
@@ -164,6 +175,36 @@ void SpotForm::on_import_audio()
     AudioFile audio_file(audio_file_full_path.toStdString());
     ADFRepository adf_repo;
     AudioTool audio_tool;
+
+    Marker marker;
+
+    if (fs::exists(audio_file.adf_file()) ){
+        // FIXME: return markers instead of sending audio_file as reference.
+        adf_repo.read_markers(audio_file);
+
+        auto af_markers = audio_file.marker();
+
+        marker.start_marker = af_markers.start_marker;
+        marker.fade_in = af_markers.fade_in;
+        marker.intro = af_markers.intro;
+        marker.extro = af_markers.extro;
+        marker.fade_out = af_markers.fade_out;
+        marker.end_marker = af_markers.end_marker;
+    }
+
+    qDebug() << "AUDIO FILE: "<< QString::fromStdString(audio_file.audio_file());
+    qDebug() << "WAVE FILE: "<< QString::fromStdString(audio_file.wave_file());
+
+    if (!fs::exists(audio_file.wave_file()) ){
+        audio_tool.generate_wave_file(audio_file.audio_file(), audio_file.wave_file());
+        qDebug() << "Wave generated.";
+    }
+
+
+    auto spot_audio = std::make_unique<TRAFFIK::SpotAudio>(m_spot, new AUDIO::Audio(audio_file.audio_file()));
+    auto spot_audio_form = std::make_unique<SpotAudioForm>(spot_audio.get());
+
+    spot_audio_form->exec();
 
     CueEditor* cue_editor = new CueEditor(audio_file);
     if (cue_editor->editor() == 1)

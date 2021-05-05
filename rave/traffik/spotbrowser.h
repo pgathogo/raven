@@ -27,6 +27,7 @@ public:
 
     void saveVoiceOvers(const SpotForm& sf);
     void saveTypeExclusions(const SpotForm& sf);
+    void save_spot_audio(const SpotForm& sf);
 private:
     Ui::SpotBrowser *ui;
     Client* m_client;

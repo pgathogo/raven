@@ -25,9 +25,7 @@ TypeExclusionDetails::TypeExclusionDetails(
 TypeExclusionDetails::~TypeExclusionDetails()
 {
     delete ui;
-    //delete typeEx;
     delete dpg;
-    qDebug() << "TypeExclusion dtor";
 }
 
 

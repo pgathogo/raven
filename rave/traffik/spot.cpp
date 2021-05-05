@@ -118,8 +118,8 @@ namespace TRAFFIK {
         m_type_ex = std::make_unique<TRAFFIK::TypeExclusion>();
         m_spot_type_ex = std::make_unique<SpotTypeExclusion>(this, m_type_ex.get() );
 
-        m_audio = std::make_unique<AUDIO::Audio>("");
-        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
+//        m_audio = std::make_unique<AUDIO::Audio>("");
+//        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
 
         setTableName("rave_spot");
 
@@ -174,6 +174,7 @@ namespace TRAFFIK {
 
     std::unique_ptr<BaseEntity> Spot::cloneAsUnique()
     {
+        qDebug() << "<<< Spot::cloneAsUnique >>>" ;
         return std::make_unique<Spot>();
     }
 

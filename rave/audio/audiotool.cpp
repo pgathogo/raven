@@ -63,6 +63,12 @@ bool AudioTool::generate_wave_file(const std::string src_audio_file, const std::
          //<< "-z" << "44100"
          //<< "-z" << "auto";
 
+    qDebug() << m_wave_form_exe ;
+    qDebug() << "INPUT: "<< input_file;
+    qDebug() << "OUTPUT: "<< output_file;
+    qDebug() << m_wave_form_exe ;
+
+
     m_wave_gen_proc->start(m_wave_form_exe, args);
     m_progress_dialog->exec();
     m_wave_gen_proc->waitForFinished();
@@ -74,22 +80,33 @@ std::string AudioTool::mp3_to_ogg(AudioFile& audio_file)
 {
     qDebug() << "mp3_to_ogg ...";
 
-    m_progress_dialog = new QProgressDialog("Converting and saving MP3 to OGG...please wait.","", 0, 100);
-    m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
-    m_progress_dialog->setRange(0,0);
-    m_progress_dialog->setCancelButton(nullptr);
 
     //audio_file.set_ogg_filename(audio_file.short_filename()+".ogg");
 
     QString ffmpeg = QDir::currentPath()+"/"+FFMPEG_EXE;
     QString batch_exec = QDir::currentPath()+"/"+BATCH_EXEC;
 
-    std::string ogg_file = audio_file.short_filename()+".ogg";
-    QString out_file = QString::fromStdString(audio_file.audio_path()+ogg_file);
-    out_file = out_file.replace("\\", "/");
+    //std::string ogg_file = audio_file.short_filename()+".ogg";
+//    QString out_file = QString::fromStdString(audio_file.ogg_filename());
+//    out_file = out_file.replace("\\", "/");
+    auto out_file = QDir::toNativeSeparators(QString::fromStdString(audio_file.ogg_filename()));
 
-    QString in_file = QString::fromStdString(audio_file.audio_file());
-    in_file = in_file.replace("\\","/");
+
+//    QString in_file = QString::fromStdString(audio_file.audio_file());
+    auto in_file = QDir::toNativeSeparators(QString::fromStdString(audio_file.audio_file()));
+
+
+    //in_file = in_file.replace("\\","/");
+    //out_file = out_file.replace("\\", "/");
+
+    qDebug() << "SRC: "<< in_file;
+    qDebug() << "DEST: "<< out_file;
+
+    m_progress_dialog = new QProgressDialog("Converting and saving MP3 to OGG...please wait.",
+                                            out_file, 0, 100);
+    m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
+    m_progress_dialog->setRange(0,0);
+    m_progress_dialog->setCancelButton(nullptr);
 
     QStringList args;
 
@@ -112,7 +129,7 @@ std::string AudioTool::mp3_to_ogg(AudioFile& audio_file)
 
     QTextStream out_stream(&temp_batch);
 
-    out_stream << ffmpeg << " -i "
+    out_stream << ffmpeg << " -y -i "
                << in_file
                << " -c:a libvorbis -q:a 4 -vsync 2 "
                << out_file;
@@ -127,7 +144,7 @@ std::string AudioTool::mp3_to_ogg(AudioFile& audio_file)
 
     m_mp3_to_ogg_proc->waitForReadyRead();
 
-    return ogg_file;
+    return audio_file.ogg_short_filename();
 }
 
 std::string AudioTool::generate_ogg_filename(int audio_file_id)

@@ -26,6 +26,10 @@ AudioFile::AudioFile(const std::string a_file)
 
     m_adf_file = m_audio_path+m_short_filename+".adf";
 
+    m_ogg_short_filename = m_short_filename+".ogg";
+
+    m_ogg_filename = m_audio_path+m_ogg_short_filename;
+
 }
 
 std::string AudioFile::audio_title() const
@@ -86,6 +90,11 @@ std::string AudioFile::adf_file() const
 std::string AudioFile::audio_lib_path() const
 {
     return m_audio_lib_path;
+}
+
+std::string AudioFile::ogg_short_filename() const
+{
+    return m_ogg_short_filename;
 }
 
 std::string AudioFile::ogg_filename() const
@@ -167,9 +176,15 @@ void AudioFile::set_audio_lib_path(const std::string lib_path)
     m_audio_lib_path = lib_path;
 }
 
+
 void AudioFile::set_id(int id)
 {
     m_id = id;
+}
+
+void AudioFile::set_ogg_short_filename(const std::string name)
+{
+    m_ogg_short_filename = name;
 }
 
 void AudioFile::set_ogg_filename(const std::string name)

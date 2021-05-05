@@ -217,6 +217,7 @@ public:
 
             template <typename C>
             static YesType& test(decltype(&C::client));
+
             template <typename C>
             static NoType& test(...);
         public:

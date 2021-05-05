@@ -38,6 +38,7 @@ public:
 
     void set_id(int id);
     void set_ogg_filename(const std::string name);
+    void set_ogg_short_filename(const std::string name);
     void set_temp_id(int id);
     void set_marker(Marker marker);
 
@@ -53,6 +54,7 @@ public:
     std::string wave_filename() const;
     std::string adf_file() const;
     std::string audio_lib_path() const;
+    std::string ogg_short_filename() const;
     std::string ogg_filename() const;
 
     int id() const;
@@ -77,6 +79,7 @@ private:
     std::string m_short_filename;   // filename without extension.
     std::string m_adf_file;  		// full path with filena of Audio Data File (.*adf)
     std::string m_audio_lib_path;	// path where Raven audio files are stored.
+    std::string m_ogg_short_filename;
     std::string m_ogg_filename;
     int m_duration;
     int m_id;

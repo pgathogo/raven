@@ -8,7 +8,10 @@ class Client;
 class VoiceOver;
 class SpotVoiceOver;
 class SpotTypeExclusion;
-class SpotAudio;
+
+namespace TRAFFIK{
+    class SpotAudio;
+}
 
 namespace AUDIO{
     class Audio;
@@ -99,7 +102,7 @@ namespace TRAFFIK {
         std::unique_ptr<SpotTypeExclusion> m_spot_type_ex;
 
         std::unique_ptr<AUDIO::Audio> m_audio;
-        std::unique_ptr<SpotAudio> m_spot_audio;
+        std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
 
     };
 }

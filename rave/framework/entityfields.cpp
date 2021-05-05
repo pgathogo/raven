@@ -273,11 +273,13 @@ std::string BooleanField::displayName() const
 /* -------- StringField --------- */
 
 StringField::StringField()
+    :mValue{}
 {
 }
 
 StringField::StringField(const std::string aName, const std::string aLabel)
-    :Field(aName, aLabel)
+    :Field(aName, aLabel),
+      mValue{}
 {
 }
 
@@ -324,6 +326,7 @@ std::string StringField::value()
 {
     return mValue;
 }
+
 
 std::string StringField::displayName() const
 {
@@ -394,6 +397,7 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
         ,mValue{-1}
         ,mIndex{-1}
         ,mDisplayField{displayField}
+        ,m_fk_entity{fkEntity.get()}
 {
     auto it = lookups.find(aName);
 
@@ -477,6 +481,11 @@ BaseEntity *ForeignKeyField::currentEntity()
     return ent;
 }
 
+BaseEntity* ForeignKeyField::fk_entity()
+{
+    return m_fk_entity;
+}
+
 void ForeignKeyField::setIndex(int i)
 {
     mIndex = i;
@@ -554,7 +563,7 @@ DateField::~DateField()
 
 DateField::DateField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel)
-    ,mValue{QDate()}
+    ,mValue{QDate(QDate::currentDate())}
 {
     /*
     auto now = std::chrono::system_clock::now();

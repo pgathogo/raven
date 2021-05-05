@@ -176,7 +176,6 @@ public:
 private:
     std::unique_ptr<BaseDatabaseManager> dbManager;
     void populateEntities();
-    void populateEntities2();
     std::vector<std::string> filterCache;
 };
 

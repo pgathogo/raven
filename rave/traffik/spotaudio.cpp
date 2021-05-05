@@ -1,200 +1,338 @@
 #include "spotaudio.h"
 #include "spot.h"
-#include "../audio/audio.h"
+//#include "../audio/audio.h"
+#include "../audio/audiofile.h"
 
-SpotAudio::SpotAudio()
-    :ManyToMany{}
-{
+namespace TRAFFIK{
 
-//    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
-//                                         std::make_unique<TRAFFIK::Spot>(), "name");
-    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
-                                          std::make_unique<AUDIO::Audio>(""), "title");
-    m_play_count = createField<IntegerField>("play_count", "Play Count");
-    m_weight = createField<IntegerField>("weight", "Weight");
-    m_seq_no = createField<IntegerField>("seq_no", "Seq No");
+    SpotAudio::SpotAudio()
+        :ManyToMany{},
+         m_audio{nullptr},
+         p_audio{""}
+    {
 
-    m_header << QString::fromStdString(m_audio->fieldLabel())
-            << QString::fromStdString(m_weight->fieldLabel());
+    //    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
+    //                                         std::make_unique<TRAFFIK::Spot>(), "name");
+//        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+//                                              std::make_unique<AUDIO::Audio>(""), "title");
+    //    m_play_count = createField<IntegerField>("play_count", "Play Count");
 
-    setTableName("rave_spotaudio");
-}
+//        m_weight = createField<IntegerField>("weight", "Weight");
+//        m_seq_no = createField<IntegerField>("seq_no", "Seq No");
 
-SpotAudio::SpotAudio(BaseEntity *pEnt, BaseEntity *dEnt)
-    :ManyToMany{},
-     m_parent_entity{pEnt},
-     m_detail_entity{dEnt}
-{
-    m_parent_id = createField<IntegerField>("spot_id","Parent ID");
-    m_detail_id = createField<IntegerField>("audio_id","Detail ID");
+//        m_short_desc = createField<StringField>("short_desc", "Short Desc");
+//        m_short_desc->setFormOnly(true);
 
-//    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
-//                                         std::make_unique<TRAFFIK::Spot>(), "name");
+//        m_notes = createField<TextField>("notes", "Notes");
+//        m_notes->setFormOnly(true);
 
-    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
-                                          std::make_unique<AUDIO::Audio>(""), "title");
-    m_play_count = createField<IntegerField>("play_count", "Play Count");
-    m_weight = createField<IntegerField>("weight", "Weight");
-    m_seq_no = createField<IntegerField>("seq_no", "Seq No");
+//        m_header << QString::fromStdString(m_audio->fieldLabel())
+//                << QString::fromStdString(m_weight->fieldLabel());
 
-    m_header << QString::fromStdString(m_audio->fieldLabel())
-             << QString::fromStdString(m_weight->fieldLabel());
+//        setTableName("rave_spotaudio");
+    }
 
-    setTableName("rave_spotaudio");
+    SpotAudio::SpotAudio(BaseEntity *pEnt, BaseEntity *dEnt)
+        :ManyToMany{},
+         m_audio{nullptr},
+         p_audio{""},
+         m_parent_entity{pEnt},
+         m_detail_entity{dEnt}
+    {
+        m_parent_id = createField<IntegerField>("spot_id","Parent ID");
+        m_detail_id = createField<IntegerField>("audio_id","Detail ID");
 
-}
+//        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+//                                              std::make_unique<AUDIO::Audio>(""), "title");
 
-SpotAudio::~SpotAudio()
-{
-}
+        m_audio = dynamic_cast<AUDIO::Audio*>(m_detail_entity);
 
-/*
-ForeignKeyField *SpotAudio::spot() const
-{
-    return m_spot;
-}
-*/
+        m_weight = createField<IntegerField>("weight", "Weight");
+        m_seq_no = createField<IntegerField>("seq_no", "Seq No");
 
-/*
-void SpotAudio::setSpot(int val)
-{
-    m_spot->setValue(val);
-}
-*/
+        m_short_desc = createField<StringField>("short_desc", "Description");
+        m_short_desc->setFormOnly(true);
 
-ForeignKeyField *SpotAudio::audio() const
-{
-    return m_audio;
-}
+        m_notes = createField<TextField>("notes", "Notes");
+        m_notes->setFormOnly(true);
 
-void SpotAudio::set_audio(int val)
-{
-    m_audio->setValue(val);
-}
+        m_header << QString::fromStdString(m_audio->title()->fieldLabel())
+                 << QString::fromStdString(m_short_desc->fieldLabel());
 
-IntegerField *SpotAudio::playCount() const
-{
-    return m_play_count;
-}
+        setTableName("rave_spotaudio");
+    }
 
-void SpotAudio::setPlayCount(int val)
-{
-    m_play_count->setValue(val);
-}
+    SpotAudio::~SpotAudio()
+    {
+    }
 
-IntegerField *SpotAudio::weight() const
-{
-    return m_weight;
-}
+//    ForeignKeyField *SpotAudio::audio() const
+//    {
+//        return m_audio;
+//    }
 
-void SpotAudio::setWeight(int val)
-{
-    m_weight->setValue(val);
-}
+//    void SpotAudio::set_audio(int val)
+//    {
+//        m_audio->setValue(val);
+//    }
 
-IntegerField *SpotAudio::seqNo() const
-{
-    return m_seq_no;
-}
+    DateField* SpotAudio::audio_date() const
+    {
+        return m_audio_date;
+    }
 
-void SpotAudio::setSeqNo(int val)
-{
-    m_seq_no->setValue(val);
-}
+    void SpotAudio::set_audio_date(QDate dt)
+    {
+        m_audio_date->setValue(dt);
+    }
 
-std::string SpotAudio::tableName() const
-{
-    return m_table_name;
-}
+    IntegerField *SpotAudio::weight() const
+    {
+        return m_weight;
+    }
 
-void SpotAudio::setTableName(const std::string table_name)
-{
-    m_table_name = table_name;
-}
+    void SpotAudio::set_weight(int val)
+    {
+        m_weight->setValue(val);
+    }
 
-std::unique_ptr<BaseEntity> SpotAudio::mapFields(StringMap *raw_entity)
-{
-}
+    IntegerField* SpotAudio::seqNo() const
+    {
+        return m_seq_no;
+    }
 
-std::vector<std::string> SpotAudio::tableViewColumns() const
-{
-    return tableViewCols<std::string>( audio()->displayName() );
-}
+    void SpotAudio::set_seq_no(int val)
+    {
+        m_seq_no->setValue(val);
+    }
 
-std::vector<std::string> SpotAudio::tableViewValues()
-{
-    return tableViewColumns();
-}
+    StringField* SpotAudio::short_desc() const
+    {
+        return m_audio->short_desc();
+//        return m_short_desc;
+    }
 
-QStringList SpotAudio::tableHeaders() const
-{
-    return m_header;
-}
+    TextField* SpotAudio::notes() const
+    {
+        return m_notes;
+    }
 
-std::string SpotAudio::searchColumn() const
-{
-    return audio()->valueToString();
-}
+    StringField* SpotAudio::title() const
+    {
+        return m_audio->title();
+    }
 
-void SpotAudio::populateEntity()
-{
-}
+    DecimalField *SpotAudio::duration() const
+    {
+        return m_audio->duration();
+    }
 
-std::unique_ptr<BaseEntity> SpotAudio::cloneAsUnique()
-{
-    return std::make_unique<SpotAudio>(m_parent_entity, m_detail_entity);
-}
+    AUDIO::Audio* SpotAudio::audio()
+    {
+        return m_audio;
+    }
 
-void SpotAudio::afterMapping(BaseEntity &entity)
-{
-    SpotAudio& spot_audio = dynamic_cast<SpotAudio&>(entity);
-    auto sa = spot_audio.detailEntity()->cloneAsUnique();
-    spot_audio.set_detail_entity(sa.get());
-    getEntityById(std::move(sa), spot_audio.detailId()->value());
-}
+    std::string SpotAudio::tableName() const
+    {
+        return m_table_name;
+    }
 
-BaseEntity *SpotAudio::mtomEntity()
-{
-    return this;
-}
+    void SpotAudio::setTableName(const std::string table_name)
+    {
+        m_table_name = table_name;
+    }
 
-std::unique_ptr<ManyToMany> SpotAudio::copy(BaseEntity *parent_entity, BaseEntity *detail_entity) const
-{
-    return std::make_unique<SpotAudio>(parent_entity, detail_entity);
-}
+    std::unique_ptr<BaseEntity> SpotAudio::mapFields(StringMap *raw_entity)
+    {
+    }
 
-IntegerField *SpotAudio::parentId() const
-{
-    return m_parent_id;
-}
+    std::vector<std::string> SpotAudio::tableViewColumns() const
+    {
+        AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(m_detail_entity);
 
-void SpotAudio::setParentId(int id)
-{
-    m_parent_id->setValue( id );
-}
+        return tableViewCols<std::string>(
+                    audio->title()->displayName(),
+                    audio->short_desc()->displayName());
+    }
 
-IntegerField *SpotAudio::detailId() const
-{
-    return m_detail_id;
-}
+    std::vector<std::string> SpotAudio::tableViewValues()
+    {
+        AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(m_detail_entity);
 
-void SpotAudio::setDetailId(int id)
-{
-    m_detail_id->setValue(id);
-}
+        return tableViewCols<std::string>(
+                    audio->title()->valueToString(),
+                    audio->short_desc()->valueToString());
+    }
 
-BaseEntity *SpotAudio::parentEntity() const
-{
-    return m_parent_entity;
-}
+    QStringList SpotAudio::tableHeaders() const
+    {
+        return m_header;
+    }
 
-BaseEntity *SpotAudio::detailEntity() const
-{
-    return m_detail_entity;
-}
+    std::string SpotAudio::searchColumn() const
+    {
+        return m_audio->title()->value();
+    }
 
-void SpotAudio::set_detail_entity(BaseEntity *other)
-{
-    m_detail_entity = other;
+    void SpotAudio::populateEntity()
+    {
+    }
 
-}
+    std::unique_ptr<BaseEntity> SpotAudio::cloneAsUnique()
+    {
+        return std::make_unique<SpotAudio>(m_parent_entity, m_detail_entity);
+    }
+
+    void SpotAudio::afterMapping(BaseEntity &entity)
+    {
+        SpotAudio& spot_audio = dynamic_cast<SpotAudio&>(entity);
+        auto sa = spot_audio.detailEntity()->cloneAsUnique();
+        spot_audio.set_detail_entity(sa.get());
+        getEntityById(std::move(sa), spot_audio.detailId()->value());
+    }
+
+    BaseEntity *SpotAudio::mtomEntity()
+    {
+        return this;
+    }
+
+    std::unique_ptr<ManyToMany> SpotAudio::copy(BaseEntity *parent_entity, BaseEntity *detail_entity) const
+    {
+        return std::make_unique<SpotAudio>(parent_entity, detail_entity);
+    }
+
+    IntegerField *SpotAudio::parentId() const
+    {
+        return m_parent_id;
+    }
+
+    void SpotAudio::setParentId(int id)
+    {
+        m_parent_id->setValue( id );
+    }
+
+    IntegerField *SpotAudio::detailId() const
+    {
+        return m_detail_id;
+    }
+
+    void SpotAudio::setDetailId(int id)
+    {
+        m_detail_id->setValue(id);
+    }
+
+    BaseEntity *SpotAudio::parentEntity() const
+    {
+        return m_parent_entity;
+    }
+
+    BaseEntity *SpotAudio::detailEntity() const
+    {
+        return m_detail_entity;
+    }
+
+    void SpotAudio::set_detail_entity(BaseEntity *other)
+    {
+        m_detail_entity = other;
+
+    }
+
+    void SpotAudio::make_audio()
+    {
+//        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+        //                                               std::make_unique<AUDIO::Audio>(""), "title");
+    }
+
+    AudioStruct SpotAudio::get_struct() const
+    {
+        return m_audio_struct;
+    }
+
+    void SpotAudio::set_struct(AudioStruct as)
+    {
+
+    }
+
+    AUDIO::Audio& SpotAudio::get_paudio()
+    {
+        return p_audio;
+    }
+
+    void SpotAudio::set_title(std::string title)
+    {
+        m_audio->set_title(title);
+
+        /*
+        auto audio = static_cast<AUDIO::Audio*>(m_audio->fk_entity());
+
+        if (audio != nullptr){
+            qDebug() << "Setting title";
+            audio->set_title(title);
+        }else{
+            qDebug() << "set_title failed";
+        }
+        */
+    }
+
+    void SpotAudio::set_short_desc(std::string sdesc)
+    {
+        m_audio->set_short_desc(sdesc);
+//        m_short_desc->setValue(sdesc);
+    }
+
+    void SpotAudio::set_notes(const std::string notes)
+    {
+        m_notes->setValue(notes);
+    }
+
+    void SpotAudio::set_marker(Marker marker)
+    {
+        m_audio->set_marker(marker);
+    }
+
+    void SpotAudio::set_audio_type(std::string audio_type)
+    {
+        m_audio->set_audio_type(audio_type);
+    }
+
+    void SpotAudio::set_audio_lib_path(const std::string lib_path)
+    {
+        m_audio->set_audio_lib_path(lib_path);
+    }
+
+    void SpotAudio::set_duration(int duration)
+    {
+        m_audio->set_duration(duration);
+    }
+
+    void SpotAudio::set_file_path(const std::string file_path)
+    {
+        m_audio->set_file_path(file_path);
+    }
+
+    void SpotAudio::set_folder(int folder)
+    {
+        m_audio->set_folder(folder);
+    }
+
+    void SpotAudio::set_genre(int genre)
+    {
+        m_audio->set_genre(genre);
+    }
+
+    void SpotAudio::set_mood(int mood)
+    {
+        m_audio->set_mood(mood);
+    }
+
+    void SpotAudio::set_artist(int id)
+    {
+        m_audio->set_artist(id);
+    }
+
+    void SpotAudio::set_audio_year(int yr)
+    {
+        m_audio->set_audio_year(yr);
+    }
+
+} // TRAFFIK

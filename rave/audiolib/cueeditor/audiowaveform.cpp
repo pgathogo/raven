@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include <QDebug>
+#include <QDir>
 #include "audiowaveform.h"
 #include "ui_audiowaveform.h"
 
@@ -117,7 +118,10 @@ namespace AUDIO {
 
     float AudioWaveForm::audio_sample_rate(QString audio_file)
     {
-        return m_audio_thread->audio_sample_rate(audio_file);
+        auto sr = m_audio_thread->audio_sample_rate(audio_file);
+        if (sr > 0)
+            sr = sr / 1000;
+        return sr;
     }
 
     void AudioWaveForm::save()
@@ -127,7 +131,11 @@ namespace AUDIO {
         const std::string MP3 = ".mp3";
         const std::string OGG = ".ogg";
 
-        if (m_audio_file.file_ext() == MP3){
+        auto q_str = QDir::toNativeSeparators(QString::fromStdString(m_audio_file.ogg_filename()));
+//        m_audio_file.set_ogg_filename(q_str.toStdString());
+        fs::path p(q_str.toStdString());
+
+        if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
             AudioTool audio_tool;
             std::string ogg_file = audio_tool.mp3_to_ogg(m_audio_file);
             if (!ogg_file.empty())
@@ -331,6 +339,16 @@ namespace AUDIO {
         create_marker_line(marker_type, line);
     }
 
+    void AudioWaveForm::show_marker_value(Marker marker)
+    {
+       ui->lblStartMarkTime->setText(QString::fromStdString(std::to_string(marker.start_marker)));
+       ui->lblFadeInMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_in)));
+       ui->lblIntroMarkTime->setText(QString::fromStdString(std::to_string(marker.intro)));
+       ui->lblFadeOutMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_out)));
+       ui->lblExtroMarkTime->setText(QString::fromStdString(std::to_string(marker.extro)));
+       ui->lblEndMarkTime->setText(QString::fromStdString(std::to_string(marker.end_marker)));
+    }
+
     void AudioWaveForm::mark_start()
     {
         create_marker_line(MarkerType::Start);
@@ -406,6 +424,7 @@ namespace AUDIO {
         show_wave_file();
         m_scene->draw_indicator_line();
         show_markers(m_audio_file.marker());
+        show_marker_value(m_audio_file.marker());
     }
 
     void AudioWaveForm::move_indicator_line(double new_position)
@@ -430,8 +449,6 @@ namespace AUDIO {
         ui->lblBitRate->setText(QString::number(b_rate)+" bits/s");
 
         float sample_rate = audio_sample_rate(QString::fromStdString(m_audio_file.audio_file()));
-        if (sample_rate > 0)
-            sample_rate = sample_rate / 1000;
 
         ui->lblSampleRate->setText(QString::number(sample_rate)+" KHz");
 

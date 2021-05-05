@@ -45,6 +45,7 @@ HEADERS += \
     setupform.h \
     spotaudio.h \
     spotaudiobrowser.h \
+    spotaudioform.h \
     traffiksetup.h \
     tree.h \
     treeviewmodel.h
@@ -75,6 +76,7 @@ SOURCES += \
     setupform.cpp \
     spotaudio.cpp \
     spotaudiobrowser.cpp \
+    spotaudioform.cpp \
     traffiksetup.cpp \
     tree.cpp \
     treeviewmodel.cpp
@@ -90,7 +92,8 @@ FORMS += \
     orderform.ui \
     scheduleform.ui \
     setupform.ui \
-    spotaudiobrowser.ui
+    spotaudiobrowser.ui \
+    spotaudioform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

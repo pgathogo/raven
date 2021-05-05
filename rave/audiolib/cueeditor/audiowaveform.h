@@ -73,6 +73,7 @@ namespace AUDIO {
         void create_marker_line(AUDIO::MarkerType marker_type);
         void create_marker_indicator(MarkerType, QLineF);
         void show_markers(Marker markers);
+        void show_marker_value(Marker marker);
         void show_mark(double mark, MarkerType marker_type);
 
         void create_marker_line(AUDIO::MarkerType marker_type, QLineF line);

@@ -26,7 +26,7 @@ OrderBooking::OrderBooking()
                                           std::make_unique<TRAFFIK::Spot>(), "name");
 
     m_spot_audio = createField<ForeignKeyField>("audio_id", "Audio",
-                                          std::make_unique<SpotAudio>(), "spot_id");
+                                          std::make_unique<TRAFFIK::SpotAudio>(), "spot_id");
 
     mHeader << QString::fromStdString(schedule()->displayName());
 

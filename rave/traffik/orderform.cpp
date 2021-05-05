@@ -247,7 +247,6 @@ void OrderForm::billingBasisCBChanged(int i)
 }
 
 
-
 void OrderForm::brandCBChanged(int i)
 {
     if (i<0) return;
