@@ -51,6 +51,8 @@ BaseEntity* EntityModel::findEntityByName(const std::string name)
     BaseEntity* be = nullptr;
 
     for (auto& record : mEntities){
+        auto key = std::get<0>(record);
+        qDebug() << "FindEntityByName: " << QString::fromStdString(key);
         if (std::get<0>(record) == name){
             be = std::get<1>(record).get();
             break;

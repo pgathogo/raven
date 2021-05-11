@@ -246,12 +246,11 @@ bool ADFRepository::read_markers(AudioFile& audio_file)
 void ADFRepository::object_to_json(const AudioFile& audio_file, QJsonObject& json)
 {
     json["audio_title"] = QString::fromStdString(audio_file.audio_title());
+    json["short_desc"] = QString::fromStdString(audio_file.short_desc());
     json["artist_name"] = QString::fromStdString(audio_file.artist_name());
-    json["audio_path"] = QString::fromStdString(audio_file.audio_path());
-    json["audio_file"] = QString::fromStdString(audio_file.audio_file());
-    json["filename"] = QString::fromStdString(audio_file.filename());
-    json["file_ext"] = QString::fromStdString(audio_file.file_ext());
-    json["short_filename"] = QString::fromStdString(audio_file.short_filename());
+    json["audio_path"] = QString::fromStdString(audio_file.audio_lib_path());
+    json["filename"] = QString::fromStdString(audio_file.ogg_filename()+".ogg");
+    json["short_filename"] = QString::fromStdString(audio_file.ogg_filename());
     json["duration"] = audio_file.duration();
 
     QJsonObject marker;

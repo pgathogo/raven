@@ -12,12 +12,6 @@ class Marker;
 
 namespace TRAFFIK{
 
-    struct AudioStruct{
-        std::string m_title{};
-        std::string m_short_desc{};
-        int m_audio_year;
-    };
-
     class SpotAudio : public ManyToMany
     {
     public:
@@ -88,16 +82,12 @@ namespace TRAFFIK{
 
         void make_audio();
 
-        AudioStruct get_struct() const;
-        void set_struct(AudioStruct as);
         AUDIO::Audio& get_paudio();
 
     private:
         AUDIO::Audio* m_audio;
 
         AUDIO::Audio p_audio;
-
-        AudioStruct m_audio_struct;
 
         DateField* m_audio_date;
         IntegerField* m_weight;

@@ -8,6 +8,7 @@
 #include "../audio/audiotool.h"
 #include "../audio/audio.h"
 #include "../audiolib/headers/cueeditor.h"
+#include "../audiolib/headers/audioplayer.h"
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
@@ -16,19 +17,22 @@
 namespace fs = std::filesystem;
 
 SpotAudioBrowser::SpotAudioBrowser(
-            ManyToMany* mtom,
+            TRAFFIK::SpotAudio* mtom,
             QVBoxLayout* layout,
             QWidget *parent)
         :BaseEntityBrowserDlg(parent, mtom->cloneAsUnique()),
         ui(new Ui::SpotAudioBrowser),
-        m_mtom{mtom}
+        m_mtom{mtom},
+        m_cue_editor{nullptr}
 {
     ui->setupUi(this);
     hideAddButton();
     hideEditButton();
     hideDeleteButton();
 
-    createImportButton();
+    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio);
+    create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
+    create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<TraffikSetup>());
     m_setup_edm->all();
@@ -70,12 +74,13 @@ void SpotAudioBrowser::deleteRecord()
 
 }
 
-void SpotAudioBrowser::createImportButton()
+void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption, Slot slot)
 {
-    QPushButton* btnImport = new QPushButton("Import");
-    btnImport->setObjectName("btnImport");
-    connect(btnImport, &QPushButton::clicked, this, &SpotAudioBrowser::import_audio);
-    bui->hlExtra->addWidget(btnImport);
+    QPushButton* btn = new QPushButton(btn_caption);
+    btn->setObjectName(btn_name);
+    connect(btn, &QPushButton::clicked, this, slot);
+    bui->hlExtra->addWidget(btn);
+
 }
 
 std::string SpotAudioBrowser::typeID()
@@ -147,9 +152,13 @@ void SpotAudioBrowser::import_audio()
         spot_audio->set_audio_lib_path(m_setup->comm_audio_folder()->value());
         spot_audio->set_title(spot_audio->title()->value());
         spot_audio->set_file_path(audio_file_full_path.toStdString());
+        spot_audio->set_file_path(m_setup->comm_audio_folder()->value());
 
         auto af = audio->audio_file();
-        af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.ogg_short_filename());
+        fs::path path{audio_file_full_path.toStdString()};
+        std::string file_no_path = path.filename().u8string();
+
+        af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.short_filename()+".ogg");
 
         auto cue_editor = std::make_unique<CueEditor>(af);
         if (cue_editor->editor() == 1){
@@ -161,14 +170,50 @@ void SpotAudioBrowser::import_audio()
             spot_audio->setDBAction(DBAction::dbaCREATE);
             //spot_audio->setDetailId() // We don't have this id yet!
 
-            //adf_repo.write(spot_audio->audio()->audio_file());
-
             auto& p_audio = spot_audio->get_paudio();
             p_audio = *spot_audio->audio();
 
-            //m_audios.push_back(std::move(m_spot_audio));
             entityDataModel().cacheEntity(std::move(spot_audio));
         }
 
     }
+}
+
+void SpotAudioBrowser::play_back()
+{
+    if (selectedRowId() < 0){
+        showMessage("Select an Audio to Listen");
+    } else {
+
+        std::string search_name = selectedRowName().toStdString();
+
+        if (!search_name.empty()){
+
+            BaseEntity* be = entityDataModel().findEntityByName(search_name);
+
+            if (be != nullptr){
+
+                auto s_audio = dynamic_cast<TRAFFIK::SpotAudio*>(be);
+
+                auto audio = dynamic_cast<AUDIO::Audio*>(s_audio->detailEntity());
+
+                AudioTool at;
+                auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+                auto audio_file = audio->file_path()->value()+ogg_file;
+
+                AudioFile af(audio_file);
+                m_cue_editor = std::make_unique<CueEditor>(af);
+                m_cue_editor->play_audio();
+            }else{
+                qDebug() << "** be is null** ";
+            }
+        }
+    }
+
+}
+
+void SpotAudioBrowser::stop_play()
+{
+    if (m_cue_editor != nullptr)
+        m_cue_editor->stop_audio();
 }

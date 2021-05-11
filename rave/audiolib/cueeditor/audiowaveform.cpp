@@ -135,6 +135,8 @@ namespace AUDIO {
 //        m_audio_file.set_ogg_filename(q_str.toStdString());
         fs::path p(q_str.toStdString());
 
+        qDebug() << "FS: "<< q_str;
+
         if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
             AudioTool audio_tool;
             std::string ogg_file = audio_tool.mp3_to_ogg(m_audio_file);
@@ -143,6 +145,9 @@ namespace AUDIO {
             //	std::string audio_lib = m_audio_file.get_audio_lib();
             //	audio_tool.copy_ogg_to_audiolib(ogg_file, std::string dest_ogg)
 
+            done(1);
+        }else{
+            done(0);
         }
 
 //            if (m_audio_file.file_ext() == OGG){
@@ -152,8 +157,6 @@ namespace AUDIO {
 //                }
 
 //            }
-
-        done(1);
     }
 
     void AudioWaveForm::on_cancel()

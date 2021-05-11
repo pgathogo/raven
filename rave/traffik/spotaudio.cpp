@@ -171,7 +171,7 @@ namespace TRAFFIK{
 
     std::string SpotAudio::searchColumn() const
     {
-        return m_audio->title()->value();
+        return detailEntity()->searchColumn();
     }
 
     void SpotAudio::populateEntity()
@@ -186,9 +186,9 @@ namespace TRAFFIK{
     void SpotAudio::afterMapping(BaseEntity &entity)
     {
         SpotAudio& spot_audio = dynamic_cast<SpotAudio&>(entity);
-        auto sa = spot_audio.detailEntity()->cloneAsUnique();
-        spot_audio.set_detail_entity(sa.get());
-        getEntityById(std::move(sa), spot_audio.detailId()->value());
+        auto audio = spot_audio.detailEntity()->cloneAsUnique();
+        spot_audio.set_detail_entity(audio.get());
+        getEntityById(std::move(audio), spot_audio.detailId()->value());
     }
 
     BaseEntity *SpotAudio::mtomEntity()
@@ -243,15 +243,6 @@ namespace TRAFFIK{
         //                                               std::make_unique<AUDIO::Audio>(""), "title");
     }
 
-    AudioStruct SpotAudio::get_struct() const
-    {
-        return m_audio_struct;
-    }
-
-    void SpotAudio::set_struct(AudioStruct as)
-    {
-
-    }
 
     AUDIO::Audio& SpotAudio::get_paudio()
     {

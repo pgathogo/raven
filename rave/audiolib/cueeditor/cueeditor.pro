@@ -19,6 +19,7 @@ SOURCES += \
     ../../audio/audiofile.cpp \
     ../../audio/audiotool.cpp \
     audiographic.cpp \
+    audioplayer.cpp \
     audiothread.cpp \
     audiowaveform.cpp \
     cueeditor.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     ../../audio/audiofile.h \
     ../../audio/audiotool.h \
     audiographic.h \
+    audioplayer.h \
     audiothread.h \
     audiowaveform.h \
     cueeditor_global.h \

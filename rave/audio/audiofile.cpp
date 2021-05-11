@@ -14,9 +14,9 @@ AudioFile::AudioFile(const std::string a_file)
      m_marker{},
      m_id{-1}
 {
-    std::filesystem::path af{audio_file()};
+    std::filesystem::path af{a_file};
     m_file_ext = af.extension().u8string();
-    m_filename = af.filename().u8string();
+    m_filename = af.filename().u8string(); // contains plus the path
     m_audio_path = af.remove_filename().u8string();
 
     std::filesystem::path f{m_filename};
@@ -35,6 +35,11 @@ AudioFile::AudioFile(const std::string a_file)
 std::string AudioFile::audio_title() const
 {
     return m_audio_title;
+}
+
+std::string AudioFile::short_desc() const
+{
+    return m_short_desc;
 }
 
 std::string AudioFile::artist_name() const
@@ -134,6 +139,11 @@ uintmax_t AudioFile::file_size() const
 void AudioFile::set_audio_title(const std::string audio_title)
 {
     m_audio_title = audio_title;
+}
+
+void AudioFile::set_short_desc(const std::string short_desc)
+{
+    m_short_desc = short_desc;
 }
 
 void AudioFile::set_artist_name(const std::string artist_name)

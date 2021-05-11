@@ -1,6 +1,7 @@
 #ifndef SPOTAUDIOBROWSER_H
 #define SPOTAUDIOBROWSER_H
 
+#include <functional>
 #include <QWidget>
 
 #include "../framework/manytomanybrowser.h"
@@ -14,16 +15,18 @@ class SpotAudio;
 }
 class ManyToMany;
 class TraffikSetup;
+class CueEditor;
 
 class SpotAudioBrowser : public BaseEntityBrowserDlg
 {
     Q_OBJECT
 
 public:
-    friend class SpotBrowser;
+
+    typedef void (SpotAudioBrowser::*Slot)();
 
     explicit SpotAudioBrowser(
-            ManyToMany* mtom,
+            TRAFFIK::SpotAudio* mtom,
             QVBoxLayout* layout,
             QWidget *parent = nullptr
             );
@@ -34,8 +37,6 @@ public:
     void updateRecord() override;
     void deleteRecord() override;
 
-    void createImportButton();
-
     std::string typeID() override;
 
     void print(std::string);
@@ -44,8 +45,12 @@ public:
 
     TRAFFIK::SpotAudio& get_spot_audio() const;
 
+    void create_button(const QString, QString, Slot);
+
 private slots:
-    void import_audio();
+     void import_audio();
+     void play_back();
+     void stop_play();
 
 private:
     Ui::SpotAudioBrowser* ui;
@@ -54,6 +59,7 @@ private:
     TraffikSetup* m_setup;
     std::vector<std::unique_ptr<TRAFFIK::SpotAudio>> m_audios;
     std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
+    std::unique_ptr<CueEditor> m_cue_editor;
 };
 
 #endif // SPOTAUDIOBROWSER_H

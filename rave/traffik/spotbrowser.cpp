@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include <QDebug>
 
 #include "spotbrowser.h"
@@ -11,8 +13,11 @@
 #include "spotaudio.h"
 #include "spotaudiobrowser.h"
 #include "../audio/audio.h"
+#include "../audio/audiotool.h"
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
+
+namespace fs = std::filesystem;
 
 SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
     BaseEntityBrowserDlg(parent,std::make_unique<TRAFFIK::Spot>(client)),
@@ -156,15 +161,36 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
 
         if (s_audio->dbAction() == DBAction::dbaCREATE){
 
+            AudioTool at;
+
             auto& audio = s_audio->get_paudio();
+
             int id = edm->createEntityDB(audio);
-            qDebug() << "<<< " << id << " >>> ";
             s_audio->setDetailId(id);
-            qDebug() << "  *** After Detail Create ***";
             s_audio->setParentId(sf.parentId());
-            qDebug() << "*** After SetParentId ***";
             edm->createEntityDB(*s_audio);
-            qDebug() << "*** After Header Create *** ";
+
+            const std::string OGG_EXT = ".ogg";
+            const std::string ADF_EXT = ".adf";
+
+            // Format audio name from Id
+            std::string ogg_file = at.generate_ogg_filename(id);
+            std::string lib_path = audio.audio_lib_path()->value();
+
+            std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
+            std::string new_filename = lib_path+ogg_file+OGG_EXT;
+
+            fs::path old_f{old_filename};
+            fs::path new_f{new_filename};
+
+            fs::rename(old_f, new_f);
+
+            // Write ADF file
+            ADFRepository adf_repo;
+            auto audio_file = audio.audio_file();
+            audio_file.set_adf_file(lib_path+ogg_file+ADF_EXT);
+            audio_file.set_ogg_filename(ogg_file);
+            adf_repo.write(audio_file);
         }
     }
 

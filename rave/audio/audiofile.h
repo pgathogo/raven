@@ -27,6 +27,7 @@ public:
     AudioFile(const std::string audio_file);
 
     void set_audio_title(const std::string audio_title);
+    void set_short_desc(const std::string short_desc);
     void set_artist_name(const std::string artist_name);
     void set_audio_path(const std::string audio_path);
     void set_audio_file(const std::string audio_file);
@@ -43,6 +44,7 @@ public:
     void set_marker(Marker marker);
 
     std::string audio_title() const;
+    std::string short_desc() const;
     std::string artist_name() const;
     std::string audio_path() const;
     std::string audio_file() const;
@@ -69,6 +71,7 @@ public:
 
 private:
     std::string m_audio_title;
+    std::string m_short_desc;
     std::string m_artist_name;
     std::string m_audio_path;
     std::string m_audio_file;
