@@ -16,7 +16,7 @@ public:
     void play_audio();
     void stop_play();
 private:
-    AudioThread* m_audio_thread;
+    std::unique_ptr<AudioThread> m_audio_thread;
     AudioFile& m_audio_file;
 
 };

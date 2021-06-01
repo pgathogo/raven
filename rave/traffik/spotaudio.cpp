@@ -11,25 +11,6 @@ namespace TRAFFIK{
          p_audio{""}
     {
 
-    //    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
-    //                                         std::make_unique<TRAFFIK::Spot>(), "name");
-//        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
-//                                              std::make_unique<AUDIO::Audio>(""), "title");
-    //    m_play_count = createField<IntegerField>("play_count", "Play Count");
-
-//        m_weight = createField<IntegerField>("weight", "Weight");
-//        m_seq_no = createField<IntegerField>("seq_no", "Seq No");
-
-//        m_short_desc = createField<StringField>("short_desc", "Short Desc");
-//        m_short_desc->setFormOnly(true);
-
-//        m_notes = createField<TextField>("notes", "Notes");
-//        m_notes->setFormOnly(true);
-
-//        m_header << QString::fromStdString(m_audio->fieldLabel())
-//                << QString::fromStdString(m_weight->fieldLabel());
-
-//        setTableName("rave_spotaudio");
     }
 
     SpotAudio::SpotAudio(BaseEntity *pEnt, BaseEntity *dEnt)
@@ -188,7 +169,13 @@ namespace TRAFFIK{
         SpotAudio& spot_audio = dynamic_cast<SpotAudio&>(entity);
         auto audio = spot_audio.detailEntity()->cloneAsUnique();
         spot_audio.set_detail_entity(audio.get());
+
         getEntityById(std::move(audio), spot_audio.detailId()->value());
+
+        AUDIO::Audio& fetched_audio = const_cast<AUDIO::Audio&>(dynamic_cast<const AUDIO::Audio&>((get_entity())));
+        auto de = spot_audio.detailEntity();
+        de = &fetched_audio;
+
     }
 
     BaseEntity *SpotAudio::mtomEntity()
@@ -236,13 +223,6 @@ namespace TRAFFIK{
         m_detail_entity = other;
 
     }
-
-    void SpotAudio::make_audio()
-    {
-//        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
-        //                                               std::make_unique<AUDIO::Audio>(""), "title");
-    }
-
 
     AUDIO::Audio& SpotAudio::get_paudio()
     {

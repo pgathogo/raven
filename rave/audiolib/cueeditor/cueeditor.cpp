@@ -2,17 +2,24 @@
 #include "audiowaveform.h"
 #include "audioplayer.h"
 
+CueEditor::CueEditor(AudioFile& audio_file, const std::string name)
+    :m_audio_file{audio_file},
+     m_audio_wave_form{nullptr},
+     m_player_only{name}
+{
+   m_audio_player = std::make_unique<AudioPlayer>(m_audio_file);
+}
+
 CueEditor::CueEditor(AudioFile& audio_file)
     :m_audio_file{audio_file}
 {
     m_audio_wave_form = new AUDIO::AudioWaveForm(m_audio_file);
-    m_audio_player = new AudioPlayer(audio_file);
 }
 
 CueEditor::~CueEditor()
 {
-    delete static_cast<AUDIO::AudioWaveForm*>(m_audio_wave_form);
-    delete m_audio_player;
+    if (m_audio_wave_form != nullptr)
+        delete static_cast<AUDIO::AudioWaveForm*>(m_audio_wave_form);
 }
 
 int CueEditor::editor()
@@ -28,7 +35,8 @@ int CueEditor::editor()
 
 void CueEditor::play_audio()
 {
-    m_audio_player->play_audio();
+   m_audio_player->play_audio();
+
 }
 
 void CueEditor::stop_audio()

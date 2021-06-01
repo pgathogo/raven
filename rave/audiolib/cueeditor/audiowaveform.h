@@ -30,6 +30,8 @@ namespace AUDIO {
         float audio_sample_rate(QString);
         float audio_bitrate(QString audio_file);
 
+        AudioThread* audio_thread() const;
+
     public slots:
         void save();
         void on_cancel();

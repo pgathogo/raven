@@ -27,6 +27,7 @@ namespace AUDIO {
         ui->setupUi(this);
 
         m_scene = new AudioWaveScene(ui->lblCurrTime, audio_file.duration());
+
         ui->gvWave->setScene(m_scene);
         ui->gvWave->setMaximumWidth(800);
         ui->gvWave->setAlignment(Qt::AlignTop|Qt::AlignLeft);
@@ -116,6 +117,11 @@ namespace AUDIO {
         return m_audio_thread->audio_bitrate(audio_file);
     }
 
+    AudioThread *AudioWaveForm::audio_thread() const
+    {
+        return m_audio_thread;
+    }
+
     float AudioWaveForm::audio_sample_rate(QString audio_file)
     {
         auto sr = m_audio_thread->audio_sample_rate(audio_file);
@@ -135,7 +141,7 @@ namespace AUDIO {
 //        m_audio_file.set_ogg_filename(q_str.toStdString());
         fs::path p(q_str.toStdString());
 
-        qDebug() << "FS: "<< q_str;
+        qDebug() << "ogg_filename() "<< q_str ;
 
         if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
             AudioTool audio_tool;

@@ -24,11 +24,12 @@ AudioThread::AudioThread(QObject* parent):
 void AudioThread::play(QString filename)
 {
     BASS_ChannelStop(m_channel);
+
     if (!(m_channel = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0,
         BASS_SAMPLE_LOOP)) &&
         !(m_channel = BASS_MusicLoad(false, filename.toLatin1(), 0, 0, BASS_MUSIC_RAMP
         | BASS_SAMPLE_LOOP, 1)))
-            qDebug() << "Can't play file";
+            qDebug() << "Can't play file- ERROR Code: " << BASS_ErrorGetCode();
     else{
         endOfMusic = false;
         BASS_ChannelPlay(m_channel, true);
@@ -171,11 +172,15 @@ void AudioThread::stop()
 void AudioThread::signal_update()
 {
     float fft[1024];
+
     if (endOfMusic == false){
         emit current_position(BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetPosition(m_channel,
             BASS_POS_BYTE)),
                         BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetLength(m_channel,
             BASS_POS_BYTE)));
+
+        qDebug() << fft;
+
         BASS_ChannelGetData(m_channel, fft, BASS_DATA_FFT2048);
         emit current_peak(fft);
     }else{

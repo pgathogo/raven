@@ -51,6 +51,8 @@ void SpotBrowser::addRecord()
 
             saveTypeExclusions(*spot_form);
 
+            save_spot_audio(*spot_form);
+
         }catch(DatabaseException& de){
 
             showMessage(de.errorMessage());
@@ -72,6 +74,7 @@ void SpotBrowser::updateRecord()
 
         std::unique_ptr<SpotForm> spot_form =
                 std::make_unique<SpotForm>(m_client, spot, this);
+
         if (spot_form->exec() > 0){
             try{
                 updateTableViewRecord(spot->tableViewValues());
@@ -172,6 +175,7 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
 
             const std::string OGG_EXT = ".ogg";
             const std::string ADF_EXT = ".adf";
+            const std::string WAVE_EXT = ".png";
 
             // Format audio name from Id
             std::string ogg_file = at.generate_ogg_filename(id);
@@ -191,6 +195,24 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
             audio_file.set_adf_file(lib_path+ogg_file+ADF_EXT);
             audio_file.set_ogg_filename(ogg_file);
             adf_repo.write(audio_file);
+
+            printstr("Copying the wave png ...");
+            // Copy Wave File to AudioLib directory
+            if (fs::exists(audio.audio_file().wave_file()) ){
+
+                printstr("OLD wave file ...");
+                printstr(audio.audio_file().wave_file());
+
+                fs::path old_wave_file{audio.audio_file().wave_file()};
+                auto wave_file = old_wave_file.filename();
+                fs::path new_wave_file{lib_path+ogg_file+WAVE_EXT};
+
+                printstr("NEW wave file ...");
+
+                fs::copy(old_wave_file, new_wave_file);
+                fs::remove(old_wave_file);
+
+            }
         }
     }
 

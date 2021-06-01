@@ -33,6 +33,7 @@ SpotAudioBrowser::SpotAudioBrowser(
     create_button("btnImport", "Import", &SpotAudioBrowser::import_audio);
     create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
+    create_button("btnCueEditor", "Edit", &SpotAudioBrowser::cue_edit);
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<TraffikSetup>());
     m_setup_edm->all();
@@ -80,6 +81,35 @@ void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption
     btn->setObjectName(btn_name);
     connect(btn, &QPushButton::clicked, this, slot);
     bui->hlExtra->addWidget(btn);
+
+}
+
+std::string SpotAudioBrowser::audio_file_from_selection()
+{
+    std::string search_name = selectedRowName().toStdString();
+    if (search_name.empty())
+        return "";
+
+    BaseEntity* be = entityDataModel().findEntityByName(search_name);
+    if (be == nullptr){
+        qDebug() << "`be` is NULL! ";
+        return "";
+    }
+
+    auto s_audio = dynamic_cast<TRAFFIK::SpotAudio*>(be);
+
+    auto audio = dynamic_cast<AUDIO::Audio*>(s_audio->detailEntity());
+
+    AudioTool at;
+    auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+    auto audio_file = audio->file_path()->value()+ogg_file;
+
+    if (!fs::exists(audio_file)){
+        showMessage("File: `"+audio_file+"` does not exists");
+        return "";
+    }
+
+    return audio_file;
 
 }
 
@@ -143,6 +173,9 @@ void SpotAudioBrowser::import_audio()
 
     if (spot_audio_form->exec() > 0){
 
+        printstr("** Audio Wave File ** ");
+        printstr(spot_audio->audio()->audio_file().wave_file());
+
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) ){
             audio_tool.generate_wave_file(spot_audio->audio()->audio_file().audio_file(),
                                           spot_audio->audio()->audio_file().wave_file());
@@ -159,6 +192,7 @@ void SpotAudioBrowser::import_audio()
         std::string file_no_path = path.filename().u8string();
 
         af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.short_filename()+".ogg");
+
 
         auto cue_editor = std::make_unique<CueEditor>(af);
         if (cue_editor->editor() == 1){
@@ -183,37 +217,42 @@ void SpotAudioBrowser::play_back()
 {
     if (selectedRowId() < 0){
         showMessage("Select an Audio to Listen");
-    } else {
-
-        std::string search_name = selectedRowName().toStdString();
-
-        if (!search_name.empty()){
-
-            BaseEntity* be = entityDataModel().findEntityByName(search_name);
-
-            if (be != nullptr){
-
-                auto s_audio = dynamic_cast<TRAFFIK::SpotAudio*>(be);
-
-                auto audio = dynamic_cast<AUDIO::Audio*>(s_audio->detailEntity());
-
-                AudioTool at;
-                auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
-                auto audio_file = audio->file_path()->value()+ogg_file;
-
-                AudioFile af(audio_file);
-                m_cue_editor = std::make_unique<CueEditor>(af);
-                m_cue_editor->play_audio();
-            }else{
-                qDebug() << "** be is null** ";
-            }
-        }
+        return;
     }
 
+    std::string audio_file = audio_file_from_selection();
+
+    if (audio_file.empty()){
+        qDebug() << "No audio file to play!";
+        return;
+    }
+
+    qDebug() << "Audio File: "<< stoq(audio_file);
+
+    // Player should be seperated from the CueEditor
+    AudioFile af(audio_file);
+    std::string name = "player-only";
+    m_cue_editor = std::make_unique<CueEditor>(af, name);
+    m_cue_editor->play_audio();
 }
 
 void SpotAudioBrowser::stop_play()
 {
     if (m_cue_editor != nullptr)
         m_cue_editor->stop_audio();
+}
+
+void SpotAudioBrowser::cue_edit()
+{
+    std::string audio_file = audio_file_from_selection();
+    if (audio_file.empty()){
+        qDebug() << "No audio file to edit!";
+        return;
+    }
+
+    AudioFile af(audio_file);
+    auto cue_editor = std::make_unique<CueEditor>(af);
+
+    if (cue_editor->editor() == 1){
+    }
 }

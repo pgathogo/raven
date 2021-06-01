@@ -55,7 +55,7 @@ inline bool confirmationMessage(const std::string msg)
 
 inline void printstr(std::string s)
 {
-    qDebug() << "STR: >> " << stoq(s);
+    qDebug() << stoq(s);
 }
 
 inline void printint(int i)

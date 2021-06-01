@@ -83,6 +83,8 @@ public:
 
     virtual std::string className();
 
+    void print_members(const QStringList& members=QStringList()) const;
+
     template<typename T>
     std::unique_ptr<T> clone()
     {
@@ -123,7 +125,13 @@ public:
 
     bool isNew();
 
+    BaseEntity const& get_entity() const;
+
 private:
+    void print_selected_members(const QStringList& members) const;
+    void print_all_members() const;
+    void print_member(const std::string, const std::string) const;
+
     IntegerField* mID;
     std::vector<FieldMap> mFields;
     std::unique_ptr<EntityDataModel> mEDM;

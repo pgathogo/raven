@@ -2,15 +2,13 @@
 #include "audiothread.h"
 
 AudioPlayer::AudioPlayer(AudioFile& audio_file)
-    :m_audio_thread{nullptr},
-      m_audio_file{audio_file}
+      :m_audio_file{audio_file}
 {
-    m_audio_thread = new AudioThread(this);
+    m_audio_thread = std::make_unique<AudioThread>(this);
 }
 
 AudioPlayer::~AudioPlayer()
 {
-    delete m_audio_thread;
 }
 
 void AudioPlayer::play_audio()
@@ -20,8 +18,6 @@ void AudioPlayer::play_audio()
 
 void AudioPlayer::stop_play()
 {
-
     if (m_audio_thread != nullptr)
         m_audio_thread->stop();
-
 }

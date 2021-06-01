@@ -267,6 +267,13 @@ namespace AUDIO{
     void AudioWave::draw_wave()
     {
     //    this->setScene(m_scene);
+        qDebug() << "Before :: Time in Secs: "<< m_time_in_secs;
+
+        if (m_time_in_secs == 0.0)
+            return;
+
+        qDebug() << "Time in Secs: "<< m_time_in_secs;
+
         QPixmap pix(m_audio_wave_file);
         m_scene->addPixmap(pix);
         QRectF m_scene_bounds = m_scene->itemsBoundingRect();
@@ -288,6 +295,8 @@ namespace AUDIO{
 
         this->centerOn(0, 0);
         this->show();
+
+        qDebug() << "** DONE draw_wave() **";
     }
 
     QGraphicsScene& AudioWave::scene() const
@@ -326,6 +335,8 @@ namespace AUDIO{
         make_indicator_line(*m_scene_bound, *m_indicator_line_position);
 
         update();
+
+        qDebug() << "** Done draw_indicator_line() **";
     }
 
     void AudioWaveScene::move_indicator_line(double new_pos)

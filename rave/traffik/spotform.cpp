@@ -168,19 +168,5 @@ void SpotForm::on_import_audio()
 
 void SpotForm::cue_edit()
 {
-    /*
-    AudioFile audio_file("D:\\home\\cpp\\audiowaveform_win\\stereo.mp3");
-
-    if (audio_file.is_valid()){
-
-        audio_file.set_wave_file("D:\\home\\cpp\\audiowaveform_win\\test.png");
-        audio_file.set_duration(7);
-        audio_file.set_artist_name("Nightwish");
-        audio_file.set_audio_title("Nemo");
-        CueEditor* cue_editor = new CueEditor(audio_file);
-        auto mark = cue_editor->editor();
-        }
-        */
-
 }
 

@@ -31,7 +31,6 @@ namespace TRAFFIK{
 
         AUDIO::Audio* audio();
 
-
 //        void set_audio(int val);
         void set_audio_date(QDate);
         void set_weight(int val);
@@ -79,8 +78,6 @@ namespace TRAFFIK{
         BaseEntity* parentEntity() const override;
         BaseEntity* detailEntity() const override;
         void set_detail_entity(BaseEntity* other);
-
-        void make_audio();
 
         AUDIO::Audio& get_paudio();
 

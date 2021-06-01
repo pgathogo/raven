@@ -47,10 +47,13 @@ public:
 
     void create_button(const QString, QString, Slot);
 
+    std::string audio_file_from_selection();
+
 private slots:
      void import_audio();
      void play_back();
      void stop_play();
+     void cue_edit();
 
 private:
     Ui::SpotAudioBrowser* ui;
@@ -60,6 +63,7 @@ private:
     std::vector<std::unique_ptr<TRAFFIK::SpotAudio>> m_audios;
     std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
     std::unique_ptr<CueEditor> m_cue_editor;
+
 };
 
 #endif // SPOTAUDIOBROWSER_H

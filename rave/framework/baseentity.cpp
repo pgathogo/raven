@@ -126,7 +126,6 @@ void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)
     std::string id_column = entity->uniqueId()->dbColumnName();
     mEDM = std::make_unique<EntityDataModel>(std::move(entity));
     mEDM->getById({id_column, "=", id});
-
 }
 
 void BaseEntity::setDBAction(DBAction dbact)
@@ -178,6 +177,42 @@ std::string BaseEntity::className()
     return  demangle(typeid(this).name());
 }
 
+void BaseEntity::print_members(const QStringList& members) const
+{
+    if (members.size() > 0){
+        print_selected_members(members);
+    }else{
+        print_all_members();
+    }
+
+    printstr("--- END ---");
+}
+
+void BaseEntity::print_selected_members(const QStringList& members) const
+{
+    QStringList::const_iterator const_iter;
+    for(const_iter=members.constBegin(); const_iter != members.constEnd(); ++const_iter){
+        for(auto& [key, field] : mFields){
+            if (key == (*const_iter).toLocal8Bit().constData()){
+                print_member(key, field->valueToString());
+            }
+        }
+    }
+
+}
+
+void BaseEntity::print_all_members() const
+{
+    for(auto& [key, field] : mFields) {
+        print_member(key, field->valueToString());
+    }
+}
+
+void BaseEntity::print_member(const std::string member, const std::string value) const
+{
+    qDebug() << stoq(member) << "=" << stoq(value);
+}
+
 void BaseEntity::baseMapFields(StringMap* map)
 {
     for(auto& [field, name] : mapping(map))
@@ -187,4 +222,9 @@ void BaseEntity::baseMapFields(StringMap* map)
 bool BaseEntity::isNew()
 {
     return (id() == -1) ? true : false;
+}
+
+BaseEntity const& BaseEntity::get_entity() const
+{
+    return mEDM->getEntity();
 }
