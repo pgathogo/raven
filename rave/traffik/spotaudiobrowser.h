@@ -13,6 +13,11 @@ class SpotAudioBrowser;
 namespace TRAFFIK{
 class SpotAudio;
 }
+
+namespace AUDIO{
+ class Audio;
+}
+
 class ManyToMany;
 class TraffikSetup;
 class CueEditor;
@@ -37,6 +42,8 @@ public:
     void updateRecord() override;
     void deleteRecord() override;
 
+    bool okay_to_delete(BaseEntity*) override;
+
     std::string typeID() override;
 
     void print(std::string);
@@ -47,7 +54,8 @@ public:
 
     void create_button(const QString, QString, Slot);
 
-    std::string audio_file_from_selection();
+    AUDIO::Audio* audio_from_selection();
+    std::string audio_file_name(AUDIO::Audio*);
 
 private slots:
      void import_audio();

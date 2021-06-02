@@ -47,9 +47,9 @@ void SpotBrowser::addRecord()
 
             entityDataModel().createEntity(std::move(spot));
 
-            saveVoiceOvers(*spot_form);
+            save_voice_overs(*spot_form);
 
-            saveTypeExclusions(*spot_form);
+            save_type_exclusions(*spot_form);
 
             save_spot_audio(*spot_form);
 
@@ -78,11 +78,12 @@ void SpotBrowser::updateRecord()
         if (spot_form->exec() > 0){
             try{
                 updateTableViewRecord(spot->tableViewValues());
+
                 entityDataModel().updateEntity(*spot);
 
-                saveVoiceOvers(*spot_form);
+                save_voice_overs(*spot_form);
 
-                saveTypeExclusions(*spot_form);
+                save_type_exclusions(*spot_form);
 
                  save_spot_audio(*spot_form);
 
@@ -115,7 +116,7 @@ bool SpotBrowser::okay_to_delete(BaseEntity* entity)
    return true;
 }
 
-void SpotBrowser::saveVoiceOvers(const SpotForm& sf)
+void SpotBrowser::save_voice_overs(const SpotForm& sf)
 {
     std::unique_ptr<EntityDataModel> edm =
            std::make_unique<EntityDataModel>();
@@ -134,7 +135,7 @@ void SpotBrowser::saveVoiceOvers(const SpotForm& sf)
     }
 }
 
-void SpotBrowser::saveTypeExclusions(const SpotForm& sf)
+void SpotBrowser::save_type_exclusions(const SpotForm& sf)
 {
     std::unique_ptr<EntityDataModel> edm =
            std::make_unique<EntityDataModel>();
@@ -159,14 +160,20 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
 
     auto& spot_audios = sf.spot_audios();
 
+    qDebug() << spot_audios.size();
+
     for(auto& sa : spot_audios){
         TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());
+
+        s_audio->print_members();
 
         if (s_audio->dbAction() == DBAction::dbaCREATE){
 
             AudioTool at;
 
             auto& audio = s_audio->get_paudio();
+
+            audio.print_members();
 
             int id = edm->createEntityDB(audio);
             s_audio->setDetailId(id);
@@ -184,6 +191,9 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
             std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
             std::string new_filename = lib_path+ogg_file+OGG_EXT;
 
+            qDebug() << "OLD File: "<< QString::fromStdString(old_filename);
+            qDebug() << "NEW File: "<< QString::fromStdString(new_filename);
+
             fs::path old_f{old_filename};
             fs::path new_f{new_filename};
 
@@ -196,18 +206,12 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
             audio_file.set_ogg_filename(ogg_file);
             adf_repo.write(audio_file);
 
-            printstr("Copying the wave png ...");
             // Copy Wave File to AudioLib directory
             if (fs::exists(audio.audio_file().wave_file()) ){
-
-                printstr("OLD wave file ...");
-                printstr(audio.audio_file().wave_file());
 
                 fs::path old_wave_file{audio.audio_file().wave_file()};
                 auto wave_file = old_wave_file.filename();
                 fs::path new_wave_file{lib_path+ogg_file+WAVE_EXT};
-
-                printstr("NEW wave file ...");
 
                 fs::copy(old_wave_file, new_wave_file);
                 fs::remove(old_wave_file);

@@ -97,7 +97,7 @@ private:
 
     std::set<int> selected_unique_hours();
 
-    void populate_spots_table(int client_id);
+    void populate_spots_table(int);
     void populate_grid(TimeBand*);
 
     void setup_break_select_grid();
@@ -106,7 +106,7 @@ private:
     void show_order_details(Order*);
     void add_days_of_week();
     void show_breaks_for_current_timeband();
-    void toggle_selection(bool mode);
+    void toggle_selection(bool);
 
     void auto_select_breaks_by_dow();
 

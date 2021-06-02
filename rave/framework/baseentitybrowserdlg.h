@@ -267,6 +267,7 @@ protected:
     void hideAddButton();
     void hideEditButton();
     void hideDeleteButton();
+    void show_delete_button();
     BaseEntity* findSelectedEntity();
     Ui::BaseEntityBrowserDlg* bui;
 

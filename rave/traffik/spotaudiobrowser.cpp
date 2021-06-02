@@ -35,6 +35,8 @@ SpotAudioBrowser::SpotAudioBrowser(
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
     create_button("btnCueEditor", "Edit", &SpotAudioBrowser::cue_edit);
 
+    show_delete_button();
+
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<TraffikSetup>());
     m_setup_edm->all();
     m_setup = dynamic_cast<TraffikSetup*>(m_setup_edm->firstEntity());
@@ -72,7 +74,18 @@ void SpotAudioBrowser::updateRecord()
 
 void SpotAudioBrowser::deleteRecord()
 {
+    BaseEntity* entity = findSelectedEntity();
 
+    // Check if it is okay  to delete the selected entity
+
+    BaseEntityBrowserDlg::deleteRecord();
+
+}
+
+bool SpotAudioBrowser::okay_to_delete(BaseEntity *entity)
+{
+    // check that the Audio is not attached to a running Spot.
+    return true;
 }
 
 void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption, Slot slot)
@@ -84,22 +97,28 @@ void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption
 
 }
 
-std::string SpotAudioBrowser::audio_file_from_selection()
+AUDIO::Audio* SpotAudioBrowser::audio_from_selection()
 {
     std::string search_name = selectedRowName().toStdString();
     if (search_name.empty())
-        return "";
+        return nullptr;
 
     BaseEntity* be = entityDataModel().findEntityByName(search_name);
     if (be == nullptr){
         qDebug() << "`be` is NULL! ";
-        return "";
+        return nullptr;
     }
 
     auto s_audio = dynamic_cast<TRAFFIK::SpotAudio*>(be);
 
     auto audio = dynamic_cast<AUDIO::Audio*>(s_audio->detailEntity());
 
+    return audio;
+
+}
+
+std::string SpotAudioBrowser::audio_file_name(AUDIO::Audio* audio)
+{
     AudioTool at;
     auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
     auto audio_file = audio->file_path()->value()+ogg_file;
@@ -177,6 +196,7 @@ void SpotAudioBrowser::import_audio()
         printstr(spot_audio->audio()->audio_file().wave_file());
 
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) ){
+
             audio_tool.generate_wave_file(spot_audio->audio()->audio_file().audio_file(),
                                           spot_audio->audio()->audio_file().wave_file());
             qDebug() << "Wave generated.";
@@ -220,14 +240,12 @@ void SpotAudioBrowser::play_back()
         return;
     }
 
-    std::string audio_file = audio_file_from_selection();
-
+    AUDIO::Audio* audio = audio_from_selection();
+    std::string audio_file = audio_file_name(audio);
     if (audio_file.empty()){
         qDebug() << "No audio file to play!";
         return;
     }
-
-    qDebug() << "Audio File: "<< stoq(audio_file);
 
     // Player should be seperated from the CueEditor
     AudioFile af(audio_file);
@@ -244,13 +262,16 @@ void SpotAudioBrowser::stop_play()
 
 void SpotAudioBrowser::cue_edit()
 {
-    std::string audio_file = audio_file_from_selection();
+    AUDIO::Audio* audio = audio_from_selection();
+    std::string audio_file = audio_file_name(audio);
     if (audio_file.empty()){
         qDebug() << "No audio file to edit!";
         return;
     }
 
     AudioFile af(audio_file);
+    af.set_audio_title(audio->title()->value());
+    //af.set_artist_name(audio->artist()->value());
     auto cue_editor = std::make_unique<CueEditor>(af);
 
     if (cue_editor->editor() == 1){

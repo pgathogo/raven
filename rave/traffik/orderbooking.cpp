@@ -6,6 +6,13 @@
 #include "spot.h"
 
 OrderBooking::OrderBooking()
+    :m_booking_segment{ nullptr }
+    ,m_schedule{ nullptr }
+    ,m_booking_status{ nullptr }
+    ,m_play_date{ nullptr }
+    ,m_play_time{ nullptr }
+    ,m_spot{ nullptr }
+    ,m_spot_audio{ nullptr }
 {
     m_schedule = createField<ForeignKeyField>("schedule_id", "Schedule",
                                              std::make_unique<Schedule>(), "schedule_date");
@@ -19,7 +26,6 @@ OrderBooking::OrderBooking()
     m_booking_status->addChoice({"CANCELLED","CANCEL"});
 
     m_play_date = createField<DateField>("play_date", "Play Date");
-
     m_play_time = createField<DateTimeField>("play_time", "Play Time");
 
     m_spot = createField<ForeignKeyField>("spot_id", "Spot",
@@ -36,7 +42,6 @@ OrderBooking::OrderBooking()
 
 OrderBooking::~OrderBooking()
 {
-
 }
 
 ForeignKeyField *OrderBooking::booking_segment() const

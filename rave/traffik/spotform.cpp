@@ -29,12 +29,11 @@
 
 namespace fs = std::filesystem;
 
-SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot,
-                   QDialog *parent) :
-    BaseEntityDetailDlg{parent},
-    ui{new Ui::SpotForm},
-    m_client{client},
-    m_spot{spot}
+SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
+    :BaseEntityDetailDlg{parent}
+     ,ui{new Ui::SpotForm}
+     ,m_client{client}
+     ,m_spot{spot}
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
@@ -75,7 +74,9 @@ SpotForm::~SpotForm()
 
 ActionResult SpotForm::saveRecord()
 {
+    printstr("saveRecord::AA");
     populateEntityFields();
+    printstr("saveRecord::BB");
     return m_spot->validate();
 }
 
@@ -127,11 +128,14 @@ void SpotForm::populateGrid()
 
 void SpotForm::populateEntityFields()
 {
+    printstr("populateEntityField::** 1 **");
     brandsComboChanged(ui->cbBrands->currentIndex());
     m_spot->set_name(ui->edtName->text().toStdString());
     m_spot->set_spot_duration(ui->edtSpotDuration->value());
     m_spot->set_real_duration(ui->edtRealDuration->value());
     m_spot->set_client(m_client->id());
+    qDebug() << "m_client->id()" << m_client->id();
+    printstr("populateEntityField::** 2 **");
 
     auto dayparts = m_daypart->read_grid();
     m_spot->set_daypart1(dayparts[1]);
@@ -158,6 +162,9 @@ void SpotForm::populateFormWidgets()
 
 void SpotForm::brandsComboChanged(int i)
 {
+    if (i < 0)
+        return;
+
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbBrands->model());
     m_spot->brand()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }

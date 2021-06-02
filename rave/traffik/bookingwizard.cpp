@@ -15,15 +15,14 @@
 
 #define DEBUG_MODE
 
-BookingWizard::BookingWizard(Order* order, QWidget *parent) :
-    QWizard(parent),
-    ui(new Ui::BookingWizard),
-    m_order{order},
-    m_spot_EDM{nullptr},
-    m_timeband_EDM{nullptr},
-    m_daypart_grid{nullptr},
-//    m_schedule_EDM{nullptr},
-    m_booking_EDM{nullptr}
+BookingWizard::BookingWizard(Order* order, QWidget *parent)
+    :QWizard(parent)
+    ,ui(new Ui::BookingWizard)
+    ,m_order{order}
+    ,m_spot_EDM{nullptr}
+    ,m_timeband_EDM{nullptr}
+    ,m_daypart_grid{nullptr}
+    ,m_booking_EDM{nullptr}
 {
     ui->setupUi(this);
 

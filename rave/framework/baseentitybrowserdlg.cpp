@@ -211,6 +211,11 @@ void BaseEntityBrowserDlg::hideDeleteButton()
     bui->btnDelete->setVisible(false);
 }
 
+void BaseEntityBrowserDlg::show_delete_button()
+{
+   bui->btnDelete->setVisible(true);
+}
+
 std::string BaseEntityBrowserDlg::typeID()
 {
     return "BaseEntityBrowserDlg";

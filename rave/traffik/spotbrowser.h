@@ -16,18 +16,18 @@ class SpotBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
-    explicit SpotBrowser(Client* client, QWidget *parent = nullptr);
+    explicit SpotBrowser(Client* client, QWidget *parent=nullptr);
     ~SpotBrowser() override;
 
     void addRecord() override;
     void updateRecord() override;
     void searchRecord() override;
 
-    bool okay_to_delete(BaseEntity* entity) override;
+    bool okay_to_delete(BaseEntity*) override;
 
-    void saveVoiceOvers(const SpotForm& sf);
-    void saveTypeExclusions(const SpotForm& sf);
-    void save_spot_audio(const SpotForm& sf);
+    void save_voice_overs(const SpotForm&);
+    void save_type_exclusions(const SpotForm&);
+    void save_spot_audio(const SpotForm&);
 private:
     Ui::SpotBrowser *ui;
     Client* m_client;

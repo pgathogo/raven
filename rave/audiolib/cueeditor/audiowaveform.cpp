@@ -141,6 +141,8 @@ namespace AUDIO {
 //        m_audio_file.set_ogg_filename(q_str.toStdString());
         fs::path p(q_str.toStdString());
 
+       qDebug() << "Audio File: " << QString::fromStdString(m_audio_file.audio_file());
+
         qDebug() << "ogg_filename() "<< q_str ;
 
         if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
