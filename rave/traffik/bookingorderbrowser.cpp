@@ -337,7 +337,7 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
         parent_is_created = false;
         QTreeWidgetItem* order_node;
         QTreeWidgetItem* booking_node;
-        QTableWidget* table;
+        QTableWidget* table{nullptr};
         int row=0;
         for (auto booking : bookings ){
             if (!parent_is_created){
@@ -357,8 +357,8 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
 
                 table = new QTableWidget(ui->twOrders);
                 QStringList header_labels ;
-                table->setRowCount(bookings.size());
 
+                table->setRowCount(bookings.size());
                 table->insertColumn(0);
                 table->insertColumn(1);
                 table->insertColumn(2);

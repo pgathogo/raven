@@ -263,7 +263,7 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
                 );
 
 
-    //TODO: Refactor the following code
+    //FIXME: Refactor the following code
     std::size_t i = 0;
     std::string  hr_str;
     for (auto it=uniq_hours.begin(); it != uniq_hours.end(); ++it){
@@ -279,7 +279,11 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
                 " in ",
                 hr_str);
 
-    m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter));
+    try{
+        m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter));
+    } catch(DatabaseException& de){
+        showMessage(de.errorMessage());
+    }
 
     return m_engine_data.m_schedule_EDM->count();
 }
@@ -304,40 +308,47 @@ void BookingWizard::toggleTimeBand(bool state)
 
 void BookingWizard::build_breaks()
 {
-    //test_booking();
-    //return;
+//    test_booking();
+//    return;
 
-    init_rules_state();
+    try{
+        init_rules_state();
 
-    TRAFFIK::Spot* spot = selected_spot();
-    m_engine_data.spot_to_book.spot_id = spot->id();
-    m_engine_data.spot_to_book.client_id = spot->client()->value();
-    m_engine_data.spot_to_book.brand_id = spot->brand()->value();
-    m_engine_data.spot_to_book.spot_name = spot->name()->value();
-    m_engine_data.spot_to_book.spot_duration = spot->spot_duration()->value();
-    m_engine_data.spot_to_book.real_duration = spot->real_duration()->value();
-    m_engine_data.spot_to_book.spot_daypart = fetch_spot_daypart(*spot);
+        TRAFFIK::Spot* spot = selected_spot();
 
-    fetch_type_exclusions(m_engine_data);
+        m_engine_data.spot_to_book.spot_id = spot->id();
+        m_engine_data.spot_to_book.client_id = spot->client()->value();
+        m_engine_data.spot_to_book.brand_id = spot->brand()->value();
+        m_engine_data.spot_to_book.spot_name = spot->name()->value();
+        m_engine_data.spot_to_book.spot_duration = spot->spot_duration()->value();
+        m_engine_data.spot_to_book.real_duration = spot->real_duration()->value();
+        m_engine_data.spot_to_book.spot_daypart = fetch_spot_daypart(*spot);
 
-    fetch_voice_exclusions(m_engine_data);
+        fetch_type_exclusions(m_engine_data);
 
-    auto unique_hours = selected_unique_hours();
+        fetch_voice_exclusions(m_engine_data);
 
-    m_engine_data.break_count = fetch_breaks(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+        auto unique_hours = selected_unique_hours();
 
-    if (m_engine_data.break_count == 0){
-        showMessage("No Breaks for the selected data range!");
-        return;
+        m_engine_data.break_count = fetch_breaks(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+
+        if (m_engine_data.break_count == 0){
+            showMessage("No Breaks for the selected data range!");
+            return;
+        }
+
+        find_existing_bookings(m_engine_data);
+
+        m_engine_data.available_breaks = find_available_breaks();
+
+        show_available_breaks();
+
+        setup_break_select_grid();
+
+    } catch(DatabaseException& de){
+        showMessage(de.errorMessage());
     }
 
-    find_existing_bookings(m_engine_data);
-
-    m_engine_data.available_breaks = find_available_breaks();
-
-    show_available_breaks();
-
-    setup_break_select_grid();
 }
 
 void BookingWizard::apply_selection()
@@ -396,7 +407,21 @@ void BookingWizard::test_booking()
 
     //populate_spots_table(5);
     //ui->tvSpots->selectRow(0);
-    TRAFFIK::Spot* spot = selected_spot();
+    TRAFFIK::Spot* spot{nullptr};
+
+    try{
+        spot = selected_spot();
+        if (spot == nullptr){
+            showMessage("Select a spot to book!");
+            return;
+        }
+    } catch(DatabaseException& de){
+        showMessage(de.errorMessage());
+    }
+
+
+    printstr("setting up the m_engine ...");
+
     m_engine_data.spot_to_book.spot_id = 3;
     m_engine_data.spot_to_book.client_id = spot->client()->value();
     m_engine_data.spot_to_book.brand_id = spot->brand()->value();
@@ -405,16 +430,20 @@ void BookingWizard::test_booking()
     m_engine_data.spot_to_book.real_duration = 0.0;
     m_engine_data.spot_to_book.spot_daypart = fetch_spot_daypart(*spot);
 
+    printstr("AA");
     fetch_type_exclusions(m_engine_data);
 
+    printstr("BB");
     fetch_voice_exclusions(m_engine_data);
 
     //ui->cbTypeDaypart->setChecked(true);
 
+    printstr("CC");
     ui->cbTimeband->setCurrentIndex(1);
 
     auto uniq_hours = selected_unique_hours();
 
+    printstr("DD");
     m_engine_data.break_count = fetch_breaks(QDate(2020,9,9), QDate(2020,9,30), uniq_hours);
 
     if (m_engine_data.break_count == 0){
@@ -422,12 +451,16 @@ void BookingWizard::test_booking()
         return;
     }
 
+    printstr("EE");
     find_existing_bookings(m_engine_data);
 
+    printstr("FF");
     m_engine_data.available_breaks = find_available_breaks();
 
+    printstr("GG");
     show_available_breaks();
 
+    printstr("HH");
     setup_break_select_grid();
 }
 
@@ -669,7 +702,10 @@ TRAFFIK::Spot* BookingWizard::selected_spot()
                             ui->tvSpots->model()->index(
                                     ui->tvSpots->currentIndex().row(), 0));
 
+
     std::string spot_name = q_col_name.toString().toStdString();
+
+    qDebug() << "***" << stoq(spot_name);
 
     if (!spot_name.empty()){
         BaseEntity* be = m_spot_EDM->findEntityByName(spot_name);
@@ -677,6 +713,8 @@ TRAFFIK::Spot* BookingWizard::selected_spot()
             spot = dynamic_cast<TRAFFIK::Spot*>(be);
         }
     }
+
+    qDebug() << "OUT <<< ";
 
     return spot;
 }

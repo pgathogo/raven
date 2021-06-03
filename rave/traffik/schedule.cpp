@@ -32,9 +32,9 @@ Schedule::Schedule()
     m_auto_transition = createField<IntegerField>("auto_transition", "Auto Transition");
     m_live_transition = createField<IntegerField>("live_transition", "Live Transition");
 
-    m_audio_type = createField<ChoiceField<std::string>>("audio_type", "Audio Type");
-    m_audio_type->addChoice({"SONG", "Song"});
-    m_audio_type->addChoice({"COMM", "Commercial"});
+    m_schedule_item_type = createField<ChoiceField<std::string>>("schedule_item_type", "Item Type");
+    m_schedule_item_type->addChoice({"SONG", "Song"});
+    m_schedule_item_type->addChoice({"COMM", "Commercial"});
 
     m_break_duration = createField<IntegerField>("break_duration", "Break Duration");
     m_break_start_win = createField<IntegerField>("break_start_win", "Break Start Win");
@@ -195,13 +195,13 @@ void Schedule::setLiveTransition(int val)
 
 ChoiceField<std::string> *Schedule::audio_type() const
 {
-    return m_audio_type;
+    return m_schedule_item_type;
 }
 
 ChoiceField<std::string>* Schedule::set_audio_type(std::string val)
 {
-    m_audio_type->setValue(val);
-    return m_audio_type;
+    m_schedule_item_type->setValue(val);
+    return m_schedule_item_type;
 }
 
 IntegerField *Schedule::breakDuration() const
