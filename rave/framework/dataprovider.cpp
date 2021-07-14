@@ -44,12 +44,12 @@ PostgresDataProvider::PostgresDataProvider()
     : BaseDataProvider()
     ,mPGConnector{nullptr}
 {
-    qDebug() << "Open connection ...";
-    //openConnection();
+    qDebug() << "PostgresDataProvider::ctor";
 }
 
 PostgresDataProvider::~PostgresDataProvider()
 {
+    qDebug() << "PostgresDataProvider::dtor";
     //PQfinish(conn);
 }
 

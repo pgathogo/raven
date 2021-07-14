@@ -1,0 +1,22 @@
+ -- TRAFFIK --
+# OrderBooking Module
+- When you cancel an order, show a message that the booking has been cancelled successfully
+- When you cance an order, show the cancellation status on the grid immedietly
+
+# PickList Dialog
+- Show that an item has been picked 
+
+# Detailed Dialog Forms
+- How to check for dirty state when you select an item for editing.
+
+# Order Form
+- How to open the form for editing in ReadOnly mode
+
+
+# STDM1.8 - Python 3
+- dict - has_key - has been removed
+
+# Spot Audio
+- After importing, take and round the real audio duration and make it the Spot Audio for booking purpose
+- ** CAN you book a spot with no Audio **
+-

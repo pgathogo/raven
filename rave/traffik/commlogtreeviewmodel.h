@@ -14,6 +14,7 @@ using TreeData = std::tuple<std::string, std::string, std::string>;
 using SelectedItems = QList<QTableWidgetItem*>;
 
 struct CommercialLog{
+    int id{-1};
     std::string client_name{};
     int spot_id{-1};
     std::string spot_name{};

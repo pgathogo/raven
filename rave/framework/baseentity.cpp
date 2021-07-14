@@ -167,7 +167,7 @@ std::string BaseEntity::make_drop_stmt(const std::string /*name*/)
     return "";
 }
 
-std::string BaseEntity::orderBy() const
+std::string BaseEntity::order_by() const
 {
     return "ID";
 }
@@ -217,6 +217,7 @@ void BaseEntity::baseMapFields(StringMap* map)
 {
     for(auto& [field, name] : mapping(map))
         this->setValueByField(*field, name);
+
 }
 
 bool BaseEntity::isNew()

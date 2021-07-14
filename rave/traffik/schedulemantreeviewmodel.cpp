@@ -20,12 +20,14 @@ ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent
 int ScheduleManTreeViewModel::read_tree_data(const Breaks& items)
 {
     int parent_id = 0;
-    for (auto& [key, breaks] : items){
-        Node* parent_node = new Node("Hour: "+std::to_string(key), std::to_string(key), ++parent_id, -1);
+    for (auto& [hour, breaks] : items){
+        Node* parent_node = new Node("Hour: "+std::to_string(hour),
+                                     std::to_string(hour), ++parent_id, -1, hour);
         m_nodes.push_back(parent_node);
         int child_id = 0;
         for(auto& comm_break : breaks){
-            Node* child_node = new Node(comm_break.schedule_time, "", ++child_id, parent_id);
+            Node* child_node = new Node(comm_break.schedule_time, "",
+                                        ++child_id, parent_id, comm_break.id);
 
             QStandardItem* schedule_time = new QStandardItem(stoq(comm_break.schedule_time));
             QStandardItem* break_mode = new QStandardItem(stoq(comm_break.break_mode));

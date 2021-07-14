@@ -61,6 +61,8 @@ public:
     std::string make_alter_stmt(const std::string name) override;
     std::string make_drop_stmt(const std::string name) override;
 
+    std::string order_by() const override;
+
     User& user();
     RoleMember& roleMember();
 

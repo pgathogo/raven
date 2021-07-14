@@ -51,17 +51,26 @@ void PickListBrowser::updateRecord()
 
 void PickListBrowser::onSelectItem()
 {
-    qDebug() << "PickListBrowser::onSelectItem()";
-    std::string searchName = selectedRowName().toStdString();
-    // get a stored pointer of BaseEntity
-    BaseEntity* entity = entityDataModel().findEntityByName(searchName);
-    entity->setDBAction(DBAction::dbaCREATE);
+    std::string search_name = selectedRowName().toStdString();
+
+    if (search_name.empty())
+        return;
+
+    BaseEntity* entity = entityDataModel().findEntityByName(search_name);
+    entity->setDBAction(DBAction::dbaCREATE); // ?????
     mPickListSetting.selectedEntities.push_back(entity);
+
+    if (mPickListSetting.pickMode == PickListMode::plmSINGLE_SELECT)
+        done(1);
 }
 
 void PickListBrowser::onCloseSelection()
 {
-    done(0);
+    if (mPickListSetting.selectedEntities.size() > 0){
+        done(1);
+    }else{
+        done(0);
+    }
 }
 
 

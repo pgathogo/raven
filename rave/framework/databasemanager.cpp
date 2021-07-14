@@ -143,8 +143,6 @@ int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 
     sqlQuery = makeInsertString(entity);
 
-    printstr(sqlQuery);
-
     provider()->executeQuery(sqlQuery);
     // Get id of the created record.
     int lastId = provider()->fetchLastId(entity.tableName());
@@ -192,7 +190,7 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string sql{};
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
-                    " WHERE "+ filter+" ORDER BY "+entity.orderBy();
+                    " WHERE "+ filter+" ORDER BY "+entity.order_by();
 
     return provider()->read(sql);
 }

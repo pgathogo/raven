@@ -52,7 +52,6 @@ BaseEntity* EntityModel::findEntityByName(const std::string name)
 
     for (auto& record : mEntities){
         auto key = std::get<0>(record);
-        qDebug() << "FindEntityByName: " << QString::fromStdString(key);
         if (std::get<0>(record) == name){
             be = std::get<1>(record).get();
             break;
@@ -260,6 +259,7 @@ void EntityDataModel::search(const std::string searchFilter)
 {
     if (dbManager->search(getEntity(), searchFilter) > 0)
         populateEntities();
+
 }
 
 std::string EntityDataModel::make_insert_stmt(const BaseEntity &entity)
@@ -294,6 +294,6 @@ void EntityDataModel::getById(std::tuple<std::string, std::string, int> searchIt
 
 void EntityDataModel::mapEntity(StringMap* map, BaseEntity& entity)
 {
-        for(auto& [field, name] : entity.mapping(map))
-            entity.setValueByField(*field, name);
+        for(auto& [field, value] : entity.mapping(map))
+            entity.setValueByField(*field, value);
 }

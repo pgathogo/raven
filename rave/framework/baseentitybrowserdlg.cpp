@@ -164,9 +164,13 @@ int BaseEntityBrowserDlg::selectedRowId() const
 QString BaseEntityBrowserDlg::selectedRowName()
 {
 
+    auto sel_row_id = selectedRowId();
+    if (sel_row_id == -1)
+        return QString("");
+
     QVariant col_name = bui->tvEntity->model()->data(
                             bui->tvEntity->model()->index(
-                                    selectedRowId(), 0));
+                                    sel_row_id, 0));
     return col_name.toString();
 }
 

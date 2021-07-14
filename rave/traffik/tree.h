@@ -16,7 +16,7 @@ using TreeData = std::tuple<std::string, std::string, std::string>;
 class Node : public QStandardItem{
 public:
     Node();
-    Node(std::string name, std::string parent_name, int n_id, int p_id);
+    Node(std::string name, std::string parent_name, int n_id, int p_id, int data);
     ~Node();
 
     std::string node_name() const { return m_node_name; }
@@ -33,6 +33,7 @@ private:
     std::string m_parent_name;
     int m_node_id;
     int m_parent_id;
+    int m_data;
     TreeNode m_children;
     QList<QStandardItem*> m_columns;
 

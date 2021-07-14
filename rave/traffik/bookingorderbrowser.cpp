@@ -7,13 +7,22 @@
 #include "traffiksetup.h"
 #include "client.h"
 #include "order.h"
+#include "spot.h"
+#include "spotform.h"
 #include "bookingwizard.h"
+#include "spotvoiceover.h"
+#include "spottypeexclusion.h"
+#include "spotaudio.h"
 #include "../framework/entitydatamodel.h"
 #include "../utils/tools.h"
 
-BookingOrderBrowser::BookingOrderBrowser(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::BookingOrderBrowser)
+BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
+    :QDialog(parent)
+    ,ui(new Ui::BookingOrderBrowser)
+    ,m_mdi_area{nullptr}
+    ,m_grid_tables{nullptr}
+    ,m_spot_ctx_menu{nullptr}
+    ,m_spot_ctx_action{nullptr}
 {
     ui->setupUi(this);
     connect(ui->cbFilter, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -40,6 +49,8 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent) :
     menu->addAction(actPlayed);
     menu->addAction(actCancelled);
 
+    set_autocompleter();
+
     ui->btnPrint->setMenu(menu);
 
 }
@@ -62,7 +73,7 @@ void BookingOrderBrowser::search_field_changed(int i)
         ui->swSearch->setCurrentIndex(1);
 }
 
-void BookingOrderBrowser::search()
+void BookingOrderBrowser::search(int id)
 {
     ui->twOrders->clear();
 
@@ -82,11 +93,9 @@ void BookingOrderBrowser::search()
         << " where f.spots_booked < f.spots_ordered "
         << " and f.spots_booked < f.spots_ordered ";
 
-        sql << make_filter();
+        sql << make_filter(id);
 
-        sql << order_by();
-
-        qDebug() << stoq(sql.str());
+        sql << order_by(id);
 
         EntityDataModel edm;
         edm.readRaw(sql.str());
@@ -169,11 +178,15 @@ void BookingOrderBrowser::select_filter()
     if (ui->cbFilter->currentIndex() == FilterField::Order_Title_Field)
         results = filter_query<Order>();
 
+    auto [_id, _label] = results;
+
     m_id = std::get<0>(results);
     m_label = std::get<1>(results);
 
     ui->edtFilter->setText(stoq(m_label));
 
+    if (!m_label.empty())
+        search(_id);
 }
 
 void BookingOrderBrowser::clear_filter()
@@ -211,7 +224,6 @@ void BookingOrderBrowser::new_booking()
         order_edm->getById({"id", "=", order_id});
 
         Order& order_ref = dynamic_cast<Order&>(order_edm->getEntity());
-
         Order* order = &order_ref;
 
         if (order != nullptr){
@@ -221,6 +233,114 @@ void BookingOrderBrowser::new_booking()
     }
 }
 
+void BookingOrderBrowser::show_spot_details(const QPoint& pos)
+{
+    if (m_spot_ctx_action == nullptr)
+        m_spot_ctx_action = new QAction("Spot details ...", this);
+
+    if (m_spot_ctx_menu == nullptr)
+        m_spot_ctx_menu = new QMenu(this);
+
+    m_spot_ctx_menu->addAction(m_spot_ctx_action);
+
+    QTableWidget* selected_table{nullptr};
+
+    bool item_found{false};
+    int spot_id {-1};
+
+    for (auto table: m_grid_tables){
+
+        if (table != nullptr) {
+
+            for (auto& item : table->selectedItems()){
+                selected_table = table;
+                if (item->column() == 3){
+                    spot_id = item->data(Qt::UserRole).toInt();
+                    item_found = true;
+                    break;
+                }
+            }
+
+            if (item_found)
+                break;
+        }
+
+    }
+
+    connect(m_spot_ctx_action, &QAction::triggered, this, [&](){
+     spot_details(spot_id);
+    });
+
+    auto act2 = m_spot_ctx_menu->exec(selected_table->viewport()->mapToGlobal(pos));
+}
+
+void BookingOrderBrowser::spot_details(int spot_id)
+{
+    auto spot_edm = std::make_unique<EntityDataModel>(std::make_unique<TRAFFIK::Spot>());
+    spot_edm->getById({"id", "=", spot_id});
+    TRAFFIK::Spot& spot_ref = dynamic_cast<TRAFFIK::Spot&>(spot_edm->getEntity());
+    TRAFFIK::Spot* spot = &spot_ref;
+
+    auto client_edm = std::make_unique<EntityDataModel>(std::make_unique<Client>());
+    client_edm->getById({"id", "=", spot->client()->value()});
+    Client& client_ref = dynamic_cast<Client&>(client_edm->getEntity());
+    Client* client = &client_ref;
+
+    spot->voice_over().setParentId(spot_id);
+    spot->type_exclusion().setParentId(spot_id);
+    spot->spot_audio().setParentId(spot_id);
+
+    std::unique_ptr<SpotForm> spot_form =
+            std::make_unique<SpotForm>(client, spot, this);
+
+    if (spot_form->exec() == 0){}
+
+}
+
+void BookingOrderBrowser::find_orders(QString text)
+{
+    auto entity = m_client_edm->findEntityByName(text.toStdString());
+    if (entity == nullptr)
+        return;
+
+    search(entity->id());
+}
+
+QTableWidget* BookingOrderBrowser::get_selected_grid()
+{
+    QTableWidget* tbl{nullptr};
+    bool table_found{false};
+
+    for (auto table: m_grid_tables){
+        for (auto& item : table->selectedItems()){
+            return table;
+        }
+    }
+
+    return tbl;
+}
+
+void BookingOrderBrowser::set_autocompleter()
+{
+    m_client_edm = std::make_unique<EntityDataModel>(
+                std::make_unique<Client>());
+
+    m_client_edm->all();
+
+    QStringList auto_list;
+    for (const auto& [name, entity] : m_client_edm->modelEntities()){
+        auto_list << QString::fromStdString(name);
+    }
+
+    m_completer = new QCompleter(auto_list);
+    m_completer->setCompletionMode(QCompleter::PopupCompletion);
+    m_completer->setCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
+
+    ui->edtFilter->setCompleter(m_completer);
+    connect(ui->edtFilter, &QLineEdit::textChanged, this, &BookingOrderBrowser::find_orders);
+
+}
+
 void BookingOrderBrowser::cancel_booking()
 {
     QStringList ids;
@@ -228,12 +348,9 @@ void BookingOrderBrowser::cancel_booking()
     std::map<int, int> revert_counter;
 
     for (auto table : m_grid_tables){
-        auto selected_bookings =  table->selectedItems();
-
         int order_id = -1;
 
-        for (int i=0; i < selected_bookings.count(); ++i){
-            auto item = selected_bookings.at(i);
+          for (auto& item : table->selectedItems()){
 
             if (item->column() == 0){
                 if (order_id == -1)
@@ -245,6 +362,7 @@ void BookingOrderBrowser::cancel_booking()
                 ids << QString::number(booking_id);
                 ++revert_counter[order_id];
             }
+
         }
     }
 
@@ -282,7 +400,14 @@ void BookingOrderBrowser::cancel_booking()
 
 }
 
-std::string BookingOrderBrowser::make_filter()
+void BookingOrderBrowser::make_spot_menu()
+{
+    m_spot_ctx_menu = new QMenu(this);
+    m_spot_ctx_menu->addAction("Properties...");
+
+}
+
+std::string BookingOrderBrowser::make_filter(int id)
 {
 
     std::unique_ptr<EntityDataModel> setupEDM;
@@ -298,23 +423,23 @@ std::string BookingOrderBrowser::make_filter()
     std::string client_id_filter;
     std::string order_id_filter{};
 
-    if (m_id > -1 ){
+    if (id > -1 ){
         if (ui->cbFilter->currentIndex() ==  FilterField::Client_Name_Field)
-                client_id_filter = " and a.id = "+std::to_string(m_id);
+                client_id_filter = " and a.id = "+std::to_string(id);
 
         if (ui->cbFilter->currentIndex() == FilterField::Order_Title_Field)
-                order_id_filter = " and f.id = "+std::to_string(m_id);
+                order_id_filter = " and f.id = "+std::to_string(id);
     }
 
     return  order_approval_filter+client_id_filter+order_id_filter;
 
 }
 
-std::string BookingOrderBrowser::order_by()
+std::string BookingOrderBrowser::order_by(int id)
 {
     std::string order_by_str{};
 
-    if (m_id > -1){
+    if (id > -1){
         order_by_str = " Order By f.order_date DESC ";
     }
 
@@ -338,11 +463,13 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
         QTreeWidgetItem* order_node;
         QTreeWidgetItem* booking_node;
         QTableWidget* table{nullptr};
+
         int row=0;
         for (auto booking : bookings ){
             if (!parent_is_created){
                 order_node = new QTreeWidgetItem(ui->twOrders);
                 order_node->setText(0, stoq(booking.order_title));
+                order_node->setData(0, Qt::UserRole, booking.order_id);
                 order_node->setText(1, QString::number(booking.order_number));
                 order_node->setText(2, stoq(booking.order_date));
                 order_node->setText(3, stoq(booking.start_date));
@@ -350,9 +477,8 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
                 order_node->setText(5, QString::number(booking.spots_ordered));
                 order_node->setText(6, QString::number(booking.spots_booked));
 
-                order_node->setData(0, Qt::UserRole, booking.order_id);
-
                 parent_is_created = true;
+
                 booking_node = new QTreeWidgetItem(order_node);
 
                 table = new QTableWidget(ui->twOrders);
@@ -373,7 +499,11 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
                 header_labels << "TX Time" << "Status";
 
                 table->setHorizontalHeaderLabels(header_labels);
+                table->resizeColumnsToContents();
+//                table->horizontalHeader()->setStretchLastSection(true);
+                table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
                 table->horizontalHeader()->setVisible(true);
+
                 table->setSelectionBehavior(QAbstractItemView::SelectRows);
                 table->setSelectionMode(QAbstractItemView::MultiSelection);
                 ui->twOrders->setItemWidget(booking_node, 0, table);
@@ -382,17 +512,21 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
 
                 m_grid_tables.push_back(table);
             }
+
             if (booking.schedule_date.empty())
                 continue;
 
             QTableWidgetItem* book_date = new QTableWidgetItem(stoq(booking.schedule_date));
-            book_date->setData(Qt::UserRole, booking.order_id);
+            book_date->setData(Qt::UserRole, booking.order_id); // Hide order_id in here
 
             QTableWidgetItem* book_time = new QTableWidgetItem(stoq(booking.schedule_time));
-            book_time->setData(Qt::UserRole, booking.booking_id);
+            book_time->setData(Qt::UserRole, booking.booking_id); // Hide bookind_id in here
 
             QTableWidgetItem* client_name = new QTableWidgetItem(stoq(booking.client_name));
+
             QTableWidgetItem* spot_title = new QTableWidgetItem(stoq(booking.spot_name));
+            spot_title->setData(Qt::UserRole, booking.spot_id); // Hide spot_id in here
+
             QTableWidgetItem* spot_duration = new QTableWidgetItem(QString::number(booking.spot_duration));
             QTableWidgetItem* tx_date = new QTableWidgetItem(stoq(booking.play_date));
             QTableWidgetItem* tx_time = new QTableWidgetItem(stoq(booking.play_time));
@@ -408,11 +542,18 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
             table->setItem(row, 7, book_status);
 
             ++row;
-
         }
+
+        table->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
     }
 
-   resizeColumnsToContents(*ui->twOrders);
+    for (int i=0; i<6; ++i)
+        ui->twOrders->resizeColumnToContents(i);
+
+    ui->twOrders->header()->setStretchLastSection(true);
+    ui->twOrders->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+   //resizeColumnsToContents(*ui->twOrders);
 
 }
 
@@ -426,7 +567,7 @@ void BookingOrderBrowser::resizeColumnsToContents(QTreeWidget& tree_widget)
   for( col = 0; col < cCols; col++ ) {
     w = tree_widget.header()->sectionSizeHint( col );
     for( i = 0; i < cItems; i++ )
-      w = qMax( w, tree_widget.topLevelItem( i )->text( col ).size()*7 + (col == 0 ? tree_widget.indentation() : 0) );
+      w = qMax( w, tree_widget.topLevelItem( i )->text( col ).size()*10 + (col == 0 ? tree_widget.indentation() : 0) );
     tree_widget.header()->resizeSection( col, w );
   }
 }

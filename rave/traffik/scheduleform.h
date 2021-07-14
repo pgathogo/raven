@@ -22,11 +22,13 @@ public:
 
     void load_schedule(const QDate& date);
     void setMdiArea(QMdiArea* mdi);
+    void delete_all_empty_breaks(QDate, int);
 
 private slots:
-    void scheduleDateChanged(const QDate& date);
     void create_breaks();
+    void delete_breaks();
     void hour_clicked(QListWidgetItem* item);
+    void scheduleDateChanged(const QDate& date);
 
 private:
     Ui::ScheduleForm *ui;
@@ -34,6 +36,7 @@ private:
     QMdiArea* mMdiArea;
 
     void build_tree_view();
+    QDate current_date();
 };
 
 #endif // SCHEDULEFORM_H

@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QItemDelegate>
 #include <QMenu>
+#include <QCompleter>
 #include "../framework/picklistbrowser.h"
 
 
@@ -82,11 +83,14 @@ public:
 
 private slots:
     void search_field_changed(int i);
-    void search();
+    void search(int);
     void select_filter();
     void clear_filter();
     void cancel_query();
     void new_booking();
+    void show_spot_details(const QPoint& pos);
+    void spot_details(int);
+    void find_orders(QString);
 
 private:
     Ui::BookingOrderBrowser *ui;
@@ -96,18 +100,28 @@ private:
     int m_id{-1};
     std::string m_label{};
 
-    std::string make_filter();
-    std::string order_by();
+    std::string make_filter(int);
+    std::string order_by(int);
 
     std::vector<QTableWidget*> m_grid_tables;
     std::vector<int> booking_ids;
 
     TreeWidgetItemDelegate m_item_delegate;
 
+    QMenu* m_spot_ctx_menu;
+    QAction* m_spot_ctx_action;
+
     void set_treewidget(Bookings& records);
     void resizeColumnsToContents(QTreeWidget& tree_widget);
     void sort_bookings(Bookings& orders);
     void cancel_booking();
+    void make_spot_menu();
+    QTableWidget* get_selected_grid();
+
+    void set_autocompleter();
+
+    QCompleter* m_completer;
+    std::unique_ptr<EntityDataModel> m_client_edm;
 
     template<typename T>
     class HasNameColumn
@@ -130,7 +144,10 @@ private:
     {
         PickListSetting set(std::make_unique<T>());
         m_picklist_browser = std::make_unique<PickListBrowser>(set);
-        m_picklist_browser->exec();
+        auto results = m_picklist_browser->exec();
+
+        if (results == 0)
+            return std::make_tuple(-1,"");
 
         for (const auto& base_entity : set.selectedEntities){
             auto entity = dynamic_cast<T*>(base_entity);
@@ -140,6 +157,8 @@ private:
                 return std::make_tuple(entity->id(), entity->title()->displayName());
         }
     }
+
+
 };
 
 class PrintBookingMenu : public QMenu

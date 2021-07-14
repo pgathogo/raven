@@ -235,7 +235,7 @@ void SetupForm::addApprover()
 
         auto levels = make_aprv_levels();
 
-        auto aprvForm = std::make_unique<ApproverForm>(
+        auto aprvForm = std::make_unique<TRAFFIK::ApproverForm>(
                     approver.get(), levels,
                     m_edm_approver->keys());
 

@@ -3,6 +3,7 @@
 
 #include <set>
 #include <QWizard>
+#include <QMenu>
 #include "../framework/entitydatamodel.h"
 #include "timeband.h"
 #include "schedule.h"
@@ -37,7 +38,7 @@ public:
 
     std::size_t fetch_breaks(QDate, QDate, std::set<int>);
     void find_existing_bookings(TRAFFIK::EngineData&);
-    int find_available_breaks();
+    std::size_t find_available_breaks();
 
     bool validateCurrentPage() override;
     TRAFFIK::Spot* selected_spot();
@@ -79,6 +80,7 @@ private slots:
     void build_breaks();
     void apply_selection();
     void clear_selection();
+    void show_spot_details(const QPoint&);
 
 private:
     Ui::BookingWizard *ui;
@@ -97,6 +99,9 @@ private:
 
     std::set<int> selected_unique_hours();
 
+    QMenu* m_spot_ctx_menu;
+    QAction* m_spot_ctx_action;
+
     void populate_spots_table(int);
     void populate_grid(TimeBand*);
 
@@ -109,6 +114,8 @@ private:
     void toggle_selection(bool);
 
     void auto_select_breaks_by_dow();
+    bool spot_has_audio(const TRAFFIK::Spot*);
+    void spot_details(int);
 
 };
 

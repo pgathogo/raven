@@ -77,6 +77,9 @@ namespace TRAFFIK {
 
         SpotAudio& spot_audio();
 
+
+        ActionResult validate() override;
+
     private:
         StringField* m_name;
         DecimalField* m_spot_duration;

@@ -15,13 +15,15 @@ Node::Node()
 {
 }
 
-Node::Node(std::string name, std::string parent_name, int n_id, int p_id)
-    :m_node_name{name},
-     m_parent_name{parent_name},
-     m_node_id{n_id},
-     m_parent_id{p_id}
+Node::Node(std::string name, std::string parent_name, int n_id, int p_id, int data)
+    :m_node_name{name}
+     ,m_parent_name{parent_name}
+     ,m_node_id{n_id}
+     ,m_parent_id{p_id}
+     ,m_data{data}
 {
     setText(QString::fromStdString(name));
+    setData(data, Qt::UserRole);
 }
 
 Node::~Node(){}

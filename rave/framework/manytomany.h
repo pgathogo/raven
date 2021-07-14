@@ -12,7 +12,7 @@ class ManyToMany : public BaseEntity
 {
 public:
     ManyToMany(){}
-    virtual ~ManyToMany();
+    virtual ~ManyToMany() override;
 
     virtual std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const = 0;
 
@@ -27,6 +27,7 @@ public:
     virtual BaseEntity* detailEntity() const = 0;
 
     virtual BaseEntity* mtomEntity() = 0;
+    //void print_members(const QStringList& members=QStringList()) const override;
 
     void addEntity(BaseEntity* entity);
     std::size_t getSize(){ return mEntities.size(); }
@@ -41,6 +42,10 @@ public:
 
 private:
     std::vector<std::unique_ptr<BaseEntity>> mEntities;
+
+//    void print_selected_members(const QStringList& members) const;
+//    void print_all_members() const;
+//    void print_member(const std::string, const std::string) const;
 };
 
 

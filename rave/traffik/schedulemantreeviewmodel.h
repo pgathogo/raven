@@ -14,6 +14,7 @@ using TreeData = std::tuple<std::string, std::string, std::string>;
 using SelectedItems = QList<QTableWidgetItem*>;
 
 struct Break{
+    int id{-1};
     std::string schedule_date{};
     int schedule_hour{-1};
     std::string schedule_time{};

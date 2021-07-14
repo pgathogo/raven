@@ -35,7 +35,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Create Breaks</string>
+        <string>Generate Schedule Breaks</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>
@@ -149,14 +149,14 @@
      <item>
       <widget class="QPushButton" name="btnCreate">
        <property name="text">
-        <string>Create Breaks</string>
+        <string>Generate Schedule Breaks</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btnCancel">
        <property name="text">
-        <string>Cancel</string>
+        <string>Close</string>
        </property>
       </widget>
      </item>

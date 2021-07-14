@@ -85,7 +85,6 @@ public:
 
     size_t count();
 
-
     void mapEntity(StringMap* map, BaseEntity& entity);
     void populateMToMDetails();
 

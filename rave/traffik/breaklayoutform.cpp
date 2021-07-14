@@ -38,6 +38,8 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
     connect(ui->btnCopy, &QPushButton::clicked, this, &BreakLayoutForm::copyHourClicked);
     connect(ui->btnUndo, &QPushButton::clicked, this, &BreakLayoutForm::undoCopyClicked);
 
+    hideSaveNewBtn();
+
     setDefaults();
 }
 

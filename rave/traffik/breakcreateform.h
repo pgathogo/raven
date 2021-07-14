@@ -37,14 +37,17 @@ public:
     };
 
 private slots:
-    void breakLayoutSelected(const QModelIndex& index);
-    void closeForm();
+    void break_layout_selected(const QModelIndex& index);
+    void close_form();
     void create_breaks();
 
 private:
     Ui::BreakCreateForm *ui;
-    std::unique_ptr<EntityDataModel> edmBreakLayout;
-    std::unique_ptr<EntityDataModel> edmBreakLine;
+    std::unique_ptr<EntityDataModel> m_edm_break_layout;
+    std::unique_ptr<EntityDataModel> m_edm_break_line;
+    bool m_breaks_created{false};
+    bool write_breaks_to_db(const std::string sql);
+    std::string make_break_sql(QDate from, QDate to);
 };
 
 #endif // BREAKCREATEFORM_H

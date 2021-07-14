@@ -6,6 +6,7 @@
 #include "schedule.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
+#include "../framework/ravenexception.h"
 #include "breakcreateform.h"
 #include "schedulemantreeviewmodel.h"
 
@@ -18,6 +19,7 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &ScheduleForm::scheduleDateChanged);
     connect(ui->btnCreate, &QPushButton::clicked, this, &ScheduleForm::create_breaks);
+    connect(ui->btnDelete, &QPushButton::clicked, this, &ScheduleForm::delete_breaks);
 
 //    connect(ui->lwHours, &QListWidget::itemClicked, this, &ScheduleForm::hourClicked);
 
@@ -43,6 +45,7 @@ void ScheduleForm::load_schedule(const QDate &date)
                 sched.scheduleDate()->dbColumnName(),
                 "=",
                 date);
+
     std::string filter = m_edm_schedule->prepareFilter(date_filter);
 
     m_edm_schedule->search(filter);
@@ -53,13 +56,44 @@ void ScheduleForm::load_schedule(const QDate &date)
 
 void ScheduleForm::scheduleDateChanged(const QDate& date)
 {
-    load_schedule(date);
+    load_schedule(QDate::fromString(date.toString()));
 }
 
 void ScheduleForm::create_breaks()
 {
     auto bcForm = std::make_unique<BreakCreateForm>(this);
-    bcForm->exec();
+    if (bcForm->exec() > 0)
+        load_schedule(current_date());
+}
+
+void ScheduleForm::delete_breaks()
+{
+    //FIXME Show ids userdata for child nodes
+    QModelIndex index = ui->tvSchedule->currentIndex();
+
+    if (!index.isValid())
+        return;
+
+    QVariant data = ui->tvSchedule->model()->data(index, Qt::UserRole);
+    QString text = data.toString();
+
+    if (text.isEmpty())
+        return;
+
+    int hour = data.toInt();
+
+    int result = QMessageBox::warning(this, tr("Schedule Breaks"),
+                                      tr("Delete ALL EMPTY breaks for selected hour?"),
+                                      QMessageBox::Yes | QMessageBox::No);
+    switch(result){
+        case QMessageBox::Yes:
+            delete_all_empty_breaks(current_date(), hour);
+            load_schedule(current_date());
+            break;
+        case QMessageBox::No:
+            break;
+    }
+
 }
 
 void ScheduleForm::hour_clicked(QListWidgetItem *item)
@@ -74,6 +108,7 @@ void ScheduleForm::build_tree_view()
         Schedule* schedule = dynamic_cast<Schedule*>(entity.get());
 
         Break comm_break;
+        comm_break.id = schedule->id();
         comm_break.schedule_date = schedule->scheduleDate()->value().toString("yyyy-mm-dd").toStdString();
         comm_break.schedule_hour = schedule->scheduleHour()->value();
         comm_break.schedule_time = schedule->scheduleTime()->value().toString("hh:mm").toStdString();
@@ -95,9 +130,32 @@ void ScheduleForm::build_tree_view()
 
 }
 
+QDate ScheduleForm::current_date()
+{
+    return ui->dtSchedule->date().currentDate();
+}
+
 void ScheduleForm::setMdiArea(QMdiArea* mdi)
 {
     mMdiArea = mdi;
 }
 
+void ScheduleForm::delete_all_empty_breaks(QDate date, int hour)
+{
+    std::stringstream sql;
+
+    sql << " DELETE From rave_schedule "
+        << " Where schedule_date ='"+date.toString("yyyy-MM-dd").toStdString()+"'"
+        << " And Schedule_hour = "+std::to_string(hour)
+        << " And id NOT IN (SELECT schedule_id From rave_orderbooking) ";
+
+    EntityDataModel edm;
+
+    try{
+        edm.executeRawSQL(sql.str());
+    }catch(DatabaseException& de){
+        showMessage(de.errorMessage());
+    }
+
+}
 

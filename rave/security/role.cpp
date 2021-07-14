@@ -250,6 +250,11 @@ std::string Role::make_drop_stmt(const std::string name)
     return make_drop_role_stmt( name );
 }
 
+std::string Role::order_by() const
+{
+    return "rolname";
+}
+
 User &Role::user()
 {
     return *mUser;

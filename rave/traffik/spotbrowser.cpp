@@ -20,7 +20,7 @@
 namespace fs = std::filesystem;
 
 SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
-    BaseEntityBrowserDlg(parent,std::make_unique<TRAFFIK::Spot>(client)),
+    BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Spot>(client)),
     ui{new Ui::SpotBrowser},
     m_client{client}
 {
@@ -190,9 +190,6 @@ void SpotBrowser::save_spot_audio(const SpotForm &sf)
 
             std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
             std::string new_filename = lib_path+ogg_file+OGG_EXT;
-
-            qDebug() << "OLD File: "<< QString::fromStdString(old_filename);
-            qDebug() << "NEW File: "<< QString::fromStdString(new_filename);
 
             fs::path old_f{old_filename};
             fs::path new_f{new_filename};

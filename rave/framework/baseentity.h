@@ -79,11 +79,12 @@ public:
     virtual std::string make_alter_stmt(const std::string name);
     virtual std::string make_drop_stmt(const std::string name);
 
-    std::string orderBy() const;
+    virtual std::string order_by() const;
+
 
     virtual std::string className();
 
-    void print_members(const QStringList& members=QStringList()) const;
+    virtual void print_members(const QStringList& members=QStringList()) const;
 
     template<typename T>
     std::unique_ptr<T> clone()

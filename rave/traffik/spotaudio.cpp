@@ -6,10 +6,35 @@
 namespace TRAFFIK{
 
     SpotAudio::SpotAudio()
-        :ManyToMany{},
-         m_audio{nullptr},
-         p_audio{""}
+        :ManyToMany{}
+        ,m_audio{nullptr}
+        ,p_audio{""}
+        ,m_parent_entity{nullptr}
+        ,m_detail_entity{nullptr}
+        ,m_parent_id{nullptr}
+        ,m_detail_id{nullptr}
     {
+        m_parent_id = createField<IntegerField>("spot_id","Parent ID");
+        m_detail_id = createField<IntegerField>("audio_id","Detail ID");
+
+        m_parent_entity = this;
+        m_detail_entity = new AUDIO::Audio("");
+
+        //m_audio = dynamic_cast<AUDIO::Audio*>(m_detail_entity);
+
+        m_weight = createField<IntegerField>("weight", "Weight");
+        m_seq_no = createField<IntegerField>("seq_no", "Seq No");
+
+        m_short_desc = createField<StringField>("short_desc", "Description");
+        m_short_desc->setFormOnly(true);
+
+        m_notes = createField<TextField>("notes", "Notes");
+        m_notes->setFormOnly(true);
+
+        //m_header << QString::fromStdString(m_audio->title()->fieldLabel())
+        //         << QString::fromStdString(m_short_desc->fieldLabel());
+
+        setTableName("rave_spotaudio");
 
     }
 
@@ -45,17 +70,8 @@ namespace TRAFFIK{
 
     SpotAudio::~SpotAudio()
     {
+
     }
-
-//    ForeignKeyField *SpotAudio::audio() const
-//    {
-//        return m_audio;
-//    }
-
-//    void SpotAudio::set_audio(int val)
-//    {
-//        m_audio->setValue(val);
-//    }
 
     DateField* SpotAudio::audio_date() const
     {
@@ -90,7 +106,6 @@ namespace TRAFFIK{
     StringField* SpotAudio::short_desc() const
     {
         return m_audio->short_desc();
-//        return m_short_desc;
     }
 
     TextField* SpotAudio::notes() const

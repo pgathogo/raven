@@ -100,7 +100,7 @@ void CommLogForm::fetch_bookings()
 
     sql << "select a.name AS client_name, b.id AS spot_id, b.name AS spot_name, "
         << "b.spot_duration AS spot_duration,  c.booking_status AS booking_status, "
-        << "c.play_date AS play_date, c.play_time AS play_time, "
+        << "c.play_date AS play_date, c.play_time AS play_time, c.id AS booking_id, "
         << "e.schedule_date AS schedule_date, e.schedule_time AS schedule_time "
         << " from rave_client a, rave_spot b, rave_orderbooking c, rave_bookingsegment d, "
         << " rave_schedule e "
@@ -143,6 +143,8 @@ void CommLogForm::fetch_bookings()
                     comm_log.play_date = value;
                 if (field == "play_time")
                     comm_log.play_time = value;
+                if (field == "booking_id")
+                    comm_log.id = std::stoi(value);
                 if (field == "schedule_date")
                     comm_log.schedule_date = value;
                 if (field == "schedule_time")

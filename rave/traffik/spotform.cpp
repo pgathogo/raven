@@ -74,9 +74,7 @@ SpotForm::~SpotForm()
 
 ActionResult SpotForm::saveRecord()
 {
-    printstr("saveRecord::AA");
     populateEntityFields();
-    printstr("saveRecord::BB");
     return m_spot->validate();
 }
 
@@ -107,7 +105,7 @@ const std::unique_ptr<SpotAudioBrowser> &SpotForm::spot_browser() const
 
 std::string SpotForm::windowTitle()
 {
-    return "Client:" +m_client->name()->displayName();
+    return "Spot Details - Client: " +m_client->name()->displayName();
 }
 
 void SpotForm::populateGrid()
@@ -128,14 +126,11 @@ void SpotForm::populateGrid()
 
 void SpotForm::populateEntityFields()
 {
-    printstr("populateEntityField::** 1 **");
     brandsComboChanged(ui->cbBrands->currentIndex());
     m_spot->set_name(ui->edtName->text().toStdString());
     m_spot->set_spot_duration(ui->edtSpotDuration->value());
     m_spot->set_real_duration(ui->edtRealDuration->value());
     m_spot->set_client(m_client->id());
-    qDebug() << "m_client->id()" << m_client->id();
-    printstr("populateEntityField::** 2 **");
 
     auto dayparts = m_daypart->read_grid();
     m_spot->set_daypart1(dayparts[1]);

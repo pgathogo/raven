@@ -178,11 +178,14 @@ namespace TRAFFIK {
         return std::make_unique<Spot>();
     }
 
-    void Spot::afterMapping(BaseEntity &entity)
+    void Spot::afterMapping(BaseEntity& entity)
     {
-        m_spot_voice_over->setParentId(entity.id());
-        m_spot_type_ex->setParentId(entity.id());
-        m_spot_audio->setParentId(entity.id());
+        Spot& spot = dynamic_cast<Spot&>(entity);
+
+        m_spot_voice_over->setParentId(spot.id());
+        m_spot_type_ex->setParentId(spot.id());
+        m_spot_audio->setParentId(spot.id());
+
     }
 
     StringField* Spot::name() const
@@ -312,6 +315,22 @@ namespace TRAFFIK {
     SpotAudio& Spot::spot_audio()
     {
         return *m_spot_audio;
+    }
+
+    ActionResult Spot::validate()
+    {
+        if (m_name->value().empty()){
+            return std::make_tuple(ActionResultType::arERROR,
+                                   "Set spot Name!");
+        }
+
+        if (m_spot_duration->value() == 0.0){
+            return std::make_tuple(ActionResultType::arERROR,
+                                   "Set spot duration!");
+        }
+
+        return BaseEntity::validate();
+
     }
 
 }

@@ -79,17 +79,17 @@ int TreeViewModel::read_tree_data(const SelectedItems& items)
         Node* node;
         if (_prev_pid == row.parent_id){
             // Make leaf
-            node = new Node(row.node_name, row.root_name, row.node_id, row.parent_id);
+            node = new Node(row.node_name, row.root_name, row.node_id, row.parent_id, row.node_id);
             node->setData(row.node_id, Qt::UserRole);
             m_nodes.push_back(node);
         } else{
             // Make header
-            Node* node_root = new Node(row.root_name, row.node_name,  row.parent_id, -1);
+            Node* node_root = new Node(row.root_name, row.node_name,  row.parent_id, -1, row.node_id);
             node_root->setData(row.node_id, Qt::UserRole);
             m_nodes.push_back(node_root);
 
             // ... then make a leaf
-            Node* node_leaf = new Node(row.node_name, row.root_name, row.node_id, row.parent_id);
+            Node* node_leaf = new Node(row.node_name, row.root_name, row.node_id, row.parent_id, row.node_id);
             node_leaf->setData(row.node_id, Qt::UserRole);
             m_nodes.push_back(node_leaf);
 

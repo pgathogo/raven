@@ -25,9 +25,48 @@ std::vector<std::unique_ptr<BaseEntity>> const& ManyToMany::entities() const
     return mEntities;
 }
 
+/*
+void ManyToMany::print_selected_members(const QStringList &members) const
+{
+    QStringList::const_iterator const_iter;
+    for(const_iter=members.constBegin(); const_iter != members.constEnd(); ++const_iter){
+        for(auto& [key, field] : fields()){
+            if (key == (*const_iter).toLocal8Bit().constData()){
+                print_member(key, field->valueToString());
+            }
+        }
+    }
+
+}
+
+void ManyToMany::print_all_members() const
+{
+    for(auto& [key, field] : fields()) {
+        print_member(key, field->valueToString());
+    }
+}
+
+void ManyToMany::print_member(const std::string member, const std::string value) const
+{
+    qDebug() << stoq(member) << "=" << stoq(value);
+}
+*/
+
 std::string ManyToMany::typeInfo() const
 {
 }
+/*
+void ManyToMany::print_members(const QStringList &members) const
+{
+    if (members.size() > 0){
+        print_selected_members(members);
+    }else{
+        print_all_members();
+    }
+
+    printstr("--- END ---");
+}
+*/
 
 /* ---------------- VoiceExclusion -----------------*/
 VoiceExclusion::VoiceExclusion()

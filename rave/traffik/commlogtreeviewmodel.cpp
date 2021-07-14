@@ -22,11 +22,12 @@ int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
 {
     int parent_id = 0;
     for (auto& [key, bookings] : items){
-        Node* parent_node = new Node(key, key, ++parent_id, -1);
+        Node* parent_node = new Node(key, key, ++parent_id, -1, -1);
         m_nodes.push_back(parent_node);
         int child_id = 0;
         for(auto& booking : bookings){
-            Node* child_node = new Node(booking.client_name, booking.spot_name, ++child_id, parent_id);
+            Node* child_node = new Node(booking.client_name, booking.spot_name,
+                                        ++child_id, parent_id, booking.id);
 
             QStandardItem* client_name = new QStandardItem(stoq(booking.client_name));
             QStandardItem* spot_id = new QStandardItem(QString::number(booking.spot_id));

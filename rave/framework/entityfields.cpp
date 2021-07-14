@@ -499,7 +499,6 @@ void ForeignKeyField::setCurrText(std::string txt)
     mCurrText = txt;
 }
 
-
 std::string ForeignKeyField::currText() const
 {
     return mCurrText;

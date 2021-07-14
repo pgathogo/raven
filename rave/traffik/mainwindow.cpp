@@ -222,6 +222,8 @@ void MainWindow::createActions()
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->addAction(clientAction);
     mainToolBar->addAction(orderBookingAction);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(scheduleAction);
     //mainToolBar->addAction(spotAction);
 }
 
