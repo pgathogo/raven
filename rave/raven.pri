@@ -1,6 +1,7 @@
 SOURCES += \
     $$PWD/audio/artist.cpp \
     $$PWD/audio/audio.cpp \
+    $$PWD/framework/letterfilterwidget.cpp \
     $$PWD/security/loginform.cpp \
     $$PWD/traffik/commlogtreeviewmodel.cpp \
     ../framework/baseentity.cpp \
@@ -74,6 +75,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/audio/artist.h \
     $$PWD/audio/audio.h \
+    $$PWD/framework/letterfilterwidget.h \
     $$PWD/security/loginform.h \
     $$PWD/traffik/commlogtreeviewmodel.h \
     $$PWD/utils/qchecklist.h \
@@ -149,6 +151,7 @@ HEADERS += \
     ../security/roleform.h
 
 FORMS += \
+    $$PWD/framework/letterfilterwidget.ui \
     $$PWD/security/loginform.ui \
     ../framework/baseentitybrowserdlg.ui \
     ../framework/baseentitydetaildlg.ui \

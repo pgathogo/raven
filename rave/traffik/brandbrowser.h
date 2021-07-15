@@ -22,6 +22,8 @@ public:
     void updateRecord() override;
     void searchRecord() override;
 
+    void search_by_client(Client*);
+
     bool okay_to_delete(BaseEntity* entity) override;
 
 private:

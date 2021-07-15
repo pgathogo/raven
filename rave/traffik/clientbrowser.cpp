@@ -19,9 +19,10 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
 {
     ui->setupUi(this);
     setDialogTitle("Clients");
-    createBrandButton();
-    createSpotButton();
-    createOrderButton();
+    //createBrandButton();
+    //createSpotButton();
+    //createOrderButton();
+    show_letter_filter();
 }
 
 ClientBrowser::~ClientBrowser()

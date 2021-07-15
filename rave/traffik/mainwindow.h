@@ -83,6 +83,7 @@ private slots:
     void openBreakBrowser();
     void openSchedule();
     void openOrderBooking();
+    void open_merged_browser();
 
     void print_comm_log();
 

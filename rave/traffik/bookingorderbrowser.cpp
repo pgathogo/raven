@@ -65,6 +65,12 @@ void BookingOrderBrowser::setMdiArea(QMdiArea *mdi)
     m_mdi_area = mdi;
 }
 
+void BookingOrderBrowser::search_by_client(Client* client)
+{
+    if (client != nullptr)
+        search(client->id());
+}
+
 void BookingOrderBrowser::search_field_changed(int i)
 {
     if (i == FilterField::Client_Name_Field || i == FilterField::Order_Title_Field)
@@ -551,7 +557,7 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
     for (int i=0; i<6; ++i)
         ui->twOrders->resizeColumnToContents(i);
 
-    ui->twOrders->header()->setStretchLastSection(true);
+    //ui->twOrders->header()->setStretchLastSection(false);
     ui->twOrders->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
    //resizeColumnsToContents(*ui->twOrders);
 

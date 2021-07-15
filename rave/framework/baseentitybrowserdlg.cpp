@@ -7,13 +7,15 @@
 
 #include "../utils/tools.h"
 #include "../framework/ravenexception.h"
+#include "../framework/letterfilterwidget.h"
 #include "../security/authentication.h"
 
-BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent) :
-    QDialog(parent),
-    mMdiArea{nullptr},
-    bui(new Ui::BaseEntityBrowserDlg),
-    mEntityDataModel{nullptr}
+BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent)
+    :QDialog(parent)
+    ,mMdiArea{nullptr}
+    ,bui(new Ui::BaseEntityBrowserDlg)
+    ,mEntityDataModel{nullptr}
+    ,m_letter_filter_widget{nullptr}
 {
     bui->setupUi(this);
     connectSlots();
@@ -26,6 +28,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
         ,mMdiArea{nullptr}
         ,bui(new Ui::BaseEntityBrowserDlg)
         ,mEntityDataModel{nullptr}
+        ,m_letter_filter_widget{nullptr}
 {
 
     bui->setupUi(this);
@@ -62,8 +65,17 @@ void BaseEntityBrowserDlg::setDialogTitle(const QString title)
 
 void BaseEntityBrowserDlg::setMdiArea(QMdiArea* mdi)
 {
-   mMdiArea = mdi;
+    mMdiArea = mdi;
 }
+
+void BaseEntityBrowserDlg::show_letter_filter()
+{
+    m_letter_filter_widget = std::make_unique<LetterFilterWidget>(this);
+    bui->vlGrid->addWidget(m_letter_filter_widget.get());
+
+    connect(m_letter_filter_widget->get_tabwidget(), &QTabWidget::currentChanged, this, BaseEntityBrowserDlg::filter_by_letter);
+}
+
 EntityDataModel& BaseEntityBrowserDlg::entityDataModel() const
 {
     return *mEntityDataModel;
@@ -108,6 +120,8 @@ void BaseEntityBrowserDlg::searchBtnClicked()
 
 void BaseEntityBrowserDlg::searchRecord()
 {
+    entityDataModel().clearEntities();
+
     if (bui->edtFilter->text().isEmpty()){
         entityDataModel().all();
     }else{
@@ -118,6 +132,20 @@ void BaseEntityBrowserDlg::searchRecord()
         auto searchItem = std::make_tuple(columnName, item);
         entityDataModel().searchByStr(searchItem);
     }
+}
+
+void BaseEntityBrowserDlg::filter_by_letter(int index)
+{
+    entityDataModel().clearEntities();
+
+    QString tab_text = m_letter_filter_widget->get_tabwidget()->tabText(index);
+
+    auto data = bui->cbFilter->itemData(
+                        bui->cbFilter->currentIndex()).value<QVariant>();
+    std::string columnName = data.toString().toStdString();
+    auto searchItem = std::make_tuple(columnName, tab_text.toStdString());
+    entityDataModel().starts_with(searchItem);
+
 }
 
 bool BaseEntityBrowserDlg::okay_to_delete(BaseEntity* /*entity*/)

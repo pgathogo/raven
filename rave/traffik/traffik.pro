@@ -33,6 +33,7 @@ HEADERS += \
     breaklayoutform.h \
     breaklayoutline.h \
     commlogform.h \
+    mergedbrowser.h \
     order.h \
     orderapprover.h \
     orderbooking.h \
@@ -64,6 +65,7 @@ SOURCES += \
     breaklayoutform.cpp \
     breaklayoutline.cpp \
     commlogform.cpp \
+    mergedbrowser.cpp \
     order.cpp \
     orderapprover.cpp \
     orderbooking.cpp \
@@ -88,6 +90,7 @@ FORMS += \
     breaklayoutbrowser.ui \
     breaklayoutform.ui \
     commlogform.ui \
+    mergedbrowser.ui \
     orderbrowser.ui \
     orderform.ui \
     scheduleform.ui \

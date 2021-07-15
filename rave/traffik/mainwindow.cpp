@@ -40,6 +40,8 @@
 #include "commlogform.h"
 #include "bookingorderbrowser.h"
 
+#include "mergedbrowser.h"
+
 AccessMap MainWindow::access_map;
 
 MainWindow::MainWindow(std::unique_ptr<Authentication> auth,
@@ -201,9 +203,9 @@ void MainWindow::createActions()
     breakAction->setStatusTip(tr("Breaks Setup"));
     connect(breakAction, &QAction::triggered, this, &MainWindow::openBreakBrowser);
 
-    QAction* scheduleAction = new QAction(tr("&Schedule"));
+    QAction* scheduleAction = new QAction(tr("&SCHEDULE"));
     setupMenu->addAction(scheduleAction);
-    scheduleAction->setStatusTip(tr("Schedule Mngmt"));
+    scheduleAction->setStatusTip(tr("Schedule"));
     connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
 
     setupMenu->addSeparator();
@@ -218,10 +220,14 @@ void MainWindow::createActions()
     orderBookingAction->setStatusTip(tr("Book Orders"));
     connect(orderBookingAction, &QAction::triggered, this, &MainWindow::openOrderBooking);
 
+    QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
+    connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
+
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
-    mainToolBar->addAction(clientAction);
-    mainToolBar->addAction(orderBookingAction);
+    //mainToolBar->addAction(clientAction);
+    //mainToolBar->addAction(orderBookingAction);
+    mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
     //mainToolBar->addAction(spotAction);
@@ -356,15 +362,14 @@ void MainWindow::openSchedule()
 
 void MainWindow::openOrderBooking()
 {
-
-    //auto order = new Order();
-    //auto bw = std::make_unique<BookingWizard>(order);
-    //bw->exec();
-
-//    OrderBookingBrowser* obBrowser = createSubWindow<OrderBookingBrowser>();
-//    obBrowser->exec();
     BookingOrderBrowser* book_order_browser = createSubWindow<BookingOrderBrowser>();
     book_order_browser->exec();
+}
+
+void MainWindow::open_merged_browser()
+{
+    MergedBrowser* m_browse = createSubWindow<MergedBrowser>();
+    m_browse->exec();
 }
 
 void MainWindow::print_comm_log()

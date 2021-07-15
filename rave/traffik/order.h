@@ -113,8 +113,8 @@ private:
     ForeignKeyField* mAccountRep;
     ForeignKeyField* mBrand;
     ForeignKeyField* mAgency;
-    IntegerField* mSpotsOrdered;
-    IntegerField* mSpotsBooked;
+    IntegerField* m_spots_ordered;
+    IntegerField* m_spots_booked;
     IntegerField* mSpotsPlayed;
     DecimalField* mDiscount;
     DecimalField* mAgencyComm;

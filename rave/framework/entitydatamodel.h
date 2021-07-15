@@ -78,6 +78,8 @@ public:
     void getById(std::tuple<std::string, std::string, int>);
     void search(const std::string searchFilter);
 
+    void starts_with(std::tuple<std::string, std::string>);
+
     std::string make_insert_stmt(const BaseEntity& entity);
     void executeRawSQL(const std::string sql);
     int insert_returning_id(const std::string sql);

@@ -2,6 +2,7 @@
 #define BASEENTITYBROWSERDLG_H
 
 #include <QDebug>
+#include <QWidget>
 
 #include <QDialog>
 #include <QMdiArea>
@@ -15,6 +16,7 @@
 class BaseEntity;
 class ValueList;
 class QTableView;
+class LetterFilterWidget;
 
 namespace Ui {
 class BaseEntityBrowserDlg;
@@ -53,6 +55,9 @@ public:
 
     EntityDataModel& entityDataModel() const;
     void setMdiArea(QMdiArea* mdi);
+
+    void show_letter_filter();
+    BaseEntity* findSelectedEntity();
 
     template<typename T1, typename T2, typename T3 >
     bool add_related_record(T3* parent)
@@ -268,7 +273,6 @@ protected:
     void hideEditButton();
     void hideDeleteButton();
     void show_delete_button();
-    BaseEntity* findSelectedEntity();
     Ui::BaseEntityBrowserDlg* bui;
 
 public slots:
@@ -276,11 +280,12 @@ public slots:
     void editBtnClicked();
     void deleteBtnClicked();
     void searchBtnClicked();
+    void filter_by_letter(int);
 
 private:
     std::unique_ptr<EntityDataModel> mEntityDataModel;
+    std::unique_ptr<LetterFilterWidget> m_letter_filter_widget;
     void populateFilterCombo();
-
 };
 
 #endif // BASEENTITYBROWSERDLG_H

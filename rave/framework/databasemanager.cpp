@@ -1,4 +1,5 @@
 #include <tuple>
+#include <algorithm>
 
 #include "databasemanager.h"
 #include "baseentity.h"
@@ -192,6 +193,21 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
 
+    return provider()->read(sql);
+}
+
+int PostgresDatabaseManager::starts_with(const BaseEntity &entity, std::tuple<std::string, std::string>& sf)
+{
+    std::string sql{};
+    std::string flds = columnsForSelection(entity);
+    auto& [field_name, value] = sf;
+
+    std::for_each(value.begin(), value.end(), [](char& c){
+        c = ::tolower(c);
+    });
+
+    sql = "SELECT "+flds+" FROM "+entity.tableName()+
+                    " WHERE LOWER("+ field_name +") LIKE '"+ value+"%'";
     return provider()->read(sql);
 }
 

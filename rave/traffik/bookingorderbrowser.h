@@ -17,6 +17,7 @@ class QMdiArea;
 class QTreeWidget;
 class QTableWidget;
 class PickListBrowser;
+class Client;
 
 class TreeWidgetItemDelegate : public QItemDelegate
 {
@@ -80,6 +81,8 @@ public:
     ~BookingOrderBrowser();
 
     void setMdiArea(QMdiArea* mdi);
+
+    void search_by_client(Client* client);
 
 private slots:
     void search_field_changed(int i);

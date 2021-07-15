@@ -246,7 +246,6 @@ void EntityDataModel::searchByStr(std::tuple<std::string, std::string> searchIte
 {
     if (dbManager->searchByStr(getEntity(), searchItem) > 0)
         populateEntities();
-
 }
 
 void EntityDataModel::searchByInt(std::tuple<std::string, std::string, int> searchItem)
@@ -260,6 +259,12 @@ void EntityDataModel::search(const std::string searchFilter)
     if (dbManager->search(getEntity(), searchFilter) > 0)
         populateEntities();
 
+}
+
+void EntityDataModel::starts_with(std::tuple<std::string, std::string> search_item)
+{
+    if (dbManager->starts_with(getEntity(), search_item) > 0)
+        populateEntities();
 }
 
 std::string EntityDataModel::make_insert_stmt(const BaseEntity &entity)

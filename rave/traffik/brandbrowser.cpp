@@ -59,6 +59,11 @@ void BrandBrowser::searchRecord()
     search_related<TRAFFIK::Brand, Client>(mClient);
 }
 
+void BrandBrowser::search_by_client(Client* client)
+{
+    search_related<TRAFFIK::Brand, Client>(client);
+}
+
 bool BrandBrowser::okay_to_delete(BaseEntity *entity)
 {
    TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(entity);

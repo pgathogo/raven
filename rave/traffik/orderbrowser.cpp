@@ -13,10 +13,10 @@ OrderBrowser::OrderBrowser(Client* client, QWidget* parent) :
     mClient{client}
 {
     ui->setupUi(this);
-    setDialogTitle("Client Orders: "+stoq(client->name()->value()));
-    if (client != nullptr)
+    if (client != nullptr){
+        setDialogTitle("Client Orders: "+stoq(client->name()->value()));
         searchRecord();
-
+    }
 }
 
 OrderBrowser::~OrderBrowser()
@@ -38,6 +38,7 @@ void OrderBrowser::searchRecord()
     search_related<Order, Client>(mClient);
 }
 
+
 bool OrderBrowser::okay_to_delete(BaseEntity* entity)
 {
    Order* order = dynamic_cast<Order*>(entity);
@@ -51,4 +52,9 @@ bool OrderBrowser::okay_to_delete(BaseEntity* entity)
 
    return true;
 
+}
+
+void OrderBrowser::search_by_client(Client* client)
+{
+    search_related<Order, Client>(client);
 }

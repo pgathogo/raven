@@ -100,6 +100,10 @@ void SpotBrowser::searchRecord()
     qDebug() << " <<< After searchRecord >>> ";
 }
 
+void SpotBrowser::search_by_client(Client* client)
+{
+    search_related<TRAFFIK::Spot, Client>(client);
+}
 
 bool SpotBrowser::okay_to_delete(BaseEntity* entity)
 {

@@ -23,6 +23,8 @@ public:
     void searchRecord() override;
     bool okay_to_delete(BaseEntity* entity) override;
 
+    void search_by_client(Client*);
+
 private:
     Ui::OrderBrowser *ui;
     Client* mClient;

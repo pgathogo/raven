@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LetterFilterWidget</class>
+ <widget class="QWidget" name="LetterFilterWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>692</width>
+    <height>43</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>45</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabLetters">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::South</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>*</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>A</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>B</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>C</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>D</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>E</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_7">
+      <attribute name="title">
+       <string>F</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_8">
+      <attribute name="title">
+       <string>G</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_9">
+      <attribute name="title">
+       <string>H</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_10">
+      <attribute name="title">
+       <string>I</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_11">
+      <attribute name="title">
+       <string>J</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_12">
+      <attribute name="title">
+       <string>K</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_13">
+      <attribute name="title">
+       <string>L</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_14">
+      <attribute name="title">
+       <string>M</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_15">
+      <attribute name="title">
+       <string>N</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_16">
+      <attribute name="title">
+       <string>O</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_17">
+      <attribute name="title">
+       <string>P</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_18">
+      <attribute name="title">
+       <string>Q</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_19">
+      <attribute name="title">
+       <string>R</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_20">
+      <attribute name="title">
+       <string>S</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_21">
+      <attribute name="title">
+       <string>T</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_22">
+      <attribute name="title">
+       <string>U</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_23">
+      <attribute name="title">
+       <string>V</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_24">
+      <attribute name="title">
+       <string>W</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_25">
+      <attribute name="title">
+       <string>X</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_26">
+      <attribute name="title">
+       <string>Y</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_27">
+      <attribute name="title">
+       <string>Z</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

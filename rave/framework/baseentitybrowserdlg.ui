@@ -96,7 +96,10 @@
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="vlGrid">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QTableView" name="tvEntity">
        <property name="selectionMode">
@@ -106,6 +109,16 @@
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
       </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="vlFilterTabs">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+      </layout>
      </item>
     </layout>
    </item>

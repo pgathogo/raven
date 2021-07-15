@@ -47,8 +47,8 @@ Order::Order()
     mAgency = createField<ForeignKeyField>("agency_id", "Agency",
                                        std::make_unique<Agent>(), "agent_name");
 
-    mSpotsOrdered = createField<IntegerField>("spots_ordered", "Spots Ordered");
-    mSpotsBooked = createField<IntegerField>("spots_booked", "Spots Booked");
+    m_spots_ordered = createField<IntegerField>("spots_ordered", "Spots Ordered");
+    m_spots_booked = createField<IntegerField>("spots_booked", "Spots Booked");
     mSpotsPlayed = createField<IntegerField>("Spots_played", "Spots Played");
     mDiscount = createField<DecimalField>("discount", "Discount");
 
@@ -82,7 +82,9 @@ Order::Order()
     mAddLogin = createField<StringField>("add_login", "Add Login");
     mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
 
-    mHeader << QString::fromStdString(m_title->fieldLabel());
+    mHeader << QString::fromStdString(m_title->fieldLabel())
+            << QString::fromStdString(m_spots_ordered->fieldLabel())
+            << QString::fromStdString(m_spots_booked->fieldLabel());
     setTableName("rave_order");
 }
 
@@ -131,8 +133,8 @@ Order::Order(const Client* client)
     mAgency = createField<ForeignKeyField>("agency_id", "Agency",
                                        std::make_unique<Agent>(), "agent_name");
 
-    mSpotsOrdered = createField<IntegerField>("spots_ordered", "Spots Ordered");
-    mSpotsBooked = createField<IntegerField>("spots_booked", "Spots Booked");
+    m_spots_ordered = createField<IntegerField>("spots_ordered", "Spots Ordered");
+    m_spots_booked = createField<IntegerField>("spots_booked", "Spots Booked");
     mSpotsPlayed = createField<IntegerField>("Spots_played", "Spots Played");
     mDiscount = createField<DecimalField>("discount", "Discount");
 
@@ -166,7 +168,10 @@ Order::Order(const Client* client)
     mAddLogin = createField<StringField>("add_login", "Add Login");
     mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
 
-    mHeader << QString::fromStdString(m_title->fieldLabel());
+    mHeader << QString::fromStdString(m_title->fieldLabel())
+            << QString::fromStdString(m_spots_ordered->fieldLabel())
+            << QString::fromStdString(m_spots_booked->fieldLabel());
+
     setTableName("rave_order");
 
 }
@@ -243,12 +248,12 @@ ForeignKeyField *Order::agency() const
 
 IntegerField *Order::spotsOrdered() const
 {
-    return mSpotsOrdered;
+    return m_spots_ordered;
 }
 
 IntegerField *Order::spotsBooked() const
 {
-    return mSpotsBooked;
+    return m_spots_booked;
 }
 
 IntegerField *Order::spotsPlayed() const
@@ -391,12 +396,12 @@ void Order::setAgency(int i)
 
 void Order::setSpotsOrdered(int i)
 {
-    mSpotsOrdered->setValue(i);
+    m_spots_ordered->setValue(i);
 }
 
 void Order::setSpotsBooked(int i)
 {
-    mSpotsBooked->setValue(i);
+    m_spots_booked->setValue(i);
 }
 
 void Order::setSpotsPlayed(int i)
@@ -487,12 +492,20 @@ std::unique_ptr<BaseEntity> Order::mapFields(StringMap *raw_entity)
 
 std::vector<std::string> Order::tableViewColumns() const
 {
-    return tableViewCols<std::string>(title()->displayName());
+    return tableViewCols<std::string>(
+                title()->displayName(),
+                spotsOrdered()->displayName(),
+                spotsBooked()->displayName()
+                );
 }
 
 std::vector<std::string> Order::tableViewValues()
 {
-    return {title()->displayName()};
+    return {
+        title()->displayName(),
+        spotsOrdered()->displayName(),
+        spotsBooked()->displayName()
+    };
 }
 
 QStringList Order::tableHeaders() const
@@ -531,7 +544,7 @@ ActionResult Order::validate()
                                "End Date less than Order Date!");
     }
 
-    if (mSpotsOrdered->value() == 0 ){
+    if (m_spots_ordered->value() == 0 ){
         return std::make_tuple(ActionResultType::arERROR,
                                "No spots ordered!");
     }

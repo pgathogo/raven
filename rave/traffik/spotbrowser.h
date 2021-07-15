@@ -28,6 +28,8 @@ public:
     void save_voice_overs(const SpotForm&);
     void save_type_exclusions(const SpotForm&);
     void save_spot_audio(const SpotForm&);
+
+    void search_by_client(Client* client);
 private:
     Ui::SpotBrowser *ui;
     Client* m_client;
