@@ -8,5 +8,7 @@
         <file>images/icons/search.png</file>
         <file>images/icons/info_small.png</file>
         <file>images/icons/error_mark.png</file>
+        <file>images/icons/clients.png</file>
+        <file>images/icons/schedule.png</file>
     </qresource>
 </RCC>

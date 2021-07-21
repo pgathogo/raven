@@ -180,7 +180,7 @@ public:
                 //updateTableViewRecord(t1->tableViewValues());
                 //entityDataModel().updateEntity(*t1);
 
-                for(auto& mtomForm : form->getForms()){
+                for(auto& mtomForm : form->get_forms()){
                     auto& items = mtomForm->entityDataModel().modelEntities();
                     for (auto&[name, entity] : items){
                         //ManyToMany* mtom = dynamic_cast<ManyToMany*>(entity.get());

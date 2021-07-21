@@ -20,3 +20,20 @@
 - After importing, take and round the real audio duration and make it the Spot Audio for booking purpose
 - ** CAN you book a spot with no Audio **
 -
+
+21/07/2021 14:32:05
+-------
+- Icon for the main application window
+X Icon for the CLIENTS dialog
+X Title for the CLIENTS dialog
+- Combine all setup windows into one tabbed dialog
+- Order - Add letter filter
+- Spots - Add letter filter
+- Order - Allow editting of orders if :
+   - Order is current
+   - Order is not cancelled
+   - No booking has been done aganist the order
+- Integrate the printing (Lime) module
+- Schedule - Icon for Schedule window
+- Schedule - Icon for "Create Breaks" button
+- Schedule - Icon for "Delete Breaks" button

@@ -41,6 +41,7 @@
 #include "bookingorderbrowser.h"
 
 #include "mergedbrowser.h"
+#include "setupbrowser.h"
 
 AccessMap MainWindow::access_map;
 
@@ -204,6 +205,7 @@ void MainWindow::createActions()
     connect(breakAction, &QAction::triggered, this, &MainWindow::openBreakBrowser);
 
     QAction* scheduleAction = new QAction(tr("&SCHEDULE"));
+    scheduleAction->setIcon(QIcon(":/images/icons/images/icons/schedule.png"));
     setupMenu->addAction(scheduleAction);
     scheduleAction->setStatusTip(tr("Schedule"));
     connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
@@ -221,15 +223,21 @@ void MainWindow::createActions()
     connect(orderBookingAction, &QAction::triggered, this, &MainWindow::openOrderBooking);
 
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
+    merged_browser_act->setIcon(QIcon(":/images/icons/images/icons/clients.png"));
     connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
+
+    QAction* setup_browser_act = new QAction(tr("&SETUPS"));
+    connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
+    mainToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     //mainToolBar->addAction(clientAction);
     //mainToolBar->addAction(orderBookingAction);
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
+    mainToolBar->addAction(setup_browser_act);
     //mainToolBar->addAction(spotAction);
 }
 
@@ -370,6 +378,12 @@ void MainWindow::open_merged_browser()
 {
     MergedBrowser* m_browse = createSubWindow<MergedBrowser>();
     m_browse->exec();
+}
+
+void MainWindow::open_setup_browser()
+{
+    SetupBrowser* setup_browser = createSubWindow<SetupBrowser>();
+    setup_browser->exec();
 }
 
 void MainWindow::print_comm_log()

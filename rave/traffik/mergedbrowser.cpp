@@ -37,7 +37,14 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     m_book_order_browser = std::make_unique<BookingOrderBrowser>(this);
     ui->vlBooking->addWidget(m_book_order_browser.get());
 
+    ui->lblTitle->setText("");
+
     connect(ui->tabMain, &QTabWidget::currentChanged, this, &MergedBrowser::change_tab);
+
+    connect(m_client_browser.get(), &ClientBrowser::client_selection_changed, this, &MergedBrowser::change_client);
+
+    setWindowIcon(QIcon(":/images/icons/images/icons/clients.png"));
+    setWindowTitle("Clients Data");
 
 }
 
@@ -73,3 +80,14 @@ void MergedBrowser::change_tab(int index)
     }
 
 }
+
+void MergedBrowser::change_client(BaseEntity* entity)
+{
+    Client* client = dynamic_cast<Client*>(entity);
+
+    m_spot_browser->set_client(client);
+    m_brand_browser->set_client(client);
+
+    ui->lblTitle->setText(QString::fromStdString(client->name()->value()));
+}
+

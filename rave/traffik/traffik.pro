@@ -43,6 +43,7 @@ HEADERS += \
     schedule.h \
     scheduleform.h \
     schedulemantreeviewmodel.h \
+    setupbrowser.h \
     setupform.h \
     spotaudio.h \
     spotaudiobrowser.h \
@@ -75,6 +76,7 @@ SOURCES += \
     schedule.cpp \
     scheduleform.cpp \
     schedulemantreeviewmodel.cpp \
+    setupbrowser.cpp \
     setupform.cpp \
     spotaudio.cpp \
     spotaudiobrowser.cpp \
@@ -94,6 +96,7 @@ FORMS += \
     orderbrowser.ui \
     orderform.ui \
     scheduleform.ui \
+    setupbrowser.ui \
     setupform.ui \
     spotaudiobrowser.ui \
     spotaudioform.ui

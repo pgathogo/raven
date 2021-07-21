@@ -84,6 +84,7 @@ private slots:
     void openSchedule();
     void openOrderBooking();
     void open_merged_browser();
+    void open_setup_browser();
 
     void print_comm_log();
 

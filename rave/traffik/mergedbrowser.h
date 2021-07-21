@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QItemSelection>
 #include <memory>
 
 class QMdiArea;
@@ -10,6 +11,7 @@ class SpotBrowser;
 class BrandBrowser;
 class Client;
 class BookingOrderBrowser;
+class BaseEntity;
 
 namespace Ui {
 class MergedBrowser;
@@ -27,6 +29,7 @@ public:
 
 public slots:
     void change_tab(int);
+    void change_client(BaseEntity*);
 
 private:
     Ui::MergedBrowser *ui;

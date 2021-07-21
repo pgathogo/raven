@@ -47,7 +47,7 @@ public:
             return ptr;
         }
 
-       BrowserForms const& getForms() const;
+       BrowserForms const& get_forms() const;
 
 signals:
        void dialog_is_closing();

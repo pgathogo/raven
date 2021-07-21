@@ -24,9 +24,7 @@ std::string ClientGroupDetailDlg::windowTitle()
 
 ClientGroupDetailDlg::~ClientGroupDetailDlg()
 {
-    qDebug() << "ClientGroupForm::dtor";
     delete ui;
-    //delete clientGroup;
 }
 
 ActionResult ClientGroupDetailDlg::saveRecord()

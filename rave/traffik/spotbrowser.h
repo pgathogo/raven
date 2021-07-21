@@ -30,6 +30,8 @@ public:
     void save_spot_audio(const SpotForm&);
 
     void search_by_client(Client* client);
+
+    void set_client(Client* client);
 private:
     Ui::SpotBrowser *ui;
     Client* m_client;

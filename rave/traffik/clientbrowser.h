@@ -53,6 +53,9 @@ private slots:
     void openBrandBrowser();
     void openSpotBrowser();
     void openOrderBrowser();
+    void selection_changed(const QItemSelection&, const QItemSelection&);
+signals:
+    void client_selection_changed(BaseEntity*);
 
 private:
     Ui::ClientBrowser *ui;

@@ -23,6 +23,7 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
     //createSpotButton();
     //createOrderButton();
     show_letter_filter();
+    connect(bui->tvEntity->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ClientBrowser::selection_changed);
 }
 
 ClientBrowser::~ClientBrowser()
@@ -108,5 +109,12 @@ void ClientBrowser::openSpotBrowser()
 void ClientBrowser::openOrderBrowser()
 {
     openBrowserWindow<Client, OrderBrowser>();
+}
+
+void ClientBrowser::selection_changed(const QItemSelection& selected, const QItemSelection& diselected)
+{
+        BaseEntity* entity = findSelectedEntity();
+        emit client_selection_changed(entity);
+
 }
 

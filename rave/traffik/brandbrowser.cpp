@@ -14,7 +14,7 @@
 BrandBrowser::BrandBrowser(Client* client, QWidget *parent) :
     BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Brand>()),
     ui(new Ui::BrandBrowser),
-    mClient{client}
+    m_client{client}
 {
     ui->setupUi(this);
     setDialogTitle("Client Brands");
@@ -29,7 +29,7 @@ BrandBrowser::~BrandBrowser()
 
 void BrandBrowser::addRecord()
 {
-    add_related_record<TRAFFIK::Brand, BrandForm, Client>(mClient);
+    add_related_record<TRAFFIK::Brand, BrandForm, Client>(m_client);
 }
 
 void BrandBrowser::updateRecord()
@@ -41,7 +41,7 @@ void BrandBrowser::updateRecord()
         BaseEntity* be = entityDataModel().findEntityByName(searchName);
         TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(be);
         std::unique_ptr<BrandForm> brandForm =
-                std::make_unique<BrandForm>(mClient, brand, this);
+                std::make_unique<BrandForm>(m_client, brand, this);
         if (brandForm->exec() > 0){
             try{
                 updateTableViewRecord(brand->tableViewValues());
@@ -56,7 +56,7 @@ void BrandBrowser::updateRecord()
 
 void BrandBrowser::searchRecord()
 {
-    search_related<TRAFFIK::Brand, Client>(mClient);
+    search_related<TRAFFIK::Brand, Client>(m_client);
 }
 
 void BrandBrowser::search_by_client(Client* client)
@@ -90,4 +90,9 @@ bool BrandBrowser::okay_to_delete(BaseEntity *entity)
 
     return false;
 
+}
+
+void BrandBrowser::set_client(Client *client)
+{
+    m_client = client;
 }

@@ -26,9 +26,11 @@ public:
 
     bool okay_to_delete(BaseEntity* entity) override;
 
+    void set_client(Client* client);
+
 private:
     Ui::BrandBrowser *ui;
-    Client* mClient;
+    Client* m_client;
 };
 
 #endif // BRANDBROWSER_H

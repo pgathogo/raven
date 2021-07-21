@@ -29,6 +29,8 @@ SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
 
     if (client != nullptr)
         searchRecord();
+
+    show_letter_filter();
 }
 
 SpotBrowser::~SpotBrowser()
@@ -103,6 +105,11 @@ void SpotBrowser::searchRecord()
 void SpotBrowser::search_by_client(Client* client)
 {
     search_related<TRAFFIK::Spot, Client>(client);
+}
+
+void SpotBrowser::set_client(Client *client)
+{
+    m_client = client;
 }
 
 bool SpotBrowser::okay_to_delete(BaseEntity* entity)

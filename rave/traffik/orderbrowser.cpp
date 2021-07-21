@@ -17,6 +17,8 @@ OrderBrowser::OrderBrowser(Client* client, QWidget* parent) :
         setDialogTitle("Client Orders: "+stoq(client->name()->value()));
         searchRecord();
     }
+
+  show_letter_filter();
 }
 
 OrderBrowser::~OrderBrowser()

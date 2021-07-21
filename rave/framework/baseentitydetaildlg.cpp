@@ -1,4 +1,3 @@
-
 #include "baseentitydetaildlg.h"
 #include "ui_baseentitydetaildlg.h"
 #include "entitydatamodel.h"
@@ -48,7 +47,7 @@ void BaseEntityDetailDlg::closeEvent(QCloseEvent* event)
     }
 }
 
-const BrowserForms &BaseEntityDetailDlg::getForms() const
+const BrowserForms &BaseEntityDetailDlg::get_forms() const
 {
     return mForms;
 }

@@ -56,6 +56,7 @@ void BaseEntityBrowserDlg::connectSlots()
     connect(bui->btnEdit, &QPushButton::clicked, this, &BaseEntityBrowserDlg::editBtnClicked);
     connect(bui->btnDelete, &QPushButton::clicked, this, &BaseEntityBrowserDlg::deleteBtnClicked);
     connect(bui->btnSearch, &QPushButton::clicked, this, &BaseEntityBrowserDlg::searchBtnClicked);
+
 }
 
 void BaseEntityBrowserDlg::setDialogTitle(const QString title)
