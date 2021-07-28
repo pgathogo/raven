@@ -65,24 +65,9 @@ public:
 
 private slots:
     void browseClients();
-    void newClientGroup();
-    void newGender();
-    void plainForm();
-    void newTypeExclusion();
-    void newVoiceOver();
-    void browseSalesPerson();
-    void browseAgent();
-    void browseTimeBands();
-    void browseBrands();
-    void browseUsers();
-    void browseRoles();
     void showRegister();
-    void contentBrowser();
-    void contentAuthBrowser();
     void openSetupForm();
-    void openBreakBrowser();
     void openSchedule();
-    void openOrderBooking();
     void open_merged_browser();
     void open_setup_browser();
 

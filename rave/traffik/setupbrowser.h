@@ -30,6 +30,15 @@ private:
 
     TabWidget* m_client_group_tab;
     TabWidget* m_gender_tab;
+    TabWidget* m_type_exclusion_tab;
+    TabWidget* m_voice_over_tab;
+    TabWidget* m_sales_person_tab;
+    TabWidget* m_agents_tab;
+    TabWidget* m_timeband_tab;
+    TabWidget* m_users_tab;
+    TabWidget* m_role_tab;
+    TabWidget* m_content_tab;
+    TabWidget* m_content_auth_tab;
 };
 
 class TabWidget : public QWidget

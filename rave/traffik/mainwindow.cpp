@@ -7,26 +7,11 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "clientgroupdlg.h"
-#include "typeexclusionbrowser.h"
 
-#include "../utils/plainform.h"
-#include "clientgroup.h"
-
-#include "voiceoverbrowser.h"
-#include "salespersonbrowser.h"
-#include "agentbrowser.h"
 #include "clientbrowser.h"
-#include "timebandbrowser.h"
 #include "traffiksetup.h"
 #include "setupform.h"
-#include "breaklayoutbrowser.h"
 #include "scheduleform.h"
-
-#include "../security/userbrowser.h"
-#include "../security/rolebrowser.h"
-#include "../security/contentbrowser.h"
-#include "../security/contentauthbrowser.h"
 
 #include "../framework/entityregister.h"
 #include "../framework/entitydatamodel.h"
@@ -36,7 +21,6 @@
 #include "bookingwizard.h"
 #include "order.h"
 
-#include "bookingsegment.h"
 #include "commlogform.h"
 #include "bookingorderbrowser.h"
 
@@ -119,90 +103,16 @@ void MainWindow::createActions()
     clientRptSubMenu->addAction(clientListAction);
     //connect(commlogAction, &QAction::triggered, this, &MainWindow::printCommLog);
 
-    // Setup
-    QAction* cgAction = new QAction(tr("&Client Group"), setupMenu);
-    setupMenu->addAction(cgAction);
-    cgAction->setStatusTip(tr("Create a new client group"));
-    connect(cgAction, &QAction::triggered, this, &MainWindow::newClientGroup);
-
-    QAction* genderAction = new QAction(tr("&Gender"), setupMenu);
-    setupMenu->addAction(genderAction);
-    genderAction->setStatusTip(tr("Maintain Gender value list"));
-    connect(genderAction, &QAction::triggered, this, &MainWindow::newGender);
-
-    QAction* typeExAction = new QAction(tr("&Exlclusions"), setupMenu);
-    setupMenu->addAction(typeExAction);
-    typeExAction->setStatusTip(tr("Maintain Type Exclusions"));
-    connect(typeExAction, &QAction::triggered, this, &MainWindow::newTypeExclusion);
-
-    // Voice Overs
-    QAction* voiceOverAction = new QAction(tr("&Voice Overs"), setupMenu);
-    setupMenu->addAction(voiceOverAction);
-    voiceOverAction->setStatusTip(tr("Maintain details of voice overs"));
-    connect(voiceOverAction, &QAction::triggered, this, &MainWindow::newVoiceOver);
-
-    QAction* salesPersonAction = new QAction(tr("&Sales Person"), setupMenu);
-    setupMenu->addAction(salesPersonAction);
-    salesPersonAction->setStatusTip(tr("Maintain details of Sales Persons"));
-    connect(salesPersonAction, &QAction::triggered, this, &MainWindow::browseSalesPerson);
-
-    QAction* agentAction = new QAction(tr("&Agents"));
-    setupMenu->addAction(agentAction);
-    agentAction->setStatusTip(tr("Maintain Agents details"));
-    connect(agentAction, &QAction::triggered, this, &MainWindow::browseAgent);
-
-    QAction* brandAction = new QAction(tr("&Brands"));
-    setupMenu->addAction(brandAction);
-    brandAction->setStatusTip(tr("Maintain Client Brands"));
-    connect(brandAction, &QAction::triggered, this, &MainWindow::browseBrands);
-
-    setupMenu->addSeparator();
-
-    QAction* tbandAction = new QAction(tr("&Time Bands"));
-    setupMenu->addAction(tbandAction);
-    tbandAction->setStatusTip(tr("Maintain Time Bands details"));
-    connect(tbandAction, &QAction::triggered, this, &MainWindow::browseTimeBands);
-
-    setupMenu->addSeparator();
-
-    QAction* roleAction = new QAction(tr("&System Roles"));
-    setupMenu->addAction(roleAction);
-    roleAction->setStatusTip(tr("Maintain system roles details"));
-    connect(roleAction, &QAction::triggered, this, &MainWindow::browseRoles);
-
-    QAction* userAction = new QAction(tr("&System Users"));
-    setupMenu->addAction(userAction);
-    userAction->setStatusTip(tr("Maintain system users details"));
-    connect(userAction, &QAction::triggered, this, &MainWindow::browseUsers);
-
-    QAction* regAction = new QAction(tr("&Show Register"));
-    setupMenu->addAction(regAction);
-    regAction->setStatusTip(tr("Show registered entities"));
-    connect(regAction, &QAction::triggered, this, &MainWindow::showRegister);
-
-    setupMenu->addSeparator();
-
-    QAction* contentAction = new QAction(tr("&App Content"));
-    setupMenu->addAction(contentAction);
-    contentAction->setStatusTip(tr("Maintain applicaion content"));
-    connect(contentAction, &QAction::triggered, this, &MainWindow::contentBrowser);
-
-    QAction* contentAuthAction = new QAction(tr("&Content Authorization"));
-    setupMenu->addAction(contentAuthAction);
-    contentAuthAction->setStatusTip(tr("Maintain content authorization"));
-    connect(contentAuthAction, &QAction::triggered, this, &MainWindow::contentAuthBrowser);
-
-    setupMenu->addSeparator();
+    /*
+    */
 
     QAction* setupAction = new QAction(tr("&Traffik Setup"));
     setupMenu->addAction(setupAction);
     setupAction->setStatusTip(tr("Traffki Default Setup"));
     connect(setupAction, &QAction::triggered, this, &MainWindow::openSetupForm);
 
-    QAction* breakAction = new QAction(tr("&Breaks"));
-    setupMenu->addAction(breakAction);
-    breakAction->setStatusTip(tr("Breaks Setup"));
-    connect(breakAction, &QAction::triggered, this, &MainWindow::openBreakBrowser);
+    /*
+    */
 
     QAction* scheduleAction = new QAction(tr("&SCHEDULE"));
     scheduleAction->setIcon(QIcon(":/images/icons/images/icons/schedule.png"));
@@ -210,126 +120,40 @@ void MainWindow::createActions()
     scheduleAction->setStatusTip(tr("Schedule"));
     connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
 
-    setupMenu->addSeparator();
-
-    plainFormAction = new QAction(tr("&Test"), setupMenu);
-    plainFormAction = new QAction(tr("&Test"), setupMenu);
-    setupMenu->addAction(plainFormAction);
-    plainFormAction->setStatusTip(tr("Maintain Gender value list"));
-    connect(plainFormAction, &QAction::triggered, this, &MainWindow::plainForm);
-
-    QAction* orderBookingAction = new QAction(tr("&Order Booking"));
-    orderBookingAction->setStatusTip(tr("Book Orders"));
-    connect(orderBookingAction, &QAction::triggered, this, &MainWindow::openOrderBooking);
+    /*
+    */
 
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
     merged_browser_act->setIcon(QIcon(":/images/icons/images/icons/clients.png"));
     connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
 
     QAction* setup_browser_act = new QAction(tr("&SETUPS"));
+    setupMenu->addAction(setup_browser_act);
     connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //mainToolBar->addAction(clientAction);
-    //mainToolBar->addAction(orderBookingAction);
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
-    mainToolBar->addAction(setup_browser_act);
-    //mainToolBar->addAction(spotAction);
-}
-
-void MainWindow::newClientGroup()
-{
-    ClientGroupDlg* clientGroup = createSubWindow<ClientGroupDlg>();
-    clientGroup->exec();
-}
-
-void MainWindow::newGender()
-{
-    ValueListBrowser* valueList = createSubWindow<ValueListBrowser>("gender");
-    valueList->exec();
-}
-
-void MainWindow::newTypeExclusion()
-{
-    TypeExclusionBrowser* typeEx = createSubWindow<TypeExclusionBrowser>();
-    typeEx->exec();
-}
-
-void MainWindow::newVoiceOver()
-{
-    VoiceOverBrowser* vob = createSubWindow<VoiceOverBrowser>();
-    vob->exec();
-}
-
-void MainWindow::browseSalesPerson()
-{
-    SalesPersonBrowser* spb = createSubWindow<SalesPersonBrowser>();
-    spb->exec();
-}
-
-void MainWindow::browseAgent()
-{
-    AgentBrowser* agentBrowser = createSubWindow<AgentBrowser>();
-    agentBrowser->exec();
-}
-
-void MainWindow::browseBrands()
-{
-    //BrandBrowser* brandBrowser = createSubWindow<BrandBrowser>();
-    //brandBrowser->exec();
 }
 
 
-void MainWindow::plainForm()
-{
-    pf = new PlainForm();
-    pf->exec();
-}
+
+
 void MainWindow::browseClients()
 {
     ClientBrowser* clientBrowser = createSubWindow<ClientBrowser>();
     clientBrowser->exec();
 }
 
-void MainWindow::browseTimeBands()
-{
-    TimeBandBrowser* tbBrowser = createSubWindow<TimeBandBrowser>();
-    tbBrowser->exec();
-}
-
-void MainWindow::browseUsers()
-{
-    UserBrowser* userBrowser = createSubWindow<UserBrowser>();
-    userBrowser->exec();
-}
-
-void MainWindow::browseRoles()
-{
-    RoleBrowser* roleBrowser = createSubWindow<RoleBrowser>();
-    roleBrowser->exec();
-}
 
 void MainWindow::showRegister()
 {
     for (auto& [k, v] : Factory<BaseEntity, int>::_data()){
         qDebug() << QString::fromStdString(k);
     }
-}
-
-void MainWindow::contentBrowser()
-{
-    ContentBrowser* contentBrowser = createSubWindow<ContentBrowser>();
-    contentBrowser->exec();
-}
-
-void MainWindow::contentAuthBrowser()
-{
-    ContentAuthBrowser* contentAuthBrowser = createSubWindow<ContentAuthBrowser>();
-    contentAuthBrowser->exec();
 }
 
 void MainWindow::openSetupForm()
@@ -356,22 +180,11 @@ void MainWindow::openSetupForm()
     }
 }
 
-void MainWindow::openBreakBrowser()
-{
-    BreakLayoutBrowser* breakBrowser = createSubWindow<BreakLayoutBrowser>();
-    breakBrowser->exec();
-}
 
 void MainWindow::openSchedule()
 {
     ScheduleForm* schedForm = createSubWindow<ScheduleForm>();
     schedForm->exec();
-}
-
-void MainWindow::openOrderBooking()
-{
-    BookingOrderBrowser* book_order_browser = createSubWindow<BookingOrderBrowser>();
-    book_order_browser->exec();
 }
 
 void MainWindow::open_merged_browser()
