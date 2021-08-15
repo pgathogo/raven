@@ -6,7 +6,7 @@
 #include <QMenu>
 #include "../framework/entitydatamodel.h"
 #include "timeband.h"
-#include "schedule.h"
+#include "../framework/schedule.h"
 #include "traffikrules.h"
 #include "spot.h"
 

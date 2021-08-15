@@ -6,7 +6,7 @@
 #include "../framework/ravenexception.h"
 #include "breaklayout.h"
 #include "breaklayoutline.h"
-#include "schedule.h"
+#include "../framework/schedule.h"
 
 
 BreakCreateForm::BreakCreateForm(QWidget *parent) :
@@ -113,15 +113,15 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
         for (auto& [name, entity] : m_edm_break_line->modelEntities()){
             BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
 
-            fields << sched.setScheduleDate(tmpDate)
-                    << sched.setScheduleTime(bll->breakTime()->value())
-                    << sched.setScheduleHour(bll->breakHour()->value())
-                    << sched.setBreakDuration(bll->duration()->value())
-                    << sched.setBreakMaxSpots(bll->maxSpots()->value())
-                    << sched.setBreakDurationLeft(bll->duration()->value())
-                    << sched.setBookedSpots(0)
+            fields << sched.set_schedule_date(tmpDate)
+                    << sched.set_schedule_time(bll->breakTime()->value())
+                    << sched.set_schedule_hour(bll->breakHour()->value())
+                    << sched.set_break_duration(bll->duration()->value())
+                    << sched.set_break_max_spots(bll->maxSpots()->value())
+                    << sched.set_break_duration_left(bll->duration()->value())
+                    << sched.set_booked_spots(0)
                     << sched.set_audio_type("COMM")
-                    << sched.setBreakMode("MIXED");
+                    << sched.set_break_mode("MIXED");
 
             insert_stmts += sched.make_insert_stmt(fields.vec);
             fields.clear();

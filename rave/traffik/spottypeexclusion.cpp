@@ -1,6 +1,6 @@
 #include "spottypeexclusion.h"
 
-#include "typeexclusion.h"
+#include "../framework/typeexclusion.h"
 
 SpotTypeExclusion::SpotTypeExclusion()
     :ManyToMany{}

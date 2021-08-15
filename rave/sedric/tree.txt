@@ -1,0 +1,13 @@
+1|MUSIC|0|
+2|Production|0|
+3|Commercial|0|
+4|Ethnic|1|
+5|Gospel|1|
+6|Classified|2|
+7|Morning Commercials|3|
+8|Kisii|4|
+9|Luo|4|
+10|Local Voice Overs|2|
+11|Worship|5|
+12|Jingle Bell|13|
+13|Jingles|2|

@@ -1,7 +1,7 @@
 #include "../framework/choicefield.h"
 #include "orderbooking.h"
 #include "bookingsegment.h"
-#include "schedule.h"
+#include "../framework/schedule.h"
 #include "spotaudio.h"
 #include "spot.h"
 

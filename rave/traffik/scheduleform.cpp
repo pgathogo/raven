@@ -3,7 +3,7 @@
 #include "scheduleform.h"
 #include "ui_scheduleform.h"
 
-#include "schedule.h"
+#include "../framework/schedule.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
 #include "../framework/ravenexception.h"
@@ -42,7 +42,7 @@ void ScheduleForm::load_schedule(const QDate &date)
 
     Schedule sched;
     auto date_filter = std::make_tuple(
-                sched.scheduleDate()->dbColumnName(),
+                sched.schedule_date()->dbColumnName(),
                 "=",
                 date);
 
@@ -109,14 +109,14 @@ void ScheduleForm::build_tree_view()
 
         Break comm_break;
         comm_break.id = schedule->id();
-        comm_break.schedule_date = schedule->scheduleDate()->value().toString("yyyy-mm-dd").toStdString();
-        comm_break.schedule_hour = schedule->scheduleHour()->value();
-        comm_break.schedule_time = schedule->scheduleTime()->value().toString("hh:mm").toStdString();
-        comm_break.break_mode = schedule->breakMode()->displayName();
-        comm_break.max_spots = schedule->breakMaxSpots()->value();
-        comm_break.break_duration = schedule->breakDuration()->value();
-        comm_break.booked_spots = schedule->bookedSpots()->value();
-        comm_break.time_left = schedule->breakDurationLeft()->value();
+        comm_break.schedule_date = schedule->schedule_date()->value().toString("yyyy-mm-dd").toStdString();
+        comm_break.schedule_hour = schedule->schedule_hour()->value();
+        comm_break.schedule_time = schedule->schedule_time()->value().toString("hh:mm").toStdString();
+        comm_break.break_mode = schedule->break_mode()->displayName();
+        comm_break.max_spots = schedule->break_max_spots()->value();
+        comm_break.break_duration = schedule->break_duration()->value();
+        comm_break.booked_spots = schedule->booked_spots()->value();
+        comm_break.time_left = schedule->break_duration_left()->value();
 
         comm_breaks[comm_break.schedule_hour].push_back(comm_break);
     }

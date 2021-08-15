@@ -2,7 +2,7 @@
 #define VOICEOVER_H
 
 #include "../framework/baseentity.h"
-#include "typeexclusion.h"
+#include "../framework/typeexclusion.h"
 
 class VoiceExclusion;
 

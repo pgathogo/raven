@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <QCheckBox>
 #include "traffikrules.h"
-#include "schedule.h"
+#include "../framework/schedule.h"
 #include "../framework/entitydatamodel.h"
 
 #define DEBUG_MODE
@@ -145,7 +145,7 @@ namespace TRAFFIK{
                                     const Break& target_break)
     {
         // verify if target break has enough space to fit the spot that's been booked
-        if (target_break.breakDurationLeft()->value() <
+        if (target_break.break_duration_left()->value() <
                 engine_data.spot_to_book.spot_duration){
             ++m_failed_break_count;
             return false;
@@ -313,7 +313,7 @@ namespace TRAFFIK{
     {
         bool is_break_valid = true;
 
-        auto target_break_hour = target_break.scheduleHour()->value();
+        auto target_break_hour = target_break.schedule_hour()->value();
 
         if (cache_hour.find(target_break_hour) != cache_hour.end()){
             if (cache_hour[target_break_hour] == false){
@@ -324,7 +324,7 @@ namespace TRAFFIK{
 
         cache_hour.clear();
 
-        int dow = target_break.scheduleDate()->value().dayOfWeek();
+        int dow = target_break.schedule_date()->value().dayOfWeek();
 
         for (auto& type_excl : engine_data.spot_to_book.type_exclusions){
             auto& [tid, daypart] = type_excl;
@@ -392,7 +392,7 @@ namespace TRAFFIK{
     {
         bool is_break_valid = true;
 
-        auto target_break_hour = target_break.scheduleHour()->value();
+        auto target_break_hour = target_break.schedule_hour()->value();
 
         if (cache_hour.find(target_break_hour) != cache_hour.end()){
             if (cache_hour[target_break_hour] == false){
@@ -403,7 +403,7 @@ namespace TRAFFIK{
 
         cache_hour.clear();
 
-        int dow = target_break.scheduleDate()->value().dayOfWeek();
+        int dow = target_break.schedule_date()->value().dayOfWeek();
 
         for (auto& voice_excl : engine_data.spot_to_book.voice_exclusions){
             auto& [tid, daypart] = voice_excl;
@@ -472,7 +472,7 @@ namespace TRAFFIK{
     {
         bool is_break_valid = true;
 
-        auto target_break_hour = target_break.scheduleHour()->value();
+        auto target_break_hour = target_break.schedule_hour()->value();
 
         if (cache_hour.find(target_break_hour) != cache_hour.end()){
             if (cache_hour[target_break_hour] == false){
@@ -483,7 +483,7 @@ namespace TRAFFIK{
 
         cache_hour.clear();
 
-        int dow = target_break.scheduleDate()->value().dayOfWeek();
+        int dow = target_break.schedule_date()->value().dayOfWeek();
 
 #ifdef DEBUG_MODE
         qDebug() << "DOW: "<< dow << "Target Hour: "<< target_break_hour;

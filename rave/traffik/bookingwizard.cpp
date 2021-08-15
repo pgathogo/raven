@@ -6,7 +6,7 @@
 
 #include "../utils/daypartgrid.h"
 
-#include "schedule.h"
+#include "../framework/schedule.h"
 #include "orderbooking.h"
 #include "bookingsegment.h"
 #include "treeviewmodel.h"
@@ -142,9 +142,9 @@ void BookingWizard::setup_break_select_grid()
         Schedule* comm_break = dynamic_cast<Schedule*>(entity.get());
         if (comm_break->break_availability() == Schedule::BreakAvailability::Break_Available){
 
-            QString date_str = comm_break->scheduleDate()->value().toString();
-            QString time_str = comm_break->scheduleTime()->value().toString("HH:mm");
-            QString dur_str = QString::number(comm_break->breakDurationLeft()->value());
+            QString date_str = comm_break->schedule_date()->value().toString();
+            QString time_str = comm_break->schedule_time()->value().toString("HH:mm");
+            QString dur_str = QString::number(comm_break->break_duration_left()->value());
 
             QTableWidgetItem* date_item = new QTableWidgetItem(date_str);
             date_item->setData(Qt::UserRole, comm_break->id());
@@ -155,15 +155,15 @@ void BookingWizard::setup_break_select_grid()
             ui->twBreakSelect->setItem(row, 1, time_item);
             time_item->setTextAlignment(Qt::AlignCenter);
 
-            int int_date = comm_break->scheduleDate()->value().day()+
-                    comm_break->scheduleDate()->value().month()+
-                    comm_break->scheduleDate()->value().year();
+            int int_date = comm_break->schedule_date()->value().day()+
+                    comm_break->schedule_date()->value().month()+
+                    comm_break->schedule_date()->value().year();
             time_item->setData(Qt::UserRole, int_date);
 
             QTableWidgetItem* dur_item = new QTableWidgetItem(dur_str);
             ui->twBreakSelect->setItem(row, 2, dur_item);
             dur_item->setTextAlignment(Qt::AlignCenter);
-            dur_item->setData(Qt::UserRole, comm_break->scheduleDate()->value().dayOfWeek());
+            dur_item->setData(Qt::UserRole, comm_break->schedule_date()->value().dayOfWeek());
 
             m_selected_breaks.insert(time_str);
 
@@ -266,7 +266,7 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
     QString date_range = "'"+start_date.toString(DATE_FORMAT)+"' and '"+end_date.toString(DATE_FORMAT)+"'";
 
     auto date_range_filter = std::make_tuple(
-                schedule.scheduleDate()->dbColumnName(),
+                schedule.schedule_date()->dbColumnName(),
                 " between ",
                 date_range.toStdString()
                 );
@@ -284,7 +284,7 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
     hr_str = "("+hr_str+")";
 
     auto hours_filter = std::make_tuple(
-                schedule.scheduleHour()->dbColumnName(),
+                schedule.schedule_hour()->dbColumnName(),
                 " in ",
                 hr_str);
 

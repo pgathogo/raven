@@ -70,34 +70,34 @@ Schedule::~Schedule()
 {
 }
 
-DateField *Schedule::scheduleDate() const
+DateField *Schedule::schedule_date() const
 {
     return m_schedule_date;
 }
 
-DateField* Schedule::setScheduleDate(const QDate val)
+DateField* Schedule::set_schedule_date(const QDate val)
 {
     m_schedule_date->setValue( val );
     return m_schedule_date;
 }
 
-TimeField *Schedule::scheduleTime() const
+TimeField *Schedule::schedule_time() const
 {
     return m_schedule_time;
 }
 
-TimeField* Schedule::setScheduleTime(const QTime val)
+TimeField* Schedule::set_schedule_time(const QTime val)
 {
     m_schedule_time->setValue( val );
     return m_schedule_time;
 }
 
-IntegerField *Schedule::scheduleHour() const
+IntegerField *Schedule::schedule_hour() const
 {
     return m_schedule_hour;
 }
 
-IntegerField* Schedule::setScheduleHour(int val)
+IntegerField* Schedule::set_schedule_hour(int val)
 {
     m_schedule_hour->setValue( val );
     return m_schedule_hour;
@@ -113,82 +113,82 @@ void Schedule::set_audio(int val)
     m_audio->setValue( val );
 }
 
-IntegerField *Schedule::fadeIn() const
+IntegerField *Schedule::fade_in() const
 {
     return m_fade_in;
 }
 
-void Schedule::setFadeIn(int val)
+void Schedule::set_fade_in(int val)
 {
     m_fade_in->setValue( val );
 }
 
-IntegerField *Schedule::fadeOut() const
+IntegerField *Schedule::fade_out() const
 {
     return m_fade_out;
 }
 
-void Schedule::setFadeOut(int val)
+void Schedule::set_fade_out(int val)
 {
     m_fade_out->setValue( val );
 }
 
-IntegerField *Schedule::fadeDelay() const
+IntegerField *Schedule::fade_delay() const
 {
     return m_fade_delay;
 }
 
-void Schedule::setFadeDelay(int val)
+void Schedule::set_fade_delay(int val)
 {
     m_fade_delay->setValue( val );
 }
 
-ChoiceField<std::string> *Schedule::playStatus() const
+ChoiceField<std::string> *Schedule::play_status() const
 {
     return m_play_status;
 }
 
-void Schedule::setPlayStatus(const std::string val)
+void Schedule::set_play_status(const std::string val)
 {
     m_play_status->setValue( val );
 }
 
-DateField *Schedule::playDate() const
+DateField *Schedule::play_date() const
 {
     return m_play_date;
 }
 
-void Schedule::setPlayDate(QDate val)
+void Schedule::set_play_date(QDate val)
 {
     m_play_date->setValue( val );
 }
 
-TimeField *Schedule::playTime() const
+TimeField *Schedule::play_time() const
 {
     return m_play_time;
 }
 
-void Schedule::setPlayTime(QTime val)
+void Schedule::set_play_time(QTime val)
 {
     m_play_time->setValue(val);
 }
 
-IntegerField *Schedule::autoTransition() const
+IntegerField *Schedule::auto_transition() const
 {
     return m_auto_transition;
 }
 
-void Schedule::setAutoTransition(int val)
+void Schedule::set_auto_transition(int val)
 {
     m_auto_transition->setValue( val );
 }
 
-IntegerField *Schedule::liveTransition() const
+IntegerField *Schedule::live_transition() const
 {
     return m_live_transition;
 }
 
-void Schedule::setLiveTransition(int val)
+void Schedule::set_live_transition(int val)
 {
     m_live_transition->setValue( val );
 }
@@ -204,87 +204,87 @@ ChoiceField<std::string>* Schedule::set_audio_type(std::string val)
     return m_schedule_item_type;
 }
 
-IntegerField *Schedule::breakDuration() const
+IntegerField *Schedule::break_duration() const
 {
     return m_break_duration;
 }
 
-IntegerField* Schedule::setBreakDuration(int val)
+IntegerField* Schedule::set_break_duration(int val)
 {
     m_break_duration->setValue(val);
     return m_break_duration;
 }
 
-IntegerField *Schedule::breakStartWin() const
+IntegerField *Schedule::break_start_win() const
 {
     return m_break_start_win;
 }
 
-void Schedule::setBreakStartWin(int val)
+void Schedule::set_break_start_win(int val)
 {
     m_break_start_win->setValue( val );
 }
 
-IntegerField *Schedule::breakEndWin() const
+IntegerField *Schedule::break_end_win() const
 {
     return m_break_end_win;
 }
 
-void Schedule::setBreakEndWin(int val)
+void Schedule::set_break_win(int val)
 {
     m_break_end_win->setValue(val);
 }
 
-IntegerField *Schedule::breakMaxSpots() const
+IntegerField *Schedule::break_max_spots() const
 {
     return m_break_max_spots;
 }
 
-IntegerField* Schedule::setBreakMaxSpots(int val)
+IntegerField* Schedule::set_break_max_spots(int val)
 {
     m_break_max_spots->setValue(val);
     return m_break_max_spots;
 }
 
-IntegerField* Schedule::bookedSpots() const
+IntegerField* Schedule::booked_spots() const
 {
     return m_booked_spots;
 }
 
-IntegerField* Schedule::setBookedSpots(int val)
+IntegerField* Schedule::set_booked_spots(int val)
 {
     m_booked_spots->setValue(val);
     return m_booked_spots;
 }
 
-IntegerField *Schedule::breakDurationLeft() const
+IntegerField *Schedule::break_duration_left() const
 {
     return m_break_duration_left;
 }
 
-IntegerField* Schedule::setBreakDurationLeft(int val)
+IntegerField* Schedule::set_break_duration_left(int val)
 {
     m_break_duration_left->setValue( val );
     return m_break_duration_left;
 }
 
-ChoiceField<std::string> *Schedule::breakMode() const
+ChoiceField<std::string> *Schedule::break_mode() const
 {
     return m_break_mode;
 }
 
-ChoiceField<std::string>* Schedule::setBreakMode(const std::string val)
+ChoiceField<std::string>* Schedule::set_break_mode(const std::string val)
 {
     m_break_mode->setValue(val);
     return m_break_mode;
 }
 
-ChoiceField<std::string> *Schedule::breakStatus() const
+ChoiceField<std::string> *Schedule::break_status() const
 {
     return m_break_status;
 }
 
-void Schedule::setBreakStatus(const std::string val)
+void Schedule::set_break_status(const std::string val)
 {
     m_break_status->setValue(val);
 }
@@ -374,16 +374,16 @@ void Schedule::afterMapping(BaseEntity&)
 void Schedule::setDefaults()
 {
     std::vector<std::string> cols;
-    cols.push_back(scheduleTime()->displayName());
-    cols.push_back(breakMaxSpots()->displayName());
-    cols.push_back(breakDurationLeft()->displayName());
-    cols.push_back(bookedSpots()->displayName());
+    cols.push_back(schedule_time()->displayName());
+    cols.push_back(break_max_spots()->displayName());
+    cols.push_back(break_duration_left()->displayName());
+    cols.push_back(booked_spots()->displayName());
     setTableViewColumns(cols);
 
-    setTableViewValues({scheduleTime()->displayName(),
-                breakMaxSpots()->displayName(),
-                breakDurationLeft()->displayName(),
-                bookedSpots()->displayName()});
+    setTableViewValues({schedule_time()->displayName(),
+                break_max_spots()->displayName(),
+                break_duration_left()->displayName(),
+                booked_spots()->displayName()});
 }
 
 void Schedule::setTableViewColumns(const std::vector<std::string> cols)

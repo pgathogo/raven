@@ -1,5 +1,21 @@
 #include "audiofile.h"
 
+AudioFile::AudioFile()
+    :m_audio_title{""}
+     ,m_artist_name{""}
+     ,m_audio_path{""}
+     ,m_audio_file{""}
+     ,m_audio_type{""}
+     ,m_wave_file{""}
+     ,m_filename{""}
+     ,m_file_ext{""}
+     ,m_short_filename{""}
+     ,m_duration{0}
+     ,m_marker{}
+     ,m_id{-1}
+{
+}
+
 AudioFile::AudioFile(const std::string a_file)
     :m_audio_title{""},
      m_artist_name{""},

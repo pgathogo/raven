@@ -3,7 +3,7 @@
 
 #include "voiceover.h"
 #include "voiceoverform.h"
-#include "typeexclusion.h"
+#include "../framework/typeexclusion.h"
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
 #include "../utils/tools.h"

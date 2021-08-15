@@ -7,7 +7,7 @@
 #include "../framework/manytomany.h"
 
 #include "voiceover.h"
-#include "typeexclusion.h"
+#include "../framework/typeexclusion.h"
 #include "timeband.h"
 
 #include "../framework/picklistbrowser.h"

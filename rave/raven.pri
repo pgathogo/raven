@@ -2,6 +2,7 @@ SOURCES += \
     $$PWD/audio/artist.cpp \
     $$PWD/audio/audio.cpp \
     $$PWD/framework/letterfilterwidget.cpp \
+    $$PWD/framework/typeexclusion.cpp \
     $$PWD/security/loginform.cpp \
     $$PWD/traffik/commlogtreeviewmodel.cpp \
     ../framework/baseentity.cpp \
@@ -51,7 +52,6 @@ SOURCES += \
     ../traffik/timeband.cpp \
     ../traffik/timebandbrowser.cpp \
     ../traffik/timebandform.cpp \
-    ../traffik/typeexclusion.cpp \
     ../traffik/typeexclusionbrowser.cpp \
     ../traffik/typeexclusiondetails.cpp \
     ../traffik/voiceover.cpp \
@@ -76,6 +76,7 @@ HEADERS += \
     $$PWD/audio/artist.h \
     $$PWD/audio/audio.h \
     $$PWD/framework/letterfilterwidget.h \
+    $$PWD/framework/typeexclusion.h \
     $$PWD/security/loginform.h \
     $$PWD/traffik/commlogtreeviewmodel.h \
     $$PWD/utils/qchecklist.h \
@@ -130,7 +131,6 @@ HEADERS += \
     ../traffik/timeband.h \
     ../traffik/timebandbrowser.h \
     ../traffik/timebandform.h \
-    ../traffik/typeexclusion.h \
     ../traffik/typeexclusionbrowser.h \
     ../traffik/typeexclusiondetails.h  \
     ../security/user.h \

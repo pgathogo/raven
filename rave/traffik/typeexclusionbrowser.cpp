@@ -1,7 +1,7 @@
 #include "typeexclusionbrowser.h"
 #include "ui_typeexclusionbrowser.h"
 
-#include "typeexclusion.h"
+#include "../framework/typeexclusion.h"
 #include "typeexclusiondetails.h"
 
 TypeExclusionBrowser::TypeExclusionBrowser(QWidget *parent):

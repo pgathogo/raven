@@ -24,6 +24,7 @@ struct Marker{
 class  AudioFile
 {
 public:
+    AudioFile();
     AudioFile(const std::string audio_file);
 
     void set_audio_title(const std::string audio_title);

@@ -22,6 +22,7 @@ HEADERS += \
     ../audio/audiofile.h \
     ../audio/audiotool.h \
     ../framework/entityregister.h \ \
+    ../framework/schedule.h \
     ../security/accesscontroller.h \
     ../security/authentication.h \
     approverform.h \
@@ -40,7 +41,6 @@ HEADERS += \
     orderbrowser.h \
     orderform.h \
     orderpackage.h \
-    schedule.h \
     scheduleform.h \
     schedulemantreeviewmodel.h \
     setupbrowser.h \
@@ -55,6 +55,7 @@ HEADERS += \
 SOURCES += \
     ../audio/audiofile.cpp \
     ../audio/audiotool.cpp \
+    ../framework/schedule.cpp \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     approverform.cpp \
@@ -73,7 +74,6 @@ SOURCES += \
     orderbrowser.cpp \
     orderform.cpp \
     orderpackage.cpp \
-    schedule.cpp \
     scheduleform.cpp \
     schedulemantreeviewmodel.cpp \
     setupbrowser.cpp \

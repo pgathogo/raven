@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "../framework/baseentitydetaildlg.h"
-#include "typeexclusion.h"
+#include "../framework/typeexclusion.h"
 
 class DayPartGrid;
 

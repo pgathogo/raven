@@ -391,6 +391,17 @@ BREAK_STATUS = (
         ('OPEN','OPEN'),
         )
 
+TRANSITION = (
+        (0, 'None'),
+        (1, 'Mix'),
+        (2, 'Cut'),
+        (3, 'Back'),
+        (4, 'Center'),
+        (5, 'Early'),
+        (6, 'Synchro'),
+        (7, 'Stop'),
+        )
+
 class Schedule(models.Model):
     schedule_date = models.DateField()
     schedule_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)

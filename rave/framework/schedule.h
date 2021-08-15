@@ -18,68 +18,68 @@ public:
     Schedule();
     ~Schedule() override;
 
-    DateField* scheduleDate() const;
-    DateField* setScheduleDate(const QDate val);
+    DateField* schedule_date() const;
+    DateField* set_schedule_date(const QDate val);
 
-    TimeField* scheduleTime() const;
-    TimeField* setScheduleTime(const QTime val);
+    TimeField* schedule_time() const;
+    TimeField* set_schedule_time(const QTime val);
 
-    IntegerField* scheduleHour() const;
-    IntegerField* setScheduleHour(int val);
+    IntegerField* schedule_hour() const;
+    IntegerField* set_schedule_hour(int val);
 
     ForeignKeyField* audio() const;
     void set_audio(int val);
 
-    IntegerField* fadeIn() const;
-    void setFadeIn(int val);
+    IntegerField* fade_in() const;
+    void set_fade_in(int val);
 
-    IntegerField* fadeOut() const;
-    void setFadeOut(int val);
+    IntegerField* fade_out() const;
+    void set_fade_out(int val);
 
-    IntegerField* fadeDelay() const;
-    void setFadeDelay(int val);
+    IntegerField* fade_delay() const;
+    void set_fade_delay(int val);
 
-    ChoiceField<std::string>* playStatus() const;
-    void setPlayStatus(const std::string val);
+    ChoiceField<std::string>* play_status() const;
+    void set_play_status(const std::string val);
 
-    DateField* playDate() const;
-    void setPlayDate(QDate val);
+    DateField* play_date() const;
+    void set_play_date(QDate val);
 
-    TimeField* playTime() const;
-    void setPlayTime(QTime val);
+    TimeField* play_time() const;
+    void set_play_time(QTime val);
 
-    IntegerField* autoTransition() const;
-    void setAutoTransition(int val);
+    IntegerField* auto_transition() const;
+    void set_auto_transition(int val);
 
-    IntegerField* liveTransition() const;
-    void setLiveTransition(int val);
+    IntegerField* live_transition() const;
+    void set_live_transition(int val);
 
     ChoiceField<std::string>* audio_type() const;
     ChoiceField<std::string>* set_audio_type(std::string val);
 
-    IntegerField* breakDuration() const;
-    IntegerField* setBreakDuration(int val);
+    IntegerField* break_duration() const;
+    IntegerField* set_break_duration(int val);
 
-    IntegerField* breakStartWin() const;
-    void setBreakStartWin(int val);
+    IntegerField* break_start_win() const;
+    void set_break_start_win(int val);
 
-    IntegerField* breakEndWin() const;
-    void setBreakEndWin(int val);
+    IntegerField* break_end_win() const;
+    void set_break_win(int val);
 
-    IntegerField* breakMaxSpots() const;
-    IntegerField* setBreakMaxSpots(int val);
+    IntegerField* break_max_spots() const;
+    IntegerField* set_break_max_spots(int val);
 
-    IntegerField* bookedSpots() const;
-    IntegerField* setBookedSpots(int val);
+    IntegerField* booked_spots() const;
+    IntegerField* set_booked_spots(int val);
 
-    IntegerField* breakDurationLeft() const;
-    IntegerField* setBreakDurationLeft(int val);
+    IntegerField* break_duration_left() const;
+    IntegerField* set_break_duration_left(int val);
 
-    ChoiceField<std::string>* breakMode() const;
-    ChoiceField<std::string>* setBreakMode(const std::string val);
+    ChoiceField<std::string>* break_mode() const;
+    ChoiceField<std::string>* set_break_mode(const std::string val);
 
-    ChoiceField<std::string>* breakStatus() const;
-    void setBreakStatus(const std::string val);
+    ChoiceField<std::string>* break_status() const;
+    void set_break_status(const std::string val);
 
     TextField* comment()const;
     void setComment(const std::string val);
