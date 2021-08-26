@@ -7,13 +7,16 @@
 #include <QStyledItemDelegate>
 #include <QDebug>
 
+
 using ItemColumns = QList<QStandardItem*>;
+
 
 struct ItemData
 {
     int id;
     QDate schedule_date;
     QTime schedule_time;
+    int schedule_hour{0};
     QString comment{""};
     QString type{"SONG"};
     int auto_transition;
@@ -21,6 +24,12 @@ struct ItemData
     QTime play_time;
     int schedule_ref{0}; // auto generated
     int table_row_id{0};
+    int booked_spots{0};
+    int audio_id{0};
+    int duration{0};
+    QString item_title{""};
+    QString artist{""};
+    QString filepath{""};
 };
 
 class ScheduleData{
@@ -28,19 +37,84 @@ public:
     ScheduleData(ItemData*);
     ~ScheduleData();
     int schedule_ref() const;
+    int row_id() const;
+    QString schedule_item_type() const;
     virtual QString title() const;
     virtual QString artist() const;
     virtual QString track_path() const;
     virtual QTime duration() const;
     virtual QString transition() const;
 
-    ItemData* item_data();
+    QDate schedule_date() const;
+    QTime schedule_time() const;
+    int schedule_hour() const;
+    int auto_transition() const;
+    QString schedule_type() const;
+    int audio_id() const;
+
+    ItemData* item_data() const;
     void set_table_row_id(int) const;
     std::string transition_to_string(int) const;
     void set_transitions();
 private:
     ItemData* m_item_data;
     std::map<int, std::string> m_transitions;
+};
+
+struct FindRef
+{
+    FindRef(int ref) : m_ref(ref){}
+    bool operator()(const ScheduleData* data) const
+    {
+        return data->schedule_ref() == m_ref;
+    }
+private:
+        int m_ref;
+};
+
+struct FindRowId
+{
+    FindRowId(int row_id)
+        : m_row_id{ row_id } {}
+    bool operator()(const ScheduleData* data) const
+    {
+        return data->row_id() ==  m_row_id;
+    }
+private:
+    int m_row_id;
+};
+
+struct FindItem
+{
+    FindItem(QString item_type, QTime time)
+        :m_item_type{item_type}
+        ,m_time{time}
+    {}
+    bool operator()(const ScheduleData* data) const
+    {
+        return ((data->schedule_item_type() == m_item_type) &&
+                (data->schedule_time() == m_time));
+    }
+private:
+    QString m_item_type;
+    QTime m_time;
+};
+
+struct FindUnique
+{
+    FindUnique(){};
+    bool operator()(const ScheduleData* first_item, ScheduleData* second_item) const
+    {
+        return first_item->schedule_hour() == second_item->schedule_hour();
+    }
+};
+
+struct SortItems
+{
+    bool operator()(const ScheduleData* first_item, ScheduleData* second_item) const
+    {
+        return (first_item->schedule_hour() < second_item->schedule_hour());
+    }
 };
 
 class CommercialBreak : public ScheduleData
@@ -59,10 +133,41 @@ private:
    // std::vector<BookedSpot> m_booked_spots;
 };
 
+class CommercialAudio : public ScheduleData
+{
+public:
+    CommercialAudio(ItemData*);
+    ~CommercialAudio();
+    QString title() const override;
+    QString artist() const override;
+    QString track_path() const override;
+    QTime duration() const override;
+private:
+    QString m_title;
+    QString m_artist;
+    QString m_track_path;
+    QTime m_duration;
+};
+
 class Song : public ScheduleData
 {
 public:
     Song(ItemData*);
+    QString title() const override;
+    QString artist() const override;
+    QString track_path() const override;
+    QTime duration() const override;
+private:
+    QString m_title;
+    QString m_artist;
+    QString m_track_path;
+    QTime m_duration;
+};
+
+class Jingle : public ScheduleData
+{
+public:
+    Jingle(ItemData*);
     QString title() const override;
     QString artist() const override;
     QString track_path() const override;
@@ -86,17 +191,6 @@ public:
 };
 
 
-struct FindRef
-{
-    FindRef(int ref) : m_ref(ref){}
-    bool operator()(const ScheduleData* data) const
-    {
-        return data->schedule_ref() == m_ref;
-    }
-private:
-        int m_ref;
-};
-
 class ScheduleItem : public QStandardItem
 {
 public:
@@ -116,6 +210,13 @@ public:
     ScheduleData* make_schedule_data(ItemData*) const override;
 };
 
+class CommercialAudioItem : public ScheduleItem
+{
+public:
+    CommercialAudioItem();
+    CommercialAudioItem(const QString);
+    ScheduleData* make_schedule_data(ItemData*) const override;
+};
 
 // SongItem
 class SongItem : public ScheduleItem
@@ -123,6 +224,14 @@ class SongItem : public ScheduleItem
 public:
     SongItem();
     SongItem(const QString);
+    ScheduleData* make_schedule_data(ItemData*) const override;
+};
+
+class JingleItem : public ScheduleItem
+{
+public:
+    JingleItem();
+    JingleItem(const QString);
     ScheduleData* make_schedule_data(ItemData*) const override;
 };
 
@@ -140,13 +249,24 @@ public:
     ItemBuilder();
     ~ItemBuilder();
 
+    enum AudioTransition{None=0, Mix, Cut, Back, Center, Early, Syncro, Stop};
+
     int get_last_item_id();
     void set_last_item_id(int id);
     int generate_row_id();
 
     std::vector<ScheduleData*> cached_data(int);
+    std::vector<ScheduleData*> all_cached();
     std::size_t cache_size() const;
     void print_cache() const;
+    std::vector<int> unique_hours();
+
+    // make this a templated function
+    ScheduleData* find_data_by_rowid(int);
+
+    bool item_exist(QString, QTime);
+
+    void delete_row(int);
 
     template<typename T>
     ItemColumns create_item(ItemData* item_data){
@@ -155,16 +275,22 @@ public:
         T item;
         auto item_schedule_data = item.make_schedule_data(item_data);
 
+
         auto time = new T(item_data->schedule_time.toString("hh:mm:ss"));
 
         time->setTextAlignment(Qt::AlignCenter);
         time->setData(item_data->schedule_time, Qt::UserRole);
 
         auto title = new T(item_schedule_data->title());
-        title->setData(item_data->id, Qt::UserRole);
+        QMap<QString, QVariant> record_identifier;
+        record_identifier["id"] = item_data->id;
+        record_identifier["row_id"] = item_schedule_data->item_data()->table_row_id;
+        record_identifier["type"] = item_data->type;
+        title->setData(record_identifier, Qt::UserRole);
 
         auto artist = new T(item_schedule_data->artist());
         auto duration = new T(item_schedule_data->duration().toString("hh:mm:ss"));
+        duration->setData(item_data->duration, Qt::UserRole);
         duration->setTextAlignment(Qt::AlignCenter);
 
         auto transition = new T(item_schedule_data->transition());
@@ -187,7 +313,7 @@ public:
         tr.append(track_path);
         tr.append(comment);
 
-        if (item_schedule_data->item_data()->table_row_id == 0){
+        if (item_data->table_row_id == 0){
             item_schedule_data->set_table_row_id(this->generate_row_id());
             m_schedule_items.push_back(item_schedule_data);
         }

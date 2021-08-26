@@ -1,6 +1,7 @@
 #include <sstream>
 #include <string>
 #include <memory>
+#include <algorithm>
 
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -32,12 +33,12 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_model{nullptr}
+    , m_schedule_model{nullptr}
     , m_tree_model{nullptr}
 {
     ui->setupUi(this);
 
-    m_item_builder = new ItemBuilder();
+    m_schedule_item_builder = new ItemBuilder();
 
     m_track_item_builder = new TrackItemBuilder();
 
@@ -53,14 +54,18 @@ MainWindow::MainWindow(QWidget *parent)
     create_track_view_headers();
     ui->tvTracks->horizontalHeader()->setStretchLastSection(true);
     ui->tvTracks->setModel(m_tracks_model);
-    set_track_view_column_width();  // Width adjustment *MUST* happen after the "setModel" method
+    ui->tvTracks->verticalHeader()->setVisible(false);
+
+    // For Width adjustment to be effected, it *MUST* be done after
+    // the "setModel" method
+    set_track_view_column_width();
 
 //    ScheduleDelegate delegate;
 //    ui->tvSchedule->setItemDelegate(&delegate);
 
-    m_model = new QStandardItemModel(this);
+    m_schedule_model = new QStandardItemModel(this);
     create_model_headers();
-    ui->tvSchedule->setModel(m_model);
+    ui->tvSchedule->setModel(m_schedule_model);
 
     ui->tvSchedule->setDragDropOverwriteMode(false);
     ui->tvSchedule->setDragEnabled(true);
@@ -72,13 +77,18 @@ MainWindow::MainWindow(QWidget *parent)
     set_column_width();
     populate_hours();
 
-    connect(ui->btnNew, &QPushButton::clicked, this, &MainWindow::add_item);
+    connect(ui->btnNew, &QPushButton::clicked, this, &MainWindow::remove_all);
     connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::item_id);
+    connect(ui->btnRemove, &QPushButton::clicked, this, &MainWindow::remove_current_schedule_item);
     connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &MainWindow::date_changed);
+    connect(ui->tvSchedule, &QTableView::doubleClicked, this, &MainWindow::insert_item);
     connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &MainWindow::hour_changed);
+    connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::save_schedule);
 
     ui->dtSchedule->setDate(QDate::currentDate());
+
+    setWindowTitle("Raven - SeDRic");
 
 }
 
@@ -93,6 +103,145 @@ void MainWindow::folder_clicked(const QModelIndex& index)
 {
     int folder_id = index.data(Qt::UserRole).toInt();
     fetch_audio(folder_id);
+}
+
+void MainWindow::insert_item(const QModelIndex& index)
+{
+    auto mod_index = ui->tvTracks->currentIndex();
+    auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
+    auto track_id = first_col.data(Qt::UserRole).toInt();
+
+    TrackItemData* data = m_track_item_builder->track_item_data(track_id);
+
+    if (data == nullptr)
+        return;
+
+    auto schedule_time_col = ui->tvSchedule->model()->index(index.row(), 0);
+    auto schedule_time = schedule_time_col.data(Qt::UserRole).toTime();
+
+    ItemData* item_data = new ItemData();
+    item_data->id = -1;
+    item_data->table_row_id = 0;
+    item_data->schedule_date = ui->dtSchedule->date();
+    item_data->schedule_time = schedule_time;
+    item_data->schedule_hour = ui->cbHours->currentData().toInt();
+
+    item_data->schedule_ref = item_data->schedule_date.day()+
+                              item_data->schedule_date.month()+
+                              item_data->schedule_date.year()+
+                              item_data->schedule_hour;
+
+    item_data->auto_transition = ItemBuilder::AudioTransition::Mix;
+    item_data->type = data->track_data()->audio_type;
+    item_data->audio_id = data->track_data()->id;
+    item_data->duration = data->track_data()->duration;
+    item_data->item_title = data->track_data()->title;
+    item_data->artist = data->track_data()->artist;
+    item_data->filepath = data->track_data()->audio_file;
+
+    auto item = m_schedule_item_builder->create_item<SongItem>(item_data);
+    m_schedule_model->insertRow(index.row(), item);
+    increment_time(index.row(), data->track_data()->duration*1000);
+}
+
+void MainWindow::remove_current_schedule_item()
+{
+    auto mod_index = ui->tvSchedule->currentIndex();
+    if (mod_index.row() < 0)
+        return;
+
+    int row = mod_index.row();
+
+    int row_id = get_schedule_row_id(row);
+
+    auto data = m_schedule_item_builder->find_data_by_rowid(row_id);
+    if (data == nullptr)
+        return;
+
+    if (!is_item_deletable(data->schedule_item_type()))
+        return;
+
+    m_schedule_item_builder->delete_row(row_id);
+    remove_item(row);
+    decrement_time(row, data->item_data()->duration);
+}
+
+int MainWindow::get_schedule_row_id(int row) const
+{
+    auto title_column = ui->tvSchedule->model()->index(row, 1);
+    auto record_identifier = title_column.data(Qt::UserRole).toMap();
+    return record_identifier["row_id"].toInt();
+}
+
+QString MainWindow::get_schedule_type(int row) const
+{
+    auto title_column = ui->tvSchedule->model()->index(row, 1);
+    auto record_identifier = title_column.data(Qt::UserRole).toMap();
+    return record_identifier["type"].toString();
+}
+
+void MainWindow::remove_item(int row)
+{
+    auto model = ui->tvSchedule->model();
+    model->removeRow(row, QModelIndex());
+}
+
+bool MainWindow::is_item_deletable(const QString item_type)
+{
+    return ((item_type=="COMM-BREAK")||(item_type=="END_MARKER")) ? false : true;
+}
+
+
+void MainWindow::remove_all()
+{
+    if (QMessageBox::warning(this, tr("Sedric"),
+                          tr("Clear all entered items?"),
+                          QMessageBox::Ok | QMessageBox::Cancel,
+                          QMessageBox::Cancel) == QMessageBox::Ok)
+    {
+        remove_items_by_date_hour(ui->dtSchedule->date(), ui->cbHours->currentData().toInt());
+    }
+}
+
+void MainWindow::remove_items_by_date_hour(QDate date, int hour)
+{
+    ui->tvSchedule->setSelectionMode(QAbstractItemView::MultiSelection);
+
+    std::vector<QModelIndex> selected_rows;
+
+    for (int row =0; row <= m_schedule_model->rowCount(); ++row){
+
+        QString schedule_type = get_schedule_type(row);
+
+        if (schedule_type.isEmpty())
+            continue;
+
+        if (!is_item_deletable(schedule_type))
+            continue;
+
+        int row_id = get_schedule_row_id(row);
+        auto data = m_schedule_item_builder->find_data_by_rowid(row_id);
+
+        auto index = ui->tvSchedule->model()->index(row,0);
+
+        selected_rows.push_back(index);
+
+        m_schedule_item_builder->delete_row(row_id);
+        decrement_time(row, data->item_data()->duration);
+    }
+
+    auto top_left_index = selected_rows[0];
+    auto bottom_right_index = selected_rows[selected_rows.size()-1];
+
+    auto item_selection = QItemSelection(top_left_index, bottom_right_index);
+    ui->tvSchedule->selectionModel()->select(item_selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+
+    auto selected_indexes = ui->tvSchedule->selectionModel()->selectedRows();
+    int sel_rows = selected_indexes.count();
+    for(int i = sel_rows; i > 0; i--)
+        ui->tvSchedule->model()->removeRow(selected_indexes.at(i-1).row(), QModelIndex());
+
+    ui->tvSchedule->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 void MainWindow::date_changed()
@@ -128,15 +277,15 @@ void MainWindow::set_track_view_column_width()
 void MainWindow::create_model_headers()
 {
 
-    m_model->setHorizontalHeaderItem(0, new QStandardItem("Time"));
-    m_model->setHorizontalHeaderItem(1, new QStandardItem("Title"));
-    m_model->setHorizontalHeaderItem(2, new QStandardItem("Artist"));
-    m_model->setHorizontalHeaderItem(3, new QStandardItem("Duration"));
-    m_model->setHorizontalHeaderItem(4, new QStandardItem("Transition"));
-    m_model->setHorizontalHeaderItem(5, new QStandardItem("Play Date"));
-    m_model->setHorizontalHeaderItem(6, new QStandardItem("Play Time"));
-    m_model->setHorizontalHeaderItem(7, new QStandardItem("Track Path"));
-    m_model->setHorizontalHeaderItem(8, new QStandardItem("Comment"));
+    m_schedule_model->setHorizontalHeaderItem(0, new QStandardItem("Time"));
+    m_schedule_model->setHorizontalHeaderItem(1, new QStandardItem("Title"));
+    m_schedule_model->setHorizontalHeaderItem(2, new QStandardItem("Artist"));
+    m_schedule_model->setHorizontalHeaderItem(3, new QStandardItem("Duration"));
+    m_schedule_model->setHorizontalHeaderItem(4, new QStandardItem("Transition"));
+    m_schedule_model->setHorizontalHeaderItem(5, new QStandardItem("Play Date"));
+    m_schedule_model->setHorizontalHeaderItem(6, new QStandardItem("Play Time"));
+    m_schedule_model->setHorizontalHeaderItem(7, new QStandardItem("Track Path"));
+    m_schedule_model->setHorizontalHeaderItem(8, new QStandardItem("Comment"));
 
 }
 
@@ -171,22 +320,24 @@ void MainWindow::audio_folder_setup()
 
 void MainWindow::populate_schedule(QDate date, int hour)
 {
+    qDebug() << "Before Cache Size: "<< m_schedule_item_builder->cache_size();
 
     int schedule_ref = date.day()+date.month()+date.year()+hour;
 
-    auto cached_items = m_item_builder->cached_data(schedule_ref);
+    auto cached_items = m_schedule_item_builder->cached_data(schedule_ref);
 
     if (cached_items.size() > 0){
-        m_model->clear();
+        m_schedule_model->clear();
         create_model_headers();
         set_column_width();
         show_cached_items(cached_items);
+        qDebug() << "After Cache Size: "<< m_schedule_item_builder->cache_size();
         return;
     }
 
     // Read from the database
     try{
-        m_model->clear();
+        m_schedule_model->clear();
         create_model_headers();
         set_column_width();
         show_db_schedule(date, hour);
@@ -200,20 +351,15 @@ void MainWindow::fetch_audio(int folder_id)
 {
     EntityDataModel edm = EntityDataModel(std::make_unique<AUDIO::Audio>());
     auto ad = std::make_unique<AUDIO::Audio>();
+
     auto folder_filter = std::make_tuple(
                 ad->folder()->dbColumnName(),
                 " = ",
                 folder_id);
+
     std::string filter = edm.prepareFilter(folder_filter);
     edm.search(filter);
 
-//    HorizontalHeaderItem(0, new QStandardItem("Track Title"));
-//    m_tracks_model->setHorizontalHeaderItem(1, new QStandardItem("Artist"));
-//    m_tracks_model->setHorizontalHeaderItem(2, new QStandardItem("Duration"));
-//    m_tracks_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
-//    m_tracks_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
-
-    QList<QStandardItem*> track_record;
     AudioTool audio_tool;
 
     for (auto&[name, entity] : edm.modelEntities()){
@@ -221,13 +367,13 @@ void MainWindow::fetch_audio(int folder_id)
 
         TrackData* track_data = new TrackData();
 
+        track_data->id = audio->id();
         track_data->title = QString::fromStdString(audio->title()->value());
         track_data->artist = QString::fromStdString(audio->artist()->displayName());
         track_data->duration = audio->duration()->value();
         track_data->audio_type = QString::fromStdString(audio->audio_type()->value());
         track_data->audio_file = QString::fromStdString(audio->file_path()->value()+
                                                         audio_tool.generate_ogg_filename(audio->id())+".ogg");
-
         ItemColumns item;
 
         if (audio->audio_type()->displayName() == "Song")
@@ -242,22 +388,6 @@ void MainWindow::fetch_audio(int folder_id)
         if (item.size() > 0)
             m_tracks_model->appendRow(item);
 
-        /*
-        auto title = new QStandardItem(stoq(audio->title()->value()));
-        title->setData(stoq(audio->title()->value()), Qt::UserRole);
-
-        auto artist = new QStandardItem(stoq(audio->artist()->displayName()));
-
-        QTime q_dur = QTime(QTime::fromMSecsSinceStartOfDay(audio->duration()->value()*1000));
-        auto duration = new QStandardItem(
-
-        track_record.append(title);
-        track_record.append(artist);
-
-        m_tracks_model->appendRow(track_record);
-
-        track_record.clear();
-        */
     }
 
 }
@@ -273,74 +403,83 @@ void MainWindow::test_schedule(QDate date, int hour)
     sd->schedule_time = QTime(22,0,0);
     sd->comment = "";
     sd->auto_transition = 1;
-    sd->type="COMM";
+    sd->type="COMM-BREAK";
 
 
-    auto comm_item1 = m_item_builder->create_item<CommercialBreakItem>(sd);
+    auto comm_item1 = m_schedule_item_builder->create_item<CommercialBreakItem>(sd);
 
 
-    m_model->appendRow(comm_item1);
+    m_schedule_model->appendRow(comm_item1);
 
     ItemData* sd2 = new ItemData();
     sd2->schedule_time = QTime(22,0,0);
     sd2->play_time = QTime(0,0,0);
     sd->auto_transition = 1 ;
-    sd2->type="COMM";
+    sd2->type="COMM-BREAK";
 
-    auto comm_item2 = m_item_builder->create_item<CommercialBreakItem>(sd);
-    m_model->appendRow(comm_item2);
+    auto comm_item2 = m_schedule_item_builder->create_item<CommercialBreakItem>(sd);
+    m_schedule_model->appendRow(comm_item2);
 
     ItemData* sd3 = new ItemData();
     sd3->schedule_time = QTime(22,0,0);
     sd3->play_time = QTime(0,0,0);
     sd->auto_transition = 1;
-    sd3->type="COMM";
+    sd3->type="COMM-BREAK";
 
-    auto comm_item3 = m_item_builder->create_item<CommercialBreakItem>(sd);
-    m_model->appendRow(comm_item3);
+    auto comm_item3 = m_schedule_item_builder->create_item<CommercialBreakItem>(sd);
+    m_schedule_model->appendRow(comm_item3);
 
     ItemData* end_data = new ItemData();
     end_data->schedule_time = QTime(22,0,0);
     end_data->type = "END_MARKER";
 
-    auto end_marker = m_item_builder->create_item<EndMarkerItem>(end_data);
-    m_model->appendRow(end_marker);
+    auto end_marker = m_schedule_item_builder->create_item<EndMarkerItem>(end_data);
+    m_schedule_model->appendRow(end_marker);
 }
 
 void MainWindow::show_cached_items(std::vector<ScheduleData*> items)
 {
     for (auto schedule_item : items){
 
-        ItemColumns table_columns;
+        ItemColumns item_columns;
 
-        if (schedule_item->item_data()->type == "COMM")
-            table_columns = m_item_builder->create_item<CommercialBreakItem>(schedule_item->item_data());
+        if (schedule_item->item_data()->type == "COMM-BREAK")
+            item_columns = m_schedule_item_builder->create_item<CommercialBreakItem>(schedule_item->item_data());
+
+        if (schedule_item->item_data()->type == "COMM-AUDIO")
+            item_columns = m_schedule_item_builder->create_item<CommercialAudioItem>(schedule_item->item_data());
 
         if (schedule_item->item_data()->type == "SONG")
-            table_columns = m_item_builder->create_item<SongItem>(schedule_item->item_data());
+            item_columns = m_schedule_item_builder->create_item<SongItem>(schedule_item->item_data());
 
-        if (table_columns.size() > 0)
-            m_model->appendRow(table_columns);
+        if (schedule_item->item_data()->type == "JINGLE")
+            item_columns = m_schedule_item_builder->create_item<JingleItem>(schedule_item->item_data());
+
+        if (item_columns.size() > 0)
+            m_schedule_model->appendRow(item_columns);
 
     }
         ItemData* end_marker_data = new ItemData();
         end_marker_data->type = "END_MARKER";
-        ItemColumns t_columns = m_item_builder->create_item<EndMarkerItem>(end_marker_data);
-        m_model->appendRow(t_columns);
+        ItemColumns t_columns = m_schedule_item_builder->create_item<EndMarkerItem>(end_marker_data);
+        m_schedule_model->appendRow(t_columns);
 }
 
 void MainWindow::show_db_schedule(QDate date, int hour)
 {
     std::stringstream sql;
 
-    sql << " SELECT rave_schedule.id, rave_schedule.schedule_date, rave_schedule.schedule_time, "
-        << " rave_schedule.auto_transition, rave_schedule.play_date, rave_schedule.play_time, "
-        << " rave_schedule.schedule_item_type, rave_schedule.comment "
-        << " FROM rave_schedule ";
+    sql << " SELECT a.id, a.schedule_date, a.schedule_time, "
+        << " a.auto_transition, a.play_date, a.play_time, "
+        << " a.schedule_item_type, a.comment, a.booked_spots, "
+        << " a.audio_id, b.title, b.filepath, b.duration, c.fullname "
+        << " FROM rave_schedule a  "
+        << " left outer join rave_audio b on a.audio_id = b.id "
+        << " left outer join rave_artist c on b.artist_id = c.id ";
 
-    std::string where_filter = " WHERE rave_schedule.schedule_date = '"+date.toString("yyyy/MM/dd").toStdString()+"'";
-    std::string and_filter = " AND rave_schedule.schedule_hour = "+std::to_string(hour);
-    std::string order_by = " ORDER BY rave_schedule.schedule_time ";
+    std::string where_filter = " WHERE a.schedule_date = '"+date.toString("yyyy/MM/dd").toStdString()+"'";
+    std::string and_filter = " AND a.schedule_hour = "+std::to_string(hour);
+    std::string order_by = " ORDER BY a.schedule_time ";
 
     sql << where_filter << and_filter << order_by;
 
@@ -383,27 +522,58 @@ void MainWindow::show_db_schedule(QDate date, int hour)
                 if (field_name == "schedule_item_type")
                     data->type = QString::fromStdString(field_value);
 
+                if (field_name == "booked_spots")
+                    data->booked_spots = str_to_int(field_value);
+
+                if (field_name == "audio_id")
+                    data->audio_id = str_to_int(field_value);
+
+                if (field_name == "duration")
+                    data->duration = str_to_int(field_value);
+
+                if (field_name == "title")
+                    data->item_title = QString::fromStdString(field_value);
+
+                if (field_name == "filepath")
+                    data->filepath = QString::fromStdString(field_value);
+
+                if (field_name == "fullname")
+                    data->artist = QString::fromStdString(field_value);
+
             }
 
             data->schedule_ref = date.day()+date.month()+date.year()+hour;
 
             ItemColumns item;
 
-            if (data->type == "COMM"){
-                item = m_item_builder->create_item<CommercialBreakItem>(data);
+            if (data->type == "COMM-BREAK"){
+                item = m_schedule_item_builder->create_item<CommercialBreakItem>(data);
             }
 
-            m_model->appendRow(item);
+            if (data->type == "COMM-AUDIO"){
+                item = m_schedule_item_builder->create_item<CommercialAudioItem>(data);
+            }
+
+            if (data->type == "SONG"){
+
+                item = m_schedule_item_builder->create_item<SongItem>(data);
+            }
+
+            m_schedule_model->appendRow(item);
 
             provider->cache()->next();
 
         } while (!provider->cache()->isLast());
     }
-        ItemData* end_marker_data = new ItemData();
-        end_marker_data->type = "END_MARKER";
-        ItemColumns t_columns = m_item_builder->create_item<EndMarkerItem>(end_marker_data);
-        m_model->appendRow(t_columns);
 
+    if (m_schedule_item_builder->item_exist("END_MARKER", QTime(hour,0,0)))
+        return;
+
+    ItemData* end_marker_data = new ItemData();
+    end_marker_data->schedule_time = QTime(hour, 0, 0);
+    end_marker_data->type = "END_MARKER";
+    ItemColumns t_columns = m_schedule_item_builder->create_item<EndMarkerItem>(end_marker_data);
+    m_schedule_model->appendRow(t_columns);
 }
 
 void MainWindow::item_id()
@@ -411,7 +581,6 @@ void MainWindow::item_id()
     auto mod_index = ui->tvSchedule->currentIndex();
     auto first_col = ui->tvSchedule->model()->index(mod_index.row(), 0);
     qDebug() << "ID: "<< first_col.data(Qt::UserRole).toInt();
-
 }
 
 
@@ -427,20 +596,95 @@ void MainWindow::add_item()
     sd->play_time = QTime(0,0,0);
     sd->auto_transition = 1;
 
-    auto song_item1 = m_item_builder->create_item<SongItem>(sd);
-    m_model->insertRow(mod_index.row(), song_item1);
+    auto song_item1 = m_schedule_item_builder->create_item<SongItem>(sd);
+    m_schedule_model->insertRow(mod_index.row(), song_item1);
 
-    update_time(mod_index.row()+1, duration);
+    increment_time(mod_index.row()+1, duration);
 }
 
-void MainWindow::update_time(int from_row, int duration)
+void MainWindow::increment_time(int from_row, int duration)
 {
     auto model = ui->tvSchedule->model();
-    for (int i=from_row; i < m_model->rowCount(); ++i){
+    for (int i=from_row; i < m_schedule_model->rowCount(); ++i){
         auto index = model->index(i, 0);
         auto time = index.data(Qt::UserRole).toTime();
         auto new_time  = time.addMSecs(duration);
         model->setData(index, new_time, Qt::UserRole);
         model->setData(index, new_time.toString("hh:mm:ss"), Qt::DisplayRole);
     }
+}
+
+void MainWindow::decrement_time(int from_row, int duration)
+{
+    auto model = ui->tvSchedule->model();
+    for(int i=from_row; i < m_schedule_model->rowCount(); ++i){
+        auto index = model->index(i, 0);
+        auto time = index.data(Qt::UserRole).toTime();
+        int time_in_duration = time.msec();
+        auto new_time = time.addMSecs(time_in_duration-(duration*1000));
+        model->setData(index, new_time, Qt::UserRole);
+        model->setData(index, new_time.toString("hh:m:ss"), Qt::DisplayRole);
+    }
+}
+
+std::string MainWindow::make_insert_stmts()
+{
+    Schedule schedule;
+    std::string insert_stmts;
+    VectorStruct<Field> fields;
+
+    for (auto data : m_schedule_item_builder->all_cached()){
+
+        schedule.set_schedule_date(data->schedule_date());
+        schedule.set_schedule_time(data->schedule_time());
+        schedule.set_schedule_hour(data->schedule_hour());
+        schedule.set_auto_transition(data->auto_transition());
+        schedule.audio()->setValue(data->audio_id());
+
+
+        fields << schedule.schedule_date()
+               << schedule.schedule_time()
+               << schedule.schedule_hour()
+               << schedule.auto_transition()
+               << schedule.audio();
+
+        insert_stmts += schedule.make_insert_stmt(fields.vec);
+        fields.clear();
+    }
+
+    return insert_stmts;
+
+}
+
+void MainWindow::save_schedule()
+{
+    std::string sql = make_insert_stmts();
+
+    if (sql.empty())
+        return;
+
+    auto hours = m_schedule_item_builder->unique_hours();
+
+    qDebug() << "Unique Hours: "<< hours.size();
+
+    for ( auto h : hours){
+        qDebug() << "Hour: "<< h;
+    }
+
+    //delete_current_schedule();
+    //write_schedule_to_db(sql);
+}
+
+bool MainWindow::write_schedule_to_db(std::string sql)
+{
+    try{
+        EntityDataModel edm;
+        edm.executeRawSQL(sql);
+        showMessage("Schedule saved successfully.");
+        return true;
+    }catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+        return false;
+    }
+
 }

@@ -20,7 +20,7 @@ public:
     explicit BreakCreateForm(QWidget *parent = nullptr);
     ~BreakCreateForm();
 
-    void setDefaults();
+    void set_defaults();
 
     template<typename T>
     struct Vectored{

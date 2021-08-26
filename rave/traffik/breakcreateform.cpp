@@ -31,7 +31,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     connect(ui->btnCreate, &QPushButton::clicked, this, &BreakCreateForm::create_breaks);
     connect(ui->btnCancel, &QPushButton::clicked, this, &BreakCreateForm::close_form);
 
-    setDefaults();
+    set_defaults();
 }
 
 BreakCreateForm::~BreakCreateForm()
@@ -39,7 +39,7 @@ BreakCreateForm::~BreakCreateForm()
     delete ui;
 }
 
-void BreakCreateForm::setDefaults()
+void BreakCreateForm::set_defaults()
 {
     setWindowTitle("Generate Schedule Breaks Form");
     ui->dtFrom->setDate(QDate::currentDate());
@@ -120,7 +120,7 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_break_max_spots(bll->maxSpots()->value())
                     << sched.set_break_duration_left(bll->duration()->value())
                     << sched.set_booked_spots(0)
-                    << sched.set_audio_type("COMM")
+                    << sched.set_audio_type("COMM-BREAK")
                     << sched.set_break_mode("MIXED");
 
             insert_stmts += sched.make_insert_stmt(fields.vec);

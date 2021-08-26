@@ -156,6 +156,11 @@
 			"TXBK5VWLEF/moc_ravenexception.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/framework/schedule.h",
+			"MU",
+			"TXBK5VWLEF/moc_schedule.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/tableviewmodel.h",
 			"MU",
 			"TXBK5VWLEF/moc_tableviewmodel.cpp"
@@ -270,6 +275,7 @@
 		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/manytomany.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/schedule.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tableviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/treeviewmodel.cpp", "MU" ],

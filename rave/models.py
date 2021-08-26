@@ -350,7 +350,7 @@ class Audio(Daypart):
     short_desc = models.CharField(max_length=255, null=True, blank=True)
     artist = models.ForeignKey(Artist, null=True)
     filepath = models.CharField(max_length=255)
-    audio_type = models.CharField(max_length=6, choices=AUDIO_TYPE, default='SONG')
+    audio_type = models.CharField(max_length=20, choices=AUDIO_TYPE, default='SONG')
     duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     start_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     fade_in_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
@@ -378,7 +378,7 @@ PLAY_STATUS = (
 
 SCHEDULE_TYPE = (
         ('SONG','SONG'),
-        ('COMM','COMMERCIAL'),
+        ('COMM-BREAK','COMMERCIAL'),
         )
 
 BREAK_MODE = (
@@ -415,7 +415,7 @@ class Schedule(models.Model):
     play_time = models.TimeField(null=True)
     auto_transition = models.IntegerField(default=0, null=True)
     live_transition = models.IntegerField(default=0, null=True)
-    schedule_item_type = models.CharField(max_length=8, choices=SCHEDULE_TYPE, default='SONG')
+    schedule_item_type = models.CharField(max_length=20, choices=SCHEDULE_TYPE, default='SONG')
     break_duration = models.IntegerField(default=0, null=True)
     break_start_win = models.IntegerField(default=0, null=True)
     break_end_win = models.IntegerField(default=0, null=True)

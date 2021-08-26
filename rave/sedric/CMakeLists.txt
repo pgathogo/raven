@@ -71,6 +71,7 @@ else()
     ../framework/treeviewmodel.cpp
     ../framework/tableviewmodel.cpp
     ../framework/tree.cpp
+    ../framework/schedule.cpp
     ../security/authentication.cpp
     ../security/user.cpp
     ../audio/audiolibrary.cpp

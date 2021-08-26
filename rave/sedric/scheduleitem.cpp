@@ -18,7 +18,12 @@ int ScheduleData::schedule_ref() const
     return m_item_data->schedule_ref;
 }
 
-ItemData* ScheduleData::item_data()
+int ScheduleData::row_id() const
+{
+    return m_item_data->table_row_id;
+}
+
+ItemData* ScheduleData::item_data() const
 {
     return m_item_data;
 }
@@ -46,7 +51,7 @@ std::string ScheduleData::transition_to_string(int value) const
     if (iter != m_transitions.end())
         return iter->second;
 
-    return "";
+    return "Mix";
 
 }
 
@@ -58,6 +63,37 @@ QTime ScheduleData::duration() const{return QTime(); }
 QString ScheduleData::transition() const
 {
     return QString::fromStdString(transition_to_string(m_item_data->auto_transition));
+}
+
+QDate ScheduleData::schedule_date() const
+{
+    return item_data()->schedule_date;
+}
+
+QTime ScheduleData::schedule_time() const
+{
+    return item_data()->schedule_time;
+
+}
+
+int ScheduleData::schedule_hour() const
+{
+    return item_data()->schedule_hour;
+}
+
+int ScheduleData::auto_transition() const
+{
+    return item_data()->auto_transition;
+}
+
+QString ScheduleData::schedule_type() const
+{
+    return schedule_item_type();
+}
+
+int ScheduleData::audio_id() const
+{
+    return item_data()->audio_id;
 }
 
 CommercialBreak::CommercialBreak(ItemData* item_data)
@@ -88,6 +124,35 @@ QTime CommercialBreak::duration() const
     return QTime();
 }
 
+CommercialAudio::CommercialAudio(ItemData* item_data)
+    :ScheduleData(item_data)
+    ,m_title{""}
+    ,m_artist{""}
+    ,m_track_path{""}
+    ,m_duration{}
+{
+}
+
+QString CommercialAudio::title() const
+{
+    return item_data()->item_title;
+}
+
+QString CommercialAudio::artist() const
+{
+    return item_data()->artist;
+}
+
+QString CommercialAudio::track_path() const
+{
+    return item_data()->filepath;
+}
+
+QTime CommercialAudio::duration() const
+{
+    return QTime::fromMSecsSinceStartOfDay(
+                item_data()->duration*1000);
+}
 
 Song::Song(ItemData* item_data)
     :ScheduleData(item_data)
@@ -100,22 +165,49 @@ Song::Song(ItemData* item_data)
 
 QString Song::title() const
 {
-    return "Song Song Song";
+    return item_data()->item_title;
 }
 
 QString Song::artist() const
 {
-    return "";
+    return item_data()->artist;
 }
 
 QString Song::track_path() const
 {
-    return "";
+    return item_data()->filepath;
 }
 
 QTime Song::duration() const
 {
-    return QTime();
+    return QTime::fromMSecsSinceStartOfDay(item_data()->duration*1000);
+}
+
+Jingle::Jingle(ItemData* item_data)
+    :ScheduleData(item_data)
+{
+}
+
+QString Jingle::title() const
+{
+    return item_data()->item_title;
+}
+
+QString Jingle::artist() const
+{
+    return item_data()->artist;
+}
+
+QString Jingle::track_path() const
+{
+    return item_data()->filepath;
+
+}
+
+QTime Jingle::duration() const
+{
+    return QTime::fromMSecsSinceStartOfDay(
+                item_data()->duration*1000);
 }
 
 
@@ -183,6 +275,21 @@ ScheduleData* CommercialBreakItem::make_schedule_data(ItemData* item_data) const
     return new CommercialBreak(item_data);
 }
 
+CommercialAudioItem::CommercialAudioItem()
+    :ScheduleItem()
+{
+}
+
+CommercialAudioItem::CommercialAudioItem(const QString text)
+    :ScheduleItem(text)
+{
+    setForeground(QBrush(QColor("darkCyan")));
+}
+
+ScheduleData* CommercialAudioItem::make_schedule_data(ItemData* item_data) const
+{
+    return new CommercialAudio(item_data);
+}
 
 SongItem::SongItem()
     :ScheduleItem()
@@ -200,6 +307,22 @@ ScheduleData* SongItem::make_schedule_data(ItemData* item_data) const
 {
     return new Song(item_data);
 }
+
+JingleItem::JingleItem()
+{
+}
+
+JingleItem::JingleItem(const QString text)
+    :ScheduleItem(text)
+{
+    setForeground(QBrush(QColor("green")));
+}
+
+ScheduleData* JingleItem::make_schedule_data(ItemData* item_data) const
+{
+    return new Jingle(item_data);
+}
+
 
 EndMarkerItem::EndMarkerItem()
     :ScheduleItem()
@@ -244,6 +367,10 @@ int ItemBuilder::generate_row_id()
     return id;
 }
 
+std::vector<ScheduleData*> ItemBuilder::all_cached()
+{
+    return m_schedule_items;
+}
 
 std::vector<ScheduleData*> ItemBuilder::cached_data(int schedule_ref)
 {
@@ -252,6 +379,26 @@ std::vector<ScheduleData*> ItemBuilder::cached_data(int schedule_ref)
     results.resize(std::distance(results.begin(), iter));
 
     return results;
+}
+
+std::vector<int> ItemBuilder::unique_hours()
+{
+    std::sort(m_schedule_items.begin(), m_schedule_items.end(), SortItems());
+
+    std::vector<ScheduleData*> results(m_schedule_items.size());
+    auto iter = std::unique_copy(m_schedule_items.begin(), m_schedule_items.end(), results.begin(), FindUnique());
+    results.resize(std::distance(results.begin(), iter));
+
+    std::vector<int> hours;
+
+
+    for (auto result : results){
+        qDebug() << "Result: " << result->title();
+        if (result->schedule_type() != "END_MARKER")
+            hours.push_back(result->schedule_hour());
+    }
+
+    return hours;
 }
 
 std::size_t ItemBuilder::cache_size() const
@@ -266,4 +413,33 @@ void ItemBuilder::print_cache() const
         qDebug() << "Title: " << schedule_item->title();
         qDebug() << "Row ID: " << schedule_item->item_data()->table_row_id;
     }
+}
+
+QString ScheduleData::schedule_item_type() const
+{
+    return m_item_data->type;
+}
+
+ScheduleData* ItemBuilder::find_data_by_rowid(int row_id)
+{
+    auto iter = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
+                             FindRowId(row_id));
+    if (iter != m_schedule_items.end())
+        return *iter;
+
+    return nullptr;
+}
+
+void ItemBuilder::delete_row(int row_id)
+{
+    m_schedule_items.erase(
+                std::remove_if(m_schedule_items.begin(), m_schedule_items.end(),
+                               FindRowId(row_id)), m_schedule_items.end());
+}
+
+bool ItemBuilder::item_exist(QString item_type, QTime time)
+{
+    auto iter = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
+                             FindItem(item_type, time));
+    return (iter == m_schedule_items.end()) ? false : true;
 }

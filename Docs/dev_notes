@@ -26,9 +26,9 @@
 - Icon for the main application window
 X Icon for the CLIENTS dialog
 X Title for the CLIENTS dialog
-- Combine all setup windows into one tabbed dialog
-- Order - Add letter filter
-- Spots - Add letter filter
+X Combine all setup windows into one tabbed dialog
+X Order - Add letter filter
+X Spots - Add letter filter
 - Order - Allow editting of orders if :
    - Order is current
    - Order is not cancelled
@@ -37,3 +37,42 @@ X Title for the CLIENTS dialog
 - Schedule - Icon for Schedule window
 - Schedule - Icon for "Create Breaks" button
 - Schedule - Icon for "Delete Breaks" button
+
+
+18/08/2021 20:11:59
+-----
+SEDRIC - Issues
+
+* General *
+
+- What is the "NEW" button used for?
+- Save functionality
+- Save-As functionality
+- Remove functionality
+- Print schedule functionality
+- Add Window title
+- Start window maximized
+- Find proper color schemes for various items
+
+* Schedule Grid *
+
+- Test edge cases - Add
+- Test edge cases - Remove item
+
+* Audio Library *
+
+- Icon for folders
+- Make folders readonly
+-
+
+* Tracks Sections *
+
+- Move color legend on the top section
+- Play audio functionality
+- Stop play audio functionality
+- History functionality
+
+* Search section *
+
+- Search audio - By title
+- Search audio - By artist
