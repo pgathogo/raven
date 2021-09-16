@@ -30,6 +30,7 @@ struct ItemData
     QString item_title{""};
     QString artist{""};
     QString filepath{""};
+    bool new_item{true};
 };
 
 class ScheduleData{
@@ -37,6 +38,7 @@ public:
     ScheduleData(ItemData*);
     ~ScheduleData();
     int schedule_ref() const;
+    int schedule_id() const;
     int row_id() const;
     QString schedule_item_type() const;
     virtual QString title() const;
@@ -56,6 +58,7 @@ public:
     void set_table_row_id(int) const;
     std::string transition_to_string(int) const;
     void set_transitions();
+    void set_schedule_time(QTime);
 private:
     ItemData* m_item_data;
     std::map<int, std::string> m_transitions;
@@ -243,6 +246,10 @@ public:
     ScheduleData* make_schedule_data(ItemData*) const override;
 };
 
+class ScheduleItemHandler
+{};
+
+
 class ItemBuilder
 {
 public:
@@ -268,13 +275,17 @@ public:
 
     void delete_row(int);
 
+    void update_schedule_item_time(QTime, int);
+
     template<typename T>
     ItemColumns create_item(ItemData* item_data){
         ItemColumns tr;
 
         T item;
         auto item_schedule_data = item.make_schedule_data(item_data);
-
+        if (item_data->table_row_id == 0){
+            item_schedule_data->set_table_row_id(this->generate_row_id());
+        }
 
         auto time = new T(item_data->schedule_time.toString("hh:mm:ss"));
 
@@ -313,10 +324,8 @@ public:
         tr.append(track_path);
         tr.append(comment);
 
-        if (item_data->table_row_id == 0){
-            item_schedule_data->set_table_row_id(this->generate_row_id());
+        if (item_data->new_item)
             m_schedule_items.push_back(item_schedule_data);
-        }
 
         return tr;
     }

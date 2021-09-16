@@ -70,6 +70,22 @@ build CMakeFiles/sedric.dir/scheduleitem.cpp.obj: CXX_COMPILER__sedric_ schedule
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir
 
+build CMakeFiles/sedric.dir/sedricscheduleitem.cpp.obj: CXX_COMPILER__sedric_ sedricscheduleitem.cpp || cmake_object_order_depends_target_sedric
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\sedric.dir\sedricscheduleitem.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  OBJECT_DIR = CMakeFiles\sedric.dir
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir
+
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/scheduledatamanager.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/framework/scheduledatamanager.cpp || cmake_object_order_depends_target_sedric
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\scheduledatamanager.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  OBJECT_DIR = CMakeFiles\sedric.dir
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
+
 build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/framework/entitydatamodel.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\entitydatamodel.cpp.obj.d
@@ -254,6 +270,14 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX_
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/audio/audiolibitem.cpp || cmake_object_order_depends_target_sedric
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiolibitem.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  OBJECT_DIR = CMakeFiles\sedric.dir
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target sedric
@@ -262,7 +286,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX_
 #############################################
 # Link the executable sedric.exe
 
-build sedric.exe: CXX_EXECUTABLE_LINKER__sedric_ CMakeFiles/sedric.dir/sedric_autogen/mocs_compilation.cpp.obj CMakeFiles/sedric.dir/main.cpp.obj CMakeFiles/sedric.dir/mainwindow.cpp.obj CMakeFiles/sedric.dir/scheduleitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tableviewmodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotrackitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || sedric_autogen
+build sedric.exe: CXX_EXECUTABLE_LINKER__sedric_ CMakeFiles/sedric.dir/sedric_autogen/mocs_compilation.cpp.obj CMakeFiles/sedric.dir/main.cpp.obj CMakeFiles/sedric.dir/mainwindow.cpp.obj CMakeFiles/sedric.dir/scheduleitem.cpp.obj CMakeFiles/sedric.dir/sedricscheduleitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/scheduledatamanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tableviewmodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotrackitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || sedric_autogen
   LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib
   OBJECT_DIR = CMakeFiles\sedric.dir

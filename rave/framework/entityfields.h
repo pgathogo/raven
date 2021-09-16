@@ -176,6 +176,8 @@ public:
 
         void setCurrentText();
 
+        void set_fk_entity(std::unique_ptr<BaseEntity>);
+
         void cacheData();
         std::size_t cacheCount();
 
@@ -187,12 +189,16 @@ public:
 
         BaseEntity* fk_entity();
 
+        BaseEntity* unique_fk_entity();
+
+
     private:
         int mValue;
         int mIndex;
         std::string mCurrText;
         std::string mDisplayField;
         BaseEntity* m_fk_entity;
+        std::unique_ptr<BaseEntity> m_unique_fk_entity;
         static std::map<std::string, std::unique_ptr<EntityDataModel>> lookups;
 };
 

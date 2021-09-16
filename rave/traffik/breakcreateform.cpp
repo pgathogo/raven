@@ -120,7 +120,7 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_break_max_spots(bll->maxSpots()->value())
                     << sched.set_break_duration_left(bll->duration()->value())
                     << sched.set_booked_spots(0)
-                    << sched.set_audio_type("COMM-BREAK")
+                    << sched.set_schedule_item_type("COMM-BREAK")
                     << sched.set_break_mode("MIXED");
 
             insert_stmts += sched.make_insert_stmt(fields.vec);

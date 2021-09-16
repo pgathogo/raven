@@ -54,8 +54,8 @@ public:
     IntegerField* live_transition() const;
     void set_live_transition(int val);
 
-    ChoiceField<std::string>* audio_type() const;
-    ChoiceField<std::string>* set_audio_type(std::string val);
+    ChoiceField<std::string>* schedule_item_type() const;
+    ChoiceField<std::string>* set_schedule_item_type(std::string val);
 
     IntegerField* break_duration() const;
     IntegerField* set_break_duration(int val);
@@ -82,7 +82,7 @@ public:
     void set_break_status(const std::string val);
 
     TextField* comment()const;
-    void setComment(const std::string val);
+    void set_comment(const std::string val);
 
     bool isBad() const;
     void setIsBad(bool flag);
@@ -112,6 +112,8 @@ public:
     std::string make_insert_stmt(const std::vector<Field*>& fields);
     std::string make_columns(const std::vector<Field*>& fields);
     std::string make_values(const std::vector<Field*>& fields);
+
+    void populate_audio_fk(int audio_id);
 
 private:
     DateField* m_schedule_date;

@@ -117,6 +117,11 @@ BaseEntity& EntityModel::getEntity()
     return *mEntity;
 }
 
+std::unique_ptr<BaseEntity> const& EntityModel::get_entity() const
+{
+    return mEntity;
+}
+
 BaseEntity* EntityModel::firstEntity()
 {
     return std::get<1>(mEntities[0]).get();

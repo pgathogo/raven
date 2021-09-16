@@ -96,6 +96,11 @@
 			"Y6ZUSTFKUI/moc_audiofolder.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/audio/audiolibitem.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiolibitem.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/audio/audiolibrary.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiolibrary.cpp"
@@ -161,6 +166,11 @@
 			"TXBK5VWLEF/moc_schedule.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/framework/scheduledatamanager.h",
+			"MU",
+			"TXBK5VWLEF/moc_scheduledatamanager.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/tableviewmodel.h",
 			"MU",
 			"TXBK5VWLEF/moc_tableviewmodel.cpp"
@@ -204,6 +214,11 @@
 			"D:/home/PMS/Raven/rave/sedric/scheduleitem.h",
 			"MU",
 			"EWIEGA46WW/moc_scheduleitem.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.h",
+			"MU",
+			"EWIEGA46WW/moc_sedricscheduleitem.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -264,6 +279,7 @@
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotrackitem.cpp", "MU" ],
@@ -276,6 +292,7 @@
 		[ "D:/home/PMS/Raven/rave/framework/manytomany.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/schedule.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/scheduledatamanager.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tableviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/treeviewmodel.cpp", "MU" ],
@@ -285,7 +302,8 @@
 		[ "D:/home/PMS/Raven/rave/security/user.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/sedric/main.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/sedric/mainwindow.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/sedric/scheduleitem.cpp", "MU" ]
+		[ "D:/home/PMS/Raven/rave/sedric/scheduleitem.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

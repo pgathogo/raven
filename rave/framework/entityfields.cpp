@@ -486,6 +486,17 @@ BaseEntity* ForeignKeyField::fk_entity()
     return m_fk_entity;
 }
 
+void ForeignKeyField::set_fk_entity(std::unique_ptr<BaseEntity> ent)
+{
+    m_unique_fk_entity = std::move(ent);
+}
+
+BaseEntity* ForeignKeyField::unique_fk_entity()
+{
+    return m_unique_fk_entity.get();
+}
+
+
 void ForeignKeyField::setIndex(int i)
 {
     mIndex = i;
@@ -673,7 +684,7 @@ TimeField::~TimeField()
 
 std::string TimeField::valueToString() const
 {
-    return mValue.toString("hh:mm").toStdString();
+    return mValue.toString("hh:mm:ss").toStdString();
 }
 
 std::string TimeField::dbValueFormatter()
@@ -683,7 +694,7 @@ std::string TimeField::dbValueFormatter()
 
 void TimeField::setValue(QTime tm)
 {
-    mValue.setHMS(tm.hour(), tm.minute(), 0);
+    mValue.setHMS(tm.hour(), tm.minute(), tm.second());
 }
 
 void TimeField::stringToValue(std::string val)

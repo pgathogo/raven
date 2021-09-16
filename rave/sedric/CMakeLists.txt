@@ -57,6 +57,10 @@ else()
     mainwindow.ui
     scheduleitem.h
     scheduleitem.cpp
+    sedricscheduleitem.h
+    sedricscheduleitem.cpp
+    ../framework/scheduledatamanager.h
+    ../framework/scheduledatamanager.cpp
     ../framework/entitydatamodel.cpp
     ../framework/databaseconnector.cpp
     ../framework/databasemanager.cpp
@@ -81,6 +85,7 @@ else()
     ../audio/audiofile.cpp
     ../audio/audiotrackitem.cpp
     ../audio/audiotool.cpp
+    ../audio/audiolibitem.cpp
 )
 endif()
 

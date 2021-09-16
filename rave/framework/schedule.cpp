@@ -195,14 +195,15 @@ void Schedule::set_live_transition(int val)
     m_live_transition->setValue( val );
 }
 
-ChoiceField<std::string> *Schedule::audio_type() const
+ChoiceField<std::string> *Schedule::schedule_item_type() const
 {
     return m_schedule_item_type;
 }
 
-ChoiceField<std::string>* Schedule::set_audio_type(std::string val)
+ChoiceField<std::string>* Schedule::set_schedule_item_type(std::string val)
 {
     m_schedule_item_type->setValue(val);
+    m_schedule_item_type->setCurrText(val);
     return m_schedule_item_type;
 }
 
@@ -296,7 +297,7 @@ TextField *Schedule::comment() const
     return m_comment;
 }
 
-void Schedule::setComment(const std::string val)
+void Schedule::set_comment(const std::string val)
 {
     m_comment->setValue(val);
 }
@@ -368,8 +369,9 @@ std::unique_ptr<BaseEntity> Schedule::cloneAsUnique()
     return std::make_unique<Schedule>();
 }
 
-void Schedule::afterMapping(BaseEntity&)
+void Schedule::afterMapping(BaseEntity& entity)
 {
+
 
 }
 
@@ -429,6 +431,18 @@ std::string Schedule::make_values(const std::vector<Field*>& fields)
         vals += field->dbValueFormatter();
     }
     return vals;
+}
+
+void Schedule::populate_audio_fk(int audio_id)
+{
+    EntityDataModel edm;
+    auto filter = std::make_tuple("id", " = ", audio_id);
+    std::string filter_str = edm.prepareFilter(filter);
+
+    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+                                      std::make_unique<AUDIO::Audio>(""),
+                                      "title",
+                                       filter_str);
 }
 
 

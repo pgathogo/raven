@@ -18,6 +18,11 @@ int ScheduleData::schedule_ref() const
     return m_item_data->schedule_ref;
 }
 
+int ScheduleData::schedule_id() const
+{
+    return m_item_data->id;
+}
+
 int ScheduleData::row_id() const
 {
     return m_item_data->table_row_id;
@@ -43,6 +48,11 @@ void ScheduleData::set_transitions()
     m_transitions[5] = "Early";
     m_transitions[6] = "Synchro";
     m_transitions[7] = "Stop";
+}
+
+void ScheduleData::set_schedule_time(QTime time)
+{
+    m_item_data->schedule_time = time;
 }
 
 std::string ScheduleData::transition_to_string(int value) const
@@ -442,4 +452,17 @@ bool ItemBuilder::item_exist(QString item_type, QTime time)
     auto iter = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
                              FindItem(item_type, time));
     return (iter == m_schedule_items.end()) ? false : true;
+}
+
+void ItemBuilder::update_schedule_item_time(QTime time, int row_id)
+{
+    auto iter = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
+                             FindRowId(row_id));
+
+    if (iter != m_schedule_items.end()){
+        ScheduleData* data = *iter;
+        if (data->schedule_item_type() == "COMM-BREAK")
+            data->set_schedule_time(time);
+    }
+
 }

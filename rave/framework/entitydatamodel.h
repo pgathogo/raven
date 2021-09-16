@@ -37,6 +37,8 @@ class EntityModel : public QStandardItemModel{
 
         BaseEntity& getEntity();
 
+        std::unique_ptr<BaseEntity> const& get_entity() const;
+
         BaseEntity* firstEntity();
 
         std::list<std::string> keys();
