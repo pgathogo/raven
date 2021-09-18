@@ -74,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_tracks_model = new QStandardItemModel(this);
     create_track_view_headers();
+    adjust_header_size();
+
     ui->tvTracks->horizontalHeader()->setStretchLastSection(true);
     ui->tvTracks->setModel(m_tracks_model);
     ui->tvTracks->verticalHeader()->setVisible(false);
@@ -210,6 +212,8 @@ void MainWindow::insert_item_new(const QModelIndex& index)
     schedule_audio->set_title(audio->title()->value());
     schedule_audio->set_file_path(audio->file_path()->value());
 
+    schedule->audio()->setValue(audio->id());
+
     schedule_artist->set_fullname(audio->artist()->displayName());
 
     if (audio->audio_type()->value() == "SONG")
@@ -221,7 +225,7 @@ void MainWindow::insert_item_new(const QModelIndex& index)
     if (audio->audio_type()->value() == "COMM-AUDIO")
         m_schedule_item->create_row_item<SEDRIC::CommercialAudioItem>(schedule, index.row());
 
-    update_schedule_time(index.row(), audio->duration()->value());
+    m_schedule_item->update_time(sched_hour, index.row(), audio->duration()->value());
 
     add_activity(sched_hour);
 }
@@ -262,7 +266,8 @@ void MainWindow::remove_current_schedule_item()
     m_schedule_item_builder->delete_row(row_id);
     remove_item(index.row());
 
-    update_schedule_time(index.row(), schedule->break_duration()->value()*-1);
+    //update_schedule_time(sched_hour, index.row(), schedule->break_duration()->value()*-1);
+    m_schedule_item->update_time(sched_hour, index.row(), schedule->break_duration()->value()*-1);
 
     remove_activity(sched_hour);
 }
@@ -333,7 +338,8 @@ void MainWindow::remove_items_by_date_hour(QDate date, int hour)
         selected_rows.push_back(index);
 
         m_schedule_item_builder->delete_row(row_id);
-        update_schedule_time(row, data->item_data()->duration*-1);
+        //update_schedule_time(hour, row, data->item_data()->duration*-1);
+        m_schedule_item->update_time(hour, row, data->item_data()->duration*-1);
     }
 
     auto top_left_index = selected_rows[0];
@@ -371,6 +377,13 @@ void MainWindow::create_track_view_headers()
     m_tracks_model->setHorizontalHeaderItem(2, new QStandardItem("Duration"));
     m_tracks_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
     m_tracks_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
+}
+
+void MainWindow::adjust_header_size()
+{
+    QHeaderView* vert_header = ui->tvSchedule->verticalHeader();
+    vert_header->setSectionResizeMode(QHeaderView::Fixed);
+    vert_header->setDefaultSectionSize(20);
 }
 
 void MainWindow::set_track_view_column_width()
@@ -723,7 +736,7 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
 
 }
 
-void MainWindow::update_schedule_time(int from_row, int duration)
+void MainWindow::update_schedule_time(int hour, int from_row, int duration)
 {
     auto model = ui->tvSchedule->model();
     for(int i=from_row; i < m_schedule_model->rowCount(); ++i){
@@ -734,6 +747,9 @@ void MainWindow::update_schedule_time(int from_row, int duration)
         int sched_hour = data["hour"].toInt();
         QTime time_stamp = data["time"].toTime();
 
+        if (sched_hour > hour)
+            break;
+
         auto new_time = time_stamp.addSecs(duration);
 
         QMap<QString, QVariant> item_data;
@@ -742,7 +758,7 @@ void MainWindow::update_schedule_time(int from_row, int duration)
         item_data["time"] = new_time;
 
         model->setData(index, item_data, Qt::UserRole);
-        model->setData(index, new_time.toString("hh:m:ss"), Qt::DisplayRole);
+        model->setData(index, new_time.toString("hh:mm:ss"), Qt::DisplayRole);
 
         m_schedule_item->update_schedule_item_time(row_id, new_time);
     }
@@ -751,33 +767,26 @@ void MainWindow::update_schedule_time(int from_row, int duration)
 
 std::string MainWindow::make_insert_stmts()
 {
-    Schedule schedule;
+//    Schedule schedule;
     std::string insert_stmts;
     VectorStruct<Field> fields;
 
+    for (auto const& schedule_item : m_schedule_item->schedule_items()){
 
-    for (auto data : m_schedule_item_builder->all_cached()){
+        auto schedule = schedule_item->schedule();
 
-        if ( (data->schedule_type() == "END_MARKER") ||
-             (data->schedule_type() == "COMM-BREAK") )
+        if ( (schedule->schedule_item_type()->value() == "END_MARKER") ||
+             (schedule->schedule_item_type()->value() == "COMM-BREAK") )
             continue;
 
-        schedule.set_schedule_date(data->schedule_date());
-        schedule.set_schedule_time(data->schedule_time());
-        schedule.set_schedule_hour(data->schedule_hour());
-        schedule.set_auto_transition(data->auto_transition());
-        schedule.audio()->setValue(data->audio_id());
-        schedule.set_schedule_item_type(data->schedule_item_type().toStdString());
+        fields << schedule->schedule_date()
+               << schedule->schedule_time()
+               << schedule->schedule_hour()
+               << schedule->auto_transition()
+               << schedule->audio()
+               << schedule->schedule_item_type();
 
-
-        fields << schedule.schedule_date()
-               << schedule.schedule_time()
-               << schedule.schedule_hour()
-               << schedule.auto_transition()
-               << schedule.audio()
-               << schedule.schedule_item_type();
-
-        insert_stmts += schedule.make_insert_stmt(fields.vec);
+        insert_stmts += schedule->make_insert_stmt(fields.vec);
         fields.clear();
     }
 
@@ -794,9 +803,6 @@ void MainWindow::print_activity_details()
 
 void MainWindow::save_schedule()
 {
-    print_activity_details();
-    return;
-
     std::string delete_stmts = make_delete_stmts();
 
     std::string insert_stmts = make_insert_stmts();

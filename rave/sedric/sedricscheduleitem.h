@@ -38,6 +38,7 @@ namespace SEDRIC{
         int schedule_row_id() const;
         void set_schedule_row_id(int id);
         int generate_row_id();
+        void update_time(int, int, int);
         void update_schedule_item_time(int, QTime);
 
         Schedule* find_schedule_item(int);
@@ -45,6 +46,8 @@ namespace SEDRIC{
 
         AUDIO::Audio* audio();
         AUDIO::Artist* artist();
+
+        std::vector<std::unique_ptr<SedricScheduleItem>> const& schedule_items() const;
 
         template<typename T>
         void create_row_item(Schedule* schedule, int row=-1)

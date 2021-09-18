@@ -99,6 +99,35 @@ namespace SEDRIC{
         return m_base_row_id;
     }
 
+
+    void SedricScheduleItem::update_time(int hour, int from_row, int duration)
+    {
+        for (int i=from_row; i < m_model->rowCount(); ++i){
+            auto index = m_model->index(i, 0);  // first column
+            auto data = index.data(Qt::UserRole).toMap();
+
+            int row_id = data["row_id"].toInt();
+            int schedule_hour = data["hour"].toInt();
+            QTime time_stamp = data["time"].toTime();
+
+            if (schedule_hour > hour)
+                break;
+
+            QTime new_time = time_stamp.addSecs(duration);
+
+            QMap<QString, QVariant> item_data;
+            item_data["row_id"] = row_id;
+            item_data["hour"] = schedule_hour;
+            item_data["time"] = new_time;
+
+            m_model->setData(index, item_data, Qt::UserRole);
+            m_model->setData(index, new_time.toString("hh:mm:ss"), Qt::DisplayRole);
+
+            update_schedule_item_time(row_id, new_time);
+        }
+
+    }
+
     void SedricScheduleItem::update_schedule_item_time(int row_id, QTime new_time)
     {
         auto iter = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
@@ -139,6 +168,12 @@ namespace SEDRIC{
     AUDIO::Artist* SedricScheduleItem::artist()
     {
         return m_artist;
+    }
+
+
+    std::vector<std::unique_ptr<SedricScheduleItem>> const& SedricScheduleItem::schedule_items() const
+    {
+        return m_schedule_items;
     }
 
     /* ---------- SongItem ------------- */
@@ -189,12 +224,12 @@ namespace SEDRIC{
 
     QString CommercialBreakItem::duration()
     {
-        return "comm-duration";
+        return "00:00:00";
     }
 
     QString CommercialBreakItem::transition()
     {
-        return "comm-transition";
+        return "MIX";
     }
 
 

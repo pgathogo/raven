@@ -66,13 +66,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void update_schedule_time(int, int);
+    void update_schedule_time(int, int, int);
     void show_cached_items(std::vector<ScheduleData*>);
     void show_db_schedule_new(QDate, std::vector<int>&);
     void populate_hour_combobox();
 
     void audio_folder_setup();
     void create_track_view_headers();
+    void adjust_header_size();
     void set_track_view_column_width();
     void fetch_audio_new(int folder_id);
     int get_schedule_row_id(int) const;
