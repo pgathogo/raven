@@ -1,11 +1,14 @@
 #pragma once
 
 #include "../framework/schedule.h"
+#include "../framework/choicefield.h"
 
 using Columns = QList<QStandardItem*>;
 
 class QStandardItemModel;
 class QStandardItem;
+class PostgresDatabaseManager;
+class BaseDataProvider;
 
 namespace AUDIO {
     class Audio;
@@ -47,7 +50,18 @@ namespace SEDRIC{
         AUDIO::Audio* audio();
         AUDIO::Artist* artist();
 
-        std::vector<std::unique_ptr<SedricScheduleItem>> const& schedule_items() const;
+        std::vector<Schedule*> schedule_items() const;
+//        std::vector<std::unique_ptr<SedricScheduleItem>> const& find_schedule_by_datehour(QDate, int) const;
+        std::map<int, int> fetch_cached_items(QDate, std::vector<int>&);
+        void fetch_db_items(QDate, std::vector<int>&);
+        void set_schedule_fields(BaseDataProvider*, Schedule*, AUDIO::Audio*, AUDIO::Artist*);
+        void create_end_marker(int);
+
+        void clear_display_items();
+        void show_items(QDate, const std::vector<int>&);
+
+        std::size_t display_item_count();
+        bool is_schedule_cached(Schedule* schedule);
 
         template<typename T>
         void create_row_item(Schedule* schedule, int row=-1)
@@ -56,15 +70,16 @@ namespace SEDRIC{
             Columns columns;
 
             auto item = std::make_unique<T>(schedule);
-            if (item->schedule_row_id() == -1){
-                item->set_schedule_row_id(generate_row_id());
+
+            if (schedule->display_row_id()->value() == -1){
+                schedule->set_display_row_id(generate_row_id());
             }
 
             auto time = new T(item->time());
             time->setTextAlignment(Qt::AlignCenter);
 
             QMap<QString, QVariant> item_data;
-            item_data["row_id"] = item->schedule_row_id();
+            item_data["row_id"] = schedule->display_row_id()->value();
             item_data["hour"] = schedule->schedule_hour()->value();
             item_data["time"] = schedule->schedule_time()->value();
             time->setData(item_data, Qt::UserRole);
@@ -88,13 +103,54 @@ namespace SEDRIC{
             columns.append(track_path);
             columns.append(comment);
 
-            if (row > -1){
-                m_model->insertRow(row, columns);
-            }else{
-                m_model->appendRow(columns);
+            m_model->insertRow(row, columns);
+
+            //m_model->appendRow(columns);
+
+            if (schedule->schedule_item_type()->value() != "END_MARKER"){
+                if (!is_schedule_cached(schedule))
+                    m_cached_schedule_items.push_back(schedule);
             }
 
-            m_schedule_items.push_back(std::move(item));
+        }
+
+        template<typename T>
+        void create_from_item(const std::unique_ptr<SedricScheduleItem>& item) const
+        {
+            auto schedule = item->schedule();
+
+            auto time = new T(item->time());
+            time->setTextAlignment(Qt::AlignCenter);
+
+            QMap<QString, QVariant> item_data;
+            item_data["row_id"] = item->schedule_row_id();
+            item_data["hour"] = schedule->schedule_hour()->value();
+            item_data["time"] = schedule->schedule_time()->value();
+            time->setData(item_data, Qt::UserRole);
+
+            auto title = new T(item->title());
+            auto artist = new T(item->artist_name());
+            auto duration = new T(item->duration());
+            auto transition = new T(item->transition());
+            auto play_date  = new T(item->play_date());
+            auto play_time = new T(item->play_time());
+            auto track_path = new T(item->track_path());
+            auto comment = new T(item->comment());
+
+            Columns columns;
+
+            columns.append(time);
+            columns.append(title);
+            columns.append(artist);
+            columns.append(duration);
+            columns.append(transition);
+            columns.append(play_date);
+            columns.append(play_time);
+            columns.append(track_path);
+            columns.append(comment);
+
+            m_model->appendRow(columns);
+
         }
 
     private:
@@ -102,7 +158,8 @@ namespace SEDRIC{
         int m_schedule_row_id{-1};
         Schedule* m_schedule;
         QStandardItemModel* m_model;
-        std::vector<std::unique_ptr<SedricScheduleItem>> m_schedule_items;
+        std::vector<Schedule*> m_cached_schedule_items;
+        std::vector<Schedule*> m_display_items;
         AUDIO::Audio* m_audio;
         AUDIO::Artist* m_artist;
     };
@@ -167,10 +224,10 @@ namespace SEDRIC{
             ,m_hour{hour}
         {
         }
-        bool operator()(const SedricScheduleItem* item) const
+        bool operator()(const Schedule* schedule) const
         {
-            return ( (item->schedule()->schedule_date()->value() == m_date) &&
-                     (item->schedule()->schedule_hour()->value() == m_hour) );
+            return ( (schedule->schedule_date()->value() == m_date) &&
+                     (schedule->schedule_hour()->value() == m_hour) );
         }
     private:
         QDate m_date;
@@ -182,13 +239,36 @@ namespace SEDRIC{
             :m_row_id{row_id}
         {
         }
-        bool operator()(const std::unique_ptr<SedricScheduleItem>& item) const
+        bool operator()(const Schedule* schedule) const
         {
-            return ( item->schedule_row_id() == m_row_id );
+            return ( schedule->display_row_id()->value() == m_row_id );
         }
      private:
         int m_row_id{-1};
     };
+
+    struct FindScheduleByDate{
+        FindScheduleByDate(QDate date)
+            :m_date{date}
+        {
+        }
+        bool operator()(const Schedule* schedule) const
+        {
+            return (schedule->schedule_date()->value() == m_date);
+
+        }
+     private:
+        QDate m_date;
+
+    };
+
+    struct SortScheduleByHour{
+        bool operator()(const Schedule* s1, const Schedule* s2)
+        {
+            return ( s1->schedule_date()->value() < s2->schedule_date()->value());
+        }
+    };
+
 
 }
 

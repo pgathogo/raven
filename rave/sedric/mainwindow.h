@@ -66,9 +66,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void update_schedule_time(int, int, int);
-    void show_cached_items(std::vector<ScheduleData*>);
-    void show_db_schedule_new(QDate, std::vector<int>&);
     void populate_hour_combobox();
 
     void audio_folder_setup();
@@ -89,30 +86,38 @@ public:
     void remove_activity(int);
     void delete_current_schedule(std::string);
     std::string make_delete_stmts();
-    void set_schedule_fields(BaseDataProvider*,
-                      Schedule*,
-                      AUDIO::Audio*,
-                      AUDIO::Artist*);
     void setup_hour_combobox();
     std::vector<std::string> split_string(std::string, char);
     std::tuple<int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
-    void create_end_marker(int hour);
 
     void print_activity_details();
-    std::vector<int> get_hours();
+    std::vector<int> get_selected_hours_asInt();
     std::vector<int> vector_str_to_int(std::vector<std::string>& vs);
+
+    void clear_schedule_model();
+    QString get_selected_hours_asString();
+    void fetch_data();
+
+    struct UnCachedHours{
+        template <typename T>
+        typename T::first_type operator()(T key_value_pair) const
+        {
+            return (key_value_pair.second == 0) ? key_value_pair.first : -1 ;
+        }
+    };
 
 public slots:
     void date_changed();
     void hour_changed(int);
     void combo_highlight(int);
     void folder_clicked(const QModelIndex&);
-    void insert_item_new(const QModelIndex& index);
+    void insert_item(const QModelIndex& index);
     void remove_current_schedule_item();
 
     void cb_data_changed(const QModelIndex&, const QModelIndex);
     void hour_cb_closed();
     void print_details(const QModelIndex&);
+    void print_schedule();
 
 private:
     Ui::MainWindow *ui;
@@ -134,6 +139,7 @@ private:
 
     //QList<QStandardItem*> commercial_record(const Schedule);
     void create_model_headers();
-    void populate_schedule(QDate, std::vector<int>);
+    std::map<int, int> fetch_schedule_from_cache(QDate, std::vector<int>);
+    void fetch_schedule_from_db(QDate, std::vector<int>);
     void set_column_width();
 };
