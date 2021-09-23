@@ -1,4 +1,5 @@
 #include <map>
+#include <sstream>
 
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -41,6 +42,11 @@ namespace SEDRIC{
 
     SedricScheduleItem::~SedricScheduleItem()
     {
+        clear_cached_items();
+    }
+
+    void SedricScheduleItem::clear_cached_items()
+    {
         for(std::vector<Schedule*>::iterator it=m_cached_schedule_items.begin();
             it != m_cached_schedule_items.end(); ++it){
             Schedule* schedule = *it;
@@ -49,6 +55,15 @@ namespace SEDRIC{
         }
 
         m_cached_schedule_items.clear();
+    }
+
+    void SedricScheduleItem::clear_cached_items_date_hours(QDate date, std::vector<int> hours)
+    {
+        for (int hour : hours){
+            m_cached_schedule_items.erase(
+                        std::remove_if(m_cached_schedule_items.begin(), m_cached_schedule_items.end(),
+                                       FindItemByDateHour(date, hour)), m_cached_schedule_items.end());
+        }
     }
 
     QString SedricScheduleItem::time()
@@ -405,6 +420,93 @@ namespace SEDRIC{
         schedule->set_schedule_item_type("END_MARKER");
         create_row_item<SEDRIC::EndMarkerItem>(schedule, m_model->rowCount());
     }
+
+    void SedricScheduleItem::new_schedule(QDate date, const std::vector<int>& hours)
+    {
+        for (int h : hours)
+            log_activity(date, h);
+
+        clear_cached_items_date_hours(date, hours);
+        show_items(date, hours);
+    }
+
+    void SedricScheduleItem::log_activity(QDate date, int hour)
+    {
+        auto it = m_activities.find(date);
+        if (it == m_activities.end()){
+            m_activities[date].push_back(hour);
+        }else{
+            if (std::find(m_activities[date].begin(),
+                          m_activities[date].end(),
+                          hour) == m_activities[date].end())
+                m_activities[date].push_back(hour);
+        }
+    }
+
+
+    std::map<QDate, std::vector<int>> SedricScheduleItem::activities() const
+    {
+        return m_activities;
+    }
+
+    std::string SedricScheduleItem::vec_to_str(const std::vector<int> ints)
+    {
+        QString str{""};
+        for (int i : ints){
+            if (!str.isEmpty())
+                str += ", ";
+            str += QString::number(i);
+        }
+        return str.toStdString();
+    }
+
+    std::string SedricScheduleItem::make_delete_stmts()
+    {
+        std::stringstream sql;
+
+        for (auto [date, hours] : m_activities){
+            std::string date_str = date.toString("yyyy/MM/dd").toStdString();
+            std::string hour_str = vec_to_str(m_activities[date]);
+
+            sql << "Delete From rave_schedule ";
+            std::string where_filter = " Where schedule_date = '"+date_str+"'";
+            std::string and_a_filter = " And schedule_hour in ("+hour_str+")";
+            std::string and_b_filter = " And schedule_item_type <> 'COMM-BREAK'; ";
+
+            sql << where_filter << and_a_filter << and_b_filter;
+
+            }
+
+        return sql.str();
+    }
+
+    std::string SedricScheduleItem::make_insert_stmts()
+    {
+    //    Schedule schedule;
+        std::string insert_stmts;
+        VectorStruct<Field> fields;
+
+        for (auto const schedule : m_cached_schedule_items){
+
+            if ( (schedule->schedule_item_type()->value() == "END_MARKER") ||
+                 (schedule->schedule_item_type()->value() == "COMM-BREAK") )
+                continue;
+
+            fields << schedule->schedule_date()
+                   << schedule->schedule_time()
+                   << schedule->schedule_hour()
+                   << schedule->auto_transition()
+                   << schedule->audio()
+                   << schedule->schedule_item_type();
+
+            insert_stmts += schedule->make_insert_stmt(fields.vec);
+            fields.clear();
+        }
+
+        return insert_stmts;
+
+    }
+
 
 
     /* ---------- SongItem ------------- */

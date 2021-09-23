@@ -32,20 +32,6 @@ namespace SEDRIC{
     class SedricScheduleItem;
 }
 
-template<typename T>
-struct VectorStruct{
-    VectorStruct& operator<<(T* t)
-    {
-        vec.push_back(t);
-        return *this;
-    }
-    void clear()
-    {
-        vec.clear();
-    }
-    std::vector<T*> vec;
-};
-
 class ScheduleHour : public QComboBox
 {
     Q_OBJECT
@@ -76,16 +62,12 @@ public:
     int get_schedule_row_id(int) const;
     void remove_item(int);
     bool is_item_deletable(const QString);
-    void remove_all();
+    void new_schedule();
     void remove_items_by_date_hour(QDate, int);
     QString get_schedule_type(int) const;
-    std::string make_insert_stmts();
     void save_schedule();
     bool write_schedule_to_db(std::string);
-    void add_activity(int);
-    void remove_activity(int);
     void delete_current_schedule(std::string);
-    std::string make_delete_stmts();
     void setup_hour_combobox();
     std::vector<std::string> split_string(std::string, char);
     std::tuple<int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
@@ -127,13 +109,12 @@ private:
     ItemBuilder* m_schedule_item_builder;
     TrackItemBuilder* m_track_item_builder;
     std::vector<ScheduleData*> m_test_data;
-    std::map<int, int> m_activities;
 
     QStandardItemModel* m_cb_model;
     std::vector<QStandardItem*> m_hours;
     ScheduleHour* m_cb_hour;
 
-    std::unique_ptr<SEDRIC::SedricScheduleItem> m_schedule_item;
+    std::unique_ptr<SEDRIC::SedricScheduleItem> m_scheduler;
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<EntityDataModel> m_edm;
 

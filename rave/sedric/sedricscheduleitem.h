@@ -16,6 +16,19 @@ namespace AUDIO {
 }
 
 namespace SEDRIC{
+    template<typename T>
+    struct VectorStruct{
+        VectorStruct& operator<<(T* t)
+        {
+            vec.push_back(t);
+            return *this;
+        }
+        void clear()
+        {
+            vec.clear();
+        }
+        std::vector<T*> vec;
+    };
 
     class SedricScheduleItem
     {
@@ -58,10 +71,21 @@ namespace SEDRIC{
         void create_end_marker(int);
 
         void clear_display_items();
+        void clear_cached_items();
+        void clear_cached_items_date_hours(QDate, std::vector<int>);
+
         void show_items(QDate, const std::vector<int>&);
 
         std::size_t display_item_count();
         bool is_schedule_cached(Schedule* schedule);
+
+        void new_schedule(QDate, const std::vector<int>&);
+        void log_activity(QDate, int);
+        std::map<QDate, std::vector<int>> activities() const;
+
+        std::string make_delete_stmts();
+        std::string make_insert_stmts();
+        std::string vec_to_str(const std::vector<int>);
 
         template<typename T>
         void create_row_item(Schedule* schedule, int row=-1)
@@ -111,46 +135,6 @@ namespace SEDRIC{
                 if (!is_schedule_cached(schedule))
                     m_cached_schedule_items.push_back(schedule);
             }
-
-        }
-
-        template<typename T>
-        void create_from_item(const std::unique_ptr<SedricScheduleItem>& item) const
-        {
-            auto schedule = item->schedule();
-
-            auto time = new T(item->time());
-            time->setTextAlignment(Qt::AlignCenter);
-
-            QMap<QString, QVariant> item_data;
-            item_data["row_id"] = item->schedule_row_id();
-            item_data["hour"] = schedule->schedule_hour()->value();
-            item_data["time"] = schedule->schedule_time()->value();
-            time->setData(item_data, Qt::UserRole);
-
-            auto title = new T(item->title());
-            auto artist = new T(item->artist_name());
-            auto duration = new T(item->duration());
-            auto transition = new T(item->transition());
-            auto play_date  = new T(item->play_date());
-            auto play_time = new T(item->play_time());
-            auto track_path = new T(item->track_path());
-            auto comment = new T(item->comment());
-
-            Columns columns;
-
-            columns.append(time);
-            columns.append(title);
-            columns.append(artist);
-            columns.append(duration);
-            columns.append(transition);
-            columns.append(play_date);
-            columns.append(play_time);
-            columns.append(track_path);
-            columns.append(comment);
-
-            m_model->appendRow(columns);
-
         }
 
     private:
@@ -162,6 +146,7 @@ namespace SEDRIC{
         std::vector<Schedule*> m_display_items;
         AUDIO::Audio* m_audio;
         AUDIO::Artist* m_artist;
+        std::map<QDate, std::vector<int>> m_activities;
     };
 
     class SongItem :  public SedricScheduleItem, public QStandardItem
@@ -246,6 +231,7 @@ namespace SEDRIC{
      private:
         int m_row_id{-1};
     };
+
 
     struct FindScheduleByDate{
         FindScheduleByDate(QDate date)
