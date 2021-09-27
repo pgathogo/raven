@@ -16,10 +16,7 @@ set(rave_security_INCLUDE_DIRS "../framework")
 set(rave_audiolib_INCLUDE_DIRS "../audio")
 
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
-find_package(postgreSQL REQUIRED)
-
-#set(postgreSQL_INCLUDE_DIRS "C:/Program Files/PostgreSQL/9.5/include")
-#set(postgreSQL_LINK_DIRS "C:/Program Files/PostgreSQL/9.5/lib/")
+find_package(PostgreSQL REQUIRED)
 
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
@@ -40,6 +37,24 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
+set(AUDIO_INCLUDE "../audiolib/headers")
+set(AUDIO_LIB "../audiolib/lib_debug")
+find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
+find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
+
+if (AUDIO_INCLUDE_DIR)
+        message(STATUS "Audio Include dir found.")
+endif()
+
+if (AUDIO_LIBRARY)
+        message(STATUS "Audio library found.")
+endif()
+
+
+include_directories(${AUDIO_INCLUDE_DIR})
+set(RAVE_AUDIO_LIBRARIES ${AUDIO_LIBRARY})
+
+
 if(ANDROID)
   add_library(sedric SHARED
     main.cpp
@@ -59,6 +74,8 @@ else()
     scheduleitem.cpp
     sedricscheduleitem.h
     sedricscheduleitem.cpp
+    saveas.h
+    saveas.cpp
     ../framework/scheduledatamanager.h
     ../framework/scheduledatamanager.cpp
     ../framework/entitydatamodel.cpp
@@ -89,7 +106,6 @@ else()
 )
 endif()
 
-
 target_include_directories(sedric PRIVATE ${postgreSQL_INCLUDE_DIRS})
 target_include_directories(sedric PRIVATE ${rave_framework_INCLUDE_DIRS})
 
@@ -99,3 +115,5 @@ link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(sedric PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(sedric PRIVATE ${PostgreSQL_LIBRARIES})
+
+target_link_libraries(sedric PRIVATE ${RAVE_AUDIO_LIBRARIES})

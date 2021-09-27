@@ -8,12 +8,14 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QVariant>
+#include <QFile>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
 #include "scheduleitem.h"
 #include "sedricscheduleitem.h"
+#include "saveas.h"
 #include "../utils/tools.h"
 
 #include "../framework/entitydatamodel.h"
@@ -32,6 +34,9 @@
 #include "../framework/schedule.h"
 #include "../framework/choicefield.h"
 #include "../utils/tools.h"
+
+#include "../audiolib/headers/cueeditor.h"
+#include "../audiolib/headers/audioplayer.h"
 
 ScheduleHour::ScheduleHour()
 {
@@ -56,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , m_schedule_model{nullptr}
     , m_tree_model{nullptr}
+    , m_cue_editor{nullptr}
 {
     ui->setupUi(this);
 
@@ -106,18 +112,21 @@ MainWindow::MainWindow(QWidget *parent)
     m_scheduler = std::make_unique<SEDRIC::SedricScheduleItem>(m_schedule_model);
 
     connect(ui->btnNew, &QPushButton::clicked, this, &MainWindow::new_schedule);
+    connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::save_schedule);
+    connect(ui->btnSaveAs, &QPushButton::clicked, this, &MainWindow::copy_schedule);
     connect(ui->btnRemove, &QPushButton::clicked, this, &MainWindow::remove_current_schedule_item);
     connect(ui->btnPrint, &QPushButton::clicked, this, &MainWindow::print_schedule);
     connect(ui->tvSchedule, &QTableView::clicked, this, &MainWindow::print_details);
     connect(ui->tvSchedule, &QTableView::doubleClicked, this, &MainWindow::insert_item);
-
     connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &MainWindow::date_changed);
+
+    connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_audio);
+    connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::stop_play);
 
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::highlighted), this, &MainWindow::combo_highlight);
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
 //            this, &MainWindow::hour_changed);
 
-    connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::save_schedule);
 
     ui->dtSchedule->setDate(QDate::currentDate());
 
@@ -127,7 +136,17 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete m_save_as;
     delete ui;
+}
+
+void MainWindow::copy_schedule()
+{
+    m_save_as = new SaveAs(get_selected_hours_asInt(), this);
+    if (m_save_as->exec() == 1){
+        Result result = m_save_as->save_result();
+        m_scheduler->copy_schedule(ui->dtSchedule->date(), result.dest_date, result.dest_map);
+    }
 }
 
 void MainWindow::setup_hour_combobox()
@@ -173,16 +192,23 @@ void MainWindow::print_schedule()
 {
 }
 
-void MainWindow::insert_item(const QModelIndex& index)
+AUDIO::Audio* MainWindow::get_audio()
 {
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
     auto audio_id = first_col.data(Qt::UserRole).toInt();
 
     if (audio_id == 0)
-        return;
+        return nullptr;
 
     AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
+
+    return audio;
+}
+
+void MainWindow::insert_item(const QModelIndex& index)
+{
+    auto audio = get_audio();
     if (audio == nullptr)
         return;
 
@@ -531,11 +557,9 @@ void MainWindow::fetch_audio_new(int folder_id)
 
         if (audio->audio_type()->displayName() == "Commercial")
             m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
-
     }
 
 }
-
 
 void MainWindow::print_activity_details()
 {
@@ -545,44 +569,17 @@ void MainWindow::save_schedule()
 {
     std::string delete_stmts = m_scheduler->make_delete_stmts();
 
-    std::string insert_stmts = m_scheduler->make_insert_stmts();
+    std::string insert_stmts = m_scheduler->make_insert_stmts(m_scheduler->cached_items());
     if (insert_stmts.empty())
         return;
 
-    delete_current_schedule(delete_stmts);
-    write_schedule_to_db(insert_stmts);
-}
-
-void MainWindow::delete_current_schedule(std::string sql)
-{
-    EntityDataModel edm;
-
-    try{
-        edm.executeRawSQL(sql);
-    } catch(DatabaseException& de){
-        showMessage(de.errorMessage());
-    }
-
-}
-
-bool MainWindow::write_schedule_to_db(std::string sql)
-{
-    try{
-        EntityDataModel edm;
-        edm.executeRawSQL(sql);
-        showMessage("Schedule saved successfully.");
-        return true;
-    }catch (DatabaseException& de) {
-        showMessage(de.errorMessage());
-        return false;
-    }
-
+    m_scheduler->delete_current_schedule(delete_stmts);
+    m_scheduler->write_schedule_to_db(insert_stmts);
 }
 
 // split string for single character delimeter
 std::vector<std::string> MainWindow::split_string(std::string source, char delim)
 {
-
     std::vector<std::string> results;
     std::stringstream ss (source);
     std::string item;
@@ -592,5 +589,35 @@ std::vector<std::string> MainWindow::split_string(std::string source, char delim
     }
 
     return results;
+}
 
+void MainWindow::play_audio()
+{
+    QItemSelectionModel* select = ui->tvTracks->selectionModel();
+    if (select->selectedRows().size() == 0)
+        return;
+
+    AUDIO::Audio* audio = get_audio();
+    if (audio == nullptr)
+        return;
+
+    AudioTool audio_tool;
+    auto ogg_file = audio_tool.generate_ogg_filename(audio->id())+".ogg";
+    auto full_audio_name = audio->file_path()->value()+ogg_file;
+
+    if (!QFile::exists(QString::fromStdString(full_audio_name))){
+        showMessage("File does not exits! "+full_audio_name);
+        return;
+    }
+
+    AudioFile af(full_audio_name);
+    m_cue_editor = std::make_unique<CueEditor>(af, full_audio_name);
+    m_cue_editor->play_audio();
+
+}
+
+void MainWindow::stop_play()
+{
+    if (m_cue_editor != nullptr)
+        m_cue_editor->stop_audio();
 }

@@ -63,7 +63,7 @@ namespace SEDRIC{
         AUDIO::Audio* audio();
         AUDIO::Artist* artist();
 
-        std::vector<Schedule*> schedule_items() const;
+        std::vector<Schedule*> cached_items() const;
 //        std::vector<std::unique_ptr<SedricScheduleItem>> const& find_schedule_by_datehour(QDate, int) const;
         std::map<int, int> fetch_cached_items(QDate, std::vector<int>&);
         void fetch_db_items(QDate, std::vector<int>&);
@@ -84,8 +84,12 @@ namespace SEDRIC{
         std::map<QDate, std::vector<int>> activities() const;
 
         std::string make_delete_stmts();
-        std::string make_insert_stmts();
+        std::string make_insert_stmts(const std::vector<Schedule*>&);
         std::string vec_to_str(const std::vector<int>);
+
+        void copy_schedule(QDate, QDate, const std::map<int, int>&);
+        void delete_current_schedule(std::string sql);
+        bool write_schedule_to_db(std::string sql);
 
         template<typename T>
         void create_row_item(Schedule* schedule, int row=-1)

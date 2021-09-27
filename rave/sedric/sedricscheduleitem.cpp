@@ -1,5 +1,6 @@
 #include <map>
 #include <sstream>
+#include <algorithm>
 
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -7,6 +8,7 @@
 #include "sedricscheduleitem.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
+#include "../framework/ravenexception.h"
 #include "../audio/artist.h"
 #include "../audio/audio.h"
 
@@ -200,7 +202,7 @@ namespace SEDRIC{
     }
 
 
-    std::vector<Schedule*> SedricScheduleItem::schedule_items() const
+    std::vector<Schedule*> SedricScheduleItem::cached_items() const
     {
         return m_cached_schedule_items;
     }
@@ -480,13 +482,13 @@ namespace SEDRIC{
         return sql.str();
     }
 
-    std::string SedricScheduleItem::make_insert_stmts()
+    std::string SedricScheduleItem::make_insert_stmts(const std::vector<Schedule*>& items)
     {
     //    Schedule schedule;
         std::string insert_stmts;
         VectorStruct<Field> fields;
 
-        for (auto const schedule : m_cached_schedule_items){
+        for (auto const schedule : items){
 
             if ( (schedule->schedule_item_type()->value() == "END_MARKER") ||
                  (schedule->schedule_item_type()->value() == "COMM-BREAK") )
@@ -507,7 +509,67 @@ namespace SEDRIC{
 
     }
 
+    void SedricScheduleItem::copy_schedule(QDate curr_date, QDate dest_date, const std::map<int, int>& hour_map)
+    {
+        m_activities.clear();
 
+        std::vector<Schedule*> tmp_copy;
+        std::vector<Schedule*> sched_copy;
+
+        for (auto [src_hour, dest_hour] : hour_map){
+            tmp_copy.clear();
+            std::copy_if(m_cached_schedule_items.begin(), m_cached_schedule_items.end(),
+                        std::back_inserter(tmp_copy),
+                         FindItemByDateHour(curr_date, src_hour));
+
+            std::transform(tmp_copy.begin(), tmp_copy.end(), std::back_inserter(sched_copy),
+                           [&](auto* schedule){
+
+                int m = schedule->schedule_time()->value().minute();
+                int s = schedule->schedule_time()->value().second();
+
+                schedule->set_schedule_time(QTime(dest_hour, m, s));
+                schedule->set_schedule_date(dest_date);
+                schedule->set_schedule_hour(dest_hour);
+
+                return schedule;
+            });
+
+            log_activity(dest_date, dest_hour);
+        }
+
+        std::string del_stmts = make_delete_stmts();
+        std::string ins_stmts = make_insert_stmts(sched_copy);
+
+        delete_current_schedule(del_stmts);
+        write_schedule_to_db(ins_stmts);
+
+    }
+
+
+    void SedricScheduleItem::delete_current_schedule(std::string sql)
+    {
+        EntityDataModel edm;
+
+        try{
+            edm.executeRawSQL(sql);
+        } catch(DatabaseException& de){
+            showMessage(de.errorMessage());
+        }
+    }
+
+    bool SedricScheduleItem::write_schedule_to_db(std::string sql)
+    {
+        try{
+            EntityDataModel edm;
+            edm.executeRawSQL(sql);
+            showMessage("Schedule saved successfully.");
+            return true;
+        }catch (DatabaseException& de) {
+            showMessage(de.errorMessage());
+            return false;
+        }
+    }
 
     /* ---------- SongItem ------------- */
 

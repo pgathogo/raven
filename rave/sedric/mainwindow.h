@@ -11,6 +11,7 @@ class TrackItemBuilder;
 class ScheduleData;
 class TreeViewModel;
 class TableViewModel;
+class SaveAs;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,6 +22,7 @@ class BaseDataProvider;
 class NodeData;
 class Schedule;
 class EntityDataModel;
+class CueEditor;
 
 namespace AUDIO{
     class Audio;
@@ -66,8 +68,6 @@ public:
     void remove_items_by_date_hour(QDate, int);
     QString get_schedule_type(int) const;
     void save_schedule();
-    bool write_schedule_to_db(std::string);
-    void delete_current_schedule(std::string);
     void setup_hour_combobox();
     std::vector<std::string> split_string(std::string, char);
     std::tuple<int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
@@ -79,6 +79,7 @@ public:
     void clear_schedule_model();
     QString get_selected_hours_asString();
     void fetch_data();
+    AUDIO::Audio* get_audio();
 
     struct UnCachedHours{
         template <typename T>
@@ -100,6 +101,10 @@ public slots:
     void hour_cb_closed();
     void print_details(const QModelIndex&);
     void print_schedule();
+    void copy_schedule();
+
+    void play_audio();
+    void stop_play();
 
 private:
     Ui::MainWindow *ui;
@@ -113,6 +118,9 @@ private:
     QStandardItemModel* m_cb_model;
     std::vector<QStandardItem*> m_hours;
     ScheduleHour* m_cb_hour;
+
+    SaveAs* m_save_as;
+    std::unique_ptr<CueEditor> m_cue_editor;
 
     std::unique_ptr<SEDRIC::SedricScheduleItem> m_scheduler;
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;

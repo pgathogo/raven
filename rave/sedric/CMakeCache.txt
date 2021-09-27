@@ -14,6 +14,18 @@
 # EXTERNAL cache entries
 ########################
 
+//Path to a file.
+../audiolib/headers:PATH=../audiolib/headers-NOTFOUND
+
+//Path to a file.
+AUDIO_INCLUDE_DIR:PATH=D:/home/PMS/Raven/rave/audiolib/headers
+
+//Path to a library.
+AUDIO_LIB:FILEPATH=D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a
+
+//Path to a library.
+AUDIO_LIBRARY:FILEPATH=D:/home/PMS/Raven/rave/sedric/libcueeditord.a
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=D:/MinGW/MinGW/bin/addr2line.exe
 
@@ -236,6 +248,9 @@ Qt5Widgets_DIR:PATH=D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets
 
 //The directory containing a CMake configuration file for Qt5.
 Qt5_DIR:PATH=D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5
+
+//Path to a library.
+RAVE_AUDIO_LIB:FILEPATH=D:/home/PMS/Raven/rave/sedric/libcueeditor.dll.a
 
 //Value Computed by CMake
 sedric_BINARY_DIR:STATIC=D:/home/PMS/Raven/rave/sedric
