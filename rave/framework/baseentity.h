@@ -96,6 +96,7 @@ public:
     T* createField(TArgs... mArgs){
         static_assert(std::is_base_of<Field, T>::value, "`T` must be derived from Field");
         auto uPtr = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
+        uPtr->set_parent(this);
         FieldMap fm;
         auto ptr(uPtr.get());
         fm = std::make_tuple(uPtr->fieldName(), std::move(uPtr));

@@ -13,6 +13,7 @@
 #include "databasemanager.h"
 #include "baseentity.h"
 #include "dataprovider.h"
+#include "relationmapper.h"
 
 using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
 using VecIter = std::vector<EntityRecord>::iterator;
@@ -45,6 +46,8 @@ class EntityModel : public QStandardItemModel{
         void deleteFromModel();
 
         bool removeRows(int position, int rows, const QModelIndex& parent) override;
+
+        void add_entity(std::unique_ptr<BaseEntity> entity);
 
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
@@ -113,6 +116,7 @@ public:
 
         std::string filter = column;
 
+
         if constexpr(std::is_integral_v<decltype(value)> &&
                 !std::is_same_v<decltype(value), bool>){
             //filter +=" = ";
@@ -133,11 +137,13 @@ public:
                 filter += "false";
             }
         }else if constexpr(is_string<decltype(value)>::value){
+            filter = "lower("+filter+")";
             if (op == "LIKE"){
                 filter += " LIKE ";
                 std::string str_value = value;
-                for(auto s : str_value)
-                    std::tolower(s);
+//                for(auto s : str_value)
+//                    std::tolower(s);
+                str_value = str_tolower(str_value);
                 filter += "'%"+str_value+"%'";
             }else{
                 filter += op;
@@ -158,6 +164,11 @@ public:
         searchFilter(args...);
     }
 
+    std::string str_tolower(std::string s){
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return std::tolower(c);});
+        return s;
+    }
+
     template<typename T, typename...Types>
     std::string prepareFilter(T firstArg, Types... args)
     {
@@ -176,10 +187,90 @@ public:
         return sf;
     }
 
+    /*
+    template<typename... Types>
+    void build_related_query(Types... args)
+    {
+
+        auto entity = firstArg();
+        auto fields = entity.dbColumnNames();
+        for (auto f : fields){
+            std::string full_field_name = entity.tableName()+"."+f;
+            query_fields.push_back(full_field_name);
+        }
+
+        build_related_query(args...);
+    }
+    */
+
+    // select_related(Artist, Audio)
+    // std::tuple<int,string> t = make_tuple(42, "name");
+
+    template<typename T, typename... Types>
+    void related_query(const T& firstArg,  const Types&... args)
+    {
+        auto fields = firstArg.dbColumnNames();
+        m_relation_mapper->append_related_tables(firstArg.tableName(), &typeid(T));
+
+        for(auto f : fields){
+            std::string full_field_name = firstArg.tableName()+"."+f;
+            m_relation_mapper->append_query_fields(full_field_name);
+        }
+
+
+        if constexpr(sizeof...(args) > 0 ) {
+            related_query(args...);
+        }
+    }
+
+    template<typename T, typename... Types>
+    FRAMEWORK::RelationMapper* select_related(T& firstArg, Types&... args)
+    {
+        m_relation_mapper->clear_query_fields();
+        m_relation_mapper->clear_related_tables();
+        m_relation_mapper->clear_foreign_key_fields();
+        m_relation_mapper->clear_query_results();
+        m_relation_mapper->clear_mapped_entities();
+
+        auto fields = getEntity().dbColumnNames();
+
+        m_relation_mapper->set_main_entity(&(getEntity()));
+        m_relation_mapper->set_main_table(getEntity().tableName());
+
+        for(auto f : fields){
+            std::string full_field_name = getEntity().tableName()+"."+f;
+            m_relation_mapper->append_query_fields(full_field_name);
+        }
+
+        for (auto const& [field_name, field] : getEntity().fields()){
+            if (field->field_type() == "ForeignKeyField"){
+                auto fk_field = dynamic_cast<ForeignKeyField*>(field.get());
+                auto fk_field_entity = std::make_tuple(fk_field->fk_entity(), field->nullable());
+                m_relation_mapper->append_foreign_key_fields(field_name, fk_field_entity);
+            }
+        }
+
+        related_query(firstArg, std::forward<Types>(args)...);
+
+        m_relation_mapper->print_query_fields();
+        m_relation_mapper->print_related_tables();
+        m_relation_mapper->print_foreign_key_fields();
+
+        m_relation_mapper->build_relation_tree();
+        m_relation_mapper->print_relation_tree();
+
+        m_relation_mapper->prepare_query();
+
+        return m_relation_mapper.get();
+
+//		readRaw(m_relation_mapper.query());
+    }
+
 private:
     std::unique_ptr<BaseDatabaseManager> dbManager;
     void populateEntities();
     std::vector<std::string> filterCache;
+    std::unique_ptr<FRAMEWORK::RelationMapper> m_relation_mapper;
 };
 
 

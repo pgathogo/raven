@@ -103,9 +103,9 @@ FieldValues BaseEntity::mapping(StringMap* e)
                std::string col = field->dbColumnName();
                std::string val = it->second;
 
-            Field* ptr(field.get());
-            fieldVal = std::make_tuple(ptr, it->second);
-            mapped_fields.push_back(fieldVal);
+                Field* ptr(field.get());
+                fieldVal = std::make_tuple(ptr, it->second);
+                mapped_fields.push_back(fieldVal);
            }
 
          }
@@ -146,6 +146,7 @@ std::vector<FieldMap> const& BaseEntity::fields() const
 {
     return mFields;
 }
+
 
 std::string BaseEntity::displayName()
 {

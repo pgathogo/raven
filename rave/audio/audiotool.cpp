@@ -12,8 +12,7 @@
 #include <QFile>
 
 #include "audiotool.h"
-#include "audiotool.h"
-#include "audiotool.h"
+#include "audio.h"
 
 
 namespace fs = std::filesystem;
@@ -200,6 +199,13 @@ void AudioTool::mp3_ready()
     qDebug() << "MP3_READY: "<< m_mp3_to_ogg_proc->readAllStandardOutput();
 }
 
+//std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
+//{
+//    auto ogg_file = generate_ogg_filename(audio->id())+".ogg";
+//    auto full_name = audio->file_path()->value()+ogg_file;
+
+//    return full_name;
+//}
 
 /*  --- ADFRepository --- */
 

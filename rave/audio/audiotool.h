@@ -9,6 +9,10 @@
 class QProcess;
 class QProgressDialog;
 
+namespace AUDIO{
+class Audio;
+}
+
 
 class AudioTool : public QObject
 {
@@ -26,6 +30,9 @@ public:
     std::string mp3_to_ogg(AudioFile&);
     std::string generate_ogg_filename(int audio_file_id);
     bool copy_ogg_to_audiolib(std::string src_ogg, std::string dest_ogg);
+
+//    std::string full_audio_name(AUDIO::Audio*);
+
 
 private slots:
     void wave_gen_finished();

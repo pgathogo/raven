@@ -6,10 +6,14 @@
 
 
 Schedule::Schedule()
-    :mIsBad{false},
-     m_break_availability{Schedule::Break_Available}
+    :mIsBad{false}
+     ,m_break_availability{Schedule::Break_Available}
 {
     // create fields
+    m_display_row_id = createField<IntegerField>("display_row_id", "Display Row Id");
+    m_display_row_id->setFormOnly(true);
+    m_display_row_id->setValue(-1);
+
     m_schedule_date = createField<DateField>("schedule_date", "Schedule Date:");
     m_schedule_time = createField<TimeField>("schedule_time", "Schedule Time:");
     m_schedule_hour = createField<IntegerField>("schedule_hour", "Schedule Hour");
@@ -68,6 +72,16 @@ Schedule::Schedule()
 
 Schedule::~Schedule()
 {
+}
+
+IntegerField* Schedule::display_row_id() const
+{
+    return m_display_row_id;
+}
+
+void Schedule::set_display_row_id(int id)
+{
+    m_display_row_id->setValue(id);
 }
 
 DateField *Schedule::schedule_date() const
@@ -324,6 +338,8 @@ Schedule::BreakAvailability Schedule::break_availability() const
         return BreakAvailability::Break_Available;
     else
         return BreakAvailability::Break_Not_Available;
+
+    return BreakAvailability::Break_Not_Available;
 }
 
 std::string Schedule::tableName() const

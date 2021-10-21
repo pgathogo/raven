@@ -247,7 +247,7 @@ void SpotAudioBrowser::play_back()
         return;
     }
 
-    // Player should be seperated from the CueEditor
+    // FIXME: Player should be seperated from the CueEditor
     AudioFile af(audio_file);
     std::string name = "player-only";
     m_cue_editor = std::make_unique<CueEditor>(af, name);
@@ -257,6 +257,7 @@ void SpotAudioBrowser::play_back()
 void SpotAudioBrowser::stop_play()
 {
     if (m_cue_editor != nullptr)
+
         m_cue_editor->stop_audio();
 }
 

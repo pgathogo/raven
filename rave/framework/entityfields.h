@@ -37,6 +37,12 @@ class Field{
         void setSearchable(bool value);
         bool searchable();
 
+        void set_nullable(bool value);
+        bool nullable();
+
+        void set_parent(BaseEntity*);
+        BaseEntity* parent() const;
+
         virtual std::string displayName() const = 0;
 
         void setMandatory(bool value);
@@ -47,16 +53,29 @@ class Field{
 
         virtual void stringToValue(std::string val)=0;
 
+        virtual std::string field_type();
+
+
+        template<typename T>
+        std::string qualified_column_name()
+        {
+            auto actual_parent = dynamic_cast<const T*>(parent());
+            return actual_parent->tableName()+"."+this->dbColumnName();
+
+        }
+
     private:
         std::string mFieldName;
         std::string mFieldLabel;
         std::string mDBColumnName;
         std::string mDisplayName;
         bool mVisible;
-        bool mFormOnly;
+        bool mFormOnly;  // for display only
         bool mSearchable;
         bool mMandatory;
-        bool mReadOnly;
+        bool mReadOnly;  // Read from db but no write
+        bool m_nullable;
+        BaseEntity* m_parent;
 };
 
 class IntegerField : public Field{
@@ -74,6 +93,7 @@ class IntegerField : public Field{
 
         int value();
         std::string displayName() const override;
+        std::string field_type() override;
 
     private:
         int mValue;
@@ -90,6 +110,7 @@ class DecimalField : public Field{
         void setValue(double val);
         double value();
         std::string displayName() const override;
+        std::string field_type() override;
     private:
         double mValue;
 };
@@ -105,6 +126,7 @@ class BooleanField : public Field{
         void setValue(bool val);
         bool value() const ;
         std::string displayName() const override;
+        std::string field_type() override;
     private:
         bool mValue;
 };
@@ -128,6 +150,7 @@ class StringField : public Field{
         std::string value();
 
         std::string displayName() const override;
+        std::string field_type() override;
     private:
         std::string mValue;
 };
@@ -146,6 +169,7 @@ class TextField :public Field{
         std::string value();
 
         std::string displayName() const override;
+        std::string field_type() override;
     private:
         std::string mValue;
 };
@@ -185,12 +209,15 @@ public:
 
         std::string sourceTableName() const;
 
+        BaseEntity* entity();
         BaseEntity* currentEntity();
 
         BaseEntity* fk_entity();
 
         BaseEntity* unique_fk_entity();
+        std::string field_type() override;
 
+        std::unique_ptr<BaseEntity> const& data_model_entity() const;
 
     private:
         int mValue;
@@ -216,6 +243,7 @@ public:
     QDate value();
 
     std::string displayName() const override;
+    std::string field_type() override;
 private:
     QDate mValue;
 };
@@ -234,6 +262,7 @@ public:
     QDateTime value();
 
     std::string displayName() const override;
+    std::string field_type() override;
 private:
     QDateTime mValue;
 };
@@ -251,6 +280,7 @@ public:
     void stringToValue(std::string val) override;
     QTime value();
     std::string displayName() const override;
+    std::string field_type() override;
 private:
     QTime mValue;
 };

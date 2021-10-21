@@ -18,6 +18,9 @@ public:
     Schedule();
     ~Schedule() override;
 
+    IntegerField* display_row_id() const;
+    void set_display_row_id(int);
+
     DateField* schedule_date() const;
     DateField* set_schedule_date(const QDate val);
 
@@ -116,6 +119,7 @@ public:
     void populate_audio_fk(int audio_id);
 
 private:
+    IntegerField* m_display_row_id;
     DateField* m_schedule_date;
     TimeField* m_schedule_time;
     IntegerField* m_schedule_hour;

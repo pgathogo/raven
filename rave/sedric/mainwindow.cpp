@@ -24,6 +24,7 @@
 #include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/tableviewmodel.h"
+#include "../framework/relationmapper.h"
 #include "../audio/audiolibrary.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"
@@ -86,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tvTracks->setModel(m_tracks_model);
     ui->tvTracks->verticalHeader()->setVisible(false);
 
-    // For Width adjustment to be effected, it *MUST* be done after
+    // For Width adjustment to take effect, it *MUST* be done after
     // the "setModel" method
     set_track_view_column_width();
 
@@ -123,14 +124,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_audio);
     connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::stop_play);
 
+    connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
+
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::highlighted), this, &MainWindow::combo_highlight);
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
 //            this, &MainWindow::hour_changed);
 
 
+    m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
+
     ui->dtSchedule->setDate(QDate::currentDate());
 
     setWindowTitle("Raven - SeDRic");
+
+    set_ui_style();
 }
 
 
@@ -138,6 +145,144 @@ MainWindow::~MainWindow()
 {
     delete m_save_as;
     delete ui;
+}
+
+void MainWindow::set_ui_style()
+{
+    ui->btnNew->setStyleSheet(
+                "QPushButton#btnNew{"
+                "background-color: rgb(255, 170, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnNew:pressed{"
+                "background-color: rgb(217, 144, 108);"
+                "border-style: inset;}"
+                );
+
+    ui->btnSave->setStyleSheet(
+                "QPushButton#btnSave{"
+                "background-color: rgb(255, 170, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnSave:pressed{"
+                "background-color: rgb(217, 144, 108);"
+                "border-style: inset;}"
+                );
+
+    ui->btnSaveAs->setStyleSheet(
+                "QPushButton#btnSaveAs{"
+                "background-color: rgb(255, 170, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnSaveAs:pressed{"
+                "background-color: rgb(217, 144, 108);"
+                "border-style: inset;}"
+                );
+
+    ui->btnRemove->setStyleSheet(
+                "QPushButton#btnRemove{"
+                "background-color: rgb(255, 85, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnRemove:pressed{"
+                "background-color: rgb(255, 0, 0);"
+                "border-style: inset;}"
+                );
+
+    ui->btnPrint->setStyleSheet(
+                "QPushButton#btnPrint{"
+                "background-color: rgb(255, 170, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnPrint:pressed{"
+                "background-color: rgb(217, 144, 108);"
+                "border-style: inset;}"
+                );
+
+    // search button
+    this->setStyleSheet("QPushButton#btnSearch{"
+                        "background-color: rgb(170, 255, 127);"
+                        "border-style: outset;"
+                        "border-width: 2px;"
+                        "border-radius: 10px;"
+                        "border-color: beige;"
+                        "min-width: 10em;"
+                        "padding: 6px;}"
+
+                        "QPushButton#btnSearch:pressed{"
+                        "background-color: rgb(0, 255 ,127);"
+                        "border-style: inset;}");
+
+    ui->btnPlay->setStyleSheet(
+                "QPushButton#btnPlay{"
+                "background-color: rgb(0, 255, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnPlay:pressed{"
+                "background-color: rgb(170, 255, 127);"
+                "border-style: inset;}"
+                );
+
+    ui->btnStop->setStyleSheet(
+                "QPushButton#btnStop{"
+                "background-color: rgb(255, 85, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnStop:pressed{"
+                "background-color: rgb(255, 0, 0);"
+                "border-style: inset;}"
+                );
+
+    ui->btnHistory->setStyleSheet(
+                "QPushButton#btnHistory{"
+                "background-color: rgb(255, 170, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnHistory:pressed{"
+                "background-color: rgb(204, 136, 102);"
+                "border-style: inset;}"
+                );
+
 }
 
 void MainWindow::copy_schedule()
@@ -167,7 +312,12 @@ void MainWindow::setup_hour_combobox()
 void MainWindow::folder_clicked(const QModelIndex& index)
 {
     int folder_id = index.data(Qt::UserRole).toInt();
-    fetch_audio_new(folder_id);
+    //fetch_audio_new(folder_id);
+
+    auto audio = std::make_unique<AUDIO::Audio>();
+    auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
+    std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
+    fetch_audio(filter_str);
 }
 
 
@@ -533,21 +683,32 @@ void MainWindow::fetch_schedule_from_db(QDate date, std::vector<int> hours)
 
 }
 
-void MainWindow::fetch_audio_new(int folder_id)
+void MainWindow::set_track_view()
 {
-    m_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-    auto ad = std::make_unique<AUDIO::Audio>();
+    m_tracks_model->clear();
+    create_track_view_headers();
+    adjust_header_size();
+}
 
-    auto folder_filter = std::make_tuple(
-                ad->folder()->dbColumnName(),
-                " = ",
-                folder_id);
+void MainWindow::fetch_audio(const std::string filter)
+{
 
-    std::string filter = m_edm->prepareFilter(folder_filter);
-    m_edm->search(filter);
+    m_audio_entity_data_model->clearEntities();
 
-    for (auto&[name, entity] : m_edm->modelEntities()){
+    m_audio_entity_data_model->search(filter);
+
+    show_audio_data();
+
+}
+
+void MainWindow::show_audio_data()
+{
+    set_track_view();
+
+    for (auto&[name, entity] : m_audio_entity_data_model->modelEntities()){
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
+
+        qDebug() << "DisplayName: "<< stoq(audio->audio_type()->displayName());
 
         if (audio->audio_type()->displayName() == "Song")
             m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
@@ -560,6 +721,7 @@ void MainWindow::fetch_audio_new(int folder_id)
     }
 
 }
+
 
 void MainWindow::print_activity_details()
 {
@@ -620,4 +782,84 @@ void MainWindow::stop_play()
 {
     if (m_cue_editor != nullptr)
         m_cue_editor->stop_audio();
+}
+
+void MainWindow::search_audio()
+{
+    m_audio_entity_data_model->clearEntities();
+
+    AUDIO::Artist artist;
+    AUDIO::Genre genre;
+    AUDIO::Mood mood;
+    AUDIO::Folder folder;
+
+    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
+
+    auto track_filter = std::make_tuple(audio->title()->qualified_column_name<AUDIO::Audio>(),"like", ui->edtTitle->text().toStdString());
+    auto artist_filter = std::make_tuple(artist.fullName()->qualified_column_name<AUDIO::Artist>(),"like", ui->edtArtist->text().toStdString());
+
+    FRAMEWORK::RelationMapper* r_map = m_audio_entity_data_model->select_related(folder, artist, genre, mood)->filter(track_filter, artist_filter);
+
+    //FRAMEWORK::RelationMapper r_map = m_audio_entity_data_model->select_related_chain(folder, artist, genre, mood).filter(artist_filter);
+
+    try{
+        m_audio_entity_data_model->readRaw(r_map->query());
+    } catch(DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+//    qDebug() << stoq(r_map->query());
+
+    r_map->map_data();
+
+    //r_map->print_query_results();
+    //r_map->print_mapped_entities();
+
+    for (auto const& [record_id, record] : r_map->mapped_entities()){
+
+        auto audio_uPtr = std::make_unique<AUDIO::Audio>();
+
+        bool audio_is_constructed = false;
+
+        for (auto const& [table_name, entities] : record){
+
+            for (auto const& entity : entities){
+
+                if (audio_uPtr->tableName() == entity->tableName() &&
+                    !audio_is_constructed){
+                    if (entity->id() > -1 ){
+                        auto audio_ptr = dynamic_cast<AUDIO::Audio*>(entity.get());
+                        *audio_uPtr.get() = *audio_ptr;
+                        audio_is_constructed = true;
+                        break;
+                    }
+                }
+
+
+                auto const& artist = audio_uPtr->artist()->data_model_entity();
+                if (artist == nullptr){
+                    continue;
+                }
+
+                if (artist->tableName() == entity->tableName()){
+                    auto artist_ptr = dynamic_cast<AUDIO::Artist*>(entity.get());
+
+                    auto artist_uptr = std::make_unique<AUDIO::Artist>();
+
+                    *artist_uptr.get() = *artist_ptr;
+                    audio->artist()->set_fk_entity(std::move(artist_uptr));
+                }
+
+            }
+
+        }
+
+        if (audio_uPtr->audio_type()->value() != ""){
+            m_audio_entity_data_model->add_entity(std::move(audio_uPtr));
+        }
+
+    }
+
+    show_audio_data();
+
 }

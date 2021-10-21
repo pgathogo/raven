@@ -93,6 +93,8 @@ else()
     ../framework/tableviewmodel.cpp
     ../framework/tree.cpp
     ../framework/schedule.cpp
+    ../framework/relationmapper.h
+    ../framework/relationmapper.cpp
     ../security/authentication.cpp
     ../security/user.cpp
     ../audio/audiolibrary.cpp

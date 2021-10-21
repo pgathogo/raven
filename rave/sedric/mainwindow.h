@@ -51,6 +51,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    enum class SearchBy{folder_id, audio_title, audio_artist};
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -60,7 +63,7 @@ public:
     void create_track_view_headers();
     void adjust_header_size();
     void set_track_view_column_width();
-    void fetch_audio_new(int folder_id);
+    void fetch_audio(const std::string);
     int get_schedule_row_id(int) const;
     void remove_item(int);
     bool is_item_deletable(const QString);
@@ -89,6 +92,12 @@ public:
         }
     };
 
+    template<typename T1, typename T2>
+    T2 search_filter(std::string field, std::string op, T1 value)
+    {
+        return std::make_tuple(field, op, value);
+    }
+
 public slots:
     void date_changed();
     void hour_changed(int);
@@ -105,6 +114,11 @@ public slots:
 
     void play_audio();
     void stop_play();
+
+    void search_audio();
+    void show_audio_data();
+    void set_track_view();
+    void set_ui_style();
 
 private:
     Ui::MainWindow *ui;
@@ -124,7 +138,7 @@ private:
 
     std::unique_ptr<SEDRIC::SedricScheduleItem> m_scheduler;
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
-    std::unique_ptr<EntityDataModel> m_edm;
+    std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
 
     //QList<QStandardItem*> commercial_record(const Schedule);
     void create_model_headers();

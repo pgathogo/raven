@@ -24,7 +24,7 @@ std::string BaseDatabaseManager::columnsForSelection(const BaseEntity& entity)
     for (auto& col : cols){
            flds += col;
            if (i<cols.size())
-           flds +=",";
+               flds +=",";
            ++i;
     }
 

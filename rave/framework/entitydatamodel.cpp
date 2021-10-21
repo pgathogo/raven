@@ -37,6 +37,15 @@ void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
     mEntities.push_back(std::move(record));
 }
 
+void EntityModel::add_entity(std::unique_ptr<BaseEntity> entity)
+{
+    BaseEntity* be = entity.get();
+    addRow(be->tableViewColumns());
+    std::string key = entity->searchColumn();
+    // we need a way to check that key is not empty!!
+    EntityRecord record = make_tuple(key, std::move(entity));
+    mEntities.push_back(std::move(record));
+}
 
 void EntityModel::addRow(const std::vector<std::string> entity_cols)
 {
@@ -141,17 +150,21 @@ std::list<std::string> EntityModel::keys()
 
 /* ----------- EntityDataModel ------------------ */
 
-EntityDataModel::EntityDataModel():
-    EntityModel{}
+EntityDataModel::EntityDataModel()
+    : EntityModel{}
+     ,m_relation_mapper{nullptr}
 {
     dbManager = std::make_unique<PostgresDatabaseManager>();
+    m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
 }
 
 EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
-    :EntityModel{std::move(baseEntity)},
-     dbManager{}
+    :EntityModel{std::move(baseEntity)}
+    ,dbManager{}
+    ,m_relation_mapper{nullptr}
 {
     dbManager = std::make_unique<PostgresDatabaseManager>();
+    m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
 }
 
 
@@ -307,3 +320,4 @@ void EntityDataModel::mapEntity(StringMap* map, BaseEntity& entity)
         for(auto& [field, value] : entity.mapping(map))
             entity.setValueByField(*field, value);
 }
+

@@ -46,11 +46,16 @@ SEDRIC - Issues
 * General *
 
 - What is the "NEW" button used for?
+  * Creates a new schedule, deleting any created items (songs)
+   
 - Save functionality
+  * Should remove any items for the current date/hour and replace with 
+    items new items on the cache/table view
+
 - Save-As functionality
 - Remove functionality
 - Print schedule functionality
-- Add Window title
+X Add Window title
 - Start window maximized
 - Find proper color schemes for various items
 

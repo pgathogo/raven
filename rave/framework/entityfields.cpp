@@ -14,26 +14,30 @@
 #include "../lib/date/date.h"
 
 Field::Field()
-    :mFieldName{"FieldName"},
-     mFieldLabel{"FieldLabel"},
-     mDBColumnName{"dbColumnName"},
-     mVisible{true},
-     mFormOnly{false},
-     mSearchable{true},
-     mMandatory{false},
-     mReadOnly{false}
+    :mFieldName{"FieldName"}
+     ,mFieldLabel{"FieldLabel"}
+     ,mDBColumnName{"dbColumnName"}
+     ,mVisible{true}
+     ,mFormOnly{false}
+     ,mSearchable{true}
+     ,mMandatory{false}
+     ,mReadOnly{false}
+     ,m_nullable{true}
+     ,m_parent{nullptr}
 {
 }
 
 Field::Field(const std::string aName, const std::string aLabel)
-    :mFieldName{aName},
-     mFieldLabel{aLabel},
-     mDBColumnName{aName},
-     mVisible{true},
-     mFormOnly{false},
-     mSearchable{true},
-     mMandatory{false},
-     mReadOnly{false}
+    :mFieldName{aName}
+     ,mFieldLabel{aLabel}
+     ,mDBColumnName{aName}
+     ,mVisible{true}
+     ,mFormOnly{false}
+     ,mSearchable{true}
+     ,mMandatory{false}
+     ,mReadOnly{false}
+     ,m_nullable{true}
+     ,m_parent{nullptr}
 {
 }
 
@@ -120,6 +124,31 @@ bool Field::mandatory() const
     return mMandatory;
 }
 
+void Field::set_nullable(bool value)
+{
+    m_nullable = value;
+}
+
+bool Field::nullable()
+{
+    return m_nullable;
+}
+
+std::string Field::field_type()
+{
+    return "Field";
+}
+
+void Field::set_parent(BaseEntity* parent)
+{
+    m_parent = parent;
+}
+
+BaseEntity* Field::parent() const
+{
+    return m_parent;
+}
+
 /* ------ IntegerField ------ */
 
 IntegerField::IntegerField()
@@ -171,6 +200,11 @@ std::string IntegerField::displayName() const
     return valueToString();
 }
 
+std::string IntegerField::field_type()
+{
+    return "IntegerField";
+}
+
 /* ------- DecimalField ------------ */
 DecimalField::DecimalField()
     :mValue{0.0}
@@ -211,6 +245,10 @@ double DecimalField::value()
 std::string DecimalField::displayName() const
 {
     return valueToString();
+}
+std::string DecimalField::field_type()
+{
+    return "DecimalField";
 }
 
 /* -------- BooleanField --------*/
@@ -267,6 +305,10 @@ bool BooleanField::value() const
 std::string BooleanField::displayName() const
 {
     return mValue ? "True" : "False";
+}
+std::string BooleanField::field_type()
+{
+    return "BooleanField";
 }
 
 
@@ -332,6 +374,10 @@ std::string StringField::displayName() const
 {
     return valueToString();
 }
+std::string StringField::field_type()
+{
+    return "StringField";
+}
 
 /* ---- TextField ---- */
 TextField::TextField()
@@ -375,6 +421,10 @@ std::string TextField::displayName() const
 {
     return valueToString();
 }
+std::string TextField::field_type()
+{
+    return "TextField";
+}
 
 /* -------- LookupField ------------- */
 
@@ -398,6 +448,8 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
         ,mIndex{-1}
         ,mDisplayField{displayField}
         ,m_fk_entity{fkEntity.get()}
+        ,m_unique_fk_entity{nullptr}
+        ,mCurrText{aName}
 {
     auto it = lookups.find(aName);
 
@@ -462,6 +514,11 @@ EntityDataModel* ForeignKeyField::dataModel() const
     return lookups[fieldName()].get();
 }
 
+std::unique_ptr<BaseEntity> const& ForeignKeyField::data_model_entity() const
+{
+    dataModel()->get_entity();
+}
+
 std::string ForeignKeyField::sourceTableName() const
 {
     return dataModel()->entityTableName();
@@ -471,13 +528,28 @@ BaseEntity *ForeignKeyField::currentEntity()
 {
     BaseEntity* ent = nullptr;
 
+    qDebug() << "FKF::currText: "<< stoq(currText());
+
     for (auto&[name, entity] : dataModel()->modelEntities()){
+        qDebug() << "FKF::name: " << stoq(name);
         if (name == currText()){
             ent = entity.get();
             break;
         }
     }
 
+    return ent;
+}
+
+BaseEntity* ForeignKeyField::entity()
+{
+    BaseEntity* ent = nullptr;
+    for(const auto& [name, entity] : dataModel()->modelEntities()){
+        if ( entity->id() == value()){
+            ent = entity.get();
+            break;
+        }
+    }
     return ent;
 }
 
@@ -562,6 +634,14 @@ std::string ForeignKeyField::displayName() const
     return name;
 }
 
+std::string ForeignKeyField::field_type()
+{
+    return "ForeignKeyField";
+}
+
+
+/* ---- DateField ------ */
+
 
 DateField::DateField()
 {
@@ -617,10 +697,17 @@ QDate DateField::value()
     return mValue;
 }
 
+
 std::string DateField::displayName() const
 {
     return valueToString();
 }
+std::string DateField::field_type()
+{
+    return "DateField";
+}
+
+/* --- DateTimeField ---- */
 
 DateTimeField::DateTimeField()
 {
@@ -667,6 +754,12 @@ std::string DateTimeField::displayName() const
 {
     return valueToString();
 }
+std::string DateTimeField::field_type()
+{
+    return "DateTimeField";
+}
+
+/* ---- DateTimeField ----- */
 
 TimeField::TimeField()
 {
@@ -710,4 +803,9 @@ QTime TimeField::value()
 std::string TimeField::displayName() const
 {
     return valueToString();
+}
+
+std::string TimeField::field_type()
+{
+    return "TimeField";
 }
