@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <sstream>
 #include "entityfields.h"
 
 using Nullable = boolean;
@@ -30,8 +31,11 @@ namespace FRAMEWORK{
         void set_main_entity(BaseEntity*);
         void set_main_table(std::string);
         void append_related_tables(std::string, const std::type_info*);
-        void append_foreign_key_fields(std::string, std::tuple<BaseEntity*, Nullable>);
+
+        void append_foreign_key_fields(std::string,  std::tuple<BaseEntity*, Nullable>);
+
         void append_query_fields(std::string);
+        void fetch_fk_fields(BaseEntity*);
 
         void clear_query_fields();
         void clear_related_tables();
@@ -68,6 +72,7 @@ namespace FRAMEWORK{
         void data_to_object(int, const std::string, BaseEntity*, const std::vector<std::tuple<std::string, std::string>>&);
         void print_mapped_entities();
         MappedEntity const& mapped_entities() const;
+        void print_join_statements_chain();
 
         template<typename T>
         struct is_string :
@@ -158,9 +163,39 @@ namespace FRAMEWORK{
             m_query += m_filter;
 
             return this;
-
         }
 
+        template<typename T, typename...Types>
+        void make_chain_join_statments(T firstArg, Types...args)
+        {
+            auto [first_entity, second_entity] = firstArg;
+            std::string first_entity_table_name = first_entity->tableName();
+            std::string second_entity_table_name = second_entity->tableName();
+
+            qDebug() << "Main Table: "<< QString::fromStdString(m_main_table);
+            qDebug() << "FK Entity: "<< QString::fromStdString(fk_field(first_entity_table_name));
+            qDebug() << " ***** ";
+
+            std::stringstream str_stream;
+            str_stream << " INNER JOIN "+first_entity_table_name+" ON ( "
+                       << m_main_table+"."+fk_field(first_entity_table_name)+" = "
+                       << first_entity_table_name+".id )";
+            m_chain_joins.push_back(str_stream.str());
+
+            str_stream.str("");
+
+            str_stream << "INNER JOIN "+second_entity_table_name+" ON ( "
+                       << first_entity_table_name+"."+fk_field(second_entity_table_name)+" = "
+                       << second_entity_table_name+".id )";
+
+            m_chain_joins.push_back(str_stream.str());
+
+            if constexpr(sizeof...(args) > 0) {
+                make_chain_join_statments(args...);
+            }
+
+
+        }
 
 
     private:
@@ -170,13 +205,16 @@ namespace FRAMEWORK{
         std::vector<std::string>m_query_fields;
         //std::vector<std::string> m_related_tables;
         std::map<std::string, const std::type_info*> m_related_tables;
-        std::map<std::string, std::tuple<BaseEntity*, Nullable>> m_foreign_key_fields;
+
+        std::map<std::string,  std::tuple<BaseEntity*, Nullable>> m_foreign_key_fields;
+
         std::map<int, std::map<std::string, std::string>> m_relation_tree;
         std::string m_query;
         std::vector<std::string>m_filter_cache;
         EntityDataModel* m_model;
         QueryResults m_query_results;
         MappedEntity m_mapped_entities;
+        std::vector<std::string> m_chain_joins;
     };
 
 

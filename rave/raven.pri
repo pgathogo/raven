@@ -1,6 +1,7 @@
 SOURCES += \
     $$PWD/audio/artist.cpp \
     $$PWD/audio/audio.cpp \
+    $$PWD/framework/datetimeselector.cpp \
     $$PWD/framework/letterfilterwidget.cpp \
     $$PWD/framework/typeexclusion.cpp \
     $$PWD/security/loginform.cpp \
@@ -75,6 +76,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/audio/artist.h \
     $$PWD/audio/audio.h \
+    $$PWD/framework/datetimeselector.h \
     $$PWD/framework/letterfilterwidget.h \
     $$PWD/framework/typeexclusion.h \
     $$PWD/security/loginform.h \
@@ -151,6 +153,7 @@ HEADERS += \
     ../security/roleform.h
 
 FORMS += \
+    $$PWD/framework/datetimeselector.ui \
     $$PWD/framework/letterfilterwidget.ui \
     $$PWD/security/loginform.ui \
     ../framework/baseentitybrowserdlg.ui \

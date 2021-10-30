@@ -527,11 +527,7 @@ std::string ForeignKeyField::sourceTableName() const
 BaseEntity *ForeignKeyField::currentEntity()
 {
     BaseEntity* ent = nullptr;
-
-    qDebug() << "FKF::currText: "<< stoq(currText());
-
     for (auto&[name, entity] : dataModel()->modelEntities()){
-        qDebug() << "FKF::name: " << stoq(name);
         if (name == currText()){
             ent = entity.get();
             break;
@@ -556,6 +552,11 @@ BaseEntity* ForeignKeyField::entity()
 BaseEntity* ForeignKeyField::fk_entity()
 {
     return m_fk_entity;
+}
+
+std::unique_ptr<BaseEntity> const& ForeignKeyField::fk_entity(const std::string field_name)
+{
+    lookups[field_name]->get_entity();
 }
 
 void ForeignKeyField::set_fk_entity(std::unique_ptr<BaseEntity> ent)

@@ -25,6 +25,7 @@
 #include "../framework/treeviewmodel.h"
 #include "../framework/tableviewmodel.h"
 #include "../framework/relationmapper.h"
+#include "../framework/baseentity.h"
 #include "../audio/audiolibrary.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"
@@ -34,10 +35,16 @@
 #include "../framework/entitydatamodel.h"
 #include "../framework/schedule.h"
 #include "../framework/choicefield.h"
+
 #include "../utils/tools.h"
 
 #include "../audiolib/headers/cueeditor.h"
 #include "../audiolib/headers/audioplayer.h"
+
+#include "../traffik/spotaudio.h"
+#include "../traffik/spot.h"
+#include "../traffik/client.h"
+
 
 ScheduleHour::ScheduleHour()
 {
@@ -63,13 +70,13 @@ MainWindow::MainWindow(QWidget *parent)
     , m_schedule_model{nullptr}
     , m_tree_model{nullptr}
     , m_cue_editor{nullptr}
+    , m_save_as{nullptr}
 {
     ui->setupUi(this);
 
     m_schedule_item_builder = new ItemBuilder();
 
     m_track_item_builder = new TrackItemBuilder();
-
 
     AudioLibrary audio_lib;
     //auto node_data = audio_lib.read_data_from_file("tree.txt");
@@ -89,7 +96,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // For Width adjustment to take effect, it *MUST* be done after
     // the "setModel" method
-    set_track_view_column_width();
 
     m_audio_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_tracks_model);
 //    ScheduleDelegate delegate;
@@ -106,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tvSchedule->horizontalHeader()->setStretchLastSection(true);
     ui->tvSchedule->verticalHeader()->setVisible(false);
 
-    setup_hour_combobox();
+    //setup_hour_combobox();
 
     set_column_width();
 
@@ -119,31 +125,38 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnPrint, &QPushButton::clicked, this, &MainWindow::print_schedule);
     connect(ui->tvSchedule, &QTableView::clicked, this, &MainWindow::print_details);
     connect(ui->tvSchedule, &QTableView::doubleClicked, this, &MainWindow::insert_item);
-    connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &MainWindow::date_changed);
+//    connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &MainWindow::date_changed);
 
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_audio);
     connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::stop_play);
+    connect(ui->btnHistory, &QPushButton::clicked, this, &MainWindow::show_audio_history);
 
     connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
+
+    connect(ui->btnDateTimeSelector, &QPushButton::clicked, this, &MainWindow::select_date_time);
 
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::highlighted), this, &MainWindow::combo_highlight);
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
 //            this, &MainWindow::hour_changed);
 
-
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
 
-    ui->dtSchedule->setDate(QDate::currentDate());
+//    ui->dtSchedule->setDate(QDate::currentDate());
 
     setWindowTitle("Raven - SeDRic");
 
     set_ui_style();
+
+    m_datetime_selection.sel_date = QDate::currentDate();
+    m_datetime_selection.sel_hours.push_back(0);
+    show_selection(m_datetime_selection);
 }
 
 
 MainWindow::~MainWindow()
 {
-    delete m_save_as;
+    if (m_save_as)
+        delete m_save_as;
     delete ui;
 }
 
@@ -211,7 +224,7 @@ void MainWindow::set_ui_style()
 
     ui->btnPrint->setStyleSheet(
                 "QPushButton#btnPrint{"
-                "background-color: rgb(255, 170, 127);"
+                "background-color: rgb(170, 255, 127);"
                 "border-style: outset;"
                 "border-width: 2px;"
                 "border-radius: 10px;"
@@ -220,7 +233,24 @@ void MainWindow::set_ui_style()
                 "padding: 6px;}"
 
                 "QPushButton#btnPrint:pressed{"
-                "background-color: rgb(217, 144, 108);"
+                "background-color: rgb(0, 255 ,127);"
+                "border-style: inset;}"
+                );
+
+
+
+    ui->btnDateTimeSelector->setStyleSheet(
+                "QPushButton#btnDateTimeSelector{"
+                "background-color: rgb(170, 255, 127);"
+                "border-style: outset;"
+                "border-width: 2px;"
+                "border-radius: 10px;"
+                "border-color: beige;"
+                "min-width: 6em;"
+                "padding: 6px;}"
+
+                "QPushButton#btnDateTimeSelector:pressed{"
+                "background-color: rgb(0, 255 ,127);"
                 "border-style: inset;}"
                 );
 
@@ -251,7 +281,11 @@ void MainWindow::set_ui_style()
                 "QPushButton#btnPlay:pressed{"
                 "background-color: rgb(170, 255, 127);"
                 "border-style: inset;}"
+
                 );
+
+    ui->btnPlay->setIcon(QIcon(":/images/icons/play_green.png"));
+//    ui->btnPlay->setIconSize(QSize(50,50));
 
     ui->btnStop->setStyleSheet(
                 "QPushButton#btnStop{"
@@ -268,6 +302,8 @@ void MainWindow::set_ui_style()
                 "border-style: inset;}"
                 );
 
+    ui->btnStop->setIcon(QIcon(":/images/icons/stop_play.png"));
+
     ui->btnHistory->setStyleSheet(
                 "QPushButton#btnHistory{"
                 "background-color: rgb(255, 170, 127);"
@@ -282,6 +318,7 @@ void MainWindow::set_ui_style()
                 "background-color: rgb(204, 136, 102);"
                 "border-style: inset;}"
                 );
+    ui->btnHistory->setIcon(QIcon(":/images/icons/history02.png"));
 
 }
 
@@ -290,7 +327,7 @@ void MainWindow::copy_schedule()
     m_save_as = new SaveAs(get_selected_hours_asInt(), this);
     if (m_save_as->exec() == 1){
         Result result = m_save_as->save_result();
-        m_scheduler->copy_schedule(ui->dtSchedule->date(), result.dest_date, result.dest_map);
+        m_scheduler->copy_schedule(m_datetime_selection.sel_date  , result.dest_date, result.dest_map);
     }
 }
 
@@ -367,7 +404,7 @@ void MainWindow::insert_item(const QModelIndex& index)
     auto [row_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
 
     schedule->setId(-1);
-    schedule->set_schedule_date(ui->dtSchedule->date());
+    schedule->set_schedule_date(m_datetime_selection.sel_date);
     schedule->set_schedule_time(time_stamp);
     schedule->set_schedule_hour(sched_hour);
 
@@ -388,7 +425,7 @@ void MainWindow::insert_item(const QModelIndex& index)
 
     m_scheduler->update_time(sched_hour, index.row(), audio->duration()->value());
 
-    m_scheduler->log_activity(ui->dtSchedule->date(), sched_hour);
+    m_scheduler->log_activity(m_datetime_selection.sel_date, sched_hour);
 }
 
 void MainWindow::remove_current_schedule_item()
@@ -412,7 +449,7 @@ void MainWindow::remove_current_schedule_item()
 
     m_scheduler->update_time(sched_hour, index.row(), schedule->break_duration()->value()*-1);
 
-    m_scheduler->log_activity(ui->dtSchedule->date(), sched_hour);
+    m_scheduler->log_activity(m_datetime_selection.sel_date, sched_hour);
 }
 
 int MainWindow::get_schedule_row_id(int row) const
@@ -454,7 +491,7 @@ void MainWindow::new_schedule()
                           QMessageBox::Cancel) == QMessageBox::Ok)
     {
        clear_schedule_model();
-       m_scheduler->new_schedule(ui->dtSchedule->date(), get_selected_hours_asInt());
+       m_scheduler->new_schedule(m_datetime_selection.sel_date, get_selected_hours_asInt());
     }
 }
 
@@ -507,10 +544,6 @@ void MainWindow::clear_schedule_model()
     set_column_width();
 }
 
-void MainWindow::date_changed()
-{
-    fetch_data();
-}
 
 void MainWindow::hour_changed(int h)
 {
@@ -540,7 +573,7 @@ void MainWindow::set_track_view_column_width()
 {
     enum Column{Title, Artist, Duration, AudioType, AudioFile};
 
-    ui->tvTracks->setColumnWidth(Column::Title, 250);
+    ui->tvTracks->setColumnWidth(Column::Title, 300);
     ui->tvTracks->setColumnWidth(Column::Artist,250);
     ui->tvTracks->setColumnWidth(Column::Duration, 100);
     ui->tvTracks->setColumnWidth(Column::AudioType, 150);
@@ -554,7 +587,7 @@ void MainWindow::create_model_headers()
     m_schedule_model->setHorizontalHeaderItem(1, new QStandardItem("Title"));
     m_schedule_model->setHorizontalHeaderItem(2, new QStandardItem("Artist"));
     m_schedule_model->setHorizontalHeaderItem(3, new QStandardItem("Duration"));
-    m_schedule_model->setHorizontalHeaderItem(4, new QStandardItem("Transition"));
+    m_schedule_model->setHorizontalHeaderItem(4, new QStandardItem("Audio Type"));
     m_schedule_model->setHorizontalHeaderItem(5, new QStandardItem("Play Date"));
     m_schedule_model->setHorizontalHeaderItem(6, new QStandardItem("Play Time"));
     m_schedule_model->setHorizontalHeaderItem(7, new QStandardItem("Track Path"));
@@ -564,13 +597,13 @@ void MainWindow::create_model_headers()
 
 void MainWindow::set_column_width()
 {
-    enum Column{TIME, TITLE, ARTIST, DURATION, TRANSITION, PLAY_DATE, PLAY_TIME, TRACK_PATH, COMMENT};
+    enum Column{TIME, TITLE, ARTIST, DURATION, AUDIO_TYPE, PLAY_DATE, PLAY_TIME, TRACK_PATH, COMMENT};
 
     ui->tvSchedule->setColumnWidth(Column::TIME, 50);
     ui->tvSchedule->setColumnWidth(Column::TITLE, 250);
     ui->tvSchedule->setColumnWidth(Column::ARTIST, 200);
     ui->tvSchedule->setColumnWidth(Column::DURATION, 80);
-    ui->tvSchedule->setColumnWidth(Column::TRANSITION, 80);
+    ui->tvSchedule->setColumnWidth(Column::AUDIO_TYPE, 120);
     ui->tvSchedule->setColumnWidth(Column::PLAY_DATE, 80);
     ui->tvSchedule->setColumnWidth(Column::PLAY_TIME, 80);
     ui->tvSchedule->setColumnWidth(Column::TRACK_PATH, 250);
@@ -622,18 +655,15 @@ QString MainWindow::get_selected_hours_asString()
 
 void MainWindow::hour_cb_closed()
 {
-    fetch_data();
+    const auto& hours = get_selected_hours_asInt();
+    //fetch_data(ui->dtSchedule->date(), hours);
 }
 
-void MainWindow::fetch_data()
+void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
 {
-    m_cb_hour->setText(get_selected_hours_asString());
-
-    QDate current_date = ui->dtSchedule->date();
-    auto selected_hours = get_selected_hours_asInt();
 
     clear_schedule_model();
-    auto processed = fetch_schedule_from_cache(current_date, selected_hours);
+    auto processed = fetch_schedule_from_cache(sel_date, sel_hours); //selected_hours);
 
     std::vector<int> uncached_hours;
     std::transform(processed.begin(), processed.end(), back_inserter(uncached_hours), UnCachedHours());
@@ -642,8 +672,9 @@ void MainWindow::fetch_data()
                 remove_if( uncached_hours.begin(), uncached_hours.end(),
                         [](int i){ return i == -1; }), uncached_hours.end());
 
-    fetch_schedule_from_db(current_date, uncached_hours);
-    m_scheduler->show_items(current_date, selected_hours);
+    fetch_schedule_from_db(sel_date, uncached_hours);
+    m_scheduler->show_items(sel_date, sel_hours); //selected_hours);
+
 }
 
 std::vector<int> MainWindow::get_selected_hours_asInt()
@@ -667,7 +698,7 @@ void MainWindow::audio_folder_setup()
     m_tree_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
 }
 
-std::map<int, int> MainWindow::fetch_schedule_from_cache(QDate date, std::vector<int> hours)
+std::map<int, int> MainWindow::fetch_schedule_from_cache(QDate date, const std::vector<int>& hours)
 {
     auto processed = m_scheduler->fetch_cached_items(date, hours);
     return processed;
@@ -688,6 +719,7 @@ void MainWindow::set_track_view()
     m_tracks_model->clear();
     create_track_view_headers();
     adjust_header_size();
+    set_track_view_column_width();
 }
 
 void MainWindow::fetch_audio(const std::string filter)
@@ -784,6 +816,50 @@ void MainWindow::stop_play()
         m_cue_editor->stop_audio();
 }
 
+void MainWindow::show_audio_history()
+{
+    /*
+    auto edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
+    TRAFFIK::Spot* spot = new TRAFFIK::Spot();
+    Client* client = new Client();
+    AUDIO::Audio* audio = new AUDIO::Audio();
+    AUDIO::Artist* artist = new AUDIO::Artist();
+
+    auto chain1 = std::make_tuple<BaseEntity*, BaseEntity*>(client, spot);
+//    auto chain2 = std::make_tuple<BaseEntity*, BaseEntity*>(audio, artist);
+
+    edm->select_related_chain(chain1);
+    */
+
+}
+
+void MainWindow::select_date_time()
+{
+    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(m_datetime_selection, this);
+    if (dts->exec() == 1){
+        m_datetime_selection = dts->selection();
+        std::sort(m_datetime_selection.sel_hours.begin(), m_datetime_selection.sel_hours.end());
+        fetch_data(m_datetime_selection.sel_date, m_datetime_selection.sel_hours);
+        show_selection(m_datetime_selection);
+    }
+
+}
+
+void MainWindow::show_selection(DateTimeSelection selection)
+{
+    QString label = selection.sel_date.toString("dd/MM/yyyy")+" : [ ";
+    QString h{""};
+    std::sort(selection.sel_hours.begin(),selection.sel_hours.end());
+    for (auto hr : selection.sel_hours){
+        if (!h.isEmpty())
+            h += ", ";
+        h += QString::number(hr);
+    }
+    label += h;
+    label += " ]";
+    ui->lblDateTime->setText(label);
+}
+
 void MainWindow::search_audio()
 {
     m_audio_entity_data_model->clearEntities();
@@ -800,20 +876,13 @@ void MainWindow::search_audio()
 
     FRAMEWORK::RelationMapper* r_map = m_audio_entity_data_model->select_related(folder, artist, genre, mood)->filter(track_filter, artist_filter);
 
-    //FRAMEWORK::RelationMapper r_map = m_audio_entity_data_model->select_related_chain(folder, artist, genre, mood).filter(artist_filter);
-
     try{
         m_audio_entity_data_model->readRaw(r_map->query());
     } catch(DatabaseException& de) {
         showMessage(de.errorMessage());
     }
 
-//    qDebug() << stoq(r_map->query());
-
     r_map->map_data();
-
-    //r_map->print_query_results();
-    //r_map->print_mapped_entities();
 
     for (auto const& [record_id, record] : r_map->mapped_entities()){
 
@@ -834,7 +903,6 @@ void MainWindow::search_audio()
                         break;
                     }
                 }
-
 
                 auto const& artist = audio_uPtr->artist()->data_model_entity();
                 if (artist == nullptr){

@@ -88,10 +88,17 @@ namespace SEDRIC{
         return QTime::fromMSecsSinceStartOfDay(
                     m_audio->duration()->value()*1000).toString("hh:mm:ss");
     }
+
     QString SedricScheduleItem::transition()
     {
         return stoq(schedule()->schedule_item_type()->value());
     }
+
+    QString SedricScheduleItem::audio_type()
+    {
+        return stoq(schedule()->schedule_item_type()->value());
+    }
+
     QString SedricScheduleItem::play_date()
     {
         return schedule()->play_date()->value().toString("dd/MM/yyyy");
@@ -221,7 +228,7 @@ namespace SEDRIC{
         m_display_items.erase(it_start, it_end);
     }
 
-    std::map<int, int> SedricScheduleItem::fetch_cached_items(QDate date, std::vector<int>& hours)
+    std::map<int, int> SedricScheduleItem::fetch_cached_items(QDate date, const std::vector<int>& hours)
     {
         std::map<int, int> processed;
 
@@ -378,7 +385,6 @@ namespace SEDRIC{
 
     void SedricScheduleItem::show_items(QDate current_date, const std::vector<int>& selected_hours)
     {
-
         std::vector<Schedule*> results;
         std::copy_if(m_display_items.begin(), m_display_items.end(), std::back_inserter(results),
                         FindScheduleByDate(current_date));
@@ -625,6 +631,16 @@ namespace SEDRIC{
     QString CommercialBreakItem::transition()
     {
         return "MIX";
+    }
+
+    QString CommercialBreakItem::track_path()
+    {
+        return "";
+    }
+
+    QString CommercialBreakItem::comment()
+    {
+        return "";
     }
 
 

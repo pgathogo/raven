@@ -76,6 +76,7 @@ else()
     sedricscheduleitem.cpp
     saveas.h
     saveas.cpp
+    sedric.qrc
     ../framework/scheduledatamanager.h
     ../framework/scheduledatamanager.cpp
     ../framework/entitydatamodel.cpp
@@ -95,6 +96,8 @@ else()
     ../framework/schedule.cpp
     ../framework/relationmapper.h
     ../framework/relationmapper.cpp
+    ../framework/datetimeselector.h
+    ../framework/datetimeselector.cpp
     ../security/authentication.cpp
     ../security/user.cpp
     ../audio/audiolibrary.cpp
@@ -105,6 +108,16 @@ else()
     ../audio/audiotrackitem.cpp
     ../audio/audiotool.cpp
     ../audio/audiolibitem.cpp
+    ../traffik/spotaudio.cpp
+    ../traffik/spot.cpp
+    ../traffik/client.cpp
+    ../traffik/clientgroup.cpp
+    ../traffik/agent.cpp
+    ../traffik/spottypeexclusion.cpp
+    ../traffik/spotvoiceover.cpp
+    ../traffik/voiceover.cpp
+    ../traffik/brand.cpp
+    ../traffik/salesperson.cpp
 )
 endif()
 

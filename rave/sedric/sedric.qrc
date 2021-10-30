@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icons/error.png</file>
+        <file>images/icons/information.png</file>
+        <file>images/icons/mark_audio.png</file>
+        <file>images/icons/mark_audio_2.png</file>
+        <file>images/icons/mark_end.png</file>
+        <file>images/icons/mark_extro.png</file>
+        <file>images/icons/mark_fade_in.png</file>
+        <file>images/icons/mark_fade_out.png</file>
+        <file>images/icons/mark_intro.png</file>
+        <file>images/icons/mark_start.png</file>
+        <file>images/icons/pause_play.png</file>
+        <file>images/icons/play_end.png</file>
+        <file>images/icons/play_extro.png</file>
+        <file>images/icons/play_fade_in.png</file>
+        <file>images/icons/play_fade_out.png</file>
+        <file>images/icons/play_green.png</file>
+        <file>images/icons/play_intro.png</file>
+        <file>images/icons/play_start.png</file>
+        <file>images/icons/stop_play.png</file>
+        <file>images/icons/warning.png</file>
+        <file>images/icons/history01.png</file>
+        <file>images/icons/history02.png</file>
+    </qresource>
+</RCC>

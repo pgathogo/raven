@@ -21,7 +21,8 @@ include(../raven.pri)
 HEADERS += \
     ../audio/audiofile.h \
     ../audio/audiotool.h \
-    ../framework/entityregister.h \ \
+    ../framework/entityregister.h \
+    ../framework/relationmapper.h \
     ../framework/schedule.h \
     ../security/accesscontroller.h \
     ../security/authentication.h \
@@ -56,6 +57,7 @@ SOURCES += \
     ../audio/audiofile.cpp \
     ../audio/audiotool.cpp \
     ../framework/schedule.cpp \
+    ../framework/relationmapper.cpp \
     ../security/accesscontroller.cpp \
     ../security/authentication.cpp \
     approverform.cpp \

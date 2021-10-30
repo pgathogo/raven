@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 #include <QComboBox>
-
+#include "../framework/datetimeselector.h"
 
 class QStandardItemModel;
 class QStandardItem;
@@ -81,8 +81,9 @@ public:
 
     void clear_schedule_model();
     QString get_selected_hours_asString();
-    void fetch_data();
+    void fetch_data(QDate, const std::vector<int>&);
     AUDIO::Audio* get_audio();
+    void show_selection(DateTimeSelection);
 
     struct UnCachedHours{
         template <typename T>
@@ -99,7 +100,7 @@ public:
     }
 
 public slots:
-    void date_changed();
+//    void date_changed();
     void hour_changed(int);
     void combo_highlight(int);
     void folder_clicked(const QModelIndex&);
@@ -114,11 +115,14 @@ public slots:
 
     void play_audio();
     void stop_play();
+    void show_audio_history();
 
     void search_audio();
     void show_audio_data();
     void set_track_view();
     void set_ui_style();
+
+    void select_date_time();
 
 private:
     Ui::MainWindow *ui;
@@ -140,9 +144,11 @@ private:
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
 
+    DateTimeSelection m_datetime_selection;
+
     //QList<QStandardItem*> commercial_record(const Schedule);
     void create_model_headers();
-    std::map<int, int> fetch_schedule_from_cache(QDate, std::vector<int>);
+    std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);
     void fetch_schedule_from_db(QDate, std::vector<int>);
     void set_column_width();
 };

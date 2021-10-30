@@ -45,6 +45,7 @@ namespace SEDRIC{
         virtual QString artist_name();
         virtual QString duration();
         virtual QString transition();
+        virtual QString audio_type();
         virtual QString play_date();
         virtual QString play_time();
         virtual QString track_path();
@@ -65,7 +66,7 @@ namespace SEDRIC{
 
         std::vector<Schedule*> cached_items() const;
 //        std::vector<std::unique_ptr<SedricScheduleItem>> const& find_schedule_by_datehour(QDate, int) const;
-        std::map<int, int> fetch_cached_items(QDate, std::vector<int>&);
+        std::map<int, int> fetch_cached_items(QDate, const std::vector<int>&);
         void fetch_db_items(QDate, std::vector<int>&);
         void set_schedule_fields(BaseDataProvider*, Schedule*, AUDIO::Audio*, AUDIO::Artist*);
         void create_end_marker(int);
@@ -113,9 +114,10 @@ namespace SEDRIC{
             time->setData(item_data, Qt::UserRole);
 
             auto title = new T(item->title());
+
             auto artist = new T(item->artist_name());
             auto duration = new T(item->duration());
-            auto transition = new T(item->transition());
+            auto transition = new T(item->audio_type());
             auto play_date  = new T(item->play_date());
             auto play_time = new T(item->play_time());
             auto track_path = new T(item->track_path());
@@ -172,6 +174,8 @@ namespace SEDRIC{
          QString artist_name() override;
          QString duration() override;
          QString transition() override;
+         QString track_path() override;
+         QString comment() override;
     };
 
     class CommercialAudioItem : public SedricScheduleItem, public QStandardItem

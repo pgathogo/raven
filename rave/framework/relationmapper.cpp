@@ -100,8 +100,9 @@ namespace FRAMEWORK{
     {
         qDebug() << " --- Foreign Key Fields --- ";
         for(auto const& [name, field] : m_foreign_key_fields) {
-            auto [entity, is_nullable] = field;
-            qDebug() << QString::fromStdString(name) << " = " << QString::fromStdString(entity->tableName());
+            qDebug() << QString::fromStdString(name);
+//            auto [entity, is_nullable] = field;
+//            qDebug() << QString::fromStdString(name) << " = " << QString::fromStdString(entity->tableName());
        }
     }
 
@@ -118,7 +119,7 @@ namespace FRAMEWORK{
 
         if (m_related_tables.size() > 0){
             auto[table_name, type] = *m_related_tables.begin();
-            m_relation_tree[index][m_main_table] = table_name; // m_related_tables[0];
+            m_relation_tree[index][m_main_table] = table_name;
         }else{
             m_relation_tree[index][m_main_table] = "";
             return;
@@ -146,15 +147,13 @@ namespace FRAMEWORK{
                 std::advance(it, next_index);
 
                 auto [table_name, type] = *it;
-                //m_relation_tree[next_index][m_related_tables[index]] = table_name; //m_related_tables.at(next_index);
-                m_relation_tree[next_index][prev_table_name] = table_name; //m_related_tables.at(next_index);
+                m_relation_tree[next_index][prev_table_name] = table_name;
                 inner_relation_tree(++index);
             }else{
                 auto it = m_related_tables.begin();
                 std::advance(it, index);
                 auto [table_name, type] = *it;
                 m_relation_tree[next_index][table_name]= "";
-                //m_relation_tree[next_index][m_related_tables[index] ]= "";
             }
 
         }
@@ -163,9 +162,9 @@ namespace FRAMEWORK{
 
     void RelationMapper::print_relation_tree()
     {
-        for(auto [count, left_right] : m_relation_tree) {
+        for(auto const& [count, left_right] : m_relation_tree) {
             int cnt = count;
-            for(auto [left, right] : left_right)
+            for(auto const& [left, right] : left_right)
                 qDebug() << cnt << " - " << stoq(left) << " => " << stoq(right);
         }
     }
@@ -181,8 +180,8 @@ namespace FRAMEWORK{
     {
         std::string fk_name;
 
-        for(auto [key, field] : m_foreign_key_fields){
-            auto [entity, is_nullable] = field;
+        for(auto const& [key, field] : m_foreign_key_fields){
+            auto const& [entity, is_nullable] = field;
             if (t_name == entity->tableName()){
                 fk_name = key;
                 break;
@@ -344,8 +343,17 @@ namespace FRAMEWORK{
         }
 
         m_mapped_entities[record_id][table_name].push_back(std::move(entity_object));
+    }
 
-
+    void RelationMapper::fetch_fk_fields(BaseEntity* entity)
+    {
+        for (auto const& [field_name, field] : entity->fields()){
+            if (field->field_type() == "ForeignKeyField"){
+                auto fk_field = dynamic_cast<ForeignKeyField*>(field.get());
+                auto fk_field_entity = std::make_tuple(fk_field->fk_entity(), field->nullable());
+                append_foreign_key_fields(field_name, fk_field_entity);
+            }
+        }
     }
 
     void RelationMapper::print_mapped_entities()
@@ -399,6 +407,14 @@ namespace FRAMEWORK{
 
             }
         }
+    }
+
+    void RelationMapper::print_join_statements_chain()
+    {
+      for (auto stmt : m_chain_joins){
+          qDebug() << stoq(stmt);
+      }
+
     }
 
     void RelationMapper::map_data()

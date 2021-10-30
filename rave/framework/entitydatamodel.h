@@ -187,25 +187,6 @@ public:
         return sf;
     }
 
-    /*
-    template<typename... Types>
-    void build_related_query(Types... args)
-    {
-
-        auto entity = firstArg();
-        auto fields = entity.dbColumnNames();
-        for (auto f : fields){
-            std::string full_field_name = entity.tableName()+"."+f;
-            query_fields.push_back(full_field_name);
-        }
-
-        build_related_query(args...);
-    }
-    */
-
-    // select_related(Artist, Audio)
-    // std::tuple<int,string> t = make_tuple(42, "name");
-
     template<typename T, typename... Types>
     void related_query(const T& firstArg,  const Types&... args)
     {
@@ -217,10 +198,10 @@ public:
             m_relation_mapper->append_query_fields(full_field_name);
         }
 
-
         if constexpr(sizeof...(args) > 0 ) {
             related_query(args...);
         }
+
     }
 
     template<typename T, typename... Types>
@@ -264,6 +245,84 @@ public:
         return m_relation_mapper.get();
 
 //		readRaw(m_relation_mapper.query());
+    }
+
+    template<typename T, typename...Types>
+    void select_related_chain(T firstArg, Types...args)
+    {
+        m_relation_mapper->clear_query_fields();
+        m_relation_mapper->clear_related_tables();
+        m_relation_mapper->clear_foreign_key_fields();
+
+        auto column_names = getEntity().dbColumnNames();
+
+        m_relation_mapper->set_main_entity(&(getEntity()));
+        m_relation_mapper->set_main_table(getEntity().tableName());
+
+        for(auto column_name : column_names){
+            std::string full_field_name = m_relation_mapper->main_table()+"."+column_name;
+            m_relation_mapper->append_query_fields(full_field_name);
+        }
+
+        m_relation_mapper->fetch_fk_fields(&getEntity());
+//        fetch_related_entity_columns(firstArg, std::forward<Types>(args)...);
+
+        qDebug() << "Done fetch_related_entity_columns";
+
+        m_relation_mapper->print_foreign_key_fields();
+
+        /*
+        m_relation_mapper->make_chain_join_statments(firstArg, std::forward<Types>(args)...);
+
+        qDebug() << "After make_chain_join_statments";
+
+        m_relation_mapper->print_join_statements_chain();
+
+        qDebug() << "After print_join_statement";
+        */
+
+
+    }
+
+    template<typename T, typename...Types>
+    void fetch_related_entity_columns(T firstArg, Types...args)
+    {
+        auto [first_entity, second_entity] = firstArg;
+
+        qDebug()<< "Second TableName: "<< stoq(second_entity->tableName());
+
+//        m_relation_mapper->fetch_fk_fields(first_entity);
+
+        m_relation_mapper->fetch_fk_fields(second_entity);
+
+        return;
+
+
+                /*
+        m_relation_mapper->append_related_tables(first_entity->tableName(), &typeid(T));
+        m_relation_mapper->append_related_tables(second_entity->tableName(), &typeid(T));
+
+        auto first_column_names = first_entity->dbColumnNames();
+        for(auto column : first_column_names){
+            std::string full_column_name = first_entity->tableName()+"."+column;
+            m_relation_mapper->append_query_fields(full_column_name);
+        }
+
+        m_relation_mapper->fetch_fk_fields(first_entity);
+
+        auto second_column_names = second_entity->dbColumnNames();
+        for(auto column : second_column_names){
+            std::string full_column_name = second_entity->tableName()+"."+column;
+            m_relation_mapper->append_query_fields(full_column_name);
+        }
+
+        m_relation_mapper->fetch_fk_fields(second_entity);
+                */
+
+        if constexpr(sizeof...(args) > 0 ){
+            fetch_related_entity_columns(args...);
+        }
+
     }
 
 private:

@@ -84,6 +84,7 @@ namespace TRAFFIK {
         StringField* m_name;
         DecimalField* m_spot_duration;
         DecimalField* m_real_duration;
+
         ForeignKeyField* m_client;
         ForeignKeyField* m_brand;
 

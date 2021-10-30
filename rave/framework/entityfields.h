@@ -213,6 +213,7 @@ public:
         BaseEntity* currentEntity();
 
         BaseEntity* fk_entity();
+        std::unique_ptr<BaseEntity> const& fk_entity(const std::string);
 
         BaseEntity* unique_fk_entity();
         std::string field_type() override;

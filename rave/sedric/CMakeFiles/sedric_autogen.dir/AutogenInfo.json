@@ -68,7 +68,8 @@
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5Widgets_QWindowsVistaStylePlugin.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake"
+		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake",
+		"D:/home/PMS/Raven/rave/sedric/sedric.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "D:/home/PMS/Raven/rave/sedric",
 	"DEP_FILE" : "",
@@ -134,6 +135,11 @@
 			"D:/home/PMS/Raven/rave/framework/dataprovider.h",
 			"MU",
 			"TXBK5VWLEF/moc_dataprovider.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/datetimeselector.h",
+			"MU",
+			"TXBK5VWLEF/moc_datetimeselector.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/entitydatamodel.h",
@@ -229,6 +235,56 @@
 			"D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.h",
 			"MU",
 			"EWIEGA46WW/moc_sedricscheduleitem.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/agent.h",
+			"MU",
+			"DQ7LGVCWUM/moc_agent.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/brand.h",
+			"MU",
+			"DQ7LGVCWUM/moc_brand.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/client.h",
+			"MU",
+			"DQ7LGVCWUM/moc_client.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/clientgroup.h",
+			"MU",
+			"DQ7LGVCWUM/moc_clientgroup.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/salesperson.h",
+			"MU",
+			"DQ7LGVCWUM/moc_salesperson.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/spot.h",
+			"MU",
+			"DQ7LGVCWUM/moc_spot.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/spotaudio.h",
+			"MU",
+			"DQ7LGVCWUM/moc_spotaudio.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/spottypeexclusion.h",
+			"MU",
+			"DQ7LGVCWUM/moc_spottypeexclusion.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/spotvoiceover.h",
+			"MU",
+			"DQ7LGVCWUM/moc_spotvoiceover.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/traffik/voiceover.h",
+			"MU",
+			"DQ7LGVCWUM/moc_voiceover.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -298,6 +354,7 @@
 		[ "D:/home/PMS/Raven/rave/framework/databaseconnector.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/databasemanager.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/dataprovider.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/datetimeselector.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/entitydatamodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/manytomany.cpp", "MU" ],
@@ -316,7 +373,17 @@
 		[ "D:/home/PMS/Raven/rave/sedric/mainwindow.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/sedric/saveas.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/sedric/scheduleitem.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.cpp", "MU" ]
+		[ "D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/agent.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/brand.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/client.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/clientgroup.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/salesperson.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/spot.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/spotaudio.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/spottypeexclusion.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/spotvoiceover.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/traffik/voiceover.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

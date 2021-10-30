@@ -79,7 +79,6 @@ ActionResult BaseEntity::validate()
 
 void BaseEntity::setValueByField(const Field& fld, const std::string& val)
 {
-
     for (auto& [name, field] : fields()){
         if (name == fld.fieldName())
            field->stringToValue(val);
