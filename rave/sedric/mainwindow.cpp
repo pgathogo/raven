@@ -23,7 +23,6 @@
 #include "../framework/databasemanager.h"
 #include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
-#include "../framework/tableviewmodel.h"
 #include "../framework/relationmapper.h"
 #include "../framework/baseentity.h"
 #include "../audio/audiolibrary.h"
@@ -349,7 +348,6 @@ void MainWindow::setup_hour_combobox()
 void MainWindow::folder_clicked(const QModelIndex& index)
 {
     int folder_id = index.data(Qt::UserRole).toInt();
-    //fetch_audio_new(folder_id);
 
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
@@ -718,7 +716,7 @@ void MainWindow::set_track_view()
 {
     m_tracks_model->clear();
     create_track_view_headers();
-    adjust_header_size();
+    //adjust_header_size();
     set_track_view_column_width();
 }
 

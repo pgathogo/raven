@@ -170,6 +170,7 @@ std::string User::make_alter_user_stmt(const std::string username)
 
 std::unique_ptr<BaseEntity> User::mapFields(StringMap*)
 {
+    return nullptr;
 }
 
 std::vector<std::string> User::tableViewColumns() const
