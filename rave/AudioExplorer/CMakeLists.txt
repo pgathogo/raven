@@ -49,6 +49,9 @@ set(PROJECT_SOURCES
         mainwindow.ui
         datatoolbar.h
         datatoolbar.cpp
+        artistform.h
+        artistform.cpp
+        artistform.ui
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp
@@ -58,6 +61,10 @@ set(PROJECT_SOURCES
         ../audio/audiotool.cpp
         ../audio/artisttypeitem.cpp
         ../framework/baseentity.cpp
+        ../framework/baseentitybrowserdlg.cpp
+        ../framework/baseentitybrowserdlg.ui
+        ../framework/baseentitydetaildlg.cpp
+        ../framework/baseentitydetaildlg.ui
         ../framework/entitydatamodel.cpp
         ../framework/relationmapper.cpp
         ../framework/entityfields.cpp
@@ -72,8 +79,11 @@ set(PROJECT_SOURCES
         ../framework/treeviewmodel.h
         ../framework/treeviewmodel.cpp
         ../framework/tree.cpp
+        ../framework/letterfilterwidget.cpp
         ../security/authentication.cpp
         ../security/user.cpp
+        ../utils/notificationbar.cpp
+        ../utils/notificationitem.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

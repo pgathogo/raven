@@ -138,7 +138,7 @@ public:
             }
         }else if constexpr(is_string<decltype(value)>::value){
             filter = "lower("+filter+")";
-            if (op == "LIKE"){
+            if (str_tolower(op) == "like"){
                 filter += " LIKE ";
                 std::string str_value = value;
 //                for(auto s : str_value)

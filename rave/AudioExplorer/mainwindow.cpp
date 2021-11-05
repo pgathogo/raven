@@ -1,16 +1,20 @@
 
 #include <QDebug>
 #include <QStandardItemModel>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "datatoolbar.h"
+#include "artistform.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"
 #include "../audio/audiolibitem.h"
+#include "../audio/artisttypeitem.h"
 #include "../audio/audiotool.h"
+#include "../framework/baseentity.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/ravenexception.h"
 #include "../framework/entitydatamodel.h"
@@ -28,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_artist_toolbar->add_button(), &QPushButton::clicked, this, &MainWindow::add_artist);
     connect(m_artist_toolbar->edit_button(), &QPushButton::clicked, this, &MainWindow::edit_artist);
     connect(m_artist_toolbar->delete_button(), &QPushButton::clicked, this, &MainWindow::delete_artist);
+
+    connect(ui->btnSearchArtist, &QPushButton::clicked, this, MainWindow::search_artist);
 
     m_genre_toolbar = new DataToolBar();
     ui->hlGenre->addWidget(m_genre_toolbar);
@@ -48,7 +54,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tvTracks->verticalHeader()->setVisible(false);
 
     m_artist_model = new QStandardItemModel(this);
-    create_artist_view_headers();
+    ui->tvArtists->setModel(m_artist_model);
+    connect(ui->tvArtists, &QTableView::clicked, this, MainWindow::artist_selected);
+    m_artist_type_item = std::make_unique<AUDIO::ArtistTypeItem>(m_artist_model);
+
+    setup_artists_view();
+    fetch_artist();
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
@@ -73,10 +84,12 @@ void MainWindow::setup_audio_folders()
     }
 }
 
-void MainWindow::setup_artists()
+void MainWindow::setup_artists_view()
 {
-
+    create_artist_view_headers();
+    set_artist_view_columns_width();
 }
+
 
 void MainWindow::create_track_view_headers()
 {
@@ -89,7 +102,20 @@ void MainWindow::create_track_view_headers()
 
 void MainWindow::create_artist_view_headers()
 {
-    m_artist_model->setHorizontalHeaderItem(0, new QStandardItem("Artist"));
+    m_artist_model->setHorizontalHeaderItem(0, new QStandardItem("First Name"));
+    m_artist_model->setHorizontalHeaderItem(1, new QStandardItem("Surname"));
+    m_artist_model->setHorizontalHeaderItem(2, new QStandardItem("Fullname"));
+    m_artist_model->setHorizontalHeaderItem(3, new QStandardItem("Artist Type"));
+}
+
+void MainWindow::set_artist_view_columns_width()
+{
+    enum Column{FirstName, Surname, FullName, ArtistType};
+
+    ui->tvArtists->setColumnWidth(Column::FirstName, 200);
+    ui->tvArtists->setColumnWidth(Column::Surname, 200);
+    ui->tvArtists->setColumnWidth(Column::FullName, 350);
+    ui->tvArtists->setColumnWidth(Column::ArtistType, 100);
 }
 
 void MainWindow::set_track_view()
@@ -115,6 +141,17 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
     std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
+    fetch_audio(filter_str);
+}
+
+
+void MainWindow::artist_selected(const QModelIndex& index)
+{
+    auto first_name_column = ui->tvArtists->model()->index(index.row(), ArtistColumn::FirstName);
+    auto artist_id = first_name_column.data(Qt::UserRole).toInt();
+    auto audio = std::make_unique<AUDIO::Audio>();
+    auto artist_filter = std::make_tuple(audio->artist()->dbColumnName(), " = ", artist_id);
+    std::string filter_str = m_audio_entity_data_model->prepareFilter(artist_filter);
     fetch_audio(filter_str);
 }
 
@@ -144,15 +181,168 @@ void MainWindow::show_audio_data()
 
 }
 
+void MainWindow::fetch_artist(const std::string filter)
+{
+    if (filter.empty()){
+        m_artist_entity_data_model->all();
+    }else{
+        m_artist_entity_data_model->search(filter);
+    }
+
+    show_artist_data();
+}
+
+void MainWindow::show_artist_data()
+{
+    m_artist_model->clear();
+    setup_artists_view();
+
+    for(auto& [name, entity] : m_artist_entity_data_model->modelEntities()){
+        AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(entity.get());
+
+        if (artist->artist_type()->displayName() == "Female")
+            m_artist_type_item->create_row_item<AUDIO::FemaleArtistTypeItem>(artist);
+
+        if (artist->artist_type()->displayName() == "Male")
+            m_artist_type_item->create_row_item<AUDIO::MaleArtistTypeItem>(artist);
+
+        if (artist->artist_type()->displayName() == "Group")
+            m_artist_type_item->create_row_item<AUDIO::GroupArtistTypeItem>(artist);
+    }
+
+}
 
 void MainWindow::add_artist()
 {
-
+    std::unique_ptr<AUDIO::Artist> artist = std::make_unique<AUDIO::Artist>();
+    std::unique_ptr<ArtistForm> art_form = std::make_unique<ArtistForm>(artist.get());
+    if (art_form->exec() > 0){
+        m_artist_entity_data_model->createEntity(std::move(artist));
+        show_artist_data();
+    }
 }
+
 void MainWindow::edit_artist()
 {
+    std::unique_ptr<ArtistForm> dlg(nullptr);
+
+    QItemSelectionModel* select = ui->tvArtists->selectionModel();
+    auto mod_index = ui->tvArtists->model()->index(select->currentIndex().row(), ArtistColumn::FullName);
+    auto col_value = ui->tvArtists->model()->data(mod_index, ArtistColumn::FullName).toString();
+    std::string search_name = col_value.toStdString();
+    if (!search_name.empty()){
+        BaseEntity* be = m_artist_entity_data_model->findEntityByName(search_name);
+        if (be != nullptr){
+            AUDIO::Artist* entity = dynamic_cast<AUDIO::Artist*>(be);
+            dlg = std::make_unique<ArtistForm>(entity);
+            if(dlg->exec() > 0){
+                try{
+                    update_table_view_record(ui->tvArtists, entity->tableViewValues());
+                    m_artist_entity_data_model->updateEntity(*entity);
+                    }
+                    catch(DatabaseException& de){
+                        showMessage(de.errorMessage());
+                    }
+                }else{
+                    dlg = nullptr;
+                }
+            }
+        }
 }
+
 
 void MainWindow::delete_artist()
 {
+    delete_entity(m_artist_entity_data_model.get(), ui->tvArtists);
 }
+
+void MainWindow::delete_entity(EntityDataModel* edm, QTableView* tv)
+{
+    if (selected_row_id(ui->tvArtists) < 0)
+        return;
+
+    BaseEntity* entity = find_selected_entity(edm);
+
+    if (okay_to_delete(entity)){
+
+        entity->setDBAction(DBAction::dbaDELETE);
+
+        try{
+            edm->deleteEntity(*entity);
+            remove_tv_selected_row(tv);
+        } catch (DatabaseException& de){
+            showMessage(de.errorMessage());
+        }
+    }
+}
+
+bool MainWindow::okay_to_delete(const BaseEntity* entity)
+{
+    QMessageBox::StandardButton result_btn = QMessageBox::Yes;
+    result_btn = QMessageBox::question(this, "Sedric",
+                          tr("Are you sure you want to delete?"),
+                          QMessageBox::No | QMessageBox::Yes,
+                          QMessageBox::No);
+    if (result_btn == QMessageBox::Yes)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void MainWindow::remove_tv_selected_row(QTableView* tv)
+{
+    tv->model()->removeRow(selected_row_id(tv));
+}
+
+std::string MainWindow::get_search_value(const QTableView* tv, int col)
+{
+    QItemSelectionModel* select = tv->selectionModel();
+    auto mod_index = tv->model()->index(select->currentIndex().row(), col);
+    auto col_value = tv->model()->data(mod_index, col).toString();
+    std::string search_value = col_value.toStdString();
+    return search_value;
+}
+
+BaseEntity* MainWindow::find_selected_entity(EntityDataModel* edm)
+{
+    std::string search_value = get_search_value(ui->tvArtists, ArtistColumn::FullName);
+    BaseEntity* entity = edm->findEntityByName(search_value);
+    return entity;
+}
+
+void MainWindow::update_table_view_record(QTableView* tv,
+        const std::vector<std::string> values)
+{
+    int col = 0;
+    for (auto value : values){
+        QVariant qvalue(QString::fromStdString(value));
+        QModelIndex model_index = tv->model()->index(selected_row_id(tv), col);
+        QAbstractItemModel* model = tv->model();
+        model->setData(model_index, qvalue);
+        ++col;
+    }
+}
+
+int MainWindow::selected_row_id(QTableView* tv)
+{
+    if (tv->selectionModel()->selectedRows().size() > 0)
+        return tv->selectionModel()->selectedRows()[0].row();
+    return -1;
+}
+
+void MainWindow::search_artist()
+{
+    if (ui->edtSearchArtist->text().isEmpty()){
+        fetch_artist();
+        return;
+    }
+
+    std::string search_value = ui->edtSearchArtist->text().toStdString();
+    auto artist = std::make_unique<AUDIO::Artist>();
+    auto artist_filter = std::make_tuple(artist->fullName()->dbColumnName(), "like", search_value);
+    std::string filter_str = m_artist_entity_data_model->prepareFilter(artist_filter);
+    fetch_artist(filter_str);
+}
+

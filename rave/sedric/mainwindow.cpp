@@ -355,7 +355,6 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     fetch_audio(filter_str);
 }
 
-
 std::tuple<int, int, QTime> MainWindow::get_sched_item_hour_time(const QModelIndex& index)
 {
     auto time_col = ui->tvSchedule->model()->index(index.row(), 0);
@@ -722,7 +721,6 @@ void MainWindow::set_track_view()
 
 void MainWindow::fetch_audio(const std::string filter)
 {
-
     m_audio_entity_data_model->clearEntities();
 
     m_audio_entity_data_model->search(filter);

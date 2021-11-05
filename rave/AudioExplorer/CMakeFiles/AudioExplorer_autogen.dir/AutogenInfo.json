@@ -76,6 +76,11 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/home/PMS/Raven/rave/AudioExplorer/artistform.h",
+			"MU",
+			"EWIEGA46WW/moc_artistform.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.h",
 			"MU",
 			"EWIEGA46WW/moc_datatoolbar.cpp"
@@ -131,6 +136,16 @@
 			"TXBK5VWLEF/moc_baseentity.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.h",
+			"MU",
+			"TXBK5VWLEF/moc_baseentitybrowserdlg.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.h",
+			"MU",
+			"TXBK5VWLEF/moc_baseentitydetaildlg.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/databaseconnector.h",
 			"MU",
 			"TXBK5VWLEF/moc_databaseconnector.cpp"
@@ -154,6 +169,11 @@
 			"D:/home/PMS/Raven/rave/framework/entityfields.h",
 			"MU",
 			"TXBK5VWLEF/moc_entityfields.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/letterfilterwidget.h",
+			"MU",
+			"TXBK5VWLEF/moc_letterfilterwidget.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/manytomany.h",
@@ -204,6 +224,16 @@
 			"D:/home/PMS/Raven/rave/security/user.h",
 			"MU",
 			"AD4PYRWGU2/moc_user.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/utils/notificationbar.h",
+			"MU",
+			"CMVTXRXFX7/moc_notificationbar.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/utils/notificationitem.h",
+			"MU",
+			"CMVTXRXFX7/moc_notificationitem.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -260,6 +290,7 @@
 	"SETTINGS_FILE" : "D:/home/PMS/Raven/rave/AudioExplorer/CMakeFiles/AudioExplorer_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/home/PMS/Raven/rave/AudioExplorer/artistform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/main.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/mainwindow.cpp", "MU" ],
@@ -272,11 +303,14 @@
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentity.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/databaseconnector.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/databasemanager.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/dataprovider.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/entitydatamodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/letterfilterwidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/manytomany.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
@@ -285,7 +319,9 @@
 		[ "D:/home/PMS/Raven/rave/framework/typeexclusion.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/valuelist.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/security/authentication.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/security/user.cpp", "MU" ]
+		[ "D:/home/PMS/Raven/rave/security/user.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/utils/notificationbar.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/utils/notificationitem.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
