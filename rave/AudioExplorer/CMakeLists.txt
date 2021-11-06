@@ -60,6 +60,9 @@ set(PROJECT_SOURCES
         ../audio/audiolibitem.cpp
         ../audio/audiotool.cpp
         ../audio/artisttypeitem.cpp
+        ../audio/genretypeitem.h
+        ../audio/genretypeitem.cpp
+        ../audio/genreform.cpp
         ../framework/baseentity.cpp
         ../framework/baseentitybrowserdlg.cpp
         ../framework/baseentitybrowserdlg.ui

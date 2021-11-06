@@ -17,6 +17,7 @@ namespace AUDIO{
   class Artist;
   class AudioLibItem;
   class ArtistTypeItem;
+  class GenreTypeItem;
 }
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +30,7 @@ class MainWindow : public QMainWindow
 
 public:
     enum ArtistColumn{FirstName=0, LastName, FullName, ArtistType, Notes};
+    enum GenreColumn{GenreName};
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -47,12 +49,19 @@ public:
     void show_artist_data();
     void update_table_view_record(QTableView* tv, const std::vector<std::string>);
 
+    void setup_genre_view();
+    void set_genre_view_columns_width();
+    void create_genre_view_headers();
+    void fetch_genre(const std::string filter="");
+    void show_genre_data();
+
     int selected_row_id(QTableView*);
     std::string get_search_value(const QTableView*, int);
-    BaseEntity* find_selected_entity(EntityDataModel*);
-    void delete_entity(EntityDataModel*, QTableView*);
+    BaseEntity* find_selected_entity(EntityDataModel*, QTableView*, int);
+    void delete_entity(EntityDataModel*, QTableView*, int);
     bool okay_to_delete(const BaseEntity* entity);
     void remove_tv_selected_row(QTableView*);
+    void make_selection(EntityDataModel* edm, std::string, int);
 
 public slots:
     void add_artist();
@@ -62,6 +71,11 @@ public slots:
     void artist_selected(const QModelIndex& index);
     void search_artist();
 
+    void add_genre();
+    void edit_genre();
+    void delete_genre();
+    void genre_selected(const QModelIndex& index);
+
 private:
     Ui::MainWindow *ui;
     DataToolBar* m_artist_toolbar;
@@ -69,12 +83,16 @@ private:
 
     QStandardItemModel* m_tracks_model;
     QStandardItemModel* m_artist_model;
+    QStandardItemModel* m_genre_model;
 
     TreeViewModel* m_folder_model;
     std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
     std::unique_ptr<EntityDataModel> m_artist_entity_data_model;
+    std::unique_ptr<EntityDataModel> m_genre_entity_data_model;
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
 
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
+    std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
+
 };
 

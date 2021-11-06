@@ -131,6 +131,16 @@
 			"Y6ZUSTFKUI/moc_audiotool.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/audio/genreform.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_genreform.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/genretypeitem.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_genretypeitem.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/baseentity.h",
 			"MU",
 			"TXBK5VWLEF/moc_baseentity.cpp"
@@ -302,6 +312,8 @@
 		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/genreform.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/genretypeitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentity.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp", "MU" ],

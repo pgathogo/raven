@@ -13,7 +13,10 @@
 #include "../audio/artist.h"
 #include "../audio/audiolibitem.h"
 #include "../audio/artisttypeitem.h"
+#include "../audio/genretypeitem.h"
 #include "../audio/audiotool.h"
+#include "../audio/genreform.h"
+
 #include "../framework/baseentity.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/ravenexception.h"
@@ -29,17 +32,23 @@ MainWindow::MainWindow(QWidget *parent)
     m_artist_toolbar = new DataToolBar();
     ui->hlArtist->addWidget(m_artist_toolbar);
 
+    // Artist Data toolbar
     connect(m_artist_toolbar->add_button(), &QPushButton::clicked, this, &MainWindow::add_artist);
     connect(m_artist_toolbar->edit_button(), &QPushButton::clicked, this, &MainWindow::edit_artist);
     connect(m_artist_toolbar->delete_button(), &QPushButton::clicked, this, &MainWindow::delete_artist);
-
     connect(ui->btnSearchArtist, &QPushButton::clicked, this, MainWindow::search_artist);
 
+
+    // Genre Data toolbar
     m_genre_toolbar = new DataToolBar();
     ui->hlGenre->addWidget(m_genre_toolbar);
+    connect(m_genre_toolbar->add_button(), &QPushButton::clicked, this, &MainWindow::add_genre);
+    connect(m_genre_toolbar->edit_button(), &QPushButton::clicked, this, &MainWindow::edit_genre);
+    connect(m_genre_toolbar->delete_button(), &QPushButton::clicked, this, &MainWindow::delete_genre);
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
     m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
+    m_genre_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Genre>());
 
     setup_audio_folders();
 
@@ -55,11 +64,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_artist_model = new QStandardItemModel(this);
     ui->tvArtists->setModel(m_artist_model);
-    connect(ui->tvArtists, &QTableView::clicked, this, MainWindow::artist_selected);
+    connect(ui->tvArtists, &QTableView::clicked, this, &MainWindow::artist_selected);
     m_artist_type_item = std::make_unique<AUDIO::ArtistTypeItem>(m_artist_model);
 
     setup_artists_view();
     fetch_artist();
+
+    m_genre_model = new QStandardItemModel(this);
+    ui->tvGenre->setModel(m_genre_model);
+    m_genre_type_item = std::make_unique<AUDIO::GenreTypeItem>(m_genre_model);
+    ui->tvGenre->horizontalHeader()->setStretchLastSection(true);
+    connect(ui->tvGenre, &QTableView::clicked, this, &MainWindow::genre_selected);
+
+    setup_genre_view();
+    fetch_genre();
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
@@ -150,11 +168,23 @@ void MainWindow::artist_selected(const QModelIndex& index)
     auto first_name_column = ui->tvArtists->model()->index(index.row(), ArtistColumn::FirstName);
     auto artist_id = first_name_column.data(Qt::UserRole).toInt();
     auto audio = std::make_unique<AUDIO::Audio>();
-    auto artist_filter = std::make_tuple(audio->artist()->dbColumnName(), " = ", artist_id);
-    std::string filter_str = m_audio_entity_data_model->prepareFilter(artist_filter);
-    fetch_audio(filter_str);
+    make_selection(m_genre_entity_data_model.get(), audio->artist()->dbColumnName(), artist_id);
 }
 
+void MainWindow::genre_selected(const QModelIndex& index)
+{
+    auto genre_column = ui->tvGenre->model()->index(index.row(), GenreColumn::GenreName);
+    auto genre_id = genre_column.data(Qt::UserRole).toInt();
+    auto audio = std::make_unique<AUDIO::Audio>();
+    make_selection(m_genre_entity_data_model.get(), audio->genre()->dbColumnName(), genre_id);
+}
+
+void MainWindow::make_selection(EntityDataModel* edm, std::string column_name, int id)
+{
+    auto filter = std::make_tuple(column_name, " = ", id);
+    std::string filter_str = edm->prepareFilter(filter);
+    fetch_audio(filter_str);
+}
 void MainWindow::fetch_audio(const std::string filter)
 {
     m_audio_entity_data_model->clearEntities();
@@ -224,14 +254,10 @@ void MainWindow::add_artist()
 
 void MainWindow::edit_artist()
 {
+    auto search_value = get_search_value(ui->tvArtists, ArtistColumn::FullName);
     std::unique_ptr<ArtistForm> dlg(nullptr);
-
-    QItemSelectionModel* select = ui->tvArtists->selectionModel();
-    auto mod_index = ui->tvArtists->model()->index(select->currentIndex().row(), ArtistColumn::FullName);
-    auto col_value = ui->tvArtists->model()->data(mod_index, ArtistColumn::FullName).toString();
-    std::string search_name = col_value.toStdString();
-    if (!search_name.empty()){
-        BaseEntity* be = m_artist_entity_data_model->findEntityByName(search_name);
+    if (!search_value.empty()){
+        BaseEntity* be = m_artist_entity_data_model->findEntityByName(search_value);
         if (be != nullptr){
             AUDIO::Artist* entity = dynamic_cast<AUDIO::Artist*>(be);
             dlg = std::make_unique<ArtistForm>(entity);
@@ -253,15 +279,97 @@ void MainWindow::edit_artist()
 
 void MainWindow::delete_artist()
 {
-    delete_entity(m_artist_entity_data_model.get(), ui->tvArtists);
+    delete_entity(m_artist_entity_data_model.get(), ui->tvArtists, ArtistColumn::FullName);
 }
 
-void MainWindow::delete_entity(EntityDataModel* edm, QTableView* tv)
+
+void MainWindow::setup_genre_view()
 {
-    if (selected_row_id(ui->tvArtists) < 0)
+    create_genre_view_headers();
+    set_genre_view_columns_width();
+}
+
+void MainWindow::add_genre()
+{
+    std::unique_ptr<AUDIO::Genre> genre = std::make_unique<AUDIO::Genre>();
+    std::unique_ptr<GenreForm> gen_form = std::make_unique<GenreForm>(genre.get());
+    if (gen_form->exec() > 0){
+        m_genre_entity_data_model->createEntity(std::move(genre));
+        show_genre_data();
+    }
+}
+
+void MainWindow::edit_genre()
+{
+    auto search_value = get_search_value(ui->tvGenre, GenreColumn::GenreName);
+    if (!search_value.empty()){
+        BaseEntity* be = m_genre_entity_data_model->findEntityByName(search_value);
+        if (be != nullptr){
+            std::unique_ptr<GenreForm> dlg(nullptr);
+            AUDIO::Genre* entity = dynamic_cast<AUDIO::Genre*>(be);
+            dlg = std::make_unique<GenreForm>(entity);
+            if(dlg->exec() > 0){
+                try{
+                    update_table_view_record(ui->tvGenre, entity->tableViewValues());
+                    m_genre_entity_data_model->updateEntity(*entity);
+                    }
+                    catch(DatabaseException& de){
+                        showMessage(de.errorMessage());
+                    }
+                }else{
+                    dlg = nullptr;
+                }
+            }
+        }
+}
+
+
+void MainWindow::delete_genre()
+{
+    delete_entity(m_genre_entity_data_model.get(), ui->tvGenre, GenreColumn::GenreName);
+}
+
+
+
+void MainWindow::create_genre_view_headers()
+{
+    m_genre_model->setHorizontalHeaderItem(0, new QStandardItem("Genre Name"));
+}
+
+void MainWindow::set_genre_view_columns_width()
+{
+    enum Column{GenreName};
+    ui->tvGenre->setColumnWidth(Column::GenreName, 200);
+}
+
+void MainWindow::fetch_genre(const std::string filter)
+{
+    if (filter.empty()){
+        m_genre_entity_data_model->all();
+    }else{
+        m_genre_entity_data_model->search(filter);
+    }
+
+    show_genre_data();
+}
+
+void MainWindow::show_genre_data()
+{
+    m_genre_model->clear();
+    setup_genre_view();
+
+    for(auto& [name, entity] : m_genre_entity_data_model->modelEntities()){
+        AUDIO::Genre* genre = dynamic_cast<AUDIO::Genre*>(entity.get());
+        m_genre_type_item->create_row_item<AUDIO::GeneralGenreTypeItem>(genre);
+    }
+}
+
+void MainWindow::delete_entity(EntityDataModel* edm, QTableView* tv, int col)
+{
+    if (selected_row_id(tv) < 0)
         return;
 
-    BaseEntity* entity = find_selected_entity(edm);
+    BaseEntity* entity = find_selected_entity(edm, tv, col);
 
     if (okay_to_delete(entity)){
 
@@ -305,9 +413,9 @@ std::string MainWindow::get_search_value(const QTableView* tv, int col)
     return search_value;
 }
 
-BaseEntity* MainWindow::find_selected_entity(EntityDataModel* edm)
+BaseEntity* MainWindow::find_selected_entity(EntityDataModel* edm, QTableView* tv, int col)
 {
-    std::string search_value = get_search_value(ui->tvArtists, ArtistColumn::FullName);
+    std::string search_value = get_search_value(tv, col);
     BaseEntity* entity = edm->findEntityByName(search_value);
     return entity;
 }
