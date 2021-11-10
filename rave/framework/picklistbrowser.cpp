@@ -8,10 +8,11 @@
 #include "manytomany.h"
 
 PickListSetting::PickListSetting(std::unique_ptr<BaseEntity> entity,
+                                 int search_col_index,
                                  PickListMode plm)
     :listEntity{std::move(entity)}
     ,pickMode{plm}
-
+    ,m_search_col_index{search_col_index}
 {
 }
 
@@ -20,7 +21,7 @@ PickListBrowser::PickListBrowser(PickListSetting& plSetting,
     BaseEntityBrowserDlg(parent, std::move(plSetting.listEntity)),
     ui(new Ui::PickListBrowser),
     scw{},
-    mPickListSetting{plSetting}
+    m_picklist_setting{plSetting}
 {
     ui->setupUi(this);
     hideAddButton();
@@ -51,26 +52,47 @@ void PickListBrowser::updateRecord()
 
 void PickListBrowser::onSelectItem()
 {
-    std::string search_name = selectedRowName().toStdString();
+
+  /*
+    std::string search_col_name = entityDataModel().getEntity().searchColumn();
+    int search_col_index = get_column_index(search_col_name);:23
+
+    if (search_col_index < 0 )
+        return;
+    */
+
+    std::string search_name = selectedRowName(m_picklist_setting.m_search_col_index).toStdString();
 
     if (search_name.empty())
         return;
 
     BaseEntity* entity = entityDataModel().findEntityByName(search_name);
     entity->setDBAction(DBAction::dbaCREATE); // ?????
-    mPickListSetting.selectedEntities.push_back(entity);
+    m_picklist_setting.selectedEntities.push_back(entity);
 
-    if (mPickListSetting.pickMode == PickListMode::plmSINGLE_SELECT)
+    if (m_picklist_setting.pickMode == PickListMode::plmSINGLE_SELECT)
         done(1);
 }
 
 void PickListBrowser::onCloseSelection()
 {
-    if (mPickListSetting.selectedEntities.size() > 0){
+    if (m_picklist_setting.selectedEntities.size() > 0){
         done(1);
     }else{
         done(0);
     }
+}
+
+int PickListBrowser::get_column_index(std::string column_name)
+{
+    for( int i=0; i<bui->tvEntity->model()->columnCount(); ++i){
+        auto col_name = bui->tvEntity->model()->headerData(i, Qt::Horizontal).toString();
+        if (col_name == QString::fromStdString(column_name)){
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 

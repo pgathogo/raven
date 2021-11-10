@@ -28,8 +28,9 @@ public:
 
     bool generate_wave_file(const std::string src_audio_file, const std::string dest_wave_file);
     std::string mp3_to_ogg(AudioFile&);
-    std::string generate_ogg_filename(int audio_file_id);
-    bool copy_ogg_to_audiolib(std::string src_ogg, std::string dest_ogg);
+    std::string generate_ogg_filename(int);
+    bool copy_ogg_to_audiolib(std::string, std::string);
+    QString format_time(double);
 
 //    std::string full_audio_name(AUDIO::Audio*);
 

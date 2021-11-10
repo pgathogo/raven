@@ -199,6 +199,32 @@ void AudioTool::mp3_ready()
     qDebug() << "MP3_READY: "<< m_mp3_to_ogg_proc->readAllStandardOutput();
 }
 
+QString AudioTool::format_time(double time)
+{
+    // hh:mm:ss:ms
+    const int msec_per_second = 1000;
+    QString time_format = "%1:%2:%3:%4";
+    QString time_str{};
+
+    int msec_dbl = 0;
+    int msec = 0;
+    int mins = 0;
+    int secs = 0;
+
+    msec_dbl = time * msec_per_second;
+    msec = msec_dbl % msec_per_second;
+
+    mins = time / 60;
+    secs = (int)time % 60;
+
+    time_str = time_format.arg(0)
+            .arg(mins, 2, 10, QChar('0'))
+            .arg(secs, 2, 10, QChar('0'))
+            .arg(msec, 3, 10, QChar('0'));
+
+    return time_str;
+}
+
 //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
 //{
 //    auto ogg_file = generate_ogg_filename(audio->id())+".ogg";

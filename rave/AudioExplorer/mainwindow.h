@@ -31,11 +31,13 @@ class MainWindow : public QMainWindow
 public:
     enum ArtistColumn{FirstName=0, LastName, FullName, ArtistType, Notes};
     enum GenreColumn{GenreName};
+    enum TrackColumns{Title, Artist, Duration, AudioType, AudioFile};
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     void fetch_audio(const std::string);
+    void fetch_folder_audio(int);
     void show_audio_data();
     void create_track_view_headers();
     void set_track_view();
@@ -61,20 +63,23 @@ public:
     void delete_entity(EntityDataModel*, QTableView*, int);
     bool okay_to_delete(const BaseEntity* entity);
     void remove_tv_selected_row(QTableView*);
-    void make_selection(EntityDataModel* edm, std::string, int);
+    std::string make_selection(EntityDataModel* edm, std::string, int);
 
 public slots:
     void add_artist();
     void edit_artist();
     void delete_artist();
-    void folder_clicked(const QModelIndex& index);
-    void artist_selected(const QModelIndex& index);
+    void folder_clicked(const QModelIndex&);
+    void artist_selected(const QModelIndex&);
     void search_artist();
 
     void add_genre();
     void edit_genre();
     void delete_genre();
-    void genre_selected(const QModelIndex& index);
+    void genre_selected(const QModelIndex&);
+
+    void audio_properties();
+    void track_double_clicked(const QModelIndex&);
 
 private:
     Ui::MainWindow *ui;

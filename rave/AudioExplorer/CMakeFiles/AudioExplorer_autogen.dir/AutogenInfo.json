@@ -81,6 +81,11 @@
 			"EWIEGA46WW/moc_artistform.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/AudioExplorer/audioform.h",
+			"MU",
+			"EWIEGA46WW/moc_audioform.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.h",
 			"MU",
 			"EWIEGA46WW/moc_datatoolbar.cpp"
@@ -191,6 +196,11 @@
 			"TXBK5VWLEF/moc_manytomany.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/framework/picklistbrowser.h",
+			"MU",
+			"TXBK5VWLEF/moc_picklistbrowser.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/queryset.h",
 			"MU",
 			"TXBK5VWLEF/moc_queryset.cpp"
@@ -204,6 +214,11 @@
 			"D:/home/PMS/Raven/rave/framework/relationmapper.h",
 			"MU",
 			"TXBK5VWLEF/moc_relationmapper.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/selectclosewidget.h",
+			"MU",
+			"TXBK5VWLEF/moc_selectclosewidget.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/tree.h",
@@ -301,6 +316,7 @@
 	"SOURCES" : 
 	[
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/artistform.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/AudioExplorer/audioform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/main.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/mainwindow.cpp", "MU" ],
@@ -324,8 +340,10 @@
 		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/letterfilterwidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/manytomany.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/picklistbrowser.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/selectclosewidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/treeviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/typeexclusion.cpp", "MU" ],

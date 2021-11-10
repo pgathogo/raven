@@ -25,6 +25,7 @@
 #include "../framework/treeviewmodel.h"
 #include "../framework/relationmapper.h"
 #include "../framework/baseentity.h"
+
 #include "../audio/audiolibrary.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"

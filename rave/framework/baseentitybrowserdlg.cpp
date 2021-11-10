@@ -190,7 +190,7 @@ int BaseEntityBrowserDlg::selectedRowId() const
     return -1;
 }
 
-QString BaseEntityBrowserDlg::selectedRowName()
+QString BaseEntityBrowserDlg::selectedRowName(int col_index)
 {
 
     auto sel_row_id = selectedRowId();
@@ -199,7 +199,7 @@ QString BaseEntityBrowserDlg::selectedRowName()
 
     QVariant col_name = bui->tvEntity->model()->data(
                             bui->tvEntity->model()->index(
-                                    sel_row_id, 0));
+                                    sel_row_id, col_index));
     return col_name.toString();
 }
 

@@ -266,7 +266,7 @@ public:
 protected:
     QMdiArea* mMdiArea;
     int selectedRowId() const;
-    QString selectedRowName();
+    QString selectedRowName(int col_index=0);
     void updateTableViewRecord(const std::vector<std::string> values);
     void removeSelectedRow();
     void hideAddButton();

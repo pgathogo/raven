@@ -19,11 +19,12 @@ enum class PickListMode{
 };
 
 struct PickListSetting {
-    PickListSetting(std::unique_ptr<BaseEntity> entity,
+    PickListSetting(std::unique_ptr<BaseEntity> entity, int search_col_index,
                     PickListMode plm = PickListMode::plmSINGLE_SELECT);
     std::unique_ptr<BaseEntity> listEntity;
     std::vector<BaseEntity*> selectedEntities;
     PickListMode pickMode;
+    int m_search_col_index=0;
 };
 
 
@@ -42,6 +43,7 @@ public:
     void addRecord() override;
     void updateRecord() override;
 
+    int get_column_index(std::string);
     std::string typeID() override;
 public slots:
     void onSelectItem();
@@ -53,7 +55,7 @@ signals:
 private:
     Ui::PickListBrowser *ui;
     SelectCloseWidget* scw;
-    PickListSetting& mPickListSetting;
+    PickListSetting& m_picklist_setting;
 };
 
 #endif // PICKLISTBROWSER_H

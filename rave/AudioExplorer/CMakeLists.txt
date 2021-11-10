@@ -52,6 +52,9 @@ set(PROJECT_SOURCES
         artistform.h
         artistform.cpp
         artistform.ui
+        audioform.h
+        audioform.cpp
+        audioform.ui
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp
@@ -83,6 +86,8 @@ set(PROJECT_SOURCES
         ../framework/treeviewmodel.cpp
         ../framework/tree.cpp
         ../framework/letterfilterwidget.cpp
+        ../framework/picklistbrowser.cpp
+        ../framework/selectclosewidget.cpp
         ../security/authentication.cpp
         ../security/user.cpp
         ../utils/notificationbar.cpp
