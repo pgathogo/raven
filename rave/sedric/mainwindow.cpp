@@ -25,6 +25,9 @@
 #include "../framework/treeviewmodel.h"
 #include "../framework/relationmapper.h"
 #include "../framework/baseentity.h"
+#include "../framework/entitydatamodel.h"
+#include "../framework/schedule.h"
+#include "../framework/choicefield.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audio.h"
@@ -32,9 +35,6 @@
 #include "../audio/audiotrackitem.h"
 #include "../audio/audiotool.h"
 #include "../audio/audiolibitem.h"
-#include "../framework/entitydatamodel.h"
-#include "../framework/schedule.h"
-#include "../framework/choicefield.h"
 
 #include "../utils/tools.h"
 

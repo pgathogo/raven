@@ -18,7 +18,7 @@
 AUDIO_INCLUDE_DIR:PATH=D:/home/PMS/Raven/rave/audiolib/headers
 
 //Path to a library.
-AUDIO_LIBRARY:FILEPATH=D:/home/PMS/Raven/rave/audiolib/lib_debug
+AUDIO_LIBRARY:FILEPATH=AUDIO_LIBRARY-NOTFOUND
 
 //Value Computed by CMake
 AudioExplorer_BINARY_DIR:STATIC=D:/home/PMS/Raven/rave/AudioExplorer
@@ -63,7 +63,7 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //Libraries linked by default with all C++ applications.
-CMAKE_CXX_STANDARD_LIBRARIES:STRING=-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -llibcueeditord
+CMAKE_CXX_STANDARD_LIBRARIES:STRING=-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
 
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=D:/MinGW/MinGW/bin/dlltool.exe

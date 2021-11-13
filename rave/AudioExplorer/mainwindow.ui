@@ -134,9 +134,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="btnPlay">
             <property name="text">
-             <string>Listen</string>
+             <string>Play</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

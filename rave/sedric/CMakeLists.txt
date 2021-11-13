@@ -42,6 +42,7 @@ set(AUDIO_LIB "../audiolib/lib_debug")
 find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
 find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
 
+
 if (AUDIO_INCLUDE_DIR)
         message(STATUS "Audio Include dir found.")
 endif()
@@ -130,5 +131,4 @@ link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(sedric PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(sedric PRIVATE ${PostgreSQL_LIBRARIES})
-
 target_link_libraries(sedric PRIVATE ${RAVE_AUDIO_LIBRARIES})

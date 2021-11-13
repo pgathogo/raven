@@ -20,9 +20,12 @@ namespace AUDIO{
   class GenreTypeItem;
 }
 
+class CueEditor;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
 
 class MainWindow : public QMainWindow
 {
@@ -31,7 +34,7 @@ class MainWindow : public QMainWindow
 public:
     enum ArtistColumn{FirstName=0, LastName, FullName, ArtistType, Notes};
     enum GenreColumn{GenreName};
-    enum TrackColumns{Title, Artist, Duration, AudioType, AudioFile};
+    enum TrackColumns : int{Title=0, Artist=1, Duration=2, AudioType=3, AudioFileName=4};
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -64,6 +67,10 @@ public:
     bool okay_to_delete(const BaseEntity* entity);
     void remove_tv_selected_row(QTableView*);
     std::string make_selection(EntityDataModel* edm, std::string, int);
+    AUDIO::Audio* get_selected_audio();
+
+    void play_audio();
+    void stop_play();
 
 public slots:
     void add_artist();
@@ -80,6 +87,8 @@ public slots:
 
     void audio_properties();
     void track_double_clicked(const QModelIndex&);
+
+    void play_btn_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -98,6 +107,8 @@ private:
 
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
+
+    std::unique_ptr<CueEditor> m_cue_editor;
 
 };
 

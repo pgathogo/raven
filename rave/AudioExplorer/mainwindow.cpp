@@ -18,6 +18,9 @@
 #include "../audio/audiotool.h"
 #include "../audio/genreform.h"
 
+#include "../audiolib/headers/cueeditor.h"
+#include "../audiolib/headers/audioplayer.h"
+
 #include "../framework/baseentity.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/ravenexception.h"
@@ -42,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnSearchArtist, &QPushButton::clicked, this, &MainWindow::search_artist);
     connect(ui->edtSearchArtist, &QLineEdit::returnPressed, this, &MainWindow::search_artist);
 
-
     // Genre Data toolbar
     m_genre_toolbar = new DataToolBar();
     ui->hlGenre->addWidget(m_genre_toolbar);
@@ -52,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Operation buttons
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
+    connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
     m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
@@ -417,8 +420,6 @@ void MainWindow::edit_genre()
         }else{
             dlg = nullptr;
         }
-
-
 }
 
 
@@ -576,9 +577,61 @@ void MainWindow::audio_properties()
                 m_audio_entity_data_model->updateEntity(*audio);
             }
             catch(DatabaseException& de){
-                qDebug() << QString::fromStdString(de.errorMessage());
                 showMessage(de.errorMessage());
             }
     }
 
+}
+
+void MainWindow::play_btn_clicked()
+{
+    if (!ui->btnPlay->isChecked()){
+        stop_play();
+    } else {
+        play_audio();
+    }
+}
+
+void MainWindow::play_audio()
+{
+    QItemSelectionModel* select = ui->tvTracks->selectionModel();
+    if (select->selectedRows().size() == 0)
+        return;
+
+    AUDIO::Audio* audio = get_selected_audio();
+    if (audio == nullptr)
+        return;
+
+    AudioTool at;
+    auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+    auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
+
+    if (!QFile::exists(QString::fromStdString(full_audio_name))){
+        showMessage("File does not exists! "+full_audio_name);
+        return;
+    }
+
+    AudioFile af(full_audio_name);
+    m_cue_editor = std::make_unique<CueEditor>(af, full_audio_name);
+    m_cue_editor->play_audio();
+}
+
+void MainWindow::stop_play()
+{
+    if (m_cue_editor != nullptr)
+        m_cue_editor->stop_audio();
+}
+
+AUDIO::Audio* MainWindow::get_selected_audio()
+{
+    auto mod_index = ui->tvTracks->currentIndex();
+    auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
+    auto audio_id = first_col.data(Qt::UserRole).toInt();
+
+    if (audio_id == 0)
+        return nullptr;
+
+    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
+
+    return audio;
 }

@@ -13,7 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
-set(rave_audiolib_INCLUDE_DIRS "../audio")
+set(rave_audio_INCLUDE_DIRS "../audio")
+set(rave_audiolib_INCLUDE_DIRS "../audiolib")
 
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
 find_package(PostgreSQL REQUIRED)
@@ -41,6 +42,18 @@ set(AUDIO_INCLUDE "../audiolib/headers")
 set(AUDIO_LIB "../audiolib/lib_debug")
 find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
 find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
+
+if (AUDIO_INCLUDE_DIR)
+        message(STATUS "AUDIO_INCLUDE_DIR found")
+endif()
+
+if (AUDIO_LIBRARY)
+        message(STATUS "Audio library found.")
+endif()
+
+
+include_directories(${AUDIO_INCLUDE_DIR})
+set(RAVE_AUDIO_LIBRARIES ${AUDIO_LIBRARY})
 
 set(PROJECT_SOURCES
         main.cpp
@@ -114,20 +127,22 @@ endif()
 target_link_libraries(AudioExplorer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_include_directories(AudioExplorer PRIVATE ${postgreSQL_INCLUDE_DIRS})
 target_include_directories(AudioExplorer PRIVATE ${rave_framework_INCLUDE_DIRS})
+target_include_directories(AudioExplorer PRIVATE ${rave_audiolib_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
+link_directories(${rave_audio_INCLUDE_DIRS})
 link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(AudioExplorer PRIVATE ${PostgreSQL_LIBRARIES})
 target_link_libraries(AudioExplorer PRIVATE ${RAVE_AUDIO_LIBRARIES})
 
-set_target_properties(AudioExplorer PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-)
+#set_target_properties(AudioExplorer PROPERTIES
+#    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+#    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+#    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+#)
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(AudioExplorer)
-endif()
+#if(QT_VERSION_MAJOR EQUAL 6)
+#    qt_finalize_executable(AudioExplorer)
+#endif()

@@ -43,7 +43,7 @@ ActionResult AudioForm::saveRecord()
 
 std::string AudioForm::windowTitle()
 {
-    return "Audio Form";
+    return "Audio Details";
 }
 
 void AudioForm::populateEntityFields()
