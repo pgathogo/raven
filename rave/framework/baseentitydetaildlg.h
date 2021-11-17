@@ -12,9 +12,10 @@
 //class EntityDataModel;
 class BaseEntity;
 class NotificationBar;
+class QListWidgetItem;
 
 namespace Ui {
-class BaseEntityDetailDlg;
+    class BaseEntityDetailDlg;
 }
 
 using BrowserForms = std::vector<std::unique_ptr<ManyToManyBrowser>>;
@@ -46,8 +47,8 @@ public:
             mForms.emplace_back(std::move(uPtr));
             return ptr;
         }
-
        BrowserForms const& get_forms() const;
+
 
 signals:
        void dialog_is_closing();

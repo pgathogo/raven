@@ -1,0 +1,18 @@
+# ninja log v5
+4	694	0	CMakeFiles/OATS_autogen	64b7d99918d505ab
+4	694	0	OATS_autogen/mocs_compilation.cpp	64b7d99918d505ab
+694	4770	6585781921490892	CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj	1d4e7f90de1db8dd
+698	4675	6585781920530838	CMakeFiles/OATS.dir/main.cpp.obj	8cc6d3fc64a493dd
+701	4825	6585781922030923	CMakeFiles/OATS.dir/mainwindow.cpp.obj	1d8ec2c27d2934ea
+7	864	0	CMakeFiles/OATS_autogen	64b7d99918d505ab
+7	864	0	OATS_autogen/mocs_compilation.cpp	64b7d99918d505ab
+865	4550	6585786416547995	CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj	9da900d4d914e34d
+867	4792	6585786418968133	CMakeFiles/OATS.dir/main.cpp.obj	84ce4b64c95a2412
+870	4901	6585786420088197	CMakeFiles/OATS.dir/mainwindow.cpp.obj	958aaff2291f7529
+4901	5114	6585786422088312	OATS.exe	dd3ceda18743f64f
+5	91	0	CMakeFiles/OATS_autogen	64b7d99918d505ab
+5	91	0	OATS_autogen/mocs_compilation.cpp	64b7d99918d505ab
+958	1818	0	CMakeFiles/OATS_autogen	64b7d99918d505ab
+958	1818	0	OATS_autogen/mocs_compilation.cpp	64b7d99918d505ab
+1819	9534	6588500991711986	CMakeFiles/OATS.dir/mainwindow.cpp.obj	958aaff2291f7529
+9534	9822	6588500994502146	OATS.exe	dd3ceda18743f64f

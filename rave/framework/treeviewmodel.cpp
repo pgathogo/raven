@@ -15,6 +15,10 @@ TreeViewModel::TreeViewModel(std::vector<NodeData*>& node_data,  QObject* parent
     build_tree(nodes);
 }
 
+TreeViewModel::~TreeViewModel()
+{
+}
+
 void TreeViewModel::build_tree_nodes(std::vector<NodeData*>& node_data)
 {
     for (auto data : node_data){

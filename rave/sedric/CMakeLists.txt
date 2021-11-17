@@ -91,8 +91,9 @@ else()
     ../framework/typeexclusion.cpp
     ../framework/queryset.h
     ../framework/valuelist.cpp
+    ../framework/treeviewmodel.h
     ../framework/treeviewmodel.cpp
-    ../framework/tableviewmodel.cpp
+    ../framework/tree.h
     ../framework/tree.cpp
     ../framework/schedule.cpp
     ../framework/relationmapper.h

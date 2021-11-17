@@ -1,6 +1,6 @@
 #include "contentdetailform.h"
 #include "ui_contentdetailform.h"
-#include "ui_baseentitydetaildlg.h"
+#include "../framework/ui_baseentitydetaildlg.h"
 
 #include "content.h"
 

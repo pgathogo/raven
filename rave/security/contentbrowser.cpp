@@ -1,6 +1,6 @@
 #include "contentbrowser.h"
 #include "ui_contentbrowser.h"
-#include "ui_baseentitybrowserdlg.h"
+#include "../framework/ui_baseentitybrowserdlg.h"
 
 #include "content.h"
 #include "contentform.h"

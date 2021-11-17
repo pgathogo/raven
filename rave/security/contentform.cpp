@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "contentform.h"
 #include "ui_contentform.h"
-#include "ui_baseentitydetaildlg.h"
+#include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/entityregister.h"
 #include "../framework/entitydatamodel.h"

@@ -1,3 +1,4 @@
+#include <QListWidgetItem>
 #include "baseentitydetaildlg.h"
 #include "ui_baseentitydetaildlg.h"
 #include "entitydatamodel.h"
@@ -14,6 +15,7 @@ BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     connectSlots();
     //setWindowTitle(QString::fromStdString(title()));
     mNoticeBar = new NotificationBar(bui->noticeLayout);
+
 }
 
 
@@ -67,9 +69,14 @@ void BaseEntityDetailDlg::btnSaveClicked()
 
 void BaseEntityDetailDlg::btnCloseClicked()
 {
-    if (confirmationMessage("Exit without saving?"))
+    if(!m_okay_to_close){
+        if (confirmationMessage("Exit without saving?"))
+            done(0);
+    }else{
         done(0);
+    }
 }
+
 
 void BaseEntityDetailDlg::btnSaveNewClicked()
 {

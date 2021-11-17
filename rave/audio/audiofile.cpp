@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "audiofile.h"
 
 AudioFile::AudioFile()

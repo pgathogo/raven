@@ -1,3 +1,4 @@
+#include <filesystem>
 
 #include <QDebug>
 #include <QStandardItemModel>
@@ -29,6 +30,8 @@
 #include "../framework/relationmapper.h"
 #include "../framework/ravenexception.h"
 
+namespace fs = std::filesystem;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -55,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Operation buttons
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
+    connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
     m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
@@ -587,8 +591,10 @@ void MainWindow::play_btn_clicked()
 {
     if (!ui->btnPlay->isChecked()){
         stop_play();
+        ui->btnPlay->setText("Play");
     } else {
         play_audio();
+        ui->btnPlay->setText("Stop");
     }
 }
 
@@ -634,4 +640,77 @@ AUDIO::Audio* MainWindow::get_selected_audio()
     AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
 
     return audio;
+}
+
+
+void MainWindow::cue_edit()
+{
+    AUDIO::Audio* audio = get_selected_audio();
+    if (audio == nullptr)
+        return;
+
+    AudioTool at;
+    auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+    auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
+    AudioFile aud_file(full_audio_name);
+
+    aud_file.set_audio_title(ogg_file);
+    aud_file.set_short_desc("");
+    aud_file.set_artist_name(audio->artist()->displayName());
+    aud_file.set_audio_path(audio->audio_lib_path()->value());
+    aud_file.set_audio_file(ogg_file);
+    aud_file.set_audio_type(audio->audio_type()->displayName());
+    //aud_file.set_wave_file(const std::string wave_file);
+    aud_file.set_duration(audio->duration()->value());
+    //aud_file.set_audio_lib_path(const std::string lib_path);
+
+    aud_file.set_id(audio->id());
+    aud_file.set_ogg_filename(full_audio_name);
+    aud_file.set_ogg_short_filename(ogg_file);
+    //aud_file.set_temp_id(int id);
+    //aud_file.set_marker(Marker marker);
+
+    audio->set_audio_file(aud_file);
+
+    auto aaf = audio->audio_file();
+
+    Marker marker;
+    audio->audio_file().set_marker(marker);
+
+    if (fs::exists(audio->audio_file().adf_file())){
+
+        qDebug() << QString::fromStdString(audio->audio_file().adf_file());
+
+        AudioFile af = audio->audio_file();
+
+        ADFRepository adf_repo;
+        adf_repo.read_markers(af);
+
+        auto af_marker = audio->audio_file().marker();
+        marker.start_marker = af_marker.start_marker;
+        marker.fade_in = af_marker.fade_in;
+        marker.intro = af_marker.intro;
+        marker.extro = af_marker.extro;
+        marker.fade_out = af_marker.fade_out;
+        marker.end_marker = af_marker.end_marker;
+    }
+
+    if (!fs::exists(audio->audio_file().wave_file())){
+        AudioTool at;
+        at.generate_wave_file(audio->audio_file().audio_file(),
+                              audio->audio_file().wave_file());
+
+        qDebug() << "Wave file generated";
+    }
+
+    qDebug() << "Title: "<< stoq(aaf.audio_title());
+    qDebug() << "Path: "<< stoq(aaf.audio_path());
+    qDebug() << "OGG: "<< stoq(aaf.ogg_filename());
+    qDebug() << "Duration: "<< aaf.duration();
+
+    auto cue_editor = std::make_unique<CueEditor>(aaf);
+    if (cue_editor->editor() == 1){
+
+    }
+
 }

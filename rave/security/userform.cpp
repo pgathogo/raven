@@ -1,6 +1,6 @@
 #include "userform.h"
 #include "ui_userform.h"
-#include "ui_baseentitydetaildlg.h"
+#include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/entitydatamodel.h"
 #include "user.h"

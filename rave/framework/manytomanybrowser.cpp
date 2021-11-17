@@ -45,7 +45,7 @@ ManyToManyBrowser::~ManyToManyBrowser()
 
 void ManyToManyBrowser::addRecord()
 {
-    PickListSetting plset(mMtoM->detailEntity()->cloneAsUnique());
+    PickListSetting plset(mMtoM->detailEntity()->cloneAsUnique(), 0);
     plb = new PickListBrowser(plset);
     plb->exec();
 

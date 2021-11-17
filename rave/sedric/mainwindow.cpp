@@ -21,7 +21,6 @@
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravenexception.h"
 #include "../framework/databasemanager.h"
-#include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/relationmapper.h"
 #include "../framework/baseentity.h"

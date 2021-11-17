@@ -65,7 +65,7 @@ void BrandForm::populateFormWidgets()
 
 void BrandForm::selectClient()
 {
-    PickListSetting set(std::make_unique<Client>());
+    PickListSetting set(std::make_unique<Client>(), 0);
     mPlb = std::make_unique<PickListBrowser>(set);
     mPlb->exec();
 

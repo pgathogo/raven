@@ -182,11 +182,6 @@
 			"TXBK5VWLEF/moc_scheduledatamanager.cpp"
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/tableviewmodel.h",
-			"MU",
-			"TXBK5VWLEF/moc_tableviewmodel.cpp"
-		],
-		[
 			"D:/home/PMS/Raven/rave/framework/tree.h",
 			"MU",
 			"TXBK5VWLEF/moc_tree.cpp"
@@ -362,7 +357,6 @@
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/schedule.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/scheduledatamanager.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/tableviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/treeviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/typeexclusion.cpp", "MU" ],

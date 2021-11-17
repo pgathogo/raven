@@ -17,6 +17,7 @@ class TreeViewModel : public QStandardItemModel
 
 public:
     TreeViewModel(std::vector<NodeData*>&, QObject* parent = nullptr);
+    ~TreeViewModel();
     void build_tree_nodes(std::vector<NodeData*>&);
     void insert_node(TreeNode tree_node, Node* node);
     void print_tree(TreeNode tree_node, int level=0);

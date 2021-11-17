@@ -1,6 +1,6 @@
 #include "contentauthform.h"
 #include "ui_contentauthform.h"
-#include "ui_baseentitydetaildlg.h"
+#include "../framework/ui_baseentitydetaildlg.h"
 
 #include "contentauth.h"
 

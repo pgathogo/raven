@@ -1,7 +1,6 @@
 SOURCES += \
     $$PWD/audio/artist.cpp \
     $$PWD/audio/audio.cpp \
-    $$PWD/audio/genreform.cpp \
     $$PWD/framework/datetimeselector.cpp \
     $$PWD/framework/letterfilterwidget.cpp \
     $$PWD/framework/typeexclusion.cpp \
@@ -77,7 +76,6 @@ SOURCES += \
 HEADERS += \
     $$PWD/audio/artist.h \
     $$PWD/audio/audio.h \
-    $$PWD/audio/genreform.h \
     $$PWD/framework/datetimeselector.h \
     $$PWD/framework/letterfilterwidget.h \
     $$PWD/framework/typeexclusion.h \

@@ -27,7 +27,6 @@ AudioForm::AudioForm(AUDIO::Audio* audio,
     connect(ui->btnPickArtist, &QPushButton::clicked, this, &AudioForm::pick_artist);
     connect(ui->cbGenre, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &AudioForm::genre_combo_changed);
-
 }
 
 AudioForm::~AudioForm()
@@ -55,7 +54,6 @@ void AudioForm::populateEntityFields()
 
     QFileInfo fi(ui->edtFilename->text());
     m_audio->set_file_path(fi.absolutePath().toStdString());
-
 }
 
 void AudioForm::populateFormWidgets()

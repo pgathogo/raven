@@ -89,6 +89,7 @@ public slots:
     void track_double_clicked(const QModelIndex&);
 
     void play_btn_clicked();
+    void cue_edit();
 
 private:
     Ui::MainWindow *ui;

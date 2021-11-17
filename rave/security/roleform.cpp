@@ -1,6 +1,6 @@
 #include "roleform.h"
 #include "ui_roleform.h"
-#include "ui_baseentitydetaildlg.h"
+#include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/manytomanybrowser.h"

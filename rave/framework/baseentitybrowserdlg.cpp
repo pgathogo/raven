@@ -141,6 +141,11 @@ void BaseEntityBrowserDlg::filter_by_letter(int index)
 
     QString tab_text = m_letter_filter_widget->get_tabwidget()->tabText(index);
 
+    if (tab_text == "*"){
+        entityDataModel().all();
+        return;
+    }
+
     auto data = bui->cbFilter->itemData(
                         bui->cbFilter->currentIndex()).value<QVariant>();
     std::string columnName = data.toString().toStdString();
