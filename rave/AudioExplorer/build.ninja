@@ -12,7 +12,7 @@
 
 # =============================================================================
 # Project: AudioExplorer
-# Configurations: 
+# Configurations: Debug
 # =============================================================================
 
 #############################################
@@ -20,6 +20,11 @@
 
 ninja_required_version = 1.5
 
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
 # =============================================================================
 # Include auxiliary files.
 
@@ -38,306 +43,306 @@ include CMakeFiles/rules.ninja
 
 build cmake_object_order_depends_target_AudioExplorer: phony || AudioExplorer_autogen
 
-build CMakeFiles/AudioExplorer.dir/AudioExplorer_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__AudioExplorer_ AudioExplorer_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/AudioExplorer_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__AudioExplorer_Debug AudioExplorer_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\AudioExplorer_autogen\mocs_compilation.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\AudioExplorer_autogen
 
-build CMakeFiles/AudioExplorer.dir/main.cpp.obj: CXX_COMPILER__AudioExplorer_ main.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/main.cpp.obj: CXX_COMPILER__AudioExplorer_Debug main.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\main.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir
 
-build CMakeFiles/AudioExplorer.dir/mainwindow.cpp.obj: CXX_COMPILER__AudioExplorer_ mainwindow.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/mainwindow.cpp.obj: CXX_COMPILER__AudioExplorer_Debug mainwindow.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\mainwindow.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir
 
-build CMakeFiles/AudioExplorer.dir/datatoolbar.cpp.obj: CXX_COMPILER__AudioExplorer_ datatoolbar.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/datatoolbar.cpp.obj: CXX_COMPILER__AudioExplorer_Debug datatoolbar.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\datatoolbar.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir
 
-build CMakeFiles/AudioExplorer.dir/artistform.cpp.obj: CXX_COMPILER__AudioExplorer_ artistform.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/artistform.cpp.obj: CXX_COMPILER__AudioExplorer_Debug artistform.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\artistform.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir
 
-build CMakeFiles/AudioExplorer.dir/audioform.cpp.obj: CXX_COMPILER__AudioExplorer_ audioform.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/audioform.cpp.obj: CXX_COMPILER__AudioExplorer_Debug audioform.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\audioform.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/audiolibrary.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/audiolibrary.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\audiolibrary.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/audiofolder.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/audiofolder.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\audiofolder.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/audio.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/audio.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\audio.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/artist.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/artist.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\artist.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/audiofile.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/audiofile.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\audiofile.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/audiolibitem.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/audiolibitem.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\audiolibitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/audiotool.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/audiotool.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\audiotool.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artisttypeitem.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/artisttypeitem.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artisttypeitem.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/artisttypeitem.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\artisttypeitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genretypeitem.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/genretypeitem.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genretypeitem.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/genretypeitem.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\genretypeitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genreform.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/audio/genreform.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genreform.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/audio/genreform.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio\genreform.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/baseentity.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/baseentity.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\baseentity.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\baseentitybrowserdlg.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\baseentitydetaildlg.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/entitydatamodel.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/entitydatamodel.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\entitydatamodel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/relationmapper.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/relationmapper.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\relationmapper.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/entityfields.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/entityfields.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\entityfields.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/databaseconnector.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/databaseconnector.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\databaseconnector.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/databasemanager.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/databasemanager.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\databasemanager.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/ravenexception.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/ravenexception.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\ravenexception.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/dataprovider.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/dataprovider.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\dataprovider.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/manytomany.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/manytomany.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\manytomany.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/typeexclusion.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/typeexclusion.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\typeexclusion.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/valuelist.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/valuelist.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\valuelist.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/treeviewmodel.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/treeviewmodel.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\treeviewmodel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/tree.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/tree.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\tree.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/letterfilterwidget.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/letterfilterwidget.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\letterfilterwidget.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/picklistbrowser.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/picklistbrowser.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\picklistbrowser.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/framework/selectclosewidget.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/framework/selectclosewidget.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework\selectclosewidget.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\framework
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/security/authentication.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/security/authentication.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\security\authentication.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\security
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/security/user.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/security/user.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\security\user.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\security
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/utils/notificationbar.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/utils/notificationbar.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\utils\notificationbar.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\utils
 
-build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.obj: CXX_COMPILER__AudioExplorer_ D$:/home/PMS/Raven/rave/utils/notificationitem.cpp || cmake_object_order_depends_target_AudioExplorer
-  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.obj: CXX_COMPILER__AudioExplorer_Debug D$:/home/PMS/Raven/rave/utils/notificationitem.cpp || cmake_object_order_depends_target_AudioExplorer
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\utils\notificationitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -g -std=gnu++17
   INCLUDES = -I. -IAudioExplorer_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\AudioExplorer.dir\D_\home\PMS\Raven\rave\utils
@@ -350,8 +355,9 @@ build CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationitem
 #############################################
 # Link the executable AudioExplorer.exe
 
-build AudioExplorer.exe: CXX_EXECUTABLE_LINKER__AudioExplorer_ CMakeFiles/AudioExplorer.dir/AudioExplorer_autogen/mocs_compilation.cpp.obj CMakeFiles/AudioExplorer.dir/main.cpp.obj CMakeFiles/AudioExplorer.dir/mainwindow.cpp.obj CMakeFiles/AudioExplorer.dir/datatoolbar.cpp.obj CMakeFiles/AudioExplorer.dir/artistform.cpp.obj CMakeFiles/AudioExplorer.dir/audioform.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artisttypeitem.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genretypeitem.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genreform.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib libcueeditord.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || AudioExplorer_autogen
-  LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 libcueeditord.a
+build AudioExplorer.exe: CXX_EXECUTABLE_LINKER__AudioExplorer_Debug CMakeFiles/AudioExplorer.dir/AudioExplorer_autogen/mocs_compilation.cpp.obj CMakeFiles/AudioExplorer.dir/main.cpp.obj CMakeFiles/AudioExplorer.dir/mainwindow.cpp.obj CMakeFiles/AudioExplorer.dir/datatoolbar.cpp.obj CMakeFiles/AudioExplorer.dir/artistform.cpp.obj CMakeFiles/AudioExplorer.dir/audioform.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/artisttypeitem.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genretypeitem.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/audio/genreform.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.obj CMakeFiles/AudioExplorer.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgetsd.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Guid.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Cored.a || AudioExplorer_autogen
+  FLAGS = -g
+  LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgetsd.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Guid.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Cored.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib
   OBJECT_DIR = CMakeFiles\AudioExplorer.dir
   POST_BUILD = cd .
@@ -395,7 +401,7 @@ build AudioExplorer_autogen: phony CMakeFiles/AudioExplorer_autogen AudioExplore
 # Custom command for CMakeFiles\AudioExplorer_autogen
 
 build CMakeFiles/AudioExplorer_autogen AudioExplorer_autogen/mocs_compilation.cpp: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\home\PMS\Raven\rave\AudioExplorer && C:\CMake\bin\cmake.exe -E cmake_autogen D:/home/PMS/Raven/rave/AudioExplorer/CMakeFiles/AudioExplorer_autogen.dir/AutogenInfo.json """
+  COMMAND = cmd.exe /C "cd /D D:\home\PMS\Raven\rave\AudioExplorer && C:\CMake\bin\cmake.exe -E cmake_autogen D:/home/PMS/Raven/rave/AudioExplorer/CMakeFiles/AudioExplorer_autogen.dir/AutogenInfo.json Debug"
   DESC = Automatic MOC and UIC for target AudioExplorer
   restat = 1
 
@@ -435,6 +441,7 @@ build C$:/CMake/share/cmake-3.18/Modules/CMakeCXXInformation.cmake C$:/CMake/sha
 # Clean additional files.
 
 build CMakeFiles/clean.additional: CLEAN_ADDITIONAL
+  CONFIG = Debug
 
 
 #############################################

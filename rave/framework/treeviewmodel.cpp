@@ -105,4 +105,45 @@ TreeData TreeViewModel::tokenize(std::string line)
 }
 
 
+Qt::ItemFlags TreeViewModel::flags(const QModelIndex& index) const
+{
+    if (!index.isValid())
+        return Qt::ItemIsEnabled;
 
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool TreeViewModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
+                 int row, int column, const QModelIndex& parent)
+{
+    qDebug() << "Row: "<< row;
+    qDebug() << "Column: "<< column;
+
+    if (action == Qt::IgnoreAction)
+        return true;
+
+    int beginRow;
+
+
+    if (row != -1)
+        beginRow = row;
+    else if (parent.isValid())
+        beginRow = 0;
+    else
+        beginRow = rowCount(QModelIndex());
+
+    return true;
+}
+
+
+QMimeData* TreeViewModel::mimeData(const QModelIndexList& indexes) const
+{
+    qDebug() << "* mimeData *";
+
+}
+
+
+Qt::DropActions TreeViewModel::supportDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}

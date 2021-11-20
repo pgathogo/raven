@@ -33,6 +33,8 @@ class EntityModel : public QStandardItemModel{
         VecIter vecEnd();
 
         std::vector<EntityRecord> const& modelEntities() const;
+        std::vector<EntityRecord> const& temp_entities() const;
+        void append_temp(EntityRecord er);
 
         std::string entityTableName() const;
 
@@ -49,12 +51,17 @@ class EntityModel : public QStandardItemModel{
 
         void add_entity(std::unique_ptr<BaseEntity> entity);
 
+        std::size_t temp_size();
+
     protected:
         void addEntity(std::unique_ptr<BaseEntity> entity);
         //void addEntity(BaseEntity* entity);
     private:
         std::unique_ptr<BaseEntity> mEntity;
         std::vector<EntityRecord> mEntities;
+
+        std::vector<EntityRecord>m_temp_entities;
+
         void addRow(const std::vector<std::string> entity_cols);
         //bool editEntity(BaseEntity* oldEntity, BaseEntity* newEntity);
 };
@@ -84,6 +91,7 @@ public:
     void search(const std::string searchFilter);
 
     void starts_with(std::tuple<std::string, std::string>);
+    void starts_with_view(std::tuple<std::string, std::string>);
 
     std::string make_insert_stmt(const BaseEntity& entity);
     void executeRawSQL(const std::string sql);

@@ -7,14 +7,14 @@
 
 # =============================================================================
 # Project: AudioExplorer
-# Configurations: 
+# Configurations: Debug
 # =============================================================================
 # =============================================================================
 
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__AudioExplorer_
+rule CXX_COMPILER__AudioExplorer_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = D:\MinGW\MinGW\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,7 +24,7 @@ rule CXX_COMPILER__AudioExplorer_
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__AudioExplorer_
+rule CXX_EXECUTABLE_LINKER__AudioExplorer_Debug
   command = cmd.exe /C "$PRE_LINK && D:\MinGW\MinGW\bin\g++.exe $FLAGS $LINK_FLAGS $in -o $TARGET_FILE -Wl,--out-implib,$TARGET_IMPLIB -Wl,--major-image-version,0,--minor-image-version,0 $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT

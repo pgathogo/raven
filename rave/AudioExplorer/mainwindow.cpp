@@ -29,12 +29,14 @@
 #include "../framework/choicefield.h"
 #include "../framework/relationmapper.h"
 #include "../framework/ravenexception.h"
+#include "../framework/letterfilterwidget.h"
 
 namespace fs = std::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    :QMainWindow(parent)
+    ,ui(new Ui::MainWindow)
+    ,m_letter_filter_widget{nullptr}
 {
     ui->setupUi(this);
 
@@ -59,6 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
     connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
+    connect(ui->btnDragMode, &QPushButton::clicked, this, &MainWindow::set_drag_mode);
+    ui->btnDragMode->setText("Drag Mode - OFF");
+    connect(ui->btnCut, &QPushButton::clicked, this, &MainWindow::cut_audio);
+    connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
     m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
@@ -94,6 +100,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setup_genre_view();
     fetch_genre();
+
+    show_letter_filter();
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
@@ -589,6 +597,9 @@ void MainWindow::audio_properties()
 
 void MainWindow::play_btn_clicked()
 {
+    if (selected_row_id(ui->tvTracks) < 0)
+        return;
+
     if (!ui->btnPlay->isChecked()){
         stop_play();
         ui->btnPlay->setText("Play");
@@ -654,21 +665,19 @@ void MainWindow::cue_edit()
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
     AudioFile aud_file(full_audio_name);
 
-    aud_file.set_audio_title(ogg_file);
+    aud_file.set_audio_title(audio->title()->value());
     aud_file.set_short_desc("");
     aud_file.set_artist_name(audio->artist()->displayName());
     aud_file.set_audio_path(audio->audio_lib_path()->value());
-    aud_file.set_audio_file(ogg_file);
+    //aud_file.set_audio_file(ogg_file);
     aud_file.set_audio_type(audio->audio_type()->displayName());
-    //aud_file.set_wave_file(const std::string wave_file);
+
     aud_file.set_duration(audio->duration()->value());
-    //aud_file.set_audio_lib_path(const std::string lib_path);
 
     aud_file.set_id(audio->id());
     aud_file.set_ogg_filename(full_audio_name);
     aud_file.set_ogg_short_filename(ogg_file);
-    //aud_file.set_temp_id(int id);
-    //aud_file.set_marker(Marker marker);
+    aud_file.set_audio_lib_path(audio->audio_lib_path()->value());
 
     audio->set_audio_file(aud_file);
 
@@ -677,16 +686,12 @@ void MainWindow::cue_edit()
     Marker marker;
     audio->audio_file().set_marker(marker);
 
-    if (fs::exists(audio->audio_file().adf_file())){
-
-        qDebug() << QString::fromStdString(audio->audio_file().adf_file());
-
-        AudioFile af = audio->audio_file();
+    if (fs::exists(aud_file.adf_file())){
 
         ADFRepository adf_repo;
-        adf_repo.read_markers(af);
+        adf_repo.read_markers(aud_file);
 
-        auto af_marker = audio->audio_file().marker();
+        auto af_marker = aud_file.marker();
         marker.start_marker = af_marker.start_marker;
         marker.fade_in = af_marker.fade_in;
         marker.intro = af_marker.intro;
@@ -695,22 +700,111 @@ void MainWindow::cue_edit()
         marker.end_marker = af_marker.end_marker;
     }
 
-    if (!fs::exists(audio->audio_file().wave_file())){
+    if (!fs::exists(aud_file.wave_file())){
         AudioTool at;
         at.generate_wave_file(audio->audio_file().audio_file(),
                               audio->audio_file().wave_file());
-
-        qDebug() << "Wave file generated";
     }
 
-    qDebug() << "Title: "<< stoq(aaf.audio_title());
-    qDebug() << "Path: "<< stoq(aaf.audio_path());
-    qDebug() << "OGG: "<< stoq(aaf.ogg_filename());
-    qDebug() << "Duration: "<< aaf.duration();
 
-    auto cue_editor = std::make_unique<CueEditor>(aaf);
+    //auto cue_editor = std::make_unique<CueEditor>(aaf);
+    CueEditor* cue_editor = new CueEditor(aud_file);
     if (cue_editor->editor() == 1){
 
     }
+
+}
+
+void MainWindow::set_drag_mode()
+{
+    if (ui->btnDragMode->isChecked()){
+        ui->tvTracks->setDragEnabled(true);
+        ui->tvTracks->setDragDropMode(QTableView::DragDrop);
+//        ui->tvTracks->setSelectionMode(QTableView::MultiSelection);
+        ui->tvFolders->setDragEnabled(true);
+        ui->tvFolders->setDragDropMode(QTreeView::DragDrop);
+        ui->tvFolders->setAcceptDrops(true);
+        ui->btnDragMode->setText("Drag Mode - ON");
+    } else {
+        ui->tvTracks->setDragEnabled(false);
+        ui->tvTracks->setDragDropMode(QTableView::NoDragDrop);
+//        ui->tvTracks->setSelectionMode(QTableView::SingleSelection);
+        ui->tvFolders->setDragEnabled(false);
+        ui->tvFolders->setDragDropMode(QTreeView::NoDragDrop);
+        ui->tvFolders->setAcceptDrops(false);
+        ui->btnDragMode->setText("Drag Mode - OFF");
+    }
+}
+
+void MainWindow::cut_audio()
+{
+    if (selected_row_id(ui->tvTracks) < 0)
+        return;
+
+    m_cut_audios.clear();
+
+    QItemSelectionModel* selection = ui->tvTracks->selectionModel();
+    QModelIndexList rows = selection->selectedRows(0);
+
+    for (auto model_index : rows){
+        int audio_id = model_index.data(Qt::UserRole).toInt();
+        m_cut_audios.push_back(audio_id);
+    }
+
+}
+
+void MainWindow::paste_audio()
+{
+    if (ui->tvFolders->selectionModel()->selectedRows().size() == 0){
+        showMessage("Please select a folder to paste audio");
+        return;
+    }
+
+    if (m_cut_audios.size() == 0){
+        showMessage("No audio to paste!");
+        return;
+    }
+
+    try{
+        move_audio_to_current_folder();
+        m_cut_audios.clear();
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+}
+
+void MainWindow::move_audio_to_current_folder()
+{
+    std::stringstream sql;
+    int folder_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+
+    std::string ids;
+    for (int id : m_cut_audios){
+        if (!ids.empty())
+            ids += ", ";
+        ids += std::to_string(id);
+    }
+
+    qDebug() << stoq(ids);
+
+    sql << "Update rave_audio set folder_id="+std::to_string(folder_id)
+        << " Where id in ("+ids+")";
+
+    EntityDataModel edm;
+    edm.executeRawSQL(sql.str());
+
+    fetch_folder_audio(folder_id);
+}
+
+void MainWindow::show_letter_filter()
+{
+    m_letter_filter_widget = std::make_unique<LetterFilterWidget>(this);
+    ui->hlayLetterFilter->addWidget(m_letter_filter_widget.get());
+    connect(m_letter_filter_widget->get_tabwidget(), &QTabWidget::currentChanged, this, &MainWindow::filter_audio_by_letter);
+}
+
+void MainWindow::filter_audio_by_letter()
+{
 
 }

@@ -23,9 +23,15 @@ public:
     void print_tree(TreeNode tree_node, int level=0);
     TreeData tokenize(std::string line);
     void build_tree(std::vector<Node *> &nodes);
-
     //Q_INVOKABLE void treeClicked(QModelIndex);
     void treeClicked(QModelIndex);
+
+    Qt::ItemFlags flags(const QModelIndex&) const;
+    bool dropMimeData(const QMimeData* data, Qt::DropAction action,
+                     int, int, const QModelIndex&);
+    QMimeData* mimeData(const QModelIndexList&) const;
+    Qt::DropActions supportDropActions() const;
+
 
 private:
     std::vector<Node*> nodes;

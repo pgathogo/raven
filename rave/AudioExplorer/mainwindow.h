@@ -11,6 +11,7 @@ class BaseEntity;
 class DataToolBar;
 class TreeViewModel;
 class EntityDataModel;
+class LetterFilterWidget;
 
 namespace AUDIO{
   class Audio;
@@ -71,6 +72,8 @@ public:
 
     void play_audio();
     void stop_play();
+    void move_audio_to_current_folder();
+    void show_letter_filter();
 
 public slots:
     void add_artist();
@@ -90,6 +93,11 @@ public slots:
 
     void play_btn_clicked();
     void cue_edit();
+    void set_drag_mode();
+
+    void cut_audio();
+    void paste_audio();
+    void filter_audio_by_letter();
 
 private:
     Ui::MainWindow *ui;
@@ -110,6 +118,9 @@ private:
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
 
     std::unique_ptr<CueEditor> m_cue_editor;
+    std::vector<int> m_cut_audios;
+
+    std::unique_ptr<LetterFilterWidget>m_letter_filter_widget;
 
 };
 

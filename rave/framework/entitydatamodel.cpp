@@ -116,6 +116,16 @@ std::vector<EntityRecord> const& EntityModel::modelEntities() const
     return mEntities;
 }
 
+std::vector<EntityRecord> const& EntityModel::temp_entities() const
+{
+    return m_temp_entities;
+}
+
+void EntityModel::append_temp(EntityRecord er)
+{
+    m_temp_entities.push_back(std::move(er));
+}
+
 std::string EntityModel::entityTableName() const
 {
     return mEntity->tableName();
@@ -146,6 +156,10 @@ std::list<std::string> EntityModel::keys()
 
     return keys;
 
+}
+std::size_t EntityModel::temp_size()
+{
+    return m_temp_entities.size();
 }
 
 /* ----------- EntityDataModel ------------------ */
@@ -283,6 +297,21 @@ void EntityDataModel::starts_with(std::tuple<std::string, std::string> search_it
 {
     if (dbManager->starts_with(getEntity(), search_item) > 0)
         populateEntities();
+}
+
+void EntityDataModel::starts_with_view(std::tuple<std::string, std::string>search_item)
+{
+    if (temp_size() == 0 ){
+        auto it_b = modelEntities().begin();
+        while(modelEntities().size() > 0) {
+            append_temp(std::move(*it_b));
+//            temp_entities().push_back(std::move(*it_b));
+            ++it_b;
+//            entities.erase(it_b);
+//			std::move(modelEntities().begin(), modelEntities().end(),
+//					  std::back_inserter(temp_entities()));
+        }
+    }
 }
 
 std::string EntityDataModel::make_insert_stmt(const BaseEntity &entity)

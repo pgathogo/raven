@@ -74,7 +74,7 @@ void BaseEntityBrowserDlg::show_letter_filter()
     m_letter_filter_widget = std::make_unique<LetterFilterWidget>(this);
     bui->vlGrid->addWidget(m_letter_filter_widget.get());
 
-    connect(m_letter_filter_widget->get_tabwidget(), &QTabWidget::currentChanged, this, BaseEntityBrowserDlg::filter_by_letter);
+    connect(m_letter_filter_widget->get_tabwidget(), &QTabWidget::currentChanged, this, &BaseEntityBrowserDlg::filter_by_letter);
 }
 
 EntityDataModel& BaseEntityBrowserDlg::entityDataModel() const
