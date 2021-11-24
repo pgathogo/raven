@@ -74,6 +74,12 @@ public:
     void stop_play();
     void move_audio_to_current_folder();
     void show_letter_filter();
+    int create_folder_to_db(const std::string&, int);
+    void delete_folder_db(int);
+    bool is_folder_empty(int);
+    void update_folder_name_db(int,std::string);
+    void connect_toolbutton_signals();
+
 
 public slots:
     void add_artist();
@@ -93,11 +99,18 @@ public slots:
 
     void play_btn_clicked();
     void cue_edit();
-    void set_drag_mode();
 
     void cut_audio();
     void paste_audio();
-    void filter_audio_by_letter();
+    void filter_audio_by_letter(int);
+
+    void folder_context_menu(const QPoint&);
+    void create_new_folder();
+    void rename_folder();
+    void delete_folder();
+
+    void cut_folder();
+    void paste_folder();
 
 private:
     Ui::MainWindow *ui;
@@ -121,6 +134,7 @@ private:
     std::vector<int> m_cut_audios;
 
     std::unique_ptr<LetterFilterWidget>m_letter_filter_widget;
+
 
 };
 

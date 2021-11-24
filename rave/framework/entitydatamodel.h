@@ -36,6 +36,10 @@ class EntityModel : public QStandardItemModel{
         std::vector<EntityRecord> const& temp_entities() const;
         void append_temp(EntityRecord er);
 
+        void move_to_temp();
+        void move_from_temp();
+        void filter_by(std::tuple<std::string, std::string>);
+
         std::string entityTableName() const;
 
         BaseEntity& getEntity();

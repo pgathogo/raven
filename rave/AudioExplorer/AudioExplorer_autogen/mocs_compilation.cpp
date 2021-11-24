@@ -2,6 +2,7 @@
 #include "EWIEGA46WW/moc_artistform.cpp"
 #include "EWIEGA46WW/moc_audioform.cpp"
 #include "EWIEGA46WW/moc_datatoolbar.cpp"
+#include "EWIEGA46WW/moc_foldernameform.cpp"
 #include "EWIEGA46WW/moc_mainwindow.cpp"
 #include "Y6ZUSTFKUI/moc_audiotool.cpp"
 #include "Y6ZUSTFKUI/moc_genreform.cpp"

@@ -68,7 +68,8 @@
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5Widgets_QWindowsVistaStylePlugin.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake"
+		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake",
+		"D:/home/PMS/Raven/rave/AudioExplorer/audioexplorer.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "D:/home/PMS/Raven/rave/AudioExplorer",
 	"DEP_FILE" : "",
@@ -89,6 +90,11 @@
 			"D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.h",
 			"MU",
 			"EWIEGA46WW/moc_datatoolbar.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/AudioExplorer/foldernameform.h",
+			"MU",
+			"EWIEGA46WW/moc_foldernameform.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/AudioExplorer/mainwindow.h",
@@ -320,6 +326,7 @@
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/artistform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/audioform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/AudioExplorer/foldernameform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/main.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/mainwindow.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/artist.cpp", "MU" ],

@@ -68,6 +68,10 @@ set(PROJECT_SOURCES
         audioform.h
         audioform.cpp
         audioform.ui
+        foldernameform.h
+        foldernameform.cpp
+        foldernameform.ui
+        audioexplorer.qrc
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp

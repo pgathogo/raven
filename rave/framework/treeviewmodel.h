@@ -23,8 +23,11 @@ public:
     void print_tree(TreeNode tree_node, int level=0);
     TreeData tokenize(std::string line);
     void build_tree(std::vector<Node *> &nodes);
+    void rebuild_tree();
     //Q_INVOKABLE void treeClicked(QModelIndex);
     void treeClicked(QModelIndex);
+
+    void append_child(QModelIndex, QStandardItem*, Node*);
 
     Qt::ItemFlags flags(const QModelIndex&) const;
     bool dropMimeData(const QMimeData* data, Qt::DropAction action,

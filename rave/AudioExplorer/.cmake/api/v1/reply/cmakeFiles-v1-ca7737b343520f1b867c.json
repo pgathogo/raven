@@ -273,6 +273,9 @@
 			"isCMake" : true,
 			"isExternal" : true,
 			"path" : "C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake"
+		},
+		{
+			"path" : "audioexplorer.qrc"
 		}
 	],
 	"kind" : "cmakeFiles",

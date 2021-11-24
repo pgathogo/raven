@@ -44,6 +44,11 @@ void TreeViewModel::build_tree(std::vector<Node *> &nodes)
 
 }
 
+void TreeViewModel::rebuild_tree()
+{
+    build_tree(nodes);
+}
+
 
 void TreeViewModel::treeClicked(QModelIndex mindex)
 {
@@ -146,4 +151,11 @@ QMimeData* TreeViewModel::mimeData(const QModelIndexList& indexes) const
 Qt::DropActions TreeViewModel::supportDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction;
+}
+
+void TreeViewModel::append_child(QModelIndex index, QStandardItem* parent, Node* node)
+{
+    beginInsertRows(QModelIndex(), index.row()+18, index.row()+18);
+    parent->appendRow(node);
+    endInsertRows();
 }

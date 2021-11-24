@@ -9,6 +9,7 @@
 #include "datatoolbar.h"
 #include "artistform.h"
 #include "audioform.h"
+#include "foldernameform.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audio.h"
@@ -23,6 +24,7 @@
 #include "../audiolib/headers/audioplayer.h"
 
 #include "../framework/baseentity.h"
+#include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/ravenexception.h"
 #include "../framework/entitydatamodel.h"
@@ -61,8 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
     connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
-    connect(ui->btnDragMode, &QPushButton::clicked, this, &MainWindow::set_drag_mode);
-    ui->btnDragMode->setText("Drag Mode - OFF");
     connect(ui->btnCut, &QPushButton::clicked, this, &MainWindow::cut_audio);
     connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
 
@@ -121,6 +121,12 @@ void MainWindow::setup_audio_folders()
         ui->tvFolders->setModel(m_folder_model);
         m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
         connect(ui->tvFolders, &QTreeView::clicked, this, &MainWindow::folder_clicked);
+
+        ui->tvFolders->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(ui->tvFolders, &QTreeView::customContextMenuRequested, this, &MainWindow::folder_context_menu);
+
+        connect_toolbutton_signals();
+
     }catch(DatabaseException& de){
         qDebug() << QString::fromStdString(de.errorMessage());
     }
@@ -185,6 +191,177 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
     //fetch_audio(filter_str);
     fetch_folder_audio(folder_id);
+}
+
+void MainWindow::folder_context_menu(const QPoint& pos)
+{
+    QMenu context_menu("Context Menu", ui->tvFolders);
+
+    QAction actNew("New Folder", ui->tvFolders);
+    connect(&actNew, &QAction::triggered, this, &MainWindow::create_new_folder);
+    actNew.setIcon(QIcon(":/images/icons/add.png"));
+
+    QAction actRename("Rename Folder", ui->tvFolders);
+    connect(&actRename, &QAction::triggered, this, &MainWindow::rename_folder);
+    actRename.setIcon(QIcon(":/images/icons/edit.png"));
+
+    QAction actCut("Cut Folder", ui->tvFolders);
+    connect(&actCut, &QAction::triggered, this, &MainWindow::cut_folder);
+    actCut.setIcon(QIcon(":/images/icons/cut.png"));
+
+    QAction actPaste("Paste Folder", ui->tvFolders);
+    connect(&actPaste, &QAction::triggered, this, &MainWindow::paste_folder);
+    actPaste.setIcon(QIcon(":/images/icons/paste.png"));
+
+    QAction actDelete("Delete Folder", ui->tvFolders);
+    connect(&actDelete, &QAction::triggered, this, &MainWindow::delete_folder);
+    actDelete.setIcon(QIcon(":/images/icons/delete.png"));
+
+    context_menu.addAction(&actNew);
+    context_menu.addAction(&actRename);
+    context_menu.addSeparator();
+    context_menu.addAction(&actCut);
+    context_menu.addAction(&actPaste);
+    context_menu.addSeparator();
+    context_menu.addAction(&actDelete);
+    context_menu.exec(ui->tvFolders->mapToGlobal(pos));
+
+}
+
+void MainWindow::connect_toolbutton_signals()
+{
+    connect(ui->tbNew, &QToolButton::clicked, this, &MainWindow::create_new_folder);
+    ui->tbNew->setIcon(QIcon(":/images/icons/add.png"));
+
+    connect(ui->tbRename, &QToolButton::clicked, this, &MainWindow::rename_folder);
+    ui->tbRename->setIcon(QIcon(":/images/icons/edit.png"));
+
+    connect(ui->tbCut, &QToolButton::clicked, this, &MainWindow::cut_folder);
+    ui->tbCut->setIcon(QIcon(":/images/icons/cut.png"));
+
+    connect(ui->tbPaste, &QToolButton::clicked, this, &MainWindow::paste_folder);
+    ui->tbPaste->setIcon(QIcon(":/images/icons/paste.png"));
+
+    connect(ui->tbDelete, &QToolButton::clicked, this, &MainWindow::delete_folder);
+    ui->tbDelete->setIcon(QIcon(":/images/icons/delete.png"));
+}
+
+
+void MainWindow::create_new_folder()
+{
+    auto folder_name_form = std::make_unique<FolderNameForm>("",this);
+    if (folder_name_form->exec() > 0){
+        std::string folder_name = folder_name_form->folder_name().toStdString();
+        int folder_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+
+        int id;
+        try{
+            id = create_folder_to_db(folder_name, folder_id);
+        }catch(DatabaseException& de){
+            qDebug() << QString::fromStdString(de.errorMessage());
+        }
+
+        Node* node = new Node(folder_name, id, folder_id);
+        node->setData(id, Qt::UserRole);
+
+        std::map<int, Node*> node_data;
+        node_data[folder_id] = node;
+        m_folder_model->insert_node(node_data, node);
+
+        //QStandardItem* parent = m_folder_model->itemFromIndex(ui->tvFolders->currentIndex());
+        //parent->appendRow(node);
+
+        QModelIndex mod_index = ui->tvFolders->selectionModel()->currentIndex();
+        QStandardItem* parent = m_folder_model->itemFromIndex(ui->tvFolders->currentIndex());
+        m_folder_model->append_child(mod_index, parent, node);
+    }
+}
+
+int MainWindow::create_folder_to_db(const std::string& folder_name, int parent_id)
+{
+    std::stringstream sql;
+    sql << "Insert into rave_folder (folder_name, parent) Values ('"+folder_name+"'"
+        << ","+std::to_string(parent_id)+") RETURNING id";
+
+    EntityDataModel edm;
+    return edm.insert_returning_id(sql.str());
+}
+
+void MainWindow::rename_folder()
+{
+    int folder_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+    QString folder_name =  m_folder_model->itemFromIndex(ui->tvFolders->currentIndex())->text();
+    auto folder_name_form = std::make_unique<FolderNameForm>(folder_name, this);
+
+    if (folder_name_form->exec() > 0){
+        QString new_name = folder_name_form->folder_name();
+        try{
+            update_folder_name_db(folder_id, new_name.toStdString());
+            QStandardItem* item = m_folder_model->itemFromIndex(ui->tvFolders->currentIndex());
+            item->setText(new_name);
+        } catch(DatabaseException& de) {
+            showMessage(de.errorMessage());
+        }
+    }
+}
+
+void MainWindow::cut_folder()
+{
+}
+
+void MainWindow::paste_folder()
+{
+}
+
+void MainWindow::update_folder_name_db(int folder_id, std::string new_name)
+{
+    std::stringstream sql;
+    sql << "Update rave_folder set folder_name = '"+new_name+"'"
+        << " Where id = "+std::to_string(folder_id);
+    EntityDataModel edm;
+    edm.executeRawSQL(sql.str());
+}
+
+
+
+void MainWindow::delete_folder()
+{
+    // if folder is empty, delete.
+    int folder_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+
+    if (!is_folder_empty(folder_id)){
+        showMessage("Cannot delete a folder with content!");
+        return;
+    }
+
+    try{
+        delete_folder_db(folder_id);
+        auto mod_index = ui->tvFolders->selectionModel()->currentIndex();
+        ui->tvFolders->model()->removeRow(mod_index.row(), mod_index.parent());
+    }catch(DatabaseException& de) {
+        showMessage("DB Error: "+de.errorMessage());
+    }
+}
+
+bool MainWindow::is_folder_empty(int folder_id)
+{
+    auto audio = std::make_unique<AUDIO::Audio>();
+    std::string column_name = audio->folder()->dbColumnName();
+    std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(std::move(audio));
+    auto audio_filter = std::make_tuple(column_name, " = ", folder_id);
+    auto filter = edm->prepareFilter(audio_filter);
+    edm->search(filter);
+
+    return (edm->count() == 0) ? true : false;
+
+}
+
+void MainWindow::delete_folder_db(int folder_id)
+{
+    std::stringstream sql;
+    sql << "Delete from rave_folder where id = "+std::to_string(folder_id);
+    EntityDataModel edm;
+    edm.executeRawSQL(sql.str());
 }
 
 
@@ -706,34 +883,12 @@ void MainWindow::cue_edit()
                               audio->audio_file().wave_file());
     }
 
-
     //auto cue_editor = std::make_unique<CueEditor>(aaf);
     CueEditor* cue_editor = new CueEditor(aud_file);
     if (cue_editor->editor() == 1){
 
     }
 
-}
-
-void MainWindow::set_drag_mode()
-{
-    if (ui->btnDragMode->isChecked()){
-        ui->tvTracks->setDragEnabled(true);
-        ui->tvTracks->setDragDropMode(QTableView::DragDrop);
-//        ui->tvTracks->setSelectionMode(QTableView::MultiSelection);
-        ui->tvFolders->setDragEnabled(true);
-        ui->tvFolders->setDragDropMode(QTreeView::DragDrop);
-        ui->tvFolders->setAcceptDrops(true);
-        ui->btnDragMode->setText("Drag Mode - ON");
-    } else {
-        ui->tvTracks->setDragEnabled(false);
-        ui->tvTracks->setDragDropMode(QTableView::NoDragDrop);
-//        ui->tvTracks->setSelectionMode(QTableView::SingleSelection);
-        ui->tvFolders->setDragEnabled(false);
-        ui->tvFolders->setDragDropMode(QTreeView::NoDragDrop);
-        ui->tvFolders->setAcceptDrops(false);
-        ui->btnDragMode->setText("Drag Mode - OFF");
-    }
 }
 
 void MainWindow::cut_audio()
@@ -786,8 +941,6 @@ void MainWindow::move_audio_to_current_folder()
         ids += std::to_string(id);
     }
 
-    qDebug() << stoq(ids);
-
     sql << "Update rave_audio set folder_id="+std::to_string(folder_id)
         << " Where id in ("+ids+")";
 
@@ -804,7 +957,19 @@ void MainWindow::show_letter_filter()
     connect(m_letter_filter_widget->get_tabwidget(), &QTabWidget::currentChanged, this, &MainWindow::filter_audio_by_letter);
 }
 
-void MainWindow::filter_audio_by_letter()
+void MainWindow::filter_audio_by_letter(int index)
 {
+    QString tab_text = m_letter_filter_widget->get_tabwidget()->tabText(index);
+
+//    if (tab_text == "*"){
+//        entityDataModel().all();
+//        return;
+//    }
+//    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
+
+    auto search = std::make_tuple("title", tab_text.toStdString());
+    m_audio_entity_data_model->starts_with_view(search);
+
+    show_audio_data();
 
 }

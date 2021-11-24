@@ -126,6 +126,56 @@ void EntityModel::append_temp(EntityRecord er)
     m_temp_entities.push_back(std::move(er));
 }
 
+void EntityModel::move_to_temp()
+{
+    auto it = mEntities.begin();
+    while(mEntities.size() > 0) {
+        m_temp_entities.push_back(std::move(*it));
+        mEntities.erase(it);
+        it = mEntities.begin();
+    }
+}
+
+void EntityModel::move_from_temp()
+{
+    auto it = m_temp_entities.begin();
+    while(m_temp_entities.size() > 0) {
+        mEntities.push_back(std::move(*it));
+        m_temp_entities.erase(it);
+        it = m_temp_entities.begin();
+    }
+}
+
+void EntityModel::filter_by(std::tuple<std::string, std::string> search_item)
+{
+    bool found=false;
+    const std::string field_name = std::get<0>(search_item);
+    const std::string search_char = std::get<1>(search_item);
+
+    auto it = m_temp_entities.begin();
+    while(it != m_temp_entities.end()){
+        const auto& [k, v] = *it;
+        for (const auto& [name, field] : v->fields()){
+            if (name == field_name){
+                std::string fv = field->valueToString();
+                if (fv.compare(0,1, search_char) == 0){
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if (found){
+            mEntities.push_back(std::move(*it));
+            m_temp_entities.erase(it);
+            found = false;
+        }else{
+            ++it;
+        }
+
+    }
+}
+
 std::string EntityModel::entityTableName() const
 {
     return mEntity->tableName();
@@ -301,16 +351,11 @@ void EntityDataModel::starts_with(std::tuple<std::string, std::string> search_it
 
 void EntityDataModel::starts_with_view(std::tuple<std::string, std::string>search_item)
 {
-    if (temp_size() == 0 ){
-        auto it_b = modelEntities().begin();
-        while(modelEntities().size() > 0) {
-            append_temp(std::move(*it_b));
-//            temp_entities().push_back(std::move(*it_b));
-            ++it_b;
-//            entities.erase(it_b);
-//			std::move(modelEntities().begin(), modelEntities().end(),
-//					  std::back_inserter(temp_entities()));
-        }
+    if (std::get<1>(search_item) == "*"){
+        move_from_temp();
+    }else{
+        move_to_temp();
+        filter_by(search_item);
     }
 }
 
