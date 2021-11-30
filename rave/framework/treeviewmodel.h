@@ -16,7 +16,7 @@ class TreeViewModel : public QStandardItemModel
     Q_OBJECT
 
 public:
-    TreeViewModel(std::vector<NodeData*>&, QObject* parent = nullptr);
+    TreeViewModel(std::vector<NodeData*>, QObject* parent = nullptr);
     ~TreeViewModel();
     void build_tree_nodes(std::vector<NodeData*>&);
     void insert_node(TreeNode tree_node, Node* node);
@@ -27,16 +27,16 @@ public:
     //Q_INVOKABLE void treeClicked(QModelIndex);
     void treeClicked(QModelIndex);
 
-    void append_child(QModelIndex, QStandardItem*, Node*);
+    void update_model(NodeData*);
+    std::vector<NodeData*> nodes_data();
 
-    Qt::ItemFlags flags(const QModelIndex&) const;
-    bool dropMimeData(const QMimeData* data, Qt::DropAction action,
-                     int, int, const QModelIndex&);
-    QMimeData* mimeData(const QModelIndexList&) const;
-    Qt::DropActions supportDropActions() const;
+//    QModelIndex index(int, int, const QModelIndex&) const override;
 
+//    int rowCount(const QModelIndex& parent=QModelIndex()) const;
+ //   QVariant data(const QModelIndex&, int) const;
 
 private:
+    std::vector<NodeData*> m_node_data;
     std::vector<Node*> nodes;
     QStandardItem* rootItem;
     TreeNode tree;

@@ -72,6 +72,8 @@ set(PROJECT_SOURCES
         foldernameform.cpp
         foldernameform.ui
         audioexplorer.qrc
+        artistmanager.h
+        artistmanager.cpp
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp

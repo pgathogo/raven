@@ -6,17 +6,26 @@
 #include "treeviewmodel.h"
 #include "tree.h"
 
-TreeViewModel::TreeViewModel(std::vector<NodeData*>& node_data,  QObject* parent)
+#include "../utils/tools.h"
+
+TreeViewModel::TreeViewModel(std::vector<NodeData*> node_data,  QObject* parent)
     :QStandardItemModel{ parent }
+    ,m_node_data{node_data}
 {
     setColumnCount(1);
     rootItem = invisibleRootItem();
+
     build_tree_nodes(node_data);
     build_tree(nodes);
 }
 
 TreeViewModel::~TreeViewModel()
 {
+}
+
+void TreeViewModel::update_model(NodeData* node_data)
+{
+    m_node_data.push_back(node_data);
 }
 
 void TreeViewModel::build_tree_nodes(std::vector<NodeData*>& node_data)
@@ -44,8 +53,18 @@ void TreeViewModel::build_tree(std::vector<Node *> &nodes)
 
 }
 
+std::vector<NodeData*> TreeViewModel::nodes_data()
+{
+    return m_node_data;
+}
+
 void TreeViewModel::rebuild_tree()
 {
+   // beginResetModel();
+   // nodes.clear();
+   // endResetModel();
+
+    build_tree_nodes(m_node_data);
     build_tree(nodes);
 }
 
@@ -72,7 +91,6 @@ void TreeViewModel::insert_node(TreeNode tree_node, Node* node)
         }
     }
 }
-
 
 void TreeViewModel::print_tree(TreeNode tree_node, int level)
 {
@@ -109,53 +127,26 @@ TreeData TreeViewModel::tokenize(std::string line)
      return tok_tuple;
 }
 
-
-Qt::ItemFlags TreeViewModel::flags(const QModelIndex& index) const
+/*
+QVariant TreeViewModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid())
-        return Qt::ItemIsEnabled;
-
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    if (!nodes.empty() && role == Qt::DisplayRole){
+//        qDebug() << nodes.at(index.row())->text();
+        return nodes.at(index.row())->text();
+    }
+    return QVariant();
 }
 
-bool TreeViewModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
-                 int row, int column, const QModelIndex& parent)
+QModelIndex TreeViewModel::index(int row, int col, const QModelIndex& parent) const
 {
-    qDebug() << "Row: "<< row;
-    qDebug() << "Column: "<< column;
-
-    if (action == Qt::IgnoreAction)
-        return true;
-
-    int beginRow;
-
-
-    if (row != -1)
-        beginRow = row;
-    else if (parent.isValid())
-        beginRow = 0;
-    else
-        beginRow = rowCount(QModelIndex());
-
-    return true;
+    if (hasIndex(row, col, parent))
+        return createIndex(row, col);
+    return QModelIndex();
 }
 
 
-QMimeData* TreeViewModel::mimeData(const QModelIndexList& indexes) const
+int TreeViewModel::rowCount(const QModelIndex& parent) const
 {
-    qDebug() << "* mimeData *";
-
+    return nodes.size();
 }
-
-
-Qt::DropActions TreeViewModel::supportDropActions() const
-{
-    return Qt::CopyAction | Qt::MoveAction;
-}
-
-void TreeViewModel::append_child(QModelIndex index, QStandardItem* parent, Node* node)
-{
-    beginInsertRows(QModelIndex(), index.row()+18, index.row()+18);
-    parent->appendRow(node);
-    endInsertRows();
-}
+*/

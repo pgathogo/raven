@@ -12,8 +12,6 @@
 #include "foldernameform.h"
 
 #include "../audio/audiolibrary.h"
-#include "../audio/audio.h"
-#include "../audio/artist.h"
 #include "../audio/audiolibitem.h"
 #include "../audio/artisttypeitem.h"
 #include "../audio/genretypeitem.h"
@@ -24,12 +22,9 @@
 #include "../audiolib/headers/audioplayer.h"
 
 #include "../framework/baseentity.h"
-#include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/ravenexception.h"
-#include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
-#include "../framework/relationmapper.h"
 #include "../framework/ravenexception.h"
 #include "../framework/letterfilterwidget.h"
 
@@ -39,11 +34,17 @@ MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
     ,ui(new Ui::MainWindow)
     ,m_letter_filter_widget{nullptr}
+    ,m_cut_folder_id{-1}
 {
     ui->setupUi(this);
 
     m_artist_toolbar = new DataToolBar();
     ui->hlArtist->addWidget(m_artist_toolbar);
+
+    // Audio Tab
+    connect(ui->btnSearchAudio, &QPushButton::clicked, this, &MainWindow::search_audio);
+    connect(ui->edtSearchAudio, &QLineEdit::returnPressed, this, &MainWindow::search_audio);
+
 
     // Artist Data toolbar
     connect(m_artist_toolbar->add_button(), &QPushButton::clicked, this, &MainWindow::add_artist);
@@ -67,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-    m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
+    //m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
     m_genre_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Genre>());
 
     setup_audio_folders();
@@ -83,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tvTracks->verticalHeader()->setVisible(false);
 
     connect(ui->tvTracks, &QTableView::doubleClicked, this, &MainWindow::track_double_clicked);
+    ui->tvTracks->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tvTracks, &QTableView::customContextMenuRequested, this, &MainWindow::track_context_menu);
 
     m_artist_model = new QStandardItemModel(this);
     m_artist_type_item = std::make_unique<AUDIO::ArtistTypeItem>(m_artist_model);
@@ -112,14 +115,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::attach_folder_model()
+{
+    //AudioLibrary audio_lib;
+    //auto tree_data = audio_lib.read_data_from_db();
+    //m_folder_model = new TreeViewModel(tree_data, this);
+    m_folder_model->rebuild_tree();
+    ui->tvFolders->setModel(m_folder_model);
+    m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
+}
+
 void MainWindow::setup_audio_folders()
 {
     try{
+
         AudioLibrary audio_lib;
         auto tree_data = audio_lib.read_data_from_db();
         m_folder_model = new TreeViewModel(tree_data, this);
         ui->tvFolders->setModel(m_folder_model);
+        m_folders = tree_data;
+
         m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
+        //attach_folder_model();
+
         connect(ui->tvFolders, &QTreeView::clicked, this, &MainWindow::folder_clicked);
 
         ui->tvFolders->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -187,10 +205,51 @@ void MainWindow::folder_clicked(const QModelIndex& index)
 {
     int folder_id = index.data(Qt::UserRole).toInt();
     auto audio = std::make_unique<AUDIO::Audio>();
-    auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
-    std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
+    //auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
+    //std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
     //fetch_audio(filter_str);
-    fetch_folder_audio(folder_id);
+    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
+    //fetch_folder_audio(folder_filter);
+    fetch_filtered_audio(folder_filter);
+}
+
+void MainWindow::track_context_menu(const QPoint& pos)
+{
+    QMenu context_menu("Context Menu", ui->tvTracks);
+
+    QAction actPlay("Play audio", ui->tvTracks);
+    connect(&actPlay, &QAction::triggered, this, &MainWindow::play_audio);
+
+    QAction actStop("Stop play", ui->tvTracks);
+    connect(&actPlay, &QAction::triggered, this, &MainWindow::stop_play);
+
+    QAction actCueEdit("Cue edit...", ui->tvTracks);
+    connect(&actCueEdit, &QAction::triggered, this, &MainWindow::cue_edit);
+
+    QAction actEditor("Audio editor...", ui->tvTracks);
+    connect(&actEditor, &QAction::triggered, this, &MainWindow::audio_editor);
+
+    QAction actCutAudio("Cut audio", ui->tvTracks);
+    connect(&actCutAudio, &QAction::triggered, this, &MainWindow::cut_audio);
+
+    QAction actPasteAudio("Paste Audio", ui->tvTracks);
+    connect(&actPasteAudio, &QAction::triggered, this, &MainWindow::paste_audio);
+
+    QAction actProp("Audio properties...", ui->tvTracks);
+    connect(&actProp, &QAction::triggered, this, &MainWindow::audio_properties);
+
+    context_menu.addAction(&actPlay);
+    context_menu.addAction(&actStop);
+    context_menu.addSeparator();
+    context_menu.addAction(&actCueEdit);
+    context_menu.addAction(&actEditor);
+    context_menu.addSeparator();
+    context_menu.addAction(&actCutAudio);
+    context_menu.addAction(&actPasteAudio);
+    context_menu.addSeparator();
+    context_menu.addAction(&actProp);
+
+    context_menu.exec(ui->tvTracks->mapToGlobal(pos));
 }
 
 void MainWindow::folder_context_menu(const QPoint& pos)
@@ -261,19 +320,30 @@ void MainWindow::create_new_folder()
             qDebug() << QString::fromStdString(de.errorMessage());
         }
 
-        Node* node = new Node(folder_name, id, folder_id);
-        node->setData(id, Qt::UserRole);
+//        Node* node = new Node(folder_name, id, folder_id);
+//        node->setData(id, Qt::UserRole);
 
-        std::map<int, Node*> node_data;
-        node_data[folder_id] = node;
-        m_folder_model->insert_node(node_data, node);
+        NodeData* nd = new NodeData();
+        nd->id = id;
+        nd->parent_id = folder_id;
+        nd->name = folder_name;
 
-        //QStandardItem* parent = m_folder_model->itemFromIndex(ui->tvFolders->currentIndex());
-        //parent->appendRow(node);
+        auto current_row = ui->tvFolders->selectionModel()->currentIndex().row();
 
-        QModelIndex mod_index = ui->tvFolders->selectionModel()->currentIndex();
-        QStandardItem* parent = m_folder_model->itemFromIndex(ui->tvFolders->currentIndex());
-        m_folder_model->append_child(mod_index, parent, node);
+        ui->tvFolders->setModel(nullptr);
+        m_folders.push_back(nd);
+        delete m_folder_model;
+
+        m_folder_model = new TreeViewModel(m_folders, this);
+
+        ui->tvFolders->setModel(m_folder_model);
+        m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
+
+        QModelIndex index = m_folder_model->index(current_row, 0, QModelIndex());
+
+        ui->tvFolders->setCurrentIndex(index);
+        ui->tvFolders->expand(index);
+
     }
 }
 
@@ -307,10 +377,43 @@ void MainWindow::rename_folder()
 
 void MainWindow::cut_folder()
 {
+    m_cut_folder_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
 }
 
 void MainWindow::paste_folder()
 {
+    int new_parent_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+
+    try{
+        update_folder_parent(m_cut_folder_id, new_parent_id);
+        update_folder_view(new_parent_id);
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+}
+
+
+void MainWindow::update_folder_view(int new_parent_id)
+{
+    for (auto folder : m_folders){
+        if (folder->id == m_cut_folder_id){
+            folder->parent_id = new_parent_id;
+            break;
+        }
+    }
+
+    auto current_row = ui->tvFolders->selectionModel()->currentIndex().row();
+    ui->tvFolders->setModel(nullptr);
+    delete m_folder_model;
+
+//    m_folder_model = new TreeViewModel(m_folders, this);
+    ui->tvFolders->setModel(m_folder_model);
+    m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
+
+    QModelIndex index = m_folder_model->index(current_row, 0, QModelIndex());
+    ui->tvFolders->setCurrentIndex(index);
+    ui->tvFolders->expand(index);
+
 }
 
 void MainWindow::update_folder_name_db(int folder_id, std::string new_name)
@@ -322,6 +425,14 @@ void MainWindow::update_folder_name_db(int folder_id, std::string new_name)
     edm.executeRawSQL(sql.str());
 }
 
+void MainWindow::update_folder_parent(int folder_id, int new_parent_id)
+{
+    std::stringstream sql;
+    sql << "Update rave_folder set parent = "+std::to_string(new_parent_id)
+        << " Where id = "+std::to_string(folder_id);
+    EntityDataModel edm;
+    edm.executeRawSQL(sql.str());
+}
 
 
 void MainWindow::delete_folder()
@@ -370,7 +481,8 @@ void MainWindow::artist_selected(const QModelIndex& index)
     auto first_name_column = ui->tvArtists->model()->index(index.row(), ArtistColumn::FirstName);
     auto artist_id = first_name_column.data(Qt::UserRole).toInt();
     auto audio = std::make_unique<AUDIO::Audio>();
-    std::string filter_str = make_selection(m_artist_entity_data_model.get(), audio->artist()->dbColumnName(), artist_id);
+    //std::string filter_str = make_selection(m_artist_entity_data_model.get(), audio->artist()->dbColumnName(), artist_id);
+    std::string filter_str = make_selection(m_artist_manager.model().get(), audio->artist()->dbColumnName(), artist_id);
     fetch_audio(filter_str);
 }
 
@@ -388,7 +500,6 @@ std::string MainWindow::make_selection(EntityDataModel* edm, std::string column_
     auto filter = std::make_tuple(column_name, " = ", id);
     std::string filter_str = edm->prepareFilter(filter);
     return filter_str;
-    //fetch_audio(filter_str);
 }
 void MainWindow::fetch_audio(const std::string filter)
 {
@@ -397,18 +508,22 @@ void MainWindow::fetch_audio(const std::string filter)
     show_audio_data();
 }
 
-void MainWindow::fetch_folder_audio(int folder_id)
+
+//void MainWindow::fetch_folder_audio(int folder_id)
+void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
 {
     m_audio_entity_data_model->clearEntities();
 
-    AUDIO::Artist artist;
-    AUDIO::Folder folder;
-    AUDIO::Genre genre;
+//    AUDIO::Artist artist;
+//    AUDIO::Folder folder;
+//    AUDIO::Genre genre;
+
+//    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
+
+//    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
+//    FRAMEWORK::RelationMapper* r_mapper = m_audio_entity_data_model->select_related(folder, artist, genre)->filter(folder_filter);
 
     auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
-
-    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
-    FRAMEWORK::RelationMapper* r_mapper = m_audio_entity_data_model->select_related(folder, artist, genre)->filter(folder_filter);
 
     try{
         m_audio_entity_data_model->readRaw(r_mapper->query());
@@ -497,14 +612,11 @@ void MainWindow::show_audio_data()
 
 }
 
+//*-------
+
 void MainWindow::fetch_artist(const std::string filter)
 {
-    if (filter.empty()){
-        m_artist_entity_data_model->all();
-    }else{
-        m_artist_entity_data_model->search(filter);
-    }
-
+    m_artist_manager.fetch_data(filter);
     show_artist_data();
 }
 
@@ -513,7 +625,7 @@ void MainWindow::show_artist_data()
     m_artist_model->clear();
     setup_artists_view();
 
-    for(auto& [name, entity] : m_artist_entity_data_model->modelEntities()){
+    for(auto& [name, entity] : m_artist_manager.model()->modelEntities()){
         AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(entity.get());
 
         if (artist->artist_type()->displayName() == "Female")
@@ -533,7 +645,7 @@ void MainWindow::add_artist()
     std::unique_ptr<AUDIO::Artist> artist = std::make_unique<AUDIO::Artist>();
     std::unique_ptr<ArtistForm> art_form = std::make_unique<ArtistForm>(artist.get());
     if (art_form->exec() > 0){
-        m_artist_entity_data_model->createEntity(std::move(artist));
+        m_artist_manager.create(std::move(artist));
         show_artist_data();
     }
 }
@@ -541,33 +653,48 @@ void MainWindow::add_artist()
 void MainWindow::edit_artist()
 {
     auto search_value = get_search_value(ui->tvArtists, ArtistColumn::FullName);
-    std::unique_ptr<ArtistForm> dlg(nullptr);
-    if (!search_value.empty()){
-        BaseEntity* be = m_artist_entity_data_model->findEntityByName(search_value);
-        if (be != nullptr){
-            AUDIO::Artist* entity = dynamic_cast<AUDIO::Artist*>(be);
-            dlg = std::make_unique<ArtistForm>(entity);
-            if(dlg->exec() > 0){
-                try{
-                    update_table_view_record(ui->tvArtists, entity->tableViewValues());
-                    m_artist_entity_data_model->updateEntity(*entity);
-                    }
-                    catch(DatabaseException& de){
-                        showMessage(de.errorMessage());
-                    }
-                }else{
-                    dlg = nullptr;
-                }
-            }
-        }
-}
+    auto artist = m_artist_manager.find_artist(search_value);
+    if (artist == nullptr)
+        return;
 
+    std::unique_ptr<ArtistForm> dlg = std::make_unique<ArtistForm>(artist);
+    if(dlg->exec() > 0){
+        try{
+            update_table_view_record(ui->tvArtists, artist->tableViewValues());
+            m_artist_manager.update(artist);
+            }
+            catch(DatabaseException& de){
+                showMessage(de.errorMessage());
+            }
+        }else{
+            dlg = nullptr;
+        }
+
+}
 
 void MainWindow::delete_artist()
 {
-    delete_entity(m_artist_entity_data_model.get(), ui->tvArtists, ArtistColumn::FullName);
+    std::string search_value = get_search_value(ui->tvArtists, ArtistColumn::FullName);
+    AUDIO::Artist* artist = m_artist_manager.find_artist(search_value);
+    if (artist == nullptr)
+        return;
+
+    if (m_artist_manager.artist_has_audio(artist)){
+        showMessage("Arist is attached to existing audio!");
+        return;
+     }
+
+    try{
+        m_artist_manager.delete_artist(artist);
+        remove_tv_selected_row(ui->tvArtists);
+    }catch (DatabaseException& de) {
+        showMessage("Error deleting!: "+de.errorMessage());
+    }
+
 }
 
+
+//*-------
 
 void MainWindow::setup_genre_view()
 {
@@ -679,12 +806,8 @@ bool MainWindow::okay_to_delete(const BaseEntity* entity)
                           tr("Are you sure you want to delete?"),
                           QMessageBox::No | QMessageBox::Yes,
                           QMessageBox::No);
-    if (result_btn == QMessageBox::Yes)
-    {
-        return true;
-    }
 
-    return false;
+    return (result_btn == QMessageBox::Yes) ? true : false;
 }
 
 void MainWindow::remove_tv_selected_row(QTableView* tv)
@@ -733,6 +856,17 @@ int MainWindow::selected_row_id(QTableView* tv)
     return -1;
 }
 
+void MainWindow::search_audio()
+{
+    if (ui->edtSearchAudio->text().isEmpty())
+        return;
+    auto audio = std::make_unique<AUDIO::Audio>();
+    auto filter =  std::make_tuple(audio->title()->qualified_column_name<AUDIO::Audio>(),
+                                   "like",
+                                   ui->edtSearchAudio->text().toStdString());
+    fetch_filtered_audio(filter);
+}
+
 void MainWindow::search_artist()
 {
     if (ui->edtSearchArtist->text().isEmpty()){
@@ -743,7 +877,8 @@ void MainWindow::search_artist()
     std::string search_value = ui->edtSearchArtist->text().toStdString();
     auto artist = std::make_unique<AUDIO::Artist>();
     auto artist_filter = std::make_tuple(artist->fullName()->dbColumnName(), "like", search_value);
-    std::string filter_str = m_artist_entity_data_model->prepareFilter(artist_filter);
+    std::string filter_str = m_artist_manager.model()->prepareFilter(artist_filter);
+
     fetch_artist(filter_str);
 }
 
@@ -891,6 +1026,11 @@ void MainWindow::cue_edit()
 
 }
 
+void MainWindow::audio_editor()
+{
+    qDebug() << "Open audio editor - Audacity!";
+}
+
 void MainWindow::cut_audio()
 {
     if (selected_row_id(ui->tvTracks) < 0)
@@ -947,7 +1087,10 @@ void MainWindow::move_audio_to_current_folder()
     EntityDataModel edm;
     edm.executeRawSQL(sql.str());
 
-    fetch_folder_audio(folder_id);
+    auto audio = std::make_unique<AUDIO::Audio>();
+    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
+    //fetch_folder_audio(folder_filter);
+    fetch_filtered_audio(folder_filter);
 }
 
 void MainWindow::show_letter_filter()

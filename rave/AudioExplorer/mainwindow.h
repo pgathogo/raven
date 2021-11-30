@@ -3,6 +3,12 @@
 #include <memory>
 
 #include <QMainWindow>
+#include "artistmanager.h"
+#include "../audio/audio.h"
+#include "../audio/artist.h"
+#include "../framework/relationmapper.h"
+#include "../framework/entitydatamodel.h"
+#include "../framework/tree.h"
 
 class QStandardItemModel;
 class QTableView;
@@ -10,12 +16,12 @@ class QTableView;
 class BaseEntity;
 class DataToolBar;
 class TreeViewModel;
-class EntityDataModel;
+//class EntityDataModel;
 class LetterFilterWidget;
 
 namespace AUDIO{
-  class Audio;
-  class Artist;
+ // class Audio;
+ // class Artist;
   class AudioLibItem;
   class ArtistTypeItem;
   class GenreTypeItem;
@@ -41,7 +47,7 @@ public:
     ~MainWindow();
 
     void fetch_audio(const std::string);
-    void fetch_folder_audio(int);
+    void fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper);
     void show_audio_data();
     void create_track_view_headers();
     void set_track_view();
@@ -77,11 +83,29 @@ public:
     int create_folder_to_db(const std::string&, int);
     void delete_folder_db(int);
     bool is_folder_empty(int);
-    void update_folder_name_db(int,std::string);
     void connect_toolbutton_signals();
+    void attach_folder_model();
+    void update_folder_name_db(int,std::string);
+    void update_folder_parent(int, int);
+    void update_folder_view(int);
+
+    template<typename T>
+    void fetch_filtered_audio(T arg)
+    {
+        AUDIO::Artist artist;
+        AUDIO::Folder folder;
+        AUDIO::Genre genre;
+
+        auto [field_name, op, value] = arg;
+        auto folder_filter = std::make_tuple(field_name, op, value);
+        FRAMEWORK::RelationMapper* r_mapper = m_audio_entity_data_model->select_related(folder, artist, genre)->filter(folder_filter);
+        fetch_folder_audio(r_mapper);
+    }
 
 
 public slots:
+    void search_audio();
+
     void add_artist();
     void edit_artist();
     void delete_artist();
@@ -99,12 +123,14 @@ public slots:
 
     void play_btn_clicked();
     void cue_edit();
+    void audio_editor();
 
     void cut_audio();
     void paste_audio();
     void filter_audio_by_letter(int);
 
     void folder_context_menu(const QPoint&);
+    void track_context_menu(const QPoint&);
     void create_new_folder();
     void rename_folder();
     void delete_folder();
@@ -120,21 +146,27 @@ private:
     QStandardItemModel* m_tracks_model;
     QStandardItemModel* m_artist_model;
     QStandardItemModel* m_genre_model;
-
     TreeViewModel* m_folder_model;
-    std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
-    std::unique_ptr<EntityDataModel> m_artist_entity_data_model;
-    std::unique_ptr<EntityDataModel> m_genre_entity_data_model;
-    std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
 
+    std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
+    //std::unique_ptr<EntityDataModel> m_artist_entity_data_model;
+    std::unique_ptr<EntityDataModel> m_genre_entity_data_model;
+
+    std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
 
     std::unique_ptr<CueEditor> m_cue_editor;
     std::vector<int> m_cut_audios;
+    int m_cut_folder_id;
 
     std::unique_ptr<LetterFilterWidget>m_letter_filter_widget;
 
+    AUDIOEXP::ArtistManager m_artist_manager;
+
+    std::vector<NodeData*> m_folders;
+
 
 };
+
 

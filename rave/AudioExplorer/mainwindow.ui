@@ -45,7 +45,10 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <layout class="QHBoxLayout" name="hlFolder">
+          <layout class="QHBoxLayout" name="hlMessage"/>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
@@ -121,6 +124,27 @@
            </item>
           </layout>
          </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Audio Search: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="edtSearchAudio"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnSearchAudio">
+             <property name="text">
+              <string>Search</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tabArtist">
@@ -146,7 +170,7 @@
            <item>
             <widget class="QLabel" name="label">
              <property name="text">
-              <string>Search:</string>
+              <string>Artist Search: </string>
              </property>
             </widget>
            </item>
@@ -259,16 +283,6 @@
            <widget class="QPushButton" name="btnDelete">
             <property name="text">
              <string>Delete</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDragMode">
-            <property name="text">
-             <string>Drag Mode</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
