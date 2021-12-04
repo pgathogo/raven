@@ -339,8 +339,8 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionMP3_to_OGG_Converter"/>
-    <addaction name="actionManage_Trash_Can"/>
+    <addaction name="actMp3Converter"/>
+    <addaction name="actTrashCan"/>
     <addaction name="actionSettings"/>
     <addaction name="separator"/>
     <addaction name="actionE_xit"/>
@@ -365,12 +365,12 @@
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionMP3_to_OGG_Converter">
+  <action name="actMp3Converter">
    <property name="text">
     <string>MP3 to OGG Converter</string>
    </property>
   </action>
-  <action name="actionManage_Trash_Can">
+  <action name="actTrashCan">
    <property name="text">
     <string>Manage Trash Can</string>
    </property>

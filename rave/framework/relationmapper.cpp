@@ -1,12 +1,17 @@
 #include <QDebug>
 #include <QString>
 #include "relationmapper.h"
-#include "../utils/tools.h"
 #include "baseentity.h"
 #include "entitydatamodel.h"
 #include "../audio/artist.h"
+#include "../utils/tools.h"
 
 namespace FRAMEWORK{
+
+    RelationMapper::RelationMapper()
+        :m_model{nullptr}
+    {
+    }
 
     RelationMapper::RelationMapper(EntityDataModel* model)
         :m_model{model}
@@ -102,7 +107,6 @@ namespace FRAMEWORK{
         for(auto const& [name, field] : m_foreign_key_fields) {
             qDebug() << QString::fromStdString(name);
 //            auto [entity, is_nullable] = field;
-//            qDebug() << QString::fromStdString(name) << " = " << QString::fromStdString(entity->tableName());
        }
     }
 
@@ -127,7 +131,6 @@ namespace FRAMEWORK{
 
         if (m_related_tables.size() == 1 )
             return;
-
 
         inner_relation_tree(index);
 
@@ -179,7 +182,6 @@ namespace FRAMEWORK{
     std::string RelationMapper::fk_field(std::string t_name)
     {
         std::string fk_name;
-
         for(auto const& [key, field] : m_foreign_key_fields){
             auto const& [entity, is_nullable] = field;
             if (t_name == entity->tableName()){
@@ -220,7 +222,6 @@ namespace FRAMEWORK{
     std::vector<std::string> RelationMapper::join_statements()
     {
         std::vector<std::string> joins;
-
         for (auto const& [count, left_right] : m_relation_tree){
             for(auto const& [left, right] : left_right){
                 if (right.size() == 0)
@@ -229,6 +230,7 @@ namespace FRAMEWORK{
                 joins.push_back(str);
             }
         }
+
         return joins;
     }
 

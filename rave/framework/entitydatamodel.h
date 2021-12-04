@@ -43,6 +43,7 @@ class EntityModel : public QStandardItemModel{
         std::string entityTableName() const;
 
         BaseEntity& getEntity();
+        void set_entity(std::unique_ptr<BaseEntity>);
 
         std::unique_ptr<BaseEntity> const& get_entity() const;
 
@@ -108,6 +109,8 @@ public:
     void populateMToMDetails();
 
     void searchFilter(){}
+
+    void make_relation_mapper();
 
     std::unique_ptr<BaseDatabaseManager> const& getDBManager() const;
 
@@ -238,19 +241,19 @@ public:
         for (auto const& [field_name, field] : getEntity().fields()){
             if (field->field_type() == "ForeignKeyField"){
                 auto fk_field = dynamic_cast<ForeignKeyField*>(field.get());
-                auto fk_field_entity = std::make_tuple(fk_field->fk_entity(), field->nullable());
+                auto fk_field_entity = std::make_tuple(fk_field->fk_entity(field_name).get(), field->nullable());
                 m_relation_mapper->append_foreign_key_fields(field_name, fk_field_entity);
             }
         }
 
         related_query(firstArg, std::forward<Types>(args)...);
 
-        m_relation_mapper->print_query_fields();
-        m_relation_mapper->print_related_tables();
-        m_relation_mapper->print_foreign_key_fields();
+        //m_relation_mapper->print_query_fields();
+        //m_relation_mapper->print_related_tables();
+//        m_relation_mapper->print_foreign_key_fields();
 
         m_relation_mapper->build_relation_tree();
-        m_relation_mapper->print_relation_tree();
+        //m_relation_mapper->print_relation_tree();
 
         m_relation_mapper->prepare_query();
 

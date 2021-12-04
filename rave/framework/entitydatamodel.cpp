@@ -186,6 +186,11 @@ BaseEntity& EntityModel::getEntity()
     return *mEntity;
 }
 
+void EntityModel::set_entity(std::unique_ptr<BaseEntity> entity)
+{
+    mEntity = std::move(entity);
+}
+
 std::unique_ptr<BaseEntity> const& EntityModel::get_entity() const
 {
     return mEntity;
@@ -215,7 +220,7 @@ std::size_t EntityModel::temp_size()
 /* ----------- EntityDataModel ------------------ */
 
 EntityDataModel::EntityDataModel()
-    : EntityModel{}
+    : EntityModel()
      ,m_relation_mapper{nullptr}
 {
     dbManager = std::make_unique<PostgresDatabaseManager>();
@@ -223,7 +228,7 @@ EntityDataModel::EntityDataModel()
 }
 
 EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
-    :EntityModel{std::move(baseEntity)}
+    :EntityModel(std::move(baseEntity))
     ,dbManager{}
     ,m_relation_mapper{nullptr}
 {
@@ -231,6 +236,10 @@ EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
     m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
 }
 
+void EntityDataModel::make_relation_mapper()
+{
+    m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
+}
 
 EntityDataModel::~EntityDataModel()
 {

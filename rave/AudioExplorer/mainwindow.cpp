@@ -10,6 +10,7 @@
 #include "artistform.h"
 #include "audioform.h"
 #include "foldernameform.h"
+#include "trashcanform.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audiolibitem.h"
@@ -25,8 +26,8 @@
 #include "../framework/treeviewmodel.h"
 #include "../framework/ravenexception.h"
 #include "../framework/choicefield.h"
-#include "../framework/ravenexception.h"
 #include "../framework/letterfilterwidget.h"
+#include "../framework/relationmapper.h"
 
 namespace fs = std::filesystem;
 
@@ -38,13 +39,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Menubar
+    connect(ui->actTrashCan, &QAction::triggered, this, &MainWindow::open_trash_can);
+
     m_artist_toolbar = new DataToolBar();
     ui->hlArtist->addWidget(m_artist_toolbar);
 
     // Audio Tab
     connect(ui->btnSearchAudio, &QPushButton::clicked, this, &MainWindow::search_audio);
     connect(ui->edtSearchAudio, &QLineEdit::returnPressed, this, &MainWindow::search_audio);
-
 
     // Artist Data toolbar
     connect(m_artist_toolbar->add_button(), &QPushButton::clicked, this, &MainWindow::add_artist);
@@ -66,9 +69,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
     connect(ui->btnCut, &QPushButton::clicked, this, &MainWindow::cut_audio);
     connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
+    connect(ui->btnDelete, &QPushButton::clicked, this, &MainWindow::delete_audio);
 
+
+    m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-    //m_artist_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Artist>());
+
     m_genre_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Genre>());
 
     setup_audio_folders();
@@ -108,6 +114,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
+
 }
 
 MainWindow::~MainWindow()
@@ -205,9 +212,6 @@ void MainWindow::folder_clicked(const QModelIndex& index)
 {
     int folder_id = index.data(Qt::UserRole).toInt();
     auto audio = std::make_unique<AUDIO::Audio>();
-    //auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
-    //std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
-    //fetch_audio(filter_str);
     auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
     //fetch_folder_audio(folder_filter);
     fetch_filtered_audio(folder_filter);
@@ -509,19 +513,9 @@ void MainWindow::fetch_audio(const std::string filter)
 }
 
 
-//void MainWindow::fetch_folder_audio(int folder_id)
 void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
 {
     m_audio_entity_data_model->clearEntities();
-
-//    AUDIO::Artist artist;
-//    AUDIO::Folder folder;
-//    AUDIO::Genre genre;
-
-//    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
-
-//    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
-//    FRAMEWORK::RelationMapper* r_mapper = m_audio_entity_data_model->select_related(folder, artist, genre)->filter(folder_filter);
 
     auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
 
@@ -1069,6 +1063,39 @@ void MainWindow::paste_audio()
 
 }
 
+void MainWindow::delete_audio()
+{
+    if (selected_row_id(ui->tvTracks) < 0)
+        return;
+
+    // Warn if audio is booked
+
+    try{
+        AUDIO::Audio* audio = get_selected_audio();
+        delete_audio_from_db(audio->id());
+
+        BaseEntity* entity = m_audio_entity_data_model->findEntityByName(audio->title()->value());
+        entity->setDBAction(DBAction::dbaDELETE);
+
+        m_audio_entity_data_model->deleteFromModel();
+        auto mod_index = ui->tvTracks->selectionModel()->currentIndex();
+        ui->tvTracks->model()->removeRow(mod_index.row(), mod_index.parent());
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+}
+
+void MainWindow::delete_audio_from_db(int audio_id)
+{
+    std::stringstream sql;
+
+    sql << "Update rave_audio set deleted = true "
+        << " Where id = "+std::to_string(audio_id);
+
+    EntityDataModel edm;
+    edm.executeRawSQL(sql.str());
+}
+
 void MainWindow::move_audio_to_current_folder()
 {
     std::stringstream sql;
@@ -1104,15 +1131,14 @@ void MainWindow::filter_audio_by_letter(int index)
 {
     QString tab_text = m_letter_filter_widget->get_tabwidget()->tabText(index);
 
-//    if (tab_text == "*"){
-//        entityDataModel().all();
-//        return;
-//    }
-//    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
-
     auto search = std::make_tuple("title", tab_text.toStdString());
     m_audio_entity_data_model->starts_with_view(search);
 
     show_audio_data();
+}
 
+void MainWindow::open_trash_can()
+{
+    auto trash_can = std::make_unique<TrashCanForm>(this);
+    trash_can->exec();
 }

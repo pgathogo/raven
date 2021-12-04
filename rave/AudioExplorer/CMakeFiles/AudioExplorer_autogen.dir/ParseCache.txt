@@ -107,3 +107,7 @@ D:/home/PMS/Raven/rave/AudioExplorer/foldernameform.cpp
  uic:ui_foldernameform.h
 D:/home/PMS/Raven/rave/AudioExplorer/artistmanager.h
 D:/home/PMS/Raven/rave/AudioExplorer/artistmanager.cpp
+D:/home/PMS/Raven/rave/AudioExplorer/trashcanform.h
+ mmc:Q_OBJECT
+D:/home/PMS/Raven/rave/AudioExplorer/trashcanform.cpp
+ uic:ui_trashcanform.h

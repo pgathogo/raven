@@ -4,6 +4,7 @@
 #include "EWIEGA46WW/moc_datatoolbar.cpp"
 #include "EWIEGA46WW/moc_foldernameform.cpp"
 #include "EWIEGA46WW/moc_mainwindow.cpp"
+#include "EWIEGA46WW/moc_trashcanform.cpp"
 #include "Y6ZUSTFKUI/moc_audiotool.cpp"
 #include "Y6ZUSTFKUI/moc_genreform.cpp"
 #include "TXBK5VWLEF/moc_baseentitybrowserdlg.cpp"

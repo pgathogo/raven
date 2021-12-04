@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-
 #include <QMainWindow>
+
 #include "artistmanager.h"
+
 #include "../audio/audio.h"
 #include "../audio/artist.h"
 #include "../framework/relationmapper.h"
@@ -20,8 +21,8 @@ class TreeViewModel;
 class LetterFilterWidget;
 
 namespace AUDIO{
- // class Audio;
- // class Artist;
+  class Audio;
+  class Artist;
   class AudioLibItem;
   class ArtistTypeItem;
   class GenreTypeItem;
@@ -88,6 +89,8 @@ public:
     void update_folder_name_db(int,std::string);
     void update_folder_parent(int, int);
     void update_folder_view(int);
+    void delete_audio_from_db(int);
+
 
     template<typename T>
     void fetch_filtered_audio(T arg)
@@ -95,15 +98,21 @@ public:
         AUDIO::Artist artist;
         AUDIO::Folder folder;
         AUDIO::Genre genre;
+        AUDIO::Audio audio;
 
         auto [field_name, op, value] = arg;
         auto folder_filter = std::make_tuple(field_name, op, value);
-        FRAMEWORK::RelationMapper* r_mapper = m_audio_entity_data_model->select_related(folder, artist, genre)->filter(folder_filter);
+        auto active_audio = std::make_tuple(audio.is_deleted()->qualified_column_name<AUDIO::Audio>(), "=", false);
+        FRAMEWORK::RelationMapper* r_mapper = new FRAMEWORK::RelationMapper();
+        r_mapper = m_audio_entity_data_model->select_related(folder, artist, genre)->filter(folder_filter, active_audio);
         fetch_folder_audio(r_mapper);
+
     }
 
 
 public slots:
+    void open_trash_can();
+
     void search_audio();
 
     void add_artist();
@@ -127,6 +136,7 @@ public slots:
 
     void cut_audio();
     void paste_audio();
+    void delete_audio();
     void filter_audio_by_letter(int);
 
     void folder_context_menu(const QPoint&);
@@ -151,6 +161,9 @@ private:
     std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
     //std::unique_ptr<EntityDataModel> m_artist_entity_data_model;
     std::unique_ptr<EntityDataModel> m_genre_entity_data_model;
+
+    std::unique_ptr<EntityDataModel> m_audio_edm;
+
 
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;

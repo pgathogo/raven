@@ -74,6 +74,9 @@ set(PROJECT_SOURCES
         audioexplorer.qrc
         artistmanager.h
         artistmanager.cpp
+        trashcanform.h
+        trashcanform.cpp
+        trashcanform.ui
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp

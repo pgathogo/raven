@@ -19,6 +19,7 @@ namespace FRAMEWORK{
     class RelationMapper
     {
     public:
+        RelationMapper();
         RelationMapper(EntityDataModel*);
         ~RelationMapper();
 

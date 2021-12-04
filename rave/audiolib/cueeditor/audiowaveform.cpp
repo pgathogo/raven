@@ -90,10 +90,8 @@ namespace AUDIO {
 
         scene_bounds.setWidth(scene_bounds.width()*0.9);
         scene_bounds.setHeight(scene_bounds.height()*0.9);
-        //ui->gvWave->fitInView(scene_bounds, Qt::KeepAspectRatio);
-        ui->gvWave->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatio);
-
         ui->gvWave->setSceneRect(scene_bounds);
+        ui->gvWave->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatioByExpanding);
 
         double scene_width = scene_bounds.width()+scene_bounds.width()*0.11;
         //ui->gvWave->setMaximumWidth(scene_width+20);

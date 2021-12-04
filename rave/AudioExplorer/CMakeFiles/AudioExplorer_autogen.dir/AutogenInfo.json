@@ -107,6 +107,11 @@
 			"EWIEGA46WW/moc_mainwindow.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/AudioExplorer/trashcanform.h",
+			"MU",
+			"EWIEGA46WW/moc_trashcanform.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/audio/artist.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_artist.cpp"
@@ -335,6 +340,7 @@
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/foldernameform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/main.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/mainwindow.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/AudioExplorer/trashcanform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/artist.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/artisttypeitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
