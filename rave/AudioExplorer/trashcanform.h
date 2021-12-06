@@ -39,6 +39,7 @@ public:
     void fetch_deleted_audio(FRAMEWORK::RelationMapper*);
     void show_audio_data();
     void set_tracks_view();
+    void un_delete_audio(const std::string);
 
     template<typename... T>
     void fetch_del_audio(T... args)
@@ -56,6 +57,8 @@ public:
         fetch_deleted_audio(r_mapper);
     }
 
+private slots:
+    void restore();
 
 
 private:

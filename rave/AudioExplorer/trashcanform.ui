@@ -40,16 +40,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="btnEmpty">
+      <widget class="QPushButton" name="btnRestore">
        <property name="text">
-        <string>Empty</string>
+        <string>Restore</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btnRestore">
+      <widget class="QPushButton" name="btnEmpty">
        <property name="text">
-        <string>Restore</string>
+        <string>Empty</string>
        </property>
       </widget>
      </item>
@@ -61,7 +61,7 @@
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::MultiSelection</enum>
+      <enum>QAbstractItemView::ExtendedSelection</enum>
      </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>

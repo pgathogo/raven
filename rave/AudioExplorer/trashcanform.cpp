@@ -30,6 +30,8 @@ TrashCanForm::TrashCanForm(QWidget *parent) :
     ui->tvTracks->setModel(m_tracks_model);
     ui->tvTracks->verticalHeader()->setVisible(false);
 
+    connect(ui->btnRestore, &QPushButton::clicked, this, &TrashCanForm::restore);
+
     fetch_del_audio();
 }
 
@@ -148,4 +150,53 @@ void TrashCanForm::set_tracks_view()
     m_tracks_model->clear();
     create_track_view_headers();
     set_track_view_column_width();
+}
+
+
+void TrashCanForm::restore()
+{
+    std::string ids;
+    QModelIndexList rows = ui->tvTracks->selectionModel()->selectedRows(0);
+
+    if (rows.count() == 0)
+        return;
+
+    int r=rows.size();
+    for (auto model_index : rows){
+        int audio_id = model_index.data(Qt::UserRole).toInt();
+        if (!ids.empty())
+            ids += ",";
+        ids += std::to_string(audio_id);
+    }
+
+    try{
+        un_delete_audio(ids);
+
+        int row_count = rows.count();
+        for (int i = row_count; i > 0; i--){
+            auto text = rows.at(i-1).data().toString();
+            BaseEntity* entity = m_audio_edm->findEntityByName(text.toStdString());
+            entity->setDBAction(DBAction::dbaDELETE);
+            m_audio_edm->deleteFromModel();
+            ui->tvTracks->model()->removeRow(rows.at(i-1).row(), rows.at(i-1).parent());
+        }
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+
+}
+
+
+void TrashCanForm::un_delete_audio(const std::string ids)
+{
+    if (ids.empty())
+        return;
+
+    std::stringstream sql;
+    sql << "Update rave_audio set deleted=false"
+        << " Where id in ("+ids+")";
+
+    EntityDataModel edm;
+    edm.executeRawSQL(sql.str());
 }

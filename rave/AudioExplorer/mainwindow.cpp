@@ -1065,32 +1065,71 @@ void MainWindow::paste_audio()
 
 void MainWindow::delete_audio()
 {
-    if (selected_row_id(ui->tvTracks) < 0)
+
+    QModelIndexList selected_rows = ui->tvTracks->selectionModel()->selectedRows(0);
+    if (selected_rows.count() == 0)
         return;
 
-    // Warn if audio is booked
+    std::vector<SelectedAudio> selected_audios;
+    for (auto model_index : selected_rows){
+        SelectedAudio sa;
+        sa.audio_id = model_index.data(Qt::UserRole).toInt();
+        sa.index = model_index;
+        selected_audios.push_back(sa);
+    }
 
+    /*
+     Check and warn if audio is booked as a commercial or normal audio
+     // pass selected_ids as reference
+     auto booked_audio = std::make_unique<BookedAudioChecker>(selected_ids);
+     if (booked_audio->exec() == 1){
+        // deselect rows (from the grid) that didn't qualify
+        // selected_ids now only contains ids that qualify for deletion
+    */
+
+    std::string ids;
+    for (auto selected_audio : selected_audios){
+        if (selected_audio.ok_to_delete){
+            if (!ids.empty())
+                ids += ",";
+            ids += std::to_string(selected_audio.audio_id);
+        }
+    }
+
+    auto select_model = ui->tvTracks->selectionModel();
+
+    for (auto selected_audio : selected_audios){
+        if (!selected_audio.ok_to_delete){
+            select_model->select(selected_audio.index, QItemSelectionModel::Deselect);
+        }
+    }
+
+    QModelIndexList rows = ui->tvTracks->selectionModel()->selectedRows(0);
+
+    int row_count = rows.count();
     try{
-        AUDIO::Audio* audio = get_selected_audio();
-        delete_audio_from_db(audio->id());
+        for (int i=row_count; i > 0; i--){
+            auto text = rows.at(i-1).data().toString();
+            BaseEntity* audio = m_audio_entity_data_model->findEntityByName(text.toStdString());
+            audio->setDBAction(DBAction::dbaDELETE);
 
-        BaseEntity* entity = m_audio_entity_data_model->findEntityByName(audio->title()->value());
-        entity->setDBAction(DBAction::dbaDELETE);
+            delete_audio_from_db(ids);
+            m_audio_entity_data_model->deleteFromModel();
 
-        m_audio_entity_data_model->deleteFromModel();
-        auto mod_index = ui->tvTracks->selectionModel()->currentIndex();
-        ui->tvTracks->model()->removeRow(mod_index.row(), mod_index.parent());
+            ui->tvTracks->model()->removeRow(rows.at(i-1).row(), rows.at(i-1).parent());
+        }
     } catch (DatabaseException& de) {
         showMessage(de.errorMessage());
     }
+
 }
 
-void MainWindow::delete_audio_from_db(int audio_id)
+void MainWindow::delete_audio_from_db(const std::string ids)
 {
     std::stringstream sql;
 
     sql << "Update rave_audio set deleted = true "
-        << " Where id = "+std::to_string(audio_id);
+        << " Where id in ("+ids+")";
 
     EntityDataModel edm;
     edm.executeRawSQL(sql.str());

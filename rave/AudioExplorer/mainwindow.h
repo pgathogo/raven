@@ -34,6 +34,11 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+struct SelectedAudio{
+    int audio_id;
+    QModelIndex index;
+    bool ok_to_delete{true};
+};
 
 class MainWindow : public QMainWindow
 {
@@ -89,7 +94,7 @@ public:
     void update_folder_name_db(int,std::string);
     void update_folder_parent(int, int);
     void update_folder_view(int);
-    void delete_audio_from_db(int);
+    void delete_audio_from_db(const std::string);
 
 
     template<typename T>
@@ -164,7 +169,6 @@ private:
 
     std::unique_ptr<EntityDataModel> m_audio_edm;
 
-
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
@@ -178,7 +182,6 @@ private:
     AUDIOEXP::ArtistManager m_artist_manager;
 
     std::vector<NodeData*> m_folders;
-
 
 };
 
