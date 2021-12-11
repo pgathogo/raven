@@ -77,6 +77,9 @@ set(PROJECT_SOURCES
         trashcanform.h
         trashcanform.cpp
         trashcanform.ui
+        bookedaudiocheckerform.cpp
+        bookedaudiocheckerform.h
+        bookedaudiocheckerform.ui
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp

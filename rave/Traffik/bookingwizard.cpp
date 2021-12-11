@@ -164,7 +164,14 @@ void BookingWizard::setup_break_select_grid()
             dur_item->setTextAlignment(Qt::AlignCenter);
             dur_item->setData(Qt::UserRole, comm_break->schedule_date()->value().dayOfWeek());
 
-            m_selected_breaks.insert(time_str);
+            //m_selected_breaks.insert(time_str);
+
+            SelectedBreak sel_break;
+            sel_break.break_id = comm_break->id();
+            sel_break.break_date = comm_break->schedule_date()->value();
+            sel_break.break_time = comm_break->schedule_time()->value();
+            sel_break.break_hour = comm_break->schedule_hour()->value();
+            m_selected_breaks[comm_break->id()] = sel_break;
 
             ++row;
         }
@@ -186,7 +193,10 @@ bool BookingWizard::make_booking()
 
 void BookingWizard::commit_booking()
 {
+    qDebug() << "Commit booking... ";
     try{
+
+        qDebug() << "Book segment";
 
         BookingSegment book_segment;
         book_segment.set_booking_date(QDate::currentDate());
@@ -207,10 +217,17 @@ void BookingWizard::commit_booking()
 
         for (int i=0; i<selected_breaks.count(); ++i){
             auto item = selected_breaks.at(i);
+
             if (item->column() == 0){
                 OrderBooking order_booking;
 
                 int break_id = item->data(Qt::UserRole).toInt();
+
+                SelectedBreak selected_break = m_selected_breaks[break_id];
+
+                qDebug() << selected_break.break_date;
+                qDebug() << selected_break.break_time;
+                qDebug() << selected_break.break_hour;
 
                 order_booking.set_booking_status("READY");
                 order_booking.set_schedule(break_id);
@@ -219,6 +236,9 @@ void BookingWizard::commit_booking()
                 order_booking.play_date()->setReadOnly(true);
                 order_booking.play_time()->setReadOnly(true);
 
+                order_booking.set_book_date(selected_break.break_date);
+                order_booking.set_book_time(selected_break.break_time);
+                order_booking.set_book_hour(selected_break.break_hour);
                 edm.createEntityDB(order_booking);
 
                 // Deduct time remainining on this break
@@ -533,8 +553,8 @@ void BookingWizard::add_days_of_week()
 void BookingWizard::show_breaks_for_current_timeband()
 {
     ui->lwSelBreaks->clear();
-    for (auto break_time : m_selected_breaks){
-        QListWidgetItem* item = new QListWidgetItem(break_time);
+    for (auto [break_id, selected_break] : m_selected_breaks){
+        QListWidgetItem* item = new QListWidgetItem(selected_break.break_time.toString("HH:mm"));
         ui->lwSelBreaks->addItem(item);
     }
 }

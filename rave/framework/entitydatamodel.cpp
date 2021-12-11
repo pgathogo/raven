@@ -383,9 +383,9 @@ int EntityDataModel::insert_returning_id(const std::string sql)
     return dbManager->insert_returning_id( sql );
 }
 
-void EntityDataModel::readRaw(const std::string sql)
+int EntityDataModel::readRaw(const std::string sql)
 {
-    dbManager->readRaw( sql );
+    return dbManager->readRaw( sql );
 
 }
 

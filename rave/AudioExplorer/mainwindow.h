@@ -34,12 +34,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-struct SelectedAudio{
-    int audio_id;
-    QModelIndex index;
-    bool ok_to_delete{true};
-};
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

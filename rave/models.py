@@ -453,8 +453,10 @@ class OrderBooking(models.Model):
     schedule = models.ForeignKey(Schedule)
     bookingsegment = models.ForeignKey(BookingSegment, default=-1)
     booking_status = models.CharField(max_length=15, choices=BOOKING_STATUS, default='READY', null=True, blank=True)
+    book_date = models.DateField(null=True)
+    book_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+    book_hour = models.IntegerField(default=0, null=True)
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
     spot = models.ForeignKey(Spot, default=-1)
     audio = models.ForeignKey(SpotAudio, null=True)
-

@@ -11,6 +11,7 @@
 #include "audioform.h"
 #include "foldernameform.h"
 #include "trashcanform.h"
+#include "bookedaudiocheckerform.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audiolibitem.h"
@@ -987,23 +988,11 @@ void MainWindow::cue_edit()
 
     audio->set_audio_file(aud_file);
 
-    auto aaf = audio->audio_file();
-
-    Marker marker;
-    audio->audio_file().set_marker(marker);
-
     if (fs::exists(aud_file.adf_file())){
 
         ADFRepository adf_repo;
-        adf_repo.read_markers(aud_file);
-
-        auto af_marker = aud_file.marker();
-        marker.start_marker = af_marker.start_marker;
-        marker.fade_in = af_marker.fade_in;
-        marker.intro = af_marker.intro;
-        marker.extro = af_marker.extro;
-        marker.fade_out = af_marker.fade_out;
-        marker.end_marker = af_marker.end_marker;
+        Marker marker = adf_repo.read_markers(aud_file.adf_file());
+        audio->audio_file().set_marker(marker);
     }
 
     if (!fs::exists(aud_file.wave_file())){
@@ -1070,37 +1059,36 @@ void MainWindow::delete_audio()
     if (selected_rows.count() == 0)
         return;
 
-    std::vector<SelectedAudio> selected_audios;
+    std::map<int, std::tuple<std::string, bool>> selected_audios;
+    std::map<int, QModelIndex> selected_indexes;
+
     for (auto model_index : selected_rows){
-        SelectedAudio sa;
-        sa.audio_id = model_index.data(Qt::UserRole).toInt();
-        sa.index = model_index;
-        selected_audios.push_back(sa);
+        int audio_id = model_index.data(Qt::UserRole).toInt();
+        selected_audios[audio_id] = std::make_tuple(model_index.data().toString().toStdString(), true);
+        selected_indexes[audio_id] = model_index;
     }
 
-    /*
-     Check and warn if audio is booked as a commercial or normal audio
-     // pass selected_ids as reference
-     auto booked_audio = std::make_unique<BookedAudioChecker>(selected_ids);
-     if (booked_audio->exec() == 1){
-        // deselect rows (from the grid) that didn't qualify
-        // selected_ids now only contains ids that qualify for deletion
-    */
+    auto bacf = std::make_unique<BookedAudioCheckerForm>(selected_audios);
+    if (bacf->exec() == 0){
+        return;
+    }
 
     std::string ids;
-    for (auto selected_audio : selected_audios){
-        if (selected_audio.ok_to_delete){
+    for (auto [id, data] : selected_audios){
+        auto [title, ok_del] = data;
+        if (ok_del){
             if (!ids.empty())
                 ids += ",";
-            ids += std::to_string(selected_audio.audio_id);
+            ids += std::to_string(id);
         }
     }
 
     auto select_model = ui->tvTracks->selectionModel();
 
-    for (auto selected_audio : selected_audios){
-        if (!selected_audio.ok_to_delete){
-            select_model->select(selected_audio.index, QItemSelectionModel::Deselect);
+    for (auto [id, data] : selected_audios){
+        auto [title, ok_del] = data;
+        if (!ok_del){
+            select_model->select(selected_indexes[id], QItemSelectionModel::Deselect);
         }
     }
 

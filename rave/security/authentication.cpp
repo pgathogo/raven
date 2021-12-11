@@ -86,7 +86,7 @@ std::tuple<std::string, std::string> Authentication::get_user_details(const std:
 {
     std::unique_ptr<User> user = std::make_unique<User>();
     auto filter_username = std::make_tuple(
-                user->userName()->dbColumnName(),
+                "lower("+user->userName()->dbColumnName()+")",
                 "=",
                 uname);
     EntityDataModel edm(std::move(user));

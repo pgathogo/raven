@@ -96,7 +96,7 @@ ActionResult UserForm::saveRecord()
     // For new user, check if there is an existing user with the same name
     if (ui->edtUserName->isEnabled()){
         EntityDataModel edm = EntityDataModel(std::make_unique<User>());
-        auto user_filter = std::make_tuple(mUser->userName()->dbColumnName(),
+        auto user_filter = std::make_tuple("lower("+mUser->userName()->dbColumnName()+")",
                                            "=",
                                            mUser->userName()->value());
         std::string filter = edm.prepareFilter(user_filter);

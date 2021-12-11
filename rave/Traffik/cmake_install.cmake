@@ -1,8 +1,8 @@
-# Install script for directory: D:/home/PMS/Raven/rave/TraffikRave
+# Install script for directory: D:/home/PMS/Raven/rave/Traffik
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/TraffikRave")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Traffik")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/home/PMS/Raven/rave/TraffikRave/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/home/PMS/Raven/rave/Traffik/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

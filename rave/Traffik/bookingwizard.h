@@ -20,6 +20,12 @@ class DayPartGrid;
 class Schedule;
 class WizardData;
 
+struct SelectedBreak{
+    int break_id;
+    QDate break_date;
+    QTime break_time;
+    int break_hour;
+};
 
 class BookingWizard : public QWizard
 {
@@ -93,7 +99,7 @@ private:
 
     TRAFFIK::EngineData m_engine_data;
     std::unique_ptr<TRAFFIK::RuleEngine> m_rule_engine;
-    std::set<QString> m_selected_breaks;
+//    std::set<QString> m_selected_breaks;
 
     std::map<int, std::vector<std::string>> m_dow_selection;
 
@@ -101,6 +107,8 @@ private:
 
     QMenu* m_spot_ctx_menu;
     QAction* m_spot_ctx_action;
+
+    std::map<int, SelectedBreak> m_selected_breaks;
 
     void populate_spots_table(int);
     void populate_grid(TimeBand*);

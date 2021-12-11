@@ -92,6 +92,11 @@
 			"EWIEGA46WW/moc_audioform.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/AudioExplorer/bookedaudiocheckerform.h",
+			"MU",
+			"EWIEGA46WW/moc_bookedaudiocheckerform.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.h",
 			"MU",
 			"EWIEGA46WW/moc_datatoolbar.cpp"
@@ -336,6 +341,10 @@
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/artistform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/artistmanager.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/audioform.cpp", "MU" ],
+		[
+			"D:/home/PMS/Raven/rave/AudioExplorer/bookedaudiocheckerform.cpp",
+			"MU"
+		],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/datatoolbar.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/foldernameform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/AudioExplorer/main.cpp", "MU" ],

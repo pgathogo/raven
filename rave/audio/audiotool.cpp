@@ -258,21 +258,19 @@ bool ADFRepository::write(const AudioFile& audio_file)
     return true;
 }
 
-bool ADFRepository::read_markers(AudioFile& audio_file)
+Marker ADFRepository::read_markers(const std::string adf_filename)
 {
-    QFile adf_file(QString::fromStdString(audio_file.adf_file()));
+    QFile adf_file(QString::fromStdString(adf_filename));
     if (!adf_file.open(QIODevice::ReadOnly)){
         qWarning("Couldn't open adf file.");
-        return false;
+        return Marker();
     }
 
     QByteArray data = adf_file.readAll();
 
     QJsonDocument doc_data(QJsonDocument::fromJson(data));
 
-    audio_file.set_marker(json_to_markers(doc_data.object()["markers"].toObject()));
-
-    return true;
+    return json_to_markers(doc_data.object()["markers"].toObject());
 }
 
 void ADFRepository::object_to_json(const AudioFile& audio_file, QJsonObject& json)

@@ -101,7 +101,7 @@ public:
     std::string make_insert_stmt(const BaseEntity& entity);
     void executeRawSQL(const std::string sql);
     int insert_returning_id(const std::string sql);
-    void readRaw(const std::string sql);
+    int readRaw(const std::string sql);
 
     size_t count();
 
@@ -131,15 +131,12 @@ public:
 
         std::string filter = column;
 
-
         if constexpr(std::is_integral_v<decltype(value)> &&
                 !std::is_same_v<decltype(value), bool>){
-            //filter +=" = ";
             filter += op;
             filter += std::to_string(value);
         }else if constexpr(std::is_integral_v<decltype(value)> &&
                            std::is_same_v<decltype(value), bool>){
-            //filter += " = ";
             filter += op;
             switch (value){
              case 0:
@@ -152,7 +149,7 @@ public:
                 filter += "false";
             }
         }else if constexpr(is_string<decltype(value)>::value){
-            filter = "lower("+filter+")";
+            //filter = "lower("+filter+")";
             if (str_tolower(op) == "like"){
                 filter += " LIKE ";
                 std::string str_value = value;

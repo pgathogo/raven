@@ -87,7 +87,7 @@ void SpotBrowser::updateRecord()
 
                 save_type_exclusions(*spot_form);
 
-                 save_spot_audio(*spot_form);
+                save_spot_audio(*spot_form);
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -165,13 +165,11 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
     }
 }
 
-void SpotBrowser::save_spot_audio(const SpotForm &sf)
+void SpotBrowser::save_spot_audio(const SpotForm& sf)
 {
     auto edm = std::make_unique<EntityDataModel>();
 
     auto& spot_audios = sf.spot_audios();
-
-    qDebug() << spot_audios.size();
 
     for(auto& sa : spot_audios){
         TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());

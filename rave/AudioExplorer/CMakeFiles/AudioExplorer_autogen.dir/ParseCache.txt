@@ -111,3 +111,7 @@ D:/home/PMS/Raven/rave/AudioExplorer/trashcanform.h
  mmc:Q_OBJECT
 D:/home/PMS/Raven/rave/AudioExplorer/trashcanform.cpp
  uic:ui_trashcanform.h
+D:/home/PMS/Raven/rave/AudioExplorer/bookedaudiocheckerform.h
+ mmc:Q_OBJECT
+D:/home/PMS/Raven/rave/AudioExplorer/bookedaudiocheckerform.cpp
+ uic:ui_bookedaudiocheckerform.h

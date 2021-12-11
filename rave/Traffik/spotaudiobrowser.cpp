@@ -30,12 +30,12 @@ SpotAudioBrowser::SpotAudioBrowser(
     hideEditButton();
     hideDeleteButton();
 
+    show_delete_button();
+
     create_button("btnImport", "Import", &SpotAudioBrowser::import_audio);
     create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
-    create_button("btnCueEditor", "Edit", &SpotAudioBrowser::cue_edit);
-
-    show_delete_button();
+    create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit);
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<TraffikSetup>());
     m_setup_edm->all();
@@ -155,9 +155,7 @@ TRAFFIK::SpotAudio& SpotAudioBrowser::get_spot_audio() const
 
 void SpotAudioBrowser::import_audio()
 {
-    ADFRepository adf_repo;
     AudioTool audio_tool;
-    Marker marker;
 
     auto audio_file_full_path = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), "/d/home/audio",
@@ -167,21 +165,18 @@ void SpotAudioBrowser::import_audio()
 
     auto audio = std::make_unique<AUDIO::Audio>(audio_file_full_path.toStdString());
 
-    audio->audio_file().set_marker(marker);
-
     if (fs::exists(audio->audio_file().adf_file()) ){
 
-        AudioFile af = audio->audio_file();
-        adf_repo.read_markers(af);
+        ADFRepository adf_repo;
+        Marker marker =  adf_repo.read_markers(audio->audio_file().adf_file());
+        audio->audio_file().set_marker(marker);
 
-        auto af_markers = audio->audio_file().marker();
-
-        marker.start_marker = af_markers.start_marker;
-        marker.fade_in = af_markers.fade_in;
-        marker.intro = af_markers.intro;
-        marker.extro = af_markers.extro;
-        marker.fade_out = af_markers.fade_out;
-        marker.end_marker = af_markers.end_marker;
+//        marker.start_marker = af_markers.start_marker;
+//        marker.fade_in = af_markers.fade_in;
+//        marker.intro = af_markers.intro;
+//        marker.extro = af_markers.extro;
+//        marker.fade_out = af_markers.fade_out;
+//        marker.end_marker = af_markers.end_marker;
     }
 
     //auto spot_audio = std::make_unique<TRAFFIK::SpotAudio>(m_mtom->parentEntity(), new AUDIO::Audio(audio_file.audio_file()));
@@ -191,9 +186,6 @@ void SpotAudioBrowser::import_audio()
     auto spot_audio_form = std::make_unique<SpotAudioForm>(spot_audio.get());
 
     if (spot_audio_form->exec() > 0){
-
-        printstr("** Audio Wave File ** ");
-        printstr(spot_audio->audio()->audio_file().wave_file());
 
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) ){
 
@@ -209,10 +201,9 @@ void SpotAudioBrowser::import_audio()
 
         auto af = audio->audio_file();
         fs::path path{audio_file_full_path.toStdString()};
-        std::string file_no_path = path.filename().u8string();
+        //std::string file_no_path = path.filename().u8string();
 
         af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.short_filename()+".ogg");
-
 
         auto cue_editor = std::make_unique<CueEditor>(af);
         if (cue_editor->editor() == 1){

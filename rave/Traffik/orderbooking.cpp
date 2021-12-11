@@ -34,6 +34,10 @@ OrderBooking::OrderBooking()
     m_spot_audio = createField<ForeignKeyField>("audio_id", "Audio",
                                           std::make_unique<TRAFFIK::SpotAudio>(), "spot_id");
 
+    m_book_date = createField<DateField>("book_date", "Book Date");
+    m_book_time = createField<TimeField>("book_time", "Book Time");
+    m_book_hour = createField<IntegerField>("book_hour", "Book Hour");
+
     mHeader << QString::fromStdString(schedule()->displayName());
 
     setTableName("rave_orderbooking");
@@ -72,6 +76,36 @@ ChoiceField<std::string>* OrderBooking::booking_status() const
 void OrderBooking::set_booking_status(std::string val)
 {
     m_booking_status->setValue(val);
+}
+
+DateField* OrderBooking::book_date()
+{
+    return m_book_date;
+}
+
+void OrderBooking::set_book_date(QDate val)
+{
+    m_book_date->setValue(val);
+}
+
+TimeField* OrderBooking::book_time()
+{
+    return m_book_time;
+}
+
+void OrderBooking::set_book_time(QTime val)
+{
+    m_book_time->setValue(val);
+}
+
+IntegerField* OrderBooking::book_hour()
+{
+    return m_book_hour;
+}
+
+void OrderBooking::set_book_hour(int val)
+{
+    m_book_hour->setValue(val);
 }
 
 DateField *OrderBooking::play_date() const

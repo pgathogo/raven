@@ -53,7 +53,7 @@ class ADFRepository
     public:
         ADFRepository();
         bool write(const AudioFile&);
-        bool read_markers(AudioFile&);
+        Marker read_markers(const std::string);
     protected:
         void object_to_json(const AudioFile&, QJsonObject&);
         Marker json_to_markers(const QJsonObject&);

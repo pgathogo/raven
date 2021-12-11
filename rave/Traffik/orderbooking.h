@@ -21,6 +21,15 @@ public:
     ChoiceField<std::string>* booking_status() const;
     void set_booking_status(std::string val);
 
+    DateField* book_date();
+    void set_book_date(QDate);
+
+    TimeField* book_time();
+    void set_book_time(QTime);
+
+    IntegerField* book_hour();
+    void set_book_hour(int);
+
     DateField* play_date() const;
     void set_play_date(QDate val);
 
@@ -54,6 +63,9 @@ private:
     DateTimeField* m_play_time;
     ForeignKeyField* m_spot;
     ForeignKeyField* m_spot_audio;
+    DateField* m_book_date;
+    TimeField* m_book_time;
+    IntegerField* m_book_hour;
 
     QStringList mHeader;
     std::string mTableName;
