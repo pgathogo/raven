@@ -1,0 +1,19 @@
+{
+	"BUILD_DIR" : "D:/home/PMS/Raven/rave/OATS/OATS_autogen",
+	"CMAKE_BINARY_DIR" : "D:/home/PMS/Raven/rave/OATS",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/home/PMS/Raven/rave/OATS",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/home/PMS/Raven/rave/OATS",
+	"CMAKE_SOURCE_DIR" : "D:/home/PMS/Raven/rave/OATS",
+	"INCLUDE_DIR" : "D:/home/PMS/Raven/rave/OATS/OATS_autogen/include",
+	"INPUTS" : [ "D:/home/PMS/Raven/rave/OATS/images/icons/OnAir.png" ],
+	"LOCK_FILE" : "D:/home/PMS/Raven/rave/OATS/CMakeFiles/OATS_autogen.dir/AutoRcc_oats_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "oats" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_oats.cpp",
+	"RCC_EXECUTABLE" : "D:/Qt/Qt5.13.2/5.13.2/mingw73_64/bin/rcc.exe",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "D:/home/PMS/Raven/rave/OATS/CMakeFiles/OATS_autogen.dir/AutoRcc_oats_EWIEGA46WW_Used.txt",
+	"SOURCE" : "D:/home/PMS/Raven/rave/OATS/oats.qrc",
+	"VERBOSITY" : 0
+}

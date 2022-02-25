@@ -615,7 +615,8 @@ namespace SEDRIC{
 
     QString CommercialBreakItem::title()
     {
-        return "Commercial Break";
+        std::string comm = "Commercial Break ("+std::to_string(schedule()->booked_spots()->value())+")";
+        return QString::fromStdString(comm);
     }
 
     QString CommercialBreakItem::artist_name()

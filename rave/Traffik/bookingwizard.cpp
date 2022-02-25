@@ -245,6 +245,7 @@ void BookingWizard::commit_booking()
                 std::stringstream  sql ;
                 sql << "Update rave_schedule set break_duration_left =  break_duration_left - "
                     << std::to_string(m_engine_data.spot_to_book.spot_duration)
+                    << ", booked_spots = booked_spots + 1 "
                     << " Where id = "+std::to_string(break_id);
 
                 edm.executeRawSQL(sql.str());

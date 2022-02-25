@@ -217,3 +217,9 @@
 1132	9092	6606606290441298	CMakeFiles/Traffik.dir/spotaudiobrowser.cpp.obj	4d12224b3cce350f
 1122	10557	6606606305112137	CMakeFiles/Traffik.dir/Traffik_autogen/mocs_compilation.cpp.obj	f16c4bc672c1f86a
 10557	38778	6606606587048263	Traffik.exe	61b4e71899d1714d
+44	656	0	CMakeFiles/Traffik_autogen	db427c72b7c41bcc
+44	656	0	Traffik_autogen/mocs_compilation.cpp	db427c72b7c41bcc
+657	7005	6609273021412000	CMakeFiles/Traffik.dir/bookingwizard.cpp.obj	550d21fac636e671
+7005	27684	6609273227693799	Traffik.exe	61b4e71899d1714d
+34	207	0	CMakeFiles/Traffik_autogen	db427c72b7c41bcc
+34	207	0	Traffik_autogen/mocs_compilation.cpp	db427c72b7c41bcc

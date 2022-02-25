@@ -29,10 +29,6 @@
 		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows-windres.cmake",
 		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows-GNU-CXX-ABI.cmake",
 		"C:/CMake/share/cmake-3.18/Modules/CMakeCommonLanguageInclude.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/FindPostgreSQL.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/SelectLibraryConfigurations.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/FindPackageMessage.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5Config.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
@@ -68,7 +64,14 @@
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5Widgets_QWindowsVistaStylePlugin.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake"
+		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake",
+		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Charts/Qt5ChartsConfigVersion.cmake",
+		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Charts/Qt5ChartsConfig.cmake",
+		"C:/CMake/share/cmake-3.18/Modules/FindPostgreSQL.cmake",
+		"C:/CMake/share/cmake-3.18/Modules/SelectLibraryConfigurations.cmake",
+		"C:/CMake/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/CMake/share/cmake-3.18/Modules/FindPackageMessage.cmake",
+		"D:/home/PMS/Raven/rave/OATS/oats.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "D:/home/PMS/Raven/rave/OATS",
 	"DEP_FILE" : "",
@@ -76,15 +79,87 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/home/PMS/Raven/rave/OATS/datetimewidget.h",
+			"MU",
+			"EWIEGA46WW/moc_datetimewidget.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/gridpanel.h",
+			"MU",
+			"EWIEGA46WW/moc_gridpanel.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/OATS/mainwindow.h",
 			"MU",
 			"EWIEGA46WW/moc_mainwindow.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/outputpanel.h",
+			"MU",
+			"EWIEGA46WW/moc_outputpanel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/playlistcontrolwidget.h",
+			"MU",
+			"EWIEGA46WW/moc_playlistcontrolwidget.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/playmodepanel.h",
+			"MU",
+			"EWIEGA46WW/moc_playmodepanel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/schedulegriditem.h",
+			"MU",
+			"EWIEGA46WW/moc_schedulegriditem.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/scheduleitem.h",
+			"MU",
+			"EWIEGA46WW/moc_scheduleitem.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/statusgridpanel.h",
+			"MU",
+			"EWIEGA46WW/moc_statusgridpanel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/subjectobserver.h",
+			"MU",
+			"EWIEGA46WW/moc_subjectobserver.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/timeanalyzerwidget.h",
+			"MU",
+			"EWIEGA46WW/moc_timeanalyzerwidget.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/timegridpanel.h",
+			"MU",
+			"EWIEGA46WW/moc_timegridpanel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/trackgridpanel.h",
+			"MU",
+			"EWIEGA46WW/moc_trackgridpanel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.h",
+			"MU",
+			"EWIEGA46WW/moc_transitionmodegridpanel.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
 	"INCLUDE_DIR" : "D:/home/PMS/Raven/rave/OATS/OATS_autogen/include",
 	"MOC_COMPILATION_FILE" : "D:/home/PMS/Raven/rave/OATS/OATS_autogen/mocs_compilation.cpp",
-	"MOC_DEFINITIONS" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB" ],
+	"MOC_DEFINITIONS" : 
+	[
+		"QT_CHARTS_LIB",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB"
+	],
 	"MOC_DEPEND_FILTERS" : 
 	[
 		[
@@ -97,8 +172,6 @@
 		"D:/home/PMS/Raven/rave/OATS",
 		"C:/Program Files/PostgreSQL/9.5/include",
 		"C:/Program Files/PostgreSQL/9.5/include/server",
-		"D:/home/PMS/Raven/rave/audiolib/headers",
-		"D:/home/PMS/Raven/rave/audiolib/lib_debug",
 		"D:/home/PMS/Raven/rave/framework",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets",
@@ -106,6 +179,7 @@
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/mkspecs/win32-g++",
+		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCharts",
 		"D:/MinGW/MinGW/include/c++/9.2.0",
 		"D:/MinGW/MinGW/include/c++/9.2.0/x86_64-w64-mingw32",
 		"D:/MinGW/MinGW/include/c++/9.2.0/backward",
@@ -137,8 +211,21 @@
 	"SETTINGS_FILE" : "D:/home/PMS/Raven/rave/OATS/CMakeFiles/OATS_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/home/PMS/Raven/rave/OATS/datetimewidget.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/gridpanel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/main.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/OATS/mainwindow.cpp", "MU" ]
+		[ "D:/home/PMS/Raven/rave/OATS/mainwindow.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/outputpanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/playlistcontrolwidget.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/playmodepanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/schedulegriditem.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/scheduleitem.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/statusgridpanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/subjectobserver.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/timeanalyzerwidget.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/timegridpanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/trackgridpanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
