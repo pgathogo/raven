@@ -15,11 +15,12 @@ namespace OATS{
         m_play_mode_label = std::make_unique<QLabel>("Play Mode:");
         m_btn_go_current = std::make_unique<QPushButton>("Go Current");
         m_btn_keep_current = std::make_unique<QPushButton>("Keep Current");
+        m_btn_keep_current->setCheckable(true);
 
         connect(m_btn_go_current.get(), &QPushButton::clicked, this, &PlayModePanel::go_current_clicked);
-        connect(m_btn_keep_current.get(), &QPushButton::clicked, this, &PlayModePanel::keep_current_clicked);
 
         m_layout = new QHBoxLayout();
+
         m_layout->addWidget(m_play_mode_label.get());
         m_layout->addWidget(m_btn_go_current.get());
         m_layout->addWidget(m_btn_keep_current.get());
@@ -33,7 +34,7 @@ namespace OATS{
 
     PlayModePanel::~PlayModePanel()
     {
-        //delete m_layout;
+        delete m_layout;
     }
 
     void PlayModePanel::go_current_clicked()
@@ -41,8 +42,13 @@ namespace OATS{
         emit go_current();
     }
 
-    void PlayModePanel::keep_current_clicked()
+    QPushButton* PlayModePanel::go_current_button()
     {
-        emit keep_current();
+        return m_btn_go_current.get();
+    }
+
+    bool PlayModePanel::keep_current_checked()
+    {
+        return m_btn_keep_current->isChecked();
     }
 }

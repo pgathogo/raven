@@ -16,13 +16,13 @@ namespace OATS{
     public:
         explicit PlayModePanel(QWidget *parent = nullptr);
         ~PlayModePanel();
-
+        QPushButton* go_current_button();
+        bool keep_current_checked();
     signals:
         void go_current();
         void keep_current();
     private slots:
         void go_current_clicked();
-        void keep_current_clicked();
     private:
         std::unique_ptr<QLabel> m_play_mode_label;
         std::unique_ptr<QPushButton> m_btn_go_current;

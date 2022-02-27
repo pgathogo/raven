@@ -1,14 +1,16 @@
 #pragma once
 
+#include <memory>
+
 #include <QFrame>
 #include <QTime>
+#include <QPushButton>
+#include <QLabel>
+#include <QProgressBar>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 class QString;
-class QLabel;
-class QPushButton;
-class QHBoxLayout;
-class QVBoxLayout;
-class QProgressBar;
 
 namespace OATS{
 
@@ -83,20 +85,20 @@ namespace OATS{
     private:
         int m_id;
         QString m_panel_name;
-        QPushButton* m_play_button;
-        QPushButton* m_stop_button;
-        QLabel* m_status_image;
-        QLabel* m_title;
-        QLabel* m_artist;
-        QLabel* m_time;
-        QProgressBar* m_progress_bar;
+        std::unique_ptr<QPushButton> m_play_button;
+        std::unique_ptr<QPushButton> m_stop_button;
+        std::unique_ptr<QLabel> m_status_image;
+        std::unique_ptr<QLabel> m_title;
+        std::unique_ptr<QLabel> m_artist;
+        std::unique_ptr<QLabel> m_time;
+        std::unique_ptr<QProgressBar> m_progress_bar;
 
         QHBoxLayout* m_layout_buttons;
         QHBoxLayout* m_layout_title;
         QHBoxLayout* m_layout_artist;
         QHBoxLayout* m_layout_time;
 
-        QVBoxLayout* m_main_panel;
+        std::unique_ptr<QVBoxLayout> m_main_panel;
 
         OATS::ScheduleItem* m_schedule_item;
         PanelStatus m_status;

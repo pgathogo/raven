@@ -29,15 +29,15 @@ namespace OATS{
         setFrameShape(QFrame::Panel);
         setFrameShadow(QFrame::Raised);
 
-        m_play_button = new QPushButton("PLAY "+name);
+        m_play_button = std::make_unique<QPushButton>("PLAY "+name);
         m_play_button->setObjectName("PlayButton");
-        connect(m_play_button, &QPushButton::clicked, this, &OutputPanel::play);
+        connect(m_play_button.get(), &QPushButton::clicked, this, &OutputPanel::play);
 
         m_play_button->setStyleSheet(btn_style);
 
-        m_stop_button = new QPushButton("STOP "+name);
+        m_stop_button = std::make_unique<QPushButton>("STOP "+name);
         m_stop_button->setObjectName("StopButton");
-        connect(m_stop_button, &QPushButton::clicked, this, &OutputPanel::stop);
+        connect(m_stop_button.get(), &QPushButton::clicked, this, &OutputPanel::stop);
 
                         //"border:1px solid #FF0000;"
         m_stop_button->setStyleSheet(
@@ -50,39 +50,39 @@ namespace OATS{
                         "color:#FFFFFF;"
                          );
 
-        m_status_image = new QLabel("img");
+        m_status_image = std::make_unique<QLabel>("img");
         m_layout_buttons = new QHBoxLayout();
 
-        m_layout_buttons->addWidget(m_play_button);
-        m_layout_buttons->addWidget(m_stop_button);
-        m_layout_buttons->addWidget(m_status_image);
+        m_layout_buttons->addWidget(m_play_button.get());
+        m_layout_buttons->addWidget(m_stop_button.get());
+        m_layout_buttons->addWidget(m_status_image.get());
         m_layout_buttons->addStretch(1);
 
         QFont f_title("JetBrains Mono", 14, QFont::Bold);
 
-        m_title = new QLabel("Title "+name);
+        m_title = std::make_unique<QLabel>("Title "+name);
         m_title->setObjectName("TitleLabel");
         m_title->setFont(f_title);
         m_title->setAlignment(Qt::AlignHCenter);
         m_layout_title = new QHBoxLayout();
-        m_layout_title->addWidget(m_title);
+        m_layout_title->addWidget(m_title.get());
 
         QFont f_artist("JetBrains Mono", 10, QFont::Bold);
         f_artist.setBold(true);
         f_artist.setPointSize(10);
 
-        m_artist = new QLabel("Artist "+name);
+        m_artist = std::make_unique<QLabel>("Artist "+name);
         m_artist->setObjectName("OutputArtistLabel");
         m_artist->setFont(f_artist);
         m_artist->setAlignment(Qt::AlignHCenter);
         m_layout_artist = new QHBoxLayout();
-        m_layout_artist->addWidget(m_artist);
+        m_layout_artist->addWidget(m_artist.get());
 
-        m_time = new QLabel("00:00 / 00:00 / 00:00");
+        m_time = std::make_unique<QLabel>("00:00 / 00:00 / 00:00");
         m_time->setAlignment(Qt::AlignHCenter);
         m_time->setFont(QFont("DigifaceWide", 20));
 
-        m_progress_bar = new QProgressBar();
+        m_progress_bar = std::make_unique<QProgressBar>();
 //        m_progress_bar->setLayoutDirection(Qt::RightToLeft);
         m_progress_bar->setTextVisible(true);
         m_progress_bar->setFormat("00:00 / 00:00 / 00:00");
@@ -98,52 +98,42 @@ namespace OATS{
         //m_progress_bar->setAlignment(Qt::AlignCenter);
 
         m_layout_time = new QHBoxLayout();
-//        m_layout_time->addWidget(m_time);
-        m_layout_time->addWidget(m_progress_bar);
+//        m_layout_time->addWidget(m_time.get());
+        m_layout_time->addWidget(m_progress_bar.get());
 
-        m_main_panel = new QVBoxLayout();
+        m_main_panel = std::make_unique<QVBoxLayout>();
         m_main_panel->addLayout(m_layout_buttons);
         m_main_panel->addLayout(m_layout_title);
         m_main_panel->addLayout(m_layout_artist);
         m_main_panel->addLayout(m_layout_time);
 
-        setLayout(m_main_panel);
+        setLayout(m_main_panel.get());
 
     }
 
     OutputPanel::~OutputPanel()
     {
-        delete m_play_button;
-        delete m_stop_button;
-        delete m_status_image;
-        delete m_title;
-        delete m_artist;
-        delete m_time;
-        delete m_progress_bar;
 
         delete m_layout_buttons;
         delete m_layout_title;
         delete m_layout_artist;
         delete m_layout_time;
 
-        //delete m_schedule_item;
-
-        delete m_main_panel;
     }
 
     QLabel* OutputPanel::title()
     {
-        return m_title;
+        return m_title.get();
     }
 
     QLabel* OutputPanel::artist()
     {
-        return m_artist;
+        return m_artist.get();
     }
 
     QLabel* OutputPanel::time()
     {
-        return m_time;
+        return m_time.get();
     }
 
     OATS::PanelStatus OutputPanel::panel_status()

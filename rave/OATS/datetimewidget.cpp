@@ -3,15 +3,17 @@
 #include <QHBoxLayout>
 #include <QTime>
 #include <QFont>
+#include <QDebug>
 
 #include "datetimewidget.h"
 
 namespace OATS{
 
     DateTimeWidget::DateTimeWidget()
+        :m_datetime_timer{nullptr}
     {
-        m_days_of_week = {"Sunday", "Monday", "Tuesday", "Wednesday",
-                         "Thursday", "Friday", "Saturday"};
+        m_days_of_week = {"Monday", "Tuesday", "Wednesday",
+                         "Thursday", "Friday", "Saturday", "Sunday"};
 
         m_time_digit = std::make_unique<QLabel>("00:00:00");
         QFont td_font("DigifaceWide", 14, QFont::Bold);
@@ -43,6 +45,8 @@ namespace OATS{
 
         fill_hour_string();
 
+        m_datetime_timer = std::make_unique<QTimer>(this);
+        connect(m_datetime_timer.get(), &QTimer::timeout, this, &DateTimeWidget::update_time);
     }
 
 
@@ -56,15 +60,13 @@ namespace OATS{
     {
         m_time_digit->setText(time.toString("HH:mm:ss"));
 
-        show_str_time(time.hour(), time.minute());  // testing only!!
-
         if (time.second() < 2)
-            show_str_time(time.hour(), time.minute());
+            m_time_text->setText(time_to_timestr(time.hour(), time.minute()));
 
         m_date_text->setText(formatted_date());
     }
 
-    void DateTimeWidget::show_str_time(int hour, int minutes)
+    QString DateTimeWidget::time_to_timestr(int hour, int minutes)
     {
         std::string str_link{""};
         std::string str_hours{""};
@@ -90,8 +92,7 @@ namespace OATS{
 
         time_str = str_minutes + str_link + str_hours;
 
-        m_time_text->setText(QString::fromStdString(time_str));
-
+        return QString::fromStdString(time_str);
     }
 
     std::string DateTimeWidget::minute_to_str(int minutes)
@@ -163,6 +164,7 @@ namespace OATS{
     QString DateTimeWidget::formatted_date()
     {
         auto curr_date = QDate::currentDate();
+
         auto day_str = day_of_week(curr_date.dayOfWeek());
 
         auto fmt_date = day_str+", "+curr_date.toString("dd MMMM yyyy");
@@ -172,7 +174,23 @@ namespace OATS{
 
     QString DateTimeWidget::day_of_week(int dow)
     {
-        return m_days_of_week[dow];
+        return m_days_of_week[dow-1];
     }
 
+    void DateTimeWidget::start_timer(int interval)
+    {
+        m_datetime_timer->start(interval);
+    }
+
+    void DateTimeWidget::stop_timer()
+    {
+        m_datetime_timer->stop();
+    }
+
+    void DateTimeWidget::update_time()
+    {
+        auto curr_time = QTime::currentTime();
+        set_time(curr_time);
+        emit time_updated();
+    }
 }
