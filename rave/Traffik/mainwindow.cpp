@@ -122,6 +122,10 @@ void MainWindow::createActions()
     setupMenu->addAction(setup_browser_act);
     connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
+
+    QAction* cue_editor_act = new QAction("Cue Editor");
+    connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
+
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -190,6 +194,11 @@ void MainWindow::open_setup_browser()
 {
     SetupBrowser* setup_browser = createSubWindow<SetupBrowser>();
     setup_browser->exec();
+}
+
+void MainWindow::open_cue_editor()
+{
+
 }
 
 void MainWindow::print_comm_log()

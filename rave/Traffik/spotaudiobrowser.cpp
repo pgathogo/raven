@@ -1,4 +1,5 @@
 #include <QFileDialog>
+#include <QDir>
 
 #include "spotaudiobrowser.h"
 #include "ui_spotaudiobrowser.h"
@@ -158,7 +159,7 @@ void SpotAudioBrowser::import_audio()
     AudioTool audio_tool;
 
     auto audio_file_full_path = QFileDialog::getOpenFileName(this,
-                                                   tr("Import Audio"), "/d/home/audio",
+                                                   tr("Import Audio"), QDir::currentPath(),
                                                    tr("Audio Files (*.ogg *.mp3 *.wav)"));
     if (audio_file_full_path.isEmpty())
         return;
@@ -185,14 +186,24 @@ void SpotAudioBrowser::import_audio()
     // Add some audio attributes - name, description etc.
     auto spot_audio_form = std::make_unique<SpotAudioForm>(spot_audio.get());
 
+    printstr("Spot form created ...");
+
     if (spot_audio_form->exec() > 0){
+
+        printstr("After spot_audio_form ...");
 
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) ){
 
-            audio_tool.generate_wave_file(spot_audio->audio()->audio_file().audio_file(),
-                                          spot_audio->audio()->audio_file().wave_file());
+            if (!audio_tool.generate_wave_file(spot_audio->audio()->audio_file().audio_file(),
+                                          spot_audio->audio()->audio_file().wave_file())){
+                showMessage("Failed to generate audio wave file! Process aborted.");
+                return;
+            }
+
             qDebug() << "Wave generated.";
         }
+
+        printstr("COMM AUDIO FOLDER: "+m_setup->comm_audio_folder()->value());
 
         spot_audio->set_audio_lib_path(m_setup->comm_audio_folder()->value());
         spot_audio->set_title(spot_audio->title()->value());
@@ -200,13 +211,19 @@ void SpotAudioBrowser::import_audio()
         spot_audio->set_file_path(m_setup->comm_audio_folder()->value());
 
         auto af = audio->audio_file();
-        fs::path path{audio_file_full_path.toStdString()};
+//        fs::path path{audio_file_full_path.toStdString()};
         //std::string file_no_path = path.filename().u8string();
 
         af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.short_filename()+".ogg");
 
+        qDebug() << QString::fromStdString(af.ogg_filename());
+
         auto cue_editor = std::make_unique<CueEditor>(af);
+
+        printstr("CueEditor created.");
+
         if (cue_editor->editor() == 1){
+            printstr("After cue_editor");
 
             spot_audio->audio()->set_audio_file(af);
             spot_audio->set_marker(cue_editor->marker());
@@ -264,8 +281,8 @@ void SpotAudioBrowser::cue_edit()
     AudioFile af(audio_file);
     af.set_audio_title(audio->title()->value());
     //af.set_artist_name(audio->artist()->value());
+    //CueEditor* cue_editor = new CueEditor(af);
     auto cue_editor = std::make_unique<CueEditor>(af);
-
     if (cue_editor->editor() == 1){
     }
 }

@@ -13,6 +13,7 @@ OrderBrowser::OrderBrowser(Client* client, QWidget* parent) :
     mClient{client}
 {
     ui->setupUi(this);
+
     if (client != nullptr){
         setDialogTitle("Client Orders: "+stoq(client->name()->value()));
         searchRecord();
@@ -33,6 +34,20 @@ void OrderBrowser::addRecord()
 
 void OrderBrowser::updateRecord()
 {
+    std::string search_name = selectedRowName().toStdString();
+    if (!search_name.empty()){
+        BaseEntity* be = entityDataModel().findEntityByName(search_name);
+        Order* order = dynamic_cast<Order*>(be);
+        auto order_form = std::make_unique<OrderForm>(mClient, order, this);
+        if (order_form->exec() > 0){
+            try{
+                updateTableViewRecord(order->tableViewValues());
+                entityDataModel().updateEntity(*order);
+            } catch (DatabaseException& de){
+                showMessage(de.errorMessage());
+            }
+        }
+    }
 }
 
 void OrderBrowser::searchRecord()
@@ -58,5 +73,11 @@ bool OrderBrowser::okay_to_delete(BaseEntity* entity)
 
 void OrderBrowser::search_by_client(Client* client)
 {
+    qDebug() << "ORDER BROWSER: "<< client->id();
     search_related<Order, Client>(client);
+}
+
+void OrderBrowser::set_client(Client* client)
+{
+    mClient = client;
 }

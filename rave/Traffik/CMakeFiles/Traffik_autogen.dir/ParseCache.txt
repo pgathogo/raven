@@ -4,13 +4,13 @@ D:/home/PMS/Raven/rave/Traffik/salespersonbrowser.h
 D:/home/PMS/Raven/rave/Traffik/approverform.h
  mmc:Q_OBJECT
 D:/home/PMS/Raven/rave/Traffik/client.h
+D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.h
+ mmc:Q_OBJECT
+D:/home/PMS/Raven/rave/Traffik/breaklayout.h
 D:/home/PMS/Raven/rave/Traffik/spotbrowser.cpp
  uic:../framework/ui_baseentitybrowserdlg.h
  uic:ui_spotbrowser.h
 D:/home/PMS/Raven/rave/framework/typeexclusion.h
-D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.h
- mmc:Q_OBJECT
-D:/home/PMS/Raven/rave/Traffik/breaklayout.h
 D:/home/PMS/Raven/rave/Traffik/brand.h
 D:/home/PMS/Raven/rave/Traffik/agent.h
 D:/home/PMS/Raven/rave/Traffik/clientbrowser.h

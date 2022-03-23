@@ -61,9 +61,11 @@ MergedBrowser::~MergedBrowser()
 void MergedBrowser::change_tab(int index)
 {
     BaseEntity* ent = m_client_browser->findSelectedEntity();
+
     if (ent == nullptr)
         return;
     m_client = dynamic_cast<Client*>(ent);
+
     switch(index){
       case 1:
         m_order_browser->search_by_client(m_client);
@@ -85,6 +87,7 @@ void MergedBrowser::change_client(BaseEntity* entity)
 {
     Client* client = dynamic_cast<Client*>(entity);
 
+    m_order_browser->set_client(client);
     m_spot_browser->set_client(client);
     m_brand_browser->set_client(client);
 

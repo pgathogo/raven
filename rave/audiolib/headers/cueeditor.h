@@ -1,6 +1,8 @@
 #ifndef CUEEDITOR_H
 #define CUEEDITOR_H
 
+#include <QApplication>
+
 #include <memory>
 #include "cueeditor_global.h"
 
@@ -14,11 +16,12 @@ namespace AUDIO{
 
 class CUEEDITOR_EXPORT CueEditor
 {
+    QApplication* app;
 public:
     enum DialogCloseResult{Cancel, Save};
 
     CueEditor(AudioFile& audio_file, const std::string name);
-    CueEditor(AudioFile& audio_file);
+    CueEditor(AudioFile& audio_file, int argc=0, char** argv = NULL);
     ~CueEditor();
     int editor();
     void play_audio();

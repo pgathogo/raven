@@ -70,6 +70,7 @@ private slots:
     void openSchedule();
     void open_merged_browser();
     void open_setup_browser();
+    void open_cue_editor();
 
     void print_comm_log();
 

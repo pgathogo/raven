@@ -3,23 +3,26 @@
 #include "audioplayer.h"
 
 CueEditor::CueEditor(AudioFile& audio_file, const std::string name)
-    :m_audio_file{audio_file},
-     m_audio_wave_form{nullptr},
-     m_player_only{name}
+    :m_audio_file{audio_file}
+     ,m_audio_wave_form{nullptr}
+     ,m_player_only{name}
 {
    m_audio_player = std::make_unique<AudioPlayer>(m_audio_file);
 }
 
-CueEditor::CueEditor(AudioFile& audio_file)
+CueEditor::CueEditor(AudioFile& audio_file, int argc, char** argv)
     :m_audio_file{audio_file}
+    ,app(new QApplication(argc, argv))
 {
     m_audio_wave_form = new AUDIO::AudioWaveForm(m_audio_file);
 }
 
 CueEditor::~CueEditor()
 {
-    if (m_audio_wave_form != nullptr)
+    if (m_audio_wave_form != nullptr){
         delete static_cast<AUDIO::AudioWaveForm*>(m_audio_wave_form);
+        delete app;
+     }
 }
 
 int CueEditor::editor()

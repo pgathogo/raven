@@ -25,6 +25,7 @@ public:
 
     void search_by_client(Client*);
 
+    void set_client(Client* client);
 private:
     Ui::OrderBrowser *ui;
     Client* mClient;

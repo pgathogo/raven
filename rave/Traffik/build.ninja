@@ -42,7 +42,7 @@ build CMakeFiles/Traffik.dir/Traffik_autogen/mocs_compilation.cpp.obj: CXX_COMPI
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\Traffik_autogen\mocs_compilation.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\Traffik_autogen
 
@@ -50,7 +50,7 @@ build CMakeFiles/Traffik.dir/main.cpp.obj: CXX_COMPILER__Traffik_ main.cpp || cm
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\main.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -58,7 +58,7 @@ build CMakeFiles/Traffik.dir/mainwindow.cpp.obj: CXX_COMPILER__Traffik_ mainwind
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\mainwindow.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -66,7 +66,7 @@ build CMakeFiles/Traffik.dir/clientbrowser.cpp.obj: CXX_COMPILER__Traffik_ clien
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\clientbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -74,7 +74,7 @@ build CMakeFiles/Traffik.dir/client.cpp.obj: CXX_COMPILER__Traffik_ client.cpp |
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\client.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -82,7 +82,7 @@ build CMakeFiles/Traffik.dir/order.cpp.obj: CXX_COMPILER__Traffik_ order.cpp || 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\order.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -90,7 +90,7 @@ build CMakeFiles/Traffik.dir/clientform.cpp.obj: CXX_COMPILER__Traffik_ clientfo
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\clientform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -98,7 +98,7 @@ build CMakeFiles/Traffik.dir/brandbrowser.cpp.obj: CXX_COMPILER__Traffik_ brandb
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\brandbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -106,7 +106,7 @@ build CMakeFiles/Traffik.dir/spotbrowser.cpp.obj: CXX_COMPILER__Traffik_ spotbro
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spotbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -114,7 +114,7 @@ build CMakeFiles/Traffik.dir/orderbrowser.cpp.obj: CXX_COMPILER__Traffik_ orderb
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\orderbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -122,7 +122,7 @@ build CMakeFiles/Traffik.dir/agent.cpp.obj: CXX_COMPILER__Traffik_ agent.cpp || 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\agent.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -130,7 +130,7 @@ build CMakeFiles/Traffik.dir/clientgroup.cpp.obj: CXX_COMPILER__Traffik_ clientg
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\clientgroup.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -138,7 +138,7 @@ build CMakeFiles/Traffik.dir/salesperson.cpp.obj: CXX_COMPILER__Traffik_ salespe
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\salesperson.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -146,7 +146,7 @@ build CMakeFiles/Traffik.dir/orderform.cpp.obj: CXX_COMPILER__Traffik_ orderform
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\orderform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -154,7 +154,7 @@ build CMakeFiles/Traffik.dir/traffiksetup.cpp.obj: CXX_COMPILER__Traffik_ traffi
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\traffiksetup.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -162,7 +162,7 @@ build CMakeFiles/Traffik.dir/bookingsegment.cpp.obj: CXX_COMPILER__Traffik_ book
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\bookingsegment.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -170,7 +170,7 @@ build CMakeFiles/Traffik.dir/orderbooking.cpp.obj: CXX_COMPILER__Traffik_ orderb
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\orderbooking.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -178,7 +178,7 @@ build CMakeFiles/Traffik.dir/spotaudio.cpp.obj: CXX_COMPILER__Traffik_ spotaudio
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spotaudio.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -186,7 +186,7 @@ build CMakeFiles/Traffik.dir/spottypeexclusion.cpp.obj: CXX_COMPILER__Traffik_ s
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spottypeexclusion.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -194,7 +194,7 @@ build CMakeFiles/Traffik.dir/spot.cpp.obj: CXX_COMPILER__Traffik_ spot.cpp || cm
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spot.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -202,7 +202,7 @@ build CMakeFiles/Traffik.dir/spotvoiceover.cpp.obj: CXX_COMPILER__Traffik_ spotv
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spotvoiceover.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -210,7 +210,7 @@ build CMakeFiles/Traffik.dir/voiceover.cpp.obj: CXX_COMPILER__Traffik_ voiceover
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\voiceover.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -218,7 +218,7 @@ build CMakeFiles/Traffik.dir/spotform.cpp.obj: CXX_COMPILER__Traffik_ spotform.c
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spotform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -226,7 +226,7 @@ build CMakeFiles/Traffik.dir/spotaudiobrowser.cpp.obj: CXX_COMPILER__Traffik_ sp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spotaudiobrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -234,7 +234,7 @@ build CMakeFiles/Traffik.dir/spotaudioform.cpp.obj: CXX_COMPILER__Traffik_ spota
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\spotaudioform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -242,7 +242,7 @@ build CMakeFiles/Traffik.dir/brand.cpp.obj: CXX_COMPILER__Traffik_ brand.cpp || 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\brand.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -250,7 +250,7 @@ build CMakeFiles/Traffik.dir/brandform.cpp.obj: CXX_COMPILER__Traffik_ brandform
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\brandform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -258,7 +258,7 @@ build CMakeFiles/Traffik.dir/orderpackage.cpp.obj: CXX_COMPILER__Traffik_ orderp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\orderpackage.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -266,7 +266,7 @@ build CMakeFiles/Traffik.dir/setupform.cpp.obj: CXX_COMPILER__Traffik_ setupform
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\setupform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -274,7 +274,7 @@ build CMakeFiles/Traffik.dir/orderapprover.cpp.obj: CXX_COMPILER__Traffik_ order
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\orderapprover.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -282,7 +282,7 @@ build CMakeFiles/Traffik.dir/approverform.cpp.obj: CXX_COMPILER__Traffik_ approv
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\approverform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -290,7 +290,7 @@ build CMakeFiles/Traffik.dir/scheduleform.cpp.obj: CXX_COMPILER__Traffik_ schedu
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\scheduleform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -298,7 +298,7 @@ build CMakeFiles/Traffik.dir/breakcreateform.cpp.obj: CXX_COMPILER__Traffik_ bre
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\breakcreateform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -306,7 +306,7 @@ build CMakeFiles/Traffik.dir/breaklayoutline.cpp.obj: CXX_COMPILER__Traffik_ bre
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\breaklayoutline.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -314,7 +314,7 @@ build CMakeFiles/Traffik.dir/breaklayout.cpp.obj: CXX_COMPILER__Traffik_ breakla
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\breaklayout.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -322,7 +322,7 @@ build CMakeFiles/Traffik.dir/breaklayoutform.cpp.obj: CXX_COMPILER__Traffik_ bre
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\breaklayoutform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -330,7 +330,7 @@ build CMakeFiles/Traffik.dir/breaklayoutbrowser.cpp.obj: CXX_COMPILER__Traffik_ 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\breaklayoutbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -338,7 +338,7 @@ build CMakeFiles/Traffik.dir/schedulemantreeviewmodel.cpp.obj: CXX_COMPILER__Tra
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\schedulemantreeviewmodel.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -346,7 +346,7 @@ build CMakeFiles/Traffik.dir/mergedbrowser.cpp.obj: CXX_COMPILER__Traffik_ merge
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\mergedbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -354,7 +354,7 @@ build CMakeFiles/Traffik.dir/bookingorderbrowser.cpp.obj: CXX_COMPILER__Traffik_
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\bookingorderbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -362,7 +362,7 @@ build CMakeFiles/Traffik.dir/bookingwizard.cpp.obj: CXX_COMPILER__Traffik_ booki
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\bookingwizard.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -370,7 +370,7 @@ build CMakeFiles/Traffik.dir/traffikrules.cpp.obj: CXX_COMPILER__Traffik_ traffi
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\traffikrules.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -378,7 +378,7 @@ build CMakeFiles/Traffik.dir/timeband.cpp.obj: CXX_COMPILER__Traffik_ timeband.c
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\timeband.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -386,7 +386,7 @@ build CMakeFiles/Traffik.dir/setupbrowser.cpp.obj: CXX_COMPILER__Traffik_ setupb
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\setupbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -394,7 +394,7 @@ build CMakeFiles/Traffik.dir/timebandbrowser.cpp.obj: CXX_COMPILER__Traffik_ tim
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\timebandbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -402,7 +402,7 @@ build CMakeFiles/Traffik.dir/timebandform.cpp.obj: CXX_COMPILER__Traffik_ timeba
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\timebandform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -410,7 +410,7 @@ build CMakeFiles/Traffik.dir/agentbrowser.cpp.obj: CXX_COMPILER__Traffik_ agentb
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\agentbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -418,7 +418,7 @@ build CMakeFiles/Traffik.dir/agentform.cpp.obj: CXX_COMPILER__Traffik_ agentform
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\agentform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -426,7 +426,7 @@ build CMakeFiles/Traffik.dir/salespersonbrowser.cpp.obj: CXX_COMPILER__Traffik_ 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\salespersonbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -434,7 +434,7 @@ build CMakeFiles/Traffik.dir/salespersonform.cpp.obj: CXX_COMPILER__Traffik_ sal
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\salespersonform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -442,7 +442,7 @@ build CMakeFiles/Traffik.dir/voiceoverbrowser.cpp.obj: CXX_COMPILER__Traffik_ vo
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\voiceoverbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -450,7 +450,7 @@ build CMakeFiles/Traffik.dir/voiceoverform.cpp.obj: CXX_COMPILER__Traffik_ voice
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\voiceoverform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -458,7 +458,7 @@ build CMakeFiles/Traffik.dir/typeexclusionbrowser.cpp.obj: CXX_COMPILER__Traffik
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\typeexclusionbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -466,7 +466,7 @@ build CMakeFiles/Traffik.dir/typeexclusiondetails.cpp.obj: CXX_COMPILER__Traffik
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\typeexclusiondetails.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -474,7 +474,7 @@ build CMakeFiles/Traffik.dir/clientgroupdetaildlg.cpp.obj: CXX_COMPILER__Traffik
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\clientgroupdetaildlg.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -482,7 +482,7 @@ build CMakeFiles/Traffik.dir/clientgroupdlg.cpp.obj: CXX_COMPILER__Traffik_ clie
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\clientgroupdlg.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -490,7 +490,7 @@ build CMakeFiles/Traffik.dir/commlogform.cpp.obj: CXX_COMPILER__Traffik_ commlog
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\commlogform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -498,7 +498,7 @@ build CMakeFiles/Traffik.dir/commlogtreeviewmodel.cpp.obj: CXX_COMPILER__Traffik
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\commlogtreeviewmodel.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -506,7 +506,7 @@ build CMakeFiles/Traffik.dir/tree.cpp.obj: CXX_COMPILER__Traffik_ tree.cpp || cm
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\tree.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -514,7 +514,7 @@ build CMakeFiles/Traffik.dir/treeviewmodel.cpp.obj: CXX_COMPILER__Traffik_ treev
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\treeviewmodel.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir
 
@@ -522,7 +522,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj: CXX
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio\audiofile.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio
 
@@ -530,7 +530,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio\audiotool.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio
 
@@ -538,7 +538,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj: CXX_CO
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio\artist.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio
 
@@ -546,7 +546,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj: CXX_COM
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio\audio.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\audio
 
@@ -554,7 +554,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj: 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\schedule.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -562,7 +562,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\relationmapper.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -570,7 +570,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\entitydatamodel.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -578,7 +578,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\baseentity.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -586,7 +586,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserd
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\baseentitybrowserdlg.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -594,7 +594,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildl
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\baseentitydetaildlg.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -602,7 +602,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\databaseconnector.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -610,7 +610,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\databasemanager.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -618,7 +618,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.o
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\entityfields.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -626,7 +626,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.o
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\dataprovider.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -634,7 +634,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\ravenexception.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -642,7 +642,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\letterfilterwidget.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -650,7 +650,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj:
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\valuelist.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -658,7 +658,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\manytomany.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -666,7 +666,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\typeexclusion.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -674,7 +674,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/manytomanybrowser.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\manytomanybrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -682,7 +682,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\picklistbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -690,7 +690,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\selectclosewidget.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -698,7 +698,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelistbrowser.c
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\valuelistbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -706,7 +706,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelistdetaildlg
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework\valuelistdetaildlg.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\framework
 
@@ -714,7 +714,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/loginform.cpp.obj: 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\loginform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -722,7 +722,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/accesscontroller.cp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\accesscontroller.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -730,7 +730,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\authentication.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -738,7 +738,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj: CXX_C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\user.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -746,7 +746,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/userbrowser.cpp.obj
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\userbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -754,7 +754,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/userform.cpp.obj: C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\userform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -762,7 +762,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauthbrowser.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\contentauthbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -770,7 +770,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauthform.cpp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\contentauthform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -778,7 +778,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauth.cpp.obj
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\contentauth.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -786,7 +786,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/role.cpp.obj: CXX_C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\role.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -794,7 +794,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/rolemember.cpp.obj:
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\rolemember.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -802,7 +802,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/content.cpp.obj: CX
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\content.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -810,7 +810,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentbrowser.cpp.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\contentbrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -818,7 +818,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentform.cpp.obj
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\contentform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -826,7 +826,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentdetailform.c
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\contentdetailform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -834,7 +834,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/rolebrowser.cpp.obj
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\rolebrowser.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -842,7 +842,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/roleform.cpp.obj: C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security\roleform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\security
 
@@ -850,7 +850,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.ob
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\utils\notificationbar.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\utils
 
@@ -858,7 +858,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.o
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\utils\notificationitem.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\utils
 
@@ -866,7 +866,7 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/daypartgrid.cpp.obj: C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\utils\daypartgrid.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../audiolib/lib_debug -I../lib/limerport/include -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -ITraffik_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\Traffik.dir
   OBJECT_FILE_DIR = CMakeFiles\Traffik.dir\D_\home\PMS\Raven\rave\utils
 
@@ -878,9 +878,9 @@ build CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/daypartgrid.cpp.obj: C
 #############################################
 # Link the executable Traffik.exe
 
-build Traffik.exe: CXX_EXECUTABLE_LINKER__Traffik_ CMakeFiles/Traffik.dir/Traffik_autogen/mocs_compilation.cpp.obj CMakeFiles/Traffik.dir/main.cpp.obj CMakeFiles/Traffik.dir/mainwindow.cpp.obj CMakeFiles/Traffik.dir/clientbrowser.cpp.obj CMakeFiles/Traffik.dir/client.cpp.obj CMakeFiles/Traffik.dir/order.cpp.obj CMakeFiles/Traffik.dir/clientform.cpp.obj CMakeFiles/Traffik.dir/brandbrowser.cpp.obj CMakeFiles/Traffik.dir/spotbrowser.cpp.obj CMakeFiles/Traffik.dir/orderbrowser.cpp.obj CMakeFiles/Traffik.dir/agent.cpp.obj CMakeFiles/Traffik.dir/clientgroup.cpp.obj CMakeFiles/Traffik.dir/salesperson.cpp.obj CMakeFiles/Traffik.dir/orderform.cpp.obj CMakeFiles/Traffik.dir/traffiksetup.cpp.obj CMakeFiles/Traffik.dir/bookingsegment.cpp.obj CMakeFiles/Traffik.dir/orderbooking.cpp.obj CMakeFiles/Traffik.dir/spotaudio.cpp.obj CMakeFiles/Traffik.dir/spottypeexclusion.cpp.obj CMakeFiles/Traffik.dir/spot.cpp.obj CMakeFiles/Traffik.dir/spotvoiceover.cpp.obj CMakeFiles/Traffik.dir/voiceover.cpp.obj CMakeFiles/Traffik.dir/spotform.cpp.obj CMakeFiles/Traffik.dir/spotaudiobrowser.cpp.obj CMakeFiles/Traffik.dir/spotaudioform.cpp.obj CMakeFiles/Traffik.dir/brand.cpp.obj CMakeFiles/Traffik.dir/brandform.cpp.obj CMakeFiles/Traffik.dir/orderpackage.cpp.obj CMakeFiles/Traffik.dir/setupform.cpp.obj CMakeFiles/Traffik.dir/orderapprover.cpp.obj CMakeFiles/Traffik.dir/approverform.cpp.obj CMakeFiles/Traffik.dir/scheduleform.cpp.obj CMakeFiles/Traffik.dir/breakcreateform.cpp.obj CMakeFiles/Traffik.dir/breaklayoutline.cpp.obj CMakeFiles/Traffik.dir/breaklayout.cpp.obj CMakeFiles/Traffik.dir/breaklayoutform.cpp.obj CMakeFiles/Traffik.dir/breaklayoutbrowser.cpp.obj CMakeFiles/Traffik.dir/schedulemantreeviewmodel.cpp.obj CMakeFiles/Traffik.dir/mergedbrowser.cpp.obj CMakeFiles/Traffik.dir/bookingorderbrowser.cpp.obj CMakeFiles/Traffik.dir/bookingwizard.cpp.obj CMakeFiles/Traffik.dir/traffikrules.cpp.obj CMakeFiles/Traffik.dir/timeband.cpp.obj CMakeFiles/Traffik.dir/setupbrowser.cpp.obj CMakeFiles/Traffik.dir/timebandbrowser.cpp.obj CMakeFiles/Traffik.dir/timebandform.cpp.obj CMakeFiles/Traffik.dir/agentbrowser.cpp.obj CMakeFiles/Traffik.dir/agentform.cpp.obj CMakeFiles/Traffik.dir/salespersonbrowser.cpp.obj CMakeFiles/Traffik.dir/salespersonform.cpp.obj CMakeFiles/Traffik.dir/voiceoverbrowser.cpp.obj CMakeFiles/Traffik.dir/voiceoverform.cpp.obj CMakeFiles/Traffik.dir/typeexclusionbrowser.cpp.obj CMakeFiles/Traffik.dir/typeexclusiondetails.cpp.obj CMakeFiles/Traffik.dir/clientgroupdetaildlg.cpp.obj CMakeFiles/Traffik.dir/clientgroupdlg.cpp.obj CMakeFiles/Traffik.dir/commlogform.cpp.obj CMakeFiles/Traffik.dir/commlogtreeviewmodel.cpp.obj CMakeFiles/Traffik.dir/tree.cpp.obj CMakeFiles/Traffik.dir/treeviewmodel.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/manytomanybrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelistbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelistdetaildlg.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/loginform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/accesscontroller.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/userbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/userform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauthbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauthform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauth.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/role.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/rolemember.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/content.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentdetailform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/rolebrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/roleform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/daypartgrid.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a D$:/home/cpp/LimeReport/build/5.13.2/win64/debug/lib/limereportd.lib D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || Traffik_autogen
-  LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a  D:/home/cpp/LimeReport/build/5.13.2/win64/debug/lib/limereportd.lib  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib
+build Traffik.exe: CXX_EXECUTABLE_LINKER__Traffik_ CMakeFiles/Traffik.dir/Traffik_autogen/mocs_compilation.cpp.obj CMakeFiles/Traffik.dir/main.cpp.obj CMakeFiles/Traffik.dir/mainwindow.cpp.obj CMakeFiles/Traffik.dir/clientbrowser.cpp.obj CMakeFiles/Traffik.dir/client.cpp.obj CMakeFiles/Traffik.dir/order.cpp.obj CMakeFiles/Traffik.dir/clientform.cpp.obj CMakeFiles/Traffik.dir/brandbrowser.cpp.obj CMakeFiles/Traffik.dir/spotbrowser.cpp.obj CMakeFiles/Traffik.dir/orderbrowser.cpp.obj CMakeFiles/Traffik.dir/agent.cpp.obj CMakeFiles/Traffik.dir/clientgroup.cpp.obj CMakeFiles/Traffik.dir/salesperson.cpp.obj CMakeFiles/Traffik.dir/orderform.cpp.obj CMakeFiles/Traffik.dir/traffiksetup.cpp.obj CMakeFiles/Traffik.dir/bookingsegment.cpp.obj CMakeFiles/Traffik.dir/orderbooking.cpp.obj CMakeFiles/Traffik.dir/spotaudio.cpp.obj CMakeFiles/Traffik.dir/spottypeexclusion.cpp.obj CMakeFiles/Traffik.dir/spot.cpp.obj CMakeFiles/Traffik.dir/spotvoiceover.cpp.obj CMakeFiles/Traffik.dir/voiceover.cpp.obj CMakeFiles/Traffik.dir/spotform.cpp.obj CMakeFiles/Traffik.dir/spotaudiobrowser.cpp.obj CMakeFiles/Traffik.dir/spotaudioform.cpp.obj CMakeFiles/Traffik.dir/brand.cpp.obj CMakeFiles/Traffik.dir/brandform.cpp.obj CMakeFiles/Traffik.dir/orderpackage.cpp.obj CMakeFiles/Traffik.dir/setupform.cpp.obj CMakeFiles/Traffik.dir/orderapprover.cpp.obj CMakeFiles/Traffik.dir/approverform.cpp.obj CMakeFiles/Traffik.dir/scheduleform.cpp.obj CMakeFiles/Traffik.dir/breakcreateform.cpp.obj CMakeFiles/Traffik.dir/breaklayoutline.cpp.obj CMakeFiles/Traffik.dir/breaklayout.cpp.obj CMakeFiles/Traffik.dir/breaklayoutform.cpp.obj CMakeFiles/Traffik.dir/breaklayoutbrowser.cpp.obj CMakeFiles/Traffik.dir/schedulemantreeviewmodel.cpp.obj CMakeFiles/Traffik.dir/mergedbrowser.cpp.obj CMakeFiles/Traffik.dir/bookingorderbrowser.cpp.obj CMakeFiles/Traffik.dir/bookingwizard.cpp.obj CMakeFiles/Traffik.dir/traffikrules.cpp.obj CMakeFiles/Traffik.dir/timeband.cpp.obj CMakeFiles/Traffik.dir/setupbrowser.cpp.obj CMakeFiles/Traffik.dir/timebandbrowser.cpp.obj CMakeFiles/Traffik.dir/timebandform.cpp.obj CMakeFiles/Traffik.dir/agentbrowser.cpp.obj CMakeFiles/Traffik.dir/agentform.cpp.obj CMakeFiles/Traffik.dir/salespersonbrowser.cpp.obj CMakeFiles/Traffik.dir/salespersonform.cpp.obj CMakeFiles/Traffik.dir/voiceoverbrowser.cpp.obj CMakeFiles/Traffik.dir/voiceoverform.cpp.obj CMakeFiles/Traffik.dir/typeexclusionbrowser.cpp.obj CMakeFiles/Traffik.dir/typeexclusiondetails.cpp.obj CMakeFiles/Traffik.dir/clientgroupdetaildlg.cpp.obj CMakeFiles/Traffik.dir/clientgroupdlg.cpp.obj CMakeFiles/Traffik.dir/commlogform.cpp.obj CMakeFiles/Traffik.dir/commlogtreeviewmodel.cpp.obj CMakeFiles/Traffik.dir/tree.cpp.obj CMakeFiles/Traffik.dir/treeviewmodel.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/manytomanybrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/picklistbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/selectclosewidget.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelistbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/framework/valuelistdetaildlg.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/loginform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/accesscontroller.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/userbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/userform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauthbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauthform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentauth.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/role.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/rolemember.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/content.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentbrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/contentdetailform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/rolebrowser.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/security/roleform.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/notificationbar.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/notificationitem.cpp.obj CMakeFiles/Traffik.dir/D_/home/PMS/Raven/rave/utils/daypartgrid.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || Traffik_autogen
+  LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib   -LD:/home/PMS/Raven/rave/Traffik/../audiolib/lib_debug
   OBJECT_DIR = CMakeFiles\Traffik.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

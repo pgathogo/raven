@@ -20,6 +20,12 @@ AUDIO_INCLUDE_DIR:PATH=D:/home/PMS/Raven/rave/audiolib/headers
 //Path to a library.
 AUDIO_LIBRARY:FILEPATH=D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a
 
+//Path to a file.
+BASS_INCLUDE_DIR:PATH=D:/home/PMS/Raven/rave/lib/BassLib/Include
+
+//Path to a library.
+BASS_LIBRARY:FILEPATH=D:/home/PMS/Raven/rave/lib/BassLib/Lib/bass.lib
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=D:/MinGW/MinGW/bin/addr2line.exe
 

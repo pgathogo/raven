@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(TraffikRave VERSION 0.1 LANGUAGES CXX)
+project(Traffik VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -37,345 +37,337 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
-set(AUDIO_INCLUDE "../audiolib/headers")
-set(AUDIO_LIB "../audiolib/lib_debug")
 set(LIMEREPORT_INCLUDE_DIR "../lib/limerport/include")
 set(LIMEREPORT_LIB "../lib/limereport")
 
-find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
-find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
 find_library(LIMEREPORT_LIBRARY limereport ${LIMEREPORT_LIB})
 
-if (AUDIO_INCLUDE_DIR)
-        message(STATUS "Audio Include dir found.")
-endif()
+#if (AUDIO_INCLUDE_DIR)
+#        message(STATUS "Audio Include dir found.")
+#endif()
 
-if (AUDIO_LIBRARY)
-        message(STATUS "Audio library found.")
-endif()
+#if (AUDIO_LIBRARY)
+#        message(STATUS "Audio library found.")
+#endif()
 
 if (LIMEREPORT_LIB)
         message(STATUS "Limereport library found.")
 endif()
 
-include_directories(${AUDIO_INCLUDE_DIR})
-include_directories(${AUDIO_LIB})
+#include_directories(${AUDIO_INCLUDE_DIR})
+#include_directories(${AUDIO_LIB})
 include_directories(${LIMEREPORT_INCLUDE_DIR})
 
 #set(RAVE_AUDIO_LIBRARIES ${AUDIO_LIBRARY})
-#set(LIMEREPORT_LIBRARIES ${LIMEREPORT_LIBRARY})
+set(LIMEREPORT_LIBRARIES ${LIMEREPORT_LIBRARY})
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        approverform.h
+        clientbrowser.h
+        clientbrowser.cpp
+        clientbrowser.ui
+        client.h
+        client.cpp
+        order.h
+        order.cpp
+        clientform.h
+        clientform.cpp
+        clientform.ui
+        brandbrowser.h
+        brandbrowser.cpp
+        brandbrowser.ui
+        spotbrowser.h
+        spotbrowser.cpp
+        spotbrowser.ui
+        orderbrowser.h
+        orderbrowser.cpp
+        orderbrowser.ui
+        agent.h
+        agent.cpp
+        clientgroup.h
+        clientgroup.cpp
+        salesperson.h
+        salesperson.cpp
+        orderform.h
+        orderform.cpp
+        orderform.ui
+        traffiksetup.h
+        traffiksetup.cpp
         bookingsegment.h
+        bookingsegment.cpp
+        orderbooking.h
+        orderbooking.cpp
+        spotaudio.h
+        spotaudio.cpp
+        spottypeexclusion.h
+        spottypeexclusion.cpp
+        spot.h
+        spot.cpp
+        spotvoiceover.h
+        spotvoiceover.cpp
+        voiceover.h
+        voiceover.cpp
+        spotform.h
+        spotform.cpp
+        spotform.ui
+        spotaudiobrowser.h
+        spotaudiobrowser.cpp
+        spotaudiobrowser.ui
+        spotaudioform.h
+        spotaudioform.cpp
+        spotaudioform.ui
+        brand.h
+        brand.cpp
+        brandform.h
+        brandform.cpp
+        brandform.ui
+        orderpackage.h
+        orderpackage.cpp
+        setupform.h
+        setupform.cpp
+        setupform.ui
+        orderapprover.h
+        orderapprover.cpp
+        approverform.h
+        approverform.cpp
+        approverform.ui
+        scheduleform.h
+        scheduleform.cpp
+        scheduleform.ui
+        breakcreateform.h
+        breakcreateform.cpp
+        breakcreateform.ui
+        breaklayoutline.h
+        breaklayoutline.cpp
+        breaklayout.h
+        breaklayout.cpp
+        breaklayoutform.h
+        breaklayoutform.cpp
+        breaklayoutform.ui
+        breaklayoutbrowser.h
+        breaklayoutbrowser.cpp
+        breaklayoutbrowser.ui
+        schedulemantreeviewmodel.h
+        schedulemantreeviewmodel.cpp
+        mergedbrowser.h
+        mergedbrowser.cpp
+        mergedbrowser.ui
+        bookingorderbrowser.h
+        bookingorderbrowser.cpp
+        bookingorderbrowser.ui
         bookingwizard.h
+        bookingwizard.cpp
+        bookingwizard.ui
+        traffikrules.h
+        traffikrules.cpp
+        timeband.h
+        timeband.cpp
+        setupbrowser.h
+        setupbrowser.cpp
+        setupbrowser.ui
+        timebandbrowser.h
+        timebandbrowser.cpp
+        timebandbrowser.ui
+        timebandform.h
+        timebandform.cpp
+        timebandform.ui
+        agentbrowser.h
+        agentbrowser.cpp
+        agentbrowser.ui
+        agentform.h
+        agentform.cpp
+        agentform.ui
+        salespersonbrowser.h
+        salespersonbrowser.cpp
+        salespersonbrowser.ui
+        salespersonform.h
+        salespersonform.cpp
+        salespersonform.ui
+        voiceoverbrowser.h
+        voiceoverbrowser.cpp
+        voiceoverbrowser.ui
+        voiceoverform.h
+        voiceoverform.cpp
+        voiceoverform.ui
+        typeexclusionbrowser.h
+        typeexclusionbrowser.cpp
+        typeexclusionbrowser.ui
+        typeexclusiondetails.h
+        typeexclusiondetails.cpp
+        typeexclusiondetails.ui
+        clientgroupdetaildlg.h
+        clientgroupdetaildlg.cpp
+        clientgroupdetaildlg.ui
+        clientgroupdlg.h
+        clientgroupdlg.cpp
+        clientgroupdlg.ui
+        commlogform.h
+        commlogform.cpp
+        commlogform.ui
+        commlogtreeviewmodel.h
+        commlogtreeviewmodel.cpp
         tree.h
         tree.cpp
         treeviewmodel.h
         treeviewmodel.cpp
-        schedulemantreeviewmodel.h
-        schedulemantreeviewmodel.cpp
-        breakcreateform.h
-        breaklayout.h
-        breaklayoutbrowser.h
-        breaklayoutform.h
-        breaklayoutline.h
-        commlogform.h
-        mergedbrowser.h
-        order.h
-        orderapprover.h
-        orderbooking.h
-        orderbrowser.h
-        orderform.h
-        orderpackage.h
-        scheduleform.h
-        scheduleform.cpp
-        scheduleform.ui
-        setupbrowser.h
-        setupform.h
-        spotaudio.h
-        spotaudiobrowser.h
-        spotaudioform.h
-        traffiksetup.h
-        approverform.cpp
-        bookingsegment.cpp
-        bookingwizard.cpp
-        breakcreateform.cpp
-        breaklayout.cpp
-        breaklayoutbrowser.cpp
-        breaklayoutform.cpp
-        breaklayoutline.cpp
-        commlogform.cpp
-        mergedbrowser.cpp
-        order.cpp
-        orderapprover.cpp
-        orderbooking.cpp
-        orderbrowser.cpp
-        orderform.cpp
-        orderpackage.cpp
-        setupbrowser.cpp
-        setupform.cpp
-        spotaudio.cpp
-        spotaudiobrowser.cpp
-        spotaudioform.cpp
-        traffiksetup.cpp
-        approverform.ui
-        bookingwizard.ui
-        breakcreateform.ui
-        breaklayoutbrowser.ui
-        breaklayoutform.ui
-        commlogform.ui
-        mergedbrowser.ui
-        orderbrowser.ui
-        orderform.ui
-        setupbrowser.ui
-        setupform.ui
-        spotaudiobrowser.ui
-        spotaudioform.ui
-        commlogtreeviewmodel.cpp
-        traffikrules.cpp
-        agent.cpp
-        agentbrowser.cpp
-        agentform.cpp
-        brand.cpp
-        brandbrowser.cpp
-        brandform.cpp
-        client.cpp
-        clientbrowser.cpp
-        clientform.cpp
-        clientgroup.cpp
-        clientgroupdetaildlg.cpp
-        clientgroupdlg.cpp
-        salesperson.cpp
-        salespersonbrowser.cpp
-        salespersonform.cpp
-        spot.cpp
-        spotbrowser.cpp
-        spotform.cpp
-        spottypeexclusion.cpp
-        spotvoiceover.cpp
-        timeband.cpp
-        timebandbrowser.cpp
-        timebandform.cpp
-        typeexclusionbrowser.cpp
-        typeexclusiondetails.cpp
-        voiceover.cpp
-        voiceoverbrowser.cpp
-        voiceoverform.cpp
-        bookingorderbrowser.cpp
-        commlogtreeviewmodel.h
-        traffikrules.h
-        agent.h
-        agentbrowser.h
-        agentform.h
-        brand.h
-        brandbrowser.h
-        brandform.h
-        client.h
-        clientbrowser.h
-        clientform.h
-        clientgroup.h
-        clientgroupdetaildlg.h
-        clientgroupdlg.h
-        bookingorderbrowser.h
-        salesperson.h
-        salespersonbrowser.h
-        salespersonform.h
-        spot.h
-        spotbrowser.h
-        spotform.h
-        spottypeexclusion.h
-        spotvoiceover.h
-        timeband.h
-        timebandbrowser.h
-        timebandform.h
-        typeexclusionbrowser.h
-        typeexclusiondetails.h
-        voiceover.h
-        voiceoverbrowser.h
-        voiceoverform.h
-        agentbrowser.ui
-        agentform.ui
-        brandbrowser.ui
-        brandform.ui
-        clientbrowser.ui
-        clientform.ui
-        clientgroupdetaildlg.ui
-        clientgroupdlg.ui
-        salespersonbrowser.ui
-        salespersonform.ui
-        spotbrowser.ui
-        spotform.ui
-        timebandbrowser.ui
-        timebandform.ui
-        typeexclusionbrowser.ui
-        typeexclusiondetails.ui
-        bookingorderbrowser.ui
-        voiceoverbrowser.ui
-        voiceoverform.ui
+
+        ../audio/artist.h
+        ../audio/audio.h
+        ../audio/audiofile.h
+        ../audio/audiofile.cpp
+        ../audio/audiotool.h
+        ../audio/audiotool.cpp
+        ../audio/artist.cpp
+        ../audio/audio.cpp
+
         ../framework/entityregister.h
         ../framework/relationmapper.h
         ../framework/schedule.h
         ../framework/schedule.cpp
         ../framework/relationmapper.cpp
-        ../framework/datetimeselector.cpp
-        ../framework/letterfilterwidget.cpp
-        ../framework/typeexclusion.cpp
+        ../framework/entitydatamodel.h
+        ../framework/entitydatamodel.cpp
         ../framework/baseentity.cpp
         ../framework/baseentitybrowserdlg.cpp
         ../framework/baseentitydetaildlg.cpp
         ../framework/databaseconnector.cpp
         ../framework/databasemanager.cpp
-        ../framework/dataprovider.cpp
-        ../framework/entitydatamodel.cpp
-        ../framework/entityfields.cpp
-        ../framework/manytomany.cpp
-        ../framework/manytomanybrowser.cpp
-        ../framework/picklistbrowser.cpp
-        ../framework/ravenexception.cpp
-        ../framework/selectclosewidget.cpp
-        ../framework/valuelist.cpp
-        ../framework/valuelistbrowser.cpp
-        ../framework/valuelistdetaildlg.cpp
-        ../framework/datetimeselector.h
-        ../framework/letterfilterwidget.h
-        ../framework/typeexclusion.h
-        ../framework/baseentity.h
-        ../framework/baseentitybrowserdlg.h
-        ../framework/baseentitydetaildlg.h
-        ../framework/choicefield.h
-        ../framework/databaseconnector.h
-        ../framework/databasemanager.h
-        ../framework/dataprovider.h
-        ../framework/entitydatamodel.h
         ../framework/entityfields.h
-        ../framework/manytomany.h
-        ../framework/manytomanybrowser.h
-        ../framework/picklistbrowser.h
+        ../framework/entityfields.cpp
         ../framework/queryset.h
+        ../framework/dataprovider.h
+        ../framework/dataprovider.cpp
         ../framework/ravenexception.h
-        ../framework/selectclosewidget.h
-        ../framework/valuelist.h
-        ../framework/valuelistbrowser.h
-        ../framework/valuelistdetaildlg.h
-        ../framework/datetimeselector.ui
+        ../framework/ravenexception.cpp
+        ../framework/letterfilterwidget.cpp
+        ../framework/letterfilterwidget.h
         ../framework/letterfilterwidget.ui
-        ../framework/baseentitybrowserdlg.ui
-        ../framework/baseentitydetaildlg.ui
+        ../framework/choicefield.h
+        ../framework/valuelist.h
+        ../framework/valuelist.cpp
+        ../framework/manytomany.h
+        ../framework/manytomany.cpp
+        ../framework/typeexclusion.h
+        ../framework/typeexclusion.cpp
+        ../framework/manytomanybrowser.h
+        ../framework/manytomanybrowser.cpp
         ../framework/manytomanybrowser.ui
+        ../framework/picklistbrowser.h
+        ../framework/picklistbrowser.cpp
         ../framework/picklistbrowser.ui
+        ../framework/selectclosewidget.h
+        ../framework/selectclosewidget.cpp
         ../framework/selectclosewidget.ui
+        ../framework/valuelistbrowser.h
+        ../framework/valuelistbrowser.cpp
         ../framework/valuelistbrowser.ui
+        ../framework/valuelistdetaildlg.h
+        ../framework/valuelistdetaildlg.cpp
         ../framework/valuelistdetaildlg.ui
-        ../audio/artist.h
-        ../audio/audio.h
-        ../audio/audiofile.h
-        ../audio/audiotool.h
-        ../audio/audiofile.cpp
-        ../audio/audiotool.cpp
-        ../audio/artist.cpp
-        ../audio/audio.cpp
-        ../utils/qchecklist.h
-        ../utils/daypartgrid.h
-        ../utils/notificationbar.h
-        ../utils/notificationitem.h
-        ../utils/plainform.h
-        ../utils/tools.h
-        ../utils/types.h
-        ../utils/daypartgrid.ui
-        ../utils/notificationitem.ui
-        ../utils/plainform.ui
-        ../utils/daypartgrid.cpp
-        ../utils/notificationbar.cpp
-        ../utils/notificationitem.cpp
-        ../utils/plainform.cpp
+
+        ../security/loginform.h
+        ../security/loginform.cpp
+        ../security/loginform.ui
         ../security/accesscontroller.h
         ../security/authentication.h
         ../security/accesscontroller.cpp
         ../security/authentication.cpp
-        ../security/loginform.cpp
-        ../security/role.cpp
-        ../security/user.cpp
-        ../security/userbrowser.cpp
-        ../security/userform.cpp
-        ../security/rolemember.cpp
-        ../security/content.cpp
-        ../security/contentauth.cpp
-        ../security/contentauthbrowser.cpp
-        ../security/contentauthform.cpp
-        ../security/contentbrowser.cpp
-        ../security/contentdetailform.cpp
-        ../security/contentform.cpp
-        ../security/rolebrowser.cpp
-        ../security/roleform.cpp
-        ../security/loginform.h
-        ../security/role.h
         ../security/user.h
+        ../security/user.cpp
         ../security/userbrowser.h
+        ../security/userbrowser.cpp
         ../security/userform.h
-        ../security/rolemember.h
-        ../security/content.h
-        ../security/contentauth.h
+        ../security/userform.cpp
+        ../security/contentauthbrowser.cpp
         ../security/contentauthbrowser.h
-        ../security/contentauthform.h
-        ../security/contentbrowser.h
-        ../security/contentdetailform.h
-        ../security/contentform.h
-        ../security/rolebrowser.h
-        ../security/roleform.h
-        ../security/userbrowser.ui
-        ../security/userform.ui
         ../security/contentauthbrowser.ui
+        ../security/contentauthform.h
+        ../security/contentauthform.cpp
         ../security/contentauthform.ui
+        ../security/contentauth.cpp
+        ../security/contentauth.h
+        ../security/role.h
+        ../security/role.cpp
+        ../security/rolemember.h
+        ../security/rolemember.cpp
+        ../security/content.h
+        ../security/content.cpp
+        ../security/contentbrowser.h
+        ../security/contentbrowser.cpp
         ../security/contentbrowser.ui
-        ../security/contentdetailform.ui
+        ../security/contentform.h
+        ../security/contentform.cpp
         ../security/contentform.ui
+        ../security/contentdetailform.h
+        ../security/contentdetailform.cpp
+        ../security/contentdetailform.ui
+        ../security/rolebrowser.h
+        ../security/rolebrowser.cpp
         ../security/rolebrowser.ui
+        ../security/roleform.h
+        ../security/roleform.cpp
         ../security/roleform.ui
-        ../security/loginform.ui
+
+        ../utils/notificationbar.h
+        ../utils/notificationitem.h
+        ../utils/notificationbar.cpp
+        ../utils/notificationitem.cpp
+        ../utils/notificationitem.ui
+        ../utils/daypartgrid.h
+        ../utils/daypartgrid.cpp
+        ../utils/daypartgrid.ui
+        ../utils/qchecklist.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(TraffikRave
+    qt_add_executable(Traffik
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
     if(ANDROID)
-        add_library(TraffikRave SHARED
+        add_library(Traffik SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(TraffikRave
+        add_executable(Traffik
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(TraffikRave PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Traffik PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-target_include_directories(TraffikRave PRIVATE ${postgreSQL_INCLUDE_DIRS})
-target_include_directories(TraffikRave PRIVATE ${rave_framework_INCLUDE_DIRS})
+
+target_include_directories(Traffik PRIVATE ${postgreSQL_INCLUDE_DIRS})
+target_include_directories(Traffik PRIVATE ${rave_framework_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
 link_directories(${rave_audiolib_INCLUDE_DIRS})
 
-target_link_libraries(TraffikRave PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(TraffikRave PRIVATE ${PostgreSQL_LIBRARIES})
-target_link_libraries(TraffikRave PRIVATE ${RAVE_AUDIO_LIBRARIES})
-target_link_libraries(TraffikRave PRIVATE ${LIMEREPORT_LIBRARIES})
+target_link_libraries(Traffik PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Traffik PRIVATE ${PostgreSQL_LIBRARIES})
+target_link_libraries(Traffik PRIVATE ${LIMEREPORT_LIBRARIES})
 
-set_target_properties(TraffikRave PROPERTIES
+set(AUDIO_INCLUDE_DIR"../audiolib/headers")
+set(AUDIO_LIB "../audiolib/lib_debug")
+
+find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
+find_library(AUDIO_LIBRARY libcueeditord ${AUDIO_LIB})
+target_include_directories(Traffik PRIVATE ${AUDIO_INCLUDE_DIR})
+target_include_directories(Traffik PRIVATE ${AUDIO_LIB})
+target_link_libraries(Traffik PRIVATE ${AUDIO_LIBRARY})
+
+set_target_properties(Traffik PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(TraffikRave)
+    qt_finalize_executable(Traffik)
 endif()

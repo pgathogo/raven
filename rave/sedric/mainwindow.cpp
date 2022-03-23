@@ -653,10 +653,7 @@ QString MainWindow::get_selected_hours_asString()
 void MainWindow::hour_cb_closed()
 {
     const auto& hours = get_selected_hours_asInt();
-    //fetch_data(ui->dtSchedule->date(), hours);
-}
-
-void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
+    //fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
 {
 
     clear_schedule_model();

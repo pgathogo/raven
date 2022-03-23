@@ -371,6 +371,7 @@ class Audio(Daypart):
     notes = models.TextField(blank=True, null=True)
 
 PLAY_STATUS = (
+        ('WAITING','WAITING'),
         ('CUED','CUED'),
         ('PLAYED','PLAYED'),
         ('CANCELLED','CANCELLED'),
@@ -379,6 +380,8 @@ PLAY_STATUS = (
 SCHEDULE_TYPE = (
         ('SONG','SONG'),
         ('COMM-BREAK','COMMERCIAL'),
+        ('COMM-AUDIO','COMMERCIAL-AUDIO'),
+        ('JINGLE','JINGLE'),
         )
 
 BREAK_MODE = (

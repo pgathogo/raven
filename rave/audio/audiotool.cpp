@@ -13,10 +13,9 @@
 
 #include "audiotool.h"
 #include "audio.h"
-
+#include "../utils/tools.h"
 
 namespace fs = std::filesystem;
-
 
 AudioTool::AudioTool()
 {
@@ -41,6 +40,12 @@ AudioTool::~AudioTool()
 
 bool AudioTool::generate_wave_file(const std::string src_audio_file, const std::string dest_wave_file)
 {
+    if (!fs::exists(m_wave_form_exe.toStdString()) ){
+        auto msg = QString("Wave file generator does NOT exist! `%1`").arg(m_wave_form_exe);
+        qDebug() << msg;
+        return false;
+    }
+
     m_progress_dialog = new QProgressDialog("Reading audio file...please wait.","", 0, 100);
     m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
     m_progress_dialog->setRange(0,0);

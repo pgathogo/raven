@@ -17,6 +17,8 @@
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
 
+#include "../utils/tools.h"
+
 namespace fs = std::filesystem;
 
 SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
@@ -79,6 +81,7 @@ void SpotBrowser::updateRecord()
 
         if (spot_form->exec() > 0){
             try{
+
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);
@@ -87,7 +90,11 @@ void SpotBrowser::updateRecord()
 
                 save_type_exclusions(*spot_form);
 
+                printstr("EE");
+
                 save_spot_audio(*spot_form);
+
+                printstr("FF");
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -99,7 +106,6 @@ void SpotBrowser::updateRecord()
 void SpotBrowser::searchRecord()
 {
     search_related<TRAFFIK::Spot, Client>(m_client);
-    qDebug() << " <<< After searchRecord >>> ";
 }
 
 void SpotBrowser::search_by_client(Client* client)
@@ -174,7 +180,7 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
     for(auto& sa : spot_audios){
         TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());
 
-        s_audio->print_members();
+//        s_audio->print_members();
 
         if (s_audio->dbAction() == DBAction::dbaCREATE){
 
@@ -182,7 +188,7 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
             auto& audio = s_audio->get_paudio();
 
-            audio.print_members();
+//            audio.print_members();
 
             int id = edm->createEntityDB(audio);
             s_audio->setDetailId(id);
@@ -192,6 +198,12 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             const std::string OGG_EXT = ".ogg";
             const std::string ADF_EXT = ".adf";
             const std::string WAVE_EXT = ".png";
+
+            qDebug() << "New ID: "<< id;
+
+            printstr("111");
+
+            printstr("Audio Lib Path: "+ audio.audio_lib_path()->value());
 
             // Format audio name from Id
             std::string ogg_file = at.generate_ogg_filename(id);
@@ -203,7 +215,12 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             fs::path old_f{old_filename};
             fs::path new_f{new_filename};
 
+            printstr("OLD Name: "+old_filename);
+            printstr("NEW Name: "+new_filename);
+
             fs::rename(old_f, new_f);
+
+            printstr("222");
 
             // Write ADF file
             ADFRepository adf_repo;
@@ -212,15 +229,23 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             audio_file.set_ogg_filename(ogg_file);
             adf_repo.write(audio_file);
 
+            printstr("333");
+
             // Copy Wave File to AudioLib directory
             if (fs::exists(audio.audio_file().wave_file()) ){
+
+                printstr("444");
 
                 fs::path old_wave_file{audio.audio_file().wave_file()};
                 auto wave_file = old_wave_file.filename();
                 fs::path new_wave_file{lib_path+ogg_file+WAVE_EXT};
 
+                printstr("555");
+
                 fs::copy(old_wave_file, new_wave_file);
                 fs::remove(old_wave_file);
+
+                printstr("666");
 
             }
         }

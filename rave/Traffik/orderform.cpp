@@ -34,7 +34,6 @@ OrderForm::OrderForm(Client* client, Order* order,
     connect(ui->cbPackage, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &OrderForm::packageRepCBChanged);
 
-
     connect(ui->cbRevenueType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &OrderForm::revenueTypeCBChanged);
 
@@ -61,7 +60,6 @@ OrderForm::OrderForm(Client* client, Order* order,
                 std::make_unique<TraffikSetup>());
     dmSetup->all();
     mSetup = dynamic_cast<TraffikSetup*>(dmSetup->firstEntity());
-
 
     if (mOrder->isNew())
         prepareNewOrder();
@@ -180,6 +178,8 @@ void OrderForm::prepareNewOrder()
     mSetup->orderNumberSequence()->setValue(
                 mSetup->orderNumberSequence()->value()+1);
     ui->sbOrderNumber->setValue(mSetup->orderNumberSequence()->value());
+
+    ui->edtClient->setText(stoq(mClient->name()->value()));
 
     setDefaults();
 }
