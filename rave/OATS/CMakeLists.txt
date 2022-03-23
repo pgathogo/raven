@@ -62,6 +62,19 @@ set(PROJECT_SOURCES
         playmodepanel.h
         playmodepanel.cpp
         oats.qrc
+        ../framework/baseentity.cpp
+        ../framework/entityfields.cpp
+        ../framework/entitydatamodel.cpp
+        ../framework/relationmapper.cpp
+        ../framework/dataprovider.cpp
+        ../framework/ravenexception.cpp
+        ../framework/databaseconnector.cpp
+        ../framework/databasemanager.cpp
+        ../audio/audio.cpp
+        ../audio/artist.cpp
+        ../audio/audiofile.cpp
+        ../security/authentication.cpp
+        ../security/user.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

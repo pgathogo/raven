@@ -7,15 +7,22 @@
 #include <QLabel>
 #include <QTimer>
 #include "scheduleitem.h"
+#include "../audio/audio.h"
+#include "../audio/artist.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+//#define TEMP_SCHEDULE
+#define DB_SCHEDULE
+
 
 class TimeAnalyzerWidget;
 class QPushButton;
 class QLabel;
+class BaseDataProvider;
+class ScheduleItem;
 
 namespace OATS{
     class DateTimeWidget;
@@ -36,11 +43,16 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    constexpr static int MAX_GRID_ITEMS = 5;
+    constexpr static int HOURS_IN_A_DAY = 23;
+    constexpr static int MAX_GRID_ITEMS = 15;
     constexpr static int MAX_PLAYLIST_ITEMS = 10;
 
     constexpr static int YIELD_FADE_DELAY = 3000;
     constexpr static int YIELD_FADE_OUT = 7000;
+
+    const std::string ChannelA = "A";
+    const std::string ChannelB = "B";
+    const std::string ChannelC = "C";
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -49,7 +61,8 @@ public:
     OATS::OutputPanel* create_output_panel(const QString);
     void display_schedule(int start_index=0);
 
-    void load_schedule(int);
+    void load_schedule(QDate, int);
+    void fetch_temp_data(int);
 
     std::string play_channel();
 
@@ -63,7 +76,6 @@ public:
     void make_playlist_grid();
     void make_play_mode_panel();
     void make_output_panel();
-    void make_item_current(int);
     int index_of(int);
     void stop_audio(OATS::OutputPanel*);
     void play_audio(OATS::OutputPanel*);
@@ -74,10 +86,9 @@ public:
     void calculate_trigger_times();
     int calculate_yield_contribution(OATS::ScheduleItem*);
 
-public slots:
-    void play_button();
-    void stop_button();
-    void go_current_clicked();
+    void fetch_db_data(QDate, int);
+    void set_schedule_fields(BaseDataProvider* provider,
+                                     OATS::ScheduleItem* sched_item);
 
 private slots:
     void close_win();
@@ -89,6 +100,18 @@ private slots:
     long long get_tick_count();
     void count_down();
     void status_timer();
+
+    void item_move_up(int, int);
+    void item_move_down(int, int);
+    void make_item_current(int);
+
+    void transition_stop(int, int);
+    void transition_mix(int, int);
+    void transition_cut(int, int);
+
+    void play_button(OATS::OutputPanel*);
+    void stop_button(OATS::OutputPanel*);
+    void go_current_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -117,6 +140,9 @@ private:
 
     static int s_sched_ref;
     static std::string s_channel;
+
+    void set_header_item(OATS::ScheduleItem*, int, QDate);
+    void fill_schedule_headers(QDate, int);
 };
 
 struct FindByRef{

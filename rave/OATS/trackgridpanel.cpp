@@ -119,6 +119,7 @@ namespace OATS{
         setStyleSheet("background-color: #222222;");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
+            m_duration_label->setText("");
             setStyleSheet("background-color: rgb(40, 133, 220)");
         }
 

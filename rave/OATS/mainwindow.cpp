@@ -12,6 +12,9 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include "../framework/entitydatamodel.h"
+#include "../framework/baseentity.h"
+
 #include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
 #include "playlistcontrolwidget.h"
@@ -35,13 +38,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    load_schedule(8);
-
-    set_current_play_item();
+    load_schedule(QDate::currentDate(), QTime::currentTime().hour());
 
     set_widgets();
 
-    connect(ui->btnTest, &QPushButton::clicked, this, &MainWindow::close_win);
+    set_current_play_item();
+
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
 
@@ -61,6 +63,16 @@ MainWindow::MainWindow(QWidget *parent)
     m_main_player_timer = std::make_unique<QTimer>(this);
     connect(m_main_player_timer.get(), &QTimer::timeout, this, &MainWindow::status_timer);
 
+    ui->swMain->setCurrentIndex(0);
+
+    connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0);});
+    connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1);});
+    connect(ui->btnSegue, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(2);});
+    connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3);});
+    connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4);});
+    connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5);});
+    connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7);});
+
     //QMainWindow::showFullScreen();
 }
 
@@ -75,7 +87,6 @@ void MainWindow::set_widgets()
     set_playlist_control_widget();
     //set_time_analytics_widget();
 
-    make_playlist_grid();
     make_output_panel();
     make_play_mode_panel();
 }
@@ -171,7 +182,205 @@ void MainWindow::compute_schedule_time()
 }
 
 
-void MainWindow::load_schedule(int hr)
+void MainWindow::load_schedule(QDate date, int hr)
+{
+//    fetch_cached_data(hr);
+
+#ifdef DB_SCHEDULE
+    fetch_db_data(date, hr);
+#endif
+
+#ifdef TEMP_SCHEDULE
+    fetch_temp_data(hr);
+#endif
+
+    make_playlist_grid();
+
+}
+
+void MainWindow::fill_schedule_headers(QDate date, int hr)
+{
+    for (int i=0; i<= MAX_GRID_ITEMS; ++i){
+        auto header_item = std::make_unique<OATS::ScheduleItem>();
+
+        if (hr > HOURS_IN_A_DAY){
+            date = date.addDays(1);
+            hr = 0;
+        }
+
+        set_header_item(header_item.get(), hr++, date);
+        m_schedule_items.push_back(std::move(header_item));
+    }
+}
+
+void MainWindow::fetch_db_data(QDate date, int hr)
+{
+    std::stringstream sql;
+
+    sql << " SELECT a.id,a.schedule_date, a.schedule_hour, a.schedule_time, "
+        << " a.auto_transition, a.play_date, a.play_time, "
+        << " a.schedule_item_type, a.comment, a.booked_spots, "
+        << " a.audio_id, b.title, b.filepath, b.duration, c.fullname "
+        << " FROM rave_schedule a  "
+        << " left outer join rave_audio b on a.audio_id = b.id "
+        << " left outer join rave_artist c on b.artist_id = c.id ";
+
+    std::string where_filter = " WHERE a.schedule_date = '"+date.toString("yyyy/MM/dd").toStdString()+"'";
+    std::string and_filter   = " AND a.schedule_hour >= "+std::to_string(hr);
+    std::string order_by     = " ORDER BY a.schedule_hour, a.schedule_time, a.id ";
+
+    sql << where_filter << and_filter << order_by;
+
+    EntityDataModel edm;
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+
+    if (provider->cacheSize() == 0){
+        fill_schedule_headers(date, hr);
+        return;
+    }
+
+    int last_hour = hr;
+    bool is_hour_header_created = false;
+
+    provider->cache()->first();
+
+    do{
+
+        if (!is_hour_header_created){
+            auto header_item = std::make_unique<OATS::ScheduleItem>();
+            set_header_item(header_item.get(), last_hour, date);
+            m_schedule_items.push_back(std::move(header_item));
+            is_hour_header_created = true;
+        }
+
+        auto sched_item = std::make_unique<OATS::ScheduleItem>();
+
+//		auto audio = dynamic_cast<AUDIO::Audio*>(schedule->audio()->dataModel()->get_entity().get());
+//		auto artist = dynamic_cast<AUDIO::Artist*>(audio->artist()->dataModel()->get_entity().get());
+
+        // populate schedule fields
+        set_schedule_fields(provider, sched_item.get());
+
+        if (sched_item->hour() != last_hour){
+            last_hour = sched_item->hour();
+            is_hour_header_created = false;
+        }
+
+        if (sched_item->schedule_type() == OATS::ScheduleType::COMM){
+            sched_item->audio().set_title(
+                        sched_item->schedule_time().toString("HH:mm").toStdString()+
+                       " Commercial Break ("+std::to_string(sched_item->booked_spots())+" items)");
+            sched_item->set_transition_type(OATS::TransitionType::CUT);
+        }
+
+        m_schedule_items.push_back(std::move(sched_item));
+
+        //m_display_items.push_back(schedule);
+
+        provider->cache()->next();
+
+    } while (!provider->cache()->isLast());
+
+    if (m_schedule_items.size() < MAX_GRID_ITEMS){
+        for(int i=0; i < MAX_GRID_ITEMS-m_schedule_items.size(); ++i){
+            auto header_item = std::make_unique<OATS::ScheduleItem>();
+            set_header_item(header_item.get(), ++last_hour, date);
+            m_schedule_items.push_back(std::move(header_item));
+        }
+    }
+}
+
+void MainWindow::set_header_item(OATS::ScheduleItem* header, int hr, QDate dt)
+{
+    header->set_schedule_type(OATS::ScheduleType::HOUR_HEADER);
+    OATS::Audio audio;
+    audio.set_title("HOUR: "+std::to_string(hr)+" Header "+dt.toString("dd/MM/yyyy").toStdString());
+    audio.set_duration(0);
+    header->set_transition_type(OATS::TransitionType::STOP);
+    header->set_audio(audio);
+}
+
+void MainWindow::set_schedule_fields(BaseDataProvider* provider,
+                                     OATS::ScheduleItem* schedule)
+{
+    OATS::Audio audio;
+
+    auto it_begin = provider->cache()->currentElement()->begin();
+    auto it_end = provider->cache()->currentElement()->end();
+
+    for (; it_begin != it_end; ++it_begin){
+        std::string field_name = (*it_begin).first;
+        std::string field_value = (*it_begin).second;
+
+        if (field_name == "id"){
+            schedule->set_id(str_to_int(field_value));
+        }
+
+        schedule->set_schedule_ref(s_sched_ref++);
+        /* ********* */
+
+        if (field_name == "live_transition"){
+            schedule->set_item_status(schedule->str_to_status(field_value));
+        }
+
+        schedule->set_play_channel(play_channel());
+
+        if (field_name == "schedule_item_type"){
+            schedule->set_schedule_type(schedule->str_to_schedule_type(field_value) );
+        }
+
+        if (field_name == "schedule_hour")
+            schedule->set_hour(str_to_int(field_value));
+
+        if (field_name == "schedule_time")
+            schedule->set_schedule_time(QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"));
+
+
+        if (field_name == "schedule_date"){
+            schedule->set_schedule_date(QDate::fromString(QString::fromStdString(field_value), "yyyy-MM-dd"));
+        }
+
+//        if (field_name == "auto_transition")
+//            schedule->set_auto_transition(str_to_int(field_value));
+
+        if (field_name == "play_date")
+            schedule->set_play_date(QDate::fromString(QString::fromStdString(field_value), "yyyy/MM/dd"));
+
+        if (field_name == "play_time")
+            schedule->set_play_time(QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"));
+
+        if (field_name == "comment")
+            schedule->set_comment(field_value);
+
+        if (field_name == "booked_spots")
+            schedule->set_booked_spots(str_to_int(field_value));
+
+        if (field_name == "duration"){
+            audio.set_duration(str_to_int(field_value));
+            //schedule->set_break_duration(str_to_int(field_value));
+        }
+
+        if (field_name == "audio_id"){
+            //schedule->set_audio(str_to_int(field_value));
+            audio.set_id(str_to_int(field_value));
+        }
+
+        if (field_name == "title")
+            audio.set_title(field_value);
+
+        if (field_name ==  "filepath")
+            audio.set_file_path(field_value);
+
+        if (field_name == "fullname")
+            audio.set_artist(field_value);
+    }
+
+    schedule->set_audio(audio);
+}
+
+void MainWindow::fetch_temp_data(int hr)
 {
     OATS::Audio audio;
     audio.set_title("Let It Go");
@@ -363,32 +572,34 @@ void MainWindow::make_playlist_grid()
     ui->vlPlaylist->setSpacing(1);
     ui->vlPlaylist->setContentsMargins(0,0,0,2);
 
-    std::string ch = "A";
+    std::string ch = ChannelA;
 
     for (int i=0; i < MAX_GRID_ITEMS; ++i){
 
         auto si = schedule_item(i);
         si->set_play_channel(ch);
 
-        auto grid_item = std::make_unique<OATS::ScheduleGridItem>(m_schedule_items[i].get());
-        m_schedule_items[i]->notify();
+        auto grid_item = std::make_unique<OATS::ScheduleGridItem>(si);
+        si->notify();
 
-        /*
+
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_up, this, &MainWindow::item_move_up);
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_down, this, &MainWindow::item_move_down);
+        connect(grid_item.get(), &OATS::ScheduleGridItem::make_current, this, &MainWindow::make_item_current);
+
+        /*
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
         connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::insert_schedule_item);
-        connect(grid_item.get(), &OATS::ScheduleGridItem::make_current, this, &MainWindow::make_item_current);
+        */
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_stop, this, &MainWindow::transition_stop);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_mix, this, &MainWindow::transition_mix);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_cut, this, &MainWindow::transition_cut);
-        */
 
         ui->vlPlaylist->addWidget(grid_item.get());
         m_schedule_grid.push_back(std::move(grid_item));
 
-        ch = (ch == "A") ? "B" : "A";
+        ch = (ch == ChannelA) ? ChannelB : ChannelA;
 
     }
 
@@ -406,7 +617,7 @@ OATS::ScheduleItem* MainWindow::schedule_item(int index)
 
 std::string MainWindow::play_channel()
 {
-    return (s_channel == "A" ) ? "B" : "A" ;
+    return (s_channel == ChannelA ) ? ChannelB : ChannelA ;
 }
 
 void MainWindow::make_output_panel()
@@ -432,12 +643,27 @@ OATS::OutputPanel* MainWindow::create_output_panel(const QString panel_name)
     return rPtr;
 }
 
-void MainWindow::play_button()
+void MainWindow::play_button(OATS::OutputPanel* op)
 {
+    op->set_fade_trigger_tick_stamp(1);
+    play_audio(op);
 }
-void MainWindow::stop_button()
+
+void MainWindow::stop_button(OATS::OutputPanel* op)
 {
+    if (op->panel_status() == OATS::PanelStatus::PLAYING){
+        op->schedule_item()->set_transition_type(OATS::TransitionType::STOP);
+        stop_audio(op);
+
+        for(auto const& op : m_output_panels){
+            op->set_start_trigger_tick_stamp(-1);
+            op->set_fade_trigger_tick_stamp(-1);
+        }
+
+        calculate_trigger_times();
+    }
 }
+
 
 void MainWindow::make_play_mode_panel()
 {
@@ -487,17 +713,16 @@ void MainWindow::go_current_clicked()
 
 void MainWindow::set_current_play_item()
 {
-    auto s_item = schedule_item(0);
-    m_current_playing_item.item = s_item;
-    m_current_playing_item.schedule_index = s_item->index();
-    m_current_playing_item.grid_index = 0;
+    if (m_schedule_items.size() > 0){
+        auto s_item = schedule_item(0);
+        m_current_playing_item.item = s_item;
+        m_current_playing_item.schedule_index = s_item->index();
+        m_current_playing_item.grid_index = 0;
 
-    make_item_current(s_item->schedule_ref());
+        make_item_current(s_item->schedule_ref());
+    }
 }
 
-void MainWindow::make_item_current(int item_ref)
-{
-}
 
 void MainWindow::time_updated()
 {
@@ -1030,7 +1255,68 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
     op->update_progress_bar(100);
 }
 
+void MainWindow::item_move_up(int schedule_ref, int grid_pos)
+{
+    int index = index_of(schedule_ref);
+    std::iter_swap(m_schedule_items.begin()+index, m_schedule_items.begin()+(index-1));
+    m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
+    m_schedule_grid[grid_pos-1]->set_subject(schedule_item(index-1));
+}
 
+void MainWindow::item_move_down(int schedule_pos, int grid_pos)
+{
+    if (grid_pos+1 > MAX_GRID_ITEMS-1)
+        return;
 
+    std::iter_swap(m_schedule_items.begin()+schedule_pos, m_schedule_items.begin()+(schedule_pos+1));
+    m_schedule_grid[grid_pos]->set_subject(schedule_item(schedule_pos));
+    m_schedule_grid[grid_pos]->set_subject(schedule_item(schedule_pos+1));
+}
 
+void MainWindow::make_item_current(int item_ref)
+{
+    assert(m_outputA != nullptr);
 
+    m_outputA->set_panel_status(OATS::PanelStatus::CUED);
+    int index = index_of(item_ref);
+    auto si = schedule_item(index);
+
+    si->set_item_status(OATS::ItemStatus::CUED);
+
+    if (si->play_channel() == ChannelA){
+        m_outputA->cue_item(si);
+    }else{
+        m_outputB->cue_item(si);
+    }
+
+    for(int i=index+1; i < m_schedule_items.size()-1; ++i){
+        auto sched_item = schedule_item(i);
+        sched_item->set_item_status(OATS::ItemStatus::WAITING);
+        sched_item->notify();
+    }
+
+    display_schedule(ui->gridScroll->value());
+
+}
+
+void MainWindow::transition_stop(int item_ref, int grid_index)
+{
+    int index = index_of(item_ref);
+    auto si = schedule_item(index);
+    si->set_transition_type(OATS::TransitionType::STOP);
+    calculate_trigger_times();
+}
+
+void MainWindow::transition_mix(int item_ref, int grid_index)
+{
+    int index = index_of(item_ref);
+    auto si = schedule_item(index);
+    si->set_transition_type(OATS::TransitionType::MIX);
+}
+
+void MainWindow::transition_cut(int item_ref, int grid_index)
+{
+    int index = index_of(item_ref);
+    auto si = schedule_item(index);
+    si->set_transition_type(OATS::TransitionType::CUT);
+}

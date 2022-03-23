@@ -147,6 +147,71 @@
 			"D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.h",
 			"MU",
 			"EWIEGA46WW/moc_transitionmodegridpanel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/artist.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_artist.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audio.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audio.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiofile.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiofile.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/baseentity.h",
+			"MU",
+			"TXBK5VWLEF/moc_baseentity.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/databaseconnector.h",
+			"MU",
+			"TXBK5VWLEF/moc_databaseconnector.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/databasemanager.h",
+			"MU",
+			"TXBK5VWLEF/moc_databasemanager.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/dataprovider.h",
+			"MU",
+			"TXBK5VWLEF/moc_dataprovider.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/entitydatamodel.h",
+			"MU",
+			"TXBK5VWLEF/moc_entitydatamodel.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/entityfields.h",
+			"MU",
+			"TXBK5VWLEF/moc_entityfields.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/ravenexception.h",
+			"MU",
+			"TXBK5VWLEF/moc_ravenexception.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/relationmapper.h",
+			"MU",
+			"TXBK5VWLEF/moc_relationmapper.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/security/authentication.h",
+			"MU",
+			"AD4PYRWGU2/moc_authentication.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/security/user.h",
+			"MU",
+			"AD4PYRWGU2/moc_user.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -225,7 +290,20 @@
 		[ "D:/home/PMS/Raven/rave/OATS/timeanalyzerwidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/timegridpanel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/trackgridpanel.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.cpp", "MU" ]
+		[ "D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/artist.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/baseentity.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/databaseconnector.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/databasemanager.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/dataprovider.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/entitydatamodel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/security/authentication.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/security/user.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
