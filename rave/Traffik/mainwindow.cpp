@@ -6,12 +6,12 @@
 #include "../framework/valuelist.h"
 #include "../framework/entityregister.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/ravensetup.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include "clientbrowser.h"
-#include "traffiksetup.h"
 #include "setupform.h"
 #include "scheduleform.h"
 #include "commlogform.h"
@@ -156,18 +156,18 @@ void MainWindow::openSetupForm()
 
     std::unique_ptr<SetupForm> setupForm;
 
-    EntityDataModel edm(std::make_unique<TraffikSetup>());
+    EntityDataModel edm(std::make_unique<RavenSetup>());
     edm.all();
     if (edm.count() > 0){
         BaseEntity* be = edm.firstEntity();
-        TraffikSetup* ts = dynamic_cast<TraffikSetup*>(be);
+        RavenSetup* ts = dynamic_cast<RavenSetup*>(be);
         setupForm = std::make_unique<SetupForm>(ts);
         if (setupForm->exec() > 0 ){
             edm.updateEntity(*ts);
             setupForm->save_approvers();
         }
     }else{
-        auto ts = std::make_unique<TraffikSetup>();
+        auto ts = std::make_unique<RavenSetup>();
         setupForm = std::make_unique<SetupForm>(ts.get());
         if (setupForm->exec() > 0 ){
             edm.createEntityDB(*ts);

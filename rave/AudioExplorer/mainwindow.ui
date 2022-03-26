@@ -214,7 +214,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="btnImport">
             <property name="text">
              <string>Audio Import</string>
             </property>

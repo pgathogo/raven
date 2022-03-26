@@ -9,6 +9,7 @@
 #include "../framework/manytomanybrowser.h"
 #include "../framework/manytomany.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/ravensetup.h"
 #include "../utils/tools.h"
 
 #include "spotform.h"
@@ -16,7 +17,6 @@
 #include "client.h"
 #include "spotvoiceover.h"
 #include "spottypeexclusion.h"
-#include "traffiksetup.h"
 
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
@@ -62,9 +62,9 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
     ui->tabWidget->setCurrentIndex(0);
 
     m_edm_setup = std::make_unique<EntityDataModel>(
-                std::make_unique<TraffikSetup>());
+                std::make_unique<RavenSetup>());
     m_edm_setup->all();
-    m_setup = dynamic_cast<TraffikSetup*>(m_edm_setup->firstEntity());
+    m_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity());
 }
 
 SpotForm::~SpotForm()

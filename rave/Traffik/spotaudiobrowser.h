@@ -7,11 +7,11 @@
 #include "../framework/manytomanybrowser.h"
 
 namespace Ui {
-class SpotAudioBrowser;
+    class SpotAudioBrowser;
 }
 
 namespace TRAFFIK{
-class SpotAudio;
+    class SpotAudio;
 }
 
 namespace AUDIO{
@@ -19,7 +19,7 @@ namespace AUDIO{
 }
 
 class ManyToMany;
-class TraffikSetup;
+class RavenSetup;
 class CueEditor;
 
 class SpotAudioBrowser : public BaseEntityBrowserDlg
@@ -67,7 +67,7 @@ private:
     Ui::SpotAudioBrowser* ui;
     ManyToMany* m_mtom;
     std::unique_ptr<EntityDataModel> m_setup_edm;
-    TraffikSetup* m_setup;
+    RavenSetup* m_setup;
     std::vector<std::unique_ptr<TRAFFIK::SpotAudio>> m_audios;
     std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
     std::unique_ptr<CueEditor> m_cue_editor;

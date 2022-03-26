@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+
+#include <QApplication>
 #include <QMainWindow>
 
 #include "artistmanager.h"
@@ -43,7 +45,7 @@ public:
     enum GenreColumn{GenreName};
     enum TrackColumns : int{Title=0, Artist=1, Duration=2, AudioType=3, AudioFileName=4};
 
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QApplication* qapp, QWidget *parent = nullptr);
     ~MainWindow();
 
     void fetch_audio(const std::string);
@@ -90,6 +92,7 @@ public:
     void update_folder_view(int);
     void delete_audio_from_db(const std::string);
 
+    void sink(std::unique_ptr<AUDIO::Audio> ptr);
 
     template<typename T>
     void fetch_filtered_audio(T arg)
@@ -126,6 +129,7 @@ public slots:
     void delete_genre();
     void genre_selected(const QModelIndex&);
 
+    void import_audio();
     void audio_properties();
     void track_double_clicked(const QModelIndex&);
 
@@ -147,8 +151,11 @@ public slots:
     void cut_folder();
     void paste_folder();
 
+
+
 private:
     Ui::MainWindow *ui;
+    QApplication* m_qapp;
     DataToolBar* m_artist_toolbar;
     DataToolBar* m_genre_toolbar;
 

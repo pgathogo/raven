@@ -53,3 +53,34 @@ void PostgresException::setAction(const std::string act)
 {
     mAction = act;
 }
+
+// ------ AudioImportException -----
+
+AudioImportException::AudioImportException(const std::string action, const std::string error_msg)
+    :mAction{action}
+    ,mErrorMsg{error_msg}
+{
+}
+
+AudioImportException::~AudioImportException()
+{
+}
+
+std::string AudioImportException::errorMessage()
+{
+    return mErrorMsg;
+}
+
+std::string AudioImportException::which()
+{
+    return "AudioImportException";
+}
+
+std::string AudioImportException::action()
+{
+}
+
+void AudioImportException::setAction(const std::string act)
+{
+    mAction = act;
+}

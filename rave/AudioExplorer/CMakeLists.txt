@@ -38,18 +38,6 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
-set(AUDIO_INCLUDE "../audiolib/headers")
-set(AUDIO_LIB "../audiolib/lib_debug")
-find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
-find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
-
-if (AUDIO_INCLUDE_DIR)
-        message(STATUS "AUDIO_INCLUDE_DIR found")
-endif()
-
-if (AUDIO_LIBRARY)
-        message(STATUS "Audio library found.")
-endif()
 
 
 include_directories(${AUDIO_INCLUDE_DIR})
@@ -91,6 +79,8 @@ set(PROJECT_SOURCES
         ../audio/genretypeitem.h
         ../audio/genretypeitem.cpp
         ../audio/genreform.cpp
+        ../audio/audioimporter.h
+        ../audio/audioimporter.cpp
         ../framework/baseentity.cpp
         ../framework/baseentitybrowserdlg.cpp
         ../framework/baseentitybrowserdlg.ui
@@ -113,6 +103,8 @@ set(PROJECT_SOURCES
         ../framework/letterfilterwidget.cpp
         ../framework/picklistbrowser.cpp
         ../framework/selectclosewidget.cpp
+        ../framework/ravensetup.h
+        ../framework/ravensetup.cpp
         ../security/authentication.cpp
         ../security/user.cpp
         ../utils/notificationbar.cpp
@@ -148,6 +140,22 @@ link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(AudioExplorer PRIVATE ${PostgreSQL_LIBRARIES})
 target_link_libraries(AudioExplorer PRIVATE ${RAVE_AUDIO_LIBRARIES})
+
+set(AUDIO_INCLUDE_DIR "../audiolib/headers")
+set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
+#find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE_DIR})
+find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
+
+if (AUDIO_INCLUDE_DIR)
+        message(STATUS "AUDIO_INCLUDE_DIR found")
+endif()
+
+if (AUDIO_LIBRARY)
+        message(STATUS "CueEditor library found.")
+endif()
+
+target_link_directories(AudioExplorer PRIVATE ${AUDIO_LIBRARY_DIR})
+target_link_libraries(AudioExplorer PRIVATE ${AUDIO_LIBRARY})
 
 #set_target_properties(AudioExplorer PROPERTIES
 #    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

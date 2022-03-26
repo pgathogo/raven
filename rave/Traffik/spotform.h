@@ -16,7 +16,7 @@ class Client;
 class DayPartGrid;
 class ManyToManyBrowser;
 class EntityDataModel;
-class TraffikSetup;
+class RavenSetup;
 class AudioFile;
 class CueEditor;
 class SpotAudioBrowser;
@@ -63,7 +63,7 @@ private:
     std::unique_ptr<SpotAudioBrowser> m_spot_audio_browser;
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
-    TraffikSetup* m_setup;
+    RavenSetup* m_setup;
 };
 
 #endif // SPOTFORM_H

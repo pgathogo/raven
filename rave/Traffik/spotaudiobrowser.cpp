@@ -5,6 +5,7 @@
 #include "ui_spotaudiobrowser.h"
 
 #include "../framework/manytomany.h"
+#include "../framework/ravensetup.h"
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
 #include "../audio/audio.h"
@@ -13,7 +14,6 @@
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
-#include "traffiksetup.h"
 
 namespace fs = std::filesystem;
 
@@ -38,9 +38,9 @@ SpotAudioBrowser::SpotAudioBrowser(
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
     create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit);
 
-    m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<TraffikSetup>());
+    m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
     m_setup_edm->all();
-    m_setup = dynamic_cast<TraffikSetup*>(m_setup_edm->firstEntity());
+    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity());
 
     layout->addWidget(this);
 
@@ -121,7 +121,7 @@ AUDIO::Audio* SpotAudioBrowser::audio_from_selection()
 std::string SpotAudioBrowser::audio_file_name(AUDIO::Audio* audio)
 {
     AudioTool at;
-    auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+    auto ogg_file = at.generate_ogg_filename(audio->id());
     auto audio_file = audio->file_path()->value()+ogg_file;
 
     if (!fs::exists(audio_file)){
@@ -186,11 +186,7 @@ void SpotAudioBrowser::import_audio()
     // Add some audio attributes - name, description etc.
     auto spot_audio_form = std::make_unique<SpotAudioForm>(spot_audio.get());
 
-    printstr("Spot form created ...");
-
     if (spot_audio_form->exec() > 0){
-
-        printstr("After spot_audio_form ...");
 
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) ){
 
@@ -203,11 +199,11 @@ void SpotAudioBrowser::import_audio()
             qDebug() << "Wave generated.";
         }
 
-        printstr("COMM AUDIO FOLDER: "+m_setup->comm_audio_folder()->value());
-
         spot_audio->set_audio_lib_path(m_setup->comm_audio_folder()->value());
+
         spot_audio->set_title(spot_audio->title()->value());
         spot_audio->set_file_path(audio_file_full_path.toStdString());
+
         spot_audio->set_file_path(m_setup->comm_audio_folder()->value());
 
         auto af = audio->audio_file();
@@ -216,14 +212,9 @@ void SpotAudioBrowser::import_audio()
 
         af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.short_filename()+".ogg");
 
-        qDebug() << QString::fromStdString(af.ogg_filename());
-
         auto cue_editor = std::make_unique<CueEditor>(af);
 
-        printstr("CueEditor created.");
-
         if (cue_editor->editor() == 1){
-            printstr("After cue_editor");
 
             spot_audio->audio()->set_audio_file(af);
             spot_audio->set_marker(cue_editor->marker());

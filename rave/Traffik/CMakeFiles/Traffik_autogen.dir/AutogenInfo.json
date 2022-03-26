@@ -326,11 +326,6 @@
 			"EWIEGA46WW/moc_traffikrules.cpp"
 		],
 		[
-			"D:/home/PMS/Raven/rave/Traffik/traffiksetup.h",
-			"MU",
-			"EWIEGA46WW/moc_traffiksetup.cpp"
-		],
-		[
 			"D:/home/PMS/Raven/rave/Traffik/tree.h",
 			"MU",
 			"EWIEGA46WW/moc_tree.cpp"
@@ -464,6 +459,11 @@
 			"D:/home/PMS/Raven/rave/framework/ravenexception.h",
 			"MU",
 			"TXBK5VWLEF/moc_ravenexception.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/ravensetup.h",
+			"MU",
+			"TXBK5VWLEF/moc_ravensetup.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/relationmapper.h",
@@ -711,7 +711,6 @@
 		[ "D:/home/PMS/Raven/rave/Traffik/timebandbrowser.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/Traffik/timebandform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/Traffik/traffikrules.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/Traffik/traffiksetup.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/Traffik/tree.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/Traffik/treeviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/Traffik/typeexclusionbrowser.cpp", "MU" ],
@@ -736,6 +735,7 @@
 		[ "D:/home/PMS/Raven/rave/framework/manytomanybrowser.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/picklistbrowser.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/ravensetup.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/schedule.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/selectclosewidget.cpp", "MU" ],

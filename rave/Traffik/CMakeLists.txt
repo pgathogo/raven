@@ -71,8 +71,8 @@ set(PROJECT_SOURCES
     orderform.h
     orderform.cpp
     orderform.ui
-    traffiksetup.h
-    traffiksetup.cpp
+    ../framework/ravensetup.h
+    ../framework/ravensetup.cpp
     bookingsegment.h
     bookingsegment.cpp
     orderbooking.h

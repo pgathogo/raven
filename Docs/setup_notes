@@ -3,3 +3,17 @@
 - Setup commercial Genre - from the Genre entity
 - Setup commercial Mood - from the Mood entity
 - Setup for commercial audio lib path - 
+
+
+# Dependencies to install
+- Fonts:
+   - Roboto
+   - Jetbrains
+   - Digi...
+
+- Dlls
+  - bass.dll
+  - cueeditor.dll
+  - libstdc++6.dll
+
+- QT Dll's

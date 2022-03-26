@@ -21,7 +21,8 @@ public:
     enum DialogCloseResult{Cancel, Save};
 
     CueEditor(AudioFile& audio_file, const std::string name);
-    CueEditor(AudioFile& audio_file, int argc=0, char** argv = NULL);
+    CueEditor(AudioFile& audio_file, QApplication* q_app);
+    //CueEditor(AudioFile& audio_file, int argc=0, char** argv = NULL);
     ~CueEditor();
     int editor();
     void play_audio();

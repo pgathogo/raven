@@ -3,11 +3,11 @@
 #include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/choicefield.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/ravensetup.h"
 #include "../utils/notificationbar.h"
 
 #include "breaklayout.h"
 #include "breaklayoutline.h"
-#include "traffiksetup.h"
 
 BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
                                  QDialog* parent) :
@@ -27,9 +27,9 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
     ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     mEdmTSetup = std::make_unique<EntityDataModel>(
-                std::make_unique<TraffikSetup>());
+                std::make_unique<RavenSetup>());
     mEdmTSetup->all();
-    mTraffikSetup = dynamic_cast<TraffikSetup*>(mEdmTSetup->firstEntity());
+    mRavenSetup = dynamic_cast<RavenSetup*>(mEdmTSetup->firstEntity());
 
     populateFormWidgets();
 
@@ -130,13 +130,13 @@ void BreakLayoutForm::addBreakLines(int hour, int timeInterval)
 {
     int time_interval;
     if (timeInterval == 0)
-        time_interval = mTraffikSetup->breakTimeInterval()->value();
+        time_interval = mRavenSetup->breakTimeInterval()->value();
     else
         time_interval = timeInterval;
 
     int breaks_per_hr = 60 / time_interval;
-    int break_dur = mTraffikSetup->breakDuration()->value();
-    int max_spots = mTraffikSetup->breakMaxSpots()->value();
+    int break_dur = mRavenSetup->breakDuration()->value();
+    int max_spots = mRavenSetup->breakMaxSpots()->value();
 
         int min = 0;
 

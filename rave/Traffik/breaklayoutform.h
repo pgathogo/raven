@@ -10,7 +10,7 @@ class BreakLayoutForm;
 
 class BreakLayout;
 class EntityDataModel;
-class TraffikSetup;
+class RavenSetup;
 
 template<typename T>
 class ChoiceField;
@@ -52,7 +52,7 @@ private:
     BreakLayout* mBreakLayout;
     std::unique_ptr<EntityDataModel> mEDMBreakLine;
     std::unique_ptr<EntityDataModel> mEdmTSetup;
-    TraffikSetup* mTraffikSetup;
+    RavenSetup* mRavenSetup;
     int tempFromHr;
     int tempToHr;
     int startPos;

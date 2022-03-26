@@ -4,7 +4,7 @@
 
 #include "bookingorderbrowser.h"
 #include "ui_bookingorderbrowser.h"
-#include "traffiksetup.h"
+#include "../framework/ravensetup.h"
 #include "client.h"
 #include "order.h"
 #include "spot.h"
@@ -417,9 +417,9 @@ std::string BookingOrderBrowser::make_filter(int id)
 {
 
     std::unique_ptr<EntityDataModel> setupEDM;
-    setupEDM = std::make_unique<EntityDataModel>(std::make_unique<TraffikSetup>());
+    setupEDM = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
     setupEDM->all();
-    auto setup = dynamic_cast<TraffikSetup*>(setupEDM->firstEntity());
+    auto setup = dynamic_cast<RavenSetup*>(setupEDM->firstEntity());
 
     std::string order_approval_filter{};
     if (setup->orderAprvdBB()->value()){

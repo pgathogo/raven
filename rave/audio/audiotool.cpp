@@ -10,6 +10,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
+#include <QTime>
 
 #include "audiotool.h"
 #include "audio.h"
@@ -170,18 +171,31 @@ bool AudioTool::copy_ogg_to_audiolib(std::string src_ogg, std::string dest_ogg)
 //                                      m_audio_file.temp_id())+".ogg");
 
     //QString src_file = QString::fromStdString(m_audio_file.audio_file());
+
     QString src_file = QString::fromStdString(src_ogg);
-    src_file = src_file.replace("\\","/");
+    //src_file = src_file.replace("\\","/");
+    auto src_path = fs::path(src_file.toStdString());
 
     //QString dest_file = QString::fromStdString(m_audio_file.audio_lib_path()+m_audio_file.ogg_filename());
     QString dest_file = QString::fromStdString(dest_ogg);
-    dest_file = dest_file.replace("\\", "/");
+    //dest_file = dest_file.replace("\\", "/");
+    auto dst_path = fs::path(dest_file.toStdString());
 
     try{
-        fs::copy(src_file.toStdString(), dest_file.toStdString());
-    } catch ( fs::filesystem_error fe) {
-        qDebug() << QString::fromUtf8(fe.what());
-        return false;
+        fs::copy(src_path, dst_path);
+    } catch ( fs::filesystem_error& fe) {
+        qDebug() << stoq(fe.what());
+    }
+
+    return true;
+}
+
+bool AudioTool::copy_wave_to_audiolib(std::string src_file, std::string dest_file)
+{
+    try{
+        fs::copy(src_file, dest_file);
+    } catch(fs::filesystem_error& fe) {
+        qDebug() << stoq(fe.what());
     }
 
     return true;
@@ -206,6 +220,9 @@ void AudioTool::mp3_ready()
 
 QString AudioTool::format_time(double time)
 {
+    return QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
+
+    /*
     // hh:mm:ss:ms
     const int msec_per_second = 1000;
     QString time_format = "%1:%2:%3:%4";
@@ -216,7 +233,7 @@ QString AudioTool::format_time(double time)
     int mins = 0;
     int secs = 0;
 
-    msec_dbl = time * msec_per_second;
+    msec_dbl = time / msec_per_second;
     msec = msec_dbl % msec_per_second;
 
     mins = time / 60;
@@ -228,6 +245,7 @@ QString AudioTool::format_time(double time)
             .arg(msec, 3, 10, QChar('0'));
 
     return time_str;
+    */
 }
 
 //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)

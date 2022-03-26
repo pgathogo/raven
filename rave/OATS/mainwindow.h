@@ -90,6 +90,8 @@ public:
     void set_schedule_fields(BaseDataProvider* provider,
                                      OATS::ScheduleItem* sched_item);
 
+    QString output_string(OATS::ScheduleItem*);
+
 private slots:
     void close_win();
     void go_current();

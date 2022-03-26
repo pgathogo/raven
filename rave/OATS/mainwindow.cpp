@@ -1283,10 +1283,20 @@ void MainWindow::make_item_current(int item_ref)
 
     si->set_item_status(OATS::ItemStatus::CUED);
 
+    qDebug() << si->audio().duration();
+    qDebug() << si->audio().intro();
+    qDebug() << si->audio().fade_delay();
+
+    QString cue_string = output_string(si);
+
+    qDebug() << "CUE STRING: "<< cue_string;
+
     if (si->play_channel() == ChannelA){
         m_outputA->cue_item(si);
+        m_outputA->set_cue_time_string(cue_string);
     }else{
         m_outputB->cue_item(si);
+        m_outputB->set_cue_time_string(cue_string);
     }
 
     for(int i=index+1; i < m_schedule_items.size()-1; ++i){
@@ -1297,6 +1307,32 @@ void MainWindow::make_item_current(int item_ref)
 
     display_schedule(ui->gridScroll->value());
 
+
+}
+
+QString MainWindow::output_string(OATS::ScheduleItem* si)
+{
+    auto duration_seconds = (int)si->audio().duration()/1000;
+    auto intro_seconds = (int)si->audio().intro()/1000;
+    auto fade_seconds = (int)si->audio().fade_delay()/1000;
+
+    int is_u1 = (int)intro_seconds/60;
+    int is_u2 = intro_seconds % 60;
+
+    int ds_u1 = (int)duration_seconds/60;
+    int ds_u2 = duration_seconds % 60;
+
+    int fs_u1 = (int)fade_seconds/60;
+    int fs_u2 = fade_seconds % 60;
+
+    QString cue_string = QString("%1:%2 / %3:%4 / %5:%6").arg(is_u1, 2, 10, QChar('0'))
+                                                         .arg(is_u2, 2, 10, QChar('0'))
+                                                         .arg(ds_u1, 2, 10, QChar('0'))
+                                                         .arg(ds_u2, 2, 10, QChar('0'))
+                                                         .arg(fs_u1, 2, 10, QChar('0'))
+                                                         .arg(fs_u2, 2, 10, QChar('0'));
+
+    return cue_string;
 }
 
 void MainWindow::transition_stop(int item_ref, int grid_index)

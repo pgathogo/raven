@@ -11,7 +11,7 @@ class OrderForm;
 
 class Client;
 class Order;
-class TraffikSetup;
+class RavenSetup;
 
 template<typename T>
 class ChoiceField;
@@ -69,6 +69,6 @@ private:
     Client* mClient;
     Order* mOrder;
     std::unique_ptr<EntityDataModel> dmSetup;
-    TraffikSetup* mSetup;
+    RavenSetup* mSetup;
 };
 #endif // ORDERFORM_H

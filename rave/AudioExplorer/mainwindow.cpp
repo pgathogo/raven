@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QStandardItemModel>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -19,6 +20,7 @@
 #include "../audio/genretypeitem.h"
 #include "../audio/audiotool.h"
 #include "../audio/genreform.h"
+#include "../audio/audioimporter.h"
 
 #include "../audiolib/headers/cueeditor.h"
 #include "../audiolib/headers/audioplayer.h"
@@ -32,9 +34,10 @@
 
 namespace fs = std::filesystem;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
     :QMainWindow(parent)
     ,ui(new Ui::MainWindow)
+    ,m_qapp{qapp}
     ,m_letter_filter_widget{nullptr}
     ,m_cut_folder_id{-1}
 {
@@ -65,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_genre_toolbar->delete_button(), &QPushButton::clicked, this, &MainWindow::delete_genre);
 
     // Operation buttons
+    connect(ui->btnImport, &QPushButton::clicked, this, &MainWindow::import_audio);
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
     connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
@@ -172,6 +176,7 @@ void MainWindow::create_track_view_headers()
     m_tracks_model->setHorizontalHeaderItem(2, new QStandardItem("Duration"));
     m_tracks_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
     m_tracks_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
+    m_tracks_model->setHorizontalHeaderItem(5, new QStandardItem("Folder"));
 }
 
 void MainWindow::create_artist_view_headers()
@@ -877,6 +882,63 @@ void MainWindow::search_artist()
     fetch_artist(filter_str);
 }
 
+void MainWindow::import_audio()
+{
+
+    auto audio_file = QFileDialog::getOpenFileName(this,
+                                                   tr("Import Audio"), QDir::currentPath(),
+                                                   tr("Audio Files (*.mp3 *.ogg)"));
+    if (audio_file.isEmpty())
+        return;
+
+    auto audio = std::make_unique<AUDIO::Audio>(audio_file.toStdString());
+
+    auto audio_form = std::make_unique<AudioForm>(audio.get());
+
+    if (audio_form->exec() > 0){
+        auto audio_importer = AUDIO::AudioImporter(audio.get(), m_qapp);
+
+        audio_importer.write_wave_file(111);
+        return;
+
+        try{
+            audio_importer.import_audio();
+        } catch (AudioImportException aie) {
+            //1. Do a clean up
+            //------------------
+            // - Remove wave file
+           // showMessge(aie.errorMessage());
+        }
+
+//        audio_importer.write_ogg_file(111);
+
+        // Save audio to DB.
+        int id = -1;
+        try{
+            id = m_audio_edm->createEntity(std::move(audio));
+        } catch (DatabaseException& de) {
+            showMessage(de.errorMessage());
+        }
+
+        try{
+            audio_importer.write_ogg_file(id);
+        } catch(fs::filesystem_error& fe) {
+            showMessage(fe.what());
+        }
+
+        try{
+            audio_importer.write_wave_file(id);
+        } catch (fs::filesystem_error& fe) {
+            showMessage(fe.what());
+        }
+
+        audio_importer.create_adf_file(id);
+
+
+    }
+
+}
+
 void MainWindow::audio_properties()
 {
     auto search_value = get_search_value(ui->tvTracks, TrackColumns::Title);
@@ -901,6 +963,7 @@ void MainWindow::audio_properties()
     }
 
 }
+
 
 void MainWindow::play_btn_clicked()
 {
@@ -1002,7 +1065,7 @@ void MainWindow::cue_edit()
     }
 
     //auto cue_editor = std::make_unique<CueEditor>(aaf);
-    CueEditor* cue_editor = new CueEditor(aud_file);
+    CueEditor* cue_editor = new CueEditor(aud_file, m_qapp);
     if (cue_editor->editor() == 1){
 
     }
@@ -1168,4 +1231,9 @@ void MainWindow::open_trash_can()
 {
     auto trash_can = std::make_unique<TrashCanForm>(this);
     trash_can->exec();
+}
+
+void MainWindow::sink(std::unique_ptr<AUDIO::Audio> ptr)
+{
+    qDebug() << "Sinking audio ..";
 }

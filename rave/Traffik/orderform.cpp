@@ -2,12 +2,12 @@
 #include "ui_orderform.h"
 #include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
+#include "../framework/ravensetup.h"
 #include "../utils/tools.h"
 #include "../framework/choicefield.h"
 
 #include "order.h"
 #include "client.h"
-#include "traffiksetup.h"
 
 
 OrderForm::OrderForm(Client* client, Order* order,
@@ -57,9 +57,9 @@ OrderForm::OrderForm(Client* client, Order* order,
             this, &OrderForm::tradeCreditTypeCBChanged);
 
     dmSetup = std::make_unique<EntityDataModel>(
-                std::make_unique<TraffikSetup>());
+                std::make_unique<RavenSetup>());
     dmSetup->all();
-    mSetup = dynamic_cast<TraffikSetup*>(dmSetup->firstEntity());
+    mSetup = dynamic_cast<RavenSetup*>(dmSetup->firstEntity());
 
     if (mOrder->isNew())
         prepareNewOrder();

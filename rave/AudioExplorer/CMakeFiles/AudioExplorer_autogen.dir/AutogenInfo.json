@@ -142,6 +142,11 @@
 			"Y6ZUSTFKUI/moc_audiofolder.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/audio/audioimporter.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audioimporter.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/audio/audiolibitem.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiolibitem.cpp"
@@ -230,6 +235,11 @@
 			"D:/home/PMS/Raven/rave/framework/ravenexception.h",
 			"MU",
 			"TXBK5VWLEF/moc_ravenexception.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/ravensetup.h",
+			"MU",
+			"TXBK5VWLEF/moc_ravensetup.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/relationmapper.h",
@@ -355,6 +365,7 @@
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audioimporter.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
@@ -372,6 +383,7 @@
 		[ "D:/home/PMS/Raven/rave/framework/manytomany.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/picklistbrowser.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/ravensetup.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/selectclosewidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],

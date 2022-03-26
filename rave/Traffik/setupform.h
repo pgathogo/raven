@@ -9,7 +9,7 @@ namespace Ui {
 class SetupForm;
 }
 
-class TraffikSetup;
+class RavenSetup;
 class OrderApprover;
 
 template<typename T>
@@ -20,7 +20,7 @@ class SetupForm : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit SetupForm(TraffikSetup* setup,
+    explicit SetupForm(RavenSetup* setup,
                        QDialog* parent = nullptr);
     ~SetupForm() override;
 
@@ -49,7 +49,7 @@ private slots:
 
 private:
     Ui::SetupForm *ui;
-    TraffikSetup* m_setup;
+    RavenSetup* m_setup;
     std::unique_ptr<EntityDataModel> m_edm_approver;
 
     void load_order_approvers();

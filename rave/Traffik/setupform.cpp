@@ -4,13 +4,13 @@
 #include "ui_setupform.h"
 #include "../framework/ui_baseentitydetaildlg.h"
 
-#include "traffiksetup.h"
+#include "../framework/ravensetup.h"
 #include "../framework/choicefield.h"
 #include "orderapprover.h"
 #include "approverform.h"
 
 
-SetupForm::SetupForm(TraffikSetup* setup,
+SetupForm::SetupForm(RavenSetup* setup,
                      QDialog* parent) :
     BaseEntityDetailDlg(parent),
     ui(new Ui::SetupForm),

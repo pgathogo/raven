@@ -1,3 +1,5 @@
+ RadioWave - Raven
+
  -- TRAFFIK --
 # OrderBooking Module
 - When you cancel an order, show a message that the booking has been cancelled successfully
@@ -52,8 +54,8 @@ SEDRIC - Issues
   * Should remove any items for the current date/hour and replace with 
     items new items on the cache/table view
 
-- Save-As functionality
-- Remove functionality
+X Save-As functionality
+X Remove functionality
 - Print schedule functionality
 X Add Window title
 - Start window maximized
@@ -72,12 +74,112 @@ X Add Window title
 
 * Tracks Sections *
 
-- Move color legend on the top section
-- Play audio functionality
-- Stop play audio functionality
+- Move color legend on the top section - legend removed
+X Play audio functionality
+X Stop play audio functionality
 - History functionality
 
 * Search section *
 
-- Search audio - By title
-- Search audio - By artist
+X Search audio - By title
+X Search audio - By artist
+
+
+22/10/2021 11:58:28
+---------
+
+# ------------------------------------------------- #
+# ****    Tech Debt  ****
+# -------------------------------------------------#
+
+Audio::Remove player from CueEditor - CueEditor should request play, stop, ... from the AudioPlay class
+
+Traffik::Move Traffik project from QMake to CMake
+
+RelationMapper::append_related_tables - Remove the storing of typeid of class "&typeid(T)"
+
+
+01/11/2021 14:45:29
+-------
+
+# ------------------------------------------------- #
+Raven - Audio Explorer
+# ------------------------------------------------- #
+
+- Add a window Icon
+- Application should start on Maximized mode
+
+
+#-------------------------------------------------------- #
+#     OATS
+#---------------------------------------------------------#
+
+
+ 
+
+
+22/11/2021 19:41:53
+----
+# --------------------------------------------------------------- #
+#             SAP-IDEAS
+# ----------------------------------------------------------------#
+
+- Client specific data
+- Cross-client data and applications
+- Transports machinary
+- Workbench concept
+- Netweaver dialog server ***
+- ABAP repository
+- Packages
+   - Transportable packages
+- Sessions and sessions management
+- 
+
+
+
+
+
+
+# --------------------------------------------------------------- #
+#             HOW-TO
+# ----------------------------------------------------------------#
+
+- Working with QTreeView
+- Working with QTreeView Model
+- How-to add, edit and delete data to a custom model
+- How to add widgets to a TableView
+- 
+
+
+
+STDM 1.8 - What's New
+
+1. Options 
+  - Entity records sorting - X
+  
+2. Entity Browser
+  - STR viewer - X
+  - Search by multiple fields - X
+
+3. Data Entry Forms - X
+  - STR Viewer - X
+  -
+
+4. Data Import
+  - Persisted sessions - X
+  - Save process - X
+
+5. Document Designer
+
+6. Support for Python3
+
+7
+
+
+21/12/2021 14:51:23
+---
+Voice Tracking - Cloud Radio
+----
+https://www.cloudrad.io/voice-tracking
+
+https://www.youtube.com/watch?v=Yx_NzleQXjg

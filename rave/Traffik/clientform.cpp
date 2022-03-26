@@ -5,7 +5,7 @@
 #include "../utils/tools.h"
 
 #include "client.h"
-#include "traffiksetup.h"
+#include "../framework/ravensetup.h"
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
@@ -42,11 +42,11 @@ ClientForm::ClientForm(Client* client,
             this, &ClientForm::accountManagerChanged);
 
     m_edm_setup = std::make_unique<EntityDataModel>(
-                std::make_unique<TraffikSetup>());
+                std::make_unique<RavenSetup>());
     m_edm_setup->all();
 
     if (m_edm_setup->count() > 0)
-        m_traffik_setup = dynamic_cast<TraffikSetup*>(m_edm_setup->firstEntity());
+        m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity());
 
     if (m_client->isNew())
         set_defaults();
@@ -184,13 +184,13 @@ void ClientForm::accountManagerChanged(int i)
 
 void ClientForm::set_defaults()
 {
-    set_choice_field_default(ui->cbRevenueType, m_traffik_setup->revenueType()->value());
-    set_choice_field_default(ui->cbBillCycle, m_traffik_setup->billingCycle()->value());
-    ui->sbAgencyComm->setValue(m_traffik_setup->agencyComm()->value());
-    ui->sbSaleRepComm->setValue(m_traffik_setup->saleRepComm()->value());
-    ui->sbIntRate->setValue(m_traffik_setup->interestRate()->value());
-    ui->sbLateFee->setValue(m_traffik_setup->lateFee()->value());
-    ui->sbGracePeriod->setValue(m_traffik_setup->gracePeriod()->value());
+    set_choice_field_default(ui->cbRevenueType, m_raven_setup->revenueType()->value());
+    set_choice_field_default(ui->cbBillCycle, m_raven_setup->billingCycle()->value());
+    ui->sbAgencyComm->setValue(m_raven_setup->agencyComm()->value());
+    ui->sbSaleRepComm->setValue(m_raven_setup->saleRepComm()->value());
+    ui->sbIntRate->setValue(m_raven_setup->interestRate()->value());
+    ui->sbLateFee->setValue(m_raven_setup->lateFee()->value());
+    ui->sbGracePeriod->setValue(m_raven_setup->gracePeriod()->value());
 }
 
 void ClientForm::set_choice_field_default(QComboBox *cbox, std::string value)
