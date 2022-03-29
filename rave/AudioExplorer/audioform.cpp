@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <QFileInfo>
 #include "audioform.h"
 #include "ui_audioform.h"
@@ -9,6 +10,8 @@
 #include "../audio/audio.h"
 #include "../audio/artist.h"
 #include "../audio/audiotool.h"
+
+namespace fs = std::filesystem;
 
 AudioForm::AudioForm(AUDIO::Audio* audio,
                      QDialog* parent)
@@ -51,9 +54,10 @@ void AudioForm::populateEntityFields()
     set_choice_field(m_audio->audio_type(), ui->cbClass);
     m_audio->set_audio_year(ui->edtYear->value());
     m_audio->set_add_dtime(ui->dtCreation->dateTime());
+    m_audio->set_creation_date(ui->dtCreation->date());
 
-    QFileInfo fi(ui->edtFilename->text());
-    m_audio->set_file_path(fi.absolutePath().toStdString());
+    fs::path p(ui->edtFilename->text().toStdString());
+    m_audio->set_file_path(p.parent_path().u8string()+"/");
 }
 
 void AudioForm::populateFormWidgets()
@@ -109,9 +113,10 @@ void AudioForm::pick_artist()
 
         auto artist_uptr = std::make_unique<AUDIO::Artist>();
         *artist_uptr.get() = *artist;
+
         m_audio->artist()->set_fk_entity(std::move(artist_uptr));
 
-        //m_audio->set_artist(artist->id());
+        m_audio->set_artist(artist->id());
         ui->edtArtist->setText(QString::fromStdString(artist->fullName()->value()));
     }
 }

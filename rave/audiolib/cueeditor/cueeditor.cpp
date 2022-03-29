@@ -21,7 +21,6 @@ CueEditor::~CueEditor()
 {
     if (m_audio_wave_form != nullptr){
         delete static_cast<AUDIO::AudioWaveForm*>(m_audio_wave_form);
-        //delete app;
      }
 }
 

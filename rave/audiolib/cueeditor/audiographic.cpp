@@ -8,6 +8,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "audiographic.h"
+#include "../../audio/audiotool.h"
 
 namespace AUDIO{
 
@@ -393,37 +394,17 @@ namespace AUDIO{
 
     void AudioWaveScene::update_counter(double time)
     {
-        const int ms_per_second =  1000;
-        QString mill_str;
-        int mill_count=0;
-
-        QString time_format="%1:%2:%3:%4";
         QString time_str;
 
-        int r_count=0;
-
-        int msecs=0;
         if (time < 0){
-            msecs = time * ms_per_second;
-            msecs = msecs% 1000;
-            time_str = time_format.arg(0)
-                    .arg(0, 2, 10, QChar('0'))
-                    .arg(0, 2, 10, QChar('0'))
-                    .arg(msecs, 3, 10, QChar('0'));
+            AudioTool at;
+            time_str = at.format_time(time);
             m_position_counter->setText(time_str);
             return;
         }
 
-        int msec_d = time * 1000;
-        msecs = msec_d % 1000;
-        int mins = time / 60;
-        int secs = (int)time % 60;
-
-        time_str = time_format.arg(0)
-                .arg(mins, 2, 10, QChar('0'))
-                .arg(secs, 2, 10, QChar('0'))
-                .arg(msecs, 3, 10, QChar('0'));
-
+        AudioTool at;
+        time_str = at.format_time(time);
         m_position_counter->setText(time_str);
     }
 
@@ -637,13 +618,11 @@ namespace AUDIO{
 
     void MarkerDisplayUnit::update(Subject *changed_subject, double time)
     {
-        qDebug() << "Update: "<< time;
-        //if (changed_subject == m_indicator){
-            if (m_display_unit != nullptr){
-                auto du = dynamic_cast<QLabel*>(m_display_unit);
-                du->setText(QString::fromStdString(format_message(time)));
-            }
-        //}
+        if (m_display_unit != nullptr){
+            AudioTool at;
+            auto du = dynamic_cast<QLabel*>(m_display_unit);
+            du->setText(at.format_time(time));
+        }
     }
 
     void MarkerDisplayUnit::set_display_unit(QWidget* display_unit)

@@ -1,4 +1,3 @@
-#include <QDebug>
 #include "audiofile.h"
 
 AudioFile::AudioFile()
@@ -124,6 +123,21 @@ std::string AudioFile::ogg_filename() const
     return m_ogg_filename;
 }
 
+std::string AudioFile::creation_date() const
+{
+    return m_creation_date;
+}
+
+std::string AudioFile::audio_class() const
+{
+    return m_audio_class;
+}
+
+std::string AudioFile::genre() const
+{
+    return m_genre;
+}
+
 int AudioFile::id() const
 {
     return m_id;
@@ -137,6 +151,11 @@ int AudioFile::duration() const
 int AudioFile::temp_id() const
 {
     return m_temp_id;
+}
+
+int AudioFile::year() const
+{
+    return m_year;
 }
 
 uintmax_t AudioFile::file_size() const
@@ -203,6 +222,19 @@ void AudioFile::set_audio_lib_path(const std::string lib_path)
     m_audio_lib_path = lib_path;
 }
 
+void AudioFile::set_creation_date(const std::string create_date)
+{
+    m_creation_date = create_date;
+}
+
+void AudioFile::set_audio_class(const std::string a_class)
+{
+    m_audio_class = a_class;
+}
+void AudioFile::set_genre(const std::string genre)
+{
+    m_genre = genre;
+}
 
 void AudioFile::set_id(int id)
 {
@@ -222,6 +254,10 @@ void AudioFile::set_ogg_filename(const std::string name)
 void AudioFile::set_temp_id(int id)
 {
     m_temp_id = id;
+}
+void AudioFile::set_year(int yr)
+{
+    m_year = yr;
 }
 
 bool AudioFile::is_valid() const

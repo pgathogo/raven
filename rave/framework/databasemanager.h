@@ -52,6 +52,7 @@ protected:
     std::string commaSepValues(const BaseEntity& entity);
 
     virtual std::string makeInsertString(const BaseEntity& entity);
+    virtual std::string make_insert_returning_string(const BaseEntity& entity);
     virtual std::string makeUpdateString(const BaseEntity& entity);
 };
 

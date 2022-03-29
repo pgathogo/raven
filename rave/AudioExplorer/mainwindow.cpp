@@ -216,7 +216,7 @@ void MainWindow::set_track_view_column_width()
 
 void MainWindow::folder_clicked(const QModelIndex& index)
 {
-    int folder_id = index.data(Qt::UserRole).toInt();
+    int folder_id = selected_folder_id(); // index.data(Qt::UserRole).toInt();
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
     //fetch_folder_audio(folder_filter);
@@ -316,12 +316,17 @@ void MainWindow::connect_toolbutton_signals()
 }
 
 
+int MainWindow::selected_folder_id()
+{
+  return ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+}
+
 void MainWindow::create_new_folder()
 {
     auto folder_name_form = std::make_unique<FolderNameForm>("",this);
     if (folder_name_form->exec() > 0){
         std::string folder_name = folder_name_form->folder_name().toStdString();
-        int folder_id = ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+        int folder_id = selected_folder_id();
 
         int id;
         try{
@@ -802,7 +807,7 @@ void MainWindow::delete_entity(EntityDataModel* edm, QTableView* tv, int col)
 bool MainWindow::okay_to_delete(const BaseEntity* entity)
 {
     QMessageBox::StandardButton result_btn = QMessageBox::Yes;
-    result_btn = QMessageBox::question(this, "Sedric",
+    result_btn = QMessageBox::question(this, "Audio Explorer",
                           tr("Are you sure you want to delete?"),
                           QMessageBox::No | QMessageBox::Yes,
                           QMessageBox::No);
@@ -882,8 +887,14 @@ void MainWindow::search_artist()
     fetch_artist(filter_str);
 }
 
+
 void MainWindow::import_audio()
 {
+    int folder_id = selected_folder_id();
+    if (folder_id == 0){
+        showMessage("Please select folder for import");
+        return;
+    }
 
     auto audio_file = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), QDir::currentPath(),
@@ -893,24 +904,25 @@ void MainWindow::import_audio()
 
     auto audio = std::make_unique<AUDIO::Audio>(audio_file.toStdString());
 
+    qDebug() << "Folder ID: "<< folder_id;
+
+    audio->set_folder(folder_id);
+
     auto audio_form = std::make_unique<AudioForm>(audio.get());
 
     if (audio_form->exec() > 0){
-        auto audio_importer = AUDIO::AudioImporter(audio.get(), m_qapp);
 
-        audio_importer.write_wave_file(111);
-        return;
+        auto audio_importer = AUDIO::AudioImporter(audio.get(), m_qapp);
 
         try{
             audio_importer.import_audio();
+
+            audio->set_marker(audio_importer.marker());
+
         } catch (AudioImportException aie) {
-            //1. Do a clean up
-            //------------------
-            // - Remove wave file
-           // showMessge(aie.errorMessage());
+            qDebug() << stoq(aie.errorMessage());
         }
 
-//        audio_importer.write_ogg_file(111);
 
         // Save audio to DB.
         int id = -1;
@@ -919,22 +931,33 @@ void MainWindow::import_audio()
         } catch (DatabaseException& de) {
             showMessage(de.errorMessage());
         }
+        qDebug() << "Create audio entity... Done.";
 
         try{
             audio_importer.write_ogg_file(id);
         } catch(fs::filesystem_error& fe) {
             showMessage(fe.what());
         }
+        qDebug() << "Write OGG file... Done.";
 
         try{
             audio_importer.write_wave_file(id);
         } catch (fs::filesystem_error& fe) {
             showMessage(fe.what());
         }
+        qDebug() << "Write audio wave file... Done.";
 
-        audio_importer.create_adf_file(id);
+        try{
+            audio_importer.create_adf_file(id);
+        } catch(fs::filesystem_error& fe) {
+        }
+        qDebug() << "Create ADF file... Done.";
 
+        // Remove temporary ogg file
+        audio_importer.remove_ogg_temp_file();
 
+        // Remove temporay wave file
+        audio_importer.remove_wave_temp_file();
     }
 
 }
@@ -1051,12 +1074,14 @@ void MainWindow::cue_edit()
 
     audio->set_audio_file(aud_file);
 
-    if (fs::exists(aud_file.adf_file())){
+    aud_file.set_marker(audio->marker());
 
-        ADFRepository adf_repo;
-        Marker marker = adf_repo.read_markers(aud_file.adf_file());
-        audio->audio_file().set_marker(marker);
-    }
+//    if (fs::exists(aud_file.adf_file())){
+
+//        ADFRepository adf_repo;
+//        Marker marker = adf_repo.read_markers(aud_file.adf_file());
+//        audio->audio_file().set_marker(marker);
+//    }
 
     if (!fs::exists(aud_file.wave_file())){
         AudioTool at;
@@ -1067,6 +1092,9 @@ void MainWindow::cue_edit()
     //auto cue_editor = std::make_unique<CueEditor>(aaf);
     CueEditor* cue_editor = new CueEditor(aud_file, m_qapp);
     if (cue_editor->editor() == 1){
+
+        audio->set_audio_file(aud_file);
+        audio->set_duration(audio->audio_file().duration());
 
     }
 
@@ -1231,9 +1259,4 @@ void MainWindow::open_trash_can()
 {
     auto trash_can = std::make_unique<TrashCanForm>(this);
     trash_can->exec();
-}
-
-void MainWindow::sink(std::unique_ptr<AUDIO::Audio> ptr)
-{
-    qDebug() << "Sinking audio ..";
 }

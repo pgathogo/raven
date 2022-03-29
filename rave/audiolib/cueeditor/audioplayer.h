@@ -6,6 +6,8 @@
 
 class AudioThread;
 
+// namespace AUDIOLIB
+
 class AudioPlayer : public QObject
 {
     Q_OBJECT

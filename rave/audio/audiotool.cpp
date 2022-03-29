@@ -222,30 +222,6 @@ QString AudioTool::format_time(double time)
 {
     return QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
 
-    /*
-    // hh:mm:ss:ms
-    const int msec_per_second = 1000;
-    QString time_format = "%1:%2:%3:%4";
-    QString time_str{};
-
-    int msec_dbl = 0;
-    int msec = 0;
-    int mins = 0;
-    int secs = 0;
-
-    msec_dbl = time / msec_per_second;
-    msec = msec_dbl % msec_per_second;
-
-    mins = time / 60;
-    secs = (int)time % 60;
-
-    time_str = time_format.arg(0)
-            .arg(mins, 2, 10, QChar('0'))
-            .arg(secs, 2, 10, QChar('0'))
-            .arg(msec, 3, 10, QChar('0'));
-
-    return time_str;
-    */
 }
 
 //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
@@ -276,8 +252,6 @@ bool ADFRepository::write(const AudioFile& audio_file)
     QJsonDocument save_adf(adf_data);
     adf_file.write(save_adf.toJson());
 
-    qDebug() << "Data is saved.";
-
     return true;
 }
 
@@ -302,18 +276,25 @@ void ADFRepository::object_to_json(const AudioFile& audio_file, QJsonObject& jso
     json["short_desc"] = QString::fromStdString(audio_file.short_desc());
     json["artist_name"] = QString::fromStdString(audio_file.artist_name());
     json["audio_path"] = QString::fromStdString(audio_file.audio_lib_path());
-    json["filename"] = QString::fromStdString(audio_file.ogg_filename()+".ogg");
-    json["short_filename"] = QString::fromStdString(audio_file.ogg_filename());
+    json["filename"] = QString::fromStdString(audio_file.audio_lib_path()+
+                                              audio_file.ogg_short_filename());
+    json["short_filename"] = QString::fromStdString(audio_file.ogg_short_filename());
     json["duration"] = audio_file.duration();
+    json["creation_date"] = QString::fromStdString(audio_file.creation_date());
+    json["class"] = QString::fromStdString(audio_file.audio_class());
+    json["genre"] = QString::fromStdString(audio_file.genre());
+    json["year"] = audio_file.year();
 
     QJsonObject marker;
 
-    marker["start"] = audio_file.marker().start_marker;
-    marker["fade_in"] = audio_file.marker().fade_in;
-    marker["intro"] = audio_file.marker().intro;
-    marker["extro"] = audio_file.marker().extro;
-    marker["fade_out"] = audio_file.marker().fade_out;
-    marker["end"] = audio_file.marker().end_marker;
+    auto m = audio_file.marker();
+
+    marker["start"] = m.round_marker(m.start_marker);
+    marker["fade_in"] = m.round_marker(m.fade_in);
+    marker["intro"] = m.round_marker(m.intro);
+    marker["extro"] = m.round_marker(m.extro);
+    marker["fade_out"] = m.round_marker(m.fade_out);
+    marker["end"] = m.round_marker(m.end_marker);
 
     json["markers"] = marker;
 }

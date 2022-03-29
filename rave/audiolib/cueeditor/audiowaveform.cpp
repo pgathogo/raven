@@ -35,7 +35,7 @@ namespace AUDIO {
         // Audiothread
         m_audio_thread = new AudioThread(this);
 
-        m_audio_file.set_duration(m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())));
+        m_audio_file.set_duration(m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file()))*1000); //msec
 
         connect(m_audio_thread, SIGNAL(current_position(double, double)), this, SLOT(audio_current_position(double, double)));
         connect(m_audio_thread, SIGNAL(current_peak(float[1024])), this, SLOT(audio_current_peak(float[1024])));
@@ -138,10 +138,6 @@ namespace AUDIO {
         auto q_str = QDir::toNativeSeparators(QString::fromStdString(m_audio_file.ogg_filename()));
 //        m_audio_file.set_ogg_filename(q_str.toStdString());
         fs::path p(q_str.toStdString());
-
-       qDebug() << "Audio File: " << QString::fromStdString(m_audio_file.audio_file());
-
-        qDebug() << "ogg_filename() "<< q_str ;
 
         if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
             AudioTool audio_tool;
@@ -350,12 +346,15 @@ namespace AUDIO {
 
     void AudioWaveForm::show_marker_value(Marker marker)
     {
-       ui->lblStartMarkTime->setText(QString::fromStdString(std::to_string(marker.start_marker)));
-       ui->lblFadeInMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_in)));
-       ui->lblIntroMarkTime->setText(QString::fromStdString(std::to_string(marker.intro)));
-       ui->lblFadeOutMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_out)));
-       ui->lblExtroMarkTime->setText(QString::fromStdString(std::to_string(marker.extro)));
-       ui->lblEndMarkTime->setText(QString::fromStdString(std::to_string(marker.end_marker)));
+        AudioTool at;
+       ui->lblStartMarkTime->setText(at.format_time(marker.start_marker));
+       //ui->lblStartMarkTime->setText(QString::fromStdString(std::to_string(marker.start_marker)));
+       //ui->lblFadeInMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_in)));
+       ui->lblFadeInMarkTime->setText(at.format_time(marker.fade_in));
+       ui->lblIntroMarkTime->setText(at.format_time(marker.intro));
+       ui->lblFadeOutMarkTime->setText(at.format_time(marker.fade_out));
+       ui->lblExtroMarkTime->setText(at.format_time(marker.extro));
+       ui->lblEndMarkTime->setText(at.format_time(marker.end_marker));
     }
 
     void AudioWaveForm::mark_start()
@@ -443,15 +442,16 @@ namespace AUDIO {
 
     void AudioWaveForm::init_widgets()
     {
+        AudioTool at;
         setWindowTitle("Cue Editor: "+QString::fromStdString(base_filename(m_audio_file.audio_file())));
         ui->lblTitle->setText(QString::fromStdString(m_audio_file.audio_title()));
         ui->lblArtist->setText(QString::fromStdString(m_audio_file.artist_name()));
 
-        ui->lblDuration->setText(format_time(m_audio_file.duration()));
+        ui->lblDuration->setText(at.format_time(m_audio_file.duration()));
 
         // status bar
         ui->lblFilepath->setText(QString::fromStdString(m_audio_file.audio_file()));
-        ui->lblFileDuration->setText(format_time(m_audio_file.duration())+" Secs");
+        ui->lblFileDuration->setText(at.format_time(m_audio_file.duration())+" Secs");
 
         int b_rate = audio_bitrate(QString::fromStdString(m_audio_file.audio_file()));
 

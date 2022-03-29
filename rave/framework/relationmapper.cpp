@@ -226,7 +226,7 @@ namespace FRAMEWORK{
             for(auto const& [left, right] : left_right){
                 if (right.size() == 0)
                     break;
-                std::string str = " INNER JOIN "+ right+" ON ( "+m_main_table+"."+fk_field(right)+" = "+right+".id )";
+                std::string str = " FULL OUTER JOIN "+ right+" ON ( "+m_main_table+"."+fk_field(right)+" = "+right+".id )";
                 joins.push_back(str);
             }
         }

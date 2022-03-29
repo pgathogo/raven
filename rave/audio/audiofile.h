@@ -4,6 +4,8 @@
 #include <string>
 #include <filesystem>
 
+#include <qDebug>
+
 struct Marker{
     double start_marker{0.0};
     double fade_in{0.0};
@@ -13,12 +15,30 @@ struct Marker{
     double end_marker{0.0};
     bool is_marked{false};
 
-    void set_start_marker(double v){ start_marker = v; }
-    void set_fade_in(double v){ fade_in = v; }
-    void set_intro(double v){ intro = v; }
-    void set_extro(double v){ extro = v; }
-    void set_fade_out(double v){ fade_out = v; }
-    void set_end_marker(double v){ end_marker = v; }
+    void set_start_marker(double v){ start_marker = round_marker(v); }
+    void set_fade_in(double v){ fade_in = round_marker(v); }
+    void set_intro(double v){ intro = round_marker(v); }
+    void set_extro(double v){ extro = round_marker(v); }
+    void set_fade_out(double v){ fade_out = round_marker(v); }
+    void set_end_marker(double v){ end_marker = round_marker(v); }
+
+    void dump_markers(){
+
+        qDebug() << " ---- Markers ---- ";
+        qDebug() << "Start Marker: "<< start_marker;
+        qDebug() << "Fade-In Marker: "<< fade_in;
+        qDebug() << "Intro Marker: "<< intro;
+        qDebug() << "Extro Marker: "<< extro;
+        qDebug() << "Fade-Out Marker: "<< fade_out;
+        qDebug() << "End Marker: "<< end_marker;
+        qDebug() << " ------------------ ";
+    }
+
+    double round_marker(double m){
+        double value = (int)(m * 100 + .5);
+        return (double)value / 100;
+    }
+
 };
 
 class  AudioFile
@@ -38,10 +58,15 @@ public:
     void set_adf_file(const std::string adf_file);
     void set_audio_lib_path(const std::string lib_path);
 
+    void set_creation_date(const std::string);
+    void set_audio_class(const std::string);
+    void set_genre(const std::string);
+
     void set_id(int id);
     void set_ogg_filename(const std::string name);
     void set_ogg_short_filename(const std::string name);
     void set_temp_id(int id);
+    void set_year(int);
     void set_marker(Marker marker);
 
     std::string audio_title() const;
@@ -60,9 +85,15 @@ public:
     std::string ogg_short_filename() const;
     std::string ogg_filename() const;
 
+    std::string creation_date() const;
+    std::string audio_class() const;
+    std::string genre() const;
+
     int id() const;
     int duration() const;
     int temp_id() const;
+    int year() const;
+
     uintmax_t file_size() const;
 
     bool is_valid() const;
@@ -85,9 +116,13 @@ private:
     std::string m_audio_lib_path;	// path where Raven audio files are stored.
     std::string m_ogg_short_filename;
     std::string m_ogg_filename;
+    std::string m_creation_date;
+    std::string m_audio_class;
+    std::string m_genre;
     int m_duration;
     int m_id;
     int m_temp_id;
+    int m_year;
     Marker m_marker;
 };
 

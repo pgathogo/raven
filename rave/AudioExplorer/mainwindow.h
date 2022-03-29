@@ -9,6 +9,7 @@
 
 #include "../audio/audio.h"
 #include "../audio/artist.h"
+#include "../../audiolib/cueeditor/audioplayer.h"
 #include "../framework/relationmapper.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/tree.h"
@@ -92,8 +93,6 @@ public:
     void update_folder_view(int);
     void delete_audio_from_db(const std::string);
 
-    void sink(std::unique_ptr<AUDIO::Audio> ptr);
-
     template<typename T>
     void fetch_filtered_audio(T arg)
     {
@@ -151,8 +150,6 @@ public slots:
     void cut_folder();
     void paste_folder();
 
-
-
 private:
     Ui::MainWindow *ui;
     QApplication* m_qapp;
@@ -174,6 +171,8 @@ private:
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
 
+    std::unique_ptr<AudioPlayer> m_audio_player;
+
     std::unique_ptr<CueEditor> m_cue_editor;
     std::vector<int> m_cut_audios;
     int m_cut_folder_id;
@@ -183,6 +182,8 @@ private:
     AUDIOEXP::ArtistManager m_artist_manager;
 
     std::vector<NodeData*> m_folders;
+
+    int selected_folder_id();
 
 };
 
