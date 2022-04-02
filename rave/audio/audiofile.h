@@ -6,7 +6,7 @@
 
 #include <qDebug>
 
-struct Marker{
+struct CueMarker{
     double start_marker{0.0};
     double fade_in{0.0};
     double intro{0.0};
@@ -67,7 +67,7 @@ public:
     void set_ogg_short_filename(const std::string name);
     void set_temp_id(int id);
     void set_year(int);
-    void set_marker(Marker marker);
+    void set_marker(CueMarker);
 
     std::string audio_title() const;
     std::string short_desc() const;
@@ -97,7 +97,7 @@ public:
     uintmax_t file_size() const;
 
     bool is_valid() const;
-    Marker marker() const;
+    CueMarker marker() const;
 
     std::string get_audio_lib();
 
@@ -123,7 +123,7 @@ private:
     int m_id;
     int m_temp_id;
     int m_year;
-    Marker m_marker;
+    CueMarker m_cue_marker;
 };
 
 #endif // AUDIOFILE_H

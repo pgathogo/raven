@@ -30,7 +30,7 @@ int CueEditor::editor()
     auto ret_id = awf->exec();
 
     if (ret_id == DialogCloseResult::Save)
-        m_marker = awf->marker();
+        m_cue_marker = awf->marker();
 
     return ret_id;
 }
@@ -46,8 +46,8 @@ void CueEditor::stop_audio()
     m_audio_player->stop_play();
 }
 
-Marker CueEditor::marker() const
+CueMarker CueEditor::marker() const
 {
-    return m_marker;
+    return m_cue_marker;
 }
 

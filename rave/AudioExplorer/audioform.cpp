@@ -75,7 +75,7 @@ void AudioForm::populateFormWidgets()
 
     AudioTool at;
     ui->edtFilename->setText(stoq(m_audio->audio_lib_path()->value() +
-                                   at.generate_ogg_filename(m_audio->id())+".ogg"));
+                                   at.make_audio_filename(m_audio->id())+".ogg"));
     ui->edtDuration->setText(at.format_time(m_audio->duration()->value()));
 
     ui->edtStart->setText(at.format_time(m_audio->start_marker()->value()));

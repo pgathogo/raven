@@ -28,7 +28,7 @@ public:
 
     bool generate_wave_file(const std::string src_audio_file, const std::string dest_wave_file);
     std::string mp3_to_ogg(AudioFile&);
-    std::string generate_ogg_filename(int);
+    std::string make_audio_filename(int);
     bool copy_ogg_to_audiolib(std::string, std::string);
     bool copy_wave_to_audiolib(std::string, std::string);
     QString format_time(double);
@@ -54,10 +54,10 @@ class ADFRepository
     public:
         ADFRepository();
         bool write(const AudioFile&);
-        Marker read_markers(const std::string);
+        CueMarker read_markers(const std::string);
     protected:
         void object_to_json(const AudioFile&, QJsonObject&);
-        Marker json_to_markers(const QJsonObject&);
+        CueMarker json_to_markers(const QJsonObject&);
 };
 
 #endif // AUDIOTOOL_H

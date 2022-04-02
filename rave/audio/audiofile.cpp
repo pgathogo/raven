@@ -11,7 +11,7 @@ AudioFile::AudioFile()
      ,m_file_ext{""}
      ,m_short_filename{""}
      ,m_duration{0}
-     ,m_marker{}
+     ,m_cue_marker{}
      ,m_id{-1}
 {
 }
@@ -27,7 +27,7 @@ AudioFile::AudioFile(const std::string a_file)
      m_file_ext{""},
      m_short_filename{""},
      m_duration{0},
-     m_marker{},
+     m_cue_marker{},
      m_id{-1}
 {
     std::filesystem::path af{a_file};
@@ -266,9 +266,9 @@ bool AudioFile::is_valid() const
     return true;
 }
 
-Marker AudioFile::marker() const
+CueMarker AudioFile::marker() const
 {
-    return m_marker;
+    return m_cue_marker;
 }
 
 std::string AudioFile::get_audio_lib()
@@ -276,7 +276,7 @@ std::string AudioFile::get_audio_lib()
     return (audio_lib_path().empty()) ? audio_path() : audio_lib_path();
 }
 
-void AudioFile::set_marker(Marker marker)
+void AudioFile::set_marker(CueMarker cue_marker)
 {
-    m_marker = marker;
+    m_cue_marker = cue_marker;
 }

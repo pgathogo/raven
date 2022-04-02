@@ -130,27 +130,28 @@ namespace AUDIO {
 
     void AudioWaveForm::save()
     {
-        save_markers();
+        save_cue_markers();
+        done(1);
 
-        const std::string MP3 = ".mp3";
-        const std::string OGG = ".ogg";
+//        const std::string MP3 = ".mp3";
+//        const std::string OGG = ".ogg";
 
-        auto q_str = QDir::toNativeSeparators(QString::fromStdString(m_audio_file.ogg_filename()));
-//        m_audio_file.set_ogg_filename(q_str.toStdString());
-        fs::path p(q_str.toStdString());
+//        auto q_str = QDir::toNativeSeparators(QString::fromStdString(m_audio_file.ogg_filename()));
+////        m_audio_file.set_ogg_filename(q_str.toStdString());
+//        fs::path p(q_str.toStdString());
 
-        if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
-            AudioTool audio_tool;
-            std::string ogg_file = audio_tool.mp3_to_ogg(m_audio_file);
-            if (!ogg_file.empty())
-                m_audio_file.set_ogg_filename(ogg_file);
-            //	std::string audio_lib = m_audio_file.get_audio_lib();
-            //	audio_tool.copy_ogg_to_audiolib(ogg_file, std::string dest_ogg)
+//        if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
+//            AudioTool audio_tool;
+//            std::string ogg_file = audio_tool.mp3_to_ogg(m_audio_file);
+//            if (!ogg_file.empty())
+//                m_audio_file.set_ogg_filename(ogg_file);
+//            //	std::string audio_lib = m_audio_file.get_audio_lib();
+//            //	audio_tool.copy_ogg_to_audiolib(ogg_file, std::string dest_ogg)
 
-            done(1);
-        }else{
-            done(0);
-        }
+//            done(1);
+//        }else{
+//            done(0);
+//        }
 
 //            if (m_audio_file.file_ext() == OGG){
 //                AudioTool audio_tool;
@@ -258,9 +259,9 @@ namespace AUDIO {
         return time_str;
     }
 
-    Marker AudioWaveForm::marker() const
+    CueMarker AudioWaveForm::marker() const
     {
-        return m_marker;
+        return m_cue_marker;
     }
 
     void AudioWaveForm::create_marker_line(AUDIO::MarkerType marker_type)
@@ -323,7 +324,7 @@ namespace AUDIO {
         return (it != m_display_units.end()) ? (*it).second : nullptr;
     }
 
-    void AudioWaveForm::show_markers(Marker markers)
+    void AudioWaveForm::show_markers(CueMarker markers)
     {
 
         show_mark(m_scene->seconds_to_pixel(markers.start_marker), MarkerType::Start);
@@ -344,7 +345,7 @@ namespace AUDIO {
         create_marker_line(marker_type, line);
     }
 
-    void AudioWaveForm::show_marker_value(Marker marker)
+    void AudioWaveForm::show_marker_value(CueMarker marker)
     {
         AudioTool at;
        ui->lblStartMarkTime->setText(at.format_time(marker.start_marker));
@@ -473,28 +474,28 @@ namespace AUDIO {
 
     }
 
-    void AudioWaveForm::save_markers()
+    void AudioWaveForm::save_cue_markers()
     {
 
         for (auto& [type, marker] : m_scene->markers()){
             switch (type){
              case AUDIO::MarkerType::Start:
-                m_marker.start_marker  = marker->current_position_sec();
+                m_cue_marker.start_marker  = marker->current_position_sec();
                 break;
              case AUDIO::MarkerType::FadeIn:
-                m_marker.fade_in  = marker->current_position_sec();
+                m_cue_marker.fade_in  = marker->current_position_sec();
                 break;
              case AUDIO::MarkerType::Intro:
-                m_marker.intro  = marker->current_position_sec();
+                m_cue_marker.intro  = marker->current_position_sec();
                 break;
              case AUDIO::MarkerType::Extro:
-                m_marker.extro  = marker->current_position_sec();
+                m_cue_marker.extro  = marker->current_position_sec();
                 break;
              case AUDIO::MarkerType::FadeOut:
-                m_marker.fade_out  = marker->current_position_sec();
+                m_cue_marker.fade_out  = marker->current_position_sec();
                 break;
              case AUDIO::MarkerType::End:
-                m_marker.end_marker  = marker->current_position_sec();
+                m_cue_marker.end_marker  = marker->current_position_sec();
                 break;
             }
         }

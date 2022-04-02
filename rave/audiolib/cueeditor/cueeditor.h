@@ -28,11 +28,11 @@ public:
     void play_audio();
     void stop_audio();
     void set_audio(AudioFile& audio_file);
-    Marker marker() const;
+    CueMarker marker() const;
 private:
     AudioFile& m_audio_file;
     void* m_audio_wave_form;
-    Marker m_marker;
+    CueMarker m_cue_marker;
     std::unique_ptr<AudioPlayer> m_audio_player;
     AUDIO::AudioWaveForm* m_awf;
     const std::string m_player_only;

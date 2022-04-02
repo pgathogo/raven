@@ -21,6 +21,8 @@
 #include "../audio/audiotool.h"
 #include "../audio/genreform.h"
 #include "../audio/audioimporter.h"
+#include "../audio/mp3oggconverter.h"
+#include "../audio/audiowaveformgenerator.h"
 
 #include "../audiolib/headers/cueeditor.h"
 #include "../audiolib/headers/audioplayer.h"
@@ -31,6 +33,7 @@
 #include "../framework/choicefield.h"
 #include "../framework/letterfilterwidget.h"
 #include "../framework/relationmapper.h"
+#include "../framework/ravensetup.h"
 
 namespace fs = std::filesystem;
 
@@ -116,6 +119,10 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
     fetch_genre();
 
     show_letter_filter();
+
+    m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
+    m_setup_edm->all();
+    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity());
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
@@ -903,61 +910,97 @@ void MainWindow::import_audio()
         return;
 
     auto audio = std::make_unique<AUDIO::Audio>(audio_file.toStdString());
-
-    qDebug() << "Folder ID: "<< folder_id;
-
     audio->set_folder(folder_id);
 
     auto audio_form = std::make_unique<AudioForm>(audio.get());
 
     if (audio_form->exec() > 0){
 
-        auto audio_importer = AUDIO::AudioImporter(audio.get(), m_qapp);
+        m_mp3_ogg_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_file);
+        m_mp3_ogg_converter->convert();
 
-        try{
-            audio_importer.import_audio();
+        m_wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(audio_file);
+        m_wave_gen->generate();
 
-            audio->set_marker(audio_importer.marker());
+        auto af = audio->audio_file();
 
-        } catch (AudioImportException aie) {
-            qDebug() << stoq(aie.errorMessage());
+        af.set_audio_file(m_mp3_ogg_converter->ogg_filename().toStdString());
+
+        af.set_creation_date(audio->creation_date()->value().toString("dd/MM/yyyy").toStdString());
+        af.set_audio_class(audio->audio_type()->displayName());
+        af.set_genre(audio->genre()->displayName());
+        af.set_year(audio->audio_year()->value());
+        af.set_audio_title(audio->title()->value());
+        af.set_wave_file(m_wave_gen->wave_filename().toStdString());
+
+        auto fk_artist = audio->artist()->unique_fk_entity();
+        if (fk_artist != nullptr) {
+            AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(fk_artist);
+            af.set_artist_name(artist->fullName()->value());
         }
 
+        auto cue_editor = std::make_unique<CueEditor>(af, m_qapp);
+        if (cue_editor->editor() == 1){
 
-        // Save audio to DB.
-        int id = -1;
-        try{
-            id = m_audio_edm->createEntity(std::move(audio));
-        } catch (DatabaseException& de) {
-            showMessage(de.errorMessage());
+            audio->set_duration(af.duration());
+            audio->set_audio_file(af);
+
+            CueMarker cue_marker = cue_editor->marker();
+
+            audio->set_marker(cue_marker);
+
+            audio->setDBAction(DBAction::dbaCREATE);
+
+            int id = -1;
+            try{
+                id = m_audio_edm->createEntity(std::move(audio));
+            } catch (DatabaseException& de) {
+                showMessage(de.errorMessage());
+                // clean-up
+                m_mp3_ogg_converter->remove_ogg_file();
+                m_wave_gen->remove_wave_file();
+            }
+
+            AudioTool at;
+            auto audio_filename = at.make_audio_filename(id);
+            qDebug() << "New Audio Filename: "<< stoq(audio_filename);
+            auto new_audio_file = m_setup->audio_folder()->value()+audio_filename+".ogg";
+
+            auto src_audio_path = fs::path(m_mp3_ogg_converter->ogg_filename().toStdString());
+            auto dst_audio_path = fs::path(new_audio_file);
+
+            try{
+                fs::copy(src_audio_path, dst_audio_path);
+            } catch (fs::filesystem_error& fe) {
+                qDebug() << "Failed to copy new audio file to dest";
+            }
+
+            auto new_audio_wave_file = m_setup->audio_folder()->value()+audio_filename+".png";
+
+            auto src_wave_path(m_wave_gen->wave_filename().toStdString());
+            auto dst_wave_path(new_audio_wave_file);
+
+            try{
+                fs::copy(src_wave_path, dst_wave_path);
+            } catch (fs::filesystem_error& fe) {
+                qDebug() << "Failed to copy new wave file to dest";
+            }
+
+            auto adf_filename = m_setup->audio_folder()->value()+audio_filename+".adf";
+            af.set_adf_file(adf_filename);
+            af.set_audio_lib_path(m_setup->audio_folder()->value());
+            af.set_ogg_short_filename(audio_filename+".ogg");
+            af.set_marker(cue_marker);
+
+            ADFRepository adf_repo;
+            adf_repo.write(af);
+
+            // clean up
+            m_mp3_ogg_converter->remove_ogg_file();
+            m_wave_gen->remove_wave_file();
+
         }
-        qDebug() << "Create audio entity... Done.";
 
-        try{
-            audio_importer.write_ogg_file(id);
-        } catch(fs::filesystem_error& fe) {
-            showMessage(fe.what());
-        }
-        qDebug() << "Write OGG file... Done.";
-
-        try{
-            audio_importer.write_wave_file(id);
-        } catch (fs::filesystem_error& fe) {
-            showMessage(fe.what());
-        }
-        qDebug() << "Write audio wave file... Done.";
-
-        try{
-            audio_importer.create_adf_file(id);
-        } catch(fs::filesystem_error& fe) {
-        }
-        qDebug() << "Create ADF file... Done.";
-
-        // Remove temporary ogg file
-        audio_importer.remove_ogg_temp_file();
-
-        // Remove temporay wave file
-        audio_importer.remove_wave_temp_file();
     }
 
 }
@@ -1013,7 +1056,7 @@ void MainWindow::play_audio()
         return;
 
     AudioTool at;
-    auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+    auto ogg_file = at.make_audio_filename(audio->id())+".ogg";
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
 
     if (!QFile::exists(QString::fromStdString(full_audio_name))){
@@ -1054,7 +1097,7 @@ void MainWindow::cue_edit()
         return;
 
     AudioTool at;
-    auto ogg_file = at.generate_ogg_filename(audio->id())+".ogg";
+    auto ogg_file = at.make_audio_filename(audio->id())+".ogg";
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
     AudioFile aud_file(full_audio_name);
 

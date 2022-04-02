@@ -24,8 +24,6 @@ AudioTool::AudioTool()
 
     m_mp3_to_ogg_proc = new QProcess(this);
     connect(m_mp3_to_ogg_proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &AudioTool::mp3_to_ogg_finished);
-//    connect(m_mp3_to_ogg_proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this,
-//            [](int i, QProcess::ExitStatus es){qDebug() << "Lambda call"; });
 
     connect(m_mp3_to_ogg_proc, &QProcess::readyReadStandardOutput, this, &AudioTool::mp3_ready);
     connect(m_mp3_to_ogg_proc,SIGNAL(readyReadStandardOutput()),this,SLOT(mp3_ready()));
@@ -95,9 +93,6 @@ std::string AudioTool::mp3_to_ogg(AudioFile& audio_file)
 //    QString out_file = QString::fromStdString(audio_file.ogg_filename());
 //    out_file = out_file.replace("\\", "/");
     auto out_file = QDir::toNativeSeparators(QString::fromStdString(audio_file.ogg_filename()));
-
-
-//    QString in_file = QString::fromStdString(audio_file.audio_file());
     auto in_file = QDir::toNativeSeparators(QString::fromStdString(audio_file.audio_file()));
 
 
@@ -152,7 +147,7 @@ std::string AudioTool::mp3_to_ogg(AudioFile& audio_file)
     return audio_file.ogg_short_filename();
 }
 
-std::string AudioTool::generate_ogg_filename(int audio_file_id)
+std::string AudioTool::make_audio_filename(int audio_file_id)
 {
     std::ostringstream ss;
     int FILENAME_LEN{8};
@@ -255,12 +250,12 @@ bool ADFRepository::write(const AudioFile& audio_file)
     return true;
 }
 
-Marker ADFRepository::read_markers(const std::string adf_filename)
+CueMarker ADFRepository::read_markers(const std::string adf_filename)
 {
     QFile adf_file(QString::fromStdString(adf_filename));
     if (!adf_file.open(QIODevice::ReadOnly)){
         qWarning("Couldn't open adf file.");
-        return Marker();
+        return CueMarker();
     }
 
     QByteArray data = adf_file.readAll();
@@ -299,9 +294,9 @@ void ADFRepository::object_to_json(const AudioFile& audio_file, QJsonObject& jso
     json["markers"] = marker;
 }
 
-Marker ADFRepository::json_to_markers(const QJsonObject& json)
+CueMarker ADFRepository::json_to_markers(const QJsonObject& json)
 {
-    Marker m;
+    CueMarker m;
 
     m.start_marker = json["start"].toDouble();
     m.fade_in = json["fade_in"].toDouble();

@@ -81,6 +81,10 @@ set(PROJECT_SOURCES
         ../audio/genreform.cpp
         ../audio/audioimporter.h
         ../audio/audioimporter.cpp
+        ../audio/mp3oggconverter.h
+        ../audio/mp3oggconverter.cpp
+        ../audio/audiowaveformgenerator.h
+        ../audio/audiowaveformgenerator.cpp
         ../framework/baseentity.cpp
         ../framework/baseentitybrowserdlg.cpp
         ../framework/baseentitybrowserdlg.ui

@@ -23,15 +23,19 @@ class TreeViewModel;
 //class EntityDataModel;
 class LetterFilterWidget;
 
+
 namespace AUDIO{
   class Audio;
   class Artist;
   class AudioLibItem;
   class ArtistTypeItem;
   class GenreTypeItem;
+  class Mp3ToOggConverter;
+  class AudioWaveFormGenerator;
 }
 
 class CueEditor;
+class RavenSetup;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -183,7 +187,15 @@ private:
 
     std::vector<NodeData*> m_folders;
 
+    std::unique_ptr<AUDIO::Mp3ToOggConverter> m_mp3_ogg_converter;
+    std::unique_ptr<AUDIO::AudioWaveFormGenerator> m_wave_gen;
+
+    RavenSetup* m_setup;
+    std::unique_ptr<EntityDataModel> m_setup_edm;
+
     int selected_folder_id();
+
+
 
 };
 
