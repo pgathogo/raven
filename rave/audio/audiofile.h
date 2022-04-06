@@ -51,7 +51,7 @@ public:
     void set_short_desc(const std::string short_desc);
     void set_artist_name(const std::string artist_name);
     void set_audio_path(const std::string audio_path);
-    void set_audio_file(const std::string audio_file);
+    void set_audio_filename(const std::string audio_filename);
     void set_audio_type(const std::string audio_type);
     void set_wave_file(const std::string wave_file);
     void set_duration(int duration);

@@ -28,7 +28,7 @@ public:
     void play_audio();
     void stop_audio();
     void set_audio(AudioFile& audio_file);
-    CueMarker marker() const;
+    CueMarker cue_marker() const;
 private:
     AudioFile& m_audio_file;
     void* m_audio_wave_form;

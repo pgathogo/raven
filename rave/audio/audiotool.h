@@ -32,20 +32,26 @@ public:
     bool copy_ogg_to_audiolib(std::string, std::string);
     bool copy_wave_to_audiolib(std::string, std::string);
     QString format_time(double);
+    void probe_file(const QString&);
 
-//    std::string full_audio_name(AUDIO::Audio*);
+    QString probe_filename();
+    QJsonObject get_probe_data(QString&);
 
 
 private slots:
     void wave_gen_finished();
     void mp3_to_ogg_finished(int, QProcess::ExitStatus);
     void mp3_ready();
+    void probe_finished(int, QProcess::ExitStatus);
 
 private:
     QString m_wave_form_exe;
     QProcess* m_wave_gen_proc;
     QProcess* m_mp3_to_ogg_proc;
     QProgressDialog* m_progress_dialog;
+    QProcess* m_probe_process;
+    QString m_probe_file;
+    QString m_probe_filename;
 };
 
 

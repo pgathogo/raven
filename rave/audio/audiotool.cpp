@@ -19,6 +19,7 @@
 namespace fs = std::filesystem;
 
 AudioTool::AudioTool()
+    :m_probe_file{""}
 {
     m_wave_form_exe = QDir::currentPath()+"/"+AUDIO_WAVE_FILE_EXE;
 
@@ -30,11 +31,15 @@ AudioTool::AudioTool()
     m_wave_gen_proc = new QProcess(this);
     connect(m_wave_gen_proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &AudioTool::wave_gen_finished);
 
+    m_probe_process = new QProcess(this);
+    connect(m_probe_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &AudioTool::probe_finished);
+
 }
 
 AudioTool::~AudioTool()
 {
     delete m_wave_gen_proc;
+    delete m_probe_process;
 }
 
 bool AudioTool::generate_wave_file(const std::string src_audio_file, const std::string dest_wave_file)
@@ -219,6 +224,79 @@ QString AudioTool::format_time(double time)
 
 }
 
+void AudioTool::probe_file(const QString& audio_file)
+{
+    m_probe_file = "";
+
+    QFile af(audio_file);
+    if (!af.open(QIODevice::ReadOnly)){
+        qWarning("Couldn't open audio file!");
+        return;
+    }
+
+    QFileInfo fi(audio_file);
+    m_probe_filename = fi.absolutePath()+"/"+fi.baseName()+".prb";
+    if (QFile::exists(m_probe_filename)){
+        m_probe_file = m_probe_filename;
+        return;
+    }
+
+    QString batch_runner = QDir::currentPath()+"/batch_runner.bat";
+    if (QFile::exists(batch_runner))
+        QFile::remove(batch_runner);
+
+    QFile temp_batch_file(batch_runner);
+    if (!temp_batch_file.open(QIODevice::WriteOnly)){
+        qWarning("Couldn't open temp batch file");
+        return;
+    }
+
+    QTextStream out_stream(&temp_batch_file);
+    QString probe_tool = QDir::currentPath()+"/ffprobe.exe";
+
+    out_stream << probe_tool
+               << " -v error -show_format -of json "
+               << audio_file
+               << " > "
+               << m_probe_filename;
+
+    temp_batch_file.close();
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    m_probe_process->start("cmd.exe", QStringList() << "/c" << batch_runner);
+        m_probe_process->waitForFinished();
+
+
+}
+
+void AudioTool::probe_finished(int code, QProcess::ExitStatus status)
+{
+    qDebug() << "Probe finished ...";
+    qDebug() << m_probe_filename;
+    m_probe_file = m_probe_filename;
+    /*
+    QByteArray data = af.readAll();
+    QJsonDocument audio_data(QJsonDocument::fromJson(data));
+    return doc_data.object()["format"].toObject();
+    */
+}
+QString AudioTool::probe_filename()
+{
+    return m_probe_file;
+}
+
+QJsonObject AudioTool::get_probe_data(QString& probe_file)
+{
+    QFile pf(probe_file);
+    if (!pf.open(QIODevice::ReadOnly)){
+        qWarning("Unable to read probe file!");
+        return QJsonObject();
+    }
+    QByteArray data = pf.readAll();
+    QJsonDocument doc_data(QJsonDocument::fromJson(data));
+    return doc_data.object()["format"].toObject();
+}
+
 //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
 //{
 //    auto ogg_file = generate_ogg_filename(audio->id())+".ogg";
@@ -264,6 +342,8 @@ CueMarker ADFRepository::read_markers(const std::string adf_filename)
 
     return json_to_markers(doc_data.object()["markers"].toObject());
 }
+
+
 
 void ADFRepository::object_to_json(const AudioFile& audio_file, QJsonObject& json)
 {

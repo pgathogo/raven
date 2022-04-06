@@ -58,6 +58,15 @@ void AudioForm::populateEntityFields()
 
     fs::path p(ui->edtFilename->text().toStdString());
     m_audio->set_file_path(p.parent_path().u8string()+"/");
+
+    m_audio->audio_file().set_audio_filename(m_audio->audio_filename()->value());
+    m_audio->audio_file().set_creation_date(m_audio->creation_date()->value().toString("dd/MM/yyyy").toStdString());
+    m_audio->audio_file().set_audio_class(m_audio->audio_type()->displayName());
+    m_audio->audio_file().set_genre(m_audio->genre()->displayName());
+    m_audio->audio_file().set_year(m_audio->audio_year()->value());
+    m_audio->audio_file().set_audio_title(m_audio->title()->value());
+    m_audio->audio_file().set_artist_name(m_audio->artist_fullname());
+
 }
 
 void AudioForm::populateFormWidgets()

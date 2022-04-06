@@ -192,9 +192,9 @@ void AudioFile::set_audio_path(const std::string audio_path)
     m_audio_path = audio_path;
 }
 
-void AudioFile::set_audio_file(const std::string audio_file)
+void AudioFile::set_audio_filename(const std::string audio_filename)
 {
-    m_audio_file = audio_file;
+    m_audio_file = audio_filename;
 }
 
 void AudioFile::set_audio_type(const std::string audio_type)

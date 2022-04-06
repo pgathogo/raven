@@ -259,7 +259,7 @@ namespace AUDIO {
         return time_str;
     }
 
-    CueMarker AudioWaveForm::marker() const
+    CueMarker AudioWaveForm::cue_marker() const
     {
         return m_cue_marker;
     }
@@ -324,15 +324,15 @@ namespace AUDIO {
         return (it != m_display_units.end()) ? (*it).second : nullptr;
     }
 
-    void AudioWaveForm::show_markers(CueMarker markers)
+    void AudioWaveForm::show_markers(CueMarker cue_markers)
     {
 
-        show_mark(m_scene->seconds_to_pixel(markers.start_marker), MarkerType::Start);
-        show_mark(m_scene->seconds_to_pixel(markers.fade_in), MarkerType::FadeIn);
-        show_mark(m_scene->seconds_to_pixel(markers.intro), MarkerType::Intro);
-        show_mark(m_scene->seconds_to_pixel(markers.fade_out), MarkerType::FadeOut);
-        show_mark(m_scene->seconds_to_pixel(markers.extro), MarkerType::Extro);
-        show_mark(m_scene->seconds_to_pixel(markers.end_marker), MarkerType::End);
+        show_mark(m_scene->seconds_to_pixel(cue_markers.start_marker), MarkerType::Start);
+        show_mark(m_scene->seconds_to_pixel(cue_markers.fade_in), MarkerType::FadeIn);
+        show_mark(m_scene->seconds_to_pixel(cue_markers.intro), MarkerType::Intro);
+        show_mark(m_scene->seconds_to_pixel(cue_markers.fade_out), MarkerType::FadeOut);
+        show_mark(m_scene->seconds_to_pixel(cue_markers.extro), MarkerType::Extro);
+        show_mark(m_scene->seconds_to_pixel(cue_markers.end_marker), MarkerType::End);
     }
 
     void AudioWaveForm::show_mark(double mark, MarkerType marker_type)
@@ -345,17 +345,17 @@ namespace AUDIO {
         create_marker_line(marker_type, line);
     }
 
-    void AudioWaveForm::show_marker_value(CueMarker marker)
+    void AudioWaveForm::show_marker_value(CueMarker cue_marker)
     {
         AudioTool at;
-       ui->lblStartMarkTime->setText(at.format_time(marker.start_marker));
+       ui->lblStartMarkTime->setText(at.format_time(cue_marker.start_marker));
        //ui->lblStartMarkTime->setText(QString::fromStdString(std::to_string(marker.start_marker)));
        //ui->lblFadeInMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_in)));
-       ui->lblFadeInMarkTime->setText(at.format_time(marker.fade_in));
-       ui->lblIntroMarkTime->setText(at.format_time(marker.intro));
-       ui->lblFadeOutMarkTime->setText(at.format_time(marker.fade_out));
-       ui->lblExtroMarkTime->setText(at.format_time(marker.extro));
-       ui->lblEndMarkTime->setText(at.format_time(marker.end_marker));
+       ui->lblFadeInMarkTime->setText(at.format_time(cue_marker.fade_in));
+       ui->lblIntroMarkTime->setText(at.format_time(cue_marker.intro));
+       ui->lblFadeOutMarkTime->setText(at.format_time(cue_marker.fade_out));
+       ui->lblExtroMarkTime->setText(at.format_time(cue_marker.extro));
+       ui->lblEndMarkTime->setText(at.format_time(cue_marker.end_marker));
     }
 
     void AudioWaveForm::mark_start()

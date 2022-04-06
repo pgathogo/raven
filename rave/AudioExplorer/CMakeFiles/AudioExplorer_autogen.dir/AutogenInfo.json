@@ -132,9 +132,19 @@
 			"Y6ZUSTFKUI/moc_audio.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/audio/audioconverter.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audioconverter.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/audio/audiofile.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiofile.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiofileinfo.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiofileinfo.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/audio/audiofolder.h",
@@ -373,7 +383,9 @@
 		[ "D:/home/PMS/Raven/rave/audio/artist.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/artisttypeitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audioconverter.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiofileinfo.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audioimporter.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],

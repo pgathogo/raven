@@ -50,7 +50,7 @@ namespace AUDIO {
         std::string base_filename(const std::string filepath);
         QString format_time(double time);
 
-        CueMarker marker() const;
+        CueMarker cue_marker() const;
 
         void mark_start();
         void mark_fade_in();
@@ -75,7 +75,7 @@ namespace AUDIO {
         void create_marker_line(AUDIO::MarkerType marker_type);
         void create_marker_indicator(MarkerType, QLineF);
         void show_markers(CueMarker);
-        void show_marker_value(CueMarker marker);
+        void show_marker_value(CueMarker);
         void show_mark(double mark, MarkerType marker_type);
 
         void create_marker_line(AUDIO::MarkerType marker_type, QLineF line);

@@ -32,6 +32,7 @@ namespace AUDIO{
   class GenreTypeItem;
   class Mp3ToOggConverter;
   class AudioWaveFormGenerator;
+  class AudioConverter;
 }
 
 class CueEditor;
@@ -96,6 +97,11 @@ public:
     void update_folder_parent(int, int);
     void update_folder_view(int);
     void delete_audio_from_db(const std::string);
+
+    int write_audio_to_db(std::unique_ptr<AUDIO::Audio>);
+    bool copy_new_audio_to_library(int);
+    bool copy_wave_file_to_library(int);
+    bool create_adf_file(int, AudioFile);
 
     template<typename T>
     void fetch_filtered_audio(T arg)
@@ -187,7 +193,7 @@ private:
 
     std::vector<NodeData*> m_folders;
 
-    std::unique_ptr<AUDIO::Mp3ToOggConverter> m_mp3_ogg_converter;
+    std::unique_ptr<AUDIO::AudioConverter> m_audio_converter;
     std::unique_ptr<AUDIO::AudioWaveFormGenerator> m_wave_gen;
 
     RavenSetup* m_setup;

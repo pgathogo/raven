@@ -15,6 +15,7 @@ CueEditor::CueEditor(AudioFile& audio_file, QApplication* q_app)
     ,app(q_app)
 {
     m_audio_wave_form = new AUDIO::AudioWaveForm(m_audio_file);
+    m_audio_player = std::make_unique<AudioPlayer>(m_audio_file);
 }
 
 CueEditor::~CueEditor()
@@ -30,7 +31,7 @@ int CueEditor::editor()
     auto ret_id = awf->exec();
 
     if (ret_id == DialogCloseResult::Save)
-        m_cue_marker = awf->marker();
+        m_cue_marker = awf->cue_marker();
 
     return ret_id;
 }
@@ -46,7 +47,7 @@ void CueEditor::stop_audio()
     m_audio_player->stop_play();
 }
 
-CueMarker CueEditor::marker() const
+CueMarker CueEditor::cue_marker() const
 {
     return m_cue_marker;
 }
