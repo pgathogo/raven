@@ -133,3 +133,5 @@ D:/home/PMS/Raven/rave/audio/audiowaveformgenerator.h
 D:/home/PMS/Raven/rave/audio/audiowaveformgenerator.cpp
 D:/home/PMS/Raven/rave/audio/audioconverter.h
 D:/home/PMS/Raven/rave/audio/audioconverter.cpp
+D:/home/PMS/Raven/rave/audio/oggtooggconverter.h
+D:/home/PMS/Raven/rave/audio/oggtooggconverter.cpp

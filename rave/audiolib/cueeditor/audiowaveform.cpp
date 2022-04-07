@@ -79,6 +79,13 @@ namespace AUDIO {
         delete m_audio_thread;
         delete m_player_timer;
         delete m_indicator_timer;
+
+        delete m_start_indicator;
+        delete m_start_display_unit;
+        delete m_fade_in_indicator;
+        delete m_fade_in_display_unit;
+
+        delete m_scene;
     }
 
     void AudioWaveForm::show_wave_file()

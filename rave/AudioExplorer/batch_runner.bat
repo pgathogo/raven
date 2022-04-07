@@ -1,1 +1,1 @@
-D:/home/PMS/Raven/rave/AudioExplorer/ffprobe.exe -v error -show_format -of json D:/home/PMS/Raven/audio/TestAudio/idont_want.mp3 > D:/home/PMS/Raven/audio/TestAudio/idont_want.prb
+D:/home/PMS/Raven/rave/audioexplorer/ffprobe.exe -v error -show_format -of json D:/home/PMS/Raven/audio/00000042.ogg > D:/home/PMS/Raven/audio/00000042.prb

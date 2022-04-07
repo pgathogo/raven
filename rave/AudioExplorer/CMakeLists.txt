@@ -85,6 +85,8 @@ set(PROJECT_SOURCES
         ../audio/audioconverter.cpp
         ../audio/mp3oggconverter.h
         ../audio/mp3oggconverter.cpp
+        ../audio/oggtooggconverter.h
+        ../audio/oggtooggconverter.cpp
         ../audio/audiowaveformgenerator.h
         ../audio/audiowaveformgenerator.cpp
         ../audio/audiofileinfo.h

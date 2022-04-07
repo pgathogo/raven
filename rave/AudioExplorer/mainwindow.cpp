@@ -25,6 +25,7 @@
 #include "../audio/audioimporter.h"
 #include "../audio/audioconverter.h"
 #include "../audio/mp3oggconverter.h"
+#include "../audio/oggtooggconverter.h"
 #include "../audio/audiowaveformgenerator.h"
 #include "../audio/audiofileinfo.h"
 
@@ -136,6 +137,12 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_artist_toolbar;
+    delete m_genre_toolbar;
+    delete m_tracks_model;
+    delete m_artist_model;
+    delete m_genre_model;
+    delete m_folder_model;
 }
 
 void MainWindow::attach_folder_model()
@@ -935,6 +942,8 @@ void MainWindow::import_audio()
         }
 
         if (file_format == "ogg"){
+            m_audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio_file);
+            m_audio_converter->convert();
         }
 
         auto audio_file_info = audio->audio_file();
@@ -1167,6 +1176,8 @@ void MainWindow::cue_edit()
         audio->set_duration(audio->audio_file().duration());
 
     }
+
+    delete cue_editor;
 
 }
 

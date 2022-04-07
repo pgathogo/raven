@@ -32,7 +32,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 133,
+				"line" : 135,
 				"parent" : 0
 			},
 			{
@@ -44,25 +44,25 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 165,
+				"line" : 167,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 139,
+				"line" : 141,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 149,
+				"line" : 151,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 150,
+				"line" : 152,
 				"parent" : 0
 			},
 			{
@@ -80,13 +80,13 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 141,
+				"line" : 143,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 142,
+				"line" : 144,
 				"parent" : 0
 			}
 		]
@@ -206,11 +206,10 @@
 				41,
 				43,
 				45,
-				46,
 				47,
+				48,
 				49,
 				51,
-				52,
 				53,
 				54,
 				55,
@@ -218,18 +217,20 @@
 				57,
 				58,
 				59,
+				60,
 				61,
 				63,
-				64,
 				65,
 				66,
 				67,
+				68,
 				69,
-				70,
 				71,
 				72,
 				73,
-				74
+				74,
+				75,
+				76
 			]
 		}
 	],
@@ -336,11 +337,10 @@
 				41,
 				43,
 				45,
-				46,
 				47,
+				48,
 				49,
 				51,
-				52,
 				53,
 				54,
 				55,
@@ -348,18 +348,20 @@
 				57,
 				58,
 				59,
+				60,
 				61,
 				63,
-				64,
 				65,
 				66,
 				67,
+				68,
 				69,
-				70,
 				71,
 				72,
 				73,
-				74
+				74,
+				75,
+				76
 			]
 		},
 		{
@@ -380,9 +382,10 @@
 				40,
 				42,
 				44,
-				60,
+				46,
 				62,
-				68
+				64,
+				70
 			]
 		},
 		{
@@ -396,15 +399,15 @@
 				16,
 				21,
 				24,
-				48,
-				50
+				50,
+				52
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				75
+				77
 			]
 		}
 	],
@@ -642,6 +645,17 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "D:/home/PMS/Raven/rave/audio/mp3oggconverter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "D:/home/PMS/Raven/rave/audio/oggtooggconverter.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "D:/home/PMS/Raven/rave/audio/oggtooggconverter.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

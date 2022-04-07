@@ -58,6 +58,7 @@ void ArtistForm::populateFormWidgets()
     ui->edtFirstName->setText(stoq(m_artist->first_name()->value()));
     ui->edtSurname->setText(stoq(m_artist->surname()->value()));
     ui->edtFullname->setText(stoq(m_artist->fullName()->value()));
+    ui->edtNotes->setText(stoq(m_artist->notes()->value()));
 
     populate_choice_combo(ui->cbArtistType, m_artist->artist_type());
 }

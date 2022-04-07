@@ -192,6 +192,11 @@
 			"Y6ZUSTFKUI/moc_mp3oggconverter.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/audio/oggtooggconverter.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_oggtooggconverter.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/baseentity.h",
 			"MU",
 			"TXBK5VWLEF/moc_baseentity.cpp"
@@ -395,6 +400,7 @@
 		[ "D:/home/PMS/Raven/rave/audio/genreform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/genretypeitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/mp3oggconverter.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/oggtooggconverter.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentity.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp", "MU" ],
