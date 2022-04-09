@@ -77,6 +77,56 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/home/PMS/Raven/rave/Traffik/agent.h",
+			"MU",
+			"MOACK37DEK/moc_agent.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/brand.h",
+			"MU",
+			"MOACK37DEK/moc_brand.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/client.h",
+			"MU",
+			"MOACK37DEK/moc_client.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/clientgroup.h",
+			"MU",
+			"MOACK37DEK/moc_clientgroup.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/salesperson.h",
+			"MU",
+			"MOACK37DEK/moc_salesperson.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/spot.h",
+			"MU",
+			"MOACK37DEK/moc_spot.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/spotaudio.h",
+			"MU",
+			"MOACK37DEK/moc_spotaudio.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/spottypeexclusion.h",
+			"MU",
+			"MOACK37DEK/moc_spottypeexclusion.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/spotvoiceover.h",
+			"MU",
+			"MOACK37DEK/moc_spotvoiceover.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/Traffik/voiceover.h",
+			"MU",
+			"MOACK37DEK/moc_voiceover.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/audio/artist.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_artist.cpp"
@@ -95,6 +145,11 @@
 			"D:/home/PMS/Raven/rave/audio/audiofolder.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiofolder.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiohistoryform.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiohistoryform.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/audio/audiolibitem.h",
@@ -230,56 +285,6 @@
 			"D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.h",
 			"MU",
 			"EWIEGA46WW/moc_sedricscheduleitem.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/agent.h",
-			"MU",
-			"DQ7LGVCWUM/moc_agent.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/brand.h",
-			"MU",
-			"DQ7LGVCWUM/moc_brand.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/client.h",
-			"MU",
-			"DQ7LGVCWUM/moc_client.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/clientgroup.h",
-			"MU",
-			"DQ7LGVCWUM/moc_clientgroup.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/salesperson.h",
-			"MU",
-			"DQ7LGVCWUM/moc_salesperson.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/spot.h",
-			"MU",
-			"DQ7LGVCWUM/moc_spot.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/spotaudio.h",
-			"MU",
-			"DQ7LGVCWUM/moc_spotaudio.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/spottypeexclusion.h",
-			"MU",
-			"DQ7LGVCWUM/moc_spottypeexclusion.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/spotvoiceover.h",
-			"MU",
-			"DQ7LGVCWUM/moc_spotvoiceover.cpp"
-		],
-		[
-			"D:/home/PMS/Raven/rave/traffik/voiceover.h",
-			"MU",
-			"DQ7LGVCWUM/moc_voiceover.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -298,8 +303,8 @@
 		"D:/home/PMS/Raven/rave/sedric",
 		"C:/Program Files/PostgreSQL/9.5/include",
 		"C:/Program Files/PostgreSQL/9.5/include/server",
-		"D:/home/PMS/Raven/rave/audiolib/headers",
 		"D:/home/PMS/Raven/rave/framework",
+		"D:/home/PMS/Raven/rave/audiolib",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui",
@@ -337,10 +342,21 @@
 	"SETTINGS_FILE" : "D:/home/PMS/Raven/rave/sedric/CMakeFiles/sedric_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/home/PMS/Raven/rave/Traffik/agent.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/brand.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/client.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/clientgroup.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/salesperson.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/spot.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/spotaudio.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/spottypeexclusion.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/spotvoiceover.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/Traffik/voiceover.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/artist.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiohistoryform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
@@ -367,17 +383,7 @@
 		[ "D:/home/PMS/Raven/rave/sedric/mainwindow.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/sedric/saveas.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/sedric/scheduleitem.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/agent.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/brand.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/client.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/clientgroup.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/salesperson.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/spot.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/spotaudio.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/spottypeexclusion.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/spotvoiceover.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/traffik/voiceover.cpp", "MU" ]
+		[ "D:/home/PMS/Raven/rave/sedric/sedricscheduleitem.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

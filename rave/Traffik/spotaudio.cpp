@@ -271,9 +271,9 @@ namespace TRAFFIK{
         m_notes->setValue(notes);
     }
 
-    void SpotAudio::set_marker(Marker marker)
+    void SpotAudio::set_marker(CueMarker marker)
     {
-        m_audio->set_marker(marker);
+        m_audio->set_cue_marker(marker);
     }
 
     void SpotAudio::set_audio_type(std::string audio_type)

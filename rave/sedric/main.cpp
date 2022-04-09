@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     auto auth = std::make_unique<Authentication>();
     auth->connect("postgres", "abc123");
-    MainWindow w;
+    MainWindow w(&a);
     w.show();
     return a.exec();
 }

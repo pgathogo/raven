@@ -34,6 +34,7 @@
 #include "../audio/audiotrackitem.h"
 #include "../audio/audiotool.h"
 #include "../audio/audiolibitem.h"
+#include "../audio/audiohistoryform.h"
 
 #include "../utils/tools.h"
 
@@ -45,27 +46,10 @@
 #include "../traffik/client.h"
 
 
-ScheduleHour::ScheduleHour()
-{
-    setMinimumWidth(150);
-}
-
-void ScheduleHour::hidePopup()
-{
-    QComboBox::hidePopup();
-    emit hourComboBoxClosed();
-}
-
-void ScheduleHour::setText(QString text)
-{
-    QLineEdit* displayText = this->lineEdit();
-    displayText->setText(text);
-    displayText->setReadOnly(true);
-}
-
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QApplication* app, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_qapp{app}
     , m_schedule_model{nullptr}
     , m_tree_model{nullptr}
     , m_cue_editor{nullptr}
@@ -124,6 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnPrint, &QPushButton::clicked, this, &MainWindow::print_schedule);
     connect(ui->tvSchedule, &QTableView::clicked, this, &MainWindow::print_details);
     connect(ui->tvSchedule, &QTableView::doubleClicked, this, &MainWindow::insert_item);
+    connect(ui->tvTracks, &QTableView::clicked, this, &MainWindow::track_selected);
 //    connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &MainWindow::date_changed);
 
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_audio);
@@ -144,11 +129,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle("Raven - SeDRic");
 
-    set_ui_style();
+    //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();
     m_datetime_selection.sel_hours.push_back(0);
     show_selection(m_datetime_selection);
+
+    m_audio_history = std::make_unique<AudioHistoryForm>();
 }
 
 
@@ -267,6 +254,7 @@ void MainWindow::set_ui_style()
                         "background-color: rgb(0, 255 ,127);"
                         "border-style: inset;}");
 
+    /*
     ui->btnPlay->setStyleSheet(
                 "QPushButton#btnPlay{"
                 "background-color: rgb(0, 255, 127);"
@@ -318,6 +306,7 @@ void MainWindow::set_ui_style()
                 "border-style: inset;}"
                 );
     ui->btnHistory->setIcon(QIcon(":/images/icons/history02.png"));
+    */
 
 }
 
@@ -330,6 +319,7 @@ void MainWindow::copy_schedule()
     }
 }
 
+/*
 void MainWindow::setup_hour_combobox()
 {
     m_cb_model = new QStandardItemModel(24, 3);
@@ -344,6 +334,7 @@ void MainWindow::setup_hour_combobox()
 
     ui->hlHour->addWidget(m_cb_hour);
 }
+*/
 
 void MainWindow::folder_clicked(const QModelIndex& index)
 {
@@ -376,7 +367,7 @@ void MainWindow::print_schedule()
 {
 }
 
-AUDIO::Audio* MainWindow::get_audio()
+AUDIO::Audio* MainWindow::get_selected_audio()
 {
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
@@ -390,9 +381,16 @@ AUDIO::Audio* MainWindow::get_audio()
     return audio;
 }
 
+void MainWindow::track_selected(const QModelIndex& index)
+{
+    if (m_audio_history->isVisible()){
+        show_audio_history();
+    }
+}
+
 void MainWindow::insert_item(const QModelIndex& index)
 {
-    auto audio = get_audio();
+    auto audio = get_selected_audio();
     if (audio == nullptr)
         return;
 
@@ -448,6 +446,7 @@ void MainWindow::remove_current_schedule_item()
 
     m_scheduler->log_activity(m_datetime_selection.sel_date, sched_hour);
 }
+
 
 int MainWindow::get_schedule_row_id(int row) const
 {
@@ -618,9 +617,8 @@ void MainWindow::populate_hour_combobox()
         if (row == 0)
             item->setCheckState(Qt::Checked);
     }
-
-
 }
+
 void MainWindow::cb_data_changed(const QModelIndex& top_left, const QModelIndex bottom_right)
 {
     /*
@@ -650,12 +648,16 @@ QString MainWindow::get_selected_hours_asString()
     return sel_hrs;
 }
 
+/*
 void MainWindow::hour_cb_closed()
 {
     const auto& hours = get_selected_hours_asInt();
     //fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
-{
+}
+*/
 
+void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
+{
     clear_schedule_model();
     auto processed = fetch_schedule_from_cache(sel_date, sel_hours); //selected_hours);
 
@@ -670,6 +672,7 @@ void MainWindow::hour_cb_closed()
     m_scheduler->show_items(sel_date, sel_hours); //selected_hours);
 
 }
+
 
 std::vector<int> MainWindow::get_selected_hours_asInt()
 {
@@ -784,12 +787,12 @@ void MainWindow::play_audio()
     if (select->selectedRows().size() == 0)
         return;
 
-    AUDIO::Audio* audio = get_audio();
+    AUDIO::Audio* audio = get_selected_audio();
     if (audio == nullptr)
         return;
 
     AudioTool audio_tool;
-    auto ogg_file = audio_tool.generate_ogg_filename(audio->id())+".ogg";
+    auto ogg_file = audio_tool.make_audio_filename(audio->id())+".ogg";
     auto full_audio_name = audio->file_path()->value()+ogg_file;
 
     if (!QFile::exists(QString::fromStdString(full_audio_name))){
@@ -798,7 +801,8 @@ void MainWindow::play_audio()
     }
 
     AudioFile af(full_audio_name);
-    m_cue_editor = std::make_unique<CueEditor>(af, full_audio_name);
+    m_cue_editor = std::make_unique<CueEditor>(af, "string");
+    //m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
     m_cue_editor->play_audio();
 
 }
@@ -809,21 +813,63 @@ void MainWindow::stop_play()
         m_cue_editor->stop_audio();
 }
 
+History MainWindow::make_history(int id)
+{
+    Schedule schedule;
+
+    auto edm = std::make_unique<EntityDataModel>(std::make_unique<Schedule>());
+
+    QString date_format = "yyyy-MM-dd";
+    QString d_range1 = m_datetime_selection.sel_date.addDays(-7).toString(date_format);
+    QString d_range2 = m_datetime_selection.sel_date.toString(date_format);
+
+    QString date_range = "'"+d_range1+"' and '"+d_range2+ "'";
+
+    auto date_filter = std::make_tuple(schedule.schedule_date()->dbColumnName(),
+                                       " between ",
+                                       date_range.toStdString());
+
+    auto audio_filter = std::make_tuple(schedule.audio()->dbColumnName(),
+                                        " = ",
+                                        id);
+
+    try{
+        edm->search(edm->prepareFilter(date_filter, audio_filter));
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+    History hist;
+    for (auto& [name, entity] : edm->modelEntities()){
+        Schedule* sched = dynamic_cast<Schedule*>(entity.get());
+
+       hist[sched->schedule_date()->value().dayOfWeek()].push_back(sched->schedule_hour()->value());
+
+    }
+
+
+    return hist;
+
+}
+
 void MainWindow::show_audio_history()
 {
-    /*
-    auto edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-    TRAFFIK::Spot* spot = new TRAFFIK::Spot();
-    Client* client = new Client();
-    AUDIO::Audio* audio = new AUDIO::Audio();
-    AUDIO::Artist* artist = new AUDIO::Artist();
 
-    auto chain1 = std::make_tuple<BaseEntity*, BaseEntity*>(client, spot);
-//    auto chain2 = std::make_tuple<BaseEntity*, BaseEntity*>(audio, artist);
+    AUDIO::Audio* audio = get_selected_audio();
 
-    edm->select_related_chain(chain1);
-    */
+    if (audio == nullptr)
+        return;
 
+    auto history =  make_history(audio->id());
+
+    if(!ui->btnHistory->isChecked()){
+        ui->vlHistory->removeWidget(m_audio_history.get());
+        m_audio_history->hide();
+    } else {
+        m_audio_history->show_history(&history);
+        ui->vlHistory->addWidget(m_audio_history.get());
+        m_audio_history->show();
+    }
 }
 
 void MainWindow::select_date_time()
@@ -840,7 +886,8 @@ void MainWindow::select_date_time()
 
 void MainWindow::show_selection(DateTimeSelection selection)
 {
-    QString label = selection.sel_date.toString("dd/MM/yyyy")+" : [ ";
+    ui->btnDateTimeSelector->setText(selection.sel_date.toString("dd/MM/yyyy"));
+    QString label = "[ ";
     QString h{""};
     std::sort(selection.sel_hours.begin(),selection.sel_hours.end());
     for (auto hr : selection.sel_hours){
@@ -923,4 +970,22 @@ void MainWindow::search_audio()
 
     show_audio_data();
 
+}
+
+ScheduleHour::ScheduleHour()
+{
+    setMinimumWidth(150);
+}
+
+void ScheduleHour::hidePopup()
+{
+    QComboBox::hidePopup();
+    emit hourComboBoxClosed();
+}
+
+void ScheduleHour::setText(QString text)
+{
+    QLineEdit* displayText = this->lineEdit();
+    displayText->setText(text);
+    displayText->setReadOnly(true);
 }

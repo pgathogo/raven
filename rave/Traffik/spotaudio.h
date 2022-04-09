@@ -8,7 +8,7 @@
 // class Audio;
 //}
 
-class Marker;
+class CueMarker;
 
 namespace TRAFFIK{
 
@@ -40,7 +40,7 @@ namespace TRAFFIK{
         void set_short_desc(std::string);
         void set_notes(const std::string);
 
-        void set_marker(Marker marker);
+        void set_marker(CueMarker marker);
         void set_audio_type(std::string);
         void set_audio_lib_path(const std::string);
         void set_duration(int);

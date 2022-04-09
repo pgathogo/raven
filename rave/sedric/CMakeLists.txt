@@ -13,7 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
-set(rave_audiolib_INCLUDE_DIRS "../audio")
+set(rave_audio_INCLUDE_DIRS "../audio")
+set(rave_audiolib_INCLUDE_DIRS "../audiolib")
 
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
 find_package(PostgreSQL REQUIRED)
@@ -37,19 +38,18 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
-set(AUDIO_INCLUDE "../audiolib/headers")
-set(AUDIO_LIB "../audiolib/lib_debug")
-find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
-find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
+#set(AUDIO_INCLUDE "../audiolib/headers")
+#set(AUDIO_LIB "../audiolib/lib_debug")
+#find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
+#find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
 
+#if (AUDIO_INCLUDE_DIR)
+#        message(STATUS "Audio Include dir found.")
+#endif()
 
-if (AUDIO_INCLUDE_DIR)
-        message(STATUS "Audio Include dir found.")
-endif()
-
-if (AUDIO_LIBRARY)
-        message(STATUS "Audio library found.")
-endif()
+#if (AUDIO_LIBRARY)
+#        message(STATUS "Audio library found.")
+#endif()
 
 
 include_directories(${AUDIO_INCLUDE_DIR})
@@ -102,6 +102,7 @@ else()
     ../framework/datetimeselector.cpp
     ../security/authentication.cpp
     ../security/user.cpp
+
     ../audio/audiolibrary.cpp
     ../audio/audiofolder.cpp
     ../audio/audio.cpp
@@ -110,6 +111,9 @@ else()
     ../audio/audiotrackitem.cpp
     ../audio/audiotool.cpp
     ../audio/audiolibitem.cpp
+    ../audio/audiohistoryform.h
+    ../audio/audiohistoryform.cpp
+
     ../traffik/spotaudio.cpp
     ../traffik/spot.cpp
     ../traffik/client.cpp
@@ -125,11 +129,28 @@ endif()
 
 target_include_directories(sedric PRIVATE ${postgreSQL_INCLUDE_DIRS})
 target_include_directories(sedric PRIVATE ${rave_framework_INCLUDE_DIRS})
+target_include_directories(sedric PRIVATE ${rave_audiolib_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
+link_directories(${rave_audio_INCLUDE_DIRS})
 link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(sedric PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(sedric PRIVATE ${PostgreSQL_LIBRARIES})
 target_link_libraries(sedric PRIVATE ${RAVE_AUDIO_LIBRARIES})
+
+set(AUDIO_INCLUDE_DIR "../audiolib/headers")
+set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
+find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
+
+if (AUDIO_INCLUDE_DIR)
+        message(STATUS "AUDIO_INCLUDE_DIR found")
+endif()
+
+if (AUDIO_LIBRARY)
+        message(STATUS "CueEditor library found.")
+endif()
+
+target_link_directories(sedric PRIVATE ${AUDIO_LIBRARY_DIR})
+target_link_libraries(sedric PRIVATE ${AUDIO_LIBRARY})

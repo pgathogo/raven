@@ -42,7 +42,7 @@ build CMakeFiles/sedric.dir/sedric_autogen/mocs_compilation.cpp.obj: CXX_COMPILE
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\sedric_autogen\mocs_compilation.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\sedric_autogen
 
@@ -50,7 +50,7 @@ build CMakeFiles/sedric.dir/main.cpp.obj: CXX_COMPILER__sedric_ main.cpp || cmak
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\main.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir
 
@@ -58,7 +58,7 @@ build CMakeFiles/sedric.dir/mainwindow.cpp.obj: CXX_COMPILER__sedric_ mainwindow
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\mainwindow.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir
 
@@ -66,7 +66,7 @@ build CMakeFiles/sedric.dir/scheduleitem.cpp.obj: CXX_COMPILER__sedric_ schedule
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\scheduleitem.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir
 
@@ -74,7 +74,7 @@ build CMakeFiles/sedric.dir/sedricscheduleitem.cpp.obj: CXX_COMPILER__sedric_ se
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\sedricscheduleitem.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir
 
@@ -82,7 +82,7 @@ build CMakeFiles/sedric.dir/saveas.cpp.obj: CXX_COMPILER__sedric_ saveas.cpp || 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\saveas.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir
 
@@ -90,7 +90,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/scheduledatamanager
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\scheduledatamanager.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -98,7 +98,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\entitydatamodel.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -106,7 +106,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.c
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\databaseconnector.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -114,7 +114,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\databasemanager.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -122,7 +122,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\ravenexception.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -130,7 +130,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.ob
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\dataprovider.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -138,7 +138,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj:
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\baseentity.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -146,7 +146,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.ob
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\entityfields.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -154,7 +154,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj:
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\manytomany.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -162,7 +162,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.o
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\typeexclusion.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -170,7 +170,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj: 
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\valuelist.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -178,7 +178,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.o
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\treeviewmodel.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -186,7 +186,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj: CXX_C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\tree.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -194,7 +194,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj: C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\schedule.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -202,7 +202,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\relationmapper.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -210,7 +210,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/datetimeselector.cp
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework\datetimeselector.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\framework
 
@@ -218,7 +218,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.o
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\security\authentication.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\security
 
@@ -226,7 +226,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj: CXX_CO
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\security\user.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\security
 
@@ -234,7 +234,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj: C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiolibrary.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -242,7 +242,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj: CX
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiofolder.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -250,7 +250,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj: CXX_COMP
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audio.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -258,7 +258,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj: CXX_COM
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\artist.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -266,7 +266,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj: CXX_
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiofile.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -274,7 +274,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotrackitem.cpp.obj:
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiotrackitem.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -282,7 +282,7 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX_
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiotool.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
@@ -290,95 +290,103 @@ build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj: C
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiolibitem.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spotaudio.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/spotaudio.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiohistoryform.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/audio/audiohistoryform.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\spotaudio.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio\audiohistoryform.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\audio
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spot.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/spot.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spotaudio.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/spotaudio.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\spot.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\spotaudio.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/client.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/client.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spot.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/spot.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\client.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\spot.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/clientgroup.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/clientgroup.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/client.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/client.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\clientgroup.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\client.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/agent.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/agent.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/clientgroup.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/clientgroup.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\agent.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\clientgroup.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spottypeexclusion.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/spottypeexclusion.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/agent.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/agent.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\spottypeexclusion.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\agent.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spotvoiceover.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/spotvoiceover.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spottypeexclusion.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/spottypeexclusion.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\spotvoiceover.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\spottypeexclusion.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/voiceover.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/voiceover.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spotvoiceover.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/spotvoiceover.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\voiceover.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\spotvoiceover.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/brand.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/brand.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/voiceover.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/voiceover.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\brand.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\voiceover.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
-build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/salesperson.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/traffik/salesperson.cpp || cmake_object_order_depends_target_sedric
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/brand.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/brand.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
-  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik\salesperson.cpp.obj.d
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\brand.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
-  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\traffik
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
+
+build CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/salesperson.cpp.obj: CXX_COMPILER__sedric_ D$:/home/PMS/Raven/rave/Traffik/salesperson.cpp || cmake_object_order_depends_target_sedric
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik\salesperson.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  OBJECT_DIR = CMakeFiles\sedric.dir
+  OBJECT_FILE_DIR = CMakeFiles\sedric.dir\D_\home\PMS\Raven\rave\Traffik
 
 build CMakeFiles/sedric.dir/sedric_autogen/EWIEGA46WW/qrc_sedric.cpp.obj: CXX_COMPILER__sedric_ sedric_autogen/EWIEGA46WW/qrc_sedric.cpp || cmake_object_order_depends_target_sedric
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\sedric.dir\sedric_autogen\EWIEGA46WW\qrc_sedric.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -ID:/home/PMS/Raven/rave/audiolib/headers -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
+  INCLUDES = -I. -Isedric_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -I../audiolib -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++
   OBJECT_DIR = CMakeFiles\sedric.dir
   OBJECT_FILE_DIR = CMakeFiles\sedric.dir\sedric_autogen\EWIEGA46WW
 
@@ -390,9 +398,9 @@ build CMakeFiles/sedric.dir/sedric_autogen/EWIEGA46WW/qrc_sedric.cpp.obj: CXX_CO
 #############################################
 # Link the executable sedric.exe
 
-build sedric.exe: CXX_EXECUTABLE_LINKER__sedric_ CMakeFiles/sedric.dir/sedric_autogen/mocs_compilation.cpp.obj CMakeFiles/sedric.dir/main.cpp.obj CMakeFiles/sedric.dir/mainwindow.cpp.obj CMakeFiles/sedric.dir/scheduleitem.cpp.obj CMakeFiles/sedric.dir/sedricscheduleitem.cpp.obj CMakeFiles/sedric.dir/saveas.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/scheduledatamanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/datetimeselector.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotrackitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spotaudio.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spot.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/client.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/clientgroup.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/agent.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spottypeexclusion.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/spotvoiceover.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/voiceover.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/brand.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/traffik/salesperson.cpp.obj CMakeFiles/sedric.dir/sedric_autogen/EWIEGA46WW/qrc_sedric.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib libcueeditord.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || sedric_autogen
-  LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  libcueeditord.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib
+build sedric.exe: CXX_EXECUTABLE_LINKER__sedric_ CMakeFiles/sedric.dir/sedric_autogen/mocs_compilation.cpp.obj CMakeFiles/sedric.dir/main.cpp.obj CMakeFiles/sedric.dir/mainwindow.cpp.obj CMakeFiles/sedric.dir/scheduleitem.cpp.obj CMakeFiles/sedric.dir/sedricscheduleitem.cpp.obj CMakeFiles/sedric.dir/saveas.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/scheduledatamanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/manytomany.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/typeexclusion.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/valuelist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/framework/datetimeselector.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotrackitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiolibitem.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/audio/audiohistoryform.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spotaudio.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spot.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/client.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/clientgroup.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/agent.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spottypeexclusion.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/spotvoiceover.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/voiceover.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/brand.cpp.obj CMakeFiles/sedric.dir/D_/home/PMS/Raven/rave/Traffik/salesperson.cpp.obj CMakeFiles/sedric.dir/sedric_autogen/EWIEGA46WW/qrc_sedric.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a D$:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || sedric_autogen
+  LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a  D:/home/PMS/Raven/rave/audiolib/lib_debug/libcueeditord.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib   -LD:/home/PMS/Raven/rave/sedric/../audiolib/lib_debug
   OBJECT_DIR = CMakeFiles\sedric.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

@@ -1,1 +1,1 @@
-D:/home/PMS/Raven/rave/audioexplorer/ffmpeg.exe -y -i D:\home\PMS\Raven\audio\TestAudio\idont_want.mp3 -c:a libvorbis -q:a 4 -vsync 2 
+D:/home/pms/Raven/rave/AudioExplorer/ffmpeg.exe -y -i D:\home\PMS\Raven\audio\TestAudio\murder.mp3 -c:a libvorbis -q:a 4 -vsync 2 

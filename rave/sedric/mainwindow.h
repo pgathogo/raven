@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QApplication>
 #include <QMainWindow>
 #include <QComboBox>
 #include "../framework/datetimeselector.h"
@@ -23,6 +24,7 @@ class NodeData;
 class Schedule;
 class EntityDataModel;
 class CueEditor;
+class AudioHistoryForm;
 
 namespace AUDIO{
     class Audio;
@@ -46,6 +48,8 @@ signals:
 };
 
 
+using History = std::map<int, std::vector<int>>;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -54,7 +58,7 @@ public:
 
     enum class SearchBy{folder_id, audio_title, audio_artist};
 
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QApplication* app, QWidget *parent = nullptr);
     ~MainWindow();
 
     void populate_hour_combobox();
@@ -82,8 +86,9 @@ public:
     void clear_schedule_model();
     QString get_selected_hours_asString();
     void fetch_data(QDate, const std::vector<int>&);
-    AUDIO::Audio* get_audio();
+    AUDIO::Audio* get_selected_audio();
     void show_selection(DateTimeSelection);
+    History make_history(int);
 
     struct UnCachedHours{
         template <typename T>
@@ -106,9 +111,10 @@ public slots:
     void folder_clicked(const QModelIndex&);
     void insert_item(const QModelIndex& index);
     void remove_current_schedule_item();
+    void track_selected(const QModelIndex& index);
 
     void cb_data_changed(const QModelIndex&, const QModelIndex);
-    void hour_cb_closed();
+//    void hour_cb_closed();
     void print_details(const QModelIndex&);
     void print_schedule();
     void copy_schedule();
@@ -126,6 +132,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    QApplication* m_qapp;
     QStandardItemModel* m_schedule_model;
     TreeViewModel* m_tree_model;
     QStandardItemModel* m_tracks_model;
@@ -146,9 +153,13 @@ private:
 
     DateTimeSelection m_datetime_selection;
 
+    std::unique_ptr<AudioHistoryForm> m_audio_history;
+    QDate m_schedule_date;
+
     //QList<QStandardItem*> commercial_record(const Schedule);
     void create_model_headers();
     std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);
     void fetch_schedule_from_db(QDate, std::vector<int>);
     void set_column_width();
 };
+

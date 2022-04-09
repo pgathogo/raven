@@ -39,7 +39,6 @@ include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
 
-
 include_directories(${AUDIO_INCLUDE_DIR})
 set(RAVE_AUDIO_LIBRARIES ${AUDIO_LIBRARY})
 
@@ -68,6 +67,7 @@ set(PROJECT_SOURCES
         bookedaudiocheckerform.cpp
         bookedaudiocheckerform.h
         bookedaudiocheckerform.ui
+
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
         ../audio/audio.cpp
@@ -91,6 +91,7 @@ set(PROJECT_SOURCES
         ../audio/audiowaveformgenerator.cpp
         ../audio/audiofileinfo.h
         ../audio/audiofileinfo.cpp
+
         ../framework/baseentity.cpp
         ../framework/baseentitybrowserdlg.cpp
         ../framework/baseentitybrowserdlg.ui
@@ -153,7 +154,6 @@ target_link_libraries(AudioExplorer PRIVATE ${RAVE_AUDIO_LIBRARIES})
 
 set(AUDIO_INCLUDE_DIR "../audiolib/headers")
 set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
-#find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE_DIR})
 find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
 
 if (AUDIO_INCLUDE_DIR)
