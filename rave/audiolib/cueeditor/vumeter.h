@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include <QRect>
 
+class QHBoxLayout;
+
 namespace AUDIO{
 
     class VuMeter : public QWidget
@@ -32,7 +34,8 @@ namespace AUDIO{
         QPixmap ledon;
         QLabel* lblLedOff;
         QLabel* lblLedOn;
-        QPushButton* btn;
+
+        QHBoxLayout* m_box_layout;
 
         int m_maxPeak;
         int m_minPeak;

@@ -18,6 +18,8 @@ class ValueList;
 class QTableView;
 class LetterFilterWidget;
 
+class QBoxLayout;
+
 namespace Ui {
 class BaseEntityBrowserDlg;
 }
@@ -272,7 +274,7 @@ protected:
     void hideAddButton();
     void hideEditButton();
     void hideDeleteButton();
-    void show_delete_button();
+    void show_delete_button(QBoxLayout* layout=nullptr);
     Ui::BaseEntityBrowserDlg* bui;
 
 public slots:

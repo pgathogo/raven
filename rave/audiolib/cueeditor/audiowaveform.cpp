@@ -4,38 +4,42 @@
 #include <QDebug>
 #include <QDir>
 #include "audiowaveform.h"
-#include "ui_audiowaveform.h"
+//#include "ui_audiowaveform.h"
 
 #include "audiothread.h"
 #include "../../audio/audiotool.h"
+#include "vumeter.h"
 
 namespace fs = std::filesystem;
 
 namespace AUDIO {
 
-    AudioWaveForm::AudioWaveForm(AudioFile& audio_file, QDialog *parent) :
-        QDialog(parent),
-        ui(new Ui::AudioWaveForm),
-        m_audio_file{audio_file},
-        m_seconds_per_pixel{0.0},
-        m_audio_wave{nullptr},
-        m_scene{nullptr},
-        m_audio_thread{nullptr},
-        m_player_timer{nullptr},
-        m_indicator_timer{nullptr}
+    AudioWaveForm::AudioWaveForm(QApplication* app, AudioFile& audio_file, QDialog *parent)
+        :QDialog(parent)
+        ,ui(new Ui::AudioWaveForm)
+        ,q_app{app}
+        ,m_audio_file{audio_file}
+        ,m_seconds_per_pixel{0.0}
+        ,m_audio_wave{nullptr}
+        ,m_scene{nullptr}
+        ,m_audio_thread{nullptr}
+        ,m_player_timer{nullptr}
+        ,m_indicator_timer{nullptr}
+        ,m_new_pos{5.5}
+
     {
+
         ui->setupUi(this);
 
-        m_scene = new AudioWaveScene(ui->lblCurrTime, audio_file.duration());
+        m_audio_thread = new AudioThread(this);
+        double audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())); // Seconds
+
+        m_audio_file.set_duration(audio_duration_secs*1000); //msec
+        m_scene = new AudioWaveScene(ui->lblCurrTime, audio_duration_secs);
 
         ui->gvWave->setScene(m_scene);
         ui->gvWave->setMaximumWidth(800);
         ui->gvWave->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-
-        // Audiothread
-        m_audio_thread = new AudioThread(this);
-
-        m_audio_file.set_duration(m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file()))*1000); //msec
 
         connect(m_audio_thread, SIGNAL(current_position(double, double)), this, SLOT(audio_current_position(double, double)));
         connect(m_audio_thread, SIGNAL(current_peak(float[1024])), this, SLOT(audio_current_peak(float[1024])));
@@ -76,6 +80,7 @@ namespace AUDIO {
     AudioWaveForm::~AudioWaveForm()
     {
         delete ui;
+
         delete m_audio_thread;
         delete m_player_timer;
         delete m_indicator_timer;
@@ -86,6 +91,7 @@ namespace AUDIO {
         delete m_fade_in_display_unit;
 
         delete m_scene;
+
     }
 
     void AudioWaveForm::show_wave_file()
@@ -103,7 +109,7 @@ namespace AUDIO {
         double scene_width = scene_bounds.width()+scene_bounds.width()*0.11;
         //ui->gvWave->setMaximumWidth(scene_width+20);
 
-        m_seconds_per_pixel = (m_audio_file.duration() *100)/scene_width;
+        m_seconds_per_pixel = ((m_audio_file.duration()/1000) *100)/scene_width;
 
         m_scene->set_sec_per_px(m_seconds_per_pixel);
 
@@ -139,34 +145,6 @@ namespace AUDIO {
     {
         save_cue_markers();
         done(1);
-
-//        const std::string MP3 = ".mp3";
-//        const std::string OGG = ".ogg";
-
-//        auto q_str = QDir::toNativeSeparators(QString::fromStdString(m_audio_file.ogg_filename()));
-////        m_audio_file.set_ogg_filename(q_str.toStdString());
-//        fs::path p(q_str.toStdString());
-
-//        if ((m_audio_file.file_ext() == MP3) && (!fs::exists(p)) ){
-//            AudioTool audio_tool;
-//            std::string ogg_file = audio_tool.mp3_to_ogg(m_audio_file);
-//            if (!ogg_file.empty())
-//                m_audio_file.set_ogg_filename(ogg_file);
-//            //	std::string audio_lib = m_audio_file.get_audio_lib();
-//            //	audio_tool.copy_ogg_to_audiolib(ogg_file, std::string dest_ogg)
-
-//            done(1);
-//        }else{
-//            done(0);
-//        }
-
-//            if (m_audio_file.file_ext() == OGG){
-//                AudioTool audio_tool;
-//                if (!audio_tool.copy_file_to_audiolib()){
-//                    //audio_tool.copy_file_to_audiolib(file_name, audio_lib);
-//                }
-
-//            }
     }
 
     void AudioWaveForm::on_cancel()
@@ -177,8 +155,6 @@ namespace AUDIO {
     void AudioWaveForm::start_play()
     {
         m_audio_thread->play(QString::fromStdString(m_audio_file.audio_file()));
-        //ui->pbAudio->setMaximum(100);
-        //on_set_peak();
     }
 
     void AudioWaveForm::stop_play()
@@ -224,7 +200,7 @@ namespace AUDIO {
         for (; i < 201; ++i){
             x = 20*log10(sqrt(fft[i+1])*3*201);
             if (x>201) x=201;
-            //m_vumeter->set_peak(x*6);
+            m_vumeter->setPeak(x*6);
         }
     }
 
@@ -478,6 +454,9 @@ namespace AUDIO {
         m_fade_in_indicator = new AUDIO::MarkerIndicator(MarkerType::FadeIn);
         m_fade_in_display_unit = new MarkerDisplayUnit(m_fade_in_indicator);
         m_fade_in_display_unit->set_display_unit(ui->lblFadeInMarkTime);
+
+        m_vumeter = std::make_unique<VuMeter>(VuMeter::meter_dir::DIR_HORIZONTAL, this);
+        ui->hlVumeter->addWidget(m_vumeter.get());
 
     }
 

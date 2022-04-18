@@ -249,9 +249,11 @@ void BaseEntityBrowserDlg::hideDeleteButton()
     bui->btnDelete->setVisible(false);
 }
 
-void BaseEntityBrowserDlg::show_delete_button()
+void BaseEntityBrowserDlg::show_delete_button(QBoxLayout* layout)
 {
-   bui->btnDelete->setVisible(true);
+    bui->btnDelete->setVisible(true);
+    if (layout != nullptr)
+        layout->addWidget(bui->btnDelete);
 }
 
 std::string BaseEntityBrowserDlg::typeID()

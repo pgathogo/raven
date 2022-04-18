@@ -15,6 +15,14 @@ AgentForm::AgentForm(Agent* agent,
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
     populateFormWidgets();
+
+    register_input_widget(ui->edtName);
+    register_input_widget(ui->edtAddress);
+    register_input_widget(ui->edtTelephone);
+    register_input_widget(ui->edtTown);
+    register_input_widget(ui->edtEmail);
+    register_input_widget(ui->edtContact);
+    register_input_widget(ui->edtContactMobile);
 }
 
 AgentForm::~AgentForm()

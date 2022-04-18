@@ -68,6 +68,7 @@ namespace AUDIO {
     {
         public:
             AudioWaveScene(QLabel* pos_counter, double audio_length);
+            ~AudioWaveScene();
 
             void draw_indicator_line();
             void move_indicator_line(double new_pos);
@@ -88,8 +89,11 @@ namespace AUDIO {
             void display_marker_position_sec();
             QPointF marker_position(MarkerType);
             double pixel_to_seconds(double px);
+            double pixel_to_milli_seconds(double px);
             double seconds_to_pixel(double secs);
             Markers markers() const;
+
+            int count();
 
             template<typename T1, typename T2>
             T1* create_marker(QWidget display_unit){

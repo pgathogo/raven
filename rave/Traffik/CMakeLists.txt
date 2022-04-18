@@ -14,7 +14,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
 set(rave_audio_INCLUDE_DIRS "../audio")
-set(rave_audiolib_INCLUDE_DIRS "../audiolib/headers")
+#set(rave_audiolib_INCLUDE_DIRS "../audiolib/headers")
+
+set(Bass_INCLUDE_DIRS "../../lib/BassLib/Include")
 
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
 find_package(PostgreSQL REQUIRED)
@@ -71,8 +73,6 @@ set(PROJECT_SOURCES
     orderform.h
     orderform.cpp
     orderform.ui
-    ../framework/ravensetup.h
-    ../framework/ravensetup.cpp
     bookingsegment.h
     bookingsegment.cpp
     orderbooking.h
@@ -190,6 +190,7 @@ set(PROJECT_SOURCES
     tree.cpp
     treeviewmodel.h
     treeviewmodel.cpp
+    traffik.qrc
 
     ../audio/artist.h
     ../audio/audio.h
@@ -199,8 +200,33 @@ set(PROJECT_SOURCES
     ../audio/audiotool.cpp
     ../audio/artist.cpp
     ../audio/audio.cpp
+    ../audio/audioconverter.h
+    ../audio/audioconverter.cpp
+    ../audio/mp3oggconverter.h
+    ../audio/mp3oggconverter.cpp
+    ../audio/oggtooggconverter.h
+    ../audio/oggtooggconverter.cpp
+    ../audio/audiowaveformgenerator.h
+    ../audio/audiowaveformgenerator.cpp
+    ../audio/audiofileinfo.h
+    ../audio/audiofileinfo.cpp
 
+    ../audio/editor/audiographic.cpp
+    ../audio/editor/audioplayer.cpp
+    ../audio/editor/audiothread.cpp
+    ../audio/editor/audiowaveform.cpp
+    ../audio/editor/subjectobserver.cpp
+    ../audio/editor/vumeter.cpp
+    ../audio/editor/audiographic.h
+    ../audio/editor/audioplayer.h
+    ../audio/editor/audiothread.h
+    ../audio/editor/audiowaveform.h
+    ../audio/editor/markindicator.h
+    ../audio/editor/subjectobserver.h
+    ../audio/editor/vumeter.h
 
+    ../framework/ravensetup.h
+    ../framework/ravensetup.cpp
     ../framework/entityregister.h
     ../framework/relationmapper.h
     ../framework/schedule.h
@@ -245,6 +271,8 @@ set(PROJECT_SOURCES
     ../framework/valuelistdetaildlg.h
     ../framework/valuelistdetaildlg.cpp
     ../framework/valuelistdetaildlg.ui
+    ../framework/applicationcontext.h
+    ../framework/applicationcontext.cpp
 
     ../security/loginform.h
     ../security/loginform.cpp
@@ -299,6 +327,7 @@ set(PROJECT_SOURCES
     ../utils/daypartgrid.ui
     ../utils/qchecklist.h
 
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -321,6 +350,7 @@ endif()
 
 target_link_libraries(Traffik PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Traffik PRIVATE ${PostgreSQL_LIBRARIES})
+
 target_include_directories(Traffik PRIVATE ${postgreSQL_INCLUDE_DIRS})
 target_include_directories(Traffik PRIVATE ${rave_framework_INCLUDE_DIRS})
 
@@ -328,18 +358,29 @@ target_include_directories(Traffik PRIVATE ${rave_framework_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
-link_directories(${AUDIO_LIBRARY_DIR})
 
-set(AUDIO_INCLUDE_DIR "../audiolib/headers")
-set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
-find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
+#link_directories(${AUDIO_LIBRARY_DIR})
 
-if (AUDIO_LIBRARY)
-        message(STATUS "CueEditor library is found.")
+#set(AUDIO_INCLUDE_DIR "../audiolib/headers")
+#set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
+#find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
+
+#if (AUDIO_LIBRARY)
+#        message(STATUS "CueEditor library is found.")
+#endif()
+
+#target_link_directories(Traffik PRIVATE ${AUDIO_LIBRARY_DIR})
+#target_link_libraries(Traffik PRIVATE ${AUDIO_LIBRARY})
+
+
+set(BASS_INCLUDE_DIR "../lib/BassLib/Include")
+set(BASS_LIBRARY_DIR "../lib/BassLib/Lib")
+find_library(BASS_LIBRARY bass ${BASS_LIBRARY_DIR})
+if (BASS_LIBRARY)
+        message(STATUS "Bass library found.")
 endif()
-
-target_link_directories(Traffik PRIVATE ${AUDIO_LIBRARY_DIR})
-target_link_libraries(Traffik PRIVATE ${AUDIO_LIBRARY})
+target_link_directories(Traffik PRIVATE ${BASS_LIBRARY_DIR})
+target_link_libraries(Traffik PRIVATE ${BASS_LIBRARY})
 
 set_target_properties(Traffik PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

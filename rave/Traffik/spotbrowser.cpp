@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <filesystem>
 
 #include <QDebug>
@@ -21,10 +22,10 @@
 
 namespace fs = std::filesystem;
 
-SpotBrowser::SpotBrowser(Client* client, QWidget* parent) :
-    BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Spot>(client)),
-    ui{new Ui::SpotBrowser},
-    m_client{client}
+SpotBrowser::SpotBrowser(Client* client, QWidget* parent)
+    :BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Spot>(client))
+    ,ui{new Ui::SpotBrowser}
+    ,m_client{client}
 {
     ui->setupUi(this);
     setDialogTitle("Client Spots");
@@ -206,10 +207,11 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             printstr("Audio Lib Path: "+ audio.audio_lib_path()->value());
 
             // Format audio name from Id
-            std::string ogg_file = at.generate_ogg_filename(id);
+            std::string ogg_file = at.make_audio_filename(id);
             std::string lib_path = audio.audio_lib_path()->value();
 
-            std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
+            //std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
+            std::string old_filename = audio.audio_file().ogg_filename();
             std::string new_filename = lib_path+ogg_file+OGG_EXT;
 
             fs::path old_f{old_filename};
@@ -218,7 +220,12 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             printstr("OLD Name: "+old_filename);
             printstr("NEW Name: "+new_filename);
 
-            fs::rename(old_f, new_f);
+            try{
+                fs::copy(old_f, new_f);
+            } catch (fs::filesystem_error& fe) {
+                qDebug() << "Unable to copy audio file: "+stoq(fe.what());
+                return;
+            }
 
             printstr("222");
 

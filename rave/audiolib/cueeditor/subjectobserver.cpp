@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "subjectobserver.h"
 
 Observer::~Observer()
@@ -27,6 +28,8 @@ void Subject::detach(Observer *)
 
 void Subject::notify(double msg)
 {
+    qDebug() << "notify: "<< msg;
+
     for(auto o : m_observers){
         o->update(this, msg);
     }

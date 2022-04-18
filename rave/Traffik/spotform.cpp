@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <filesystem>
 #include <sstream>
 
@@ -51,8 +52,8 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
 
     m_spot_audio_browser =
             std::make_unique<SpotAudioBrowser>(&m_spot->spot_audio(),
-                                                ui->vlSpotAudio,
-                                                this);
+                                               ui->vlSpotAudio,
+                                               this);
 
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);

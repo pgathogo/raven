@@ -30,6 +30,11 @@ AudioForm::AudioForm(AUDIO::Audio* audio,
     connect(ui->btnPickArtist, &QPushButton::clicked, this, &AudioForm::pick_artist);
     connect(ui->cbGenre, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &AudioForm::genre_combo_changed);
+
+    register_input_widget(ui->edtTitle);
+    register_input_widget(ui->edtArtist);
+    register_input_widget(ui->edtFolder);
+    register_input_widget(ui->edtNotes);
 }
 
 AudioForm::~AudioForm()
@@ -55,6 +60,7 @@ void AudioForm::populateEntityFields()
     m_audio->set_audio_year(ui->edtYear->value());
     m_audio->set_add_dtime(ui->dtCreation->dateTime());
     m_audio->set_creation_date(ui->dtCreation->date());
+    m_audio->set_notes(ui->edtNotes->toPlainText().toStdString());
 
     fs::path p(ui->edtFilename->text().toStdString());
     m_audio->set_file_path(p.parent_path().u8string()+"/");

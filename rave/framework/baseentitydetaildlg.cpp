@@ -9,7 +9,7 @@ BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     QDialog(parent),
     bui(new Ui::BaseEntityDetailDlg),
     mNoticeBar{},
-    m_okay_to_close{false}
+    m_okay_to_close{true}
 {
     bui->setupUi(this);
     connectSlots();

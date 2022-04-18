@@ -12,6 +12,7 @@ class BrandBrowser;
 class Client;
 class BookingOrderBrowser;
 class BaseEntity;
+class QApplication;
 
 namespace Ui {
 class MergedBrowser;
@@ -22,7 +23,7 @@ class MergedBrowser : public QDialog
     Q_OBJECT
 
 public:
-    explicit MergedBrowser(QWidget *parent = nullptr);
+    explicit MergedBrowser(QWidget* parent = nullptr);
     ~MergedBrowser();
 
     void setMdiArea(QMdiArea* mdi);

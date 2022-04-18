@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/images/icons">
+        <file>images/icons/close_msg.png</file>
+        <file>images/icons/remove.png</file>
+        <file>images/icons/success.png</file>
+        <file>images/icons/add.png</file>
+        <file>images/icons/edit.png</file>
+        <file>images/icons/search.png</file>
+        <file>images/icons/info_small.png</file>
+        <file>images/icons/error_mark.png</file>
+        <file>images/icons/clients.png</file>
+        <file>images/icons/schedule.png</file>
+    </qresource>
+</RCC>

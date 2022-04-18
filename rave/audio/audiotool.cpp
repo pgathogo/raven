@@ -220,7 +220,8 @@ void AudioTool::mp3_ready()
 
 QString AudioTool::format_time(double time)
 {
-    return QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
+    auto fmt_str = QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
+    return fmt_str;
 
 }
 

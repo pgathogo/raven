@@ -23,7 +23,8 @@ SOURCES += \
     audiothread.cpp \
     audiowaveform.cpp \
     cueeditor.cpp \
-    subjectobserver.cpp
+    subjectobserver.cpp \
+    vumeter.cpp
 
 HEADERS += \
     ../../audio/audiofile.h \
@@ -35,7 +36,8 @@ HEADERS += \
     cueeditor_global.h \
     cueeditor.h \
     markindicator.h \
-    subjectobserver.h
+    subjectobserver.h \
+    vumeter.h
 
 # Default rules for deployment.
 unix {

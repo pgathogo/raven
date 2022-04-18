@@ -17,5 +17,7 @@
         <file>images/icons/play_intro.png</file>
         <file>images/icons/play_start.png</file>
         <file>images/icons/stop_play.png</file>
+        <file>images/icons/ledoff.bmp</file>
+        <file>images/icons/ledon.bmp</file>
     </qresource>
 </RCC>

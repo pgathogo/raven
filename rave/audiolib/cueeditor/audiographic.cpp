@@ -6,6 +6,7 @@
 #include <QLineF>
 #include <QLabel>
 #include <QGraphicsSceneMouseEvent>
+#include <QTime>
 
 #include "audiographic.h"
 #include "../../audio/audiotool.h"
@@ -253,9 +254,11 @@ namespace AUDIO{
         this->setScene(m_scene);
         this->setMaximumHeight(300);
         this->setMaximumWidth(803);
+
+
         m_time_in_secs = time_in_secs;
         draw_wave();
-        m_scene->draw_indicator_line();
+        //m_scene->draw_indicator_line();
         this->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     }
 
@@ -288,7 +291,8 @@ namespace AUDIO{
 
         this->setSceneRect(m_scene_bounds);
 
-        m_scene_width = m_scene_bounds.width()+m_scene_bounds.width()*0.11;
+        //m_scene_width = m_scene_bounds.width()+m_scene_bounds.width()*0.11;
+        m_scene_width = (m_scene_bounds.width()*2)*0.11;
         this->setMaximumWidth(m_scene_width+20);
 
         m_seconds_per_px = (m_time_in_secs*100)/m_scene_width;
@@ -315,13 +319,35 @@ namespace AUDIO{
         m_scene->move_indicator_line(new_pos);
     }
 
+
+    /* -------------------- AudioWaveScene ------------------------------- */
+
     AudioWaveScene::AudioWaveScene(QLabel* pos_counter, double audio_length)
-        :m_position_counter{pos_counter},
-         m_start_marker{nullptr},
-         m_audio_length{audio_length}
+        :m_position_counter{pos_counter}
+        ,m_start_marker{nullptr}
+        ,m_audio_length{audio_length}
+        ,m_scene_bound{nullptr}
+        ,m_indicator_line_position{nullptr}
+        ,m_indicator_line_item{nullptr}
+        ,m_pen{nullptr}
     {
         m_pen = new QPen(Qt::red);
         m_pen->setWidth(5);
+    }
+
+    AudioWaveScene::~AudioWaveScene()
+    {
+        if (m_scene_bound != nullptr)
+            delete m_scene_bound;
+
+        if (m_indicator_line_position != nullptr)
+            delete m_indicator_line_position;
+
+        if (m_indicator_line_item != nullptr)
+            delete m_indicator_line_item;
+
+        if (m_pen != nullptr)
+            delete m_pen;
     }
 
 
@@ -337,7 +363,6 @@ namespace AUDIO{
 
         update();
 
-        qDebug() << "** Done draw_indicator_line() **";
     }
 
     void AudioWaveScene::move_indicator_line(double new_pos)
@@ -357,7 +382,7 @@ namespace AUDIO{
         make_indicator_line(*m_scene_bound, *m_indicator_line_position);
 
         //double secs = new_pos * m_seconds_per_pixel/ 100;
-        update_counter(pixel_to_seconds(dx));
+        update_counter(pixel_to_milli_seconds(dx));
     }
 
     void AudioWaveScene::add_text(QPointF pos)
@@ -397,15 +422,14 @@ namespace AUDIO{
         QString time_str;
 
         if (time < 0){
-            AudioTool at;
-            time_str = at.format_time(time);
+            time_str = QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
             m_position_counter->setText(time_str);
             return;
         }
 
-        AudioTool at;
-        time_str = at.format_time(time);
+        time_str = QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
         m_position_counter->setText(time_str);
+
     }
 
     void AudioWaveScene::make_indicator_line(QRectF scene_bound, QLineF line_pos)
@@ -414,9 +438,15 @@ namespace AUDIO{
         addItem(m_indicator_line_item);
     }
 
+    int AudioWaveScene::count()
+    {
+        return items().size();
+    }
+
     void AudioWaveScene::remove_indicator_line()
     {
         removeItem(m_indicator_line_item);
+        delete m_indicator_line_item;
     }
 
     QLineF *AudioWaveScene::indicator_line() const
@@ -493,6 +523,11 @@ namespace AUDIO{
     double AudioWaveScene::pixel_to_seconds(double px)
     {
         return px * m_seconds_per_pixel/ 100;
+    }
+
+    double AudioWaveScene::pixel_to_milli_seconds(double px)
+    {
+        return (px * m_seconds_per_pixel/ 100)*1000;
     }
 
     double AudioWaveScene::seconds_to_pixel(double secs)

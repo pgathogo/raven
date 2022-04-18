@@ -1,1 +1,1 @@
-D:/home/PMS/Raven/rave/Traffik/ffmpeg.exe -y -i D:\home\PMS\Raven\audio\TestAudio\sabuni_gaya.mp3 -c:a libvorbis -q:a 4 -vsync 2 D:\music\studio1\sabuni_gaya.ogg
+D:/home/pms/raven/rave/Traffik/ffmpeg.exe -y -i D:\home\PMS\Raven\audio\TestAudio\sabuni_gaya.mp3 -c:a libvorbis -q:a 4 -vsync 2 D:\home\PMS\Raven\audio\TestAudio\sabuni_gaya.ogg

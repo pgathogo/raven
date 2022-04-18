@@ -113,6 +113,7 @@ else()
     ../audio/audiolibitem.cpp
     ../audio/audiohistoryform.h
     ../audio/audiohistoryform.cpp
+    ../audio/vumeter.h
 
     ../traffik/spotaudio.cpp
     ../traffik/spot.cpp

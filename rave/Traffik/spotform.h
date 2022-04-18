@@ -8,9 +8,12 @@
 
 #include "spot.h"
 
+
 namespace Ui {
 class SpotForm;
 }
+
+class QApplication;
 
 class Client;
 class DayPartGrid;

@@ -1,4 +1,6 @@
+#include <QApplication>
 #include <QMdiArea>
+
 #include "mergedbrowser.h"
 #include "ui_mergedbrowser.h"
 

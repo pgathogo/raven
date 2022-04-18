@@ -156,6 +156,7 @@ private:
     std::unique_ptr<AudioHistoryForm> m_audio_history;
     QDate m_schedule_date;
 
+
     //QList<QStandardItem*> commercial_record(const Schedule);
     void create_model_headers();
     std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);

@@ -70,11 +70,7 @@ void AudioThread::read_FFT(QString filename)
 
     QWORD pos = BASS_ChannelGetLength(chan, BASS_POS_BYTE);
 
-    qDebug() << "Streaming file: " << pos;
-
     DWORD p = (DWORD) BASS_ChannelBytes2Seconds(chan, pos); // length of file in seconds
-
-    qDebug() << "Length of file: "<< p;
 
     float time = 0;
 
@@ -103,13 +99,11 @@ void AudioThread::read_FFT(QString filename)
                     peak = fft[1 + b0];
             }
 
-            qDebug() << "Column: "<< sqrt(peak);
-
         }
         qDebug() << "<--- end of row --->";
         pos = BASS_ChannelGetPosition(chan, BASS_POS_BYTE);
         p = (DWORD) BASS_ChannelBytes2Seconds(chan, pos);
-        qDebug() << "TIME: " << p/60 << p % 60;
+        //qDebug() << "TIME: " << p/60 << p % 60;
         time += 1 / fps;
     }
 
@@ -178,8 +172,6 @@ void AudioThread::signal_update()
             BASS_POS_BYTE)),
                         BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetLength(m_channel,
             BASS_POS_BYTE)));
-
-        qDebug() << fft;
 
         BASS_ChannelGetData(m_channel, fft, BASS_DATA_FFT2048);
         emit current_peak(fft);

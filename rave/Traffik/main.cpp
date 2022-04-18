@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     auth->connect("postgres", "abc123");
     //LoginForm lf(auth.get());
     //if (lf.exec() > 0){
-        MainWindow w(std::move(auth));
+        MainWindow w(&a, std::move(auth));
         w.show();
         return a.exec();
     //}

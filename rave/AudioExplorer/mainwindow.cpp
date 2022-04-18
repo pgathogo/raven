@@ -1136,6 +1136,7 @@ AUDIO::Audio* MainWindow::get_selected_audio()
 
 void MainWindow::cue_edit()
 {
+
     AUDIO::Audio* audio = get_selected_audio();
     if (audio == nullptr)
         return;
@@ -1168,16 +1169,14 @@ void MainWindow::cue_edit()
         wave_gen->generate();
     }
 
-    //auto cue_editor = std::make_unique<CueEditor>(aaf);
-    CueEditor* cue_editor = new CueEditor(aud_file, m_qapp);
-    if (cue_editor->editor() == 1){
+    auto cue_editor = std::make_unique<CueEditor>(aud_file, m_qapp);
+    //CueEditor* cue_editor = new CueEditor(aud_file, m_qapp);
 
+    if (cue_editor->editor() == 1){
         audio->set_audio_file(aud_file);
         audio->set_duration(audio->audio_file().duration());
-
     }
 
-    delete cue_editor;
 
 }
 

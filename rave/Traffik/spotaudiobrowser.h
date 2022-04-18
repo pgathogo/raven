@@ -16,11 +16,17 @@ namespace TRAFFIK{
 
 namespace AUDIO{
  class Audio;
+ class AudioWaveForm;
+ class AudioPlayer;
+}
+
+namespace FRAMEWORK{
+    class ApplicationContext;
 }
 
 class ManyToMany;
 class RavenSetup;
-class CueEditor;
+//class CueEditor;
 
 class SpotAudioBrowser : public BaseEntityBrowserDlg
 {
@@ -55,7 +61,7 @@ public:
     void create_button(const QString, QString, Slot);
 
     AUDIO::Audio* audio_from_selection();
-    std::string audio_file_name(AUDIO::Audio*);
+    std::string get_audio_file(AUDIO::Audio*);
 
 private slots:
      void import_audio();
@@ -65,13 +71,15 @@ private slots:
 
 private:
     Ui::SpotAudioBrowser* ui;
+
     ManyToMany* m_mtom;
     std::unique_ptr<EntityDataModel> m_setup_edm;
     RavenSetup* m_setup;
     std::vector<std::unique_ptr<TRAFFIK::SpotAudio>> m_audios;
     std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
-    std::unique_ptr<CueEditor> m_cue_editor;
-
+//    std::unique_ptr<CueEditor> m_cue_editor;
+    std::unique_ptr<AUDIO::AudioWaveForm> m_audio_wave_form;
+    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
 };
 
 #endif // SPOTAUDIOBROWSER_H

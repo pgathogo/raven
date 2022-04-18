@@ -4,6 +4,8 @@
 #include <QDialog>
 #include "../framework/baseentitybrowserdlg.h"
 
+class QApplication;
+
 class Client;
 class SpotForm;
 

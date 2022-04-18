@@ -24,8 +24,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(std::unique_ptr<Authentication> auth,
-               QWidget *parent = nullptr);
+    MainWindow(QApplication* app,
+               std::unique_ptr<Authentication> auth,
+               QWidget* parent = nullptr);
     ~MainWindow();
 
     template<typename T>
@@ -77,6 +78,7 @@ private slots:
 private:
     //PlainForm* pf;
     Ui::MainWindow *ui;
+
     QMdiArea* mdiArea;
 
     QMenu* traffikMenu;

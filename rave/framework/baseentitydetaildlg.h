@@ -47,6 +47,13 @@ public:
             mForms.emplace_back(std::move(uPtr));
             return ptr;
         }
+
+        template<typename T>
+        void register_input_widget(T* edit)
+        {
+            connect(edit, &T::textChanged, this, [&](){m_okay_to_close = false;});
+        }
+
        BrowserForms const& get_forms() const;
 
 

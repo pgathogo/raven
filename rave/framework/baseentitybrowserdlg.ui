@@ -35,7 +35,7 @@
        </property>
        <property name="icon">
         <iconset resource="../traffik/traffik.qrc">
-         <normaloff>:/images/icons/images/icons/add.png</normaloff>:/images/icons/images/icons/add.png</iconset>
+         <normaloff>:/images/icons/add.png</normaloff>:/images/icons/add.png</iconset>
        </property>
       </widget>
      </item>
@@ -46,7 +46,7 @@
        </property>
        <property name="icon">
         <iconset resource="../traffik/traffik.qrc">
-         <normaloff>:/images/icons/images/icons/edit.png</normaloff>:/images/icons/images/icons/edit.png</iconset>
+         <normaloff>:/images/icons/edit.png</normaloff>:/images/icons/edit.png</iconset>
        </property>
       </widget>
      </item>
@@ -57,7 +57,7 @@
        </property>
        <property name="icon">
         <iconset resource="../traffik/traffik.qrc">
-         <normaloff>:/images/icons/images/icons/remove.png</normaloff>:/images/icons/images/icons/remove.png</iconset>
+         <normaloff>:/images/icons/delete.png</normaloff>:/images/icons/delete.png</iconset>
        </property>
       </widget>
      </item>
@@ -147,7 +147,7 @@
        </property>
        <property name="icon">
         <iconset resource="../traffik/traffik.qrc">
-         <normaloff>:/images/icons/images/icons/search.png</normaloff>:/images/icons/images/icons/search.png</iconset>
+         <normaloff>:/images/icons/search.png</normaloff>:/images/icons/search.png</iconset>
        </property>
       </widget>
      </item>

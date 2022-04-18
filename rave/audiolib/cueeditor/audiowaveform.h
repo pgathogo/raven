@@ -2,7 +2,9 @@
 #define AUDIOWAVEFORM_H
 
 #include <memory>
+
 #include <QDialog>
+#include <QApplication>
 
 #include "audiographic.h"
 #include "../../audio/audiofile.h"
@@ -17,12 +19,16 @@ namespace AUDIO {
         class AudioWaveForm;
     }
 
+    class VuMeter;
+
     class AudioWaveForm : public QDialog
     {
+        QApplication* q_app;
+
         Q_OBJECT
 
     public:
-        explicit AudioWaveForm(AudioFile& audio_file, QDialog* parent = nullptr);
+        explicit AudioWaveForm(QApplication* app, AudioFile& audio_file, QDialog* parent = nullptr);
         ~AudioWaveForm() override;
 
         void show_wave_file();
@@ -82,6 +88,7 @@ namespace AUDIO {
 
     private:
         Ui::AudioWaveForm *ui;
+
         AudioFile& m_audio_file;
         double m_seconds_per_pixel;
         AudioWave* m_audio_wave;
@@ -89,6 +96,8 @@ namespace AUDIO {
         AudioThread* m_audio_thread;
         QTimer* m_player_timer;
         QTimer* m_indicator_timer;
+
+        std::unique_ptr<VuMeter> m_vumeter;
 
         void init_widgets();
 
@@ -104,6 +113,8 @@ namespace AUDIO {
         AUDIO::MarkerDisplayUnit* m_fade_in_display_unit;
 
         std::map<AUDIO::MarkerType, AUDIO::MarkerDisplayUnit*> m_display_units;
+
+        double m_new_pos;
 
     };
 

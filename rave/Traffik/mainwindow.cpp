@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QMdiArea>
 #include <QToolBar>
 
@@ -7,6 +8,7 @@
 #include "../framework/entityregister.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
+//#include "../framework/applicationcontext.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -20,10 +22,10 @@
 
 AccessMap MainWindow::access_map;
 
-MainWindow::MainWindow(std::unique_ptr<Authentication> auth,
+MainWindow::MainWindow(QApplication* app,
+                       std::unique_ptr<Authentication> auth,
                        QWidget *parent)
     : QMainWindow(parent)
-    //, pf{}
     , ui(new Ui::MainWindow)
     , mdiArea{ new QMdiArea }
     ,traffikMenu{}
@@ -56,6 +58,8 @@ MainWindow::MainWindow(std::unique_ptr<Authentication> auth,
 
 //    m_report = new LimeReport::ReportEngine(this);
 
+//    FRAMEWORK::ApplicationContext* app_context;
+//    app_context = app_context->instance(app);
 
     this->setWindowTitle("Raven - Traffik");
 }
@@ -106,7 +110,7 @@ void MainWindow::createActions()
     */
 
     QAction* scheduleAction = new QAction(tr("&SCHEDULE"));
-    scheduleAction->setIcon(QIcon(":/images/icons/images/icons/schedule.png"));
+    scheduleAction->setIcon(QIcon(":/images/icons/schedule.png"));
     setupMenu->addAction(scheduleAction);
     scheduleAction->setStatusTip(tr("Schedule"));
     connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
@@ -115,7 +119,7 @@ void MainWindow::createActions()
     */
 
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
-    merged_browser_act->setIcon(QIcon(":/images/icons/images/icons/clients.png"));
+    merged_browser_act->setIcon(QIcon(":/images/icons/clients.png"));
     connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
 
     QAction* setup_browser_act = new QAction(tr("&SETUPS"));
