@@ -110,7 +110,7 @@ void MainWindow::createActions()
     */
 
     QAction* scheduleAction = new QAction(tr("&SCHEDULE"));
-    scheduleAction->setIcon(QIcon(":/images/icons/schedule.png"));
+    scheduleAction->setIcon(QIcon(":/images/media/icons/schedule.png"));
     setupMenu->addAction(scheduleAction);
     scheduleAction->setStatusTip(tr("Schedule"));
     connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
@@ -119,7 +119,7 @@ void MainWindow::createActions()
     */
 
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
-    merged_browser_act->setIcon(QIcon(":/images/icons/clients.png"));
+    merged_browser_act->setIcon(QIcon(":/images/media/icons/clients.png"));
     connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
 
     QAction* setup_browser_act = new QAction(tr("&SETUPS"));

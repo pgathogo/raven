@@ -9,7 +9,7 @@
 
 #include "../audio/audio.h"
 #include "../audio/artist.h"
-#include "../../audiolib/cueeditor/audioplayer.h"
+//#include "../../audiolib/cueeditor/audioplayer.h"
 #include "../framework/relationmapper.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/tree.h"
@@ -33,9 +33,11 @@ namespace AUDIO{
   class Mp3ToOggConverter;
   class AudioWaveFormGenerator;
   class AudioConverter;
+  class AudioWaveForm;
+  class AudioPlayer;
 }
 
-class CueEditor;
+//class CueEditor;
 class RavenSetup;
 
 QT_BEGIN_NAMESPACE
@@ -181,9 +183,9 @@ private:
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
 
-    std::unique_ptr<AudioPlayer> m_audio_player;
+    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
 
-    std::unique_ptr<CueEditor> m_cue_editor;
+//    std::unique_ptr<CueEditor> m_cue_editor;
     std::vector<int> m_cut_audios;
     int m_cut_folder_id;
 
@@ -196,12 +198,12 @@ private:
     std::unique_ptr<AUDIO::AudioConverter> m_audio_converter;
     std::unique_ptr<AUDIO::AudioWaveFormGenerator> m_wave_gen;
 
+    std::unique_ptr<AUDIO::AudioWaveForm> m_audio_wave_form;
+
     RavenSetup* m_setup;
     std::unique_ptr<EntityDataModel> m_setup_edm;
 
     int selected_folder_id();
-
-
 
 };
 

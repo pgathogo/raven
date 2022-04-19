@@ -283,7 +283,6 @@ void SpotAudioBrowser::play_back()
 void SpotAudioBrowser::stop_play()
 {
     if (m_audio_player != nullptr)
-
         m_audio_player->stop_play();
 }
 

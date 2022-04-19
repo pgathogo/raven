@@ -61,6 +61,8 @@ public:
     void show_letter_filter();
     BaseEntity* findSelectedEntity();
 
+    void set_button_icons();
+
     template<typename T1, typename T2, typename T3 >
     bool add_related_record(T3* parent)
     {

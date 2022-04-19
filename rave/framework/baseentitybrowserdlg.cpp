@@ -43,6 +43,29 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
 
+    set_button_icons();
+
+}
+
+void BaseEntityBrowserDlg::set_button_icons()
+{
+    QPixmap add_pixmap(":/images/media/icons/add.png");
+    QIcon add_icon(add_pixmap);
+    bui->btnAdd->setIcon(add_icon);
+
+    QPixmap edit_pixmap(":/images/media/icons/edit.png");
+    QIcon edit_icon(edit_pixmap);
+    bui->btnEdit->setIcon(edit_icon);
+
+    QPixmap delete_pixmap(":/images/media/icons/delete.png");
+    QIcon delete_icon(delete_pixmap);
+    bui->btnDelete->setIcon(delete_icon);
+
+    QPixmap search_pixmap(":/images/media/icons/search.png");
+    QIcon search_icon(search_pixmap);
+    bui->btnSearch->setIcon(search_icon);
+
+
 }
 
 BaseEntityBrowserDlg::~BaseEntityBrowserDlg()

@@ -22,15 +22,14 @@
 #include "../audio/genretypeitem.h"
 #include "../audio/audiotool.h"
 #include "../audio/genreform.h"
-#include "../audio/audioimporter.h"
 #include "../audio/audioconverter.h"
 #include "../audio/mp3oggconverter.h"
 #include "../audio/oggtooggconverter.h"
 #include "../audio/audiowaveformgenerator.h"
 #include "../audio/audiofileinfo.h"
 
-#include "../audiolib/headers/cueeditor.h"
-#include "../audiolib/headers/audioplayer.h"
+#include "../audio/editor/audiowaveform.h"
+#include "../audio/editor/audioplayer.h"
 
 #include "../framework/baseentity.h"
 #include "../framework/treeviewmodel.h"
@@ -286,23 +285,23 @@ void MainWindow::folder_context_menu(const QPoint& pos)
 
     QAction actNew("New Folder", ui->tvFolders);
     connect(&actNew, &QAction::triggered, this, &MainWindow::create_new_folder);
-    actNew.setIcon(QIcon(":/images/icons/add.png"));
+    actNew.setIcon(QIcon(":/images/media/icons/add.png"));
 
     QAction actRename("Rename Folder", ui->tvFolders);
     connect(&actRename, &QAction::triggered, this, &MainWindow::rename_folder);
-    actRename.setIcon(QIcon(":/images/icons/edit.png"));
+    actRename.setIcon(QIcon(":/images/media/icons/edit.png"));
 
     QAction actCut("Cut Folder", ui->tvFolders);
     connect(&actCut, &QAction::triggered, this, &MainWindow::cut_folder);
-    actCut.setIcon(QIcon(":/images/icons/cut.png"));
+    actCut.setIcon(QIcon(":/images/media/icons/cut.png"));
 
     QAction actPaste("Paste Folder", ui->tvFolders);
     connect(&actPaste, &QAction::triggered, this, &MainWindow::paste_folder);
-    actPaste.setIcon(QIcon(":/images/icons/paste.png"));
+    actPaste.setIcon(QIcon(":/images/media/icons/paste.png"));
 
     QAction actDelete("Delete Folder", ui->tvFolders);
     connect(&actDelete, &QAction::triggered, this, &MainWindow::delete_folder);
-    actDelete.setIcon(QIcon(":/images/icons/delete.png"));
+    actDelete.setIcon(QIcon(":/images/media/icons/delete.png"));
 
     context_menu.addAction(&actNew);
     context_menu.addAction(&actRename);
@@ -318,19 +317,19 @@ void MainWindow::folder_context_menu(const QPoint& pos)
 void MainWindow::connect_toolbutton_signals()
 {
     connect(ui->tbNew, &QToolButton::clicked, this, &MainWindow::create_new_folder);
-    ui->tbNew->setIcon(QIcon(":/images/icons/add.png"));
+    ui->tbNew->setIcon(QIcon(":/images/media/icons/add.png"));
 
     connect(ui->tbRename, &QToolButton::clicked, this, &MainWindow::rename_folder);
-    ui->tbRename->setIcon(QIcon(":/images/icons/edit.png"));
+    ui->tbRename->setIcon(QIcon(":/images/media/icons/edit.png"));
 
     connect(ui->tbCut, &QToolButton::clicked, this, &MainWindow::cut_folder);
-    ui->tbCut->setIcon(QIcon(":/images/icons/cut.png"));
+    ui->tbCut->setIcon(QIcon(":/images/media/icons/cut.png"));
 
     connect(ui->tbPaste, &QToolButton::clicked, this, &MainWindow::paste_folder);
-    ui->tbPaste->setIcon(QIcon(":/images/icons/paste.png"));
+    ui->tbPaste->setIcon(QIcon(":/images/media/icons/paste.png"));
 
     connect(ui->tbDelete, &QToolButton::clicked, this, &MainWindow::delete_folder);
-    ui->tbDelete->setIcon(QIcon(":/images/icons/delete.png"));
+    ui->tbDelete->setIcon(QIcon(":/images/media/icons/delete.png"));
 }
 
 
@@ -946,16 +945,18 @@ void MainWindow::import_audio()
             m_audio_converter->convert();
         }
 
-        auto audio_file_info = audio->audio_file();
-        auto cue_editor = std::make_unique<CueEditor>(audio_file_info, m_qapp);
+//        auto cue_editor = std::make_unique<CueEditor>(audio_file_info, m_qapp);
+//        if (cue_editor->editor() == 1)
 
-        if (cue_editor->editor() == 1)
+        auto audio_file_info = audio->audio_file();
+        auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(audio_file_info);
+        if (wave_form->exec() == 1)
         {
             audio->set_duration(audio_file_info.duration());
-            audio->set_cue_marker(cue_editor->cue_marker());
+            audio->set_cue_marker(wave_form->cue_marker());
             audio->setDBAction(DBAction::dbaCREATE);
 
-            audio_file_info.set_marker(cue_editor->cue_marker());
+            audio_file_info.set_marker(wave_form->cue_marker());
 
             int audio_id = write_audio_to_db(std::move(audio));
             if (audio_id == -1){
@@ -1109,14 +1110,17 @@ void MainWindow::play_audio()
     }
 
     AudioFile af(full_audio_name);
-    m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
-    m_cue_editor->play_audio();
+    m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
+    m_audio_player->play_audio();
+
+//    m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
+//    m_cue_editor->play_audio();
 }
 
 void MainWindow::stop_play()
 {
-    if (m_cue_editor != nullptr)
-        m_cue_editor->stop_audio();
+    if (m_audio_player != nullptr)
+        m_audio_player->stop_play();
 }
 
 AUDIO::Audio* MainWindow::get_selected_audio()
@@ -1169,14 +1173,15 @@ void MainWindow::cue_edit()
         wave_gen->generate();
     }
 
-    auto cue_editor = std::make_unique<CueEditor>(aud_file, m_qapp);
+//    auto cue_editor = std::make_unique<CueEditor>(aud_file, m_qapp);
     //CueEditor* cue_editor = new CueEditor(aud_file, m_qapp);
+//    if (cue_editor->editor() == 1){
 
-    if (cue_editor->editor() == 1){
+    auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(aud_file);
+    if (wave_form->exec()) {
         audio->set_audio_file(aud_file);
         audio->set_duration(audio->audio_file().duration());
     }
-
 
 }
 

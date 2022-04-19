@@ -184,7 +184,6 @@ void TrashCanForm::restore()
         showMessage(de.errorMessage());
     }
 
-
 }
 
 

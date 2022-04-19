@@ -14,6 +14,7 @@ public:
     QPushButton* add_button();
     QPushButton* edit_button();
     QPushButton* delete_button();
+    void set_button_icons();
 private:
     QHBoxLayout* m_btn_layout;
     QPushButton* m_btnAdd;

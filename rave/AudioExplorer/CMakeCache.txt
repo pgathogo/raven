@@ -26,6 +26,9 @@ AudioExplorer_BINARY_DIR:STATIC=D:/home/PMS/Raven/rave/AudioExplorer
 //Value Computed by CMake
 AudioExplorer_SOURCE_DIR:STATIC=D:/home/PMS/Raven/rave/AudioExplorer
 
+//Path to a library.
+BASS_LIBRARY:FILEPATH=D:/home/PMS/Raven/rave/lib/BassLib/Lib/bass.lib
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=D:/MinGW/MinGW/bin/addr2line.exe
 

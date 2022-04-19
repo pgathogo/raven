@@ -13,31 +13,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
+
 set(rave_audio_INCLUDE_DIRS "../audio")
-set(rave_audiolib_INCLUDE_DIRS "../audiolib")
+
+#set(rave_audiolib_INCLUDE_DIRS "../audiolib")
 
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
 find_package(PostgreSQL REQUIRED)
-
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check https://doc.qt.io/qt/deployment-android.html for more information.
-# They need to be set before the find_package( ...) calls below.
-
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
-
 
 include_directories(${AUDIO_INCLUDE_DIR})
 set(RAVE_AUDIO_LIBRARIES ${AUDIO_LIBRARY})
@@ -67,6 +55,7 @@ set(PROJECT_SOURCES
         bookedaudiocheckerform.cpp
         bookedaudiocheckerform.h
         bookedaudiocheckerform.ui
+        audioexplorer.qrc
 
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.cpp
@@ -79,8 +68,6 @@ set(PROJECT_SOURCES
         ../audio/genretypeitem.h
         ../audio/genretypeitem.cpp
         ../audio/genreform.cpp
-        ../audio/audioimporter.h
-        ../audio/audioimporter.cpp
         ../audio/audioconverter.h
         ../audio/audioconverter.cpp
         ../audio/mp3oggconverter.h
@@ -91,6 +78,20 @@ set(PROJECT_SOURCES
         ../audio/audiowaveformgenerator.cpp
         ../audio/audiofileinfo.h
         ../audio/audiofileinfo.cpp
+
+        ../audio/editor/audiographic.cpp
+        ../audio/editor/audioplayer.cpp
+        ../audio/editor/audiothread.cpp
+        ../audio/editor/audiowaveform.cpp
+        ../audio/editor/subjectobserver.cpp
+        ../audio/editor/vumeter.cpp
+        ../audio/editor/audiographic.h
+        ../audio/editor/audioplayer.h
+        ../audio/editor/audiothread.h
+        ../audio/editor/audiowaveform.h
+        ../audio/editor/markindicator.h
+        ../audio/editor/subjectobserver.h
+        ../audio/editor/vumeter.h
 
         ../framework/baseentity.cpp
         ../framework/baseentitybrowserdlg.cpp
@@ -141,38 +142,50 @@ endif()
 
 target_link_libraries(AudioExplorer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_include_directories(AudioExplorer PRIVATE ${postgreSQL_INCLUDE_DIRS})
+
 target_include_directories(AudioExplorer PRIVATE ${rave_framework_INCLUDE_DIRS})
-target_include_directories(AudioExplorer PRIVATE ${rave_audiolib_INCLUDE_DIRS})
+#target_include_directories(AudioExplorer PRIVATE ${rave_audiolib_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
-link_directories(${rave_audio_INCLUDE_DIRS})
-link_directories(${rave_audiolib_INCLUDE_DIRS})
+
+#link_directories(${rave_audio_INCLUDE_DIRS})
+#link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(AudioExplorer PRIVATE ${PostgreSQL_LIBRARIES})
-target_link_libraries(AudioExplorer PRIVATE ${RAVE_AUDIO_LIBRARIES})
 
-set(AUDIO_INCLUDE_DIR "../audiolib/headers")
-set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
-find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
+#target_link_libraries(AudioExplorer PRIVATE ${RAVE_AUDIO_LIBRARIES})
 
-if (AUDIO_INCLUDE_DIR)
-        message(STATUS "AUDIO_INCLUDE_DIR found")
-endif()
+#set(AUDIO_INCLUDE_DIR "../audiolib/headers")
+#set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
+#find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
 
-if (AUDIO_LIBRARY)
-        message(STATUS "CueEditor library found.")
-endif()
-
-target_link_directories(AudioExplorer PRIVATE ${AUDIO_LIBRARY_DIR})
-target_link_libraries(AudioExplorer PRIVATE ${AUDIO_LIBRARY})
-
-#set_target_properties(AudioExplorer PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-#    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-#    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-#)
-
-#if(QT_VERSION_MAJOR EQUAL 6)
-#    qt_finalize_executable(AudioExplorer)
+#if (AUDIO_INCLUDE_DIR)
+#        message(STATUS "AUDIO_INCLUDE_DIR found")
 #endif()
+
+#if (AUDIO_LIBRARY)
+#        message(STATUS "CueEditor library found.")
+#endif()
+
+#target_link_directories(AudioExplorer PRIVATE ${AUDIO_LIBRARY_DIR})
+#target_link_libraries(AudioExplorer PRIVATE ${AUDIO_LIBRARY})
+
+set(BASS_INCLUDE_DIR "../lib/BassLib/Include")
+set(BASS_LIBRARY_DIR "../lib/BassLib/Lib")
+find_library(BASS_LIBRARY bass ${BASS_LIBRARY_DIR})
+if (BASS_LIBRARY)
+        message(STATUS "Bass library found.")
+endif()
+target_link_directories(AudioExplorer PRIVATE ${BASS_LIBRARY_DIR})
+target_link_libraries(AudioExplorer PRIVATE ${BASS_LIBRARY})
+
+set_target_properties(AudioExplorer PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(AudioExplorer)
+endif()

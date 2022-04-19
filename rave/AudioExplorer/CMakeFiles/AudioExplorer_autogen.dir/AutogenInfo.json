@@ -152,11 +152,6 @@
 			"Y6ZUSTFKUI/moc_audiofolder.cpp"
 		],
 		[
-			"D:/home/PMS/Raven/rave/audio/audioimporter.h",
-			"MU",
-			"Y6ZUSTFKUI/moc_audioimporter.cpp"
-		],
-		[
 			"D:/home/PMS/Raven/rave/audio/audiolibitem.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiolibitem.cpp"
@@ -175,6 +170,41 @@
 			"D:/home/PMS/Raven/rave/audio/audiowaveformgenerator.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiowaveformgenerator.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/audiographic.h",
+			"MU",
+			"QI22GHLL3J/moc_audiographic.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/audioplayer.h",
+			"MU",
+			"QI22GHLL3J/moc_audioplayer.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/audiothread.h",
+			"MU",
+			"QI22GHLL3J/moc_audiothread.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/audiowaveform.h",
+			"MU",
+			"QI22GHLL3J/moc_audiowaveform.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/markindicator.h",
+			"MU",
+			"QI22GHLL3J/moc_markindicator.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/subjectobserver.h",
+			"MU",
+			"QI22GHLL3J/moc_subjectobserver.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/editor/vumeter.h",
+			"MU",
+			"QI22GHLL3J/moc_vumeter.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/audio/genreform.h",
@@ -335,7 +365,6 @@
 		"C:/Program Files/PostgreSQL/9.5/include/server",
 		"D:/home/PMS/Raven/rave/audiolib/headers",
 		"D:/home/PMS/Raven/rave/framework",
-		"D:/home/PMS/Raven/rave/audiolib",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets",
 		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui",
@@ -392,11 +421,16 @@
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofileinfo.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/audio/audioimporter.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiowaveformgenerator.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/editor/audiographic.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/editor/audioplayer.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/editor/audiothread.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/editor/audiowaveform.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/editor/subjectobserver.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/editor/vumeter.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/genreform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/genretypeitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/mp3oggconverter.cpp", "MU" ],
