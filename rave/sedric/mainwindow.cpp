@@ -38,8 +38,11 @@
 
 #include "../utils/tools.h"
 
-#include "../audiolib/headers/cueeditor.h"
-#include "../audiolib/headers/audioplayer.h"
+//#include "../audiolib/headers/cueeditor.h"
+//#include "../audiolib/headers/audioplayer.h"
+
+#include "../audio/editor/audiowaveform.h"
+#include "../audio/editor/audioplayer.h"
 
 #include "../traffik/spotaudio.h"
 #include "../traffik/spot.h"
@@ -52,7 +55,6 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     , m_qapp{app}
     , m_schedule_model{nullptr}
     , m_tree_model{nullptr}
-    , m_cue_editor{nullptr}
     , m_save_as{nullptr}
 {
     ui->setupUi(this);
@@ -343,6 +345,7 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
     std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
+
     fetch_audio(filter_str);
 }
 
@@ -390,7 +393,7 @@ void MainWindow::track_selected(const QModelIndex& index)
 
 void MainWindow::insert_item(const QModelIndex& index)
 {
-    auto audio = get_selected_audio();
+    auto audio = this->get_selected_audio();
     if (audio == nullptr)
         return;
 
@@ -556,6 +559,7 @@ void MainWindow::create_track_view_headers()
     m_tracks_model->setHorizontalHeaderItem(2, new QStandardItem("Duration"));
     m_tracks_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
     m_tracks_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
+    m_tracks_model->setHorizontalHeaderItem(5, new QStandardItem("Folder"));
 }
 
 void MainWindow::adjust_header_size()
@@ -567,13 +571,14 @@ void MainWindow::adjust_header_size()
 
 void MainWindow::set_track_view_column_width()
 {
-    enum Column{Title, Artist, Duration, AudioType, AudioFile};
+    enum Column{Title, Artist, Duration, AudioType, AudioFile, Folder};
 
     ui->tvTracks->setColumnWidth(Column::Title, 300);
     ui->tvTracks->setColumnWidth(Column::Artist,250);
     ui->tvTracks->setColumnWidth(Column::Duration, 100);
     ui->tvTracks->setColumnWidth(Column::AudioType, 150);
     ui->tvTracks->setColumnWidth(Column::AudioFile, 250);
+    ui->tvTracks->setColumnWidth(Column::Folder, 250);
 }
 
 void MainWindow::create_model_headers()
@@ -714,8 +719,8 @@ void MainWindow::fetch_schedule_from_db(QDate date, std::vector<int> hours)
 void MainWindow::set_track_view()
 {
     m_tracks_model->clear();
+    m_audio_lib_item->clear();
     create_track_view_headers();
-    //adjust_header_size();
     set_track_view_column_width();
 }
 
@@ -735,8 +740,6 @@ void MainWindow::show_audio_data()
 
     for (auto&[name, entity] : m_audio_entity_data_model->modelEntities()){
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
-
-        qDebug() << "DisplayName: "<< stoq(audio->audio_type()->displayName());
 
         if (audio->audio_type()->displayName() == "Song")
             m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
@@ -787,7 +790,7 @@ void MainWindow::play_audio()
     if (select->selectedRows().size() == 0)
         return;
 
-    AUDIO::Audio* audio = get_selected_audio();
+    AUDIO::Audio* audio = this->get_selected_audio();
     if (audio == nullptr)
         return;
 
@@ -801,16 +804,15 @@ void MainWindow::play_audio()
     }
 
     AudioFile af(full_audio_name);
-    m_cue_editor = std::make_unique<CueEditor>(af, "string");
-    //m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
-    m_cue_editor->play_audio();
+    m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
+    m_audio_player->play_audio();
 
 }
 
 void MainWindow::stop_play()
 {
-    if (m_cue_editor != nullptr)
-        m_cue_editor->stop_audio();
+    if (m_audio_player != nullptr)
+        m_audio_player->stop_play();
 }
 
 History MainWindow::make_history(int id)
@@ -855,7 +857,7 @@ History MainWindow::make_history(int id)
 void MainWindow::show_audio_history()
 {
 
-    AUDIO::Audio* audio = get_selected_audio();
+    AUDIO::Audio* audio = this->get_selected_audio();
 
     if (audio == nullptr)
         return;
@@ -870,6 +872,7 @@ void MainWindow::show_audio_history()
         ui->vlHistory->addWidget(m_audio_history.get());
         m_audio_history->show();
     }
+
 }
 
 void MainWindow::select_date_time()

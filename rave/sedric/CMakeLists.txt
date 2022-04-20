@@ -14,43 +14,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
 set(rave_audio_INCLUDE_DIRS "../audio")
-set(rave_audiolib_INCLUDE_DIRS "../audiolib")
+
+#set(rave_audiolib_INCLUDE_DIRS "../audiolib")
 
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
 find_package(PostgreSQL REQUIRED)
-
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check http://doc.qt.io/qt-5/deployment-android.html for more information.
-# They need to be set before the find_package(Qt5 ...) call.
-
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
-
-#set(AUDIO_INCLUDE "../audiolib/headers")
-#set(AUDIO_LIB "../audiolib/lib_debug")
-#find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
-#find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
-
-#if (AUDIO_INCLUDE_DIR)
-#        message(STATUS "Audio Include dir found.")
-#endif()
-
-#if (AUDIO_LIBRARY)
-#        message(STATUS "Audio library found.")
-#endif()
-
 
 include_directories(${AUDIO_INCLUDE_DIR})
 set(RAVE_AUDIO_LIBRARIES ${AUDIO_LIBRARY})
@@ -113,7 +87,20 @@ else()
     ../audio/audiolibitem.cpp
     ../audio/audiohistoryform.h
     ../audio/audiohistoryform.cpp
-    ../audio/vumeter.h
+
+    ../audio/editor/audiographic.cpp
+    ../audio/editor/audioplayer.cpp
+    ../audio/editor/audiothread.cpp
+    ../audio/editor/audiowaveform.cpp
+    ../audio/editor/subjectobserver.cpp
+    ../audio/editor/vumeter.cpp
+    ../audio/editor/audiographic.h
+    ../audio/editor/audioplayer.h
+    ../audio/editor/audiothread.h
+    ../audio/editor/audiowaveform.h
+    ../audio/editor/markindicator.h
+    ../audio/editor/subjectobserver.h
+    ../audio/editor/vumeter.h
 
     ../traffik/spotaudio.cpp
     ../traffik/spot.cpp
@@ -130,28 +117,50 @@ endif()
 
 target_include_directories(sedric PRIVATE ${postgreSQL_INCLUDE_DIRS})
 target_include_directories(sedric PRIVATE ${rave_framework_INCLUDE_DIRS})
-target_include_directories(sedric PRIVATE ${rave_audiolib_INCLUDE_DIRS})
+#target_include_directories(sedric PRIVATE ${rave_audiolib_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
+
 link_directories(${rave_audio_INCLUDE_DIRS})
-link_directories(${rave_audiolib_INCLUDE_DIRS})
+#link_directories(${rave_audiolib_INCLUDE_DIRS})
 
 target_link_libraries(sedric PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(sedric PRIVATE ${PostgreSQL_LIBRARIES})
+
 target_link_libraries(sedric PRIVATE ${RAVE_AUDIO_LIBRARIES})
 
-set(AUDIO_INCLUDE_DIR "../audiolib/headers")
-set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
-find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
+#set(AUDIO_INCLUDE_DIR "../audiolib/headers")
+#set(AUDIO_LIBRARY_DIR "../audiolib/lib_debug")
+#find_library(AUDIO_LIBRARY cueeditord ${AUDIO_LIBRARY_DIR})
 
-if (AUDIO_INCLUDE_DIR)
-        message(STATUS "AUDIO_INCLUDE_DIR found")
+#if (AUDIO_INCLUDE_DIR)
+#        message(STATUS "AUDIO_INCLUDE_DIR found")
+#endif()
+
+#if (AUDIO_LIBRARY)
+#        message(STATUS "CueEditor library found.")
+#endif()
+
+#target_link_directories(sedric PRIVATE ${AUDIO_LIBRARY_DIR})
+#target_link_libraries(sedric PRIVATE ${AUDIO_LIBRARY})
+
+set(BASS_INCLUDE_DIR "../lib/BassLib/Include")
+set(BASS_LIBRARY_DIR "../lib/BassLib/Lib")
+find_library(BASS_LIBRARY bass ${BASS_LIBRARY_DIR})
+if (BASS_LIBRARY)
+        message(STATUS "Bass library found.")
 endif()
 
-if (AUDIO_LIBRARY)
-        message(STATUS "CueEditor library found.")
-endif()
+target_link_directories(sedric PRIVATE ${BASS_LIBRARY_DIR})
+target_link_libraries(sedric PRIVATE ${BASS_LIBRARY})
 
-target_link_directories(sedric PRIVATE ${AUDIO_LIBRARY_DIR})
-target_link_libraries(sedric PRIVATE ${AUDIO_LIBRARY})
+#set_target_properties(sedric PROPERTIES
+#    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+#    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+#    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+#)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(sedric)
+endif()

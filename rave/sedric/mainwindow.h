@@ -30,6 +30,7 @@ namespace AUDIO{
     class Audio;
     class Artist;
     class AudioLibItem;
+    class AudioPlayer;
 }
 
 namespace SEDRIC{
@@ -145,19 +146,18 @@ private:
     ScheduleHour* m_cb_hour;
 
     SaveAs* m_save_as;
-    std::unique_ptr<CueEditor> m_cue_editor;
+//    std::unique_ptr<CueEditor> m_cue_editor;
 
     std::unique_ptr<SEDRIC::SedricScheduleItem> m_scheduler;
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
+    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
 
     DateTimeSelection m_datetime_selection;
 
     std::unique_ptr<AudioHistoryForm> m_audio_history;
     QDate m_schedule_date;
 
-
-    //QList<QStandardItem*> commercial_record(const Schedule);
     void create_model_headers();
     std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);
     void fetch_schedule_from_db(QDate, std::vector<int>);
