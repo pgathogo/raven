@@ -5,15 +5,20 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QTime>
-#include <QDebug>
 #include <QScrollBar>
 #include <QDebug>
+#include <QStandardItemModel>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/baseentity.h"
+#include "../framework/ravenexception.h"
+#include "../framework/tree.h"
+#include "../framework/treeviewmodel.h"
+
+#include "../audio/audiolibrary.h"
 
 #include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
@@ -40,9 +45,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     load_schedule(QDate::currentDate(), QTime::currentTime().hour());
 
-    set_widgets();
+    set_playout_widgets();
 
-    set_current_play_item();
+    setup_audio_libary();
 
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
@@ -81,7 +86,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::set_widgets()
+void MainWindow::set_playout_widgets()
 {
     set_datetime_widget();
     set_playlist_control_widget();
@@ -162,6 +167,9 @@ void MainWindow::go_current()
 
 void MainWindow::compute_schedule_time()
 {
+    if (m_current_playing_item.item == nullptr)
+        return;
+
     int min = m_current_playing_item.item->schedule_time().minute();
     int sec = m_current_playing_item.item->schedule_time().second();
     int msec = m_current_playing_item.item->schedule_time().msec();
@@ -196,6 +204,7 @@ void MainWindow::load_schedule(QDate date, int hr)
 
     make_playlist_grid();
 
+    set_current_play_item();
 }
 
 void MainWindow::fill_schedule_headers(QDate date, int hr)
@@ -284,11 +293,13 @@ void MainWindow::fetch_db_data(QDate date, int hr)
     } while (!provider->cache()->isLast());
 
     if (m_schedule_items.size() < MAX_GRID_ITEMS){
+
         for(int i=0; i < MAX_GRID_ITEMS-m_schedule_items.size(); ++i){
             auto header_item = std::make_unique<OATS::ScheduleItem>();
             set_header_item(header_item.get(), ++last_hour, date);
             m_schedule_items.push_back(std::move(header_item));
         }
+
     }
 }
 
@@ -577,11 +588,14 @@ void MainWindow::make_playlist_grid()
     for (int i=0; i < MAX_GRID_ITEMS; ++i){
 
         auto si = schedule_item(i);
-        si->set_play_channel(ch);
+
+        if (si->schedule_type() != OATS::ScheduleType::HOUR_HEADER){
+            si->set_play_channel(ch);
+            ch = (ch == ChannelA) ? ChannelB : ChannelA;
+        }
 
         auto grid_item = std::make_unique<OATS::ScheduleGridItem>(si);
         si->notify();
-
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_up, this, &MainWindow::item_move_up);
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_down, this, &MainWindow::item_move_down);
@@ -599,11 +613,18 @@ void MainWindow::make_playlist_grid()
         ui->vlPlaylist->addWidget(grid_item.get());
         m_schedule_grid.push_back(std::move(grid_item));
 
-        ch = (ch == ChannelA) ? ChannelB : ChannelA;
-
     }
 
     ui->vlPlaylist->insertStretch(-1,1);
+
+    if (m_schedule_items.size() > 0){
+        ui->gridScroll->setMaximum(m_schedule_items.size() - MAX_GRID_ITEMS );
+    } else {
+        ui->gridScroll->setMaximum(MAX_GRID_ITEMS);
+    }
+
+    ui->gridScroll->setPageStep(MAX_GRID_ITEMS/2);
+
 }
 
 OATS::ScheduleItem* MainWindow::schedule_item(int index)
@@ -694,8 +715,8 @@ void MainWindow::go_current_clicked()
 
     if (m_current_playing_item.schedule_index > -1){
         int idx = m_current_playing_item.schedule_index;
-        for(int i=0; i < MAX_GRID_ITEMS; ++i){
 
+        for(int i=0; i < MAX_GRID_ITEMS; ++i){
             if (i > MAX_GRID_ITEMS)
                 break;
 
@@ -714,7 +735,15 @@ void MainWindow::go_current_clicked()
 void MainWindow::set_current_play_item()
 {
     if (m_schedule_items.size() > 0){
+
         auto s_item = schedule_item(0);
+
+        if (s_item == nullptr)
+            return;
+
+        if (s_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER)
+            return;
+
         m_current_playing_item.item = s_item;
         m_current_playing_item.schedule_index = s_item->index();
         m_current_playing_item.grid_index = 0;
@@ -1355,4 +1384,26 @@ void MainWindow::transition_cut(int item_ref, int grid_index)
     int index = index_of(item_ref);
     auto si = schedule_item(index);
     si->set_transition_type(OATS::TransitionType::CUT);
+}
+
+void MainWindow::setup_audio_libary()
+{
+    try{
+        AudioLibrary audio_lib;
+        auto tree_data = audio_lib.read_data_from_db();
+        m_folder_model = std::make_unique<TreeViewModel>(tree_data, this);
+        ui->tvFolder->setModel(m_folder_model.get());
+        m_folders = tree_data;
+
+        m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Libaray"));
+        connect(ui->tvFolder, &QTreeView::clicked, this, &MainWindow::folder_clicked);
+
+    } catch (DatabaseException& de) {
+        qDebug() << stoq(de.errorMessage());
+    }
+}
+
+void MainWindow::folder_clicked()
+{
+    qDebug() << "Folder clicked ... ";
 }

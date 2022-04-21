@@ -9,3 +9,4 @@
 #include "EWIEGA46WW/moc_timegridpanel.cpp"
 #include "EWIEGA46WW/moc_trackgridpanel.cpp"
 #include "EWIEGA46WW/moc_transitionmodegridpanel.cpp"
+#include "TXBK5VWLEF/moc_treeviewmodel.cpp"

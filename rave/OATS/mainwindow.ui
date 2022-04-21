@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
-    <height>693</height>
+    <width>1065</width>
+    <height>683</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,10 +41,20 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <layout class="QVBoxLayout" name="vlPlaylist"/>
+            <layout class="QVBoxLayout" name="vlPlaylist">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetFixedSize</enum>
+             </property>
+            </layout>
            </item>
            <item>
             <widget class="QScrollBar" name="gridScroll">
+             <property name="maximum">
+              <number>20</number>
+             </property>
+             <property name="pageStep">
+              <number>2</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -114,7 +124,77 @@
                <widget class="QWidget" name="pgJingle"/>
                <widget class="QWidget" name="pgTrackInfo"/>
                <widget class="QWidget" name="page"/>
-               <widget class="QWidget" name="pgLoad"/>
+               <widget class="QWidget" name="pgLoad">
+                <layout class="QVBoxLayout" name="verticalLayout_8">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_3">
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_7">
+                     <item>
+                      <widget class="QTabWidget" name="twLoad">
+                       <property name="currentIndex">
+                        <number>1</number>
+                       </property>
+                       <widget class="QWidget" name="tab">
+                        <attribute name="title">
+                         <string>Browse</string>
+                        </attribute>
+                        <layout class="QVBoxLayout" name="verticalLayout_5">
+                         <item>
+                          <widget class="QTreeView" name="tvFolder"/>
+                         </item>
+                        </layout>
+                       </widget>
+                       <widget class="QWidget" name="tab_2">
+                        <attribute name="title">
+                         <string>Search</string>
+                        </attribute>
+                       </widget>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QTableView" name="tvTracks"/>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="hlLetterFilter"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="vlAudioInfo">
+                     <item>
+                      <widget class="QPushButton" name="btnListen">
+                       <property name="text">
+                        <string>Listen</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btnAudioInfo">
+                       <property name="text">
+                        <string>Audio Info ...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
               </widget>
              </item>
             </layout>
@@ -247,7 +327,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>994</width>
+     <width>1065</width>
      <height>21</height>
     </rect>
    </property>

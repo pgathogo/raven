@@ -101,6 +101,7 @@ namespace OATS{
 
         ScheduleType str_to_schedule_type(std::string);
         OATS::ItemStatus str_to_status(std::string);
+        QString schedule_type_to_str(ScheduleType);
 
     private:
         int m_id;

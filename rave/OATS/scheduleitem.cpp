@@ -233,6 +233,27 @@ namespace OATS {
         return ScheduleType::SONG;
     }
 
+    QString ScheduleItem::schedule_type_to_str(ScheduleType s_type)
+    {
+        switch(s_type){
+        case ScheduleType::SONG:
+            return "SONG";
+        case ScheduleType::COMM_AUDIO:
+            return "COMM_AUDIO";
+        case ScheduleType::COMM:
+            return "COMM";
+        case ScheduleType::JINGLE:
+            return "JINGLE";
+        case ScheduleType::DROP:
+            return "DROP";
+        case ScheduleType::HOUR_HEADER:
+            return "HOUR_HEADER";
+        default:
+            return "UNKNOWN TYPE";
+        }
+
+    }
+
     OATS::ItemStatus ScheduleItem::str_to_status(std::string s_status)
     {
         if (s_status == "WAITING")

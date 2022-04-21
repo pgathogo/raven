@@ -19,7 +19,7 @@ namespace OATS{
       size_policy.setHorizontalStretch(1);
       setSizePolicy(size_policy);
       setLineWidth(1);
-      setFixedHeight(60);
+      setFixedHeight(50);
     }
 
     GridPanel::~GridPanel()

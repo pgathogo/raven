@@ -1,4 +1,6 @@
 #include <QHBoxLayout>
+#include <QDebug>
+
 #include "schedulegriditem.h"
 #include "scheduleitem.h"
 #include "timegridpanel.h"

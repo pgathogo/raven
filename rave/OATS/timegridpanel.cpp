@@ -16,18 +16,20 @@ namespace OATS{
 
         setObjectName("TimePanel");
         setFixedWidth(80);
-        setStyleSheet("QFrame{background-color: #222222;}");
+        setStyleSheet("QFrame#TimePanel{background-color: #222222;}");
 
         QFont f("JetBrains Mono", 10, QFont::Bold);
         f.setBold(true);
 
-        m_label = std::make_unique<QLabel>("00:00:00");
+        //m_label = std::make_unique<QLabel>("00:00:00");
+        m_label = std::make_unique<QLabel>("");
         m_label->setObjectName("TimeLabel");
         m_label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         m_label->setFont(f);
 
         m_layout->addWidget(m_label.get());
         setLayout(m_layout);
+
     }
 
     TimeGridPanel::~TimeGridPanel()
@@ -57,8 +59,11 @@ namespace OATS{
 
     void TimeGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
-        QTime t = msec_to_time(schedule_item->hour(), schedule_item->current_time());
-        set_label(t.toString("HH:mm:ss"));
+
+        if (schedule_item->schedule_type() != OATS::ScheduleType::HOUR_HEADER){
+            QTime t = msec_to_time(schedule_item->hour(), schedule_item->current_time());
+            set_label(t.toString("HH:mm:ss"));
+        }
     }
 
     QVBoxLayout* TimeGridPanel::main_layout()

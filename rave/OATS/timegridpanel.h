@@ -23,6 +23,7 @@ namespace OATS{
         void set_label(QString);
         void update(OATS::ScheduleItem* schedule_item) override;
         QVBoxLayout* main_layout();
+        QString label(){ return m_label->text(); }
     protected:
         void contextMenuEvent(QContextMenuEvent* event) override;
     private slots:

@@ -242,6 +242,22 @@ build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.o
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\framework
 
+build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj: CXX_COMPILER__OATS_ D$:/home/PMS/Raven/rave/framework/tree.cpp || cmake_object_order_depends_target_OATS
+  DEFINES = -DQT_CHARTS_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\framework\tree.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -IOATS_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++ -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCharts
+  OBJECT_DIR = CMakeFiles\OATS.dir
+  OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\framework
+
+build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj: CXX_COMPILER__OATS_ D$:/home/PMS/Raven/rave/framework/treeviewmodel.cpp || cmake_object_order_depends_target_OATS
+  DEFINES = -DQT_CHARTS_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\framework\treeviewmodel.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -IOATS_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++ -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCharts
+  OBJECT_DIR = CMakeFiles\OATS.dir
+  OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\framework
+
 build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj: CXX_COMPILER__OATS_ D$:/home/PMS/Raven/rave/audio/audio.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DQT_CHARTS_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\audio\audio.cpp.obj.d
@@ -261,6 +277,22 @@ build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj: CXX_COMPI
 build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj: CXX_COMPILER__OATS_ D$:/home/PMS/Raven/rave/audio/audiofile.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DQT_CHARTS_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\audio\audiofile.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -IOATS_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++ -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCharts
+  OBJECT_DIR = CMakeFiles\OATS.dir
+  OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\audio
+
+build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj: CXX_COMPILER__OATS_ D$:/home/PMS/Raven/rave/audio/audiolibrary.cpp || cmake_object_order_depends_target_OATS
+  DEFINES = -DQT_CHARTS_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\audio\audiolibrary.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -I. -IOATS_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++ -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCharts
+  OBJECT_DIR = CMakeFiles\OATS.dir
+  OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\audio
+
+build CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj: CXX_COMPILER__OATS_ D$:/home/PMS/Raven/rave/audio/audiofolder.cpp || cmake_object_order_depends_target_OATS
+  DEFINES = -DQT_CHARTS_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles\OATS.dir\D_\home\PMS\Raven\rave\audio\audiofolder.cpp.obj.d
   FLAGS = -std=gnu++17
   INCLUDES = -I. -IOATS_autogen/include -I"C:/Program Files/PostgreSQL/9.5/include" -I"C:/Program Files/PostgreSQL/9.5/include/server" -I../framework -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/./mkspecs/win32-g++ -isystem D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCharts
   OBJECT_DIR = CMakeFiles\OATS.dir
@@ -298,7 +330,7 @@ build CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj: CXX_COMPILER
 #############################################
 # Link the executable OATS.exe
 
-build OATS.exe: CXX_EXECUTABLE_LINKER__OATS_ CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj CMakeFiles/OATS.dir/main.cpp.obj CMakeFiles/OATS.dir/mainwindow.cpp.obj CMakeFiles/OATS.dir/timeanalyzerwidget.cpp.obj CMakeFiles/OATS.dir/datetimewidget.cpp.obj CMakeFiles/OATS.dir/playlistcontrolwidget.cpp.obj CMakeFiles/OATS.dir/scheduleitem.cpp.obj CMakeFiles/OATS.dir/gridpanel.cpp.obj CMakeFiles/OATS.dir/subjectobserver.cpp.obj CMakeFiles/OATS.dir/schedulegriditem.cpp.obj CMakeFiles/OATS.dir/timegridpanel.cpp.obj CMakeFiles/OATS.dir/trackgridpanel.cpp.obj CMakeFiles/OATS.dir/statusgridpanel.cpp.obj CMakeFiles/OATS.dir/transitionmodegridpanel.cpp.obj CMakeFiles/OATS.dir/outputpanel.cpp.obj CMakeFiles/OATS.dir/playmodepanel.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Charts.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || OATS_autogen
+build OATS.exe: CXX_EXECUTABLE_LINKER__OATS_ CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj CMakeFiles/OATS.dir/main.cpp.obj CMakeFiles/OATS.dir/mainwindow.cpp.obj CMakeFiles/OATS.dir/timeanalyzerwidget.cpp.obj CMakeFiles/OATS.dir/datetimewidget.cpp.obj CMakeFiles/OATS.dir/playlistcontrolwidget.cpp.obj CMakeFiles/OATS.dir/scheduleitem.cpp.obj CMakeFiles/OATS.dir/gridpanel.cpp.obj CMakeFiles/OATS.dir/subjectobserver.cpp.obj CMakeFiles/OATS.dir/schedulegriditem.cpp.obj CMakeFiles/OATS.dir/timegridpanel.cpp.obj CMakeFiles/OATS.dir/trackgridpanel.cpp.obj CMakeFiles/OATS.dir/statusgridpanel.cpp.obj CMakeFiles/OATS.dir/transitionmodegridpanel.cpp.obj CMakeFiles/OATS.dir/outputpanel.cpp.obj CMakeFiles/OATS.dir/playmodepanel.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/OATS.dir/D_/home/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj | D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Charts.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a C$:/Program$ Files/PostgreSQL/9.5/lib/libpq.lib D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a D$:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a || OATS_autogen
   LINK_LIBRARIES = D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Charts.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Widgets.a  "C:/Program Files/PostgreSQL/9.5/lib/libpq.lib"  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Gui.a  D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/libQt5Core.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/PROGRA~1/POSTGR~1/9.5/lib
   OBJECT_DIR = CMakeFiles\OATS.dir

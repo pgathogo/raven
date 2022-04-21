@@ -18,11 +18,14 @@ QT_END_NAMESPACE
 #define DB_SCHEDULE
 
 
-class TimeAnalyzerWidget;
 class QPushButton;
 class QLabel;
+class TreeViewModel;
+
 class BaseDataProvider;
 class ScheduleItem;
+class TimeAnalyzerWidget;
+class NodeData;
 
 namespace OATS{
     class DateTimeWidget;
@@ -34,6 +37,7 @@ namespace OATS{
 }
 
 struct CurrentPlayItem{
+    CurrentPlayItem():item{nullptr}{}
     OATS::ScheduleItem* item;
     int schedule_index{-1};
     int grid_index{-1};
@@ -44,7 +48,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     constexpr static int HOURS_IN_A_DAY = 23;
-    constexpr static int MAX_GRID_ITEMS = 15;
+    constexpr static int MAX_GRID_ITEMS = 12;
     constexpr static int MAX_PLAYLIST_ITEMS = 10;
 
     constexpr static int YIELD_FADE_DELAY = 3000;
@@ -66,7 +70,7 @@ public:
 
     std::string play_channel();
 
-    void set_widgets();
+    void set_playout_widgets();
     void set_datetime_widget();
     void set_time_analytics_widget();
     void set_playlist_control_widget();
@@ -91,6 +95,7 @@ public:
                                      OATS::ScheduleItem* sched_item);
 
     QString output_string(OATS::ScheduleItem*);
+    void setup_audio_libary();
 
 private slots:
     void close_win();
@@ -114,6 +119,8 @@ private slots:
     void play_button(OATS::OutputPanel*);
     void stop_button(OATS::OutputPanel*);
     void go_current_clicked();
+
+    void folder_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -139,6 +146,9 @@ private:
     std::unique_ptr<QTimer> m_fast_flash_timer;
     std::unique_ptr<QTimer> m_countdown_timer;
     std::unique_ptr<QTimer> m_main_player_timer;
+
+    std::unique_ptr<TreeViewModel> m_folder_model;
+    std::vector<NodeData*> m_folders;
 
     static int s_sched_ref;
     static std::string s_channel;

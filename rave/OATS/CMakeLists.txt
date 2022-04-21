@@ -70,9 +70,19 @@ set(PROJECT_SOURCES
         ../framework/ravenexception.cpp
         ../framework/databaseconnector.cpp
         ../framework/databasemanager.cpp
+        ../framework/ravenexception.h
+        ../framework/ravenexception.cpp
+        ../framework/tree.h
+        ../framework/tree.cpp
+        ../framework/treeviewmodel.h
+        ../framework/treeviewmodel.cpp
         ../audio/audio.cpp
         ../audio/artist.cpp
         ../audio/audiofile.cpp
+        ../audio/audiolibrary.h
+        ../audio/audiolibrary.cpp
+        ../audio/audiofolder.h
+        ../audio/audiofolder.cpp
         ../security/authentication.cpp
         ../security/user.cpp
 )
