@@ -19,6 +19,11 @@
 #include "../framework/treeviewmodel.h"
 
 #include "../audio/audiolibrary.h"
+#include "../audio/audiotrackviewer.h"
+#include "../audio/audio.h"
+#include "../audio/artist.h"
+#include "../audio/audiotrackitem.h"
+#include "../audio/audiolibitem.h"
 
 #include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
@@ -27,6 +32,7 @@
 #include "schedulegriditem.h"
 #include "outputpanel.h"
 #include "playmodepanel.h"
+
 
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
@@ -48,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     set_playout_widgets();
 
     setup_audio_libary();
+
 
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
@@ -76,10 +83,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3);});
     connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4);});
     connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5);});
-    connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7);});
+    connect(ui->btnLoad, &QPushButton::clicked, this, &MainWindow::open_audio_load_page);
 
     //QMainWindow::showFullScreen();
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -1312,13 +1320,7 @@ void MainWindow::make_item_current(int item_ref)
 
     si->set_item_status(OATS::ItemStatus::CUED);
 
-    qDebug() << si->audio().duration();
-    qDebug() << si->audio().intro();
-    qDebug() << si->audio().fade_delay();
-
     QString cue_string = output_string(si);
-
-    qDebug() << "CUE STRING: "<< cue_string;
 
     if (si->play_channel() == ChannelA){
         m_outputA->cue_item(si);
@@ -1401,9 +1403,59 @@ void MainWindow::setup_audio_libary()
     } catch (DatabaseException& de) {
         qDebug() << stoq(de.errorMessage());
     }
+
+    m_track_viewer = std::make_unique<AUDIO::AudioTrackViewer>(this);
+    ui->vlTracks->addWidget(m_track_viewer.get());
+
+    m_audio_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_track_viewer->model());
+    m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
 }
 
-void MainWindow::folder_clicked()
+void MainWindow::folder_clicked(const QModelIndex& index)
 {
-    qDebug() << "Folder clicked ... ";
+    int folder_id = index.data(Qt::UserRole).toInt();
+
+    auto audio = std::make_unique<AUDIO::Audio>();
+    auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
+    std::string filter_str = m_audio_edm->prepareFilter(folder_filter);
+
+    fetch_audio(filter_str);
+}
+
+void MainWindow::fetch_audio(const std::string filter)
+{
+    m_audio_edm->clearEntities();
+    m_audio_edm->search(filter);
+    show_audio_data();
+}
+
+void MainWindow::show_audio_data()
+{
+    m_track_viewer->clear();
+    m_audio_lib_item->clear();
+    m_track_viewer->create_track_view_headers();
+
+    for(auto&[name, entity] : m_audio_edm->modelEntities())
+    {
+        AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
+
+        if (audio->audio_type()->displayName() == "Song")
+            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
+
+        if (audio->audio_type()->displayName() == "Jingle")
+            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
+
+        if (audio->audio_type()->displayName() == "Commercial")
+            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
+
+    }
+
+
+}
+
+
+void MainWindow::open_audio_load_page()
+{
+
+    ui->swMain->setCurrentIndex(7);
 }

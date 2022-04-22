@@ -62,6 +62,7 @@ set(PROJECT_SOURCES
         playmodepanel.h
         playmodepanel.cpp
         oats.qrc
+
         ../framework/baseentity.cpp
         ../framework/entityfields.cpp
         ../framework/entitydatamodel.cpp
@@ -76,6 +77,9 @@ set(PROJECT_SOURCES
         ../framework/tree.cpp
         ../framework/treeviewmodel.h
         ../framework/treeviewmodel.cpp
+        ../framework/letterfilterwidget.h
+        ../framework/letterfilterwidget.cpp
+
         ../audio/audio.cpp
         ../audio/artist.cpp
         ../audio/audiofile.cpp
@@ -83,6 +87,15 @@ set(PROJECT_SOURCES
         ../audio/audiolibrary.cpp
         ../audio/audiofolder.h
         ../audio/audiofolder.cpp
+        ../audio/audiotrackviewer.h
+        ../audio/audiotrackviewer.cpp
+        ../audio/audiotrackitem.h
+        ../audio/audiotrackitem.cpp
+        ../audio/audiolibitem.h
+        ../audio/audiolibitem.cpp
+        ../audio/audiotool.h
+        ../audio/audiotool.cpp
+
         ../security/authentication.cpp
         ../security/user.cpp
 )

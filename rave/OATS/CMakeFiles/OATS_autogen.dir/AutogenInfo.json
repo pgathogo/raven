@@ -169,9 +169,29 @@
 			"Y6ZUSTFKUI/moc_audiofolder.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/audio/audiolibitem.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiolibitem.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/audio/audiolibrary.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiolibrary.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiotool.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiotool.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiotrackitem.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiotrackitem.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiotrackviewer.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiotrackviewer.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/baseentity.h",
@@ -202,6 +222,11 @@
 			"D:/home/PMS/Raven/rave/framework/entityfields.h",
 			"MU",
 			"TXBK5VWLEF/moc_entityfields.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/framework/letterfilterwidget.h",
+			"MU",
+			"TXBK5VWLEF/moc_letterfilterwidget.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/framework/ravenexception.h",
@@ -315,13 +340,18 @@
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiotrackitem.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiotrackviewer.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/baseentity.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/databaseconnector.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/databasemanager.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/dataprovider.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/entitydatamodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/letterfilterwidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],

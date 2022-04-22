@@ -20,12 +20,14 @@ QT_END_NAMESPACE
 
 class QPushButton;
 class QLabel;
-class TreeViewModel;
+class QStandardItemModel;
 
+class TreeViewModel;
 class BaseDataProvider;
 class ScheduleItem;
 class TimeAnalyzerWidget;
 class NodeData;
+class EntityDataModel;
 
 namespace OATS{
     class DateTimeWidget;
@@ -34,6 +36,11 @@ namespace OATS{
     class ScheduleGridItem;
     class OutputPanel;
     class PlayModePanel;
+}
+
+namespace AUDIO{
+   class AudioTrackViewer;
+   class AudioLibItem;
 }
 
 struct CurrentPlayItem{
@@ -96,6 +103,9 @@ public:
 
     QString output_string(OATS::ScheduleItem*);
     void setup_audio_libary();
+    void create_track_view_headers();
+    void fetch_audio(const std::string);
+    void show_audio_data();
 
 private slots:
     void close_win();
@@ -120,7 +130,8 @@ private slots:
     void stop_button(OATS::OutputPanel*);
     void go_current_clicked();
 
-    void folder_clicked();
+    void folder_clicked(const QModelIndex& index);
+    void open_audio_load_page();
 
 private:
     Ui::MainWindow *ui;
@@ -149,6 +160,10 @@ private:
 
     std::unique_ptr<TreeViewModel> m_folder_model;
     std::vector<NodeData*> m_folders;
+
+    std::unique_ptr<AUDIO::AudioTrackViewer> m_track_viewer;
+    std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
+    std::unique_ptr<EntityDataModel> m_audio_edm;
 
     static int s_sched_ref;
     static std::string s_channel;

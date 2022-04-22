@@ -129,17 +129,17 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_3">
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_7">
+                    <layout class="QVBoxLayout" name="verticalLayout_5">
                      <item>
                       <widget class="QTabWidget" name="twLoad">
                        <property name="currentIndex">
-                        <number>1</number>
+                        <number>0</number>
                        </property>
                        <widget class="QWidget" name="tab">
                         <attribute name="title">
                          <string>Browse</string>
                         </attribute>
-                        <layout class="QVBoxLayout" name="verticalLayout_5">
+                        <layout class="QVBoxLayout" name="verticalLayout_7">
                          <item>
                           <widget class="QTreeView" name="tvFolder"/>
                          </item>
@@ -153,10 +153,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QTableView" name="tvTracks"/>
-                     </item>
-                     <item>
-                      <layout class="QHBoxLayout" name="hlLetterFilter"/>
+                      <layout class="QVBoxLayout" name="vlTracks"/>
                      </item>
                     </layout>
                    </item>
