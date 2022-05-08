@@ -38,9 +38,6 @@
 
 #include "../utils/tools.h"
 
-//#include "../audiolib/headers/cueeditor.h"
-//#include "../audiolib/headers/audioplayer.h"
-
 #include "../audio/editor/audiowaveform.h"
 #include "../audio/editor/audioplayer.h"
 
@@ -134,7 +131,7 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();
-    m_datetime_selection.sel_hours.push_back(0);
+//    m_datetime_selection.sel_hours.push_back(0);
     show_selection(m_datetime_selection);
 
     m_audio_history = std::make_unique<AudioHistoryForm>();
@@ -475,7 +472,7 @@ bool MainWindow::is_item_deletable(const QString item_type)
 {
     if (item_type=="COMM-BREAK")
         return false;
-    if (item_type=="END_MARKER")
+    if (item_type=="END-MARKER")
         return false;
 
     return true;
@@ -849,7 +846,6 @@ History MainWindow::make_history(int id)
 
     }
 
-
     return hist;
 
 }
@@ -881,6 +877,7 @@ void MainWindow::select_date_time()
     if (dts->exec() == 1){
         m_datetime_selection = dts->selection();
         std::sort(m_datetime_selection.sel_hours.begin(), m_datetime_selection.sel_hours.end());
+
         fetch_data(m_datetime_selection.sel_date, m_datetime_selection.sel_hours);
         show_selection(m_datetime_selection);
     }

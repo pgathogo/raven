@@ -36,6 +36,7 @@ public:
 public slots:
     void pick_selection();
     void cancel_dialog();
+    void clear_selection();
 
 private:
     Ui::DateTimeSelector *ui;

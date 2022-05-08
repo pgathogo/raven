@@ -12,6 +12,7 @@ DateTimeSelector::DateTimeSelector(DateTimeSelection selection, QWidget *parent)
 
     connect(ui->btnOK, &QPushButton::clicked, this, &DateTimeSelector::pick_selection);
     connect(ui->btnCancel, &QPushButton::clicked, this, &DateTimeSelector::cancel_dialog);
+    connect(ui->btnClear, &QPushButton::clicked, this, &DateTimeSelector::clear_selection);
 }
 
 DateTimeSelector::~DateTimeSelector()
@@ -49,10 +50,10 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int& long_hour)
 
     int row = 0;
     int	col = 0;
-    for (int hr=0; hr < time_text_am.size(); ++hr){
 
+    for (int hr=0; hr < time_text_am.size(); ++hr){
         QString btn_text = time_text_am[hr]+" "+time_symbol;
-        QPushButton* btn = new QPushButton(btn_text);
+        QPushButton* btn = new QPushButton(btn_text, this);
         btn->setMinimumHeight(40);
         btn->setCheckable(true);
         connect(btn, &QPushButton::clicked, this,
@@ -86,10 +87,10 @@ void DateTimeSelector::pick_selection()
     m_selection.sel_date = ui->calWidget->selectedDate();
 
     for (auto [text, btn_data] : m_hour_buttons){
-        //auto [hr, is_selected] = tup;
         if (btn_data.is_selected)
             m_selection.sel_hours.push_back(btn_data.long_hour_fmt);
     }
+
 
     accept();
 
@@ -103,6 +104,15 @@ void DateTimeSelector::cancel_dialog()
 DateTimeSelection DateTimeSelector::selection()
 {
     return m_selection;
+}
+
+void DateTimeSelector::clear_selection()
+{
+    for (auto [text, data] : m_hour_buttons){
+        data.button->setChecked(false);
+    }
+
+
 }
 
 

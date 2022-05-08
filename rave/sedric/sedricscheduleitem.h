@@ -15,7 +15,8 @@ namespace AUDIO {
     class Artist;
 }
 
-namespace SEDRIC{
+namespace SEDRIC
+{
     template<typename T>
     struct VectorStruct{
         VectorStruct& operator<<(T* t)
@@ -91,6 +92,8 @@ namespace SEDRIC{
         void copy_schedule(QDate, QDate, const std::map<int, int>&);
         void delete_current_schedule(std::string sql);
         bool write_schedule_to_db(std::string sql);
+
+        bool log_find(QDate, int);
 
         template<typename T>
         void create_row_item(Schedule* schedule, int row=-1)

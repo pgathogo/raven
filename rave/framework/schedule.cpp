@@ -39,6 +39,7 @@ Schedule::Schedule()
     m_schedule_item_type = createField<ChoiceField<std::string>>("schedule_item_type", "Item Type");
     m_schedule_item_type->addChoice({"SONG", "Song"});
     m_schedule_item_type->addChoice({"COMM-BREAK", "Commercial"});
+    m_schedule_item_type->addChoice({"JINGLE", "Jingle"});
 
     m_break_duration = createField<IntegerField>("break_duration", "Break Duration");
     m_break_start_win = createField<IntegerField>("break_start_win", "Break Start Win");

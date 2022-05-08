@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include <QDebug>
 #include <QStandardItemModel>
+#include <QSplitter>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -55,7 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     setup_audio_libary();
 
-
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
 
@@ -76,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_main_player_timer.get(), &QTimer::timeout, this, &MainWindow::status_timer);
 
     ui->swMain->setCurrentIndex(0);
+    ui->twLoad->setCurrentIndex(0);
 
     connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0);});
     connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1);});
@@ -83,7 +84,23 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3);});
     connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4);});
     connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5);});
-    connect(ui->btnLoad, &QPushButton::clicked, this, &MainWindow::open_audio_load_page);
+    connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7);});
+
+    // Audio Library Page
+
+    connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
+
+    /*
+    QWidget* top_widget = new QWidget();
+    top_widget->setLayout(ui->hlAudioLib);
+
+    QWidget* bottom_widget = new QWidget();
+    bottom_widget->setLayout(ui->vlTracks);
+
+    QSplitter* splitter = new QSplitter(ui->pgLoad);
+    splitter->addWidget(top_widget);
+    splitter->addWidget(bottom_widget);
+    */
 
     //QMainWindow::showFullScreen();
 }
@@ -178,11 +195,13 @@ void MainWindow::compute_schedule_time()
     if (m_current_playing_item.item == nullptr)
         return;
 
-    int min = m_current_playing_item.item->schedule_time().minute();
-    int sec = m_current_playing_item.item->schedule_time().second();
-    int msec = m_current_playing_item.item->schedule_time().msec();
+//    int min = m_current_playing_item.item->schedule_time().minute();
+//    int sec = m_current_playing_item.item->schedule_time().second();
+//    int msec = m_current_playing_item.item->schedule_time().msec();
 
-    int time_counter = (min * 60000) + (sec * 1000) + msec;
+//    int time_counter = (min * 60000) + (sec * 1000) + msec;
+
+    int time_counter = m_current_playing_item.item->audio().duration();
 
     m_current_playing_item.item->set_current_time(time_counter);
     m_current_playing_item.item->notify();
@@ -209,7 +228,6 @@ void MainWindow::load_schedule(QDate date, int hr)
 #ifdef TEMP_SCHEDULE
     fetch_temp_data(hr);
 #endif
-
     make_playlist_grid();
 
     set_current_play_item();
@@ -248,6 +266,7 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 
     sql << where_filter << and_filter << order_by;
 
+
     EntityDataModel edm;
     edm.readRaw(sql.str());
 
@@ -263,7 +282,19 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 
     provider->cache()->first();
 
+    int item_duration = 0;
+    int total_duration = 0;
+
     do{
+        auto sched_item = std::make_unique<OATS::ScheduleItem>();
+
+        set_schedule_fields(provider, sched_item.get());
+
+        if (sched_item->hour() != last_hour){
+            last_hour = sched_item->hour();
+            is_hour_header_created = false;
+            item_duration = 0;
+        }
 
         if (!is_hour_header_created){
             auto header_item = std::make_unique<OATS::ScheduleItem>();
@@ -272,18 +303,26 @@ void MainWindow::fetch_db_data(QDate date, int hr)
             is_hour_header_created = true;
         }
 
-        auto sched_item = std::make_unique<OATS::ScheduleItem>();
+
+        if (item_duration == 0){
+            total_duration = 0;
+        } else {
+            total_duration = sched_item->current_time()+item_duration;
+        }
+
+        QTime item_time = sched_item->schedule_time().addMSecs(total_duration);
+        sched_item->set_current_time(total_duration);
+
+        sched_item->set_schedule_time(item_time);
+
+        item_duration = item_duration + sched_item->audio().duration();
+
+
 
 //		auto audio = dynamic_cast<AUDIO::Audio*>(schedule->audio()->dataModel()->get_entity().get());
 //		auto artist = dynamic_cast<AUDIO::Artist*>(audio->artist()->dataModel()->get_entity().get());
 
         // populate schedule fields
-        set_schedule_fields(provider, sched_item.get());
-
-        if (sched_item->hour() != last_hour){
-            last_hour = sched_item->hour();
-            is_hour_header_created = false;
-        }
 
         if (sched_item->schedule_type() == OATS::ScheduleType::COMM){
             sched_item->audio().set_title(
@@ -300,15 +339,18 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 
     } while (!provider->cache()->isLast());
 
+
     if (m_schedule_items.size() < MAX_GRID_ITEMS){
 
-        for(int i=0; i < MAX_GRID_ITEMS-m_schedule_items.size(); ++i){
+        int extra_items = MAX_GRID_ITEMS-m_schedule_items.size();
+
+        for(int i=0; i < extra_items; ++i){
             auto header_item = std::make_unique<OATS::ScheduleItem>();
             set_header_item(header_item.get(), ++last_hour, date);
             m_schedule_items.push_back(std::move(header_item));
         }
-
     }
+
 }
 
 void MainWindow::set_header_item(OATS::ScheduleItem* header, int hr, QDate dt)
@@ -318,7 +360,11 @@ void MainWindow::set_header_item(OATS::ScheduleItem* header, int hr, QDate dt)
     audio.set_title("HOUR: "+std::to_string(hr)+" Header "+dt.toString("dd/MM/yyyy").toStdString());
     audio.set_duration(0);
     header->set_transition_type(OATS::TransitionType::STOP);
+    header->set_schedule_ref(s_sched_ref++);
+    header->set_schedule_date(dt);
+    header->set_hour(hr);
     header->set_audio(audio);
+    header->set_play_channel("X");
 }
 
 void MainWindow::set_schedule_fields(BaseDataProvider* provider,
@@ -608,11 +654,12 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_up, this, &MainWindow::item_move_up);
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_down, this, &MainWindow::item_move_down);
         connect(grid_item.get(), &OATS::ScheduleGridItem::make_current, this, &MainWindow::make_item_current);
+        connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::insert_item);
 
         /*
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
-        connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::insert_schedule_item);
         */
+
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_stop, this, &MainWindow::transition_stop);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_mix, this, &MainWindow::transition_mix);
@@ -710,6 +757,41 @@ void MainWindow::display_schedule(int start_index)
         m_schedule_grid[i]->set_subject(schedule);
     }
 }
+
+void MainWindow::push_items_down(int from_pos)
+{
+    for (int i=from_pos+1; i< MAX_GRID_ITEMS; ++i){
+        auto schedule = schedule_item(i-1);
+        m_schedule_grid[i]->set_subject(schedule);
+    }
+}
+
+void MainWindow::reprint_schedule(int from_pos)
+{
+    for(int i=from_pos; i<MAX_GRID_ITEMS; ++i){
+        auto schedule = schedule_item(i);
+        m_schedule_grid[i]->set_subject(schedule);
+    }
+}
+
+void MainWindow::recompute_time(int from_pos)
+{
+    int prev_duration;
+    for(int i=from_pos; i<MAX_GRID_ITEMS; ++i){
+        if (i > 0){
+            auto schedule = schedule_item(i-1);
+            prev_duration = 0;
+            if (schedule->schedule_type() != OATS::ScheduleType::HOUR_HEADER)
+                prev_duration = schedule->current_time() + schedule->audio().duration();
+
+            schedule = schedule_item(i);
+            schedule->set_current_time(prev_duration);
+            m_schedule_grid[i]->set_subject(schedule);
+        }
+    }
+}
+
+
 
 void MainWindow::scroll_changed(int new_pos)
 {
@@ -1261,7 +1343,6 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         auto next_schedule_item = find_next_schedule_item(op->schedule_item());
 
         if (next_schedule_item != nullptr){
-            qDebug() << "cue next schedule";
             cue_next_schedule(next_schedule_item, next_output_panel);
         }
 
@@ -1337,7 +1418,79 @@ void MainWindow::make_item_current(int item_ref)
     }
 
     display_schedule(ui->gridScroll->value());
+}
 
+void MainWindow::insert_item(int schedule_ref, int grid_pos)
+{
+//    if (current_page != load_audio_page)
+//        return;
+
+    int audio_id = m_track_viewer->get_selected_audio_id();
+    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
+
+    int index = index_of(schedule_ref);
+    auto item_at_cursor = schedule_item(index);
+
+    auto new_item = std::make_unique<OATS::ScheduleItem>();
+    new_item->set_hour(item_at_cursor->hour());
+    new_item->set_schedule_date(item_at_cursor->schedule_date());
+    new_item->set_schedule_type(new_item->str_to_schedule_type(audio->audio_type()->value()));
+    new_item->set_transition_type(OATS::TransitionType::MIX);
+    new_item->set_id(-1);
+    new_item->set_schedule_ref(s_sched_ref++);
+    new_item->set_schedule_date(item_at_cursor->schedule_date());
+    new_item->set_comment("MANUAL-INSERT");
+
+    QTime new_time;
+    if (item_at_cursor->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
+        new_time = QTime::fromString(QTime::currentTime().toString(), "hh:mm:ss");
+    } else {
+        new_time = item_at_cursor->schedule_time().addMSecs(item_at_cursor->audio().duration());
+    }
+
+
+    new_item->set_schedule_time(new_time);
+
+    OATS::Audio new_audio;
+    new_audio.set_title(audio->title()->value());
+    new_audio.set_duration(audio->duration()->value());
+    new_audio.set_file_path(audio->file_path()->value());
+    new_audio.set_artist(audio->artist()->displayName());
+
+    new_item->set_audio(new_audio);
+
+    auto play_channel = [&](){
+        auto prev_si = schedule_item(grid_pos-1);
+        if (prev_si->play_channel() == "A")
+            return "B";
+        if (prev_si->play_channel() == "B")
+            return "A";
+        return "A";
+    };
+
+    new_item->set_play_channel(play_channel());
+
+    if (m_current_playing_item.item == nullptr)
+        m_current_playing_item.item = new_item.get();
+
+    auto insert_schedule_item = [&](int next_slot=0){
+        m_schedule_grid[grid_pos]->set_subject(new_item.get());
+        std::vector<std::unique_ptr<OATS::ScheduleItem>>::iterator it;
+        it = m_schedule_items.begin()+(grid_pos+next_slot);
+        m_schedule_items.insert(it,  std::move(new_item));
+    };
+
+    if (item_at_cursor->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
+        push_items_down(grid_pos+1);
+        insert_schedule_item(1);
+        reprint_schedule(grid_pos-1);
+    } else {
+        push_items_down(grid_pos);
+        insert_schedule_item();
+        recompute_time(grid_pos);
+    }
+
+    print_schedule_items();  // debugging purposes only
 
 }
 
@@ -1416,10 +1569,11 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     int folder_id = index.data(Qt::UserRole).toInt();
 
     auto audio = std::make_unique<AUDIO::Audio>();
-    auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
-    std::string filter_str = m_audio_edm->prepareFilter(folder_filter);
-
-    fetch_audio(filter_str);
+//    auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
+//    std::string filter_str = m_audio_edm->prepareFilter(folder_filter);
+//    fetch_audio(filter_str);
+    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(), "=", folder_id);
+    fetch_filtered_audio(folder_filter);
 }
 
 void MainWindow::fetch_audio(const std::string filter)
@@ -1450,12 +1604,91 @@ void MainWindow::show_audio_data()
 
     }
 
+}
+
+void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
+{
+    m_audio_edm->clearEntities();
+
+    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_edm->get_entity().get());
+
+    try{
+        m_audio_edm->readRaw(r_mapper->query());
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+    r_mapper->map_data();
+
+    for (auto const& [record_id, record] : r_mapper->mapped_entities()){
+        auto audio_Uptr = std::make_unique<AUDIO::Audio>();
+        bool audio_is_constructed = false;
+
+        for(auto const& [table_name, entities] : record)
+        {
+            for (auto const& entity : entities)
+            {
+                if (audio_Uptr->tableName() == entity->tableName() &&
+                        !audio_is_constructed)
+                {
+                    if (entity->id() > -1){
+                        auto audio_ptr = dynamic_cast<AUDIO::Audio*>(entity.get());
+                        *audio_Uptr.get() = *audio_ptr;
+                        audio_is_constructed = true;
+                        break;
+                    }
+                }
+
+                auto const& artist = audio_Uptr->artist()->data_model_entity();
+
+                if (artist == nullptr){
+                    continue;
+                }
+
+                if (artist->tableName() == entity->tableName())
+                {
+                    auto artist_ptr = dynamic_cast<AUDIO::Artist*>(entity.get());
+                    auto artist_uptr = std::make_unique<AUDIO::Artist>();
+                    *artist_uptr.get() = *artist_ptr;
+                    audio->artist()->set_fk_entity(std::move(artist_uptr));
+                }
+            }
+        }
+
+        if (audio_Uptr->audio_type()->value() != ""){
+            m_audio_edm->add_entity(std::move(audio_Uptr));
+        }
+    }
+
+    show_audio_data();
 
 }
 
-
-void MainWindow::open_audio_load_page()
+void MainWindow::print_schedule_items()
 {
+    for (const auto& item : m_schedule_items){
+        qDebug() << stoq(item->audio().title());
+    }
+}
 
-    ui->swMain->setCurrentIndex(7);
+void MainWindow::search_audio()
+{
+    if (!ui->edtTitle->text().isEmpty()){
+        auto audio = std::make_unique<AUDIO::Audio>();
+        auto title_filter = std::make_tuple(
+                    audio->title()->qualified_column_name<AUDIO::Audio>(), "like", ui->edtTitle->text().toStdString());
+        fetch_filtered_audio(title_filter);
+        return;
+    }
+
+    if (!ui->edtArtist->text().isEmpty()){
+        auto artist = std::make_unique<AUDIO::Artist>();
+        auto artist_filter = std::make_tuple(
+                    artist->fullName()->qualified_column_name<AUDIO::Artist>(), "like", ui->edtArtist->text().toStdString()
+                    );
+        fetch_filtered_audio(artist_filter);
+    }
+
+
+
 }

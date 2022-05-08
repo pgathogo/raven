@@ -47,6 +47,8 @@ namespace OATS{
     {
         if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
             setStyleSheet("background-color: #222222;");
+            m_status1->setText("");
+            m_status2->setText("");
             return;
         }
 

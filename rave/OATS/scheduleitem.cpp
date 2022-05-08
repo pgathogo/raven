@@ -229,6 +229,8 @@ namespace OATS {
             return ScheduleType::DROP;
         if (s_type == "HOUR_HEADER")
             return ScheduleType::HOUR_HEADER;
+        if (s_type == "NBITE")
+            return ScheduleType::NEWS_BITE;
 
         return ScheduleType::SONG;
     }

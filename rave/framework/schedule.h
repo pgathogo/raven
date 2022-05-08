@@ -15,6 +15,7 @@ class Schedule : public BaseEntity
 public:
     enum BreakAvailability{Break_Not_Available, Break_Available};
 
+
     Schedule();
     ~Schedule() override;
 

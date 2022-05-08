@@ -404,7 +404,7 @@ std::vector<int> ItemBuilder::unique_hours()
 
     for (auto result : results){
         qDebug() << "Result: " << result->title();
-        if (result->schedule_type() != "END_MARKER")
+        if (result->schedule_type() != "END-MARKER")
             hours.push_back(result->schedule_hour());
     }
 

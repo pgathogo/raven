@@ -80,12 +80,13 @@ namespace OATS{
 
     }
 
-    void TrackGridPanel::mousePressEvent(QMouseEvent* event)
+    void TrackGridPanel::mouseReleaseEvent(QMouseEvent* event)
     {
         if (event->button() == Qt::LeftButton){
-            emit dynamic_cast<ScheduleGridItem*>(parent())->insert_item(parent_index(), index());
+            emit dynamic_cast<ScheduleGridItem*>(parent())->insert_item(parent_ref(), index());
         }
     }
+
 
     void TrackGridPanel::move_up()
     {

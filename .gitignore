@@ -1,5 +1,6 @@
 #Files
 *.autosave
+*.stackdump
 #Folders
 media
 images

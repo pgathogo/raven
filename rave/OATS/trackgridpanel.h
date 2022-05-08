@@ -24,7 +24,9 @@ namespace OATS{
         void update(OATS::ScheduleItem* schedule_item) override;
     protected:
         void contextMenuEvent(QContextMenuEvent* event) override;
-        void mousePressEvent(QMouseEvent* event) override;
+//        void mousePressEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
+
     private slots:
         void move_up();
         void move_down();

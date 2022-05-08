@@ -26,6 +26,7 @@ class EntityModel : public QStandardItemModel{
         ~EntityModel() override;
         size_t entitiesCount();
         BaseEntity* findEntityByName(const std::string name);
+        BaseEntity* find_entity_by_id(int);
         void clearEntities();
         void setHeader();
 

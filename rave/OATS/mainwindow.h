@@ -10,6 +10,10 @@
 #include "../audio/audio.h"
 #include "../audio/artist.h"
 
+#include "../framework/entitydatamodel.h"
+#include "../framework/relationmapper.h"
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -27,7 +31,6 @@ class BaseDataProvider;
 class ScheduleItem;
 class TimeAnalyzerWidget;
 class NodeData;
-class EntityDataModel;
 
 namespace OATS{
     class DateTimeWidget;
@@ -107,6 +110,25 @@ public:
     void fetch_audio(const std::string);
     void show_audio_data();
 
+    void print_schedule_items();
+
+    void fetch_folder_audio(FRAMEWORK::RelationMapper*);
+    void recompute_time(int);
+
+    template<typename T>
+    void fetch_filtered_audio(T arg)
+    {
+        AUDIO::Artist artist;
+        AUDIO::Audio audio;
+
+        auto [field_name, op, value] = arg;
+        auto base_filter = std::make_tuple(field_name, op, value);
+        auto active_audio = std::make_tuple(audio.is_deleted()->qualified_column_name<AUDIO::Audio>(), "=", false);
+        FRAMEWORK::RelationMapper* r_mapper = new FRAMEWORK::RelationMapper();
+        r_mapper = m_audio_edm->select_related(artist)->filter(base_filter, active_audio);
+        fetch_folder_audio(r_mapper);
+    }
+
 private slots:
     void close_win();
     void go_current();
@@ -121,6 +143,7 @@ private slots:
     void item_move_up(int, int);
     void item_move_down(int, int);
     void make_item_current(int);
+    void insert_item(int, int);
 
     void transition_stop(int, int);
     void transition_mix(int, int);
@@ -131,7 +154,10 @@ private slots:
     void go_current_clicked();
 
     void folder_clicked(const QModelIndex& index);
-    void open_audio_load_page();
+    void search_audio();
+    void push_items_down(int);
+    void reprint_schedule(int);
+//    void insert_schedule_item(int, std::unique_ptr<OATS::ScheduleItem>);
 
 private:
     Ui::MainWindow *ui;

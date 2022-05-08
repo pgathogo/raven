@@ -71,6 +71,19 @@ BaseEntity* EntityModel::findEntityByName(const std::string name)
     return be;
 }
 
+BaseEntity* EntityModel::find_entity_by_id(int id)
+{
+    BaseEntity* be = nullptr;
+
+    for (auto& record : mEntities){
+        const auto& [name, entity] = record;
+        if (entity->id() == id)
+                return entity.get();
+    }
+
+    return be;
+}
+
 void EntityModel::deleteFromModel()
 {
     mEntities.erase(std::remove_if(

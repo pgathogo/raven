@@ -18,7 +18,13 @@ public:
 
     QTabWidget* get_tabwidget();
 
+    void tab_clicked(int);
+
 private:
     Ui::LetterFilterWidget *ui;
+
+signals:
+    void tab_changed(int);
+    void tab_letter(QString letter);
 };
 

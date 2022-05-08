@@ -10,6 +10,8 @@ LetterFilterWidget::LetterFilterWidget(QWidget *parent) :
 
     ui->tabLetters->setTabPosition(QTabWidget::South);
     ui->tabLetters->setCurrentIndex(0);
+
+    connect(ui->tabLetters, &QTabWidget::currentChanged, this, &LetterFilterWidget::tab_clicked);
 }
 
 LetterFilterWidget::~LetterFilterWidget()
@@ -20,4 +22,9 @@ LetterFilterWidget::~LetterFilterWidget()
 QTabWidget* LetterFilterWidget::get_tabwidget()
 {
     return ui->tabLetters;
+}
+
+void LetterFilterWidget::tab_clicked(int index)
+{
+    emit tab_letter(ui->tabLetters->tabText(index));
 }

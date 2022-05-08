@@ -86,7 +86,7 @@ namespace SEDRIC{
     QString SedricScheduleItem::duration()
     {
         return QTime::fromMSecsSinceStartOfDay(
-                    m_audio->duration()->value()*1000).toString("hh:mm:ss");
+                    m_audio->duration()->value()).toString("hh:mm:ss");
     }
 
     QString SedricScheduleItem::transition()
@@ -151,7 +151,7 @@ namespace SEDRIC{
             if (schedule_hour > hour)
                 break;
 
-            QTime new_time = time_stamp.addSecs(duration);
+            QTime new_time = time_stamp.addMSecs(duration);
 
             QMap<QString, QVariant> item_data;
             item_data["row_id"] = row_id;
@@ -299,6 +299,10 @@ namespace SEDRIC{
 
         provider->cache()->first();
 
+        int item_duration = 0;
+
+        int current_hour = -1;
+
         do{
             Schedule* schedule = new Schedule();
 
@@ -307,6 +311,22 @@ namespace SEDRIC{
 
             // populate schedule fields
             set_schedule_fields(provider, schedule, audio, artist);
+
+            if (schedule->schedule_hour()->value() != current_hour){
+                item_duration = 0;
+                current_hour = schedule->schedule_hour()->value();
+            }
+
+            if (schedule->schedule_item_type()->value() == "SONG" ||
+                schedule->schedule_item_type()->value() == "COMM-AUDIO" ||
+                schedule->schedule_item_type()->value() == "JINGLE")
+            {
+                if (item_duration > 0){
+                    //schedule->set_schedule_time(schedule->schedule_time()->value().addMSecs(item_duration));
+                }
+
+                item_duration = item_duration + audio->duration()->value();
+            }
 
             m_display_items.push_back(schedule);
 
@@ -451,6 +471,12 @@ namespace SEDRIC{
         }
     }
 
+    bool SedricScheduleItem::log_find(QDate date, int hour)
+    {
+        return ( (std::find(m_activities[date].begin(),
+                          m_activities[date].end(), hour))== m_activities[date].end()) ? false : true;
+    }
+
 
     std::map<QDate, std::vector<int>> SedricScheduleItem::activities() const
     {
@@ -490,7 +516,9 @@ namespace SEDRIC{
 
     std::string SedricScheduleItem::make_insert_stmts(const std::vector<Schedule*>& items)
     {
-    //    Schedule schedule;
+        if (m_activities.size() == 0)
+            return "";
+
         std::string insert_stmts;
         VectorStruct<Field> fields;
 
@@ -500,15 +528,18 @@ namespace SEDRIC{
                  (schedule->schedule_item_type()->value() == "COMM-BREAK") )
                 continue;
 
-            fields << schedule->schedule_date()
-                   << schedule->schedule_time()
-                   << schedule->schedule_hour()
-                   << schedule->auto_transition()
-                   << schedule->audio()
-                   << schedule->schedule_item_type();
+            if (log_find(schedule->schedule_date()->value(), schedule->schedule_hour()->value()))
+            {
+                fields << schedule->schedule_date()
+                       << schedule->schedule_time()
+                       << schedule->schedule_hour()
+                       << schedule->auto_transition()
+                       << schedule->audio()
+                       << schedule->schedule_item_type();
 
-            insert_stmts += schedule->make_insert_stmt(fields.vec);
-            fields.clear();
+                insert_stmts += schedule->make_insert_stmt(fields.vec);
+                fields.clear();
+            }
         }
 
         return insert_stmts;

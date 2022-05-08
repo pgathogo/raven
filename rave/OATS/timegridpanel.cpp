@@ -59,8 +59,9 @@ namespace OATS{
 
     void TimeGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
-
-        if (schedule_item->schedule_type() != OATS::ScheduleType::HOUR_HEADER){
+        if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
+            set_label("");
+        } else {
             QTime t = msec_to_time(schedule_item->hour(), schedule_item->current_time());
             set_label(t.toString("HH:mm:ss"));
         }

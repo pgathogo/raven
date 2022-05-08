@@ -345,7 +345,7 @@ public:
         auto model = index.model();
         auto model_index = model->index(index.row(), model->columnCount());
         auto item_type = model_index.data(Qt::UserRole).toString();
-        if (item_type == "END_MARKER"){
+        if (item_type == "END-MARKER"){
             size.setHeight(50);
             return size;
         }
