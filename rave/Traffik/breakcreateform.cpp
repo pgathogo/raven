@@ -31,6 +31,9 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     connect(ui->btnCreate, &QPushButton::clicked, this, &BreakCreateForm::create_breaks);
     connect(ui->btnCancel, &QPushButton::clicked, this, &BreakCreateForm::close_form);
 
+    connect(ui->btnAddHour, &QPushButton::clicked, this, &BreakCreateForm::add_hour);
+    connect(ui->btnRemoveHour, &QPushButton::clicked, this, &BreakCreateForm::remove_hour);
+
     set_defaults();
 }
 
@@ -44,6 +47,7 @@ void BreakCreateForm::set_defaults()
     setWindowTitle("Generate Schedule Breaks Form");
     ui->dtFrom->setDate(QDate::currentDate());
     ui->dtTo->setDate(QDate::currentDate());
+    populate_hour_combo();
 }
 
 void BreakCreateForm::break_layout_selected(const QModelIndex &index)
@@ -110,7 +114,8 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
     QDate tmpDate = from;
     while (tmpDate <= to){
 
-        for (auto& [name, entity] : m_edm_break_line->modelEntities()){
+        for (auto& [name, entity] : m_edm_break_line->modelEntities())
+        {
             BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
 
             fields << sched.set_schedule_date(tmpDate)
@@ -123,9 +128,19 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_schedule_item_type("COMM-BREAK")
                     << sched.set_break_mode("MIXED");
 
-            insert_stmts += sched.make_insert_stmt(fields.vec);
-            fields.clear();
+
+            if (ui->cbSelectedHours->count() == 0)
+            {
+                insert_stmts += sched.make_insert_stmt(fields.vec);
+            }else{
+                if (ui->cbSelectedHours->findText(QString::number(bll->breakHour()->value())) > -1 )
+                {
+                    insert_stmts += sched.make_insert_stmt(fields.vec);
+                }
             }
+
+            fields.clear();
+         }
 
         tmpDate = tmpDate.addDays(1);
     }
@@ -146,4 +161,23 @@ bool BreakCreateForm::write_breaks_to_db(const std::string sql)
         showMessage(de.errorMessage());
         return false;
     }
+}
+
+void BreakCreateForm::populate_hour_combo()
+{
+    for (int i=0; i <= 23; ++i){
+        ui->cbHours->addItem(QString::number(i));
+    }
+}
+
+void BreakCreateForm::add_hour()
+{
+    if (ui->cbSelectedHours->findText(ui->cbHours->currentText()) == -1 ){
+        ui->cbSelectedHours->addItem(ui->cbHours->currentText());
+    }
+}
+
+void BreakCreateForm::remove_hour()
+{
+    ui->cbSelectedHours->removeItem(ui->cbSelectedHours->currentIndex());
 }

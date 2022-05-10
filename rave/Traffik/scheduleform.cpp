@@ -69,12 +69,12 @@ void ScheduleForm::create_breaks()
 void ScheduleForm::delete_breaks()
 {
     //FIXME Show ids userdata for child nodes
-    QModelIndex index = ui->tvSchedule->currentIndex();
+    QModelIndex index = ui->tvSchedule->selectionModel()->currentIndex();
 
     if (!index.isValid())
         return;
 
-    QVariant data = ui->tvSchedule->model()->data(index, Qt::UserRole);
+    QVariant data = ui->tvSchedule->selectionModel()->model()->data(index, Qt::UserRole);
     QString text = data.toString();
 
     if (text.isEmpty())

@@ -776,17 +776,25 @@ void MainWindow::reprint_schedule(int from_pos)
 
 void MainWindow::recompute_time(int from_pos)
 {
-    int prev_duration;
-    for(int i=from_pos; i<MAX_GRID_ITEMS; ++i){
-        if (i > 0){
-            auto schedule = schedule_item(i-1);
-            prev_duration = 0;
-            if (schedule->schedule_type() != OATS::ScheduleType::HOUR_HEADER)
-                prev_duration = schedule->current_time() + schedule->audio().duration();
+    QTime new_time;
+    QTime prev_schedule_time;
 
-            schedule = schedule_item(i);
-            schedule->set_current_time(prev_duration);
-            m_schedule_grid[i]->set_subject(schedule);
+    for(int i=from_pos; i<MAX_GRID_ITEMS; ++i){
+
+        if (i > 0){
+            auto prev_schedule_item = schedule_item(i-1);
+            prev_schedule_time  = prev_schedule_item->schedule_time();
+
+            auto current_schedule = schedule_item(i);
+
+            if (prev_schedule_item->schedule_type() != OATS::ScheduleType::HOUR_HEADER){
+                new_time = prev_schedule_time.addMSecs(prev_schedule_item->audio().duration());
+            }else{
+                new_time = current_schedule->schedule_time();
+            }
+
+            current_schedule->set_schedule_time(new_time);
+            m_schedule_grid[i]->set_subject(current_schedule);
         }
     }
 }
@@ -1401,6 +1409,14 @@ void MainWindow::make_item_current(int item_ref)
 
     si->set_item_status(OATS::ItemStatus::CUED);
 
+    QTime curr_time = QTime::currentTime();
+    si->set_schedule_time(curr_time);
+
+    int item_duration = si->audio().duration();
+
+    si->notify();
+
+
     QString cue_string = output_string(si);
 
     if (si->play_channel() == ChannelA){
@@ -1413,7 +1429,11 @@ void MainWindow::make_item_current(int item_ref)
 
     for(int i=index+1; i < m_schedule_items.size()-1; ++i){
         auto sched_item = schedule_item(i);
+        sched_item->set_schedule_time(curr_time.addMSecs(item_duration));
         sched_item->set_item_status(OATS::ItemStatus::WAITING);
+        curr_time = sched_item->schedule_time();
+        item_duration = sched_item->audio().duration();
+
         sched_item->notify();
     }
 

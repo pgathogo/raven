@@ -21,6 +21,7 @@ public:
     ~BreakCreateForm();
 
     void set_defaults();
+    void populate_hour_combo();
 
     template<typename T>
     struct Vectored{
@@ -40,6 +41,9 @@ private slots:
     void break_layout_selected(const QModelIndex& index);
     void close_form();
     void create_breaks();
+
+    void add_hour();
+    void remove_hour();
 
 private:
     Ui::BreakCreateForm *ui;
