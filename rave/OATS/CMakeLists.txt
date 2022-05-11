@@ -61,6 +61,8 @@ set(PROJECT_SOURCES
         outputpanel.cpp
         playmodepanel.h
         playmodepanel.cpp
+        commercialviewer.h
+        commercialviewer.cpp
         oats.qrc
 
         ../framework/baseentity.cpp

@@ -57,6 +57,7 @@ namespace OATS{
         ScheduleItem(const ScheduleItem& other);
 
         int schedule_ref();
+        int id();
         int index();
         void set_index(int);
 

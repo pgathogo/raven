@@ -9,6 +9,8 @@
 #include <QDebug>
 #include <QStandardItemModel>
 #include <QSplitter>
+#include <QStandardItem>
+#include <QList>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -33,6 +35,7 @@
 #include "schedulegriditem.h"
 #include "outputpanel.h"
 #include "playmodepanel.h"
+#include "commercialviewer.h"
 
 
 int MainWindow::s_sched_ref{0};
@@ -78,13 +81,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->swMain->setCurrentIndex(0);
     ui->twLoad->setCurrentIndex(0);
 
-    connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0);});
-    connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1);});
-    connect(ui->btnSegue, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(2);});
-    connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3);});
-    connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4);});
-    connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5);});
-    connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7);});
+    connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
+    connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1); m_control_page = ControlPage::Commercial; });
+    connect(ui->btnSegue, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(2); m_control_page = ControlPage::Segue; });
+    connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3); m_control_page = ControlPage::Cart; });
+    connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4); m_control_page = ControlPage::Jingle; });
+    connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5); m_control_page = ControlPage::TrackInfo; });
+    connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7); m_control_page = ControlPage::Load; });
 
     // Audio Library Page
 
@@ -119,6 +122,8 @@ void MainWindow::set_playout_widgets()
 
     make_output_panel();
     make_play_mode_panel();
+    make_comm_viewer_widget();
+
 }
 
 void MainWindow::close_win()
@@ -252,7 +257,7 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 {
     std::stringstream sql;
 
-    sql << " SELECT a.id,a.schedule_date, a.schedule_hour, a.schedule_time, "
+    sql << " SELECT a.id, a.schedule_date, a.schedule_hour, a.schedule_time, "
         << " a.auto_transition, a.play_date, a.play_time, "
         << " a.schedule_item_type, a.comment, a.booked_spots, "
         << " a.audio_id, b.title, b.filepath, b.duration, c.fullname "
@@ -303,7 +308,6 @@ void MainWindow::fetch_db_data(QDate date, int hr)
             is_hour_header_created = true;
         }
 
-
         if (item_duration == 0){
             total_duration = 0;
         } else {
@@ -316,8 +320,6 @@ void MainWindow::fetch_db_data(QDate date, int hr)
         sched_item->set_schedule_time(item_time);
 
         item_duration = item_duration + sched_item->audio().duration();
-
-
 
 //		auto audio = dynamic_cast<AUDIO::Audio*>(schedule->audio()->dataModel()->get_entity().get());
 //		auto artist = dynamic_cast<AUDIO::Artist*>(audio->artist()->dataModel()->get_entity().get());
@@ -654,7 +656,7 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_up, this, &MainWindow::item_move_up);
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_down, this, &MainWindow::item_move_down);
         connect(grid_item.get(), &OATS::ScheduleGridItem::make_current, this, &MainWindow::make_item_current);
-        connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::insert_item);
+        connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::grid_clicked);
 
         /*
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
@@ -745,6 +747,12 @@ void MainWindow::make_play_mode_panel()
 {
     m_play_mode_panel = std::make_unique<OATS::PlayModePanel>(this);
     ui->hlPlayMode->addWidget(m_play_mode_panel.get());
+}
+
+void MainWindow::make_comm_viewer_widget()
+{
+    m_comm_viewer = std::make_unique<OATS::CommercialViewer>(this);
+    ui->vlCommViewer->addWidget(m_comm_viewer.get());
 }
 
 void MainWindow::display_schedule(int start_index)
@@ -1440,11 +1448,38 @@ void MainWindow::make_item_current(int item_ref)
     display_schedule(ui->gridScroll->value());
 }
 
-void MainWindow::insert_item(int schedule_ref, int grid_pos)
+void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
 {
-//    if (current_page != load_audio_page)
-//        return;
+    switch(m_control_page)
+    {
+      case ControlPage::Home:
+        break;
+      case ControlPage::Commercial:
+        qDebug() << schedule_ref;
+        show_commercial(schedule_ref);
+        break;
+      case ControlPage::Segue:
+        qDebug() << "Segue page ...";
+        break;
+      case ControlPage::Cart:
+        qDebug() << "Cart page ... ";
+        break;
+      case ControlPage::Jingle:
+        qDebug() << "Jingle page ...";
+        break;
+      case ControlPage::TrackInfo:
+        qDebug() << "Track info ...";
+        break;
+      case ControlPage::Load:
+        load_item(schedule_ref, grid_pos);
+        break;
+     default:
+        qDebug() << "No existance page";
+    }
+}
 
+void MainWindow::load_item(int schedule_ref, int grid_pos)
+{
     int audio_id = m_track_viewer->get_selected_audio_id();
     AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
 
@@ -1467,7 +1502,6 @@ void MainWindow::insert_item(int schedule_ref, int grid_pos)
     } else {
         new_time = item_at_cursor->schedule_time().addMSecs(item_at_cursor->audio().duration());
     }
-
 
     new_item->set_schedule_time(new_time);
 
@@ -1512,6 +1546,21 @@ void MainWindow::insert_item(int schedule_ref, int grid_pos)
 
     print_schedule_items();  // debugging purposes only
 
+}
+
+void MainWindow::show_commercial(int schedule_ref)
+{
+    int index = index_of(schedule_ref);
+    auto schedule = schedule_item(index);
+
+    m_comm_viewer->clear();
+    m_comm_viewer->create_view_headers();
+
+    fetch_commercial_in_db(schedule->id());
+
+    m_comm_viewer->set_title("Commercial Break: "+schedule->schedule_time().toString("HH:mm"));
+
+    qDebug() << "Schedule ID: "<< schedule->id();
 }
 
 QString MainWindow::output_string(OATS::ScheduleItem* si)
@@ -1709,6 +1758,79 @@ void MainWindow::search_audio()
         fetch_filtered_audio(artist_filter);
     }
 
+}
+
+void MainWindow::fetch_commercial_in_db(int schedule_id)
+{
+    std::stringstream sql;
+
+    sql <<"select a.id, a.schedule_date, a.schedule_time, a.schedule_hour, "
+        <<" b.schedule_id, b.spot_id,   "
+        <<" c.name spot_title, c.spot_duration, c.real_duration, c.client_id,   "
+        <<" d.audio_id, "
+        <<" e.name client_name   "
+        <<" from rave_schedule a "
+        <<" left outer join rave_orderbooking b on a.id = b.schedule_id "
+        <<" left outer join rave_spot c on b.spot_id = c.id "
+        <<" left outer join rave_spotaudio d on c.id = d.spot_id "
+        <<" left outer join rave_client e on c.client_id = e.id ";
+
+   std::string where_filter = " where a.id = "+ std::to_string(schedule_id);
+
+   sql << where_filter;
+
+   EntityDataModel edm;
+   edm.readRaw(sql.str());
+
+   auto provider = edm.getDBManager()->provider();
+
+   if (provider->cacheSize() == 0)
+       return;
+
+   QList<QStandardItem*> columns;
+
+   provider->cache()->first();
+
+   std::string spot_title;
+   std::string client_name;
+   std::string spot_duration;
+
+   do{
+       auto it_begin = provider->cache()->currentElement()->begin();
+       auto it_end = provider->cache()->currentElement()->end();
+
+       for(; it_begin != it_end; ++it_begin) {
+
+           std::string field_name = (*it_begin).first;
+           std::string field_value = (*it_begin).second;
+
+           if (field_name == "spot_title"){
+               spot_title = field_value;
+           }
+
+           if (field_name == "spot_duration"){
+               spot_duration = field_value;
+           }
+
+           if (field_name == "client_name"){
+               client_name = field_value;
+           }
+
+
+       }
+
+       auto title = new QStandardItem(QString::fromStdString(spot_title));
+       auto client = new QStandardItem(QString::fromStdString(client_name));
+       auto duration = new QStandardItem(QString::fromStdString(spot_duration));
+       columns.append(title);
+       columns.append(client);
+       columns.append(duration);
+
+       m_comm_viewer->model()->appendRow(columns);
+       columns.clear();
+
+       provider->cache()->next();
+   } while (!provider->cache()->isLast());
 
 
 }

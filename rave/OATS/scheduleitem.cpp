@@ -103,6 +103,11 @@ namespace OATS {
     {
     }
 
+    int ScheduleItem::id()
+    {
+        return m_id;
+    }
+
 
     int ScheduleItem::schedule_ref()
     {

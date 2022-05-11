@@ -39,6 +39,7 @@ namespace OATS{
     class ScheduleGridItem;
     class OutputPanel;
     class PlayModePanel;
+    class CommercialViewer;
 }
 
 namespace AUDIO{
@@ -68,6 +69,9 @@ public:
     const std::string ChannelB = "B";
     const std::string ChannelC = "C";
 
+
+    enum class ControlPage{Home, Commercial, Segue, Cart, Jingle, TrackInfo, Load};
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -90,6 +94,8 @@ public:
     void make_playlist_grid();
     void make_play_mode_panel();
     void make_output_panel();
+    void make_comm_viewer_widget();
+
     int index_of(int);
     void stop_audio(OATS::OutputPanel*);
     void play_audio(OATS::OutputPanel*);
@@ -114,6 +120,10 @@ public:
 
     void fetch_folder_audio(FRAMEWORK::RelationMapper*);
     void recompute_time(int);
+
+    void load_item(int, int);
+    void show_commercial(int);
+    void fetch_commercial_in_db(int);
 
     template<typename T>
     void fetch_filtered_audio(T arg)
@@ -143,7 +153,7 @@ private slots:
     void item_move_up(int, int);
     void item_move_down(int, int);
     void make_item_current(int);
-    void insert_item(int, int);
+    void grid_clicked(int, int);
 
     void transition_stop(int, int);
     void transition_mix(int, int);
@@ -191,8 +201,12 @@ private:
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<EntityDataModel> m_audio_edm;
 
+    std::unique_ptr<OATS::CommercialViewer> m_comm_viewer;
+
     static int s_sched_ref;
     static std::string s_channel;
+
+    ControlPage m_control_page;
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate, int);

@@ -79,6 +79,11 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/home/PMS/Raven/rave/OATS/commercialviewer.h",
+			"MU",
+			"EWIEGA46WW/moc_commercialviewer.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/OATS/datetimewidget.h",
 			"MU",
 			"EWIEGA46WW/moc_datetimewidget.cpp"
@@ -321,6 +326,7 @@
 	"SETTINGS_FILE" : "D:/home/PMS/Raven/rave/OATS/CMakeFiles/OATS_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/home/PMS/Raven/rave/OATS/commercialviewer.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/datetimewidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/gridpanel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/main.cpp", "MU" ],
