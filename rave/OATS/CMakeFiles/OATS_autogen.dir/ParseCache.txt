@@ -7,6 +7,7 @@ D:/home/PMS/Raven/rave/security/authentication.h
 D:/home/PMS/Raven/rave/OATS/playlistcontrolwidget.h
  mmc:Q_OBJECT
 D:/home/PMS/Raven/rave/audio/audiolibitem.h
+D:/home/PMS/Raven/rave/framework/schedule.cpp
 D:/home/PMS/Raven/rave/OATS/mainwindow.h
  mmc:Q_OBJECT
 D:/home/PMS/Raven/rave/security/user.cpp
@@ -35,6 +36,8 @@ D:/home/PMS/Raven/rave/OATS/schedulegriditem.h
 D:/home/PMS/Raven/rave/OATS/playmodepanel.cpp
 D:/home/PMS/Raven/rave/audio/audiofile.cpp
 D:/home/PMS/Raven/rave/OATS/scheduleitem.h
+D:/home/PMS/Raven/rave/audio/audiohistoryform.cpp
+ uic:ui_audiohistoryform.h
 D:/home/PMS/Raven/rave/OATS/outputpanel.cpp
 D:/home/PMS/Raven/rave/OATS/timegridpanel.h
  mmc:Q_OBJECT
@@ -50,6 +53,8 @@ D:/home/PMS/Raven/rave/OATS/subjectobserver.cpp
 D:/home/PMS/Raven/rave/OATS/timegridpanel.cpp
 D:/home/PMS/Raven/rave/OATS/trackgridpanel.cpp
 D:/home/PMS/Raven/rave/OATS/statusgridpanel.h
+ mmc:Q_OBJECT
+D:/home/PMS/Raven/rave/audio/audiohistoryform.h
  mmc:Q_OBJECT
 D:/home/PMS/Raven/rave/OATS/statusgridpanel.cpp
 D:/home/PMS/Raven/rave/OATS/outputpanel.h
@@ -91,3 +96,9 @@ D:/home/PMS/Raven/rave/audio/audiotrackitem.cpp
 D:/home/PMS/Raven/rave/OATS/commercialviewer.h
  mmc:Q_OBJECT
 D:/home/PMS/Raven/rave/OATS/commercialviewer.cpp
+D:/home/PMS/Raven/rave/OATS/trackinfo.h
+ mmc:Q_OBJECT
+D:/home/PMS/Raven/rave/OATS/trackinfo.cpp
+ uic:ui_trackinfo.h
+D:/home/PMS/Raven/rave/utils/tools.h
+D:/home/PMS/Raven/rave/framework/schedule.h

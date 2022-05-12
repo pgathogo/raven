@@ -63,6 +63,8 @@ set(PROJECT_SOURCES
         playmodepanel.cpp
         commercialviewer.h
         commercialviewer.cpp
+        trackinfo.h
+        trackinfo.cpp
         oats.qrc
 
         ../framework/baseentity.cpp
@@ -81,6 +83,8 @@ set(PROJECT_SOURCES
         ../framework/treeviewmodel.cpp
         ../framework/letterfilterwidget.h
         ../framework/letterfilterwidget.cpp
+        ../framework/schedule.h
+        ../framework/schedule.cpp
 
         ../audio/audio.cpp
         ../audio/artist.cpp
@@ -97,9 +101,13 @@ set(PROJECT_SOURCES
         ../audio/audiolibitem.cpp
         ../audio/audiotool.h
         ../audio/audiotool.cpp
+        ../audio/audiohistoryform.h
+        ../audio/audiohistoryform.cpp
 
         ../security/authentication.cpp
         ../security/user.cpp
+
+        ../utils/tools.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

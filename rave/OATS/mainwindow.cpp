@@ -11,6 +11,7 @@
 #include <QSplitter>
 #include <QStandardItem>
 #include <QList>
+#include <QVBoxLayout>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -20,6 +21,7 @@
 #include "../framework/ravenexception.h"
 #include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
+#include "../framework/schedule.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audiotrackviewer.h"
@@ -36,6 +38,7 @@
 #include "outputpanel.h"
 #include "playmodepanel.h"
 #include "commercialviewer.h"
+#include "trackinfo.h"
 
 
 int MainWindow::s_sched_ref{0};
@@ -123,6 +126,7 @@ void MainWindow::set_playout_widgets()
     make_output_panel();
     make_play_mode_panel();
     make_comm_viewer_widget();
+    make_track_info_widget();
 
 }
 
@@ -753,6 +757,14 @@ void MainWindow::make_comm_viewer_widget()
 {
     m_comm_viewer = std::make_unique<OATS::CommercialViewer>(this);
     ui->vlCommViewer->addWidget(m_comm_viewer.get());
+}
+
+void MainWindow::make_track_info_widget()
+{
+    m_track_info = std::make_unique<TrackInfo>(this);
+    QVBoxLayout* vlTrackInfo = new QVBoxLayout();
+    vlTrackInfo->addWidget(m_track_info.get());
+    ui->pgTrackInfo->setLayout(vlTrackInfo);
 }
 
 void MainWindow::display_schedule(int start_index)
@@ -1468,7 +1480,7 @@ void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
         qDebug() << "Jingle page ...";
         break;
       case ControlPage::TrackInfo:
-        qDebug() << "Track info ...";
+        show_track_info(schedule_ref);
         break;
       case ControlPage::Load:
         load_item(schedule_ref, grid_pos);
@@ -1506,6 +1518,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     new_item->set_schedule_time(new_time);
 
     OATS::Audio new_audio;
+    new_audio.set_id(audio->id());
     new_audio.set_title(audio->title()->value());
     new_audio.set_duration(audio->duration()->value());
     new_audio.set_file_path(audio->file_path()->value());
@@ -1562,6 +1575,56 @@ void MainWindow::show_commercial(int schedule_ref)
 
     qDebug() << "Schedule ID: "<< schedule->id();
 }
+
+void MainWindow::show_track_info(int schedule_ref)
+{
+    int index = index_of(schedule_ref);
+    auto schedule = schedule_item(index);
+
+    auto history =  make_history(schedule->audio().id());
+    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(schedule->audio().id());
+    m_track_info->show_audio_info(audio, history);
+}
+
+History MainWindow::make_history(int audio_id)
+{
+    History hist;
+
+    if (audio_id < 0)
+        return hist;
+
+    Schedule schedule;
+    auto edm = std::make_unique<EntityDataModel>(std::make_unique<Schedule>());
+
+    QString date_format = "yyyy-MM-dd";
+    QString d_range1 = QDate::currentDate().addDays(-7).toString(date_format);
+    QString d_range2 = QDate::currentDate().toString(date_format);
+
+    QString date_range = "'"+d_range1+"' and '"+d_range2+ "'";
+
+    auto date_filter = std::make_tuple(schedule.schedule_date()->dbColumnName(),
+                                       " between ",
+                                       date_range.toStdString());
+    auto audio_filter = std::make_tuple(schedule.audio()->dbColumnName(),
+                                        " = ",
+                                        audio_id);
+
+    try{
+        edm->search(edm->prepareFilter(date_filter, audio_filter));
+    } catch(DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+
+    for (auto& [name, entity] : edm->modelEntities()){
+        Schedule* sched = dynamic_cast<Schedule*>(entity.get());
+        hist[sched->schedule_date()->value().dayOfWeek()].push_back(sched->schedule_hour()->value());
+    }
+
+    return hist;
+
+}
+
 
 QString MainWindow::output_string(OATS::ScheduleItem* si)
 {

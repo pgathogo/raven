@@ -149,6 +149,11 @@
 			"EWIEGA46WW/moc_trackgridpanel.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/OATS/trackinfo.h",
+			"MU",
+			"EWIEGA46WW/moc_trackinfo.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.h",
 			"MU",
 			"EWIEGA46WW/moc_transitionmodegridpanel.cpp"
@@ -172,6 +177,11 @@
 			"D:/home/PMS/Raven/rave/audio/audiofolder.h",
 			"MU",
 			"Y6ZUSTFKUI/moc_audiofolder.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/audio/audiohistoryform.h",
+			"MU",
+			"Y6ZUSTFKUI/moc_audiohistoryform.cpp"
 		],
 		[
 			"D:/home/PMS/Raven/rave/audio/audiolibitem.h",
@@ -244,6 +254,11 @@
 			"TXBK5VWLEF/moc_relationmapper.cpp"
 		],
 		[
+			"D:/home/PMS/Raven/rave/framework/schedule.h",
+			"MU",
+			"TXBK5VWLEF/moc_schedule.cpp"
+		],
+		[
 			"D:/home/PMS/Raven/rave/framework/tree.h",
 			"MU",
 			"TXBK5VWLEF/moc_tree.cpp"
@@ -262,6 +277,11 @@
 			"D:/home/PMS/Raven/rave/security/user.h",
 			"MU",
 			"AD4PYRWGU2/moc_user.cpp"
+		],
+		[
+			"D:/home/PMS/Raven/rave/utils/tools.h",
+			"MU",
+			"CMVTXRXFX7/moc_tools.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -341,11 +361,13 @@
 		[ "D:/home/PMS/Raven/rave/OATS/timeanalyzerwidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/timegridpanel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/trackgridpanel.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/OATS/trackinfo.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/OATS/transitionmodegridpanel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/artist.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audio.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofile.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiofolder.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/audio/audiohistoryform.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibitem.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiolibrary.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/audio/audiotool.cpp", "MU" ],
@@ -360,6 +382,7 @@
 		[ "D:/home/PMS/Raven/rave/framework/letterfilterwidget.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
+		[ "D:/home/PMS/Raven/rave/framework/schedule.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/tree.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/framework/treeviewmodel.cpp", "MU" ],
 		[ "D:/home/PMS/Raven/rave/security/authentication.cpp", "MU" ],

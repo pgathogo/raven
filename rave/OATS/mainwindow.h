@@ -31,6 +31,7 @@ class BaseDataProvider;
 class ScheduleItem;
 class TimeAnalyzerWidget;
 class NodeData;
+class TrackInfo;
 
 namespace OATS{
     class DateTimeWidget;
@@ -53,6 +54,8 @@ struct CurrentPlayItem{
     int schedule_index{-1};
     int grid_index{-1};
 };
+
+using History = std::map<int, std::vector<int>>;
 
 class MainWindow : public QMainWindow
 {
@@ -95,6 +98,7 @@ public:
     void make_play_mode_panel();
     void make_output_panel();
     void make_comm_viewer_widget();
+    void make_track_info_widget();
 
     int index_of(int);
     void stop_audio(OATS::OutputPanel*);
@@ -124,6 +128,8 @@ public:
     void load_item(int, int);
     void show_commercial(int);
     void fetch_commercial_in_db(int);
+    void show_track_info(int);
+    History make_history(int);
 
     template<typename T>
     void fetch_filtered_audio(T arg)
@@ -202,6 +208,7 @@ private:
     std::unique_ptr<EntityDataModel> m_audio_edm;
 
     std::unique_ptr<OATS::CommercialViewer> m_comm_viewer;
+    std::unique_ptr<TrackInfo> m_track_info;
 
     static int s_sched_ref;
     static std::string s_channel;

@@ -144,3 +144,7 @@
 14	90	0	sedric_autogen/mocs_compilation.cpp	9a0c48e522cdcce
 91	4715	6737182482107949	CMakeFiles/sedric.dir/sedricscheduleitem.cpp.obj	6dc7a38a87ac0165
 4715	8320	6737182518030004	sedric.exe	a570c5d670e8d5f1
+131	621	0	CMakeFiles/sedric_autogen	9a0c48e522cdcce
+131	621	0	sedric_autogen/mocs_compilation.cpp	9a0c48e522cdcce
+8	55	0	CMakeFiles/sedric_autogen	9a0c48e522cdcce
+8	55	0	sedric_autogen/mocs_compilation.cpp	9a0c48e522cdcce
