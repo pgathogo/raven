@@ -13,6 +13,7 @@ public:
     Authentication();
     ~Authentication();
     void connect(const std::string uname, const std::string pword);
+    void connect_cluster(const std::string, const std::string);
     void access_controller(const std::string uname);
     std::tuple<std::string, std::string> get_user_details(const std::string uname);
     PostgresDatabaseManager* dbManager();

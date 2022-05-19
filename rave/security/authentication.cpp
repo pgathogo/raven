@@ -20,7 +20,6 @@ Authentication::~Authentication()
 
 void Authentication::connect(const std::string uname, const std::string pword)
 {
-
     QString dbname{};
     QString server{};
     int port=-1;
@@ -38,6 +37,26 @@ void Authentication::connect(const std::string uname, const std::string pword)
     std::string conninfo = "user="+uname+" password="+pword+" dbname="+dbname.toStdString()+" port="+std::to_string(port);
     mDBManager = new PostgresDatabaseManager(conninfo);
 
+}
+
+void Authentication::connect_cluster(const std::string uname, const std::string pword)
+{
+    QString dbname{};
+    QString server{};
+    int port=-1;
+
+    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\PMSL\Raven\Database)", QSettings::NativeFormat);
+    if (registry.childKeys().contains("clusterdb", Qt::CaseInsensitive))
+        dbname = registry.value("clusterdb").toString();
+
+    if (registry.childKeys().contains("clusterserver", Qt::CaseInsensitive))
+        server = registry.value("clusterserver").toString();
+
+    if (registry.childKeys().contains("clusterport", Qt::CaseInsensitive))
+        port = registry.value("clusterport").toInt();
+
+    std::string conninfo = "user="+uname+" password="+pword+" dbname="+dbname.toStdString()+" port="+std::to_string(port);
+    mDBManager = new PostgresDatabaseManager(conninfo);
 }
 
 void Authentication::access_controller(const std::string uname)

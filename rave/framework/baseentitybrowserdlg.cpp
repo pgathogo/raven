@@ -1,6 +1,7 @@
 #include <QMessageBox>
 
 #include "baseentitybrowserdlg.h"
+#include "ui_baseentitybrowserdlg.h"
 
 #include "baseentity.h"
 #include "entitydatamodel.h"

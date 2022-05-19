@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.2, 2022-05-10T17:57:52. -->
+<!-- Written by QtCreator 4.15.2, 2022-05-18T22:03:19. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -425,7 +425,7 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/Administrator/AppData/Local/Temp/QtCreator-rcdVEr/qtc-cmake-HfcDwDiR</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/home/PMS/Raven/rave/build-TraffikRave-Qt_5_13_2_mingw73_64-Debug</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">2</value>
   </valuemap>

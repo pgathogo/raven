@@ -3,10 +3,13 @@
 
 #include <QDebug>
 #include <QWidget>
+#include <QVariant>
 
 #include <QDialog>
 #include <QMdiArea>
 #include "entitydatamodel.h"
+
+#include "baseentitybrowserdlg.h"
 #include "ui_baseentitybrowserdlg.h"
 
 #include "ravenexception.h"
@@ -249,9 +252,10 @@ public:
                 }
            }
         }else{
-            auto data = bui->cbFilter->itemData(
-                                bui->cbFilter->currentIndex()).value<QVariant>();
-            std::string columnName = data.toString().toStdString();
+            auto var_data = bui->cbFilter->itemData(bui->cbFilter->currentIndex());
+//            auto data = var_data.value<QString>();
+//            std::string columnName = data.toStdString();
+            std::string columnName = var_data.toString().toStdString();
             std::string item = bui->edtFilter->text().toStdString();
             auto brand_filter = std::make_tuple(columnName, "=", item);
 

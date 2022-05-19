@@ -103,7 +103,7 @@ void MainWindow::createActions()
 
     QAction* setupAction = new QAction(tr("&Traffik Setup"));
     setupMenu->addAction(setupAction);
-    setupAction->setStatusTip(tr("Traffki Default Setup"));
+    setupAction->setStatusTip(tr("Traffk Default Setup"));
     connect(setupAction, &QAction::triggered, this, &MainWindow::openSetupForm);
 
     /*
