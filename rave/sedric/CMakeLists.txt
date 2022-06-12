@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
+
 project(sedric LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -17,7 +19,7 @@ set(rave_audio_INCLUDE_DIRS "../audio")
 
 #set(rave_audiolib_INCLUDE_DIRS "../audiolib")
 
-set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
+set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)

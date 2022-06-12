@@ -1,3 +1,4 @@
+#include <QCloseEvent>
 #include "loginform.h"
 #include "ui_loginform.h"
 

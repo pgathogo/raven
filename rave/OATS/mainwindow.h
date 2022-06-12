@@ -178,7 +178,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    std::unique_ptr<TimeAnalyzerWidget> m_taw;
+   // std::unique_ptr<TimeAnalyzerWidget> m_taw;
     std::unique_ptr<OATS::DateTimeWidget> m_dtw;
     std::unique_ptr<OATS::PlayListControlWidget> m_pcw;
     std::unique_ptr<OATS::PlayModePanel> m_play_mode_panel;

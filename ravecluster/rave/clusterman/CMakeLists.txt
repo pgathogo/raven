@@ -44,6 +44,8 @@ set(PROJECT_SOURCES
         ${rave_framework_INCLUDE_DIRS}/baseentitydetaildlg.cpp
         ${rave_framework_INCLUDE_DIRS}/baseentitybrowserdlg.h
         ${rave_framework_INCLUDE_DIRS}/baseentitybrowserdlg.cpp
+        ${rave_framework_INCLUDE_DIRS}/letterfilterwidget.h
+        ${rave_framework_INCLUDE_DIRS}/letterfilterwidget.cpp
         ../../../rave/framework/entityfields.h
         ../../../rave/framework/entityfields.cpp
         ../../../rave/framework/dataprovider.h

@@ -20,3 +20,7 @@ rave/audiolib/build-cueeditor-AMD_64-Debug
 rave/audiolib/build-cueeditor-AMD_64-Release
 audiofiles
 Softlib
+Debug
+Release
+CMakeFiles/
+*_autogen

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QFile>
 #include "../security/authentication.h"
 
 int main(int argc, char *argv[])

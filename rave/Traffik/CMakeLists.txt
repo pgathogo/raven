@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
+
 project(Traffik VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -7,6 +9,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,7 +21,7 @@ set(rave_audio_INCLUDE_DIRS "../audio")
 
 set(Bass_INCLUDE_DIRS "../../lib/BassLib/Include")
 
-set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
+set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)

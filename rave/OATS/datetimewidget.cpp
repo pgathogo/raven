@@ -38,7 +38,7 @@ namespace OATS{
         m_datetime_layout->addLayout(m_time_digit_layout);
         m_datetime_layout->addLayout(m_time_date_layout);
         m_datetime_layout->setStretch(1, 2);
-        m_datetime_layout->setMargin(0);
+        m_datetime_layout->setContentsMargins(0,0,0,0);
         //m_datetime_layout->setSpacing(10);
 
         setLayout(m_datetime_layout.get());

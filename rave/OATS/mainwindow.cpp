@@ -30,7 +30,7 @@
 #include "../audio/audiotrackitem.h"
 #include "../audio/audiolibitem.h"
 
-#include "timeanalyzerwidget.h"
+//#include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
 #include "playlistcontrolwidget.h"
 #include "scheduleitem.h"
@@ -49,7 +49,7 @@ using namespace std::chrono_literals;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_taw{nullptr}
+   // , m_taw{nullptr}
     , m_dtw{nullptr}
     , m_outputA{nullptr}
     , m_outputB{nullptr}
@@ -157,6 +157,7 @@ void MainWindow::set_datetime_widget()
 
 void MainWindow::set_time_analytics_widget()
 {
+	/*
     m_taw = std::make_unique<TimeAnalyzerWidget>();
     std::map<QString, float> time_slots;
 
@@ -166,6 +167,7 @@ void MainWindow::set_time_analytics_widget()
 
     m_taw->set_time_bar(time_slots);
     ui->hlTimeAnalytics->addWidget(m_taw.get());
+    */
 }
 
 void MainWindow::set_playlist_control_widget()

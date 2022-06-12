@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
+
 project(OATS VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -11,8 +13,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Charts REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
@@ -30,13 +32,14 @@ set(AUDIO_LIB "../audiolib/lib_debug")
 find_path(AUDIO_INCLUDE_DIR cueeditor.h ${AUDIO_INCLUDE})
 find_library(AUDIO_LIBRARY cueeditor ${AUDIO_LIB})
 
+#timeanalyzerwidget.h
+#timeanalyzerwidget.cpp
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        timeanalyzerwidget.h
-        timeanalyzerwidget.cpp
         datetimewidget.h
         datetimewidget.cpp
         playlistcontrolwidget.h
@@ -128,7 +131,7 @@ else()
 endif()
 
 target_link_libraries(OATS PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(OATS PRIVATE Qt${QT_VERSION_MAJOR}::Charts)
+#target_link_libraries(OATS PRIVATE Qt${QT_VERSION_MAJOR}::Charts)
 
 target_include_directories(OATS PRIVATE ${postgreSQL_INCLUDE_DIRS})
 target_include_directories(OATS PRIVATE ${rave_framework_INCLUDE_DIRS})

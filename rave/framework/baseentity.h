@@ -7,6 +7,8 @@
 
 #include <QList>
 #include <QDebug>
+#include <QStringList>
+
 #include "entityfields.h"
 
 #include "../utils/types.h"
@@ -14,7 +16,7 @@
 #include "entityregister.h"
 
 class QString;
-class QStringList;
+//class QStringList;
 class QStandardItem;
 
 class EntityDataModel;
