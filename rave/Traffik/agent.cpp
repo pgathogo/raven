@@ -28,6 +28,7 @@ Agent::Agent():
 
     setTableName("rave_agent");
 
+
 }
 
 Agent::Agent(int)

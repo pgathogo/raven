@@ -1,5 +1,6 @@
 #include <QMenu>
 #include <QMenuBar>
+#include <QMdiArea>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -9,22 +10,33 @@
 #include "../../../rave/security/authentication.h"
 #include "../../../rave/security/userbrowser.h"
 
+#include "clusterbrowser.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_mdi_area{new QMdiArea }
     , m_file_menu{}
-    , m_setup_action{}
+    , m_setup_act{}
 {
     ui->setupUi(this);
 
-    connect(ui->btnRaveDB, &QPushButton::clicked, this, &MainWindow::connect_rave_db);
-    connect(ui->btnClusterDB, &QPushButton::clicked, this, &MainWindow::connect_cluster_db);
+    m_mdi_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_mdi_area->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setCentralWidget(m_mdi_area);
 
+//    connect(ui->btnRaveDB, &QPushButton::clicked, this, &MainWindow::connect_rave_db);
+//    connect(ui->btnClusterDB, &QPushButton::clicked, this, &MainWindow::connect_cluster_db);
     setup_menu();
+
+    setWindowTitle("Cluster Manager");
+
+    connect_rave_db();
 }
 
 MainWindow::~MainWindow()
 {
+    delete m_mdi_area;
     delete ui;
 }
 
@@ -39,20 +51,30 @@ void MainWindow::connect_cluster_db()
 {
     auto auth = std::make_unique<Authentication>();
     auth->connect_cluster("postgres", "abc123");
-
-
 }
 
 void MainWindow::setup_menu()
 {
     m_file_menu = menuBar()->addMenu(tr("&File"));
-    m_setup_action = m_file_menu->addAction("&User Setup");
-    m_setup_action->setStatusTip("User setup");
-    connect(m_setup_action, &QAction::triggered, this, &MainWindow::user_browser);
+
+    m_setup_act = m_file_menu->addAction("&User Setup");
+    m_setup_act->setStatusTip("User setup");
+
+    m_cluster_act = m_file_menu->addAction("&Cluster Setup");
+    m_cluster_act->setStatusTip("Cluster setup window");
+
+    connect(m_setup_act, &QAction::triggered, this, &MainWindow::user_browser);
+    connect(m_cluster_act, &QAction::triggered, this, &MainWindow::cluster_browser);
 }
 
 void MainWindow::user_browser()
 {
-    auto user_browser = std::make_unique<UserBrowser>();
+    UserBrowser* user_browser = create_sub_window<UserBrowser>();
     user_browser->exec();
+}
+
+void MainWindow::cluster_browser()
+{
+    ClusterBrowser* cluster_browser = create_sub_window<ClusterBrowser>();
+    cluster_browser->exec();
 }

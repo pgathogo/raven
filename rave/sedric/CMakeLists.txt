@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
+set(CMAKE_CXX_COMPILER "C:/mingw64/bin/x86_64-w64-mingw32-g++.exe")
 
 project(sedric LANGUAGES CXX)
 
@@ -104,6 +104,7 @@ else()
     ../audio/editor/subjectobserver.h
     ../audio/editor/vumeter.h
 
+    ../traffik/spotaudio.h
     ../traffik/spotaudio.cpp
     ../traffik/spot.cpp
     ../traffik/client.cpp

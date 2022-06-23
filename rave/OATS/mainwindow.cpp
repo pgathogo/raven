@@ -39,6 +39,7 @@
 #include "playmodepanel.h"
 #include "commercialviewer.h"
 #include "trackinfo.h"
+#include "jinglegrid.h"
 
 
 int MainWindow::s_sched_ref{0};
@@ -64,8 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
-
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
+    connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
 
     compute_schedule_time();
 
@@ -127,6 +128,7 @@ void MainWindow::set_playout_widgets()
     make_play_mode_panel();
     make_comm_viewer_widget();
     make_track_info_widget();
+    make_jingle_grid_widget();
 
 }
 
@@ -668,7 +670,6 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
         */
 
-
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_stop, this, &MainWindow::transition_stop);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_mix, this, &MainWindow::transition_mix);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_cut, this, &MainWindow::transition_cut);
@@ -769,6 +770,11 @@ void MainWindow::make_track_info_widget()
     ui->pgTrackInfo->setLayout(vlTrackInfo);
 }
 
+void MainWindow::make_jingle_grid_widget()
+{
+    m_jingle_grid = std::make_unique<OATS::JingleGrid>();
+    ui->vlJingle->addWidget(m_jingle_grid.get());
+}
 void MainWindow::display_schedule(int start_index)
 {
     for (int i=0; i < MAX_GRID_ITEMS; ++i){
@@ -850,6 +856,11 @@ void MainWindow::go_current_clicked()
     }
 
     ui->gridScroll->setValue(m_current_playing_item.grid_index);
+}
+
+void MainWindow::play_jingle(const QString jingle)
+{
+    qDebug() << "Playing jingle: " << jingle;
 }
 
 void MainWindow::set_current_play_item()

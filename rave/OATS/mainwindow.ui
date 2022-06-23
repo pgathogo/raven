@@ -90,7 +90,7 @@
                 <string notr="true">background-color: rgb(170, 255, 127);S</string>
                </property>
                <property name="currentIndex">
-                <number>5</number>
+                <number>4</number>
                </property>
                <widget class="QWidget" name="pgHome">
                 <widget class="QLabel" name="label">
@@ -116,7 +116,13 @@
                </widget>
                <widget class="QWidget" name="pgSegue"/>
                <widget class="QWidget" name="pgCart"/>
-               <widget class="QWidget" name="pgJingle"/>
+               <widget class="QWidget" name="pgJingle">
+                <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1">
+                 <item>
+                  <layout class="QVBoxLayout" name="vlJingle"/>
+                 </item>
+                </layout>
+               </widget>
                <widget class="QWidget" name="pgTrackInfo"/>
                <widget class="QWidget" name="page"/>
                <widget class="QWidget" name="pgLoad">
@@ -375,7 +381,7 @@
      <x>0</x>
      <y>0</y>
      <width>1065</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPLIER "C:/mingw64/bin/g++.exe")
+
 project(clusterman VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -31,6 +33,11 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        cluster.h
+        cluster.cpp
+        clusterbrowser.h
+        clusterbrowser.cpp
+        clusterbrowser.ui
         ../../../rave/security/authentication.h
         ../../../rave/security/authentication.cpp
         ../../../rave/security/user.h

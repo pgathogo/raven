@@ -68,6 +68,8 @@ set(PROJECT_SOURCES
         commercialviewer.cpp
         trackinfo.h
         trackinfo.cpp
+        jinglegrid.h
+        jinglegrid.cpp
         oats.qrc
 
         ../framework/baseentity.cpp

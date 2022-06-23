@@ -1,5 +1,4 @@
 #include <QDebug>
-#include <QMdiArea>
 #include <QToolBar>
 
 #include "../framework/valuelistbrowser.h"
@@ -137,8 +136,6 @@ void MainWindow::createActions()
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
 }
-
-
 
 
 void MainWindow::browseClients()

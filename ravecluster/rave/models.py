@@ -27,3 +27,7 @@ class Server(models.Model):
     server_ip = models.CharField(max_length=24, blank=True, null=True)
     server_port= models.IntegerField(default=0)
     notes = models.TextField(blank=True, null=True)
+
+class Database(models.Model):
+    db_name = models.CharField(max_length=200)
+    server = models.ForeignKey(Server, models.DO_NOTHING)

@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QVariant>
 #include <QFile>
+#include <QCloseEvent>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -118,6 +119,7 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     connect(ui->btnDateTimeSelector, &QPushButton::clicked, this, &MainWindow::select_date_time);
 
+
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::highlighted), this, &MainWindow::combo_highlight);
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
 //            this, &MainWindow::hour_changed);
@@ -131,7 +133,6 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();
-//    m_datetime_selection.sel_hours.push_back(0);
     show_selection(m_datetime_selection);
 
     m_audio_history = std::make_unique<AudioHistoryForm>();
@@ -900,6 +901,10 @@ void MainWindow::show_selection(DateTimeSelection selection)
     ui->lblDateTime->setText(label);
 }
 
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+}
+
 void MainWindow::search_audio()
 {
     m_audio_entity_data_model->clearEntities();
@@ -967,10 +972,9 @@ void MainWindow::search_audio()
         }
 
     }
-
     show_audio_data();
-
 }
+
 
 ScheduleHour::ScheduleHour()
 {
@@ -989,3 +993,4 @@ void ScheduleHour::setText(QString text)
     displayText->setText(text);
     displayText->setReadOnly(true);
 }
+

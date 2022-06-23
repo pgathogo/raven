@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-sys.path.insert(0, 'D:/Virtualenvs/raven/Lib/site-packages')
+sys.path.insert(0, 'D/Home/VirtualEnvs/Django4/Lib/site-packages')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")

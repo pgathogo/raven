@@ -117,11 +117,15 @@ namespace OATS{
 
         m_duration_label->setText(t.toString("mm:ss"));
 
-        setStyleSheet("background-color: #222222;");
+        setStyleSheet("background-color: #FF6666;");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
             m_duration_label->setText("");
             setStyleSheet("background-color: rgb(40, 133, 220)");
+        }
+
+        if (schedule_item->schedule_type() == OATS::ScheduleType::SONG){
+            setStyleSheet("background-color: #E0E0E0");
         }
 
     }

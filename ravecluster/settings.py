@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     #}
 #}
 
-from django.conf.urls import url
+from django.urls import re_path as url
 urlpatterns = [
     url(r'^$', lambda x: x)
 ]
@@ -23,7 +23,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'abc123',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 

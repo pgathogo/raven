@@ -13,14 +13,12 @@
 #include "../framework/entitydatamodel.h"
 #include "../framework/relationmapper.h"
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 //#define TEMP_SCHEDULE
 #define DB_SCHEDULE
-
 
 class QPushButton;
 class QLabel;
@@ -41,6 +39,7 @@ namespace OATS{
     class OutputPanel;
     class PlayModePanel;
     class CommercialViewer;
+    class JingleGrid;
 }
 
 namespace AUDIO{
@@ -99,6 +98,7 @@ public:
     void make_output_panel();
     void make_comm_viewer_widget();
     void make_track_info_widget();
+    void make_jingle_grid_widget();
 
     int index_of(int);
     void stop_audio(OATS::OutputPanel*);
@@ -168,6 +168,7 @@ private slots:
     void play_button(OATS::OutputPanel*);
     void stop_button(OATS::OutputPanel*);
     void go_current_clicked();
+    void play_jingle(const QString);
 
     void folder_clicked(const QModelIndex& index);
     void search_audio();
@@ -209,6 +210,7 @@ private:
 
     std::unique_ptr<OATS::CommercialViewer> m_comm_viewer;
     std::unique_ptr<TrackInfo> m_track_info;
+    std::unique_ptr<OATS::JingleGrid> m_jingle_grid;
 
     static int s_sched_ref;
     static std::string s_channel;

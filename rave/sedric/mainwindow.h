@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QComboBox>
+
 #include "../framework/datetimeselector.h"
 
 class QStandardItemModel;
@@ -13,6 +14,7 @@ class ScheduleData;
 class TreeViewModel;
 class TableViewModel;
 class SaveAs;
+class QCloseEvent;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -104,6 +106,8 @@ public:
     {
         return std::make_tuple(field, op, value);
     }
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 public slots:
 //    void date_changed();
@@ -112,7 +116,7 @@ public slots:
     void folder_clicked(const QModelIndex&);
     void insert_item(const QModelIndex& index);
     void remove_current_schedule_item();
-    void track_selected(const QModelIndex& index);
+    void track_selected(const QModelIndex& indClex);
 
     void cb_data_changed(const QModelIndex&, const QModelIndex);
 //    void hour_cb_closed();
