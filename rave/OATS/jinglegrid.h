@@ -4,12 +4,14 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QButtonGroup>
+#include <QLabel>
 #include <QMenu>
 
 class QGridLayout;
 class QVBoxLayout;
 class QHBoxLayout;
 class QAction;
+class QJsonDocument;
 
 namespace OATS
 {
@@ -18,13 +20,20 @@ namespace OATS
     class Jingle
     {
     public:
-      Jingle(int page_id, int col,  QString title);
+      Jingle(int page_id, int row, int col,  QString title);
       ~Jingle();
       QString title() const;
+      void set_title(const QString);
+      void set_page_id(int);
+      void set_col(int);
       int page_id();
       int col();
+      QString id();
+      void set_id(QString);
     private:
+        QString m_id{""};
         int m_grid_page_id{-1};
+        int m_row{-1};
         int m_col{-1};
         QString m_title;
     };
@@ -50,7 +59,7 @@ namespace OATS
         Q_OBJECT
     public:
         const int PAGE_COUNT = 9;
-        const int GRID_ROWS = 8;
+        const int GRID_ROWS = 10;
         const int GRID_COLS = 2;
 
         explicit JingleGrid(QWidget *parent = nullptr);
@@ -67,7 +76,9 @@ namespace OATS
         void play_jingle_at(int, int);
         void open_menu_at(int, int,  const QPoint&);
         void make_context_menu();
-       void open_load_dialog(int, int);
+        void open_load_dialog(int, int);
+        int current_page();
+        void set_current_page(int);
 
     signals:
         void play_jingle(const QString);
@@ -89,6 +100,18 @@ namespace OATS
         std::vector<std::vector<std::unique_ptr<GridButton>>> m_grid_buttons;
         std::map<int, std::unique_ptr<QPushButton>> m_page_buttons;
         std::vector<std::unique_ptr<QPushButton>> m_tool_buttons;
+
+        int m_current_page{-1};
+        std::unique_ptr<QLabel> m_file_path;
+    };
+
+    struct FindJingle{
+        FindJingle(QString id): m_id{id}{}
+        bool operator()(std::unique_ptr<OATS::Jingle> const& jingle){
+            return (jingle->id() == m_id);
+        }
+    private:
+        QString m_id;
     };
 
 

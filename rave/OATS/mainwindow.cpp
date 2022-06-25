@@ -1192,7 +1192,8 @@ void MainWindow::status_timer()
 
 int MainWindow::index_of(int item_ref)
 {
-    auto it = std::find_if(m_schedule_items.begin(), m_schedule_items.end(), FindByRef(item_ref));
+    auto it = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
+                           FindByRef(item_ref));
     if (it != m_schedule_items.end()){
         return std::distance(m_schedule_items.begin(), it);
     }else{

@@ -8,11 +8,15 @@
 
 namespace OATS
 {
-    Jingle::Jingle(int page_id, int col, QString title)
+    Jingle::Jingle(int page_id, int row, int col, QString title)
         :m_grid_page_id{page_id}
+        ,m_row{row}
         ,m_col{col}
         ,m_title{title}
     {
+        m_id = QString::number(page_id)+
+               QString::number(col)+
+               QString::number(col);
     }
 
     Jingle::~Jingle()
@@ -23,9 +27,19 @@ namespace OATS
         return m_title;
     }
 
+    void Jingle::set_title(const QString title)
+    {
+        m_title = title;
+    }
+
     int Jingle::page_id()
     {
         return m_grid_page_id;
+    }
+
+    void Jingle::set_page_id(int id)
+    {
+        m_grid_page_id = id;
     }
 
     int Jingle::col()
@@ -33,10 +47,26 @@ namespace OATS
         return m_col;
     }
 
+    void Jingle::set_col(int c)
+    {
+        m_col = c;
+    }
+
+    QString Jingle::id()
+    {
+        return m_id;
+    }
+
+    void Jingle::set_id(QString i)
+    {
+        m_id = i;
+    }
+
+
     /* --------------------------------------------- */
     GridButton::GridButton(int id)
         :m_id{id}
-         ,m_jingle{}
+        ,m_jingle{nullptr}
     {
     }
 
@@ -79,14 +109,18 @@ namespace OATS
 
         make_jingles();
         make_toolbar(m_main_layout.get());
+
+        m_file_path = std::make_unique<QLabel>("File Path");
+        m_main_layout->addWidget(m_file_path.get());
+
         make_grid_buttons(m_main_layout.get());
-        make_pager(m_main_layout.get());
         make_stop_button(m_main_layout.get());
+        make_pager(m_main_layout.get());
         make_context_menu();
 
         assign_buttons(1);
 
-        m_main_layout->setStretch(1, 1);
+        m_main_layout->setStretch(2, 1);
 
         this->setLayout(m_main_layout.get());
 
@@ -99,13 +133,13 @@ namespace OATS
 
     void JingleGrid::make_jingles()
     {
-        auto jingle1 = std::make_unique<Jingle>(1,0, "Jingle1");
-        auto jingle2 = std::make_unique<Jingle>(1,1, "Jingle2");
-        auto jingle3 = std::make_unique<Jingle>(1,0, "Jingle3");
-        auto jingle4 = std::make_unique<Jingle>(1,1, "Jingle4");
+        auto jingle1 = std::make_unique<Jingle>(1,0,0, "Jingle1");
+        auto jingle2 = std::make_unique<Jingle>(1,0,1, "Jingle2");
+        auto jingle3 = std::make_unique<Jingle>(1,1,0, "Jingle3");
+        auto jingle4 = std::make_unique<Jingle>(1,1,1, "Jingle4");
 
-        auto jingle5 = std::make_unique<Jingle>(2,0, "Jingle5");
-        auto jingle6 = std::make_unique<Jingle>(2,1, "Jingle6");
+        auto jingle5 = std::make_unique<Jingle>(2,0,0, "Jingle5");
+        auto jingle6 = std::make_unique<Jingle>(2,0,1, "Jingle6");
 
         m_jingles.push_back(std::move(jingle1));
         m_jingles.push_back(std::move(jingle2));
@@ -133,10 +167,13 @@ namespace OATS
 
                connect(btn.get(), &GridButton::clicked, this,
                        [=](){ play_jingle_at(row, col); });
+
                m_grid_layout->addWidget(btn.get(), row, col, 1, 1);
                m_grid_buttons[row][col] = std::move(btn);
            }
        }
+
+       m_grid_layout->setVerticalSpacing(0);
 
         m_button_widget = std::make_unique<QWidget>();
         m_button_widget->setLayout(m_grid_layout.get());
@@ -171,11 +208,41 @@ namespace OATS
 
     void JingleGrid::open_load_dialog(int row, int col)
     {
-        auto filename = QFileDialog::getOpenFileName(this, tr("/d/"), tr("Audio Files (*.ogg)"));
+        auto filename = QFileDialog::getOpenFileName(this,
+                                                     "Select audio file",
+                                                     "D:/Music",
+                                                     tr("Audio Files (*.ogg)"));
+
+        qDebug() << "Page ID: " << current_page();
+
+        if (m_grid_buttons[row][col]->jingle() == nullptr){
+            auto jingle = std::make_unique<Jingle>(current_page(), row, col, filename);
+            m_grid_buttons[row][col]->set_jingle(jingle.get());
+            m_jingles.push_back(std::move(jingle));
+            return;
+        }
+        auto jingle_id =QString::number(current_page())+
+                        QString::number(row)+
+                        QString::number(col);
+
+        qDebug() << "Jingle ID: " << jingle_id;
+
+        auto it = std::find_if(m_jingles.begin(), m_jingles.end(),
+                              FindJingle(jingle_id));
+
+       if(it != m_jingles.end()){
+           qDebug() << "Updating ... ";
+            (*it)->set_title(filename);
+            m_grid_buttons[row][col]->set_jingle((*it).get());
+       }
+
     }
 
     void JingleGrid::play_jingle_at(int row, int col)
     {
+        if (m_grid_buttons[row][col]->jingle() == nullptr)
+            return;
+
         auto jingle = m_grid_buttons[row][col]->jingle()->title();
         emit play_jingle(jingle);
     }
@@ -220,11 +287,11 @@ namespace OATS
        auto save_as_btn = std::make_unique<QPushButton>("Save As...");
        auto clear_all = std::make_unique<QPushButton>("Clear All");
 
-       m_toolbar_layout->addStretch(1);
        m_toolbar_layout->addWidget(open_btn.get());
        m_toolbar_layout->addWidget(save_btn.get());
        m_toolbar_layout->addWidget(save_as_btn.get());
        m_toolbar_layout->addWidget(clear_all.get());
+       m_toolbar_layout->addStretch(1);
 
        m_tool_buttons.push_back(std::move(open_btn));
        m_tool_buttons.push_back(std::move(save_btn));
@@ -246,7 +313,7 @@ namespace OATS
             auto page_button = std::make_unique<QPushButton>(QString::number(i));
             page_button->setCheckable(true);
             connect(page_button.get(), &QPushButton::clicked, this,
-                    [=](){assign_buttons(i);});
+                    [=](){assign_buttons(i); set_current_page(i);});
             m_page_button_group->addButton(page_button.get());
             m_pager_layout->addWidget(page_button.get());
             m_page_buttons[i] = std::move(page_button);
@@ -254,6 +321,16 @@ namespace OATS
 
         main_layout->addLayout(m_pager_layout.get());
 
+    }
+
+    int JingleGrid::current_page()
+    {
+        return m_current_page;
+    }
+
+    void JingleGrid::set_current_page(int page)
+    {
+        m_current_page = page;
     }
 
    void JingleGrid::make_stop_button(QVBoxLayout* main_layout)
