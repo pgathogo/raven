@@ -3,6 +3,9 @@
 #include <QAction>
 #include <QFileDialog>
 #include <QDebug>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 #include "jinglegrid.h"
 
@@ -14,7 +17,7 @@ namespace OATS
         ,m_col{col}
         ,m_title{title}
     {
-        m_id = QString::number(page_id)+
+        m_jingle_id = QString::number(page_id)+
                QString::number(col)+
                QString::number(col);
     }
@@ -32,7 +35,7 @@ namespace OATS
         m_title = title;
     }
 
-    int Jingle::page_id()
+    int Jingle::page_id() const
     {
         return m_grid_page_id;
     }
@@ -42,7 +45,12 @@ namespace OATS
         m_grid_page_id = id;
     }
 
-    int Jingle::col()
+    int Jingle::row() const
+    {
+        return m_row;
+    }
+
+    int Jingle::col() const
     {
         return m_col;
     }
@@ -52,14 +60,34 @@ namespace OATS
         m_col = c;
     }
 
-    QString Jingle::id()
+    QString Jingle::jingle_id() const
     {
-        return m_id;
+        return m_jingle_id;
     }
 
-    void Jingle::set_id(QString i)
+    void Jingle::set_jingle_id(QString id)
     {
-        m_id = i;
+        m_jingle_id = id;
+    }
+
+    int Jingle::track_id()
+    {
+        return m_track_id;
+    }
+
+    void Jingle::set_track_id(int t_id)
+    {
+        m_track_id = t_id;
+    }
+
+    QString Jingle::track_path()
+    {
+        return m_track_path;
+    }
+
+    void Jingle::set_track_path(QString t_path)
+    {
+        m_track_path = t_path;
     }
 
 
@@ -104,13 +132,14 @@ namespace OATS
         ,m_pager_layout{nullptr}
         ,m_context_menu{nullptr}
         ,m_context_action{nullptr}
+        ,m_jingle_filename{""}
     {
         m_main_layout = std::make_unique<QVBoxLayout>();
 
         make_jingles();
         make_toolbar(m_main_layout.get());
 
-        m_file_path = std::make_unique<QLabel>("File Path");
+        m_file_path = std::make_unique<QLabel>("Jingle fiile... ");
         m_main_layout->addWidget(m_file_path.get());
 
         make_grid_buttons(m_main_layout.get());
@@ -118,7 +147,7 @@ namespace OATS
         make_pager(m_main_layout.get());
         make_context_menu();
 
-        assign_buttons(1);
+        attach_jingle_to_buttons(JINGLE_PAGE_ONE);
 
         m_main_layout->setStretch(2, 1);
 
@@ -134,12 +163,28 @@ namespace OATS
     void JingleGrid::make_jingles()
     {
         auto jingle1 = std::make_unique<Jingle>(1,0,0, "Jingle1");
+        jingle1->set_track_id(1);
+        jingle1->set_track_path("D:/Music/Studio1/");
+
         auto jingle2 = std::make_unique<Jingle>(1,0,1, "Jingle2");
+        jingle2->set_track_id(2);
+        jingle2->set_track_path("D:/Music/Studio1/");
+
         auto jingle3 = std::make_unique<Jingle>(1,1,0, "Jingle3");
+        jingle2->set_track_id(3);
+        jingle2->set_track_path("D:/Music/Studio1/");
+
         auto jingle4 = std::make_unique<Jingle>(1,1,1, "Jingle4");
+        jingle2->set_track_id(4);
+        jingle2->set_track_path("D:/Music/Studio1/");
 
         auto jingle5 = std::make_unique<Jingle>(2,0,0, "Jingle5");
+        jingle2->set_track_id(5);
+        jingle2->set_track_path("D:/Music/Studio1/");
+
         auto jingle6 = std::make_unique<Jingle>(2,0,1, "Jingle6");
+        jingle2->set_track_id(6);
+        jingle2->set_track_path("D:/Music/Studio1/");
 
         m_jingles.push_back(std::move(jingle1));
         m_jingles.push_back(std::move(jingle2));
@@ -256,7 +301,7 @@ namespace OATS
         }
     }
 
-    void JingleGrid::assign_buttons(int page_id)
+    void JingleGrid::attach_jingle_to_buttons(int page_id)
     {
       clear_buttons();
       int row=0;
@@ -287,6 +332,8 @@ namespace OATS
        auto save_as_btn = std::make_unique<QPushButton>("Save As...");
        auto clear_all = std::make_unique<QPushButton>("Clear All");
 
+       connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
+
        m_toolbar_layout->addWidget(open_btn.get());
        m_toolbar_layout->addWidget(save_btn.get());
        m_toolbar_layout->addWidget(save_as_btn.get());
@@ -313,7 +360,7 @@ namespace OATS
             auto page_button = std::make_unique<QPushButton>(QString::number(i));
             page_button->setCheckable(true);
             connect(page_button.get(), &QPushButton::clicked, this,
-                    [=](){assign_buttons(i); set_current_page(i);});
+                    [=](){attach_jingle_to_buttons(i); set_current_page(i);});
             m_page_button_group->addButton(page_button.get());
             m_pager_layout->addWidget(page_button.get());
             m_page_buttons[i] = std::move(page_button);
@@ -340,4 +387,52 @@ namespace OATS
        main_layout->addWidget(m_stop_button.get());
 
    }
+
+  QJsonObject JingleGrid::jingle_to_json(std::unique_ptr<Jingle> const& jingle)
+  {
+     QJsonObject json;
+
+     json["jingle_id"] = jingle->jingle_id();
+     json["page_id"] = jingle->page_id();
+     json["row"] = jingle->row();
+     json["col"] = jingle->col();
+     json["title"] = jingle->title();
+     json["track_id"] = jingle->track_id();
+     json["track_path"] = jingle->track_path();
+
+     return json;
+  }
+
+  void JingleGrid::save_jingles()
+  {
+      if (m_jingle_filename.isEmpty()){
+          m_jingle_filename = QFileDialog::getSaveFileName(this, tr("Save jingles"),
+                                  "", tr("Jingles (*.jgl)"));
+          if (m_jingle_filename.isEmpty())
+          return;
+      }
+
+      qDebug() << m_jingle_filename;
+
+      save_to(m_jingle_filename);
+  }
+
+  void JingleGrid::save_to(const QString filename)
+  {
+     QJsonArray jingles;
+
+     for (const auto& jingle : m_jingles) {
+         auto jingle_json = jingle_to_json(jingle);
+         jingles.push_back(jingle_json);
+     }
+
+     QJsonDocument jingle_doc(jingles);
+     QFile file(filename);
+     if (!file.open(QIODevice::WriteOnly)){
+        return;
+     }
+
+     file.write(jingle_doc.toJson(QJsonDocument::Indented));
+  }
+
 }

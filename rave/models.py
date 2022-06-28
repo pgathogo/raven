@@ -39,7 +39,7 @@ class ClientGroup(models.Model):
 
 class Person(models.Model):
     name = models.CharField(max_length=200)
-    gender = models.ForeignKey(Gender, null=True, blank=True)
+    gender = models.ForeignKey(Gender, models.DO_NOTHING, null=True, blank=True)
     mobile_no = models.CharField(max_length=15, null=True, blank=True)
     add_login = models.CharField(max_length=15, null=True, blank=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
@@ -92,9 +92,9 @@ class Client(models.Model):
     contact_salute = models.CharField(max_length=5, choices=SALUTATION)
     contact_email = models.CharField(max_length=100, null=True, blank=True)
     contact_mobile = models.CharField(max_length=15, null=True, blank=True)
-    agency = models.ForeignKey(Agent, blank=True, null=True)
-    client_group = models.ForeignKey(ClientGroup, blank=True, null=True)
-    account_manager = models.ForeignKey(SalesPerson, blank=True, null=True)
+    agency = models.ForeignKey(Agent, models.DO_NOTHING, blank=True, null=True)
+    client_group = models.ForeignKey(ClientGroup,models.DO_NOTHING,  blank=True, null=True)
+    account_manager = models.ForeignKey(SalesPerson,models.DO_NOTHING,  blank=True, null=True)
     revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE, default='C')
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     agency_comm = models.DecimalField(max_digits=5, decimal_places=2, null=True)
@@ -106,8 +106,8 @@ class Client(models.Model):
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=255)
-    client = models.ForeignKey(Client)
-    brand_manager = models.ForeignKey(SalesPerson, null=True, blank=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING)
+    brand_manager = models.ForeignKey(SalesPerson,models.DO_NOTHING,  null=True, blank=True)
 
 class Daypart(models.Model):
     daypart1 = models.CharField(max_length=96, null=True, blank=True)
@@ -124,8 +124,8 @@ class Spot(Daypart):
     name = models.CharField(max_length=255)
     spot_duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     real_duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
-    client = models.ForeignKey(Client)
-    brand = models.ForeignKey(Brand, blank=True, null=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING)
+    brand = models.ForeignKey(Brand, models.DO_NOTHING, blank=True, null=True)
 
 class SpotVoiceOver(ManyToMany):
     pass
@@ -240,17 +240,17 @@ class OrderPackage(models.Model):
 class Order(models.Model):
     title = models.CharField(max_length=255)
     order_number = models.IntegerField(null=True)
-    client = models.ForeignKey(Client)
+    client = models.ForeignKey(Client, models.DO_NOTHING)
     order_date = models.DateField()
     start_date = models.DateField()
     end_date = models.DateField()
-    package = models.ForeignKey(OrderPackage, null=True)
+    package = models.ForeignKey(OrderPackage, models.DO_NOTHING, null=True)
     revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE)
     billing_type = models.CharField(max_length=1, blank=True, null=True, choices=ORDER_BILLING_TYPE)
     billing_period = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
-    account_rep = models.ForeignKey(SalesPerson, null=True, blank=True)
-    brand = models.ForeignKey(Brand, null=True, blank=True)
-    agency = models.ForeignKey(Agent, null=True, blank=True)
+    account_rep = models.ForeignKey(SalesPerson,models.DO_NOTHING,  null=True, blank=True)
+    brand = models.ForeignKey(Brand, models.DO_NOTHING, null=True, blank=True)
+    agency = models.ForeignKey(Agent,models.DO_NOTHING,  null=True, blank=True)
     spots_ordered = models.IntegerField(null=True)
     spots_booked = models.IntegerField(null=True)
     spots_played = models.IntegerField(null=True)
@@ -275,8 +275,8 @@ class OrderApprover(models.Model):
     level = models.IntegerField(null=True)
 
 class OrderApprovals(models.Model):
-    order = models.ForeignKey(Order)
-    approver = models.ForeignKey(OrderApprover)
+    order = models.ForeignKey(Order, models.DO_NOTHING)
+    approver = models.ForeignKey(OrderApprover, models.DO_NOTHING)
     username = models.CharField(max_length=15, null=True, blank=True)
     level = models.IntegerField(null=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
@@ -295,7 +295,7 @@ class BreakLayout(models.Model):
     week_days = models.CharField(max_length=7)
 
 class BreakLayoutLine(models.Model):
-    break_layout = models.ForeignKey(BreakLayout)
+    break_layout = models.ForeignKey(BreakLayout, models.DO_NOTHING)
     week_day = models.IntegerField()
     break_time = models.TimeField(auto_now=False, auto_now_add=False)
     break_hour = models.IntegerField(default=0)
@@ -348,7 +348,7 @@ AUDIO_TYPE = (
 class Audio(Daypart):
     title = models.CharField(max_length=255)
     short_desc = models.CharField(max_length=255, null=True, blank=True)
-    artist = models.ForeignKey(Artist, null=True)
+    artist = models.ForeignKey(Artist,models.DO_NOTHING,  null=True)
     filepath = models.CharField(max_length=255)
     audio_type = models.CharField(max_length=20, choices=AUDIO_TYPE, default='SONG')
     duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
@@ -358,9 +358,9 @@ class Audio(Daypart):
     extro_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     fade_out_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     end_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
-    genre = models.ForeignKey(Genre, blank=True, null=True)
-    mood = models.ForeignKey(Mood, blank=True, null=True)
-    folder = models.ForeignKey(Folder, blank=True, null=True)
+    genre = models.ForeignKey(Genre, models.DO_NOTHING, blank=True, null=True)
+    mood = models.ForeignKey(Mood, models.DO_NOTHING, blank=True, null=True)
+    folder = models.ForeignKey(Folder, models.DO_NOTHING, blank=True, null=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
@@ -409,7 +409,7 @@ class Schedule(models.Model):
     schedule_date = models.DateField()
     schedule_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
     schedule_hour = models.IntegerField(default=0, null=True)
-    audio = models.ForeignKey(Audio, null=True)
+    audio = models.ForeignKey(Audio, models.DO_NOTHING, null=True)
     fade_in = models.IntegerField(default=0, null=True)
     fade_out = models.IntegerField(default=0, null=True)
     fade_delay = models.IntegerField(default=0, null=True)
@@ -430,13 +430,13 @@ class Schedule(models.Model):
     comment = models.CharField(max_length=255, blank=True, null=True)
 
 class SpotAudio(models.Model):
-    spot = models.ForeignKey(Spot)
-    audio = models.ForeignKey(Audio)
+    spot = models.ForeignKey(Spot, models.DO_NOTHING)
+    audio = models.ForeignKey(Audio, models.DO_NOTHING)
     weight = models.IntegerField(default=100, null=True)
     seq_no = models.IntegerField(default=1, null=True)
 
 class BookingSegment(models.Model):
-    order = models.ForeignKey(Order, default=-1)
+    order = models.ForeignKey(Order, models.DO_NOTHING, default=-1)
     booking_date = models.DateField(null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
@@ -453,13 +453,13 @@ BOOKING_STATUS = (
         )
 
 class OrderBooking(models.Model):
-    schedule = models.ForeignKey(Schedule)
-    bookingsegment = models.ForeignKey(BookingSegment, default=-1)
+    schedule = models.ForeignKey(Schedule, models.DO_NOTHING)
+    bookingsegment = models.ForeignKey(BookingSegment, models.DO_NOTHING, default=-1)
     booking_status = models.CharField(max_length=15, choices=BOOKING_STATUS, default='READY', null=True, blank=True)
     book_date = models.DateField(null=True)
     book_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
     book_hour = models.IntegerField(default=0, null=True)
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
-    spot = models.ForeignKey(Spot, default=-1)
-    audio = models.ForeignKey(SpotAudio, null=True)
+    spot = models.ForeignKey(Spot, models.DO_NOTHING, default=-1)
+    audio = models.ForeignKey(SpotAudio, models.DO_NOTHING, null=True)

@@ -12,6 +12,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QAction;
 class QJsonDocument;
+class QJsonObject;
 
 namespace OATS
 {
@@ -26,16 +27,25 @@ namespace OATS
       void set_title(const QString);
       void set_page_id(int);
       void set_col(int);
-      int page_id();
-      int col();
-      QString id();
-      void set_id(QString);
+      int page_id() const;
+      int row() const;
+      int col() const;
+      QString jingle_id() const;
+      void set_jingle_id(QString);
+
+      int track_id();
+      void set_track_id(int);
+      QString track_path();
+      void set_track_path(QString);
     private:
-        QString m_id{""};
+        QString m_jingle_id{""};
         int m_grid_page_id{-1};
         int m_row{-1};
         int m_col{-1};
         QString m_title;
+
+        int m_track_id{-1};
+        QString m_track_path;
     };
 
     /* GridButton */
@@ -62,6 +72,8 @@ namespace OATS
         const int GRID_ROWS = 10;
         const int GRID_COLS = 2;
 
+        int JINGLE_PAGE_ONE = 1;
+
         explicit JingleGrid(QWidget *parent = nullptr);
         QGridLayout* layout() const;
 
@@ -71,7 +83,7 @@ namespace OATS
         void make_pager(QVBoxLayout*);
         void make_stop_button(QVBoxLayout*);
 
-        void assign_buttons(int page_id);
+        void attach_jingle_to_buttons(int page_id);
         void clear_buttons();
         void play_jingle_at(int, int);
         void open_menu_at(int, int,  const QPoint&);
@@ -79,9 +91,14 @@ namespace OATS
         void open_load_dialog(int, int);
         int current_page();
         void set_current_page(int);
+        QJsonObject jingle_to_json(std::unique_ptr<Jingle> const&);
+        void save_to(const QString);
 
     signals:
         void play_jingle(const QString);
+
+    private slots:
+        void save_jingles();
 
     private:
         std::unique_ptr<QVBoxLayout> m_main_layout;
@@ -103,12 +120,13 @@ namespace OATS
 
         int m_current_page{-1};
         std::unique_ptr<QLabel> m_file_path;
+        QString m_jingle_filename;
     };
 
     struct FindJingle{
         FindJingle(QString id): m_id{id}{}
         bool operator()(std::unique_ptr<OATS::Jingle> const& jingle){
-            return (jingle->id() == m_id);
+            return (jingle->jingle_id() == m_id);
         }
     private:
         QString m_id;

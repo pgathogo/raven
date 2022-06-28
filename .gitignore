@@ -3,6 +3,9 @@
 *.stackdump
 .*~*
 *.*~*
+*.swp
+*__*__*
+__*__
 #Folders
 media
 images

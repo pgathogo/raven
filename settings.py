@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     #}
 #}
 
-from django.conf.urls import url
+from django.urls import re_path as url
 urlpatterns = [
     url(r'^$', lambda x: x)
 ]
