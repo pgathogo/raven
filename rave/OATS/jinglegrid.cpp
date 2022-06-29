@@ -252,8 +252,6 @@ namespace OATS
 
     void JingleGrid::open_menu_at(int row, int col, const QPoint& pos)
     {
-       qDebug() << "Row: "<< row << "Col: " << col << "Position: "<< pos;
-
        if (m_context_action == nullptr)
        {
         m_context_action = std::make_unique<QAction>("Load...", this);
@@ -273,7 +271,6 @@ namespace OATS
                                                      "D:/Music",
                                                      tr("Audio Files (*.ogg)"));
 
-        qDebug() << "Page ID: " << current_page();
 
         if (m_grid_buttons[row][col]->jingle() == nullptr){
             auto jingle = std::make_unique<Jingle>(current_page(), row, col, filename);
@@ -285,13 +282,11 @@ namespace OATS
                         QString::number(row)+
                         QString::number(col);
 
-        qDebug() << "Jingle ID: " << jingle_id;
 
         auto it = std::find_if(m_jingles.begin(), m_jingles.end(),
                               FindJingle(jingle_id));
 
        if(it != m_jingles.end()){
-           qDebug() << "Updating ... ";
             (*it)->set_title(filename);
             m_grid_buttons[row][col]->set_jingle((*it).get());
        }
@@ -365,6 +360,7 @@ namespace OATS
 
        connect(open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
        connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
+       connect(save_as_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_as);
        connect(clear_all.get(), &QPushButton::clicked, this, &JingleGrid::clear_all);
 
        m_toolbar_layout->addWidget(open_btn.get());
@@ -497,16 +493,25 @@ namespace OATS
       save_to_file(m_jingle_filename);
   }
 
+  void JingleGrid::save_as()
+  {
+      m_jingle_filename = QFileDialog::getSaveFileName(this, tr("Save jingles as..."), "",
+                                                   tr("Jingles (*.jgl)"));
+      if (m_jingle_filename.isEmpty())
+          return;
+
+      save_to_file(m_jingle_filename);
+  }
+
   void JingleGrid::save_to_file(const QString filename)
   {
      QJsonArray jingles;
-     QJsonObject jingle;
-
      for (const auto& jingle : m_jingles) {
          auto jingle_json = jingle_to_json(jingle);
          jingles.push_back(jingle_json);
      }
 
+     QJsonObject jingle;
      jingle["jingles"] = jingles;
      QJsonDocument jingle_doc(jingle);
 

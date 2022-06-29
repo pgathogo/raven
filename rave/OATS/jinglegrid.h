@@ -98,7 +98,6 @@ namespace OATS
         void save_to_file(const QString);
         void open_from_file(const QString);
         void clear_page(int);
-        void clear_all();
 
     signals:
         void play_jingle(const QString);
@@ -106,6 +105,8 @@ namespace OATS
     private slots:
         void get_jingles();
         void save_jingles();
+        void clear_all();
+        void save_as();
 
     private:
         std::unique_ptr<QVBoxLayout> m_main_layout;
