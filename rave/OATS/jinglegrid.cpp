@@ -11,6 +11,15 @@
 
 namespace OATS
 {
+    Jingle::Jingle()
+        :m_grid_page_id{-1}
+        ,m_row{-1}
+        ,m_col{-1}
+        ,m_title{""}
+        ,m_jingle_id{""}
+    {
+    }
+
     Jingle::Jingle(int page_id, int row, int col, QString title)
         :m_grid_page_id{page_id}
         ,m_row{row}
@@ -55,6 +64,11 @@ namespace OATS
         return m_col;
     }
 
+    void Jingle::set_row(int r)
+    {
+        m_row = r;
+    }
+
     void Jingle::set_col(int c)
     {
         m_col = c;
@@ -65,7 +79,7 @@ namespace OATS
         return m_jingle_id;
     }
 
-    void Jingle::set_jingle_id(QString id)
+    void Jingle::set_jingle_id(const QString id)
     {
         m_jingle_id = id;
     }
@@ -117,6 +131,7 @@ namespace OATS
     void GridButton::set_jingle(Jingle* const jingle)
     {
         m_jingle = jingle;
+
         if (jingle == nullptr){
             setText("");
         }else{
@@ -303,7 +318,7 @@ namespace OATS
 
     void JingleGrid::attach_jingle_to_buttons(int page_id)
     {
-      clear_buttons();
+      clear_page(page_id);
       int row=0;
       int col=0;
       for(auto const& jingle: m_jingles)
@@ -323,6 +338,22 @@ namespace OATS
 
     }
 
+   void JingleGrid::clear_all()
+   {
+       for(int page=0; page<= PAGE_COUNT; ++page){
+            clear_page(page) ;
+       }
+   }
+
+   void JingleGrid::clear_page(int page)
+   {
+       for (int row=0; row <= GRID_ROWS-1; ++row){
+           for (int col=0; col <= GRID_COLS-1; ++col){
+               m_grid_buttons[row][col]->set_jingle(nullptr);
+           }
+       }
+   }
+
    void JingleGrid::make_toolbar(QVBoxLayout* main_layout)
    {
        m_toolbar_layout = std::make_unique<QHBoxLayout>();
@@ -332,7 +363,9 @@ namespace OATS
        auto save_as_btn = std::make_unique<QPushButton>("Save As...");
        auto clear_all = std::make_unique<QPushButton>("Clear All");
 
+       connect(open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
        connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
+       connect(clear_all.get(), &QPushButton::clicked, this, &JingleGrid::clear_all);
 
        m_toolbar_layout->addWidget(open_btn.get());
        m_toolbar_layout->addWidget(save_btn.get());
@@ -388,6 +421,55 @@ namespace OATS
 
    }
 
+  void JingleGrid::get_jingles()
+  {
+      m_jingle_filename = QFileDialog::getOpenFileName(this,
+                                                       tr("Open jingle file"),
+                                                       "",
+                                                       tr("Jingles (*.jgl)"));
+      if (m_jingle_filename.isEmpty())
+          return;
+
+      m_file_path->setText(m_jingle_filename);
+
+      open_from_file(m_jingle_filename);
+
+      attach_jingle_to_buttons(m_current_page);
+  }
+
+  void JingleGrid::open_from_file(const QString filename)
+  {
+      QFile jingle_file(filename);
+      if (!jingle_file.open(QIODevice::ReadOnly)){
+          qWarning("Coudn't open jingle file");
+          return;
+      }
+
+      QByteArray data = jingle_file.readAll();
+      QJsonDocument doc_data(QJsonDocument::fromJson(data));
+      QJsonObject jingle_json = doc_data.object();
+      QJsonArray jingles = jingle_json["jingles"].toArray();
+
+      m_jingles.clear();
+
+      for(auto&& jingle_json : jingles){
+         std::unique_ptr<Jingle> jingle = std::make_unique<Jingle>();
+         QJsonObject obj = jingle_json.toObject();
+
+         jingle->set_jingle_id(obj["jingle_id"].toString());
+
+         jingle->set_page_id(obj["page_id"].toInt());
+         jingle->set_row(obj["row"].toInt());
+         jingle->set_col(obj["col"].toInt());
+         jingle->set_title(obj["title"].toString());
+         jingle->set_track_id(obj["track_id"].toInt());
+         jingle->set_track_path(obj["track_path"].toString());
+
+         m_jingles.push_back(std::move(jingle));
+      }
+
+  }
+
   QJsonObject JingleGrid::jingle_to_json(std::unique_ptr<Jingle> const& jingle)
   {
      QJsonObject json;
@@ -412,21 +494,22 @@ namespace OATS
           return;
       }
 
-      qDebug() << m_jingle_filename;
-
-      save_to(m_jingle_filename);
+      save_to_file(m_jingle_filename);
   }
 
-  void JingleGrid::save_to(const QString filename)
+  void JingleGrid::save_to_file(const QString filename)
   {
      QJsonArray jingles;
+     QJsonObject jingle;
 
      for (const auto& jingle : m_jingles) {
          auto jingle_json = jingle_to_json(jingle);
          jingles.push_back(jingle_json);
      }
 
-     QJsonDocument jingle_doc(jingles);
+     jingle["jingles"] = jingles;
+     QJsonDocument jingle_doc(jingle);
+
      QFile file(filename);
      if (!file.open(QIODevice::WriteOnly)){
         return;

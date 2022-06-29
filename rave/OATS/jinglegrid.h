@@ -21,17 +21,19 @@ namespace OATS
     class Jingle
     {
     public:
+      Jingle();
       Jingle(int page_id, int row, int col,  QString title);
       ~Jingle();
       QString title() const;
       void set_title(const QString);
       void set_page_id(int);
+      void set_row(int);
       void set_col(int);
       int page_id() const;
       int row() const;
       int col() const;
       QString jingle_id() const;
-      void set_jingle_id(QString);
+      void set_jingle_id(const QString);
 
       int track_id();
       void set_track_id(int);
@@ -92,12 +94,17 @@ namespace OATS
         int current_page();
         void set_current_page(int);
         QJsonObject jingle_to_json(std::unique_ptr<Jingle> const&);
-        void save_to(const QString);
+
+        void save_to_file(const QString);
+        void open_from_file(const QString);
+        void clear_page(int);
+        void clear_all();
 
     signals:
         void play_jingle(const QString);
 
     private slots:
+        void get_jingles();
         void save_jingles();
 
     private:
@@ -118,7 +125,7 @@ namespace OATS
         std::map<int, std::unique_ptr<QPushButton>> m_page_buttons;
         std::vector<std::unique_ptr<QPushButton>> m_tool_buttons;
 
-        int m_current_page{-1};
+        int m_current_page{1};
         std::unique_ptr<QLabel> m_file_path;
         QString m_jingle_filename;
     };
