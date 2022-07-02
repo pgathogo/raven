@@ -2,10 +2,12 @@
 
 #include <memory>
 #include <vector>
+#include <chrono>
 
 #include <QMainWindow>
 #include <QLabel>
 #include <QTimer>
+
 #include "scheduleitem.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"
@@ -55,17 +57,19 @@ struct CurrentPlayItem{
 };
 
 using History = std::map<int, std::vector<int>>;
+using namespace std::chrono_literals;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     constexpr static int HOURS_IN_A_DAY = 23;
-    constexpr static int MAX_GRID_ITEMS = 12;
+    constexpr static int MAX_GRID_ITEMS = 10;
     constexpr static int MAX_PLAYLIST_ITEMS = 10;
 
     constexpr static int YIELD_FADE_DELAY = 3000;
     constexpr static int YIELD_FADE_OUT = 7000;
+
 
     const std::string ChannelA = "A";
     const std::string ChannelB = "B";
@@ -130,6 +134,8 @@ public:
     void fetch_commercial_in_db(int);
     void show_track_info(int);
     History make_history(int);
+
+    void start_timers();
 
     template<typename T>
     void fetch_filtered_audio(T arg)

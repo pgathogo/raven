@@ -110,9 +110,11 @@ namespace OATS
 
     private:
         std::unique_ptr<QVBoxLayout> m_main_layout;
-        std::unique_ptr<QGridLayout> m_grid_layout;
         std::unique_ptr<QHBoxLayout> m_pager_layout;
-        std::unique_ptr<QHBoxLayout> m_toolbar_layout;
+
+        QGridLayout* m_grid_layout;
+        QHBoxLayout* m_toolbar_layout;
+
         std::unique_ptr<QWidget> m_button_widget;
         std::unique_ptr<QWidget> m_toolbar_widget;
         std::unique_ptr<QPushButton> m_stop_button;
@@ -125,6 +127,11 @@ namespace OATS
         std::vector<std::vector<std::unique_ptr<GridButton>>> m_grid_buttons;
         std::map<int, std::unique_ptr<QPushButton>> m_page_buttons;
         std::vector<std::unique_ptr<QPushButton>> m_tool_buttons;
+
+        std::unique_ptr<QPushButton> open_btn;
+        std::unique_ptr<QPushButton> save_btn;
+        std::unique_ptr<QPushButton> save_as_btn;
+        std::unique_ptr<QPushButton> clear_all_btn;
 
         int m_current_page{1};
         std::unique_ptr<QLabel> m_file_path;
@@ -139,7 +146,6 @@ namespace OATS
     private:
         QString m_id;
     };
-
 
 
 }

@@ -16,10 +16,12 @@ namespace OATS{
 
       auto size_policy = QSizePolicy();
       size_policy.setHorizontalPolicy(QSizePolicy::Expanding);
+      size_policy.setVerticalPolicy(QSizePolicy::Expanding);
       size_policy.setHorizontalStretch(1);
       setSizePolicy(size_policy);
       setLineWidth(1);
-      setFixedHeight(50);
+      //setFixedHeight(60);
+      //setMinimumHeight(70);
     }
 
     GridPanel::~GridPanel()

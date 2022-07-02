@@ -97,6 +97,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
 
+
+    start_timers();
+
+
     /*
     QWidget* top_widget = new QWidget();
     top_widget->setLayout(ui->hlAudioLib);
@@ -116,6 +120,19 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::start_timers()
+{
+    auto SLOW_FLASH_INTERVAL = 400ms;
+    auto FAST_FLASH_INTERVAL = 250ms;
+    auto MAIN_TIMER_INTERVAL = 25ms;
+    auto COUNT_DOWN_INTERVAL = 50ms;
+
+    m_slow_flash_timer->start(SLOW_FLASH_INTERVAL);
+    m_fast_flash_timer->start(FAST_FLASH_INTERVAL);
+    m_countdown_timer->start(COUNT_DOWN_INTERVAL);
+    m_main_player_timer->start(MAIN_TIMER_INTERVAL);
 }
 
 void MainWindow::set_playout_widgets()
@@ -790,7 +807,8 @@ void MainWindow::push_items_down(int from_pos)
 {
     for (int i=from_pos+1; i< MAX_GRID_ITEMS; ++i){
         auto schedule = schedule_item(i-1);
-        m_schedule_grid[i]->set_subject(schedule);
+        if (schedule != nullptr)
+            m_schedule_grid[i]->set_subject(schedule);
     }
 }
 
@@ -798,7 +816,8 @@ void MainWindow::reprint_schedule(int from_pos)
 {
     for(int i=from_pos; i<MAX_GRID_ITEMS; ++i){
         auto schedule = schedule_item(i);
-        m_schedule_grid[i]->set_subject(schedule);
+        if (schedule != nullptr)
+            m_schedule_grid[i]->set_subject(schedule);
     }
 }
 
@@ -1542,10 +1561,15 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     auto play_channel = [&](){
         auto prev_si = schedule_item(grid_pos-1);
+        if (prev_si == nullptr)
+            return "A";
+
         if (prev_si->play_channel() == "A")
             return "B";
+
         if (prev_si->play_channel() == "B")
             return "A";
+
         return "A";
     };
 
@@ -1556,6 +1580,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     auto insert_schedule_item = [&](int next_slot=0){
         m_schedule_grid[grid_pos]->set_subject(new_item.get());
+        //new_item->attach(m_schedule_grid[grid_pos+next_slot].get());
         std::vector<std::unique_ptr<OATS::ScheduleItem>>::iterator it;
         it = m_schedule_items.begin()+(grid_pos+next_slot);
         m_schedule_items.insert(it,  std::move(new_item));
@@ -1587,7 +1612,6 @@ void MainWindow::show_commercial(int schedule_ref)
 
     m_comm_viewer->set_title("Commercial Break: "+schedule->schedule_time().toString("HH:mm"));
 
-    qDebug() << "Schedule ID: "<< schedule->id();
 }
 
 void MainWindow::show_track_info(int schedule_ref)

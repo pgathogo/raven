@@ -158,6 +158,7 @@ namespace OATS
         m_main_layout->addWidget(m_file_path.get());
 
         make_grid_buttons(m_main_layout.get());
+
         make_stop_button(m_main_layout.get());
         make_pager(m_main_layout.get());
         make_context_menu();
@@ -172,7 +173,7 @@ namespace OATS
 
     QGridLayout* JingleGrid::layout() const
     {
-        return m_grid_layout.get();
+        return m_grid_layout;
     }
 
     void JingleGrid::make_jingles()
@@ -212,7 +213,7 @@ namespace OATS
 
     void JingleGrid::make_grid_buttons(QVBoxLayout* main_layout)
     {
-       m_grid_layout = std::make_unique<QGridLayout>();
+       m_grid_layout = new QGridLayout(this);
 
        int id=1;
        m_grid_buttons.resize(GRID_ROWS);
@@ -235,8 +236,8 @@ namespace OATS
 
        m_grid_layout->setVerticalSpacing(0);
 
-        m_button_widget = std::make_unique<QWidget>();
-        m_button_widget->setLayout(m_grid_layout.get());
+        m_button_widget = std::make_unique<QWidget>(this);
+        m_button_widget->setLayout(m_grid_layout);
 
         main_layout->addWidget(m_button_widget.get());
     }
@@ -351,31 +352,32 @@ namespace OATS
 
    void JingleGrid::make_toolbar(QVBoxLayout* main_layout)
    {
-       m_toolbar_layout = std::make_unique<QHBoxLayout>();
+       m_toolbar_layout = new QHBoxLayout();
 
-       auto open_btn = std::make_unique<QPushButton>("Open...");
-       auto save_btn = std::make_unique<QPushButton>("Save");
-       auto save_as_btn = std::make_unique<QPushButton>("Save As...");
-       auto clear_all = std::make_unique<QPushButton>("Clear All");
+       open_btn = std::make_unique<QPushButton>("Open...");
+       save_btn = std::make_unique<QPushButton>("Save");
+       save_as_btn = std::make_unique<QPushButton>("Save As...");
+       clear_all_btn = std::make_unique<QPushButton>("Clear All");
 
        connect(open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
        connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
        connect(save_as_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_as);
-       connect(clear_all.get(), &QPushButton::clicked, this, &JingleGrid::clear_all);
+       connect(clear_all_btn.get(), &QPushButton::clicked, this, &JingleGrid::clear_all);
 
        m_toolbar_layout->addWidget(open_btn.get());
        m_toolbar_layout->addWidget(save_btn.get());
        m_toolbar_layout->addWidget(save_as_btn.get());
-       m_toolbar_layout->addWidget(clear_all.get());
+       m_toolbar_layout->addWidget(clear_all_btn.get());
        m_toolbar_layout->addStretch(1);
 
        m_tool_buttons.push_back(std::move(open_btn));
        m_tool_buttons.push_back(std::move(save_btn));
        m_tool_buttons.push_back(std::move(save_as_btn));
-       m_tool_buttons.push_back(std::move(clear_all));
+       m_tool_buttons.push_back(std::move(clear_all_btn));
 
-       m_toolbar_widget = std::make_unique<QWidget>();
-       m_toolbar_widget->setLayout(m_toolbar_layout.get());
+       m_toolbar_widget = std::make_unique<QWidget>(this);
+
+       m_toolbar_widget->setLayout(m_toolbar_layout);
 
        main_layout->addWidget(m_toolbar_widget.get());
    }
