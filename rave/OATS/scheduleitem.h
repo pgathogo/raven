@@ -55,6 +55,7 @@ namespace OATS{
     public:
         ScheduleItem();
         ScheduleItem(const ScheduleItem& other);
+        ScheduleItem(Observer* ob);
 
         int schedule_ref();
         int id();

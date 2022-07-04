@@ -166,6 +166,7 @@ private slots:
     void item_move_down(int, int);
     void make_item_current(int);
     void grid_clicked(int, int);
+    void delete_schedule_item(int, int);
 
     void transition_stop(int, int);
     void transition_mix(int, int);

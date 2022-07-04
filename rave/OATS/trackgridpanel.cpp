@@ -66,10 +66,10 @@ namespace OATS{
         m_act_make_current = std::make_unique<QAction>("Make Current");
         m_act_delete_item = std::make_unique<QAction>("Delete Item");
 
-        connect(m_act_move_up.get(), &QAction::triggered, this, TrackGridPanel::move_up);
-        connect(m_act_move_down.get(), &QAction::triggered, this, TrackGridPanel::move_down);
-        connect(m_act_make_current.get(), &QAction::triggered, this, TrackGridPanel::make_audio_current);
-        connect(m_act_delete_item.get(), &QAction::triggered, this, TrackGridPanel::delete_item);
+        connect(m_act_move_up.get(), &QAction::triggered, this, &TrackGridPanel::move_up);
+        connect(m_act_move_down.get(), &QAction::triggered, this, &TrackGridPanel::move_down);
+        connect(m_act_make_current.get(), &QAction::triggered, this, &TrackGridPanel::make_audio_current);
+        connect(m_act_delete_item.get(), &QAction::triggered, this, &TrackGridPanel::delete_item);
 
         menu.addAction(m_act_move_up.get());
         menu.addAction(m_act_move_down.get());
@@ -105,7 +105,7 @@ namespace OATS{
 
     void TrackGridPanel::delete_item()
     {
-        emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->delete_item(parent_ref());
+        emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->delete_item(parent_ref(), index());
     }
 
     void TrackGridPanel::update(OATS::ScheduleItem* schedule_item)

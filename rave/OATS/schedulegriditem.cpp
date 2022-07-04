@@ -92,6 +92,7 @@ namespace OATS{
         m_time_panel->update(si);
         m_track_panel->update(si);
         m_status_panel->update(si);
+
         m_transition_mode_panel->update(si);
 
         m_schedule_item = si;

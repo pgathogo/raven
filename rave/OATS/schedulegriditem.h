@@ -52,7 +52,7 @@ namespace OATS{
     signals:
         void move_up(int, int);
         void move_down(int, int);
-        void delete_item(int);
+        void delete_item(int, int);
         void insert_item(int, int);
         void make_current(int, int);
 

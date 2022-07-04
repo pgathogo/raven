@@ -197,7 +197,7 @@ namespace AUDIO {
 
         m_title = createField<StringField>("title", "Title");
 
-        set_title(fs::path(audio_file).stem().u8string());
+        set_title(fs::path(audio_file).stem().string());
 
         m_short_desc = createField<StringField>("short_desc", "Short Desc");
 

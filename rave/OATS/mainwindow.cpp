@@ -1,6 +1,7 @@
 #include <map>
 #include <chrono>
 #include <math.h>
+#include <algorithm>
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -333,11 +334,7 @@ void MainWindow::fetch_db_data(QDate date, int hr)
             is_hour_header_created = true;
         }
 
-        if (item_duration == 0){
-            total_duration = 0;
-        } else {
-            total_duration = sched_item->current_time()+item_duration;
-        }
+        total_duration = (item_duration == 0) ?  0 : sched_item->current_time()+item_duration;
 
         QTime item_time = sched_item->schedule_time().addMSecs(total_duration);
         sched_item->set_current_time(total_duration);
@@ -682,10 +679,7 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_down, this, &MainWindow::item_move_down);
         connect(grid_item.get(), &OATS::ScheduleGridItem::make_current, this, &MainWindow::make_item_current);
         connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::grid_clicked);
-
-        /*
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
-        */
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_stop, this, &MainWindow::transition_stop);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_mix, this, &MainWindow::transition_mix);
@@ -799,6 +793,7 @@ void MainWindow::display_schedule(int start_index)
         if (schedule_index >= m_schedule_items.size())
             break;
         auto schedule = schedule_item(schedule_index);
+
         m_schedule_grid[i]->set_subject(schedule);
     }
 }
@@ -1442,14 +1437,16 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
     m_schedule_grid[grid_pos-1]->set_subject(schedule_item(index-1));
 }
 
-void MainWindow::item_move_down(int schedule_pos, int grid_pos)
+void MainWindow::item_move_down(int schedule_ref, int grid_pos)
 {
     if (grid_pos+1 > MAX_GRID_ITEMS-1)
         return;
 
-    std::iter_swap(m_schedule_items.begin()+schedule_pos, m_schedule_items.begin()+(schedule_pos+1));
-    m_schedule_grid[grid_pos]->set_subject(schedule_item(schedule_pos));
-    m_schedule_grid[grid_pos]->set_subject(schedule_item(schedule_pos+1));
+    int index = index_of(schedule_ref);
+    std::iter_swap(m_schedule_items.begin()+index, m_schedule_items.begin()+(index+1));
+
+    m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
+    m_schedule_grid[grid_pos+1]->set_subject(schedule_item(index+1));
 }
 
 void MainWindow::make_item_current(int item_ref)
@@ -1523,6 +1520,30 @@ void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
     }
 }
 
+void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
+{
+    int index = index_of(schedule_ref);
+    auto si = schedule_item(index);
+    if (si->item_status()== OATS::ItemStatus::PLAYED)
+        return;
+    if (si->schedule_type()==OATS::ScheduleType::COMM || si->schedule_type()==OATS::ScheduleType::HOUR_HEADER)
+        return;
+
+    auto it = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
+                           [&](std::unique_ptr<OATS::ScheduleItem> const& item){return item->schedule_ref()==si->schedule_ref() ;});
+
+    if (it != m_schedule_items.end()){
+        m_schedule_items.erase(it);
+    }
+
+//    auto scroll_value = ui->gridScroll->value();
+    display_schedule(grid_pos);
+    ui->gridScroll->setSliderPosition(MAX_GRID_ITEMS);
+    ui->gridScroll->setSliderPosition(0);
+
+}
+
+
 void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
     int audio_id = m_track_viewer->get_selected_audio_id();
@@ -1532,6 +1553,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     auto item_at_cursor = schedule_item(index);
 
     auto new_item = std::make_unique<OATS::ScheduleItem>();
+
     new_item->set_hour(item_at_cursor->hour());
     new_item->set_schedule_date(item_at_cursor->schedule_date());
     new_item->set_schedule_type(new_item->str_to_schedule_type(audio->audio_type()->value()));
@@ -1580,7 +1602,9 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     auto insert_schedule_item = [&](int next_slot=0){
         m_schedule_grid[grid_pos]->set_subject(new_item.get());
-        //new_item->attach(m_schedule_grid[grid_pos+next_slot].get());
+
+//        new_item->attach(m_schedule_grid[grid_pos].get()); // We need to find a better way of attaching the observer
+
         std::vector<std::unique_ptr<OATS::ScheduleItem>>::iterator it;
         it = m_schedule_items.begin()+(grid_pos+next_slot);
         m_schedule_items.insert(it,  std::move(new_item));
@@ -1692,8 +1716,10 @@ QString MainWindow::output_string(OATS::ScheduleItem* si)
 void MainWindow::transition_stop(int item_ref, int grid_index)
 {
     int index = index_of(item_ref);
+
     auto si = schedule_item(index);
     si->set_transition_type(OATS::TransitionType::STOP);
+    m_schedule_grid[grid_index]->set_subject(si);
     calculate_trigger_times();
 }
 
@@ -1702,6 +1728,7 @@ void MainWindow::transition_mix(int item_ref, int grid_index)
     int index = index_of(item_ref);
     auto si = schedule_item(index);
     si->set_transition_type(OATS::TransitionType::MIX);
+    m_schedule_grid[grid_index]->set_subject(si);
 }
 
 void MainWindow::transition_cut(int item_ref, int grid_index)
@@ -1709,6 +1736,7 @@ void MainWindow::transition_cut(int item_ref, int grid_index)
     int index = index_of(item_ref);
     auto si = schedule_item(index);
     si->set_transition_type(OATS::TransitionType::CUT);
+    m_schedule_grid[grid_index]->set_subject(si);
 }
 
 void MainWindow::setup_audio_libary()

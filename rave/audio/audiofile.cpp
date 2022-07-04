@@ -31,12 +31,12 @@ AudioFile::AudioFile(const std::string a_file)
      m_id{-1}
 {
     std::filesystem::path af{a_file};
-    m_file_ext = af.extension().u8string();
-    m_filename = af.filename().u8string(); // contains plus the path
-    m_audio_path = af.remove_filename().u8string();
+    m_file_ext = af.extension().string();
+    m_filename = af.filename().string(); // contains plus the path
+    m_audio_path = af.remove_filename().string();
 
     std::filesystem::path f{m_filename};
-    m_short_filename = f.replace_extension().u8string();
+    m_short_filename = f.replace_extension().string();
 
     m_wave_file = m_audio_path+m_short_filename+".png";
 
