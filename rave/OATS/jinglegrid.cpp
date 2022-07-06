@@ -146,7 +146,7 @@ namespace OATS
         ,m_main_layout{nullptr}
         ,m_pager_layout{nullptr}
         ,m_context_menu{nullptr}
-        ,m_context_action{nullptr}
+        ,m_load_action{nullptr}
         ,m_jingle_filename{""}
     {
         m_main_layout = std::make_unique<QVBoxLayout>();
@@ -244,23 +244,28 @@ namespace OATS
 
     void JingleGrid::make_context_menu()
     {
-        m_context_action = std::make_unique<QAction>("Load...", this);
-        m_context_menu = std::make_unique<QMenu>();
-        m_context_menu->addAction(m_context_action.get());
-        connect(m_context_action.get(), &QAction::triggered, this,
+        m_load_action = std::make_unique<QAction>("Load...", this);
+        connect(m_load_action.get(), &QAction::triggered, this,
                 [&](){ qDebug() << "Load Clicked";});
+
+        m_load_action = std::make_unique<QAction>("Clear", this);
+        connect(m_clear_action.get(), &QAction::triggered, this,
+                [](){});
+
+        m_context_menu = std::make_unique<QMenu>();
+        m_context_menu->addAction(m_load_action.get());
     }
 
     void JingleGrid::open_menu_at(int row, int col, const QPoint& pos)
     {
-       if (m_context_action == nullptr)
+       if (m_load_action == nullptr)
        {
-        m_context_action = std::make_unique<QAction>("Load...", this);
+        m_load_action = std::make_unique<QAction>("Load...", this);
         m_context_menu = std::make_unique<QMenu>();
-        m_context_menu->addAction(m_context_action.get());
+        m_context_menu->addAction(m_load_action.get());
        }
 
-        connect(m_context_action.get(), &QAction::triggered, this,
+        connect(m_load_action.get(), &QAction::triggered, this,
                 [&](){ open_load_dialog(row, col); });
        m_context_menu->exec(m_grid_buttons[row][col]->mapToGlobal(pos));
     }

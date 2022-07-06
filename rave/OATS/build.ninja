@@ -47,7 +47,7 @@ build cmake_object_order_depends_target_OATS: phony || OATS_autogen OATS_autogen
 build CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\OATS_autogen\mocs_compilation.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\OATS_autogen
@@ -55,7 +55,7 @@ build CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__O
 build CMakeFiles/OATS.dir/main.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/main.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\main.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -63,7 +63,7 @@ build CMakeFiles/OATS.dir/main.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS
 build CMakeFiles/OATS.dir/mainwindow.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/mainwindow.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\mainwindow.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -71,7 +71,7 @@ build CMakeFiles/OATS.dir/mainwindow.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clien
 build CMakeFiles/OATS.dir/datetimewidget.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/datetimewidget.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\datetimewidget.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -79,7 +79,7 @@ build CMakeFiles/OATS.dir/datetimewidget.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/C
 build CMakeFiles/OATS.dir/playlistcontrolwidget.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/playlistcontrolwidget.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\playlistcontrolwidget.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -87,7 +87,7 @@ build CMakeFiles/OATS.dir/playlistcontrolwidget.cpp.obj: CXX_COMPILER__OATS_ D$:
 build CMakeFiles/OATS.dir/scheduleitem.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/scheduleitem.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\scheduleitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -95,7 +95,7 @@ build CMakeFiles/OATS.dir/scheduleitem.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Cli
 build CMakeFiles/OATS.dir/gridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/gridpanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\gridpanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -103,7 +103,7 @@ build CMakeFiles/OATS.dir/gridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Client
 build CMakeFiles/OATS.dir/subjectobserver.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/subjectobserver.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\subjectobserver.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -111,7 +111,7 @@ build CMakeFiles/OATS.dir/subjectobserver.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/
 build CMakeFiles/OATS.dir/schedulegriditem.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/schedulegriditem.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\schedulegriditem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -119,7 +119,7 @@ build CMakeFiles/OATS.dir/schedulegriditem.cpp.obj: CXX_COMPILER__OATS_ D$:/Home
 build CMakeFiles/OATS.dir/timegridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/timegridpanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\timegridpanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -127,7 +127,7 @@ build CMakeFiles/OATS.dir/timegridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Cl
 build CMakeFiles/OATS.dir/trackgridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/trackgridpanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\trackgridpanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -135,7 +135,7 @@ build CMakeFiles/OATS.dir/trackgridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/C
 build CMakeFiles/OATS.dir/statusgridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/statusgridpanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\statusgridpanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -143,7 +143,7 @@ build CMakeFiles/OATS.dir/statusgridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/
 build CMakeFiles/OATS.dir/transitionmodegridpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/transitionmodegridpanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\transitionmodegridpanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -151,7 +151,7 @@ build CMakeFiles/OATS.dir/transitionmodegridpanel.cpp.obj: CXX_COMPILER__OATS_ D
 build CMakeFiles/OATS.dir/outputpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/outputpanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\outputpanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -159,7 +159,7 @@ build CMakeFiles/OATS.dir/outputpanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clie
 build CMakeFiles/OATS.dir/playmodepanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/playmodepanel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\playmodepanel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -167,7 +167,7 @@ build CMakeFiles/OATS.dir/playmodepanel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Cl
 build CMakeFiles/OATS.dir/commercialviewer.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/commercialviewer.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\commercialviewer.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -175,7 +175,7 @@ build CMakeFiles/OATS.dir/commercialviewer.cpp.obj: CXX_COMPILER__OATS_ D$:/Home
 build CMakeFiles/OATS.dir/trackinfo.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/trackinfo.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\trackinfo.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -183,7 +183,7 @@ build CMakeFiles/OATS.dir/trackinfo.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Client
 build CMakeFiles/OATS.dir/jinglegrid.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/jinglegrid.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\jinglegrid.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir
@@ -191,7 +191,7 @@ build CMakeFiles/OATS.dir/jinglegrid.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clien
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\baseentity.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -199,7 +199,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/baseentity.cp
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entityfields.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/entityfields.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\entityfields.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -207,7 +207,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entityfields.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\entitydatamodel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -215,7 +215,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entitydatamod
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/relationmapper.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/relationmapper.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\relationmapper.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -223,7 +223,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/relationmappe
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/dataprovider.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/dataprovider.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\dataprovider.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -231,7 +231,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/dataprovider.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/ravenexception.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/ravenexception.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\ravenexception.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -239,7 +239,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/ravenexceptio
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databaseconnector.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/databaseconnector.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\databaseconnector.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -247,7 +247,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databaseconne
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databasemanager.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/databasemanager.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\databasemanager.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -255,7 +255,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databasemanag
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/tree.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/tree.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\tree.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -263,7 +263,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/tree.cpp.obj:
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/treeviewmodel.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/treeviewmodel.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\treeviewmodel.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -271,7 +271,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/treeviewmodel
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\letterfilterwidget.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -279,7 +279,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/letterfilterw
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/schedule.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/framework/schedule.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework\schedule.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\framework
@@ -287,7 +287,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/schedule.cpp.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audio.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audio.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audio.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -295,7 +295,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audio.cpp.obj: CX
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/artist.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/artist.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\artist.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -303,7 +303,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/artist.cpp.obj: C
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofile.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiofile.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiofile.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -311,7 +311,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofile.cpp.obj
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibrary.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiolibrary.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiolibrary.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -319,7 +319,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibrary.cpp.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofolder.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiofolder.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiofolder.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -327,7 +327,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofolder.cpp.o
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackviewer.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiotrackviewer.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiotrackviewer.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -335,7 +335,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackviewer.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackitem.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiotrackitem.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiotrackitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -343,7 +343,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackitem.cp
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibitem.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiolibitem.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiolibitem.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -351,7 +351,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibitem.cpp.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotool.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiotool.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiotool.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -359,7 +359,15 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotool.cpp.obj
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiohistoryform.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/audiohistoryform.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\audiohistoryform.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
+  INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\OATS.dir
+  OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
+
+build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/trackbrowser.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/audio/trackbrowser.cpp || cmake_object_order_depends_target_OATS
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio\trackbrowser.cpp.obj.d
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\audio
@@ -367,7 +375,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiohistoryform.
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/authentication.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/security/authentication.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\security\authentication.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\security
@@ -375,7 +383,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/authentication
 build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/user.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/security/user.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\security\user.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\D_\Home\Clients\PMS\Raven\rave\security
@@ -383,7 +391,7 @@ build CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/user.cpp.obj: 
 build CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj: CXX_COMPILER__OATS_ D$:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/EWIEGA46WW/qrc_oats.cpp || cmake_object_order_depends_target_OATS
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\OATS.dir\OATS_autogen\EWIEGA46WW\qrc_oats.cpp.obj.d
-  FLAGS = -std=gnu++17
+  FLAGS = -Wno-return-type -std=gnu++20
   INCLUDES = -ID:/Home/Clients/PMS/Raven/rave/OATS -ID:/Home/Clients/PMS/Raven/rave/OATS/OATS_autogen/include -I"C:/Program Files/PostgreSQL/14/include" -I"C:/Program Files/PostgreSQL/14/include/server" -ID:/Home/Clients/PMS/Raven/rave/OATS/../framework -isystem C:/Qt/6.2.4/mingw_64/include/QtCore -isystem C:/Qt/6.2.4/mingw_64/include -isystem C:/Qt/6.2.4/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.2.4/mingw_64/include/QtWidgets -isystem C:/Qt/6.2.4/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\OATS.dir
   OBJECT_FILE_DIR = CMakeFiles\OATS.dir\OATS_autogen\EWIEGA46WW
@@ -396,7 +404,8 @@ build CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj: CXX_COMPILER
 #############################################
 # Link the executable OATS.exe
 
-build OATS.exe: CXX_EXECUTABLE_LINKER__OATS_ CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj CMakeFiles/OATS.dir/main.cpp.obj CMakeFiles/OATS.dir/mainwindow.cpp.obj CMakeFiles/OATS.dir/datetimewidget.cpp.obj CMakeFiles/OATS.dir/playlistcontrolwidget.cpp.obj CMakeFiles/OATS.dir/scheduleitem.cpp.obj CMakeFiles/OATS.dir/gridpanel.cpp.obj CMakeFiles/OATS.dir/subjectobserver.cpp.obj CMakeFiles/OATS.dir/schedulegriditem.cpp.obj CMakeFiles/OATS.dir/timegridpanel.cpp.obj CMakeFiles/OATS.dir/trackgridpanel.cpp.obj CMakeFiles/OATS.dir/statusgridpanel.cpp.obj CMakeFiles/OATS.dir/transitionmodegridpanel.cpp.obj CMakeFiles/OATS.dir/outputpanel.cpp.obj CMakeFiles/OATS.dir/playmodepanel.cpp.obj CMakeFiles/OATS.dir/commercialviewer.cpp.obj CMakeFiles/OATS.dir/trackinfo.cpp.obj CMakeFiles/OATS.dir/jinglegrid.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackviewer.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackitem.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibitem.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiohistoryform.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj | C$:/Qt/6.2.4/mingw_64/lib/libQt6Widgets.a C$:/Program$ Files/PostgreSQL/14/lib/libpq.lib C$:/Qt/6.2.4/mingw_64/lib/libQt6Gui.a C$:/Qt/6.2.4/mingw_64/lib/libQt6Core.a || OATS_autogen OATS_autogen_timestamp_deps
+build OATS.exe: CXX_EXECUTABLE_LINKER__OATS_ CMakeFiles/OATS.dir/OATS_autogen/mocs_compilation.cpp.obj CMakeFiles/OATS.dir/main.cpp.obj CMakeFiles/OATS.dir/mainwindow.cpp.obj CMakeFiles/OATS.dir/datetimewidget.cpp.obj CMakeFiles/OATS.dir/playlistcontrolwidget.cpp.obj CMakeFiles/OATS.dir/scheduleitem.cpp.obj CMakeFiles/OATS.dir/gridpanel.cpp.obj CMakeFiles/OATS.dir/subjectobserver.cpp.obj CMakeFiles/OATS.dir/schedulegriditem.cpp.obj CMakeFiles/OATS.dir/timegridpanel.cpp.obj CMakeFiles/OATS.dir/trackgridpanel.cpp.obj CMakeFiles/OATS.dir/statusgridpanel.cpp.obj CMakeFiles/OATS.dir/transitionmodegridpanel.cpp.obj CMakeFiles/OATS.dir/outputpanel.cpp.obj CMakeFiles/OATS.dir/playmodepanel.cpp.obj CMakeFiles/OATS.dir/commercialviewer.cpp.obj CMakeFiles/OATS.dir/trackinfo.cpp.obj CMakeFiles/OATS.dir/jinglegrid.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entityfields.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/relationmapper.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/dataprovider.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/ravenexception.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databaseconnector.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/databasemanager.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/tree.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/treeviewmodel.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/framework/schedule.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audio.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/artist.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofile.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibrary.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiofolder.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackviewer.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotrackitem.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiolibitem.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiotool.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/audiohistoryform.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/audio/trackbrowser.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/authentication.cpp.obj CMakeFiles/OATS.dir/D_/Home/Clients/PMS/Raven/rave/security/user.cpp.obj CMakeFiles/OATS.dir/OATS_autogen/EWIEGA46WW/qrc_oats.cpp.obj | C$:/Qt/6.2.4/mingw_64/lib/libQt6Widgets.a C$:/Program$ Files/PostgreSQL/14/lib/libpq.lib C$:/Qt/6.2.4/mingw_64/lib/libQt6Gui.a C$:/Qt/6.2.4/mingw_64/lib/libQt6Core.a || OATS_autogen OATS_autogen_timestamp_deps
+  FLAGS = -Wno-return-type
   LINK_LIBRARIES = C:/Qt/6.2.4/mingw_64/lib/libQt6Widgets.a  "C:/Program Files/PostgreSQL/14/lib/libpq.lib"  C:/Qt/6.2.4/mingw_64/lib/libQt6Gui.a  C:/Qt/6.2.4/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -ld3d11  -ldxgi  -ldxguid  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/PROGRA~1/POSTGR~1/14/lib
   OBJECT_DIR = CMakeFiles\OATS.dir
@@ -465,7 +474,7 @@ build OATS_autogen/EWIEGA46WW/qrc_oats.cpp | ${cmake_ninja_workdir}OATS_autogen/
 #############################################
 # Phony custom command for CMakeFiles\OATS_autogen_timestamp_deps
 
-build CMakeFiles/OATS_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/OATS_autogen_timestamp_deps: phony C$:/Qt/6.2.4/mingw_64/lib/libQt6Core.a C$:/Qt/6.2.4/mingw_64/./bin/moc.exe C$:/Qt/6.2.4/mingw_64/./bin/uic.exe
+build CMakeFiles/OATS_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/OATS_autogen_timestamp_deps: phony C$:/Qt/6.2.4/mingw_64/./bin/uic.exe C$:/Qt/6.2.4/mingw_64/lib/libQt6Core.a C$:/Qt/6.2.4/mingw_64/./bin/moc.exe
 
 
 #############################################

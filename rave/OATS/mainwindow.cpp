@@ -2,6 +2,7 @@
 #include <chrono>
 #include <math.h>
 #include <algorithm>
+#include <concepts>
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -42,6 +43,7 @@
 #include "trackinfo.h"
 #include "jinglegrid.h"
 
+#include "../audio/trackbrowser.h"
 
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
@@ -56,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_outputA{nullptr}
     , m_outputB{nullptr}
 {
+
     ui->setupUi(this);
 
     load_schedule(QDate::currentDate(), QTime::currentTime().hour());
@@ -84,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_main_player_timer.get(), &QTimer::timeout, this, &MainWindow::status_timer);
 
     ui->swMain->setCurrentIndex(0);
-    ui->twLoad->setCurrentIndex(0);
+//    ui->twLoad->setCurrentIndex(0);
 
     connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
     connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1); m_control_page = ControlPage::Commercial; });
@@ -96,8 +99,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Audio Library Page
 
-    connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
+//    connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
 
+    //AUDIO::TrackBrowser* tb = new AUDIO::TrackBrowser();
+    m_track_browser = std::make_unique<AUDIO::TrackBrowser>();
+    ui->vlTrackBrowser->addWidget(m_track_browser.get());
 
     start_timers();
 
@@ -775,10 +781,12 @@ void MainWindow::make_comm_viewer_widget()
 
 void MainWindow::make_track_info_widget()
 {
+    /*
     m_track_info = std::make_unique<TrackInfo>(this);
     QVBoxLayout* vlTrackInfo = new QVBoxLayout();
     vlTrackInfo->addWidget(m_track_info.get());
     ui->pgTrackInfo->setLayout(vlTrackInfo);
+    */
 }
 
 void MainWindow::make_jingle_grid_widget()
@@ -1536,7 +1544,6 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
         m_schedule_items.erase(it);
     }
 
-//    auto scroll_value = ui->gridScroll->value();
     display_schedule(grid_pos);
     ui->gridScroll->setSliderPosition(MAX_GRID_ITEMS);
     ui->gridScroll->setSliderPosition(0);
@@ -1546,8 +1553,10 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
 
 void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
-    int audio_id = m_track_viewer->get_selected_audio_id();
-    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
+//    int audio_id = m_track_viewer->get_selected_audio_id();
+//    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
+
+    AUDIO::Audio* audio = m_track_browser->current_selected_audio();
 
     int index = index_of(schedule_ref);
     auto item_at_cursor = schedule_item(index);
@@ -1602,9 +1611,6 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     auto insert_schedule_item = [&](int next_slot=0){
         m_schedule_grid[grid_pos]->set_subject(new_item.get());
-
-//        new_item->attach(m_schedule_grid[grid_pos].get()); // We need to find a better way of attaching the observer
-
         std::vector<std::unique_ptr<OATS::ScheduleItem>>::iterator it;
         it = m_schedule_items.begin()+(grid_pos+next_slot);
         m_schedule_items.insert(it,  std::move(new_item));
@@ -1741,6 +1747,7 @@ void MainWindow::transition_cut(int item_ref, int grid_index)
 
 void MainWindow::setup_audio_libary()
 {
+    /*
     try{
         AudioLibrary audio_lib;
         auto tree_data = audio_lib.read_data_from_db();
@@ -1760,6 +1767,7 @@ void MainWindow::setup_audio_libary()
 
     m_audio_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_track_viewer->model());
     m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
+    */
 }
 
 void MainWindow::folder_clicked(const QModelIndex& index)
@@ -1871,6 +1879,7 @@ void MainWindow::print_schedule_items()
 
 void MainWindow::search_audio()
 {
+    /*
     if (!ui->edtTitle->text().isEmpty()){
         auto audio = std::make_unique<AUDIO::Audio>();
         auto title_filter = std::make_tuple(
@@ -1886,6 +1895,7 @@ void MainWindow::search_audio()
                     );
         fetch_filtered_audio(artist_filter);
     }
+    */
 
 }
 

@@ -121,7 +121,8 @@ namespace OATS
 
         std::unique_ptr<QButtonGroup> m_page_button_group;
         std::unique_ptr<QMenu> m_context_menu;
-        std::unique_ptr<QAction> m_context_action;
+        std::unique_ptr<QAction> m_load_action;
+        std::unique_ptr<QAction> m_clear_action;
 
         std::vector<std::unique_ptr<Jingle>> m_jingles;
         std::vector<std::vector<std::unique_ptr<GridButton>>> m_grid_buttons;

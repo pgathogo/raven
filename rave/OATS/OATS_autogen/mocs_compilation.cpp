@@ -15,5 +15,6 @@
 #include "YFL3MR5MWG/moc_audiohistoryform.cpp"
 #include "YFL3MR5MWG/moc_audiotool.cpp"
 #include "YFL3MR5MWG/moc_audiotrackviewer.cpp"
+#include "YFL3MR5MWG/moc_trackbrowser.cpp"
 #include "DX5S3JBGB7/moc_letterfilterwidget.cpp"
 #include "DX5S3JBGB7/moc_treeviewmodel.cpp"

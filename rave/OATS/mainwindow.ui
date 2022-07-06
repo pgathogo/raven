@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1065</width>
+    <width>1097</width>
     <height>683</height>
    </rect>
   </property>
@@ -90,22 +90,14 @@
                 <string notr="true">background-color: rgb(170, 255, 127);S</string>
                </property>
                <property name="currentIndex">
-                <number>4</number>
+                <number>7</number>
                </property>
                <widget class="QWidget" name="pgHome">
-                <widget class="QLabel" name="label">
-                 <property name="geometry">
-                  <rect>
-                   <x>110</x>
-                   <y>220</y>
-                   <width>47</width>
-                   <height>13</height>
-                  </rect>
-                 </property>
-                 <property name="text">
-                  <string>HOME</string>
-                 </property>
-                </widget>
+                <layout class="QVBoxLayout" name="verticalLayout_12">
+                 <item>
+                  <layout class="QVBoxLayout" name="vlHome"/>
+                 </item>
+                </layout>
                </widget>
                <widget class="QWidget" name="pgComm">
                 <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -126,7 +118,7 @@
                <widget class="QWidget" name="pgTrackInfo"/>
                <widget class="QWidget" name="page"/>
                <widget class="QWidget" name="pgLoad">
-                <layout class="QVBoxLayout" name="verticalLayout_5">
+                <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1">
                  <property name="spacing">
                   <number>2</number>
                  </property>
@@ -137,110 +129,7 @@
                   <number>2</number>
                  </property>
                  <item>
-                  <layout class="QHBoxLayout" name="hlAudioLib">
-                   <item>
-                    <widget class="QTabWidget" name="twLoad">
-                     <property name="currentIndex">
-                      <number>0</number>
-                     </property>
-                     <widget class="QWidget" name="tab">
-                      <attribute name="title">
-                       <string>Browse</string>
-                      </attribute>
-                      <layout class="QVBoxLayout" name="verticalLayout_7">
-                       <item>
-                        <widget class="QTreeView" name="tvFolder"/>
-                       </item>
-                      </layout>
-                     </widget>
-                     <widget class="QWidget" name="tab_2">
-                      <attribute name="title">
-                       <string>Search</string>
-                      </attribute>
-                      <layout class="QVBoxLayout" name="verticalLayout_8">
-                       <item>
-                        <layout class="QGridLayout" name="gridLayout">
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_3">
-                           <property name="text">
-                            <string>Title:</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QLineEdit" name="edtTitle"/>
-                         </item>
-                         <item row="1" column="0">
-                          <widget class="QLabel" name="label_4">
-                           <property name="text">
-                            <string>Artist:</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="1">
-                          <widget class="QLineEdit" name="edtArtist"/>
-                         </item>
-                         <item row="2" column="1">
-                          <widget class="QPushButton" name="btnSearch">
-                           <property name="text">
-                            <string>Search</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_2">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>329</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                      </layout>
-                     </widget>
-                    </widget>
-                   </item>
-                   <item>
-                    <layout class="QVBoxLayout" name="vlAudioInfo">
-                     <item>
-                      <widget class="QPushButton" name="btnListen">
-                       <property name="text">
-                        <string>Listen</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QPushButton" name="btnAudioInfo">
-                       <property name="text">
-                        <string>Audio Info ...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <spacer name="verticalSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Vertical</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>20</width>
-                         <height>40</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="vlTracks">
+                  <layout class="QVBoxLayout" name="vlTrackBrowser">
                    <property name="spacing">
                     <number>2</number>
                    </property>
@@ -380,8 +269,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1065</width>
-     <height>22</height>
+     <width>1097</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER "C:/mingw/bin/g++.exe")
+set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
 project(OATS VERSION 0.1 LANGUAGES CXX)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -108,6 +110,8 @@ set(PROJECT_SOURCES
         ../audio/audiotool.cpp
         ../audio/audiohistoryform.h
         ../audio/audiohistoryform.cpp
+        ../audio/trackbrowser.h
+        ../audio/trackbrowser.cpp
 
         ../security/authentication.cpp
         ../security/user.cpp

@@ -47,6 +47,7 @@ namespace OATS{
 namespace AUDIO{
    class AudioTrackViewer;
    class AudioLibItem;
+   class TrackBrowser;
 }
 
 struct CurrentPlayItem{
@@ -218,6 +219,8 @@ private:
     std::unique_ptr<OATS::CommercialViewer> m_comm_viewer;
     std::unique_ptr<TrackInfo> m_track_info;
     std::unique_ptr<OATS::JingleGrid> m_jingle_grid;
+
+    std::unique_ptr<AUDIO::TrackBrowser> m_track_browser;
 
     static int s_sched_ref;
     static std::string s_channel;

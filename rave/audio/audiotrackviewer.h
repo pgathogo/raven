@@ -45,6 +45,7 @@ namespace AUDIO
 
     signals:
         void track_view_clicked(const QModelIndex&);
+        void track_selected(int);
 
     };
 
