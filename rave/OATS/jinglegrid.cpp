@@ -402,6 +402,8 @@ namespace OATS
             m_page_buttons[i] = std::move(page_button);
         }
 
+        m_page_buttons[1]->setChecked(true);
+
         main_layout->addLayout(m_pager_layout.get());
 
     }

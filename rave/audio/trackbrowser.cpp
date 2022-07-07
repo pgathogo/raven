@@ -39,7 +39,7 @@ namespace AUDIO
     void TrackBrowser::init_top_widget(QSplitter* splitter)
     {
         m_top_widget = std::make_unique<QWidget>(this);
-        m_top_widget->setStyleSheet("background-color: green;");
+        //m_top_widget->setStyleSheet("background-color: green;");
 
         auto v_layout = new QVBoxLayout(this);
         m_top_widget->setLayout(v_layout);
@@ -50,7 +50,10 @@ namespace AUDIO
         m_audio_folder_widget = std::make_unique<AudioFolderWidget>();
         m_tab_widget->addTab(m_audio_folder_widget.get(), "Browse Audio");
 
-        m_search_widget = std::make_unique<SearchWidget>();
+        m_search_widget = std::make_unique<AudioSearchWidget>();
+
+        connect(m_search_widget.get(), &AudioSearchWidget::search_filter, this, &TrackBrowser::search_filter);
+
         m_tab_widget->addTab(m_search_widget.get(), "Search Audio");
 
         splitter->addWidget(m_top_widget.get());
@@ -60,7 +63,7 @@ namespace AUDIO
     void TrackBrowser::init_bottom_widget(QSplitter* splitter)
     {
         m_bottom_widget = std::make_unique<QWidget>(this);
-        m_bottom_widget->setStyleSheet("background-color: yellow;");
+        //m_bottom_widget->setStyleSheet("background-color: yellow;");
 
         auto v_layout = new QVBoxLayout(this);
         m_bottom_widget->setLayout(v_layout);
@@ -74,7 +77,7 @@ namespace AUDIO
 
         splitter->addWidget(m_bottom_widget.get());
 
-        QList<int> sizes = {80, 200};
+        QList<int> sizes({50, 100});
         splitter->setSizes(sizes);
 
     }
@@ -97,6 +100,17 @@ namespace AUDIO
     AUDIO::Audio* TrackBrowser::current_selected_audio()
     {
         return m_current_selected_audio;
+    }
+
+    AUDIO::Audio* TrackBrowser::find_audio_by_id(int audio_id)
+    {
+        m_audio_data_model->find_audio_by_id(audio_id);
+
+    }
+
+    void TrackBrowser::search_filter(Filter filter)
+    {
+        m_audio_data_model->fetch_filtered_audio(filter);
     }
 
     /* ------ AudioFolderWidget ------ */
@@ -143,7 +157,7 @@ namespace AUDIO
         emit folder_clicked_signal(folder_id);
     }
 
-    SearchWidget::SearchWidget()
+    AudioSearchWidget::AudioSearchWidget()
         :m_grid_layout{nullptr}
         ,m_lbl_title{nullptr}
         ,m_edt_title{nullptr}
@@ -152,7 +166,7 @@ namespace AUDIO
         setLayout(m_grid_layout.get());
     }
 
-   void SearchWidget::layout_controls()
+   void AudioSearchWidget::layout_controls()
    {
        m_grid_layout = std::make_unique<QGridLayout>();
        m_lbl_title = std::make_unique<QLabel>("Title: ", this);
@@ -162,6 +176,7 @@ namespace AUDIO
        m_edt_artist = std::make_unique<QLineEdit>(this);
 
        m_btn_search = std::make_unique<QPushButton>("Search", this);
+       connect(m_btn_search.get(), &QPushButton::clicked, this, &AudioSearchWidget::search_clicked);
 
        m_grid_layout->addWidget(m_lbl_title.get(), ROW0, COL0);
        m_grid_layout->addWidget(m_edt_title.get(), ROW0, COL1);
@@ -173,6 +188,56 @@ namespace AUDIO
 
    }
 
+   void AudioSearchWidget::search_clicked()
+   {
+       if (!m_edt_title->text().isEmpty()){
+           auto audio = std::make_unique<AUDIO::Audio>();
+           auto title_filter = std::make_tuple(
+                       audio->title()->qualified_column_name<AUDIO::Audio>(),
+                       "like",
+                       m_edt_title->text().toStdString());
+
+           emit search_filter(title_filter);
+
+       }
+
+       if (!m_edt_artist->text().isEmpty()) {
+           auto artist = std::make_unique<AUDIO::Artist>();
+           auto artist_filter = std::make_tuple(
+                       artist->fullName()->qualified_column_name<AUDIO::Artist>(),
+                       "like",
+                       m_edt_artist->text().toStdString());
+
+           emit search_filter(artist_filter);
+       }
+
+   }
+
+   AudioLibWidget::AudioLibWidget()
+       :m_h_layout{nullptr}
+       ,m_audio_folder_widget{nullptr}
+       ,m_audio_search_widget{nullptr}
+   {
+       m_h_layout = std::make_unique<QVBoxLayout>();
+
+       setStyleSheet("background-color: red;");
+
+//       m_tab_widget = std::make_unique<QTabWidget>(this);
+
+//       m_audio_folder_widget = std::make_unique<AudioFolderWidget>();
+//       m_tab_widget->addTab(m_audio_folder_widget.get(), "Browser Audio Folders");
+
+//       m_audio_search_widget  = std::make_unique<AudioSearchWidget>();
+//       m_tab_widget->addTab(m_audio_search_widget.get(), "Search Audio");
+
+//       m_h_layout->addWidget(m_tab_widget.get());
+
+       //auto v_layout = std::make_unique<QHBoxLayout>();
+       setLayout(m_h_layout.get());
+
+   }
+
+   /* --- AudioTrackWidget ----- */
 
    AudioTrackWidgetToolbar::AudioTrackWidgetToolbar()
        :m_h_layout{nullptr}
@@ -227,6 +292,7 @@ namespace AUDIO
    }
 
   /* -----  AudioDataModel ------ */
+
   AudioDataModel::AudioDataModel(AUDIO::AudioTrackViewer* viewer)
        :m_viewer{viewer}
    {
@@ -240,6 +306,11 @@ namespace AUDIO
    {
         AUDIO::Audio* audio = m_lib_item->find_audio_by_id(track_id);
         emit selected_audio(audio);
+   }
+
+   AUDIO::Audio* AudioDataModel::find_audio_by_id(int audio_id)
+   {
+       return m_lib_item->find_audio_by_id(audio_id);
    }
 
 

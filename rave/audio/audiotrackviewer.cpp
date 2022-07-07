@@ -124,8 +124,8 @@ namespace AUDIO
         if (letter != "*")
              pattern = "^["+letter+"].*";
 
-        //m_filter_model->setFilterRegExp(QRegularExpression(pattern, Qt::CaseInsensitive));
         m_filter_model->setFilterRegularExpression(QRegularExpression(pattern));
+        m_filter_model->setFilterCaseSensitivity(Qt::CaseInsensitive);
         m_filter_model->setFilterKeyColumn(0);
     }
 

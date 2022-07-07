@@ -15,6 +15,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_BUILD_TYPE Debug)
+
+set(CMAKE_PREFIX_PATH "C:/Qt/6.2.4/mingw_64/lib/cmake")
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
@@ -72,6 +76,8 @@ set(PROJECT_SOURCES
         trackinfo.cpp
         jinglegrid.h
         jinglegrid.cpp
+        cartpanel.h
+        cartpanel.cpp
         oats.qrc
 
         ../framework/baseentity.cpp

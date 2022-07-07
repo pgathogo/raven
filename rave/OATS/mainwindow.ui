@@ -90,7 +90,7 @@
                 <string notr="true">background-color: rgb(170, 255, 127);S</string>
                </property>
                <property name="currentIndex">
-                <number>7</number>
+                <number>3</number>
                </property>
                <widget class="QWidget" name="pgHome">
                 <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -107,7 +107,13 @@
                 </layout>
                </widget>
                <widget class="QWidget" name="pgSegue"/>
-               <widget class="QWidget" name="pgCart"/>
+               <widget class="QWidget" name="pgCart">
+                <layout class="QVBoxLayout" name="verticalLayout_8">
+                 <item>
+                  <layout class="QVBoxLayout" name="vlCart"/>
+                 </item>
+                </layout>
+               </widget>
                <widget class="QWidget" name="pgJingle">
                 <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1">
                  <item>

@@ -42,8 +42,10 @@
 #include "commercialviewer.h"
 #include "trackinfo.h"
 #include "jinglegrid.h"
+#include "cartpanel.h"
 
 #include "../audio/trackbrowser.h"
+
 
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
@@ -64,8 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
     load_schedule(QDate::currentDate(), QTime::currentTime().hour());
 
     set_playout_widgets();
-
-    setup_audio_libary();
 
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
@@ -105,20 +105,12 @@ MainWindow::MainWindow(QWidget *parent)
     m_track_browser = std::make_unique<AUDIO::TrackBrowser>();
     ui->vlTrackBrowser->addWidget(m_track_browser.get());
 
+    m_cart_panel = std::make_unique<OATS::CartPanel>();
+    ui->vlCart->addWidget(m_cart_panel.get());
+
     start_timers();
 
 
-    /*
-    QWidget* top_widget = new QWidget();
-    top_widget->setLayout(ui->hlAudioLib);
-
-    QWidget* bottom_widget = new QWidget();
-    bottom_widget->setLayout(ui->vlTracks);
-
-    QSplitter* splitter = new QSplitter(ui->pgLoad);
-    splitter->addWidget(top_widget);
-    splitter->addWidget(bottom_widget);
-    */
 
     //QMainWindow::showFullScreen();
 }
@@ -781,12 +773,12 @@ void MainWindow::make_comm_viewer_widget()
 
 void MainWindow::make_track_info_widget()
 {
-    /*
+
     m_track_info = std::make_unique<TrackInfo>(this);
     QVBoxLayout* vlTrackInfo = new QVBoxLayout();
     vlTrackInfo->addWidget(m_track_info.get());
     ui->pgTrackInfo->setLayout(vlTrackInfo);
-    */
+
 }
 
 void MainWindow::make_jingle_grid_widget()
@@ -1553,8 +1545,6 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
 
 void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
-//    int audio_id = m_track_viewer->get_selected_audio_id();
-//    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
 
     AUDIO::Audio* audio = m_track_browser->current_selected_audio();
 
@@ -1649,8 +1639,15 @@ void MainWindow::show_track_info(int schedule_ref)
     int index = index_of(schedule_ref);
     auto schedule = schedule_item(index);
 
+    if (schedule == nullptr)
+        return;
+
+    if ((schedule->schedule_type() == OATS::ScheduleType::HOUR_HEADER) ||
+       (schedule->schedule_type() == OATS::ScheduleType::COMM))
+        return;
+
     auto history =  make_history(schedule->audio().id());
-    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(schedule->audio().id());
+    AUDIO::Audio* audio = m_track_browser->find_audio_by_id(schedule->audio().id());
     m_track_info->show_audio_info(audio, history);
 }
 
@@ -1745,130 +1742,6 @@ void MainWindow::transition_cut(int item_ref, int grid_index)
     m_schedule_grid[grid_index]->set_subject(si);
 }
 
-void MainWindow::setup_audio_libary()
-{
-    /*
-    try{
-        AudioLibrary audio_lib;
-        auto tree_data = audio_lib.read_data_from_db();
-        m_folder_model = std::make_unique<TreeViewModel>(tree_data, this);
-        ui->tvFolder->setModel(m_folder_model.get());
-        m_folders = tree_data;
-
-        m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Libaray"));
-        connect(ui->tvFolder, &QTreeView::clicked, this, &MainWindow::folder_clicked);
-
-    } catch (DatabaseException& de) {
-        qDebug() << stoq(de.errorMessage());
-    }
-
-    m_track_viewer = std::make_unique<AUDIO::AudioTrackViewer>(this);
-    ui->vlTracks->addWidget(m_track_viewer.get());
-
-    m_audio_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_track_viewer->model());
-    m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-    */
-}
-
-void MainWindow::folder_clicked(const QModelIndex& index)
-{
-    int folder_id = index.data(Qt::UserRole).toInt();
-
-    auto audio = std::make_unique<AUDIO::Audio>();
-//    auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
-//    std::string filter_str = m_audio_edm->prepareFilter(folder_filter);
-//    fetch_audio(filter_str);
-    auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(), "=", folder_id);
-    fetch_filtered_audio(folder_filter);
-}
-
-void MainWindow::fetch_audio(const std::string filter)
-{
-    m_audio_edm->clearEntities();
-    m_audio_edm->search(filter);
-    show_audio_data();
-}
-
-void MainWindow::show_audio_data()
-{
-    m_track_viewer->clear();
-    m_audio_lib_item->clear();
-    m_track_viewer->create_track_view_headers();
-
-    for(auto&[name, entity] : m_audio_edm->modelEntities())
-    {
-        AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
-
-        if (audio->audio_type()->displayName() == "Song")
-            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
-
-        if (audio->audio_type()->displayName() == "Jingle")
-            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
-
-        if (audio->audio_type()->displayName() == "Commercial")
-            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
-
-    }
-
-}
-
-void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
-{
-    m_audio_edm->clearEntities();
-
-    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_edm->get_entity().get());
-
-    try{
-        m_audio_edm->readRaw(r_mapper->query());
-    } catch (DatabaseException& de) {
-        showMessage(de.errorMessage());
-    }
-
-    r_mapper->map_data();
-
-    for (auto const& [record_id, record] : r_mapper->mapped_entities()){
-        auto audio_Uptr = std::make_unique<AUDIO::Audio>();
-        bool audio_is_constructed = false;
-
-        for(auto const& [table_name, entities] : record)
-        {
-            for (auto const& entity : entities)
-            {
-                if (audio_Uptr->tableName() == entity->tableName() &&
-                        !audio_is_constructed)
-                {
-                    if (entity->id() > -1){
-                        auto audio_ptr = dynamic_cast<AUDIO::Audio*>(entity.get());
-                        *audio_Uptr.get() = *audio_ptr;
-                        audio_is_constructed = true;
-                        break;
-                    }
-                }
-
-                auto const& artist = audio_Uptr->artist()->data_model_entity();
-
-                if (artist == nullptr){
-                    continue;
-                }
-
-                if (artist->tableName() == entity->tableName())
-                {
-                    auto artist_ptr = dynamic_cast<AUDIO::Artist*>(entity.get());
-                    auto artist_uptr = std::make_unique<AUDIO::Artist>();
-                    *artist_uptr.get() = *artist_ptr;
-                    audio->artist()->set_fk_entity(std::move(artist_uptr));
-                }
-            }
-        }
-
-        if (audio_Uptr->audio_type()->value() != ""){
-            m_audio_edm->add_entity(std::move(audio_Uptr));
-        }
-    }
-
-    show_audio_data();
-
-}
 
 void MainWindow::print_schedule_items()
 {
@@ -1877,27 +1750,6 @@ void MainWindow::print_schedule_items()
     }
 }
 
-void MainWindow::search_audio()
-{
-    /*
-    if (!ui->edtTitle->text().isEmpty()){
-        auto audio = std::make_unique<AUDIO::Audio>();
-        auto title_filter = std::make_tuple(
-                    audio->title()->qualified_column_name<AUDIO::Audio>(), "like", ui->edtTitle->text().toStdString());
-        fetch_filtered_audio(title_filter);
-        return;
-    }
-
-    if (!ui->edtArtist->text().isEmpty()){
-        auto artist = std::make_unique<AUDIO::Artist>();
-        auto artist_filter = std::make_tuple(
-                    artist->fullName()->qualified_column_name<AUDIO::Artist>(), "like", ui->edtArtist->text().toStdString()
-                    );
-        fetch_filtered_audio(artist_filter);
-    }
-    */
-
-}
 
 void MainWindow::fetch_commercial_in_db(int schedule_id)
 {

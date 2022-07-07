@@ -29,10 +29,13 @@ namespace AUDIO
 {
     class AudioTrackViewer;
     class AudioFolderWidget;
-    class SearchWidget;
+    class AudioSearchWidget;
+    class AudioLibWidget;
     class AudioTrackWidget;
     class AudioLibItem;
     class AudioDataModel;
+
+    using Filter = std::tuple<std::string, std::string, std::string>;
 
     class TrackBrowser : public QWidget
     {
@@ -44,11 +47,13 @@ namespace AUDIO
         void init_bottom_widget(QSplitter*);
 
         AUDIO::Audio* current_selected_audio();
+        AUDIO::Audio* find_audio_by_id(int);
 
     signals:
     private slots:
         void folder_clicked(int);
         void selected_audio(AUDIO::Audio*);
+        void search_filter(Filter);
 
     private:
        std::unique_ptr<QWidget> m_top_widget;
@@ -66,7 +71,10 @@ namespace AUDIO
        std::unique_ptr<AudioTrackViewer> m_track_viewer;
 
        std::unique_ptr<AudioFolderWidget> m_audio_folder_widget;
-       std::unique_ptr<SearchWidget> m_search_widget;
+       std::unique_ptr<AudioSearchWidget> m_search_widget;
+
+       std::unique_ptr<AudioLibWidget> m_audio_lib_widget;
+
        std::unique_ptr<AudioTrackWidget> m_audio_track_widget;
        std::unique_ptr<AudioDataModel> m_audio_data_model;
 
@@ -98,7 +106,7 @@ namespace AUDIO
     };
 
 
-    class SearchWidget : public QWidget
+    class AudioSearchWidget : public QWidget
     {
         Q_OBJECT
     public:
@@ -108,8 +116,12 @@ namespace AUDIO
         const int ROW1 = 1;
         const int ROW2 = 2;
 
-        SearchWidget();
+        AudioSearchWidget();
         void layout_controls();
+    signals:
+        void search_filter(Filter);
+    private slots:
+        void search_clicked();
     private:
         std::unique_ptr<QGridLayout> m_grid_layout;
         std::unique_ptr<QLabel> m_lbl_title;
@@ -119,6 +131,19 @@ namespace AUDIO
         std::unique_ptr<QLineEdit>m_edt_artist;
 
         std::unique_ptr<QPushButton>m_btn_search;
+    };
+
+
+    class AudioLibWidget : public QWidget
+    {
+        Q_OBJECT
+    public:
+        AudioLibWidget();
+    private:
+        std::unique_ptr<QVBoxLayout> m_h_layout;
+        std::unique_ptr<QTabWidget> m_tab_widget;
+        std::unique_ptr<AudioFolderWidget> m_audio_folder_widget;
+        std::unique_ptr<AudioSearchWidget> m_audio_search_widget;
     };
 
     class AudioTrackWidgetToolbar : public QWidget
@@ -163,6 +188,7 @@ namespace AUDIO
         AudioDataModel(AUDIO::AudioTrackViewer* viewer);
         void fetch_audio_data(FRAMEWORK::RelationMapper*);
         void show_data();
+        AUDIO::Audio* find_audio_by_id(int);
 
         template<typename T>
         void fetch_filtered_audio(T arg)
@@ -183,6 +209,7 @@ namespace AUDIO
 
     private slots:
         void track_selected(int);
+
     private:
        AUDIO::AudioTrackViewer* m_viewer;
        std::unique_ptr<AUDIO::AudioLibItem> m_lib_item;

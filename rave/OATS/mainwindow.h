@@ -42,6 +42,7 @@ namespace OATS{
     class PlayModePanel;
     class CommercialViewer;
     class JingleGrid;
+   class CartPanel;
 }
 
 namespace AUDIO{
@@ -120,14 +121,10 @@ public:
                                      OATS::ScheduleItem* sched_item);
 
     QString output_string(OATS::ScheduleItem*);
-    void setup_audio_libary();
     void create_track_view_headers();
-    void fetch_audio(const std::string);
-    void show_audio_data();
 
     void print_schedule_items();
 
-    void fetch_folder_audio(FRAMEWORK::RelationMapper*);
     void recompute_time(int);
 
     void load_item(int, int);
@@ -137,20 +134,6 @@ public:
     History make_history(int);
 
     void start_timers();
-
-    template<typename T>
-    void fetch_filtered_audio(T arg)
-    {
-        AUDIO::Artist artist;
-        AUDIO::Audio audio;
-
-        auto [field_name, op, value] = arg;
-        auto base_filter = std::make_tuple(field_name, op, value);
-        auto active_audio = std::make_tuple(audio.is_deleted()->qualified_column_name<AUDIO::Audio>(), "=", false);
-        FRAMEWORK::RelationMapper* r_mapper = new FRAMEWORK::RelationMapper();
-        r_mapper = m_audio_edm->select_related(artist)->filter(base_filter, active_audio);
-        fetch_folder_audio(r_mapper);
-    }
 
 private slots:
     void close_win();
@@ -178,8 +161,6 @@ private slots:
     void go_current_clicked();
     void play_jingle(const QString);
 
-    void folder_clicked(const QModelIndex& index);
-    void search_audio();
     void push_items_down(int);
     void reprint_schedule(int);
 //    void insert_schedule_item(int, std::unique_ptr<OATS::ScheduleItem>);
@@ -212,8 +193,6 @@ private:
     std::unique_ptr<TreeViewModel> m_folder_model;
     std::vector<NodeData*> m_folders;
 
-    std::unique_ptr<AUDIO::AudioTrackViewer> m_track_viewer;
-    std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<EntityDataModel> m_audio_edm;
 
     std::unique_ptr<OATS::CommercialViewer> m_comm_viewer;
@@ -221,6 +200,7 @@ private:
     std::unique_ptr<OATS::JingleGrid> m_jingle_grid;
 
     std::unique_ptr<AUDIO::TrackBrowser> m_track_browser;
+    std::unique_ptr<OATS::CartPanel>m_cart_panel;
 
     static int s_sched_ref;
     static std::string s_channel;
