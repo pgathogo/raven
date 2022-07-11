@@ -118,6 +118,8 @@ set(PROJECT_SOURCES
         ../audio/audiohistoryform.cpp
         ../audio/trackbrowser.h
         ../audio/trackbrowser.cpp
+        ../audio/trackpickerdialog.h
+        ../audio/trackpickerdialog.cpp
 
         ../security/authentication.cpp
         ../security/user.cpp

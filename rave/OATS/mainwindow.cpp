@@ -31,6 +31,7 @@
 #include "../audio/artist.h"
 #include "../audio/audiotrackitem.h"
 #include "../audio/audiolibitem.h"
+#include "../audio/trackpickerdialog.h"
 
 //#include "timeanalyzerwidget.h"
 #include "datetimewidget.h"

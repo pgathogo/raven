@@ -42,6 +42,7 @@ namespace AUDIO
         //m_top_widget->setStyleSheet("background-color: green;");
 
         auto v_layout = new QVBoxLayout(this);
+        v_layout->setContentsMargins(0,0,0,0);
         m_top_widget->setLayout(v_layout);
 
         m_tab_widget = std::make_unique<QTabWidget>(m_top_widget.get());
@@ -66,6 +67,7 @@ namespace AUDIO
         //m_bottom_widget->setStyleSheet("background-color: yellow;");
 
         auto v_layout = new QVBoxLayout(this);
+        v_layout->setContentsMargins(0,0,0,0);
         m_bottom_widget->setLayout(v_layout);
 
         m_audio_track_widget = std::make_unique<AudioTrackWidget>();
@@ -256,6 +258,7 @@ namespace AUDIO
        m_btn_history = std::make_unique<QPushButton>("Audio History", this);
 
        m_h_layout = std::make_unique<QHBoxLayout>();
+       m_h_layout->setContentsMargins(0,0,0,0);
        m_h_layout->addWidget(m_btn_listen.get());
        m_h_layout->addWidget(m_btn_info.get());
        m_h_layout->addWidget(m_btn_history.get());
@@ -270,10 +273,10 @@ namespace AUDIO
        ,m_v_layout{nullptr}
    {
         m_v_layout = std::make_unique<QVBoxLayout>();
+        m_v_layout->setContentsMargins(0,0,0,0);
 
         m_toolbar = std::make_unique<AudioTrackWidgetToolbar>();
         m_track_viewer = std::make_unique<AUDIO::AudioTrackViewer>();
-
 
         m_v_layout->addWidget(m_toolbar.get());
         m_v_layout->addWidget(m_track_viewer.get());
@@ -365,7 +368,7 @@ namespace AUDIO
 
     if (audio_Uptr->audio_type()->value() != ""){
         m_audio_edm->add_entity(std::move(audio_Uptr));
-    }
+     }
     }
 
     show_data();

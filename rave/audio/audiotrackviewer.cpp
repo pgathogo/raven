@@ -1,8 +1,9 @@
 #include <QTableView>
+#include <QAbstractItemView>
 #include <QVBoxLayout>
 #include <QStandardItemModel>
 #include <QHeaderView>
-#include <QRegularExpression>>
+#include <QRegularExpression>
 #include <QDebug>
 
 #include "audiotrackviewer.h"
@@ -17,6 +18,7 @@ namespace AUDIO
         , m_track_model{nullptr}
     {
         m_track_view = std::make_unique<QTableView>(this);
+        m_track_view->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_track_model = std::make_unique<QStandardItemModel>(this);
 
         m_filter_model = std::make_unique<QSortFilterProxyModel>(this);
@@ -34,6 +36,7 @@ namespace AUDIO
         connect(m_letter_filter_widget.get(), &LetterFilterWidget::tab_letter, this, &AudioTrackViewer::filter_by_letter);
 
         m_main_layout = new QVBoxLayout();
+        m_main_layout->setContentsMargins(0,0,0,0);
         m_main_layout->setSpacing(0);
         m_main_layout->addWidget(m_track_view.get());
         m_main_layout->addWidget(m_letter_filter_widget.get());

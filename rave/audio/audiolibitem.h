@@ -3,6 +3,7 @@
 #include <memory>
 #include "../audio/audio.h"
 #include "../framework/choicefield.h"
+#include "qstandarditemmodel.h"
 
 
 class QStandardItemModel;

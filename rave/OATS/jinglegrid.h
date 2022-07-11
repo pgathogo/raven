@@ -14,6 +14,11 @@ class QAction;
 class QJsonDocument;
 class QJsonObject;
 
+namespace AUDIO{
+    class TrackPickerDialog;
+    class Audio;
+}
+
 namespace OATS
 {
     /* Jingle */
@@ -76,6 +81,11 @@ namespace OATS
 
         int JINGLE_PAGE_ONE = 1;
 
+        struct GridCell{
+            int row{-1};
+            int col{-1};
+        };
+
         explicit JingleGrid(QWidget *parent = nullptr);
         QGridLayout* layout() const;
 
@@ -91,6 +101,7 @@ namespace OATS
         void open_menu_at(int, int,  const QPoint&);
         void make_context_menu();
         void open_load_dialog(int, int);
+        void clear_jingle(int, int);
         int current_page();
         void set_current_page(int);
         QJsonObject jingle_to_json(std::unique_ptr<Jingle> const&);
@@ -98,6 +109,7 @@ namespace OATS
         void save_to_file(const QString);
         void open_from_file(const QString);
         void clear_page(int);
+        void print_grid();
 
     signals:
         void play_jingle(const QString);
@@ -107,6 +119,7 @@ namespace OATS
         void save_jingles();
         void clear_all();
         void save_as();
+        void selected_audio(AUDIO::Audio*);
 
     private:
         std::unique_ptr<QVBoxLayout> m_main_layout;
@@ -137,6 +150,9 @@ namespace OATS
         int m_current_page{1};
         std::unique_ptr<QLabel> m_file_path;
         QString m_jingle_filename;
+
+        std::unique_ptr<AUDIO::TrackPickerDialog> m_track_picker_dialog;
+        GridCell m_current_grid_cell;
     };
 
     struct FindJingle{

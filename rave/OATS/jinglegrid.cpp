@@ -6,8 +6,12 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QGraphicsColorizeEffect>
+#include <QPropertyAnimation>
 
 #include "jinglegrid.h"
+#include "../audio/trackbrowser.h"
+#include "../audio/trackpickerdialog.h"
 
 namespace OATS
 {
@@ -27,7 +31,7 @@ namespace OATS
         ,m_title{title}
     {
         m_jingle_id = QString::number(page_id)+
-               QString::number(col)+
+               QString::number(row)+
                QString::number(col);
     }
 
@@ -161,7 +165,7 @@ namespace OATS
 
         make_stop_button(m_main_layout.get());
         make_pager(m_main_layout.get());
-        make_context_menu();
+        //make_context_menu();
 
         attach_jingle_to_buttons(JINGLE_PAGE_ONE);
 
@@ -244,16 +248,19 @@ namespace OATS
 
     void JingleGrid::make_context_menu()
     {
+        /*
         m_load_action = std::make_unique<QAction>("Load...", this);
         connect(m_load_action.get(), &QAction::triggered, this,
                 [&](){ qDebug() << "Load Clicked";});
 
-        m_load_action = std::make_unique<QAction>("Clear", this);
+        m_clear_action = std::make_unique<QAction>("Clear", this);
         connect(m_clear_action.get(), &QAction::triggered, this,
                 [](){});
 
         m_context_menu = std::make_unique<QMenu>();
         m_context_menu->addAction(m_load_action.get());
+        m_context_menu->addAction(m_clear_action.get());
+        */
     }
 
     void JingleGrid::open_menu_at(int row, int col, const QPoint& pos)
@@ -261,43 +268,75 @@ namespace OATS
        if (m_load_action == nullptr)
        {
         m_load_action = std::make_unique<QAction>("Load...", this);
+        m_clear_action = std::make_unique<QAction>("Clear", this);
+
         m_context_menu = std::make_unique<QMenu>();
         m_context_menu->addAction(m_load_action.get());
+        m_context_menu->addAction(m_clear_action.get());
+
        }
 
         connect(m_load_action.get(), &QAction::triggered, this,
                 [&](){ open_load_dialog(row, col); });
-       m_context_menu->exec(m_grid_buttons[row][col]->mapToGlobal(pos));
+
+        connect(m_clear_action.get(), &QAction::triggered, this,
+                [&](){clear_jingle(row, col);});
+
+        m_context_menu->exec(m_grid_buttons[row][col]->mapToGlobal(pos));
     }
 
     void JingleGrid::open_load_dialog(int row, int col)
     {
-        auto filename = QFileDialog::getOpenFileName(this,
-                                                     "Select audio file",
-                                                     "D:/Music",
-                                                     tr("Audio Files (*.ogg)"));
+        QGraphicsColorizeEffect* effect = new QGraphicsColorizeEffect(m_grid_buttons[row][col].get());
+        m_grid_buttons[row][col]->setGraphicsEffect(effect);
+        QPropertyAnimation* p_animation = new QPropertyAnimation(effect, "color");
+        p_animation->setStartValue(QColor(Qt::red));
+        p_animation->setEndValue(QColor(Qt::green));
+        p_animation->setLoopCount(-1);
+        p_animation->setDuration(2000);
+        p_animation->start();
 
+        m_current_grid_cell.row = row;
+        m_current_grid_cell.col = col;
+
+        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
+        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio);
+        m_track_picker_dialog->exec();
+
+        m_load_action = nullptr;
+        p_animation->stop();
+    }
+
+    void JingleGrid::clear_jingle(int row, int col)
+    {
+        m_grid_buttons[row][col]->set_jingle(nullptr);
+    }
+
+   void JingleGrid::selected_audio(AUDIO::Audio* audio)
+   {
+       int row = m_current_grid_cell.row;
+       int col = m_current_grid_cell.col;
 
         if (m_grid_buttons[row][col]->jingle() == nullptr){
-            auto jingle = std::make_unique<Jingle>(current_page(), row, col, filename);
+            auto jingle = std::make_unique<Jingle>(current_page(), row, col, QString::fromStdString(audio->title()->value()));
             m_grid_buttons[row][col]->set_jingle(jingle.get());
             m_jingles.push_back(std::move(jingle));
             return;
         }
+
         auto jingle_id =QString::number(current_page())+
                         QString::number(row)+
                         QString::number(col);
-
 
         auto it = std::find_if(m_jingles.begin(), m_jingles.end(),
                               FindJingle(jingle_id));
 
        if(it != m_jingles.end()){
-            (*it)->set_title(filename);
+            (*it)->set_title(QString::fromStdString(audio->title()->value()));
             m_grid_buttons[row][col]->set_jingle((*it).get());
        }
 
-    }
+   }
 
     void JingleGrid::play_jingle_at(int row, int col)
     {
