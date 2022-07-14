@@ -67,13 +67,8 @@ namespace AUDIO
        std::unique_ptr<QPushButton> m_btn_info;
        std::unique_ptr<QPushButton> m_btn_history;
 
-       std::unique_ptr<QTreeView> m_folder_view;
-       std::unique_ptr<AudioTrackViewer> m_track_viewer;
-
        std::unique_ptr<AudioFolderWidget> m_audio_folder_widget;
        std::unique_ptr<AudioSearchWidget> m_search_widget;
-
-       std::unique_ptr<AudioLibWidget> m_audio_lib_widget;
 
        std::unique_ptr<AudioTrackWidget> m_audio_track_widget;
        std::unique_ptr<AudioDataModel> m_audio_data_model;

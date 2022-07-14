@@ -1,12 +1,85 @@
+#include <algorithm>
+
 #include <QStandardItemModel>
 #include <QHeaderView>
 
 #include "cartpanel.h"
 #include "../audio/trackbrowser.h"
 #include "../audio/trackpickerdialog.h"
+#include "../audio/audiotool.h"
 
 namespace OATS
 {
+    CartItem::CartItem()
+        :m_track_id{-1}
+        ,m_title{""}
+        ,m_track_path{""}
+        ,m_track_fullname{""}
+        ,m_duration{0.0}
+        ,m_cart_id{-1}
+    {
+    }
+    void CartItem::set_track_id(int id)
+    {
+        m_track_id = id;
+    }
+
+   int CartItem::track_id()
+   {
+       return m_track_id;
+   }
+   void CartItem::set_track_title(const QString title)
+   {
+       m_title = title;
+   }
+   QString CartItem::track_title()
+   {
+       return m_title;
+   }
+
+   void CartItem::set_track_path(const QString path)
+   {
+       m_track_path =  path;
+
+   }
+
+   QString CartItem::track_path()
+   {
+       return m_track_path;
+
+   }
+
+   void CartItem::set_track_fullname(const QString name)
+   {
+       m_track_fullname = name;
+
+   }
+
+   QString CartItem::track_fullname()
+   {
+       return m_track_fullname;
+   }
+
+   void CartItem::set_track_duration(double dur)
+   {
+       m_duration = dur;
+   }
+
+   double CartItem::track_duration()
+   {
+       return m_duration;
+   }
+
+   void CartItem::set_cart_id(int t_id)
+   {
+       m_cart_id = t_id;
+   }
+
+   int CartItem::cart_id()
+   {
+       return m_cart_id;
+   }
+
     CartPanel::CartPanel()
         :m_v_layout{nullptr}
         ,m_top_toolbar{nullptr}
@@ -17,9 +90,9 @@ namespace OATS
     {
         m_top_toolbar = std::make_unique<PanelTopToolbar>();
 
-        m_cart_a = std::make_unique<CartWidget>();
-        m_cart_b = std::make_unique<CartWidget>();
-        m_cart_c = std::make_unique<CartWidget>();
+        m_cart_a = std::make_unique<CartWidget>(1);
+        m_cart_b = std::make_unique<CartWidget>(2);
+        m_cart_c = std::make_unique<CartWidget>(3);
 
         m_v_layout = std::make_unique<QVBoxLayout>();
         m_v_layout->addWidget(m_top_toolbar.get());
@@ -87,18 +160,21 @@ namespace OATS
         ,m_remove_btn{nullptr}
         ,m_down_btn{nullptr}
     {
-        m_up_btn = std::make_unique<QPushButton>("U", this);
+        m_up_btn = std::make_unique<QPushButton>("UP", this);
         m_up_btn->setMaximumWidth(50);
+        connect(m_up_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::move_item_up);
 
         m_add_btn = std::make_unique<QPushButton>("A", this);
         m_add_btn->setMaximumWidth(50);
-
         connect(m_add_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::open_track_picker);
 
         m_remove_btn = std::make_unique<QPushButton>("R", this);
         m_remove_btn->setMaximumWidth(50);
+        connect(m_remove_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::remove_item);
+
         m_down_btn = std::make_unique<QPushButton>("D", this);
         m_down_btn->setMaximumWidth(50);
+        connect(m_down_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::move_item_down);
 
         m_v_layout = std::make_unique<QVBoxLayout>();
 
@@ -144,6 +220,9 @@ namespace OATS
 
          m_table_view->horizontalHeader()->setStretchLastSection(true);
          m_table_view->verticalHeader()->setVisible(false);
+         m_table_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+         connect(m_table_view.get(), &QTableView::clicked, this, &AudioViewWidget::table_view_clicked);
 
          create_table_view_headers();
 
@@ -154,28 +233,186 @@ namespace OATS
         setLayout(m_v_layout.get());
      }
 
+     void AudioViewWidget::table_view_clicked(const QModelIndex& index)
+     {
+        int id = index.data(Qt::UserRole).toInt();
+        auto cart_item = get_selected_cart_item(id);
+        if (cart_item == nullptr)
+            return;
+        emit
+
+     }
+
      void AudioViewWidget::create_table_view_headers()
      {
          m_model->setHorizontalHeaderItem(0, new QStandardItem("Title"));
          m_model->setHorizontalHeaderItem(1, new QStandardItem("Duration"));
 
-         m_table_view->setColumnWidth(0, 300);
-         m_table_view->setColumnWidth(1, 50);
+         m_table_view->setColumnWidth(0, 280);
+         m_table_view->setColumnWidth(1, 80);
      }
 
-     void AudioViewWidget::add_audio(AUDIO::Audio* audio)
+     void AudioViewWidget::add_audio(AUDIO::Audio* audio, int cart_id)
      {
          QList<QStandardItem*> columns;
+         AudioTool at;
+
+         auto cart_item = std::make_unique<CartItem>();
+         cart_item->set_track_id(audio->id());
+         cart_item->set_track_title(QString::fromStdString(audio->title()->value()));
+         cart_item->set_track_path(QString::fromStdString(audio->audio_lib_path()->value()));
+
+         cart_item->set_track_fullname(
+                     cart_item->track_path()+
+                     QString::fromStdString(at.make_audio_filename(cart_item->track_id())+".ogg"));
+
+         cart_item->set_track_duration(audio->duration()->value());
+         cart_item->set_cart_id(cart_id);
 
          auto title = new QStandardItem(QString::fromStdString(audio->title()->value()));
-         auto duration = new QStandardItem(QString::number(audio->duration()->value()));
+         title->setData(audio->id(), Qt::UserRole);
+         auto duration = new QStandardItem(at.format_time(audio->duration()->value()));
 
          columns.append(title);
          columns.append(duration);
 
          m_model->appendRow(columns);
 
+         m_cart_items.push_back(std::move(cart_item));
+
      }
+
+     void AudioViewWidget::move_selected_item_up()
+     {
+         move_selected_item(AudioViewWidget::MoveDirection::Up);
+     }
+
+     void AudioViewWidget::move_selected_item_down()
+     {
+         move_selected_item(AudioViewWidget::MoveDirection::Down);
+     }
+
+     void AudioViewWidget::move_selected_item(MoveDirection dr)
+     {
+
+         auto indexes = m_table_view->selectionModel()->selectedRows(0);
+         if (indexes.size() == 0)
+             return;
+
+         int cart_item_id = indexes[0].data(Qt::UserRole).toInt();
+
+         auto it = std::find_if(m_cart_items.begin(), m_cart_items.end(),
+                                FindCartItem(cart_item_id));
+
+         if (it == m_cart_items.end())
+             return;
+
+         QList<QStandardItem*> columns;
+         AudioTool at;
+
+         auto title = new QStandardItem((*it)->track_title());
+         title->setData((*it)->track_id(), Qt::UserRole);
+
+         auto duration = new QStandardItem(at.format_time((*it)->track_duration()));
+         columns.append(title);
+         columns.append(duration);
+
+         int row = m_table_view->currentIndex().row();
+         int new_row = -1;
+
+         switch(dr)
+         {
+           case MoveDirection::Up:
+           {
+             new_row = (row > 0) ? row - 1: row;
+             if (new_row == 0)
+                 return;
+
+              break;
+           }
+
+           case MoveDirection::Down:
+           {
+             if (row == m_table_view->model()->rowCount()-1)
+                 return;
+
+             new_row = row+1;
+             break;
+           }
+
+         }
+
+         m_model->removeRows(row, 1);
+         m_model->insertRow(new_row, columns);
+     }
+
+     int AudioViewWidget::get_cart_id()
+     {
+         auto indexes = m_table_view->selectionModel()->selectedRows(0);
+         if (indexes.size() == 0)
+             return -1;
+         int cart_item_id = indexes[0].data(Qt::UserRole).toInt();
+         return cart_item_id;
+     }
+
+     std::vector<int> AudioViewWidget::get_selected_cart_ids()
+     {
+         std::vector<int> ids;
+
+         auto indexes = m_table_view->selectionModel()->selectedRows(0);
+         for (auto index : indexes){
+             int id = index.data(Qt::UserRole).toInt();
+             ids.push_back(id);
+         }
+
+         return ids;
+     }
+
+     std::vector<CartItem*> AudioViewWidget::get_selected_cart_items()
+     {
+        std::vector<CartItem*> items;
+
+        for (auto& id : get_selected_cart_ids()) {
+            auto it = std::find_if(m_cart_items.begin(), m_cart_items.end(),
+                                   FindCartItem(id));
+            if (it != m_cart_items.end()){
+                items.push_back((*it).get());
+            }
+        }
+
+        return items;
+     }
+
+     void AudioViewWidget::remove_selected_item()
+     {
+        int cart_item_id = get_cart_id();
+        if (cart_item_id == -1)
+            return;
+
+        auto it = std::find_if(m_cart_items.begin(), m_cart_items.end(),
+                               FindCartItem(cart_item_id));
+        if (it == m_cart_items.end())
+            return;
+
+       m_cart_items.erase(it);
+
+       int row = m_table_view->currentIndex().row();
+       m_model->removeRows(row, 1);
+
+     }
+
+
+    CartItem* AudioViewWidget::get_selected_cart_item(int cart_item_id)
+    {
+        auto it = std::find_if(m_cart_items.begin(), m_cart_items.end(),
+                               FindCartItem(cart_item_id));
+
+        if (it == m_cart_items.end())
+            return nullptr;
+
+        return (*it).get();
+    }
+
 
     /* ---- AudioViewControllerWidget ---- */
 
@@ -186,10 +423,10 @@ namespace OATS
         ,m_group_btn{nullptr}
         ,m_next_btn{nullptr}
     {
-        m_preview_btn = std::make_unique<QPushButton>("P", this);
-        m_clear_btn = std::make_unique<QPushButton>("C", this);
-        m_group_btn = std::make_unique<QPushButton>("G", this);
-        m_next_btn = std::make_unique<QPushButton>("N", this);
+        m_preview_btn = std::make_unique<QPushButton>("Preview", this);
+        m_clear_btn = std::make_unique<QPushButton>("Clear", this);
+        m_group_btn = std::make_unique<QPushButton>("Group", this);
+        m_next_btn = std::make_unique<QPushButton>("Next", this);
 
         m_v_layout = std::make_unique<QVBoxLayout>();
 
@@ -213,6 +450,7 @@ namespace OATS
      {
         m_timer_lbl = std::make_unique<QLabel>("00:00", this);
         m_play_btn = std::make_unique<QPushButton>("P", this);
+        connect(m_play_btn.get(), &QPushButton::clicked, this, &AudioPlayWidget::play_button_clicked);
         m_stop_btn = std::make_unique<QPushButton>("S", this);
 
         m_v_layout = std::make_unique<QVBoxLayout>();
@@ -226,20 +464,34 @@ namespace OATS
 
      }
 
+     void AudioPlayWidget::play_button_clicked()
+     {
+         emit play_audio();
+     }
+
     /* ----- CartWidget ----- */
 
-    CartWidget::CartWidget()
+    CartWidget::CartWidget(int cart_id)
         :m_h_layout{nullptr}
         ,m_audio_load_widget{nullptr}
         ,m_audio_view_widget{nullptr}
         ,m_audio_view_controller_widget{nullptr}
         ,m_play_widget{nullptr}
+        ,m_cart_id{cart_id}
     {
         m_audio_load_widget = std::make_unique<AudioLoadWidget>();
         connect(m_audio_load_widget.get(), &AudioLoadWidget::cart_add_audio, this, &CartWidget::cart_add_audio);
+        connect(m_audio_load_widget.get(), &AudioLoadWidget::move_item_up, this, &CartWidget::move_item_up);
+        connect(m_audio_load_widget.get(), &AudioLoadWidget::move_item_down, this, &CartWidget::move_item_down);
+        connect(m_audio_load_widget.get(), &AudioLoadWidget::remove_item, this, &CartWidget::remove_item);
+
         m_audio_view_widget = std::make_unique<AudioViewWidget>();
         m_audio_view_controller_widget = std::make_unique<AudioViewControllerWidget>();
+
         m_play_widget = std::make_unique<AudioPlayWidget>();
+        connect(m_play_widget.get(), &AudioPlayWidget::play_audio, this, &CartWidget::play_audio);
+
+        m_cart_player = std::make_unique<CartItemPlayer>();
 
         m_h_layout = std::make_unique<QHBoxLayout>();
 
@@ -252,10 +504,46 @@ namespace OATS
 
     }
 
+    int CartWidget::get_cart_id()
+    {
+        return m_cart_id;
+    }
+
+
    void CartWidget::cart_add_audio(AUDIO::Audio* audio)
    {
-       m_audio_view_widget->add_audio(audio);
-
+       m_audio_view_widget->add_audio(audio, m_cart_id);
    }
 
+   void CartWidget::move_item_up()
+   {
+       m_audio_view_widget->move_selected_item_up();
+   }
+
+   void CartWidget::move_item_down()
+   {
+       m_audio_view_widget->move_selected_item_down();
+   }
+
+   void CartWidget::remove_item()
+   {
+      m_audio_view_widget->remove_selected_item();
+   }
+
+   void CartWidget::play_audio()
+   {
+      m_cart_player->play_cart_item(m_audio_view_widget->get_selected_cart_items());
+   }
+
+   /* ----------- CartItemPlayer ---- */
+   CartItemPlayer::CartItemPlayer()
+   {
+   }
+
+   void CartItemPlayer::play_cart_item(Playlist cart_items)
+   {
+       for (auto ci : cart_items){
+           qDebug() << ci->track_fullname();
+       }
+   }
 }

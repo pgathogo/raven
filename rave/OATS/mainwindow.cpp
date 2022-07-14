@@ -1533,9 +1533,10 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
     auto it = std::find_if(m_schedule_items.begin(), m_schedule_items.end(),
                            [&](std::unique_ptr<OATS::ScheduleItem> const& item){return item->schedule_ref()==si->schedule_ref() ;});
 
-    if (it != m_schedule_items.end()){
-        m_schedule_items.erase(it);
-    }
+    if (it == m_schedule_items.end())
+        return;
+
+    m_schedule_items.erase(it);
 
     display_schedule(grid_pos);
     ui->gridScroll->setSliderPosition(MAX_GRID_ITEMS);

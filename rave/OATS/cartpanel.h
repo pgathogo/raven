@@ -25,6 +25,31 @@ namespace OATS
     class AudioViewControllerWidget;
     class AudioPlayWidget;
 
+    class CartItem
+    {
+    public:
+        enum class CartID{CartA=1, CartB, CartC};
+        CartItem();
+        void set_track_id(int);
+        int track_id();
+        void set_track_title(const QString);
+        QString track_title();
+        void set_track_path(const QString);
+        QString track_path();
+        void set_track_fullname(const QString);
+        QString track_fullname();
+        void set_track_duration(double);
+        double track_duration();
+        void set_cart_id(int);
+        int cart_id();
+    private:
+        int m_track_id;
+        QString m_title;
+        QString m_track_path;
+        QString m_track_fullname;
+        double m_duration;
+        int m_cart_id;
+    };
 
     class CartPanel : public QWidget
     {
@@ -73,6 +98,9 @@ namespace OATS
         AudioLoadWidget();
     signals:
         void cart_add_audio(AUDIO::Audio*);
+        void move_item_up();
+        void move_item_down();
+        void remove_item();
     private slots:
         void open_track_picker();
         void selected_audio(AUDIO::Audio*);
@@ -91,13 +119,39 @@ namespace OATS
     {
         Q_OBJECT
     public:
-        AudioViewWidget();
+        enum class MoveDirection{Up, Down};
+
+         AudioViewWidget();
          void create_table_view_headers();
-         void add_audio(AUDIO::Audio*);
+         void add_audio(AUDIO::Audio*, int);
+         void move_selected_item_up();
+         void move_selected_item_down();
+         void move_selected_item(MoveDirection);
+         void remove_selected_item();
+
+         int get_cart_id();
+         CartItem* get_selected_cart_item(int);
+
+        std::vector<int> get_selected_cart_ids();
+        std::vector<CartItem*> get_selected_cart_items();
+
+    private slots:
+         void table_view_clicked(const QModelIndex&);
+
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QTableView> m_table_view;
         std::unique_ptr<QStandardItemModel> m_model;
+        std::vector<std::unique_ptr<CartItem>> m_cart_items;
+    };
+
+    struct FindCartItem{
+        FindCartItem(int id): m_id{id}{}
+        bool operator()(std::unique_ptr<OATS::CartItem> const& cart_item){
+            return (cart_item->track_id() == m_id);
+        }
+    private:
+        int m_id;
     };
 
     /* ----- AudioViewControllerWidget ---- */
@@ -121,6 +175,10 @@ namespace OATS
         Q_OBJECT
     public:
         AudioPlayWidget();
+    signals:
+        void play_audio();
+    private slots:
+        void play_button_clicked();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QLabel> m_timer_lbl;
@@ -129,20 +187,40 @@ namespace OATS
     };
 
 
+    /* ----- AudioPlayer ------- */
+
+    class CartItemPlayer : public QObject
+    {
+        Q_OBJECT
+        using Playlist = std::vector<CartItem*>;
+    public:
+        CartItemPlayer();
+        void play_cart_item(Playlist);
+    private:
+    };
+
+
     /* ---- CartWidget ----- */
     class CartWidget : public QWidget
     {
         Q_OBJECT
     public:
-        CartWidget();
+        CartWidget(int);
     private slots:
         void cart_add_audio(AUDIO::Audio*);
+        void move_item_up();
+        void move_item_down();
+        void remove_item();
+        int get_cart_id();
+        void play_audio();
     private:
         std::unique_ptr<QHBoxLayout> m_h_layout;
         std::unique_ptr<AudioLoadWidget> m_audio_load_widget;
         std::unique_ptr<AudioViewWidget> m_audio_view_widget;
         std::unique_ptr<AudioViewControllerWidget> m_audio_view_controller_widget;
         std::unique_ptr<AudioPlayWidget> m_play_widget;
+        std::unique_ptr<CartItemPlayer> m_cart_player;
+        int m_cart_id;
     };
 
 
