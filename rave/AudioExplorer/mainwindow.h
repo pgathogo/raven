@@ -162,6 +162,8 @@ public slots:
     void cut_folder();
     void paste_folder();
 
+    void end_of_play();
+
 private:
     Ui::MainWindow *ui;
     QApplication* m_qapp;

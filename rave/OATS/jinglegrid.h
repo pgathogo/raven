@@ -109,7 +109,6 @@ namespace OATS
         void save_to_file(const QString);
         void open_from_file(const QString);
         void clear_page(int);
-        void print_grid();
 
     signals:
         void play_jingle(const QString);

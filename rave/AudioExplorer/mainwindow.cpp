@@ -1111,6 +1111,7 @@ void MainWindow::play_audio()
 
     AudioFile af(full_audio_name);
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
+    connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
     m_audio_player->play_audio();
 
 //    m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
@@ -1121,6 +1122,11 @@ void MainWindow::stop_play()
 {
     if (m_audio_player != nullptr)
         m_audio_player->stop_play();
+}
+
+void MainWindow::end_of_play()
+{
+    qDebug() << "Play ended ...";
 }
 
 AUDIO::Audio* MainWindow::get_selected_audio()

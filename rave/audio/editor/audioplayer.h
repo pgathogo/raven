@@ -14,13 +14,22 @@ namespace AUDIO
         Q_OBJECT
     public:
         AudioPlayer(AudioFile& audio_file);
+        AudioPlayer(std::vector<QString> play_list);
         ~AudioPlayer();
 
         void play_audio();
         void stop_play();
+
+        void add_to_playlist(QString);
+    signals:
+        void end_of_play();
+    private slots:
+        void end_of_playback();
     private:
         std::unique_ptr<AudioThread> m_audio_thread;
-        AudioFile& m_audio_file;
+        AudioFile m_audio_file;
+        std::vector<QString> m_play_list;
+        static int play_count;
 
     };
 }

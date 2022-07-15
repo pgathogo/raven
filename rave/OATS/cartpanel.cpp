@@ -7,6 +7,7 @@
 #include "../audio/trackbrowser.h"
 #include "../audio/trackpickerdialog.h"
 #include "../audio/audiotool.h"
+#include "../audio/audiofile.h"
 
 namespace OATS
 {
@@ -221,6 +222,7 @@ namespace OATS
          m_table_view->horizontalHeader()->setStretchLastSection(true);
          m_table_view->verticalHeader()->setVisible(false);
          m_table_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+         m_table_view->setSelectionMode(QAbstractItemView::MultiSelection);
 
          connect(m_table_view.get(), &QTableView::clicked, this, &AudioViewWidget::table_view_clicked);
 
@@ -239,7 +241,6 @@ namespace OATS
         auto cart_item = get_selected_cart_item(id);
         if (cart_item == nullptr)
             return;
-        emit
 
      }
 
@@ -368,9 +369,9 @@ namespace OATS
          return ids;
      }
 
-     std::vector<CartItem*> AudioViewWidget::get_selected_cart_items()
+     CartItems AudioViewWidget::get_selected_cart_items()
      {
-        std::vector<CartItem*> items;
+        CartItems items;
 
         for (auto& id : get_selected_cart_ids()) {
             auto it = std::find_if(m_cart_items.begin(), m_cart_items.end(),
@@ -381,6 +382,17 @@ namespace OATS
         }
 
         return items;
+     }
+
+     double AudioViewWidget::get_selected_items_duration(CartItems cart_items)
+     {
+         double duration = 0;
+         for (auto item : cart_items){
+            duration += item->track_duration();
+         }
+
+         return duration;
+
      }
 
      void AudioViewWidget::remove_selected_item()
@@ -442,7 +454,7 @@ namespace OATS
     }
 
     /* ---- AudioPlayWidget ---- */
-     AudioPlayWidget::AudioPlayWidget()
+     CartPlayerWidget::CartPlayerWidget()
          :m_v_layout{nullptr}
          ,m_timer_lbl{nullptr}
          ,m_play_btn{nullptr}
@@ -450,8 +462,9 @@ namespace OATS
      {
         m_timer_lbl = std::make_unique<QLabel>("00:00", this);
         m_play_btn = std::make_unique<QPushButton>("P", this);
-        connect(m_play_btn.get(), &QPushButton::clicked, this, &AudioPlayWidget::play_button_clicked);
+        connect(m_play_btn.get(), &QPushButton::clicked, this, &CartPlayerWidget::play_button_clicked);
         m_stop_btn = std::make_unique<QPushButton>("S", this);
+        connect(m_stop_btn.get(), &QPushButton::clicked, this, &CartPlayerWidget::stop_play);
 
         m_v_layout = std::make_unique<QVBoxLayout>();
         m_v_layout->addWidget(m_timer_lbl.get());
@@ -464,9 +477,44 @@ namespace OATS
 
      }
 
-     void AudioPlayWidget::play_button_clicked()
+     void CartPlayerWidget::play_button_clicked()
      {
          emit play_audio();
+     }
+
+     void CartPlayerWidget::stop_play()
+     {
+         m_audio_player->stop_play();
+     }
+
+
+     void CartPlayerWidget::play_cart_items(CartItems cart_items)
+     {
+       std::vector<QString> play_items;
+
+       double duration = 0;
+       for (auto ci : cart_items){
+           duration += ci->track_duration();
+           play_items.push_back(ci->track_fullname());
+       }
+
+       AudioTool at;
+       set_timer_label(at.format_time(duration));
+
+       m_audio_player = std::make_unique<AUDIO::AudioPlayer>(play_items);
+       m_audio_player->play_audio();
+     }
+
+     void CartPlayerWidget::set_timer_label(QString text)
+     {
+         m_timer_lbl->setText(text);
+     }
+
+     void CartPlayerWidget::set_selected_items_duration(double duration)
+     {
+         m_selected_items_duration = duration;
+         AudioTool at;
+         set_timer_label(at.format_time(duration));
      }
 
     /* ----- CartWidget ----- */
@@ -488,10 +536,10 @@ namespace OATS
         m_audio_view_widget = std::make_unique<AudioViewWidget>();
         m_audio_view_controller_widget = std::make_unique<AudioViewControllerWidget>();
 
-        m_play_widget = std::make_unique<AudioPlayWidget>();
-        connect(m_play_widget.get(), &AudioPlayWidget::play_audio, this, &CartWidget::play_audio);
+        m_play_widget = std::make_unique<CartPlayerWidget>();
+        connect(m_play_widget.get(), &CartPlayerWidget::play_audio, this, &CartWidget::play_audio);
 
-        m_cart_player = std::make_unique<CartItemPlayer>();
+//        m_cart_player = std::make_unique<CartPlayer>();
 
         m_h_layout = std::make_unique<QHBoxLayout>();
 
@@ -532,18 +580,13 @@ namespace OATS
 
    void CartWidget::play_audio()
    {
-      m_cart_player->play_cart_item(m_audio_view_widget->get_selected_cart_items());
+      CartItems cart_items = m_audio_view_widget->get_selected_cart_items();
+      if (cart_items.size() == 0)
+          return;
+
+      m_play_widget->set_selected_items_duration(m_audio_view_widget->get_selected_items_duration(cart_items));
+      m_play_widget->play_cart_items(cart_items);
    }
 
-   /* ----------- CartItemPlayer ---- */
-   CartItemPlayer::CartItemPlayer()
-   {
-   }
 
-   void CartItemPlayer::play_cart_item(Playlist cart_items)
-   {
-       for (auto ci : cart_items){
-           qDebug() << ci->track_fullname();
-       }
-   }
 }

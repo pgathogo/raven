@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QTableView>
+#include "../audio/editor/audioplayer.h"
 
 class QStandardItemModel;
 
@@ -13,6 +14,7 @@ namespace AUDIO
 {
   class TrackPickerDialog;
   class Audio;
+  class AudioPlayer;
 }
 
 namespace OATS
@@ -23,7 +25,10 @@ namespace OATS
     class AudioLoadWidget;
     class AudioViewWidget;
     class AudioViewControllerWidget;
-    class AudioPlayWidget;
+    class CartPlayerWidget;
+    class CartItem;
+
+    using CartItems = std::vector<CartItem*>;
 
     class CartItem
     {
@@ -131,9 +136,10 @@ namespace OATS
 
          int get_cart_id();
          CartItem* get_selected_cart_item(int);
+         double get_selected_items_duration(CartItems);
 
         std::vector<int> get_selected_cart_ids();
-        std::vector<CartItem*> get_selected_cart_items();
+        CartItems get_selected_cart_items();
 
     private slots:
          void table_view_clicked(const QModelIndex&);
@@ -169,34 +175,27 @@ namespace OATS
     };
 
     /* ---- AudioPlayWidget ---- */
-
-    class AudioPlayWidget : public QWidget
+    class CartPlayerWidget : public QWidget
     {
         Q_OBJECT
     public:
-        AudioPlayWidget();
+        CartPlayerWidget();
+        void play_cart_items(CartItems);
+        void set_timer_label(QString);
+        void set_selected_items_duration(double);
+
     signals:
         void play_audio();
     private slots:
         void play_button_clicked();
+        void stop_play();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QLabel> m_timer_lbl;
         std::unique_ptr<QPushButton> m_play_btn;
         std::unique_ptr<QPushButton> m_stop_btn;
-    };
-
-
-    /* ----- AudioPlayer ------- */
-
-    class CartItemPlayer : public QObject
-    {
-        Q_OBJECT
-        using Playlist = std::vector<CartItem*>;
-    public:
-        CartItemPlayer();
-        void play_cart_item(Playlist);
-    private:
+        std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+        double m_selected_items_duration;
     };
 
 
@@ -218,8 +217,7 @@ namespace OATS
         std::unique_ptr<AudioLoadWidget> m_audio_load_widget;
         std::unique_ptr<AudioViewWidget> m_audio_view_widget;
         std::unique_ptr<AudioViewControllerWidget> m_audio_view_controller_widget;
-        std::unique_ptr<AudioPlayWidget> m_play_widget;
-        std::unique_ptr<CartItemPlayer> m_cart_player;
+        std::unique_ptr<CartPlayerWidget> m_play_widget;
         int m_cart_id;
     };
 

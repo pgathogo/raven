@@ -179,6 +179,7 @@ find_library(BASS_LIBRARY bass ${BASS_LIBRARY_DIR})
 if (BASS_LIBRARY)
         message(STATUS "Bass library found.")
 endif()
+
 target_link_directories(AudioExplorer PRIVATE ${BASS_LIBRARY_DIR})
 target_link_libraries(AudioExplorer PRIVATE ${BASS_LIBRARY})
 

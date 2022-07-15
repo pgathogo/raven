@@ -120,6 +120,10 @@ set(PROJECT_SOURCES
         ../audio/trackbrowser.cpp
         ../audio/trackpickerdialog.h
         ../audio/trackpickerdialog.cpp
+        ../audio/editor/audioplayer.h
+        ../audio/editor/audioplayer.cpp
+        ../audio/editor/audiothread.h
+        ../audio/editor/audiothread.cpp
 
         ../security/authentication.cpp
         ../security/user.cpp
@@ -157,6 +161,16 @@ link_directories(${rave_audiolib_INCLUDE_DIRS})
 target_link_libraries(OATS PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(OATS PRIVATE ${PostgreSQL_LIBRARIES})
 target_link_libraries(OATS PRIVATE ${RAVE_AUDIO_LIBRARIES})
+
+set(BASS_INCLUDE_DIR "../lib/BassLib/Include")
+set(BASS_LIBRARY_DIR "../lib/BassLib/Lib")
+find_library(BASS_LIBRARY bass ${BASS_LIBRARY_DIR})
+if (BASS_LIBRARY)
+        message(STATUS "Bass library found.")
+endif()
+
+target_link_directories(OATS PRIVATE ${BASS_LIBRARY_DIR})
+target_link_libraries(OATS PRIVATE ${BASS_LIBRARY})
 
 set_target_properties(OATS PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

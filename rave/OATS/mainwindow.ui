@@ -90,7 +90,7 @@
                 <string notr="true">background-color: rgb(170, 255, 127);S</string>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>7</number>
                </property>
                <widget class="QWidget" name="pgHome">
                 <layout class="QVBoxLayout" name="verticalLayout_12">

@@ -29,6 +29,14 @@ namespace AUDIO
         void adjust_header_size();
         QStandardItemModel* model();
 
+    signals:
+        void track_view_clicked(const QModelIndex&);
+        void track_selected(int);
+
+    private slots:
+        void tv_clicked(const QModelIndex& index);
+        void filter_by_letter(QString letter);
+
     private:
         std::unique_ptr<QTableView> m_track_view;
         std::unique_ptr<QStandardItemModel> m_track_model;
@@ -39,13 +47,6 @@ namespace AUDIO
 
         std::unique_ptr<QSortFilterProxyModel> m_filter_model;
 
-    private slots:
-        void tv_clicked(const QModelIndex& index);
-        void filter_by_letter(QString letter);
-
-    signals:
-        void track_view_clicked(const QModelIndex&);
-        void track_selected(int);
 
     };
 

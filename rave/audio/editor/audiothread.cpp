@@ -176,8 +176,8 @@ void AudioThread::signal_update()
         BASS_ChannelGetData(m_channel, fft, BASS_DATA_FFT2048);
         emit current_peak(fft);
     }else{
-        emit end_of_playback();
         playing = false;
+        emit end_of_playback();
     }
 }
 
