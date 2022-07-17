@@ -905,19 +905,21 @@ void MainWindow::time_updated()
         go_current();
 }
 
+/*
 long long MainWindow::get_tick_count()
 {
     auto time_point = std::chrono::steady_clock::now();
     auto msec = std::chrono::time_point_cast<std::chrono::milliseconds>(time_point);
     return msec.time_since_epoch().count();
 }
+*/
 
 void MainWindow::slow_flash()
 {
     auto TEN_SECONDS  = 10000ms;
     auto FIVE_SECONDS =  5000ms;
 
-    auto current_time = get_tick_count();
+    auto current_time = m_audio_tool.get_tick_count();
 
     // Output A
 
@@ -955,7 +957,7 @@ void MainWindow::fast_flash()
 {
     auto FIVE_SECONDS = 5000ms;
 
-    auto current_time = get_tick_count();
+    auto current_time = m_audio_tool.get_tick_count();
 
     // Output A
     if (m_outputA->panel_status() == OATS::PanelStatus::CUED) {
@@ -990,7 +992,7 @@ void MainWindow::fast_flash()
 
 void MainWindow::count_down()
 {
-    auto trigger_ticker = get_tick_count();
+    auto trigger_ticker = m_audio_tool.get_tick_count();
 
     switch (m_outputA->panel_status())
     {
@@ -1134,7 +1136,7 @@ void MainWindow::status_timer()
 {
     int elapsed{0};
     int remaining{0};
-    auto trigger_ticker = get_tick_count();
+    auto trigger_ticker = m_audio_tool.get_tick_count();
 
     switch (m_outputA->panel_status())
     {
@@ -1384,7 +1386,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);
         op->schedule_item()->set_play_start_time(QTime::currentTime());
 
-        op->set_start_tick_stamp(get_tick_count());
+        op->set_start_tick_stamp(m_audio_tool.get_tick_count());
 
         op->schedule_item()->notify();
 

@@ -11,6 +11,7 @@
 #include "scheduleitem.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"
+#include "../audio/audiotool.h"
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/relationmapper.h"
@@ -72,11 +73,9 @@ public:
     constexpr static int YIELD_FADE_DELAY = 3000;
     constexpr static int YIELD_FADE_OUT = 7000;
 
-
     const std::string ChannelA = "A";
     const std::string ChannelB = "B";
     const std::string ChannelC = "C";
-
 
     enum class ControlPage{Home, Commercial, Segue, Cart, Jingle, TrackInfo, Load};
 
@@ -142,7 +141,7 @@ private slots:
     void time_updated();
     void slow_flash();
     void fast_flash();
-    long long get_tick_count();
+    //long long get_tick_count();
     void count_down();
     void status_timer();
 
@@ -206,6 +205,8 @@ private:
     static std::string s_channel;
 
     ControlPage m_control_page;
+
+    AUDIO::AudioTool m_audio_tool;
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate, int);

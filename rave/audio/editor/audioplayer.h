@@ -22,6 +22,7 @@ namespace AUDIO
 
         void add_to_playlist(QString);
     signals:
+        void play_next();
         void end_of_play();
     private slots:
         void end_of_playback();

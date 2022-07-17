@@ -6,9 +6,13 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QTableView>
+#include <QJsonArray>
+
 #include "../audio/editor/audioplayer.h"
+#include "../audio/audiotool.h"
 
 class QStandardItemModel;
+class QTimer;
 
 namespace AUDIO
 {
@@ -29,6 +33,8 @@ namespace OATS
     class CartItem;
 
     using CartItems = std::vector<CartItem*>;
+
+    enum class CartStatus {Waiting, Playing};
 
     class CartItem
     {
@@ -61,6 +67,8 @@ namespace OATS
         Q_OBJECT
     public:
         CartPanel();
+    private slots:
+        void save_cart_items(QString);
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<PanelTopToolbar> m_top_toolbar;
@@ -76,11 +84,17 @@ namespace OATS
         Q_OBJECT
     public:
         PanelTopToolbar();
+    signals:
+        void save_cart_items(QString);
+    private slots:
+        void save_cart();
     private:
         std::unique_ptr<QHBoxLayout> m_h_layout;
         std::unique_ptr<QPushButton> m_open_btn;
         std::unique_ptr<QPushButton> m_save_btn;
         std::unique_ptr<QLabel> m_title_lbl;
+
+        QString m_cart_filename;
     };
 
     /* --- PanelBottomToolbar ---- */
@@ -141,9 +155,13 @@ namespace OATS
         std::vector<int> get_selected_cart_ids();
         CartItems get_selected_cart_items();
 
+        void clear_table();
+        void select_all_items();
+        void diselect_all_items();
+        QJsonObject cart_item_to_json(std::unique_ptr<CartItem> const&);
+        QJsonArray get_cart_items();
     private slots:
          void table_view_clicked(const QModelIndex&);
-
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QTableView> m_table_view;
@@ -166,6 +184,13 @@ namespace OATS
         Q_OBJECT
     public:
          AudioViewControllerWidget();
+    signals:
+         void clear_items();
+         void select_all();
+         void diselect_all();
+    private slots:
+         void emit_clear_items();
+         void emit_group_clicked();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QPushButton> m_preview_btn;
@@ -180,22 +205,32 @@ namespace OATS
         Q_OBJECT
     public:
         CartPlayerWidget();
-        void play_cart_items(CartItems);
+        void play_audio(CartItems);
         void set_timer_label(QString);
         void set_selected_items_duration(double);
-
+        void count_down();
+        CartStatus cart_status();
     signals:
-        void play_audio();
+        void play_audio_request();
     private slots:
         void play_button_clicked();
         void stop_play();
+        void play_next();
+        void end_of_play();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QLabel> m_timer_lbl;
         std::unique_ptr<QPushButton> m_play_btn;
         std::unique_ptr<QPushButton> m_stop_btn;
         std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+
+        AUDIO::AudioTool m_audio_tool;
         double m_selected_items_duration;
+        long long m_start_tick_time_stamp;
+        std::unique_ptr<QTimer> m_countdown_timer;
+
+        CartStatus m_cart_status;
+
     };
 
 
@@ -205,13 +240,17 @@ namespace OATS
         Q_OBJECT
     public:
         CartWidget(int);
+        QJsonArray get_cart_items();
     private slots:
         void cart_add_audio(AUDIO::Audio*);
         void move_item_up();
         void move_item_down();
         void remove_item();
         int get_cart_id();
-        void play_audio();
+        void play_audio_signal_handler();
+        void clear_items_signal_handler();
+        void select_all_signal_handler();
+        void diselect_all_signal_handler();
     private:
         std::unique_ptr<QHBoxLayout> m_h_layout;
         std::unique_ptr<AudioLoadWidget> m_audio_load_widget;

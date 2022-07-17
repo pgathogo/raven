@@ -39,7 +39,7 @@ void TrackInfo::show_audio_info(const AUDIO::Audio* audio, History& history)
     ui->lblClass->setText(stoq(audio->audio_type()->displayName()));
     ui->lblYear->setText(QString::number(audio->audio_year()->value()));
 
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto ogg_file =  at.make_audio_filename(audio->id())+".ogg";
     ui->lblAudioFile->setText( stoq(audio->audio_lib_path()->value()+ogg_file) );
 

@@ -36,8 +36,6 @@ namespace AUDIO
 
     void AudioPlayer::play_audio()
     {
-        //m_audio_thread->play(QString::fromStdString(m_audio_file.audio_file()));
-
         m_audio_thread->play(m_play_list[play_count++]);
     }
 
@@ -53,6 +51,8 @@ namespace AUDIO
 
         if (play_count < m_play_list.size()){
             play_audio();
+            emit play_next();
+        }else {
             emit end_of_play();
         }
 

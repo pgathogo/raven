@@ -59,7 +59,7 @@ namespace AUDIO{
 
     QString AudioLibItem::file_path()
     {
-        AudioTool audio_tool;
+        AUDIO::AudioTool audio_tool;
         return QString::fromStdString(audio()->audio_lib_path()->value() +
                                       audio_tool.make_audio_filename(audio()->id())+".ogg");
     }

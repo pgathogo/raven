@@ -1,6 +1,7 @@
 #Files
 *.autosave
 *.stackdump
+*.crt
 .*~*
 *.*~*
 *.swp
