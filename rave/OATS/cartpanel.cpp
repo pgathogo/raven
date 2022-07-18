@@ -98,6 +98,7 @@ namespace OATS
     {
         m_top_toolbar = std::make_unique<PanelTopToolbar>();
         connect(m_top_toolbar.get(), &PanelTopToolbar::save_cart_items, this, &CartPanel::save_cart_items);
+        connect(m_top_toolbar.get(), &PanelTopToolbar::read_cart_items, this, &CartPanel::read_cart_items);
 
         m_cart_a = std::make_unique<CartWidget>(1);
         m_cart_b = std::make_unique<CartWidget>(2);
@@ -110,6 +111,9 @@ namespace OATS
         m_v_layout->addWidget(m_cart_c.get());
 
         m_bottom_toolbar = std::make_unique<PanelBottomToolbar>();
+        connect(m_bottom_toolbar.get(), &PanelBottomToolbar::stop_all, this, &CartPanel::stop_all);
+        connect(m_bottom_toolbar.get(), &PanelBottomToolbar::clear_all, this, &CartPanel::clear_all);
+
         m_v_layout->addWidget(m_bottom_toolbar.get());
 
         m_v_layout->setContentsMargins(0,10,0,0);
@@ -121,14 +125,10 @@ namespace OATS
 
    void CartPanel::save_cart_items(QString filename)
    {
-       auto cart_a_items = m_cart_a->get_cart_items();
-       auto cart_b_items = m_cart_b->get_cart_items();
-       auto cart_c_items = m_cart_c->get_cart_items();
-
        QJsonObject cart;
-       cart["cartA"] = cart_a_items;
-       cart["cartB"] = cart_b_items;
-       cart["cartC"] = cart_c_items;
+       cart["cartA"] = m_cart_a->get_cart_items();
+       cart["cartB"] = m_cart_b->get_cart_items();
+       cart["cartC"] = m_cart_c->get_cart_items();
 
        QJsonDocument cart_doc(cart);
 
@@ -139,6 +139,35 @@ namespace OATS
 
        file.write(cart_doc.toJson(QJsonDocument::Indented));
    }
+
+    void CartPanel::read_cart_items(QByteArray& data)
+    {
+        QJsonDocument doc_data(QJsonDocument::fromJson(data));
+        QJsonObject cart_json = doc_data.object();
+
+        QJsonArray json_cart_items_a = cart_json["cartA"].toArray();
+        QJsonArray json_cart_items_b = cart_json["cartB"].toArray();
+        QJsonArray json_cart_items_c = cart_json["cartC"].toArray();
+
+        m_cart_a->read_cart_items(json_cart_items_a);
+        m_cart_b->read_cart_items(json_cart_items_b);
+        m_cart_c->read_cart_items(json_cart_items_c);
+
+    }
+
+    void CartPanel::stop_all()
+    {
+        m_cart_a->stop_all();
+        m_cart_b->stop_all();
+        m_cart_c->stop_all();
+    }
+
+    void CartPanel::clear_all()
+    {
+        m_cart_a->clear_all();
+        m_cart_b->clear_all();
+        m_cart_c->clear_all();
+    }
 
     /* ---- PanelTopToolbar ----- */
 
@@ -152,8 +181,11 @@ namespace OATS
         setStyleSheet("background-color: red;");
 
         m_open_btn = std::make_unique<QPushButton>("Open", this);
+        connect(m_open_btn.get(), &QPushButton::clicked, this, &PanelTopToolbar::open_cart_file);
+
         m_save_btn = std::make_unique<QPushButton>("Save", this);
         connect(m_save_btn.get(), &QPushButton::clicked, this, &PanelTopToolbar::save_cart);
+
         m_title_lbl = std::make_unique<QLabel>("Toolbar..",this);
 
         m_h_layout = std::make_unique<QHBoxLayout>();
@@ -169,13 +201,36 @@ namespace OATS
     {
         if (m_cart_filename.isEmpty()){
             m_cart_filename = QFileDialog::getSaveFileName(this, tr("Save Cart Items"),
-                                                           "", tr("CartItems (*.crt"));
+                                                           "", tr("Cart File (*.cat"));
             if (m_cart_filename.isEmpty())
                 return;
         }
 
         emit save_cart_items(m_cart_filename);
     }
+
+    void PanelTopToolbar::open_cart_file()
+    {
+        m_cart_filename = QFileDialog::getOpenFileName(this,
+                                                       tr("Open Cart file"),
+                                                       "",
+                                                       tr("Cart File (*.cat);; All (*.*)"));
+        if (m_cart_filename.isEmpty())
+            return;
+
+        m_title_lbl->setText(m_cart_filename);
+
+        QFile cart_file(m_cart_filename);
+        if (!cart_file.open(QIODevice::ReadOnly)){
+            qWarning("Couldn't open cart file");
+            return;
+        }
+
+        QByteArray data = cart_file.readAll();
+
+        emit read_cart_items(data);
+    }
+
 
 
     /* ----- PanelBottomToolbar ------ */
@@ -186,13 +241,25 @@ namespace OATS
         ,m_clear_all_btn{nullptr}
     {
         m_stop_all_btn = std::make_unique<QPushButton>("Stop All", this);
+        connect(m_stop_all_btn.get(), &QPushButton::clicked, this, &PanelBottomToolbar::stop_all_clicked);
+
         m_clear_all_btn = std::make_unique<QPushButton>("Clear All", this);
+        connect(m_clear_all_btn.get(), &QPushButton::clicked, this, &PanelBottomToolbar::clear_all_clicked);
 
         m_h_layout = std::make_unique<QHBoxLayout>();
         m_h_layout->addWidget(m_stop_all_btn.get());
         m_h_layout->addWidget(m_clear_all_btn.get());
 
         setLayout(m_h_layout.get());
+    }
+
+    void PanelBottomToolbar::stop_all_clicked()
+    {
+        emit stop_all();
+    }
+    void PanelBottomToolbar::clear_all_clicked()
+    {
+        emit clear_all();
     }
 
     /* ----- AudioLoadWidget ----- */
@@ -313,7 +380,6 @@ namespace OATS
 
      void AudioViewWidget::add_audio(AUDIO::Audio* audio, int cart_id)
      {
-         QList<QStandardItem*> columns;
          AUDIO::AudioTool at;
 
          auto cart_item = std::make_unique<CartItem>();
@@ -328,14 +394,18 @@ namespace OATS
          cart_item->set_track_duration(audio->duration()->value());
          cart_item->set_cart_id(cart_id);
 
+         add_to_table_view(cart_item.get());
+
+         /*
          auto title = new QStandardItem(QString::fromStdString(audio->title()->value()));
          title->setData(audio->id(), Qt::UserRole);
          auto duration = new QStandardItem(at.format_time(audio->duration()->value()));
 
+         QList<QStandardItem*> columns;
          columns.append(title);
          columns.append(duration);
-
          m_model->appendRow(columns);
+         */
 
          m_cart_items.push_back(std::move(cart_item));
 
@@ -512,11 +582,46 @@ namespace OATS
 
         json_object["cart_id"] = cart_item->cart_id();
         json_object["track_id"] = cart_item->track_id();
+        json_object["title"] = cart_item->track_title();
         json_object["track_path"] = cart_item->track_path();
         json_object["track_fullname"] = cart_item->track_fullname();
         json_object["duration"] = cart_item->track_duration();
 
         return json_object;
+    }
+
+    void AudioViewWidget::add_to_table_view(CartItem* ci)
+    {
+         AUDIO::AudioTool at;
+
+         auto title = new QStandardItem(ci->track_title());
+         title->setData(ci->track_id(), Qt::UserRole);
+         auto duration = new QStandardItem(at.format_time(ci->track_duration()));
+
+         QList<QStandardItem*> columns;
+         columns.append(title);
+         columns.append(duration);
+         m_model->appendRow(columns);
+    }
+
+    void AudioViewWidget::read_cart_items(QJsonArray& data)
+    {
+        for (auto&& json_cart_item: data){
+            std::unique_ptr<CartItem> cart_item = std::make_unique<CartItem>();
+            QJsonObject obj = json_cart_item.toObject();
+
+            cart_item->set_cart_id(obj["cart_id"].toInt());
+            cart_item->set_track_id(obj["track_id"].toInt());
+            cart_item->set_track_title(obj["title"].toString());
+            cart_item->set_track_path(obj["track_path"].toString());
+            cart_item->set_track_fullname(obj["track_fullname"].toString());
+            cart_item->set_track_duration(obj["duration"].toDouble());
+
+            add_to_table_view(cart_item.get());
+
+            m_cart_items.push_back(std::move(cart_item));
+        }
+
     }
 
     /* ---- AudioViewControllerWidget ---- */
@@ -564,6 +669,10 @@ namespace OATS
             emit diselect_all();
     }
 
+    void AudioViewControllerWidget::clear_all()
+    {
+        emit clear_items();
+    }
 
     /* ---- AudioPlayWidget ---- */
      CartPlayerWidget::CartPlayerWidget()
@@ -733,6 +842,11 @@ namespace OATS
        m_audio_view_widget->add_audio(audio, m_cart_id);
    }
 
+   void CartWidget::read_cart_items(QJsonArray& data)
+   {
+       m_audio_view_widget->read_cart_items(data);
+   }
+
    void CartWidget::move_item_up()
    {
        m_audio_view_widget->move_selected_item_up();
@@ -774,6 +888,16 @@ namespace OATS
    void CartWidget::diselect_all_signal_handler()
    {
        m_audio_view_widget->diselect_all_items();
+   }
+
+   void CartWidget::stop_all()
+   {
+       m_play_widget->stop_play();
+   }
+
+   void CartWidget::clear_all()
+   {
+       m_audio_view_controller_widget->clear_all();
    }
 
 

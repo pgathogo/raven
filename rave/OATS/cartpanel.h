@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QTableView>
 #include <QJsonArray>
+#include <QFile>
 
 #include "../audio/editor/audioplayer.h"
 #include "../audio/audiotool.h"
@@ -69,6 +70,9 @@ namespace OATS
         CartPanel();
     private slots:
         void save_cart_items(QString);
+        void read_cart_items(QByteArray&);
+        void stop_all();
+        void clear_all();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<PanelTopToolbar> m_top_toolbar;
@@ -86,8 +90,10 @@ namespace OATS
         PanelTopToolbar();
     signals:
         void save_cart_items(QString);
+        void read_cart_items(QByteArray&);
     private slots:
         void save_cart();
+        void open_cart_file();
     private:
         std::unique_ptr<QHBoxLayout> m_h_layout;
         std::unique_ptr<QPushButton> m_open_btn;
@@ -103,6 +109,12 @@ namespace OATS
         Q_OBJECT
     public:
         PanelBottomToolbar();
+    signals:
+        void stop_all();
+        void clear_all();
+    private slots:
+        void stop_all_clicked();
+        void clear_all_clicked();
     private:
         std::unique_ptr<QHBoxLayout> m_h_layout;
         std::unique_ptr<QPushButton> m_stop_all_btn;
@@ -160,6 +172,8 @@ namespace OATS
         void diselect_all_items();
         QJsonObject cart_item_to_json(std::unique_ptr<CartItem> const&);
         QJsonArray get_cart_items();
+        void read_cart_items(QJsonArray&);
+        void add_to_table_view(CartItem*);
     private slots:
          void table_view_clicked(const QModelIndex&);
     private:
@@ -184,6 +198,7 @@ namespace OATS
         Q_OBJECT
     public:
          AudioViewControllerWidget();
+         void clear_all();
     signals:
          void clear_items();
          void select_all();
@@ -210,11 +225,11 @@ namespace OATS
         void set_selected_items_duration(double);
         void count_down();
         CartStatus cart_status();
+        void stop_play();
     signals:
         void play_audio_request();
     private slots:
         void play_button_clicked();
-        void stop_play();
         void play_next();
         void end_of_play();
     private:
@@ -241,6 +256,9 @@ namespace OATS
     public:
         CartWidget(int);
         QJsonArray get_cart_items();
+        void read_cart_items(QJsonArray&);
+        void stop_all();
+        void clear_all();
     private slots:
         void cart_add_audio(AUDIO::Audio*);
         void move_item_up();

@@ -1,0 +1,48 @@
+{
+    "cartA": [
+        {
+            "cart_id": 1,
+            "duration": 7000,
+            "title": "Stereo Test",
+            "track_fullname": "D:/music/studio1/00000006.ogg",
+            "track_id": 6,
+            "track_path": "D:/music/studio1/"
+        },
+        {
+            "cart_id": 1,
+            "duration": 44000,
+            "title": "Sabuni Gaya",
+            "track_fullname": "D:/music/studio1/00000011.ogg",
+            "track_id": 11,
+            "track_path": "D:/music/studio1/"
+        }
+    ],
+    "cartB": [
+        {
+            "cart_id": 2,
+            "duration": 47000,
+            "title": "I Dont Want",
+            "track_fullname": "D:/music/studio1/00000076.ogg",
+            "track_id": 76,
+            "track_path": "D:/music/studio1/"
+        }
+    ],
+    "cartC": [
+        {
+            "cart_id": 3,
+            "duration": 25000,
+            "title": "Deceiver",
+            "track_fullname": "D:/music/studio1/00000077.ogg",
+            "track_id": 77,
+            "track_path": "D:/music/studio1/"
+        },
+        {
+            "cart_id": 3,
+            "duration": 47000,
+            "title": "Loose Control",
+            "track_fullname": "D:/music/studio1/00000079.ogg",
+            "track_id": 79,
+            "track_path": "D:/music/studio1/"
+        }
+    ]
+}
