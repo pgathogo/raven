@@ -47,7 +47,6 @@
 
 #include "../audio/trackbrowser.h"
 
-
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
 
@@ -56,7 +55,6 @@ using namespace std::chrono_literals;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-   // , m_taw{nullptr}
     , m_dtw{nullptr}
     , m_outputA{nullptr}
     , m_outputB{nullptr}
@@ -110,8 +108,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->vlCart->addWidget(m_cart_panel.get());
 
     start_timers();
-
-
 
     //QMainWindow::showFullScreen();
 }
@@ -774,12 +770,10 @@ void MainWindow::make_comm_viewer_widget()
 
 void MainWindow::make_track_info_widget()
 {
-
     m_track_info = std::make_unique<TrackInfo>(this);
     QVBoxLayout* vlTrackInfo = new QVBoxLayout();
     vlTrackInfo->addWidget(m_track_info.get());
     ui->pgTrackInfo->setLayout(vlTrackInfo);
-
 }
 
 void MainWindow::make_jingle_grid_widget()
@@ -787,6 +781,7 @@ void MainWindow::make_jingle_grid_widget()
     m_jingle_grid = std::make_unique<OATS::JingleGrid>();
     ui->vlJingle->addWidget(m_jingle_grid.get());
 }
+
 void MainWindow::display_schedule(int start_index)
 {
     for (int i=0; i < MAX_GRID_ITEMS; ++i){
@@ -841,7 +836,6 @@ void MainWindow::recompute_time(int from_pos)
         }
     }
 }
-
 
 
 void MainWindow::scroll_changed(int new_pos)
@@ -1549,8 +1543,9 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
 
 void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
-
     AUDIO::Audio* audio = m_track_browser->current_selected_audio();
+
+
 
     int index = index_of(schedule_ref);
     auto item_at_cursor = schedule_item(index);
@@ -1583,6 +1578,14 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     new_audio.set_artist(audio->artist()->displayName());
 
     new_item->set_audio(new_audio);
+
+    // check if audio exist
+    AUDIO::AudioTool at;
+    std::string filename = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+".ogg";
+    if (!at.audio_exist(QString::fromStdString(filename))){
+        new_item->set_item_status(OATS::ItemStatus::ERROR_01);
+        new_item->set_transition_type(OATS::TransitionType::SKIP);
+    }
 
     auto play_channel = [&](){
         auto prev_si = schedule_item(grid_pos-1);

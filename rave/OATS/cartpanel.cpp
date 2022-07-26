@@ -319,7 +319,7 @@ namespace OATS
 
      AudioViewWidget::AudioViewWidget()
          :m_v_layout{nullptr}
-         , m_table_view{nullptr}
+         ,m_table_view{nullptr}
          ,m_model{nullptr}
      {
          m_table_view = std::make_unique<QTableView>();
@@ -333,6 +333,8 @@ namespace OATS
          m_table_view->verticalHeader()->setVisible(false);
          m_table_view->setSelectionBehavior(QAbstractItemView::SelectRows);
          m_table_view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+//         m_table_view->model()->setData();
 
          connect(m_table_view.get(), &QTableView::clicked, this, &AudioViewWidget::table_view_clicked);
 
@@ -373,9 +375,11 @@ namespace OATS
      {
          m_model->setHorizontalHeaderItem(0, new QStandardItem("Title"));
          m_model->setHorizontalHeaderItem(1, new QStandardItem("Duration"));
+         m_model->setHorizontalHeaderItem(2, new QStandardItem(""));
 
          m_table_view->setColumnWidth(0, 280);
          m_table_view->setColumnWidth(1, 80);
+         m_table_view->setColumnWidth(2, 20);
      }
 
      void AudioViewWidget::add_audio(AUDIO::Audio* audio, int cart_id)

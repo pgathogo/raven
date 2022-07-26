@@ -6,7 +6,7 @@
 template<typename T>
 class ChoiceField;
 
-class Client : public BaseEntity::Registrar<Client>
+class Client : public BaseEntity //::Registrar<Client>
 {
 public:
     Client();

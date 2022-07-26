@@ -27,7 +27,7 @@ using StringMap = std::map<std::string, std::string>;
 using FieldValues = std::vector<std::tuple<Field*, std::string>>;
 
 
-class BaseEntity : public Factory<BaseEntity, int>
+class BaseEntity  : public Factory<BaseEntity, int>
 {
 public:
     BaseEntity();

@@ -33,6 +33,8 @@ namespace OATS{
         std::unique_ptr<QAction> m_act_stop;
         std::unique_ptr<QAction> m_act_mix;
         std::unique_ptr<QAction> m_act_cut;
+
+        ScheduleItem* m_schedule_item;
     };
 }
 

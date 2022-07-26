@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
+#set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
 project(Traffik VERSION 0.1 LANGUAGES CXX)
 
@@ -10,8 +10,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(rave_framework_INCLUDE_DIRS "../framework")
@@ -29,6 +28,9 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
+
+#set(CMAKE_EXE_LINKER_FLAGS "-static")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 
 #set(LIMEREPORT_INCLUDE_DIR "../lib/limerport/include")
@@ -329,9 +331,11 @@ set(PROJECT_SOURCES
     ../utils/daypartgrid.cpp
     ../utils/daypartgrid.ui
     ../utils/qchecklist.h
+    ../utils/tools.h
 
 
 )
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Traffik
@@ -350,6 +354,21 @@ else()
     endif()
 endif()
 
+if (MSVC)
+    target_compile_options(Traffik PRIVATE "/W0")
+    target_compile_options(Traffik PUBLIC "/wd4716")
+    target_compile_options(Traffik PUBLIC "/Zc:__cplusplus")
+    target_compile_options(Traffik PUBLIC "/EHsc")
+ else()
+     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
+ endif()
+
+#target_link_libraries(Traffik PRIVATE dbghelp.dll)
+
+#set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
+#target_link_libraries(Traffik PRIVATE -static-libstdc++)
+#target_compile_options(Traffik PRIVATE /MT)
+target_link_options(Traffik PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
 target_link_libraries(Traffik PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Traffik PRIVATE ${PostgreSQL_LIBRARIES})
@@ -384,6 +403,12 @@ if (BASS_LIBRARY)
 endif()
 target_link_directories(Traffik PRIVATE ${BASS_LIBRARY_DIR})
 target_link_libraries(Traffik PRIVATE ${BASS_LIBRARY})
+
+find_library(DbgHelp_LIBRARY dbghelp ".")
+if (DbgHelp_LIBRARY)
+    message(STATUS "DbgHelp library found")
+endif()
+target_link_libraries(Traffik PRIVATE ${DbgHelp_LIBRARY})
 
 set_target_properties(Traffik PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

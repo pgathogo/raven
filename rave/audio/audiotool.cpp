@@ -309,6 +309,12 @@ namespace AUDIO
         return msec.time_since_epoch().count();
     }
 
+    bool AudioTool::audio_exist(const QString audio_file)
+    {
+        QFile af(audio_file);
+        return (af.exists()) ? true : false;
+    }
+
     //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
     //{
     //    auto ogg_file = generate_ogg_filename(audio->id())+".ogg";

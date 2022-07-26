@@ -20,8 +20,10 @@ namespace AUDIO
         ,m_mp3_filename{mp3_file}
     {
         m_converter_process = new QProcess(this);
-        connect(m_converter_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Mp3ToOggConverter::conversion_finished);
-        connect(m_converter_process, QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
+        //connect(m_converter_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Mp3ToOggConverter::conversion_finished);
+        connect(m_converter_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(conversion_finished(int, QProcess::ExitStatus)));
+        //connect(m_converter_process, &QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
+        connect(m_converter_process, SIGNAL(errorOccured(QProcess::ProcessError)),this, SLOT(conversion_error(QProcess::ProcessError)));
     }
 
     Mp3ToOggConverter::~Mp3ToOggConverter()

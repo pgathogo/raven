@@ -42,5 +42,7 @@ namespace OATS{
         std::unique_ptr<QAction> m_act_move_down;
         std::unique_ptr<QAction> m_act_make_current;
         std::unique_ptr<QAction> m_act_delete_item;
+
+        OATS::ScheduleItem* m_schedule_item;
     };
 }

@@ -67,7 +67,9 @@ void SpotTypeExclusion::setDetailEntity(BaseEntity *other)
 
 std::unique_ptr<BaseEntity> SpotTypeExclusion::mapFields(StringMap*)
 {
+    return nullptr;
 }
+
 
 std::vector<std::string> SpotTypeExclusion::tableViewColumns() const
 {

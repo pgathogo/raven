@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include <QGridLayout>
 #include <QButtonGroup>
 #include <QAction>
@@ -8,10 +10,17 @@
 #include <QJsonDocument>
 #include <QGraphicsColorizeEffect>
 #include <QPropertyAnimation>
+#include <QProgressBar>
+#include <QTimer>
+
+#include <QVBoxLayout>
+#include <QPalette>
 
 #include "jinglegrid.h"
 #include "../audio/trackbrowser.h"
 #include "../audio/trackpickerdialog.h"
+
+using namespace std::chrono_literals;
 
 namespace OATS
 {
@@ -108,12 +117,26 @@ namespace OATS
         m_track_path = t_path;
     }
 
+    int Jingle::track_duration()
+    {
+        return m_track_duration;
+    }
 
-    /* --------------------------------------------- */
+    void Jingle::set_track_duration(int duration)
+    {
+        m_track_duration = duration;
+    }
+
+
+    /* ---------------- GridButton ----------------------------- */
+
     GridButton::GridButton(int id)
         :m_id{id}
         ,m_jingle{nullptr}
+        ,m_count_down_timer{nullptr}
     {
+        m_count_down_timer = std::make_unique<QTimer>(this);
+        connect(m_count_down_timer.get(), &QTimer::timeout, this, &GridButton::count_down);
     }
 
     GridButton::GridButton(int id, Jingle* const jingle)
@@ -141,6 +164,38 @@ namespace OATS
         }else{
             setText(m_jingle->title());
         }
+    }
+
+    void GridButton::start_countdown_timer()
+    {
+      auto COUNT_DOWN_INTERVAL = 50ms;
+      m_start_tick_count = m_audio_tool.get_tick_count();
+      m_count_down_timer->start(COUNT_DOWN_INTERVAL);
+    }
+
+    void GridButton::count_down()
+    {
+        auto trigger_tick = m_audio_tool.get_tick_count();
+        int elapsed = trigger_tick - m_start_tick_count;
+        int remaining = m_jingle->track_duration() - elapsed;
+
+        auto progress_value = (100 - round((float)remaining/m_jingle->track_duration() * 100));
+        m_color_value = progress_value / 100;
+
+        setStyleSheet(QString("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+                                               "stop:0 rgba(230, 103, 192, 255), stop:%1 rgba(230, 103, 192, 255),"
+                                               "stop:%2 rgba(79, 179, 228, 255), stop:1 rgba(79, 179, 228, 255));")
+                                                .arg(m_color_value-0.01f)
+                                                .arg(m_color_value));
+        if ( (progress_value >= 100) || (m_color_value >= 1.0f)){
+            m_count_down_timer->stop();
+        }
+
+    }
+
+    void GridButton::stop_countdown_timer()
+    {
+        m_count_down_timer->stop();
     }
 
     /* ----------------------------------------------- */
@@ -287,6 +342,7 @@ namespace OATS
 
     void JingleGrid::open_load_dialog(int row, int col)
     {
+        /*
         QGraphicsColorizeEffect* effect = new QGraphicsColorizeEffect(m_grid_buttons[row][col].get());
         m_grid_buttons[row][col]->setGraphicsEffect(effect);
         QPropertyAnimation* p_animation = new QPropertyAnimation(effect, "color");
@@ -295,6 +351,7 @@ namespace OATS
         p_animation->setLoopCount(-1);
         p_animation->setDuration(2000);
         p_animation->start();
+        */
 
         m_current_grid_cell.row = row;
         m_current_grid_cell.col = col;
@@ -304,7 +361,7 @@ namespace OATS
         m_track_picker_dialog->exec();
 
         m_load_action = nullptr;
-        p_animation->stop();
+        //p_animation->stop();
     }
 
     void JingleGrid::clear_jingle(int row, int col)
@@ -319,6 +376,9 @@ namespace OATS
 
         if (m_grid_buttons[row][col]->jingle() == nullptr){
             auto jingle = std::make_unique<Jingle>(current_page(), row, col, QString::fromStdString(audio->title()->value()));
+            jingle->set_track_path(QString::fromStdString(audio->audio_lib_path()->value()));
+            jingle->set_track_duration(audio->duration()->value());
+
             m_grid_buttons[row][col]->set_jingle(jingle.get());
             m_jingles.push_back(std::move(jingle));
             return;
@@ -333,6 +393,8 @@ namespace OATS
 
        if(it != m_jingles.end()){
             (*it)->set_title(QString::fromStdString(audio->title()->value()));
+            (*it)->set_track_path(QString::fromStdString(audio->audio_lib_path()->value()));
+            (*it)->set_track_duration(audio->duration()->value());
             m_grid_buttons[row][col]->set_jingle((*it).get());
        }
 
@@ -344,6 +406,13 @@ namespace OATS
             return;
 
         auto jingle = m_grid_buttons[row][col]->jingle()->title();
+
+        qDebug() << jingle;
+        qDebug() << m_grid_buttons[row][col]->jingle()->track_path();
+        qDebug() << m_grid_buttons[row][col]->jingle()->track_duration();
+
+        m_grid_buttons[row][col]->start_countdown_timer();
+
         emit play_jingle(jingle);
     }
 
@@ -508,6 +577,7 @@ namespace OATS
          jingle->set_title(obj["title"].toString());
          jingle->set_track_id(obj["track_id"].toInt());
          jingle->set_track_path(obj["track_path"].toString());
+         jingle->set_track_duration(obj["duration"].toInt());
 
          m_jingles.push_back(std::move(jingle));
       }
@@ -525,6 +595,7 @@ namespace OATS
      json["title"] = jingle->title();
      json["track_id"] = jingle->track_id();
      json["track_path"] = jingle->track_path();
+     json["duration"] = jingle->track_duration();
 
      return json;
   }

@@ -140,6 +140,7 @@ namespace TRAFFIK{
 
     std::unique_ptr<BaseEntity> SpotAudio::mapFields(StringMap *raw_entity)
     {
+        return nullptr;
     }
 
     std::vector<std::string> SpotAudio::tableViewColumns() const

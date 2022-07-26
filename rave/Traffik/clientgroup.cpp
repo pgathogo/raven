@@ -135,7 +135,9 @@ void ClientGroup::afterMapping(BaseEntity &entity)
 
 }
 
+/*
 std::string ClientGroup::className()
 {
-    return  demangle(typeid(this).name());
+    return  rave_demangler(typeid(this).name());
 }
+*/

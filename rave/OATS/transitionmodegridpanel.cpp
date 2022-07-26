@@ -39,6 +39,8 @@ namespace OATS{
 
     void TransitionModeGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
+        m_schedule_item = schedule_item;
+
         m_transition_label->setText(QString::fromStdString(schedule_item->transition_type_text()));
         setStyleSheet("background-color: #222222;");
 
@@ -53,14 +55,25 @@ namespace OATS{
         if (schedule_item->transition_type() == OATS::TransitionType::CUT){
             setStyleSheet("background-color: rgb(220, 135, 40)");
         }
+
+        if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
+            setStyleSheet("background-color: #fb1d04");
+            m_transition_label->setText("SKIP");
+        }
     }
 
     void TransitionModeGridPanel::contextMenuEvent(QContextMenuEvent* event)
     {
-        QMenu menu(this);
+        QMenu menu;
         m_act_stop = std::make_unique<QAction>("Stop");
         m_act_mix = std::make_unique<QAction>("Mix");
         m_act_cut = std::make_unique<QAction>("Cut");
+
+        if (m_schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
+            m_act_stop->setEnabled(false);
+            m_act_mix->setEnabled(false);
+            m_act_cut->setEnabled(false);
+        }
 
         connect(m_act_stop.get(), &QAction::triggered, this, &OATS::TransitionModeGridPanel::tran_mode_stop);
         connect(m_act_mix.get(), &QAction::triggered, this, &OATS::TransitionModeGridPanel::tran_mode_mix);

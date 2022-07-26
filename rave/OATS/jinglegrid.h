@@ -7,12 +7,16 @@
 #include <QLabel>
 #include <QMenu>
 
+#include "../audio/audiotool.h"
+
 class QGridLayout;
 class QVBoxLayout;
 class QHBoxLayout;
 class QAction;
 class QJsonDocument;
 class QJsonObject;
+class QProgressBar;
+class QTimer;
 
 namespace AUDIO{
     class TrackPickerDialog;
@@ -44,6 +48,9 @@ namespace OATS
       void set_track_id(int);
       QString track_path();
       void set_track_path(QString);
+
+      int track_duration();
+      void set_track_duration(int);
     private:
         QString m_jingle_id{""};
         int m_grid_page_id{-1};
@@ -53,21 +60,31 @@ namespace OATS
 
         int m_track_id{-1};
         QString m_track_path;
+        int m_track_duration;
     };
 
     /* GridButton */
 
     class GridButton : public QPushButton
     {
+        Q_OBJECT
     public:
         GridButton(int id);
         GridButton(int id, Jingle* const jingle);
         ~GridButton();
         void set_jingle(Jingle* const jingle);
         Jingle* jingle();
+        void start_countdown_timer();
+        void stop_countdown_timer();
+    private slots:
+        void count_down();
     private:
         int m_id{-1};
         Jingle* m_jingle;
+        std::unique_ptr<QTimer> m_count_down_timer;
+        long long m_start_tick_count;
+        AUDIO::AudioTool m_audio_tool;
+        float m_color_value{0.0f};
     };
 
     /* JingleGrid */

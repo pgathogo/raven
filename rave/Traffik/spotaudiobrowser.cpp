@@ -131,7 +131,7 @@ AUDIO::Audio* SpotAudioBrowser::audio_from_selection()
 
 std::string SpotAudioBrowser::get_audio_file(AUDIO::Audio* audio)
 {
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto filename = at.make_audio_filename(audio->id());
 
     auto audio_file = audio->file_path()->value()+filename+".ogg";
@@ -168,7 +168,7 @@ TRAFFIK::SpotAudio& SpotAudioBrowser::get_spot_audio() const
 
 void SpotAudioBrowser::import_audio()
 {
-    AudioTool audio_tool;
+    AUDIO::AudioTool audio_tool;
 
     auto audio_filename = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), QDir::currentPath(),
@@ -183,7 +183,7 @@ void SpotAudioBrowser::import_audio()
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
     if (fs::exists(audio->audio_file().adf_file()) ){
-        ADFRepository adf_repo;
+        AUDIO::ADFRepository adf_repo;
         CueMarker cue_marker =  adf_repo.read_markers(audio->audio_file().adf_file());
         audio->audio_file().set_marker(cue_marker);
     }

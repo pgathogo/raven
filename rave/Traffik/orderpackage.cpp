@@ -57,11 +57,12 @@ void OrderPackage::setTableName(const std::string table_name)
 
 std::unique_ptr<BaseEntity> OrderPackage::mapFields(StringMap*)
 {
+    return nullptr;
 }
 
 std::vector<std::string> OrderPackage::tableViewColumns() const
 {
-    tableViewCols<std::string>(name()->displayName());
+    return tableViewCols<std::string>(name()->displayName());
 }
 
 std::vector<std::string> OrderPackage::tableViewValues()

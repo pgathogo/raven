@@ -73,6 +73,8 @@ std::unique_ptr<BaseEntity> VoiceOver::mapFields(StringMap* e)
     vo->voiceEx().setParentId(vo->id());
     return std::move(vo);
     */
+    return nullptr;
+
 }
 
 std::vector<std::string> VoiceOver::tableViewColumns() const

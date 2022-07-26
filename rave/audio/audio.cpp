@@ -44,6 +44,7 @@ namespace AUDIO {
     std::unique_ptr<BaseEntity> Genre::mapFields(StringMap *raw_entity)
     {
 
+        return nullptr;
     }
 
     std::vector<std::string> Genre::tableViewColumns() const
@@ -594,7 +595,7 @@ namespace AUDIO {
 
     std::unique_ptr<BaseEntity> Audio::mapFields(StringMap *raw_entity)
     {
-
+        return nullptr;
     }
 
     std::vector<std::string> Audio::tableViewColumns() const
@@ -685,6 +686,7 @@ namespace AUDIO {
 
     std::unique_ptr<BaseEntity> Folder::mapFields(StringMap *raw_entity)
     {
+        return nullptr;
     }
 
     std::vector<std::string> Folder::tableViewColumns() const
@@ -724,6 +726,7 @@ namespace AUDIO {
 
     ActionResult Folder::validate()
     {
+        return ActionResult();
 
     }
 
@@ -837,6 +840,7 @@ namespace AUDIO {
 
     std::unique_ptr<BaseEntity> Mood::mapFields(StringMap *raw_entity)
     {
+        return nullptr;
 
     }
 
@@ -877,6 +881,7 @@ namespace AUDIO {
 
     ActionResult Mood::validate()
     {
+        return ActionResult();
 
     }
 

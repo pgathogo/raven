@@ -306,6 +306,7 @@ void RavenSetup::setTableName(const std::string table_name)
 
 std::unique_ptr<BaseEntity> RavenSetup::mapFields(StringMap*)
 {
+    return nullptr;
 }
 
 std::vector<std::string> RavenSetup::tableViewColumns() const

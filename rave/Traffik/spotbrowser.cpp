@@ -185,7 +185,7 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
         if (s_audio->dbAction() == DBAction::dbaCREATE){
 
-            AudioTool at;
+            AUDIO::AudioTool at;
 
             auto& audio = s_audio->get_paudio();
 
@@ -230,7 +230,7 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             printstr("222");
 
             // Write ADF file
-            ADFRepository adf_repo;
+            AUDIO::ADFRepository adf_repo;
             auto audio_file = audio.audio_file();
             audio_file.set_adf_file(lib_path+ogg_file+ADF_EXT);
             audio_file.set_ogg_filename(ogg_file);

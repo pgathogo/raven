@@ -9,8 +9,8 @@
 namespace OATS{
 
     enum class ScheduleType{SONG, COMM, JINGLE, DROP, COMM_AUDIO, HOUR_HEADER, NEWS_BITE};
-    enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP};
-    enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO};
+    enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, ERROR_01};
+    enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
 
     class Audio{
     public:

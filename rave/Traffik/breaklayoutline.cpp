@@ -108,6 +108,7 @@ void BreakLayoutLine::setTableName(const std::string table_name)
 
 std::unique_ptr<BaseEntity> BreakLayoutLine::mapFields(StringMap *raw_entity)
 {
+    return nullptr;
 }
 
 std::vector<std::string> BreakLayoutLine::tableViewColumns() const

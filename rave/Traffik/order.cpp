@@ -488,6 +488,7 @@ void Order::setTableName(const std::string table_name)
 
 std::unique_ptr<BaseEntity> Order::mapFields(StringMap *raw_entity)
 {
+    return nullptr;
 }
 
 std::vector<std::string> Order::tableViewColumns() const

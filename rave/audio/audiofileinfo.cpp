@@ -18,7 +18,9 @@ namespace AUDIO{
         ,m_probed{false}
     {
         m_probe_process = new QProcess(this);
-        connect(m_probe_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, AudioFileInfo::file_probe_finished);
+        //connect(m_probe_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &AudioFileInfo::file_probe_finished);
+
+        connect(m_probe_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(file_probe_finished(int, QProcess::ExitStatus)));
     }
 
     AudioFileInfo::~AudioFileInfo()

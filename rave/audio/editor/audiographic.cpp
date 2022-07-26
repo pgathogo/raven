@@ -655,7 +655,7 @@ namespace AUDIO{
     void MarkerDisplayUnit::update(Subject *changed_subject, double time)
     {
         if (m_display_unit != nullptr){
-            AudioTool at;
+            AUDIO::AudioTool at;
             auto du = dynamic_cast<QLabel*>(m_display_unit);
             du->setText(at.format_time(time));
         }

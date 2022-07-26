@@ -329,7 +329,7 @@ namespace AUDIO {
 
     void AudioWaveForm::show_marker_value(CueMarker cue_marker)
     {
-        AudioTool at;
+        AUDIO::AudioTool at;
        ui->lblStartMarkTime->setText(at.format_time(cue_marker.start_marker));
        //ui->lblStartMarkTime->setText(QString::fromStdString(std::to_string(marker.start_marker)));
        //ui->lblFadeInMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_in)));
@@ -425,7 +425,7 @@ namespace AUDIO {
 
     void AudioWaveForm::init_widgets()
     {
-        AudioTool at;
+        AUDIO::AudioTool at;
         setWindowTitle("Cue Editor: "+QString::fromStdString(base_filename(m_audio_file.audio_file())));
         ui->lblTitle->setText(QString::fromStdString(m_audio_file.audio_title()));
         ui->lblArtist->setText(QString::fromStdString(m_audio_file.artist_name()));

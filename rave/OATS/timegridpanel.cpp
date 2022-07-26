@@ -66,6 +66,11 @@ namespace OATS{
             QTime t = schedule_item->schedule_time();
             set_label(t.toString("HH:mm:ss"));
         }
+
+
+        if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
+        }
+
     }
 
     QVBoxLayout* TimeGridPanel::main_layout()

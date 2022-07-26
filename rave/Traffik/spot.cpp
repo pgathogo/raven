@@ -141,6 +141,7 @@ namespace TRAFFIK {
 
     std::unique_ptr<BaseEntity> Spot::mapFields(StringMap*)
     {
+        return nullptr;
     }
 
     std::vector<std::string> Spot::tableViewColumns() const

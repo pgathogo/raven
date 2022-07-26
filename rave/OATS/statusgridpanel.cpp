@@ -71,6 +71,11 @@ namespace OATS{
         if (schedule_item->item_status() == OATS::ItemStatus::PLAYING){
             setStyleSheet("background-color: rgb(78, 207, 42)");
         }
+
+        if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
+            setStyleSheet("background-color: #fb1d04");
+            m_status2->setText("");
+        }
     }
 
 

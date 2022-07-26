@@ -12,6 +12,7 @@ namespace OATS{
 
     TrackGridPanel::TrackGridPanel(QWidget* parent)
         :GridPanel(parent)
+        ,m_schedule_item{nullptr}
     {
         constexpr static int COLUMN_0 = 0;
         constexpr static int COLUMN_1 = 1;
@@ -59,12 +60,17 @@ namespace OATS{
 
     void TrackGridPanel::contextMenuEvent(QContextMenuEvent* event)
     {
-        QMenu menu(this);
+        QMenu menu;
 
         m_act_move_up = std::make_unique<QAction>("Move Up");
         m_act_move_down = std::make_unique<QAction>("Move Down");
         m_act_make_current = std::make_unique<QAction>("Make Current");
+
+        if (m_schedule_item->item_status() == OATS::ItemStatus::ERROR_01)
+            m_act_make_current->setEnabled(false);
+
         m_act_delete_item = std::make_unique<QAction>("Delete Item");
+
 
         connect(m_act_move_up.get(), &QAction::triggered, this, &TrackGridPanel::move_up);
         connect(m_act_move_down.get(), &QAction::triggered, this, &TrackGridPanel::move_down);
@@ -110,6 +116,8 @@ namespace OATS{
 
     void TrackGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
+        m_schedule_item = schedule_item;
+
         m_track_label->setText(QString::fromStdString(schedule_item->audio().title()));
         m_artist_label->setText(QString::fromStdString(schedule_item->audio().artist()));
 
@@ -117,7 +125,7 @@ namespace OATS{
 
         m_duration_label->setText(t.toString("mm:ss"));
 
-        setStyleSheet("background-color: #FF6666;");
+        setStyleSheet("background-color: #636160;");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
             m_duration_label->setText("");
@@ -126,6 +134,11 @@ namespace OATS{
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::SONG){
             setStyleSheet("background-color: #E0E0E0");
+        }
+
+        if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
+            setStyleSheet("background-color: #fb1d04");
+            m_artist_label->setText(m_artist_label->text()+": ERROR - FILE NOT FOUND");
         }
 
     }

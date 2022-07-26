@@ -10,7 +10,7 @@ class Field;
 class IntegerField;
 class TextField;
 
-class ClientGroup : public BaseEntity::Registrar<ClientGroup>
+class ClientGroup : public BaseEntity //::Registrar<ClientGroup>
 {
 public:
     ClientGroup();
@@ -40,7 +40,7 @@ public:
     std::unique_ptr<BaseEntity> cloneAsUnique() override;
     void afterMapping(BaseEntity& entity) override;
 
-    std::string className() override;
+//    std::string className() override;
 
 
 private:

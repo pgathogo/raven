@@ -35,6 +35,7 @@ namespace AUDIO
         QJsonObject get_probe_data(QString&);
 
         long long get_tick_count();
+        bool audio_exist(const QString);
 
     private slots:
         void wave_gen_finished();

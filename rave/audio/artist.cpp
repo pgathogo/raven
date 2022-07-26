@@ -122,6 +122,7 @@ namespace AUDIO{
 
     std::unique_ptr<BaseEntity> Artist::mapFields(StringMap *raw_entity)
     {
+        return nullptr;
     }
 
     std::vector<std::string> Artist::tableViewColumns() const

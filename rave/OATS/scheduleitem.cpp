@@ -273,6 +273,8 @@ namespace OATS {
             return OATS::ItemStatus::PLAYED;
         if (s_status == "STOP")
             return OATS::ItemStatus::STOP;
+        if (s_status == "ERROR_01")
+            return OATS::ItemStatus::ERROR_01;
 
         return OATS::ItemStatus::WAITING;
     }
@@ -349,6 +351,9 @@ namespace OATS {
         case OATS::ItemStatus::STOP:
             return "STOP";
             break;
+        case OATS::ItemStatus::ERROR_01:
+            return "ERROR_01";
+            break;
         default:
             return "WAITING";
         }
@@ -358,7 +363,7 @@ namespace OATS {
 
     std::string ScheduleItem::transition_type_text()
     {
-    enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO};
+    enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
         switch (transition_type())
         {
         case OATS::TransitionType::NONE:
@@ -372,6 +377,9 @@ namespace OATS {
             break;
         case OATS::TransitionType::CUT:
             return "CUT";
+            break;
+        case OATS::TransitionType::SKIP:
+            return "SKIP";
             break;
         default:
             return "OTHERS";

@@ -65,6 +65,7 @@ void SpotVoiceOver::setDetailEntity(BaseEntity *other)
 
 std::unique_ptr<BaseEntity> SpotVoiceOver::mapFields(StringMap*)
 {
+    return nullptr;
 }
 
 std::vector<std::string> SpotVoiceOver::tableViewColumns() const

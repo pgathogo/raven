@@ -1,6 +1,9 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include <Windows.h>
+#include <DbgHelp.h>
+
 #include <string>
 #include <random>
 #include <sstream>
@@ -11,7 +14,15 @@
 #include <QDebug>
 
 #include <cstdlib>
+
+#if defined(__GNUC__) || defined(__GNUG__)
 #include <cxxabi.h>
+#endif
+
+//#pragma comment(lib, "DbgHelp.Lib")
+
+//extern char *__unDName(char*, const char*, int, void*, void*, int);
+
 
 inline QString stoq(std::string s)
 {
@@ -90,6 +101,8 @@ inline std::tuple<int, int, int> ymd(const std::string date_str)
         return std::make_tuple(std::atoi(yr), std::atoi(mth),
                                std::atoi(day));
 }
+
+#if defined(__GNUC__) || defined(__GNUG__)
 inline std::string demangle(const char* name){
     int status = 4; // some abitrary value to eliminate the compiler warning
 
@@ -98,6 +111,21 @@ inline std::string demangle(const char* name){
 
     return (status == 0) ? res.get() : name ;
 }
+#endif
+
+#if defined(_MSC_VER)
+inline std::string demangle(const char* name){
+    //const char *decorated_name = 0;
+    char undecorated_name[1024];
+    //__unDName(undecorated_name, name+1, 1024, malloc, free, 0x2800);
+    UnDecorateSymbolName(name, undecorated_name, sizeof(name)/sizeof(*name), UNDNAME_COMPLETE);
+
+    std::string formatted_str = undecorated_name;
+    return formatted_str;
+
+}
+#endif
+
 
 namespace uuid {
     static std::random_device              rd;
