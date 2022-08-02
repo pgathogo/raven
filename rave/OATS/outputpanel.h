@@ -16,7 +16,7 @@ namespace OATS{
 
     class ScheduleItem;
 
-    enum class PanelStatus{WAITING, CUED, PLAYING, STOP};
+    enum class PanelStatus{WAITING, CUED, PLAYING, PLAYED, STOP};
     enum class ButtonFlashColor{NONE, GREEN, ORANGE, RED};
     enum class ProgressBarBGColor{RED, BLUE, GREEN};
 

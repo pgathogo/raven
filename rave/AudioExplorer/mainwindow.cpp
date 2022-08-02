@@ -926,7 +926,7 @@ void MainWindow::import_audio()
     audio->set_folder(folder_id);
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
-    auto audio_form = std::make_unique<AudioForm>(audio.get());
+    auto audio_form = std::make_unique<AudioForm>(audio.get(), m_setup);
     if (audio_form->exec() > 0)
     {
 
@@ -1001,7 +1001,7 @@ int MainWindow::write_audio_to_db(std::unique_ptr<AUDIO::Audio> audio)
 
 bool MainWindow::copy_new_audio_to_library(int audio_id)
 {
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto audio_filename = at.make_audio_filename(audio_id);
     auto new_audio_file = m_setup->audio_folder()->value()+audio_filename+".ogg";
     auto src_audio_path = fs::path(m_audio_converter->ogg_filename().toStdString());
@@ -1019,7 +1019,7 @@ bool MainWindow::copy_new_audio_to_library(int audio_id)
 
 bool MainWindow::copy_wave_file_to_library(int audio_id)
 {
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto audio_filename = at.make_audio_filename(audio_id);
 
     auto new_audio_wave_file = m_setup->audio_folder()->value()+audio_filename+".png";
@@ -1038,7 +1038,7 @@ bool MainWindow::copy_wave_file_to_library(int audio_id)
 
 bool MainWindow::create_adf_file(int audio_id, AudioFile af)
 {
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto audio_filename = at.make_audio_filename(audio_id);
 
     auto adf_filename = m_setup->audio_folder()->value()+audio_filename+".adf";
@@ -1046,7 +1046,7 @@ bool MainWindow::create_adf_file(int audio_id, AudioFile af)
     af.set_audio_lib_path(m_setup->audio_folder()->value());
     af.set_ogg_short_filename(audio_filename+".ogg");
 
-    ADFRepository adf_repo;
+    AUDIO::ADFRepository adf_repo;
     adf_repo.write(af);
 }
 
@@ -1062,7 +1062,7 @@ void MainWindow::audio_properties()
 
     AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be);
 
-    std::unique_ptr<AudioForm> audio_form = std::make_unique<AudioForm>(audio);
+    std::unique_ptr<AudioForm> audio_form = std::make_unique<AudioForm>(audio, m_setup);
     if (audio_form->exec() > 0){
         try{
                 update_table_view_record(ui->tvTracks, audio->tableViewValues());
@@ -1100,7 +1100,7 @@ void MainWindow::play_audio()
     if (audio == nullptr)
         return;
 
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto ogg_file = at.make_audio_filename(audio->id())+".ogg";
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
 
@@ -1151,7 +1151,7 @@ void MainWindow::cue_edit()
     if (audio == nullptr)
         return;
 
-    AudioTool at;
+    AUDIO::AudioTool at;
     auto ogg_file = at.make_audio_filename(audio->id())+".ogg";
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
     AudioFile aud_file(full_audio_name);

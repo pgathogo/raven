@@ -161,6 +161,9 @@ namespace OATS{
          case OATS::PanelStatus::PLAYING:
             text = "PLAYING";
             break;
+         case OATS::PanelStatus::PLAYED:
+            text = "PLAYED";
+            break;
          case OATS::PanelStatus::STOP:
             text = "STOP";
             break;

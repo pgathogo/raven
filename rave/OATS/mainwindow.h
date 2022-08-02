@@ -133,6 +133,7 @@ public:
     History make_history(int);
 
     void start_timers();
+    void print(QString);
 
 private slots:
     void close_win();
@@ -147,7 +148,7 @@ private slots:
 
     void item_move_up(int, int);
     void item_move_down(int, int);
-    void make_item_current(int);
+    void make_item_current(int, int);
     void grid_clicked(int, int);
     void delete_schedule_item(int, int);
 
@@ -177,6 +178,7 @@ private:
     std::vector<std::unique_ptr<OATS::ScheduleGridItem>> m_schedule_grid;
 
     CurrentPlayItem m_current_playing_item;
+    OATS::ScheduleItem* m_current_cued_item;
 
     OATS::OutputPanel* m_outputA;
     OATS::OutputPanel* m_outputB;

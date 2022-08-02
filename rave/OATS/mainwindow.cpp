@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_dtw{nullptr}
     , m_outputA{nullptr}
     , m_outputB{nullptr}
+    , m_current_cued_item{nullptr}
 {
 
     ui->setupUi(this);
@@ -784,11 +785,19 @@ void MainWindow::make_jingle_grid_widget()
 
 void MainWindow::display_schedule(int start_index)
 {
+    auto schedule = schedule_item(start_index);
+    auto ch = schedule->play_channel();
+
     for (int i=0; i < MAX_GRID_ITEMS; ++i){
         int schedule_index = i+start_index;
         if (schedule_index >= m_schedule_items.size())
             break;
+
         auto schedule = schedule_item(schedule_index);
+
+        //schedule->set_play_channel(play_channel(schedule_index));
+        schedule->set_play_channel(ch);
+        ch = (ch == ChannelA) ? ChannelB : ChannelA;
 
         m_schedule_grid[i]->set_subject(schedule);
     }
@@ -796,10 +805,29 @@ void MainWindow::display_schedule(int start_index)
 
 void MainWindow::push_items_down(int from_pos)
 {
+    auto play_channel = [&](){
+        auto prev_si = schedule_item(from_pos);
+        if (prev_si == nullptr)
+            return "A";
+
+        if (prev_si->play_channel() == "A")
+            return "B";
+
+        if (prev_si->play_channel() == "B")
+            return "A";
+
+        return "A";
+    };
+
+    auto ch = (play_channel() == ChannelA) ? ChannelB : ChannelA;
+
     for (int i=from_pos+1; i< MAX_GRID_ITEMS; ++i){
         auto schedule = schedule_item(i-1);
-        if (schedule != nullptr)
-            m_schedule_grid[i]->set_subject(schedule);
+        if (schedule != nullptr){
+           schedule->set_play_channel(ch);
+           m_schedule_grid[i]->set_subject(schedule);
+           ch = (ch == ChannelA) ? ChannelB : ChannelA;
+        }
     }
 }
 
@@ -888,7 +916,7 @@ void MainWindow::set_current_play_item()
         m_current_playing_item.schedule_index = s_item->index();
         m_current_playing_item.grid_index = 0;
 
-        make_item_current(s_item->schedule_ref());
+        make_item_current(s_item->schedule_ref(), m_current_playing_item.grid_index);
     }
 }
 
@@ -1054,6 +1082,11 @@ void MainWindow::count_down()
         }
     }
     break;
+
+    case OATS::PanelStatus::STOP:
+        calculate_trigger_times();
+        break;
+
     }
 
     // Output B
@@ -1064,6 +1097,7 @@ void MainWindow::count_down()
      case OATS::PanelStatus::CUED:
         break;
      case OATS::PanelStatus::PLAYING:
+      {
         long long elapsed = trigger_ticker - m_outputB->start_tick_stamp();
         long long remaining = m_outputB->schedule_item()->audio().duration() - elapsed;
 
@@ -1122,6 +1156,12 @@ void MainWindow::count_down()
                                       ) * 100 ) );
 
         }
+      }
+      break;
+    case OATS::PanelStatus::STOP:
+        calculate_trigger_times();
+        break;
+
     }
 
 }
@@ -1151,6 +1191,7 @@ void MainWindow::status_timer()
         }
         // Do some outputC stuff
         break;
+
     case OATS::PanelStatus::PLAYING:
             //fade_audio(m_outputA);
           if (m_outputA->start_tick_stamp() > 0){
@@ -1159,7 +1200,6 @@ void MainWindow::status_timer()
 
             remaining = m_outputA->schedule_item()->audio().duration() - elapsed;
             m_outputA->set_time_remaining(remaining);
-
 
             if ( (remaining <= 0) || (m_outputA->start_tick_stamp() < 0) ){
                 // protect C output
@@ -1182,6 +1222,9 @@ void MainWindow::status_timer()
         if ((m_outputB->start_trigger_tick_stamp() > -1 ) &&
             (m_outputB->start_trigger_tick_stamp() <= (trigger_ticker+0)))
         {
+            if (m_outputA->panel_status() == OATS::PanelStatus::PLAYING)
+                stop_audio(m_outputA);
+
             play_audio(m_outputB);
         }
         break;
@@ -1198,6 +1241,7 @@ void MainWindow::status_timer()
             }
          }
     }
+
 
 }
 
@@ -1235,15 +1279,17 @@ OATS::ScheduleItem* MainWindow::find_next_schedule_item(OATS::ScheduleItem* curr
     return next_item;
 }
 
-void MainWindow::cue_next_schedule(OATS::ScheduleItem* si, OATS::OutputPanel* op)
+void MainWindow::cue_next_schedule(OATS::ScheduleItem* next_schedule_item, OATS::OutputPanel* next_output_panel)
 {
-    si->set_item_status(OATS::ItemStatus::CUED);
-    op->cue_item(si);
-    op->set_panel_status(OATS::PanelStatus::CUED);
+    next_schedule_item->set_item_status(OATS::ItemStatus::CUED);
+    next_output_panel->cue_item(next_schedule_item);
+    next_output_panel->set_panel_status(OATS::PanelStatus::CUED);
 
-    auto duration_seconds = (int)si->audio().duration()/1000;
-    auto intro_seconds = (int)si->audio().intro()/1000;
-    auto fade_seconds = (int)si->audio().fade_delay()/1000;
+    m_current_cued_item = next_schedule_item;
+
+    auto duration_seconds = (int)next_schedule_item->audio().duration()/1000;
+    auto intro_seconds = (int)next_schedule_item->audio().intro()/1000;
+    auto fade_seconds = (int)next_schedule_item->audio().fade_delay()/1000;
 
     int is_u1 = (int)intro_seconds/60;
     int is_u2 = intro_seconds % 60;
@@ -1260,14 +1306,14 @@ void MainWindow::cue_next_schedule(OATS::ScheduleItem* si, OATS::OutputPanel* op
                                                          .arg(ds_u2, 2, 10, QChar('0'))
                                                          .arg(fs_u1, 2, 10, QChar('0'))
                                                          .arg(fs_u2, 2, 10, QChar('0'));
-    op->set_cue_time_string(cue_string);
+    next_output_panel->set_cue_time_string(cue_string);
 
-    op->update_progress_bar(0);
+    next_output_panel->update_progress_bar(0);
 
-    if (si->audio().intro() > 0) {
-        op->set_progress_bar_background(OATS::ProgressBarBGColor::RED);
+    if (next_schedule_item->audio().intro() > 0) {
+        next_output_panel->set_progress_bar_background(OATS::ProgressBarBGColor::RED);
     } else {
-        op->set_progress_bar_background(OATS::ProgressBarBGColor::BLUE);
+        next_output_panel->set_progress_bar_background(OATS::ProgressBarBGColor::BLUE);
     }
 
     calculate_trigger_times();
@@ -1282,6 +1328,9 @@ void MainWindow::calculate_trigger_times()
 {
     assert(m_outputA != nullptr);
     assert(m_outputB != nullptr);
+
+    if (m_current_playing_item.item == nullptr)
+        return;
 
     long long current_play_start_time{0};
 
@@ -1399,6 +1448,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
             cue_next_schedule(next_schedule_item, next_output_panel);
         }
 
+
         display_schedule(ui->gridScroll->value());
 
         //calculate_trigger_times();
@@ -1410,11 +1460,11 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 void MainWindow::stop_audio(OATS::OutputPanel* op)
 {
     if (op->schedule_item()->item_status() == OATS::ItemStatus::PLAYING){
-        op->set_panel_status(OATS::PanelStatus::STOP);
+        op->set_panel_status(OATS::PanelStatus::PLAYED);
         op->set_start_trigger_tick_stamp(-1);
         op->set_fade_trigger_tick_stamp(-1);
 
-        op->schedule_item()->set_item_status(OATS::ItemStatus::STOP);
+        op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYED);
         op->schedule_item()->notify();
     }
 
@@ -1446,30 +1496,35 @@ void MainWindow::item_move_down(int schedule_ref, int grid_pos)
     m_schedule_grid[grid_pos+1]->set_subject(schedule_item(index+1));
 }
 
-void MainWindow::make_item_current(int item_ref)
+void MainWindow::make_item_current(int schedule_ref, int grid_pos)
 {
     assert(m_outputA != nullptr);
+    assert(m_outputB != nullptr);
 
-    m_outputA->set_panel_status(OATS::PanelStatus::CUED);
-    int index = index_of(item_ref);
+    if (m_current_cued_item != nullptr){
+        m_current_cued_item->set_item_status(OATS::ItemStatus::WAITING);
+        m_current_cued_item->notify();
+    }
+
+    int index = index_of(schedule_ref);
     auto si = schedule_item(index);
-
-    si->set_item_status(OATS::ItemStatus::CUED);
+    m_current_cued_item = si;
 
     QTime curr_time = QTime::currentTime();
-    si->set_schedule_time(curr_time);
-
     int item_duration = si->audio().duration();
 
+    si->set_item_status(OATS::ItemStatus::CUED);
+    si->set_schedule_time(curr_time);
+    si->set_schedule_time(curr_time.addMSecs(item_duration));
     si->notify();
 
-
     QString cue_string = output_string(si);
-
     if (si->play_channel() == ChannelA){
+        m_outputA->set_panel_status(OATS::PanelStatus::CUED);
         m_outputA->cue_item(si);
         m_outputA->set_cue_time_string(cue_string);
     }else{
+        m_outputB->set_panel_status(OATS::PanelStatus::CUED);
         m_outputB->cue_item(si);
         m_outputB->set_cue_time_string(cue_string);
     }
@@ -1513,7 +1568,7 @@ void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
         load_item(schedule_ref, grid_pos);
         break;
      default:
-        qDebug() << "No existance page";
+        qDebug() << "None-existance page";
     }
 }
 
@@ -1545,7 +1600,8 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
     AUDIO::Audio* audio = m_track_browser->current_selected_audio();
 
-
+    if (audio == nullptr)
+        return;
 
     int index = index_of(schedule_ref);
     auto item_at_cursor = schedule_item(index);
@@ -1588,7 +1644,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     }
 
     auto play_channel = [&](){
-        auto prev_si = schedule_item(grid_pos-1);
+        auto prev_si = schedule_item(grid_pos);
         if (prev_si == nullptr)
             return "A";
 
@@ -1739,6 +1795,7 @@ void MainWindow::transition_mix(int item_ref, int grid_index)
     auto si = schedule_item(index);
     si->set_transition_type(OATS::TransitionType::MIX);
     m_schedule_grid[grid_index]->set_subject(si);
+    calculate_trigger_times();
 }
 
 void MainWindow::transition_cut(int item_ref, int grid_index)
@@ -1831,4 +1888,9 @@ void MainWindow::fetch_commercial_in_db(int schedule_id)
    } while (!provider->cache()->isLast());
 
 
+}
+
+void MainWindow::print(QString msg)
+{
+    qDebug() << msg;
 }

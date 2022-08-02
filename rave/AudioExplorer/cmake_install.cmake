@@ -1,4 +1,4 @@
-# Install script for directory: D:/Home/Clients/PMS/raven/rave/AudioExplorer
+# Install script for directory: D:/Home/Clients/PMS/Raven/rave/AudioExplorer
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/Home/Clients/PMS/raven/rave/AudioExplorer/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/Home/Clients/PMS/Raven/rave/AudioExplorer/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

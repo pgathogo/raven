@@ -30,6 +30,7 @@ namespace OATS
     class Jingle
     {
     public:
+        enum class JingleStatus{Ready, Error};
       Jingle();
       Jingle(int page_id, int row, int col,  QString title);
       ~Jingle();
@@ -51,6 +52,7 @@ namespace OATS
 
       int track_duration();
       void set_track_duration(int);
+      void set_jingle_status(Jingle::JingleStatus);
     private:
         QString m_jingle_id{""};
         int m_grid_page_id{-1};
@@ -61,6 +63,7 @@ namespace OATS
         int m_track_id{-1};
         QString m_track_path;
         int m_track_duration;
+        Jingle::JingleStatus m_jingle_status;
     };
 
     /* GridButton */

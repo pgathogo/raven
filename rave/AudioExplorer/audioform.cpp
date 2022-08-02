@@ -6,6 +6,7 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/choicefield.h"
 #include "../framework/picklistbrowser.h"
+#include "../framework/ravensetup.h"
 
 #include "../audio/audio.h"
 #include "../audio/artist.h"
@@ -14,12 +15,17 @@
 namespace fs = std::filesystem;
 
 AudioForm::AudioForm(AUDIO::Audio* audio,
+                      RavenSetup* setup,
                      QDialog* parent)
     :BaseEntityDetailDlg(parent)
     ,ui(new Ui::AudioForm)
     ,m_audio{audio}
+    ,m_setup{setup}
     ,m_artist_picker{nullptr}
+    ,m_audio_tool{nullptr}
 {
+    m_audio_tool = std::make_unique<AUDIO::AudioTool>();
+
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
     setMaximumWidth(500);
@@ -63,7 +69,8 @@ void AudioForm::populateEntityFields()
     m_audio->set_notes(ui->edtNotes->toPlainText().toStdString());
 
     fs::path p(ui->edtFilename->text().toStdString());
-    m_audio->set_file_path(p.parent_path().u8string()+"/");
+
+    m_audio->set_file_path(m_audio->audio_lib_path()->value());
 
     m_audio->audio_file().set_audio_filename(m_audio->audio_filename()->value());
     m_audio->audio_file().set_creation_date(m_audio->creation_date()->value().toString("dd/MM/yyyy").toStdString());
@@ -88,18 +95,18 @@ void AudioForm::populateFormWidgets()
     ui->edtYear->setValue(m_audio->audio_year()->value());
     ui->edtFolder->setText(stoq(m_audio->folder()->displayName()));
 
-    AudioTool at;
     ui->edtFilename->setText(stoq(m_audio->audio_lib_path()->value() +
-                                   at.make_audio_filename(m_audio->id())+".ogg"));
-    ui->edtDuration->setText(at.format_time(m_audio->duration()->value()));
+                                   m_audio_tool->make_audio_filename(m_audio->id())+".ogg"));
 
-    ui->edtStart->setText(at.format_time(m_audio->start_marker()->value()));
-    ui->edtFadeIn->setText(at.format_time(m_audio->fade_in_marker()->value()));
-    ui->edtIntro->setText(at.format_time(m_audio->intro_marker()->value()));
+    ui->edtDuration->setText(m_audio_tool->format_time(m_audio->duration()->value()));
 
-    ui->edtExtro->setText(at.format_time(m_audio->extro_marker()->value()));
-    ui->edtFadeOut->setText(at.format_time(m_audio->fade_out_marker()->value()));
-    ui->edtEnd->setText(at.format_time(m_audio->end_marker()->value()));
+    ui->edtStart->setText(m_audio_tool->format_time(m_audio->start_marker()->value()));
+    ui->edtFadeIn->setText(m_audio_tool->format_time(m_audio->fade_in_marker()->value()));
+    ui->edtIntro->setText(m_audio_tool->format_time(m_audio->intro_marker()->value()));
+
+    ui->edtExtro->setText(m_audio_tool->format_time(m_audio->extro_marker()->value()));
+    ui->edtFadeOut->setText(m_audio_tool->format_time(m_audio->fade_out_marker()->value()));
+    ui->edtEnd->setText(m_audio_tool->format_time(m_audio->end_marker()->value()));
 
     ui->edtNotes->setText(stoq(m_audio->notes()->value()));
 

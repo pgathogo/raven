@@ -348,6 +348,9 @@ namespace OATS {
         case OATS::ItemStatus::PLAYING:
             return "PLAYING";
             break;
+        case OATS::ItemStatus::PLAYED:
+            return "PLAYED";
+            break;
         case OATS::ItemStatus::STOP:
             return "STOP";
             break;

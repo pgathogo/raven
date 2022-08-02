@@ -14,12 +14,15 @@ namespace AUDIO{
   class Artist;
   class Genre;
   class Folder;
+  class AudioTool;
 }
 
 class PickListBrowser;
 
 template<typename T>
 class ChoiceField;
+
+class RavenSetup;
 
 
 class AudioForm : public BaseEntityDetailDlg
@@ -30,6 +33,7 @@ public:
     enum ArtistColumn{FirstName=0, LastName, FullName, ArtistType, Notes};
 
     explicit AudioForm(AUDIO::Audio*,
+                       RavenSetup* setup,
                        QDialog* parent = nullptr);
     ~AudioForm();
 
@@ -55,7 +59,8 @@ private slots:
 private:
     Ui::AudioForm *ui;
     AUDIO::Audio* m_audio;
+    RavenSetup* m_setup;
     std::unique_ptr<PickListBrowser> m_artist_picker;
-
+    std::unique_ptr<AUDIO::AudioTool> m_audio_tool;
 };
 

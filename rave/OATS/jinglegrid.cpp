@@ -30,6 +30,7 @@ namespace OATS
         ,m_col{-1}
         ,m_title{""}
         ,m_jingle_id{""}
+        ,m_jingle_status{Jingle::JingleStatus::Ready}
     {
     }
 
@@ -38,6 +39,7 @@ namespace OATS
         ,m_row{row}
         ,m_col{col}
         ,m_title{title}
+        ,m_jingle_status{Jingle::JingleStatus::Ready}
     {
         m_jingle_id = QString::number(page_id)+
                QString::number(row)+
@@ -125,6 +127,11 @@ namespace OATS
     void Jingle::set_track_duration(int duration)
     {
         m_track_duration = duration;
+    }
+
+    void Jingle::set_jingle_status(Jingle::JingleStatus status)
+    {
+        m_jingle_status = status;
     }
 
 
@@ -371,12 +378,25 @@ namespace OATS
 
    void JingleGrid::selected_audio(AUDIO::Audio* audio)
    {
+       AUDIO::AudioTool at;
+       auto audio_fullname = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+".ogg";
+
+       QString title = QString::fromStdString(audio->title()->value());
+       QString path = QString::fromStdString(audio->audio_lib_path()->value());
+
        int row = m_current_grid_cell.row;
        int col = m_current_grid_cell.col;
 
         if (m_grid_buttons[row][col]->jingle() == nullptr){
-            auto jingle = std::make_unique<Jingle>(current_page(), row, col, QString::fromStdString(audio->title()->value()));
-            jingle->set_track_path(QString::fromStdString(audio->audio_lib_path()->value()));
+
+            auto jingle = std::make_unique<Jingle>(current_page(), row, col, title);
+
+            if (!at.audio_exist(QString::fromStdString(audio_fullname))){
+                title += " - ERROR_01: File Not Found!";
+                jingle->set_jingle_status(Jingle::JingleStatus::Error);
+            }
+
+            jingle->set_track_path(path);
             jingle->set_track_duration(audio->duration()->value());
 
             m_grid_buttons[row][col]->set_jingle(jingle.get());
@@ -392,8 +412,15 @@ namespace OATS
                               FindJingle(jingle_id));
 
        if(it != m_jingles.end()){
-            (*it)->set_title(QString::fromStdString(audio->title()->value()));
-            (*it)->set_track_path(QString::fromStdString(audio->audio_lib_path()->value()));
+
+        if (!at.audio_exist(QString::fromStdString(audio_fullname))){
+            qDebug() << "Error file";
+            title += " - ERROR_01: File Not Found!";
+            (*it)->set_jingle_status(Jingle::JingleStatus::Error);
+        }
+
+            (*it)->set_title(title);
+            (*it)->set_track_path(path);
             (*it)->set_track_duration(audio->duration()->value());
             m_grid_buttons[row][col]->set_jingle((*it).get());
        }
