@@ -85,6 +85,7 @@ public:
     void compute_schedule_time();
     OATS::OutputPanel* create_output_panel(const QString);
     void display_schedule(int start_index=0);
+    QTime schedule_time_at(int);
 
     void load_schedule(QDate, int);
     void fetch_temp_data(int);

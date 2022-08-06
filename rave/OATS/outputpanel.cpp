@@ -185,18 +185,14 @@ namespace OATS{
     void OutputPanel::play()
     {
         // play cued item
-        //emit play_item(m_id, m_schedule_item);
         emit play_item(this);
-        m_status = OATS::PanelStatus::PLAYING;
         set_panel_style();
     }
 
     void OutputPanel::stop()
     {
         // stop audio play
-        //emit stop_play(m_id, m_schedule_item);
         emit stop_play(this);
-        m_status = OATS::PanelStatus::STOP;
         set_panel_style();
     }
 
@@ -372,6 +368,22 @@ namespace OATS{
     {
         return m_cue_time_string;
     }
+
+    void OutputPanel::delete_cued_item()
+    {
+       m_schedule_item = nullptr;
+       m_cue_time_string= "";
+       m_title->setText("");
+       m_artist->setText("");
+       m_start_tick_stamp = -1;
+       m_start_trigger_tick_stamp = -1;
+       m_fade_trigger_tick_stamp = -1;
+       m_time->setText("00:00 / 00:00 / 00:00");
+       m_progress_bar->setFormat("00:00 / 00:00 / 00:00");
+       m_status = OATS::PanelStatus::WAITING;
+    }
+
+
 
     void OutputPanel::set_progress_bar_background(OATS::ProgressBarBGColor bg_color)
     {

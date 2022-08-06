@@ -77,9 +77,9 @@ namespace OATS{
 
         void set_cue_time_string(QString);
         QString cue_time_string();
+
+        void delete_cued_item();
     signals:
-//        void play_item(int panel_id, ScheduleItem* si);
-//        void stop_play(int panel_id, ScheduleItem* si);
         void play_item(OutputPanel*);
         void stop_play(OutputPanel*);
     private:

@@ -65,12 +65,18 @@ namespace OATS{
         m_act_move_up = std::make_unique<QAction>("Move Up");
         m_act_move_down = std::make_unique<QAction>("Move Down");
         m_act_make_current = std::make_unique<QAction>("Make Current");
+        m_act_delete_item = std::make_unique<QAction>("Delete Item");
 
         if (m_schedule_item->item_status() == OATS::ItemStatus::ERROR_01)
             m_act_make_current->setEnabled(false);
 
-        m_act_delete_item = std::make_unique<QAction>("Delete Item");
-
+        if ((m_schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER) ||
+            (m_schedule_item->item_status() == OATS::ItemStatus::PLAYING)){
+            m_act_move_up->setEnabled(false);
+            m_act_move_down->setEnabled(false);
+            m_act_make_current->setEnabled(false);
+            m_act_delete_item->setEnabled(false);
+        }
 
         connect(m_act_move_up.get(), &QAction::triggered, this, &TrackGridPanel::move_up);
         connect(m_act_move_down.get(), &QAction::triggered, this, &TrackGridPanel::move_down);
