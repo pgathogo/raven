@@ -14,6 +14,8 @@
 #include <QStandardItem>
 #include <QList>
 #include <QVBoxLayout>
+#include <QMessageBox>
+
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -58,8 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
     , m_dtw{nullptr}
     , m_outputA{nullptr}
     , m_outputB{nullptr}
-    , m_current_cued_item{nullptr}
 {
+    m_current_cued_item.item = nullptr;
 
     ui->setupUi(this);
 
@@ -68,7 +70,8 @@ MainWindow::MainWindow(QWidget *parent)
     set_playout_widgets();
 
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
-    connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current_clicked);
+    connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current);
+    connect(m_play_mode_panel.get(), &OATS::PlayModePanel::keep_current, this, &MainWindow::keep_current);
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
 
@@ -191,30 +194,6 @@ void MainWindow::set_playlist_control_widget()
     m_pcw = std::make_unique<OATS::PlayListControlWidget>();
     connect(m_pcw.get(), &OATS::PlayListControlWidget::go_current, this, &MainWindow::go_current);
     //ui->hlPlayMode->addWidget(m_pcw.get());
-}
-
-void MainWindow::go_current()
-{
-    m_schedule_grid[0]->set_subject(m_current_playing_item.item);
-    m_current_playing_item.item->notify();
-
-    if (m_current_playing_item.schedule_index > -1 ){
-        int idx = m_current_playing_item.schedule_index;
-
-        for (int i=0; i<MAX_GRID_ITEMS; ++i){
-
-            if (i > MAX_GRID_ITEMS)
-                break;
-
-            auto si = schedule_item(idx++);
-            if (si == nullptr)
-                break;
-
-            m_schedule_grid[i]->set_subject(si);
-        }
-    }
-
-    ui->gridScroll->setValue(m_current_playing_item.grid_index);
 }
 
 void MainWindow::compute_schedule_time()
@@ -802,6 +781,36 @@ void MainWindow::display_schedule(int start_index)
     }
 }
 
+void MainWindow::display_schedule2(int start_index)
+{
+    auto schedule = schedule_item(start_index);
+    auto ch = schedule->play_channel();
+
+   // for (int i=start_index; i < MAX_GRID_ITEMS; ++i){
+
+    int idx = 0;
+
+    //for (int schedule_index=start_index; schedule_index < m_schedule_items.size(); ++schedule_index){
+    for (int schedule_index=0; schedule_index < m_schedule_items.size(); ++schedule_index){
+//        int schedule_index = i+start_index;
+
+        if (schedule_index >= MAX_GRID_ITEMS)
+            break;
+
+        //auto schedule = schedule_item(schedule_index);
+        //QTime schedule_time = schedule_time_at(schedule_index);
+        auto schedule = schedule_item(start_index);
+        QTime schedule_time = schedule_time_at(start_index);
+        ++start_index;
+
+        //schedule->set_play_channel(play_channel(schedule_index));
+        schedule->set_play_channel(ch);
+        schedule->set_schedule_time(schedule_time);
+        ch = (ch == ChannelA) ? ChannelB : ChannelA;
+
+        m_schedule_grid[idx++]->set_subject(schedule);
+    }
+}
 
 
 void MainWindow::push_items_down(int from_pos)
@@ -890,31 +899,18 @@ QTime MainWindow::schedule_time_at(int index)
 
 void MainWindow::scroll_changed(int new_pos)
 {
-    display_schedule(new_pos);
+   display_schedule2(new_pos);
 }
 
-void MainWindow::go_current_clicked()
+void MainWindow::go_current()
 {
-    m_schedule_grid[0]->set_subject(m_current_playing_item.item);
-    m_current_playing_item.item->notify();
-
-    if (m_current_playing_item.schedule_index > -1){
-        int idx = m_current_playing_item.schedule_index;
-
-        for(int i=0; i < MAX_GRID_ITEMS; ++i){
-            if (i > MAX_GRID_ITEMS)
-                break;
-
-            auto sched_item = schedule_item(idx++);
-            if (sched_item == nullptr)
-                break;
-
-            m_schedule_grid[i]->set_subject(sched_item);
-        }
-
-    }
-
     ui->gridScroll->setValue(m_current_playing_item.grid_index);
+}
+
+void MainWindow::keep_current(bool checked)
+{
+    if (checked)
+        go_current();
 }
 
 void MainWindow::play_jingle(const QString jingle)
@@ -1323,7 +1319,8 @@ void MainWindow::cue_next_schedule(OATS::ScheduleItem* next_schedule_item, OATS:
     next_output_panel->cue_item(next_schedule_item);
     next_output_panel->set_panel_status(OATS::PanelStatus::CUED);
 
-    m_current_cued_item = next_schedule_item;
+    m_current_cued_item.item = next_schedule_item;
+
 
     auto duration_seconds = (int)next_schedule_item->audio().duration()/1000;
     auto intro_seconds = (int)next_schedule_item->audio().intro()/1000;
@@ -1484,6 +1481,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         auto next_output_panel = find_output_panel(next_id);
         auto next_schedule_item = find_next_schedule_item(op->schedule_item());
 
+
         if (m_current_playing_item.item != next_schedule_item){
 
             if (next_schedule_item != nullptr){
@@ -1492,9 +1490,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         }
 
-        display_schedule(ui->gridScroll->value()+1);
-
-        //calculate_trigger_times();
+        display_schedule2(ui->gridScroll->value());
 
     }
 
@@ -1509,6 +1505,8 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
 
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYED);
         op->schedule_item()->notify();
+
+//        m_current_playing_item.item->set_item_status(OATS::ItemStatus::PLAYED);
     }
 
     display_schedule(ui->gridScroll->value()+1);
@@ -1525,6 +1523,19 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
         return;
 
     int index = index_of(schedule_ref);
+
+    auto si = schedule_item(index);
+    auto prev_si = schedule_item(index-1);
+
+    if ((si->item_status() == OATS::ItemStatus::CUED) &&
+        (prev_si->item_status() == OATS::ItemStatus::PLAYING)){
+
+        QMessageBox::information(this, tr("OATS"),
+                                 tr("Cannot move CUED item past a playing item."),
+                                 QMessageBox::Ok);
+        return;
+    }
+
     std::iter_swap(m_schedule_items.begin()+index, m_schedule_items.begin()+(index-1));
     m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
     m_schedule_grid[grid_pos-1]->set_subject(schedule_item(index-1));
@@ -1550,15 +1561,31 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
     int index = index_of(schedule_ref);
     auto si = schedule_item(index);
 
+    if (si->item_status() == OATS::ItemStatus::PLAYING)
+        return;
+
     if (si->item_status() == OATS::ItemStatus::ERROR_01)
         return;
 
-    if (m_current_cued_item != nullptr){
-        m_current_cued_item->set_item_status(OATS::ItemStatus::WAITING);
-        m_current_cued_item->notify();
+
+    if ((m_current_cued_item.item != nullptr) &&
+        (m_current_cued_item.item->item_status() != OATS::ItemStatus::PLAYING) ){
+        m_current_cued_item.item->set_item_status(OATS::ItemStatus::WAITING);
+        m_current_cued_item.item->notify();
     }
 
-    m_current_cued_item = si;
+
+    if ( grid_pos < m_current_playing_item.grid_index){
+
+         if (m_current_playing_item.item->item_status()==OATS::ItemStatus::PLAYING) {
+            QMessageBox::information(this, tr("OATS"),
+                         tr("Cannot schedule past playing item"),
+                         QMessageBox::Ok);
+            return;
+         }
+    }
+
+    m_current_cued_item.item = si;
 
     QTime curr_time = QTime::currentTime();
     int item_duration = si->audio().duration();
@@ -1630,8 +1657,10 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
 {
     int index = index_of(schedule_ref);
     auto si = schedule_item(index);
+
     if (si->item_status()== OATS::ItemStatus::PLAYED)
         return;
+
     if (si->schedule_type()==OATS::ScheduleType::COMM || si->schedule_type()==OATS::ScheduleType::HOUR_HEADER)
         return;
 
@@ -1651,7 +1680,9 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
 
     m_schedule_items.erase(it);
 
-    display_schedule(grid_pos);
+    ui->gridScroll->setMaximum(ui->gridScroll->maximum()-1);
+
+    display_schedule2(grid_pos+1);
     ui->gridScroll->setSliderPosition(MAX_GRID_ITEMS);
     ui->gridScroll->setSliderPosition(0);
 
@@ -1741,7 +1772,9 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
         recompute_time(grid_pos);
     }
 
-    print_schedule_items();  // debugging purposes only
+   ui->gridScroll->setMaximum(ui->gridScroll->maximum()+1);
+
+   print_schedule_items();  // debugging purposes only
 
 }
 

@@ -20,9 +20,10 @@ namespace OATS{
         bool keep_current_checked();
     signals:
         void go_current();
-        void keep_current();
+        void keep_current(bool);
     private slots:
         void go_current_clicked();
+        void keep_current_clicked();
     private:
         std::unique_ptr<QLabel> m_play_mode_label;
         std::unique_ptr<QPushButton> m_btn_go_current;

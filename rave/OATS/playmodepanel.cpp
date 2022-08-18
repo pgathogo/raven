@@ -18,6 +18,7 @@ namespace OATS{
         m_btn_keep_current->setCheckable(true);
 
         connect(m_btn_go_current.get(), &QPushButton::clicked, this, &PlayModePanel::go_current_clicked);
+        connect(m_btn_keep_current.get(), &QPushButton::clicked, this, &PlayModePanel::keep_current_clicked);
 
         m_layout = new QHBoxLayout();
 
@@ -40,6 +41,11 @@ namespace OATS{
     void PlayModePanel::go_current_clicked()
     {
         emit go_current();
+    }
+
+    void PlayModePanel::keep_current_clicked()
+    {
+        emit keep_current(m_btn_keep_current->isChecked());
     }
 
     QPushButton* PlayModePanel::go_current_button()

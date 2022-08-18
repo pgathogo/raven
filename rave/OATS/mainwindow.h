@@ -59,7 +59,10 @@ struct CurrentPlayItem{
     int grid_index{-1};
 };
 
+
 using History = std::map<int, std::vector<int>>;
+using CurrentCuedItem = CurrentPlayItem;
+
 using namespace std::chrono_literals;
 
 class MainWindow : public QMainWindow
@@ -85,6 +88,7 @@ public:
     void compute_schedule_time();
     OATS::OutputPanel* create_output_panel(const QString);
     void display_schedule(int start_index=0);
+    void display_schedule2(int start_index);
     QTime schedule_time_at(int);
 
     void load_schedule(QDate, int);
@@ -138,7 +142,6 @@ public:
 
 private slots:
     void close_win();
-    void go_current();
     void scroll_changed(int);
     void time_updated();
     void slow_flash();
@@ -159,7 +162,8 @@ private slots:
 
     void play_button(OATS::OutputPanel*);
     void stop_button(OATS::OutputPanel*);
-    void go_current_clicked();
+    void go_current();
+    void keep_current(bool);
     void play_jingle(const QString);
 
     void push_items_down(int);
@@ -179,7 +183,7 @@ private:
     std::vector<std::unique_ptr<OATS::ScheduleGridItem>> m_schedule_grid;
 
     CurrentPlayItem m_current_playing_item;
-    OATS::ScheduleItem* m_current_cued_item;
+    CurrentCuedItem m_current_cued_item;
 
     OATS::OutputPanel* m_outputA;
     OATS::OutputPanel* m_outputB;
