@@ -54,9 +54,6 @@ namespace OATS{
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
             setStyleSheet("background-color: #222222;");
-            m_status1->setText("");
-            m_status2->setText("");
-            return;
         }
 
         m_status1->setText(QString::fromStdString(schedule_item->item_status_text()));

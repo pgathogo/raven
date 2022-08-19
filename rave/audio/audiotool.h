@@ -1,6 +1,8 @@
 #ifndef AUDIOTOOL_H
 #define AUDIOTOOL_H
 
+#include <chrono>
+
 #include <QObject>
 #include <QProcess>
 
@@ -36,6 +38,8 @@ namespace AUDIO
 
         long long get_tick_count();
         bool audio_exist(const QString);
+
+        QTime msec_to_time(int, int);
 
     private slots:
         void wave_gen_finished();

@@ -48,17 +48,6 @@ namespace OATS{
         return m_parent;
     }
 
-    QTime GridPanel::msec_to_time(int h, int ms)
-    {
-        auto msecs = std::chrono::milliseconds(ms);
-        auto hr = std::chrono::duration_cast<std::chrono::hours>(msecs);
-        msecs -= hr;
-        auto mins = std::chrono::duration_cast<std::chrono::minutes>(msecs);
-        msecs -= mins;
-        auto secs = std::chrono::duration_cast<std::chrono::seconds>(msecs);
-        QTime t(h, mins.count(), secs.count());
-        return t;
-    }
 
     OATS::TimeFmt GridPanel::dur_to_tfmt(long ms)
     {

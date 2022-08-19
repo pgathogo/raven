@@ -397,8 +397,10 @@ void BookingWizard::apply_selection()
 
         for (int i=0; i < sel_items.size(); ++i){
             auto time_str = sel_items[i]->text();
-            combo->addItem(time_str);
-            m_dow_selection[day_of_week->row()+1].push_back(time_str.toStdString());
+            if (combo->findText(time_str) == -1){
+                combo->addItem(time_str);
+                m_dow_selection[day_of_week->row()+1].push_back(time_str.toStdString());
+            }
         }
     }
 }

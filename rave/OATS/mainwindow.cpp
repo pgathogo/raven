@@ -34,6 +34,7 @@
 #include "../audio/audiotrackitem.h"
 #include "../audio/audiolibitem.h"
 #include "../audio/trackpickerdialog.h"
+#include "../audio/trackbrowser.h"
 
 //#include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
@@ -47,7 +48,6 @@
 #include "jinglegrid.h"
 #include "cartpanel.h"
 
-#include "../audio/trackbrowser.h"
 
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
@@ -267,6 +267,7 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 
     sql << where_filter << and_filter << order_by;
 
+    cache_commercial_break_data(date, hr);
 
     EntityDataModel edm;
     edm.readRaw(sql.str());
@@ -313,17 +314,18 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 
         item_duration = item_duration + sched_item->audio().duration();
 
-//		auto audio = dynamic_cast<AUDIO::Audio*>(schedule->audio()->dataModel()->get_entity().get());
-//		auto artist = dynamic_cast<AUDIO::Artist*>(audio->artist()->dataModel()->get_entity().get());
-
-        // populate schedule fields
-
-        if (sched_item->schedule_type() == OATS::ScheduleType::COMM){
+        if (sched_item->schedule_type() == OATS::ScheduleType::COMM)
+        {
+            auto comm_duration = get_comm_duration(sched_item->id());
+            sched_item->audio().set_duration(comm_duration);
             sched_item->audio().set_title(
                         sched_item->schedule_time().toString("HH:mm").toStdString()+
                        " Commercial Break ("+std::to_string(sched_item->booked_spots())+" items)");
-            sched_item->set_transition_type(OATS::TransitionType::CUT);
+
+            item_duration += comm_duration;
         }
+
+        sched_item->set_transition_type(OATS::TransitionType::CUT);
 
         m_schedule_items.push_back(std::move(sched_item));
 
@@ -346,6 +348,79 @@ void MainWindow::fetch_db_data(QDate date, int hr)
     }
 
 }
+
+int MainWindow::get_comm_duration(int schedule_id)
+{
+    auto comm_breaks = m_comm_breaks[schedule_id];
+    int duration=0;
+    for (auto& comm : comm_breaks){
+        duration += comm.duration;
+    }
+    return duration;
+}
+
+
+void MainWindow::cache_commercial_break_data(QDate date, int hr)
+{
+    std::stringstream sql;
+
+    sql << " select a.id, a.schedule_id, a.spot_id,  a.booking_status, "
+           " a.book_date, a.book_hour, a.book_time,"
+           " d.title, d.duration "
+           " From rave_orderbooking a "
+           " left outer join rave_spot b on b.id = a.spot_id "
+           " left outer join rave_spotaudio c on c.spot_id = b.id "
+           " left outer join rave_audio d on d.id = c.audio_id ";
+
+    std::string where_filter = " WHERE a.book_date = '"+date.toString("yyyy/MM/dd").toStdString()+"'";
+    std::string and_filter   = " AND a.book_hour >= "+std::to_string(hr);
+    std::string order_by     = " ORDER BY a.book_time ";
+
+    sql << where_filter << and_filter << order_by;
+
+    EntityDataModel edm;
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
+
+    provider->cache()->first();
+
+    do{
+        auto it_begin = provider->cache()->currentElement()->begin();
+        auto it_end = provider->cache()->currentElement()->end();
+
+        CommBreak cb;
+
+        for (; it_begin != it_end; ++it_begin){
+            std::string field_name = (*it_begin).first;
+            std::string field_value = (*it_begin).second;
+
+            if (field_name == "id"){ cb.booking_id = str_to_int(field_value); }
+            if (field_name == "schedule_id"){ cb.schedule_id = str_to_int(field_value); }
+            if (field_name == "spot_id"){ cb.spot_id = str_to_int(field_value); }
+            if (field_name == "booking_status") {cb.booking_status = QString::fromStdString(field_value); }
+            if (field_name == "book_hour"){cb.book_hour = str_to_int(field_value);}
+            if (field_name == "book_time") {cb.book_time = QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"); }
+            if (field_name == "title") {cb.comm_title = QString::fromStdString(field_value);}
+            if (field_name == "duration"){ cb.duration = str_to_int(field_value); }
+        }
+
+        if (m_comm_breaks.contains(cb.schedule_id)){
+           m_comm_breaks[cb.schedule_id].push_back(cb) ;
+        } else {
+            std::vector<CommBreak> comm_breaks;
+            comm_breaks.push_back(cb);
+            m_comm_breaks[cb.schedule_id] = comm_breaks;
+        }
+
+        provider->cache()->next();
+
+    } while(!provider->cache()->isLast());
+
+}
+
 
 void MainWindow::set_header_item(OATS::ScheduleItem* header, int hr, QDate dt)
 {
@@ -1671,7 +1746,6 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
         return;
 
     if (si->item_status()==OATS::ItemStatus::CUED){
-        qDebug() << "Delete CH: "<< QString::fromStdString(si->play_channel());
         if (si->play_channel() == ChannelA)
             m_outputA->delete_cued_item();
         else
@@ -1729,9 +1803,8 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     new_item->set_audio(new_audio);
 
     // check if audio exist
-    AUDIO::AudioTool at;
-    std::string filename = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+".ogg";
-    if (!at.audio_exist(QString::fromStdString(filename))){
+    std::string filename = audio->audio_lib_path()->value()+m_audio_tool.make_audio_filename(audio->id())+".ogg";
+    if (!m_audio_tool.audio_exist(QString::fromStdString(filename))){
         new_item->set_item_status(OATS::ItemStatus::ERROR_01);
         new_item->set_transition_type(OATS::TransitionType::SKIP);
     }
@@ -1967,8 +2040,6 @@ void MainWindow::fetch_commercial_in_db(int schedule_id)
            if (field_name == "client_name"){
                client_name = field_value;
            }
-
-
        }
 
        auto title = new QStandardItem(QString::fromStdString(spot_title));
@@ -1991,3 +2062,5 @@ void MainWindow::print(QString msg)
 {
     qDebug() << msg;
 }
+
+

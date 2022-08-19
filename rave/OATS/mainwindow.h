@@ -59,6 +59,17 @@ struct CurrentPlayItem{
     int grid_index{-1};
 };
 
+struct CommBreak{
+    int booking_id{-1};
+    int schedule_id{-1};
+    int spot_id{-1};
+    QString booking_status{""};
+    int book_hour{-1};
+    QTime book_time;
+    QString comm_title;
+    int duration;
+};
+
 
 using History = std::map<int, std::vector<int>>;
 using CurrentCuedItem = CurrentPlayItem;
@@ -121,6 +132,7 @@ public:
     int calculate_yield_contribution(OATS::ScheduleItem*);
 
     void fetch_db_data(QDate, int);
+    void cache_commercial_break_data(QDate, int);
     void set_schedule_fields(BaseDataProvider* provider,
                                      OATS::ScheduleItem* sched_item);
 
@@ -139,6 +151,8 @@ public:
 
     void start_timers();
     void print(QString);
+
+    int get_comm_duration(int);
 
 private slots:
     void close_win();
@@ -214,6 +228,8 @@ private:
     ControlPage m_control_page;
 
     AUDIO::AudioTool m_audio_tool;
+
+    std::map<int, std::vector<CommBreak>> m_comm_breaks;
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate, int);

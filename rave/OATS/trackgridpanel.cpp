@@ -8,6 +8,8 @@
 #include "schedulegriditem.h"
 #include "scheduleitem.h"
 
+#include "../audio/audiotool.h"
+
 namespace OATS{
 
     TrackGridPanel::TrackGridPanel(QWidget* parent)
@@ -127,14 +129,15 @@ namespace OATS{
         m_track_label->setText(QString::fromStdString(schedule_item->audio().title()));
         m_artist_label->setText(QString::fromStdString(schedule_item->audio().artist()));
 
-        QTime t = msec_to_time(schedule_item->hour(), schedule_item->audio().duration());
+        AUDIO::AudioTool at;
+        QTime t = at. msec_to_time(schedule_item->hour(), schedule_item->audio().duration());
 
         m_duration_label->setText(t.toString("mm:ss"));
 
         setStyleSheet("background-color: #636160;");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
-            m_duration_label->setText("");
+            //m_duration_label->setText("");
             setStyleSheet("background-color: rgb(40, 133, 220)");
         }
 

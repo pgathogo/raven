@@ -315,6 +315,18 @@ namespace AUDIO
         return (af.exists()) ? true : false;
     }
 
+    QTime AudioTool::msec_to_time(int h, int ms)
+    {
+        auto msecs = std::chrono::milliseconds(ms);
+        auto hr = std::chrono::duration_cast<std::chrono::hours>(msecs);
+        msecs -= hr;
+        auto mins = std::chrono::duration_cast<std::chrono::minutes>(msecs);
+        msecs -= mins;
+        auto secs = std::chrono::duration_cast<std::chrono::seconds>(msecs);
+        QTime t(h, mins.count(), secs.count());
+        return t;
+    }
+
     //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
     //{
     //    auto ogg_file = generate_ogg_filename(audio->id())+".ogg";
