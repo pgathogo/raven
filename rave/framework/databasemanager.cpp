@@ -174,6 +174,7 @@ int PostgresDatabaseManager::fetchAll(const BaseEntity& entity)
     std::string sql{};
     std::string flds = columnsForSelection(entity);
     sql = "SELECT " + flds + " FROM "+entity.tableName();  //+" ORDER BY "+entity.orderBy();
+
     return provider()->read(sql);
 }
 
@@ -280,6 +281,124 @@ std::string PostgresDatabaseManager::make_insert_stmt(const BaseEntity &entity)
 PostgresDataProvider *PostgresDatabaseManager::pgProvider()
 {
     return dataProvider;
+}
+
+std::string PostgresDatabaseManager::manager_type()
+{
+    return "POSTGRES";
+}
+
+/* -------- SQLiteDatabaseManager ------------------------------------ */
+
+SQLiteDatabaseManager::SQLiteDatabaseManager()
+{
+    //data_provider = new SQLiteDataProvider;
+
+}
+
+SQLiteDatabaseManager::SQLiteDatabaseManager(const std::string dbname)
+{
+    m_data_provider =  new SQLiteDataProvider(dbname.c_str());
+
+}
+
+SQLiteDatabaseManager::~SQLiteDatabaseManager()
+{
+
+}
+
+void SQLiteDatabaseManager::updateEntity(const BaseEntity& entity)
+{
+
+}
+
+int SQLiteDatabaseManager::createEntity(const BaseEntity& entity)
+{
+
+}
+
+int SQLiteDatabaseManager::deleteEntity(const BaseEntity& entity)
+{
+
+}
+int SQLiteDatabaseManager::deleteEntityByValue(
+    const std::string tabale_name,
+    std::tuple<ColumnName, ColumnValue>)
+{
+
+}
+
+int SQLiteDatabaseManager::fetchAll(const BaseEntity& entity)
+{
+    std::string sql{};
+    std::string flds = columnsForSelection(entity);
+    sql = "SELECT " + flds + " FROM "+entity.tableName();  //+" ORDER BY "+entity.orderBy();
+
+    qDebug() << "----- SQLiteDatabaseManager ----- ";
+    qDebug() << stoq(sql);
+    qDebug() << "----------------------------------";
+
+    return provider()->read(sql);
+}
+
+int SQLiteDatabaseManager::searchByStr(const BaseEntity& entity,
+          std::tuple<std::string, std::string> sf)
+{
+
+}
+
+int SQLiteDatabaseManager::searchByInt(const BaseEntity& entity,
+           std::tuple<std::string,std::string,  int> field_value)
+{
+
+}
+
+int SQLiteDatabaseManager::search(const BaseEntity& entity, const std::string filter)
+{
+
+}
+
+int SQLiteDatabaseManager::starts_with(const BaseEntity& entity,
+        std::tuple<std::string, std::string>& sf)
+{
+
+}
+void SQLiteDatabaseManager::executeRawSQL(const std::string sql)
+{
+
+}
+int SQLiteDatabaseManager::readRaw(const std::string sql)
+{
+
+}
+int SQLiteDatabaseManager::insert_returning_id(const std::string sql)
+{
+
+}
+
+BaseDataProvider* SQLiteDatabaseManager::provider()
+{
+    return m_data_provider;
+}
+
+std::string SQLiteDatabaseManager::make_insert_stmt(const BaseEntity& entity)
+{
+
+}
+
+void SQLiteDatabaseManager::loadEntity(BaseEntity& entity)
+{
+
+}
+std::string SQLiteDatabaseManager::db_name()
+{
+    auto s = m_data_provider->db_name();
+    return s;
+}
+
+std::string SQLiteDatabaseManager::manager_type()
+{
+    return m_data_provider->db_name();
 }
 
 

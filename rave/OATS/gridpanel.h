@@ -27,7 +27,6 @@ namespace OATS{
         int parent_ref();
 
         QWidget* parent();
-        QTime msec_to_time(int, int);
         TimeFmt dur_to_tfmt(long);
     private:
         QWidget* m_parent;

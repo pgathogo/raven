@@ -286,6 +286,12 @@ Qt6Widgets_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6Widgets
 //The directory containing a CMake configuration file for Qt6.
 Qt6_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6
 
+//Path to a library.
+SQLite3_LIB:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib
+
+//Path to a library.
+SQLite3_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib
+
 //Path to a program.
 Vulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=Vulkan_GLSLANG_VALIDATOR_EXECUTABLE-NOTFOUND
 
@@ -445,6 +451,8 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding PostgreSQL
 FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/Program Files/PostgreSQL/14/lib/libpq.lib][C:/Program Files/PostgreSQL/14/include][c ][v14.3()]
+//Details about finding SQLite3
+FIND_PACKAGE_MESSAGE_DETAILS_SQLite3:INTERNAL=[D:/Home/Clients/PMS/Raven/rave/lib/sqlite3][D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib][v3.29.0()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding WrapAtomic
@@ -1153,6 +1161,8 @@ QT_FEATURE_xmlstreamwriter:INTERNAL=ON
 QT_FEATURE_xrender:INTERNAL=OFF
 //Qt feature: zstd (from target Qt6::Core)
 QT_FEATURE_zstd:INTERNAL=OFF
+//ADVANCED property for variable: SQLite3_LIBRARY
+SQLite3_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: Vulkan_GLSLANG_VALIDATOR_EXECUTABLE
 Vulkan_GLSLANG_VALIDATOR_EXECUTABLE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: Vulkan_GLSLC_EXECUTABLE

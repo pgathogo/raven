@@ -12,6 +12,7 @@ class QuerySet
 {
 public:
     QuerySet();
+    ~QuerySet();
     void first();
     void next();
     void previous();
@@ -51,6 +52,15 @@ class DataQuerySet : public QuerySet<T1>{
 template<typename T1>
 QuerySet<T1>::QuerySet()
 {
+}
+
+template<typename T1>
+QuerySet<T1>::~QuerySet()
+{
+    for(auto elem : elems){
+        delete elem;
+    }
+    elems.clear();
 }
 
 template<typename T1>

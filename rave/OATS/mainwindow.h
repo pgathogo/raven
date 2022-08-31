@@ -43,13 +43,16 @@ namespace OATS{
     class PlayModePanel;
     class CommercialViewer;
     class JingleGrid;
-   class CartPanel;
+    class CartPanel;
 }
 
 namespace AUDIO{
    class AudioTrackViewer;
    class AudioLibItem;
    class TrackBrowser;
+
+   template<typename T>
+   class AudioCacheManager;
 }
 
 struct CurrentPlayItem{
@@ -90,6 +93,9 @@ public:
     const std::string ChannelA = "A";
     const std::string ChannelB = "B";
     const std::string ChannelC = "C";
+
+    const QString CACHE_DB_SQLITE = "audiocache.db";
+    const QString AUDIO_CACHE_LOCATION = "d:/audio/cache/";   // Temporary
 
     enum class ControlPage{Home, Commercial, Segue, Cart, Jingle, TrackInfo, Load};
 
@@ -231,8 +237,11 @@ private:
 
     std::map<int, std::vector<CommBreak>> m_comm_breaks;
 
+    std::unique_ptr<AUDIO::AudioCacheManager<SQLiteDatabaseManager>> m_audio_cache_manager;
+
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate, int);
+    void setup_timers();
 };
 
 struct FindByRef{

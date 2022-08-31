@@ -5,14 +5,16 @@
 #include <vector>
 #include <QDebug>
 #include <map>
+
 #include <libpq-fe.h>
+#include <sqlite3.h>
+
 #include "queryset.h"
-
-
 
 //using VectorMapped = std::vector<std::map<std::string, std::string>>;
 using StringMapped = std::map<std::string, std::string>;
 using RecordTuple = std::tuple<std::string, std::string>;
+using VectorMapped = std::vector<std::map<std::string, std::string>>;
 
 class PostgresConnector;
 class DatabaseException;
@@ -31,6 +33,7 @@ public:
     int cacheSize() const;
     std::vector<StringMapped*>::iterator cacheIter();
     DataQuerySet<StringMapped>* cache();
+    virtual std::string provider_type() = 0;
 private:
     DataQuerySet<StringMapped> dataQuerySet;
 };
@@ -51,10 +54,48 @@ class PostgresDataProvider: public BaseDataProvider
         void openConnection(const std::string conninfo);
         void closeConnection();
         char* make_error_message(char*, char*);
+        std::string provider_type() override;
     private:
         PostgresConnector* mPGConnector;
         PGconn* conn;
         //static PostgresDataProvider* mInstance;
 };
+
+struct SQLiteResult
+{
+public:
+    SQLiteResult(){}
+    int result_status{ 0 };
+    const char* result_message;
+};
+
+
+class SQLiteDataProvider : public BaseDataProvider
+{
+    public:
+        SQLiteDataProvider(const std::string);
+        //static PostgresDataProvider* instance();
+        ~SQLiteDataProvider() override;
+        bool executeQuery(const std::string query) override;
+        int fetchLastId(const std::string tableName) override;
+        int insert_returning_id(const std::string query) override;
+        int read(const std::string query) override;
+        SQLiteResult open_connection();
+        char* make_error_message(char*, char*);
+        static int read_data(void*, int, char**, char**);
+        void add_record(StringMapped*);
+        int fetch_data(const std::string);
+        bool exec_query(const std::string);
+
+        const std::string db_name();
+        std::string provider_type() override;
+
+    private:
+        std::string m_dbname;
+        sqlite3* m_conn;
+
+};
+
+
 
 #endif // DATAPROVIDER_H

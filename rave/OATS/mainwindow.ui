@@ -223,30 +223,37 @@
        <item>
         <layout class="QHBoxLayout" name="hlExtraButtons">
          <item>
-          <widget class="QPushButton" name="pushButton_11">
+          <widget class="QPushButton" name="btnPrint1">
            <property name="text">
-            <string>PushButton</string>
+            <string>Print Queue</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_9">
+          <widget class="QPushButton" name="btnPrint2">
            <property name="text">
-            <string>PushButton</string>
+            <string>Print Cache</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_10">
+          <widget class="QPushButton" name="btnPrint3">
            <property name="text">
-            <string>PushButton</string>
+            <string>Move to Cache</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_12">
+          <widget class="QPushButton" name="btnClearQue">
            <property name="text">
-            <string>PushButton</string>
+            <string>Clear Queue</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnClearCache">
+           <property name="text">
+            <string>Clear Cache</string>
            </property>
           </widget>
          </item>
@@ -276,7 +283,7 @@
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

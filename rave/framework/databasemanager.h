@@ -2,10 +2,12 @@
 #define DATABASEMANAGER_H
 
 #include <string>
+#include <QString>
 
 class BaseEntity;
 class BaseDataProvider;
 class PostgresDataProvider;
+class SQLiteDataProvider;
 
 using FilterField = std::tuple<std::string, std::string>;
 using ColumnName = std::string;
@@ -41,6 +43,8 @@ public:
 
     virtual BaseDataProvider* provider() = 0;
     virtual std::string make_insert_stmt(const BaseEntity& entity) =0;
+
+    virtual std::string manager_type() = 0;
 protected:
     virtual void loadEntity(BaseEntity& entity) = 0;
 
@@ -86,10 +90,52 @@ public:
     std::string make_insert_stmt(const BaseEntity& entity) override;
     PostgresDataProvider* pgProvider();
 
+   std::string manager_type() override;
+
 protected:
     void loadEntity(BaseEntity& entity)override;
 private:
     PostgresDataProvider* dataProvider;
+    std::string mConninfo;
+};
+
+class SQLiteDatabaseManager : public BaseDatabaseManager
+{
+public:
+    SQLiteDatabaseManager();
+    SQLiteDatabaseManager(const std::string conninfo);
+     ~SQLiteDatabaseManager() override;
+    virtual void populateFields(BaseEntity* /*entity*/){}
+    virtual void populateObject(const BaseEntity& /*entity*/){}
+
+    void updateEntity(const BaseEntity& entity) override;
+    int createEntity(const BaseEntity& entity) override;
+    int deleteEntity(const BaseEntity& entity)override;
+    int deleteEntityByValue(
+            const std::string tabale_name,
+            std::tuple<ColumnName, ColumnValue>) override;
+    int fetchAll(const BaseEntity& entity) override;
+    int searchByStr(const BaseEntity& entity,
+                          std::tuple<std::string, std::string> sf) override;
+    int searchByInt(const BaseEntity& entity,
+                           std::tuple<std::string,std::string,  int> field_value) override;
+    int search(const BaseEntity& entity, const std::string filter) override;
+    int starts_with(const BaseEntity& entity,
+                    std::tuple<std::string, std::string>& sf) override;
+    void executeRawSQL(const std::string sql) override;
+    int readRaw(const std::string sql) override;
+    int insert_returning_id(const std::string sql) override;
+    BaseDataProvider* provider() override;
+    std::string make_insert_stmt(const BaseEntity& entity) override;
+
+    std::string db_name();
+
+   std::string manager_type() override;
+
+protected:
+    void loadEntity(BaseEntity& entity)override;
+private:
+    SQLiteDataProvider* m_data_provider;
     std::string mConninfo;
 };
 

@@ -44,7 +44,6 @@ PostgresDataProvider::PostgresDataProvider()
     : BaseDataProvider()
     ,mPGConnector{nullptr}
 {
-    qDebug() << "PostgresDataProvider::ctor";
 }
 
 PostgresDataProvider::~PostgresDataProvider()
@@ -192,7 +191,6 @@ int PostgresDataProvider::insert_returning_id(const std::string query)
 
 int PostgresDataProvider::read(const std::string query)
 {
-
     clear();
 
     PGresult* res;
@@ -339,4 +337,126 @@ char* PostgresDataProvider::make_error_message(char* cmdError, char* pgError)
     strcpy(msg, cmdError);
     strcat(msg, pgError);
     return msg;
+}
+
+std::string PostgresDataProvider::provider_type()
+{
+    return ">> POSTGRES <<";
+}
+
+/* ----- SQLiteDataProvider --------------------- */
+
+SQLiteDataProvider::SQLiteDataProvider(const std::string dbname)
+    :m_dbname{ dbname }
+    ,m_conn{ nullptr }
+{
+    qDebug() << "SQLiteDataProvider::ctor :"<< QString::fromStdString(m_dbname);
+}
+
+SQLiteDataProvider::~SQLiteDataProvider()
+{
+    if (m_conn != nullptr )
+        delete m_conn;
+}
+
+int SQLiteDataProvider::read_data(void* database, int argc, char** argv, char** azColName)
+{
+    //std::map<std::string, std::string> record;
+    StringMapped* record = new StringMapped;
+
+    for (int i=0; i<argc; ++i){
+        record->insert(std::make_pair(azColName[i], (argv[i] ? argv[i] : "NULL")));
+    }
+
+    SQLiteDataProvider* db_provider = reinterpret_cast<SQLiteDataProvider*>(database);
+    db_provider->add_record(record);
+}
+
+void SQLiteDataProvider::add_record(StringMapped* record)
+{
+    //m_data.push_back(record);
+    append(record);
+}
+
+int SQLiteDataProvider::fetch_data(const std::string query)
+{
+}
+
+bool SQLiteDataProvider::exec_query(const std::string query)
+{
+    SQLiteResult result = open_connection();
+    const char* sql = query.c_str();
+    char* err_msg = 0;
+
+    result.result_status = sqlite3_exec(m_conn, sql, SQLiteDataProvider::read_data, this, &err_msg);
+
+    if (result.result_status != SQLITE_OK){
+        // Todo: log error messages
+        //::cout << "SQL error: " << sqlite3_errmsg(m_database) << '\n';
+        sqlite3_free(err_msg);
+        return false;
+    }
+
+    sqlite3_close(m_conn);
+    return true;
+}
+
+SQLiteResult SQLiteDataProvider::open_connection()
+{
+    qDebug() << "DBName: " << QString::fromStdString(m_dbname);
+
+    SQLiteResult result;
+    result.result_status = sqlite3_open(m_dbname.c_str(), &m_conn);
+    result.result_message = sqlite3_errmsg(m_conn);
+    return result;
+}
+
+char* SQLiteDataProvider::make_error_message(char*, char*)
+{
+
+}
+bool SQLiteDataProvider::executeQuery(const std::string query)
+{
+
+}
+
+int SQLiteDataProvider::fetchLastId(const std::string tableName)
+{
+
+}
+
+int SQLiteDataProvider::read(const std::string query)
+{
+    SQLiteResult result = open_connection();
+
+    qDebug() << "Result: "<< result.result_message << "Status: "<< result.result_status;
+
+    const char* sql = query.c_str();
+    char* err_msg = 0;
+
+    result.result_status = sqlite3_exec(m_conn, sql, SQLiteDataProvider::read_data, this, &err_msg);
+
+    if (result.result_status != SQLITE_OK){
+        // raise exception
+        sqlite3_free(err_msg);
+    }
+
+    sqlite3_close(m_conn);
+
+    return cacheSize();
+}
+
+const std::string SQLiteDataProvider::db_name()
+{
+    return m_dbname;
+}
+
+std::string SQLiteDataProvider::provider_type()
+{
+    return ">> SQLITE <<";
+}
+
+int SQLiteDataProvider::insert_returning_id(const std::string query)
+{
+
 }

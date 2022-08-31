@@ -124,11 +124,15 @@ set(PROJECT_SOURCES
         ../audio/editor/audioplayer.cpp
         ../audio/editor/audiothread.h
         ../audio/editor/audiothread.cpp
+        ../audio/audiocache.h
+        ../audio/audiocache.cpp
+        ../audio/audiocachemanager.h
 
         ../security/authentication.cpp
         ../security/user.cpp
 
         ../utils/tools.h
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -171,6 +175,19 @@ endif()
 
 target_link_directories(OATS PRIVATE ${BASS_LIBRARY_DIR})
 target_link_libraries(OATS PRIVATE ${BASS_LIBRARY})
+
+set(sqlite3_INCLUDE_DIR "../lib/sqlite3/include")
+set(sqlite3_LIBRARY_DIR "../lib/sqlite3/lib")
+
+find_library(SQLite3_LIBRARY sqlite3 ${sqlite3_LIBARRY_DIR})
+if (SQLite3_LIBRARY)
+    message(STATUS "SQLite3 library found!")
+endif()
+
+include_directories(${sqlite3_INCLUDE_DIR})
+target_link_directories(OATS PRIVATE ${sqlite3_LIBRARY_DIR})
+target_link_libraries(OATS PRIVATE ${SQLite3_LIBRARY})
+
 
 set_target_properties(OATS PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

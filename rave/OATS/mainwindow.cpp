@@ -3,6 +3,7 @@
 #include <math.h>
 #include <algorithm>
 #include <concepts>
+#include <iostream>
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -26,6 +27,7 @@
 #include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
 #include "../framework/schedule.h"
+#include "../framework/databasemanager.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audiotrackviewer.h"
@@ -35,6 +37,7 @@
 #include "../audio/audiolibitem.h"
 #include "../audio/trackpickerdialog.h"
 #include "../audio/trackbrowser.h"
+#include "../audio/audiocachemanager.h"
 
 //#include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
@@ -47,6 +50,7 @@
 #include "trackinfo.h"
 #include "jinglegrid.h"
 #include "cartpanel.h"
+
 
 
 int MainWindow::s_sched_ref{0};
@@ -65,32 +69,27 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
+    // First load any cached audio data
+    m_audio_cache_manager = std::make_unique<AUDIO::AudioCacheManager<SQLiteDatabaseManager>>(CACHE_DB_SQLITE, AUDIO_CACHE_LOCATION);
+    auto rec_count = m_audio_cache_manager->load_cached_audio();
+
+    // Load data from DB
     load_schedule(QDate::currentDate(), QTime::currentTime().hour());
 
     set_playout_widgets();
+
+    compute_schedule_time();
+
+    setup_timers();
+
+    ui->swMain->setCurrentIndex(0);
+//    ui->twLoad->setCurrentIndex(0);
 
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::keep_current, this, &MainWindow::keep_current);
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
-
-    compute_schedule_time();
-
-    m_slow_flash_timer = std::make_unique<QTimer>(this);
-    connect(m_slow_flash_timer.get(), &QTimer::timeout, this, &MainWindow::slow_flash);
-
-    m_fast_flash_timer = std::make_unique<QTimer>(this);
-    connect(m_fast_flash_timer.get(), &QTimer::timeout, this, &MainWindow::fast_flash);
-
-    m_countdown_timer = std::make_unique<QTimer>(this);
-    connect(m_countdown_timer.get(), &QTimer::timeout, this, &MainWindow::count_down);
-
-    m_main_player_timer = std::make_unique<QTimer>(this);
-    connect(m_main_player_timer.get(), &QTimer::timeout, this, &MainWindow::status_timer);
-
-    ui->swMain->setCurrentIndex(0);
-//    ui->twLoad->setCurrentIndex(0);
 
     connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
     connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1); m_control_page = ControlPage::Commercial; });
@@ -99,6 +98,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4); m_control_page = ControlPage::Jingle; });
     connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5); m_control_page = ControlPage::TrackInfo; });
     connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7); m_control_page = ControlPage::Load; });
+
+    connect(ui->btnPrint1, &QPushButton::clicked, this, [&](){m_audio_cache_manager->print_queue();});
+    connect(ui->btnPrint2, &QPushButton::clicked, this, [&](){m_audio_cache_manager->print_cache();});
+    connect(ui->btnPrint3, &QPushButton::clicked, this, [&](){m_audio_cache_manager->cache_audio();});
+    connect(ui->btnClearQue, &QPushButton::clicked, this, [&](){m_audio_cache_manager->clear_queue();});
+    connect(ui->btnClearCache, &QPushButton::clicked, this, [&](){m_audio_cache_manager->clear_cache();});
+
 
     // Audio Library Page
 
@@ -113,6 +119,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     start_timers();
 
+
     //QMainWindow::showFullScreen();
 }
 
@@ -120,6 +127,21 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setup_timers()
+{
+    m_slow_flash_timer = std::make_unique<QTimer>(this);
+    connect(m_slow_flash_timer.get(), &QTimer::timeout, this, &MainWindow::slow_flash);
+
+    m_fast_flash_timer = std::make_unique<QTimer>(this);
+    connect(m_fast_flash_timer.get(), &QTimer::timeout, this, &MainWindow::fast_flash);
+
+    m_countdown_timer = std::make_unique<QTimer>(this);
+    connect(m_countdown_timer.get(), &QTimer::timeout, this, &MainWindow::count_down);
+
+    m_main_player_timer = std::make_unique<QTimer>(this);
+    connect(m_main_player_timer.get(), &QTimer::timeout, this, &MainWindow::status_timer);
 }
 
 void MainWindow::start_timers()
@@ -267,8 +289,6 @@ void MainWindow::fetch_db_data(QDate date, int hr)
 
     sql << where_filter << and_filter << order_by;
 
-    cache_commercial_break_data(date, hr);
-
     EntityDataModel edm;
     edm.readRaw(sql.str());
 
@@ -278,6 +298,8 @@ void MainWindow::fetch_db_data(QDate date, int hr)
         fill_schedule_headers(date, hr);
         return;
     }
+
+    cache_commercial_break_data(date, hr);
 
     int last_hour = hr;
     bool is_hour_header_created = false;
@@ -317,6 +339,7 @@ void MainWindow::fetch_db_data(QDate date, int hr)
         if (sched_item->schedule_type() == OATS::ScheduleType::COMM)
         {
             auto comm_duration = get_comm_duration(sched_item->id());
+
             sched_item->audio().set_duration(comm_duration);
             sched_item->audio().set_title(
                         sched_item->schedule_time().toString("HH:mm").toStdString()+
@@ -1846,6 +1869,19 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     }
 
    ui->gridScroll->setMaximum(ui->gridScroll->maximum()+1);
+
+   auto audio_cache = std::make_unique<AUDIO::AudioCache>();
+   audio_cache->set_audio_id(audio->id());
+   audio_cache->set_title(audio->title()->value());
+   audio_cache->set_artist_name(audio->artist_fullname());
+   audio_cache->set_orig_filepath(audio->file_path()->value());
+   audio_cache->set_cache_filepath("C:\tmp");
+   audio_cache->set_audio_type(audio->audio_type()->value());
+   audio_cache->set_cache_datetime(QDateTime::currentDateTime());
+
+   std::cout << audio_cache;
+
+   m_audio_cache_manager->queue_audio(std::move(audio_cache));
 
    print_schedule_items();  // debugging purposes only
 
