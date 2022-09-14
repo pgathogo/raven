@@ -11,6 +11,8 @@ __*__
 *.def
 CMake*
 *ninja*
+*ninja_*
+*.log
 #Folders
 media
 images
