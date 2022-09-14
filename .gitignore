@@ -9,6 +9,7 @@
 __*__
 *.db
 *.def
+CMake*
 #Folders
 media
 images
