@@ -26,7 +26,7 @@ set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
 set(rave_audiolib_INCLUDE_DIRS "../audio")
 
-set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
+set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})

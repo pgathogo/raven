@@ -183,6 +183,19 @@ endif()
 target_link_directories(AudioExplorer PRIVATE ${BASS_LIBRARY_DIR})
 target_link_libraries(AudioExplorer PRIVATE ${BASS_LIBRARY})
 
+set(sqlite3_INCLUDE_DIR "../lib/sqlite3/include")
+set(sqlite3_LIBRARY_DIR "../lib/sqlite3/lib")
+
+find_library(SQLite3_LIBRARY sqlite3 ${sqlite3_LIBARRY_DIR})
+if (SQLite3_LIBRARY)
+    message(STATUS "SQLite3 library found!")
+endif()
+
+include_directories(${sqlite3_INCLUDE_DIR})
+target_link_directories(AudioExplorer PRIVATE ${sqlite3_LIBRARY_DIR})
+target_link_libraries(AudioExplorer PRIVATE ${SQLite3_LIBRARY})
+
+
 set_target_properties(AudioExplorer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

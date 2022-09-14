@@ -206,3 +206,13 @@
 8000	15059	6825361675356002	CMakeFiles/Traffik.dir/clientgroupdetaildlg.cpp.obj	3a9889a7bcfd1e0
 7430	15309	6825361677719140	CMakeFiles/Traffik.dir/bookingwizard.cpp.obj	727d3807603cbe68
 15309	15806	6825361682865296	Traffik.exe	f478e31285e879dc
+35	2441	6848593256874995	Traffik_autogen/timestamp	2539d9201ce559ca
+35	2441	6848593256874995	Traffik_autogen/mocs_compilation.cpp	2539d9201ce559ca
+35	2441	6848593256874995	D:/Home/Clients/PMS/Raven/rave/Traffik/Traffik_autogen/timestamp	2539d9201ce559ca
+35	2441	6848593256874995	D:/Home/Clients/PMS/Raven/rave/Traffik/Traffik_autogen/mocs_compilation.cpp	2539d9201ce559ca
+94	5352	6848608330654410	CMakeFiles/Traffik.dir/spottypeexclusion.cpp.obj	51dec652decc0abc
+81	5440	6848608331564378	CMakeFiles/Traffik.dir/bookingsegment.cpp.obj	b678c7d1c25f62d7
+69	5449	6848608331664393	CMakeFiles/Traffik.dir/clientgroup.cpp.obj	2dea93f0b3f22338
+65	5572	6848608332884390	CMakeFiles/Traffik.dir/agent.cpp.obj	60436051200e8b7b
+90	5665	6848608333815132	CMakeFiles/Traffik.dir/spotaudio.cpp.obj	e62c0e7264e8076f
+85	5881	6848608335925071	CMakeFiles/Traffik.dir/orderbooking.cpp.obj	792f48cada14f2c9
