@@ -13,6 +13,8 @@ CMake*
 *ninja*
 *ninja_*
 *.log
+.ninja_log
+build.ninja
 #Folders
 media
 images
