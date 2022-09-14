@@ -1296,6 +1296,8 @@ void MainWindow::delete_audio()
 
 void MainWindow::delete_audio_from_db(const std::string ids)
 {
+    // Remove audio file from database
+
     std::stringstream sql;
 
     sql << "Update rave_audio set deleted = true "
