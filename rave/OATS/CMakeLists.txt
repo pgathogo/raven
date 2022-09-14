@@ -127,6 +127,8 @@ set(PROJECT_SOURCES
         ../audio/audiocache.h
         ../audio/audiocache.cpp
         ../audio/audiocachemanager.h
+        ../audio/audiocachequeuethread.h
+        ../audio/cacheupdaterthread.h
 
         ../security/authentication.cpp
         ../security/user.cpp

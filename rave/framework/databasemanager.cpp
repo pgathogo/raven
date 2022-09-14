@@ -112,7 +112,7 @@ std::string BaseDatabaseManager::make_insert_returning_string(const BaseEntity& 
     std::string flds = columnsForInsert(entity);
     std::string vals = commaSepValues(entity);
     std::string in_a = "INSERT INTO "+entity.tableName()+"( "+flds+")";
-    std::string in_b = " VALUES ("+vals+") RETURNING id ";
+    std::string in_b = " VALUES ("+vals+") RETURNING id; ";
     std::string insert_stmt = in_a + in_b;
     return insert_stmt;
 }
@@ -307,14 +307,49 @@ SQLiteDatabaseManager::~SQLiteDatabaseManager()
 
 }
 
+std::string SQLiteDatabaseManager::makeUpdateString(const BaseEntity& entity)
+{
+   std::string flds = columnsForInsert(entity);
+   std::string vals = commaSepValues(entity);
+
+   std::vector<std::string> fld_tokens = split_string(flds, ',');
+   std::vector<std::string> val_tokens = split_string(vals, ',');
+
+   std::string upd_field{""};
+
+   for(int i=0; i<fld_tokens.size(); ++i){
+       upd_field += fld_tokens[i]+"="+val_tokens[i];
+
+       if (i < fld_tokens.size()-1)
+           upd_field += ",";
+   }
+
+   std::string in_a = "UPDATE "+entity.tableName()+" SET "+ upd_field;
+   std::string in_b = " WHERE "+entity.uniqueId()->dbColumnName()+"="+std::to_string(entity.id());
+   std::string update_stmt = in_a + in_b;
+
+   return update_stmt;
+
+}
+
 void SQLiteDatabaseManager::updateEntity(const BaseEntity& entity)
 {
+    std::string sqlQuery;
+    sqlQuery = makeUpdateString(entity);
+
+    provider()->executeQuery(sqlQuery);
 
 }
 
 int SQLiteDatabaseManager::createEntity(const BaseEntity& entity)
 {
+    std::string sql_string;
 
+    sql_string = makeInsertString(entity);
+
+    int last_id = m_data_provider->insert_returning_id(sql_string);
+
+    return last_id;
 }
 
 int SQLiteDatabaseManager::deleteEntity(const BaseEntity& entity)
@@ -333,10 +368,6 @@ int SQLiteDatabaseManager::fetchAll(const BaseEntity& entity)
     std::string sql{};
     std::string flds = columnsForSelection(entity);
     sql = "SELECT " + flds + " FROM "+entity.tableName();  //+" ORDER BY "+entity.orderBy();
-
-    qDebug() << "----- SQLiteDatabaseManager ----- ";
-    qDebug() << stoq(sql);
-    qDebug() << "----------------------------------";
 
     return provider()->read(sql);
 }

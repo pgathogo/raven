@@ -38,6 +38,9 @@
 #include "../audio/trackpickerdialog.h"
 #include "../audio/trackbrowser.h"
 #include "../audio/audiocachemanager.h"
+#include "../audio/audiocachequeuethread.h"
+#include "../audio/cacheupdaterthread.h"
+#include "../audio/audiocache.h"
 
 //#include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
@@ -70,8 +73,27 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // First load any cached audio data
-    m_audio_cache_manager = std::make_unique<AUDIO::AudioCacheManager<SQLiteDatabaseManager>>(CACHE_DB_SQLITE, AUDIO_CACHE_LOCATION);
+    m_audio_cache_manager = std::make_shared<AUDIO::AudioCacheManager<SQLiteDatabaseManager>>(CACHE_DB_SQLITE, AUDIO_CACHE_LOCATION);
     auto rec_count = m_audio_cache_manager->load_cached_audio();
+
+    m_queue_mutex = std::make_shared<QMutex>();
+
+    auto thread1 =  std::make_unique<AUDIO::AudioCacheQueueThread<SQLiteDatabaseManager>>(m_audio_cache_manager, m_queue_mutex, this);
+    auto thread2 =  std::make_unique<AUDIO::AudioCacheQueueThread<SQLiteDatabaseManager>>(m_audio_cache_manager, m_queue_mutex, this);
+    auto thread3 =  std::make_unique<AUDIO::AudioCacheQueueThread<SQLiteDatabaseManager>>(m_audio_cache_manager, m_queue_mutex, this);
+    auto thread4 =  std::make_unique<AUDIO::AudioCacheQueueThread<SQLiteDatabaseManager>>(m_audio_cache_manager, m_queue_mutex, this);
+
+    m_cache_queue_threads.push_back(std::move(thread1));
+    m_cache_queue_threads.push_back(std::move(thread2));
+    m_cache_queue_threads.push_back(std::move(thread3));
+    m_cache_queue_threads.push_back(std::move(thread4));
+
+    m_cache_updater = std::make_unique<AUDIO::CacheUpdaterThread<SQLiteDatabaseManager>>(m_audio_cache_manager, m_queue_mutex, this);
+
+    m_cache_updater_timer = std::make_unique<QTimer>(this);
+    connect(m_cache_updater_timer.get(), &QTimer::timeout, this, &MainWindow::persist_cache);
+    auto five_seconds = 5000ms;
+    m_cache_updater_timer->start(five_seconds);
 
     // Load data from DB
     load_schedule(QDate::currentDate(), QTime::currentTime().hour());
@@ -105,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnClearQue, &QPushButton::clicked, this, [&](){m_audio_cache_manager->clear_queue();});
     connect(ui->btnClearCache, &QPushButton::clicked, this, [&](){m_audio_cache_manager->clear_cache();});
 
+    connect(ui->btnPrintCache, &QPushButton::clicked, this, [&](){m_audio_cache_manager->print_cache();});
 
     // Audio Library Page
 
@@ -118,7 +141,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->vlCart->addWidget(m_cart_panel.get());
 
     start_timers();
-
 
     //QMainWindow::showFullScreen();
 }
@@ -881,32 +903,38 @@ void MainWindow::display_schedule(int start_index)
 
 void MainWindow::display_schedule2(int start_index)
 {
-    auto schedule = schedule_item(start_index);
-    auto ch = schedule->play_channel();
 
-   // for (int i=start_index; i < MAX_GRID_ITEMS; ++i){
+    auto schedule = schedule_item(start_index);
+
+    if (schedule == nullptr)
+        return;
+
+
+    auto ch = schedule->play_channel();
 
     int idx = 0;
 
-    //for (int schedule_index=start_index; schedule_index < m_schedule_items.size(); ++schedule_index){
     for (int schedule_index=0; schedule_index < m_schedule_items.size(); ++schedule_index){
-//        int schedule_index = i+start_index;
 
         if (schedule_index >= MAX_GRID_ITEMS)
             break;
 
-        //auto schedule = schedule_item(schedule_index);
-        //QTime schedule_time = schedule_time_at(schedule_index);
+        if (start_index > MAX_GRID_ITEMS)
+            break;
+
         auto schedule = schedule_item(start_index);
+
         QTime schedule_time = schedule_time_at(start_index);
         ++start_index;
 
         //schedule->set_play_channel(play_channel(schedule_index));
-        schedule->set_play_channel(ch);
+        //schedule->set_play_channel(ch);
         schedule->set_schedule_time(schedule_time);
-        ch = (ch == ChannelA) ? ChannelB : ChannelA;
+
+        //ch = (ch == ChannelA) ? ChannelB : ChannelA;
 
         m_schedule_grid[idx++]->set_subject(schedule);
+        //schedule->set_play_channel(play_channel(schedule_index));
     }
 }
 
@@ -1043,14 +1071,11 @@ void MainWindow::time_updated()
         go_current();
 }
 
-/*
-long long MainWindow::get_tick_count()
+void MainWindow::persist_cache()
 {
-    auto time_point = std::chrono::steady_clock::now();
-    auto msec = std::chrono::time_point_cast<std::chrono::milliseconds>(time_point);
-    return msec.time_since_epoch().count();
+    // Starts a thread that writes cache to database
+    m_cache_updater->start();
 }
-*/
 
 void MainWindow::slow_flash()
 {
@@ -1413,12 +1438,13 @@ OATS::ScheduleItem* MainWindow::find_next_schedule_item(OATS::ScheduleItem* curr
 
 void MainWindow::cue_next_schedule(OATS::ScheduleItem* next_schedule_item, OATS::OutputPanel* next_output_panel)
 {
+    set_scheduled_item_filepath(next_schedule_item);
+
     next_schedule_item->set_item_status(OATS::ItemStatus::CUED);
     next_output_panel->cue_item(next_schedule_item);
     next_output_panel->set_panel_status(OATS::PanelStatus::CUED);
 
     m_current_cued_item.item = next_schedule_item;
-
 
     auto duration_seconds = (int)next_schedule_item->audio().duration()/1000;
     auto intro_seconds = (int)next_schedule_item->audio().intro()/1000;
@@ -1451,6 +1477,22 @@ void MainWindow::cue_next_schedule(OATS::ScheduleItem* next_schedule_item, OATS:
 
     calculate_trigger_times();
 }
+
+void MainWindow::set_scheduled_item_filepath(OATS::ScheduleItem* schedule_item)
+{
+    std::string cache_audio_filepath =
+            m_audio_cache_manager->get_audio_cache_path(schedule_item->audio().id());
+
+    // point the scheduled item filepath to audio cache filepath
+    if (!cache_audio_filepath.empty())
+        schedule_item->audio().set_file_path(cache_audio_filepath);
+}
+
+void MainWindow::set_cache_last_play_dtime(OATS::ScheduleItem* schedule_item)
+{
+    m_audio_cache_manager->set_cache_audio_last_play_dtime(schedule_item->audio().id());
+}
+
 
 int MainWindow::calculate_yield_contribution(OATS::ScheduleItem* item)
 {
@@ -1556,9 +1598,7 @@ void MainWindow::calculate_trigger_times()
 
 void MainWindow::play_audio(OATS::OutputPanel* op)
 {
-
     if (op->panel_status() == OATS::PanelStatus::CUED){
-
 
         op->set_panel_status(OATS::PanelStatus::PLAYING);
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);
@@ -1567,6 +1607,11 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         op->set_start_tick_stamp(m_audio_tool.get_tick_count());
 
         op->schedule_item()->notify();
+
+        auto audio = op->schedule_item()->audio();
+        std::string audio_filename = audio.file_path()+
+                m_audio_tool.make_audio_filename(audio.id())+".ogg";
+        qDebug() << "FULL FILENAME >>" << stoq(audio_filename);
 
         int grid_index = index_of(op->schedule_item()->schedule_ref());
 
@@ -1578,7 +1623,6 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         auto next_output_panel = find_output_panel(next_id);
         auto next_schedule_item = find_next_schedule_item(op->schedule_item());
-
 
         if (m_current_playing_item.item != next_schedule_item){
 
@@ -1603,6 +1647,9 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
 
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYED);
         op->schedule_item()->notify();
+
+        set_cache_last_play_dtime(op->schedule_item());
+
 
 //        m_current_playing_item.item->set_item_status(OATS::ItemStatus::PLAYED);
     }
@@ -1682,6 +1729,8 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
             return;
          }
     }
+
+    set_scheduled_item_filepath(si);
 
     m_current_cued_item.item = si;
 
@@ -1822,6 +1871,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     new_audio.set_duration(audio->duration()->value());
     new_audio.set_file_path(audio->file_path()->value());
     new_audio.set_artist(audio->artist()->displayName());
+    new_audio.set_file_path(audio->audio_lib_path()->value());
 
     new_item->set_audio(new_audio);
 
@@ -1858,6 +1908,9 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
         m_schedule_items.insert(it,  std::move(new_item));
     };
 
+   if (new_item->transition_type() != OATS::TransitionType::SKIP)
+       queue_for_caching(audio);
+
     if (item_at_cursor->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
         push_items_down(grid_pos+1);
         insert_schedule_item(1);
@@ -1870,22 +1923,36 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
    ui->gridScroll->setMaximum(ui->gridScroll->maximum()+1);
 
+   //print_schedule_items();  // debugging purposes only
+}
+
+
+void MainWindow::queue_for_caching(AUDIO::Audio* audio)
+{
    auto audio_cache = std::make_unique<AUDIO::AudioCache>();
+
    audio_cache->set_audio_id(audio->id());
    audio_cache->set_title(audio->title()->value());
    audio_cache->set_artist_name(audio->artist_fullname());
-   audio_cache->set_orig_filepath(audio->file_path()->value());
-   audio_cache->set_cache_filepath("C:\tmp");
+   audio_cache->set_orig_filepath(audio->audio_lib_path()->value());
+   audio_cache->set_cache_filepath(AUDIO_CACHE_LOCATION.toStdString());
    audio_cache->set_audio_type(audio->audio_type()->value());
    audio_cache->set_cache_datetime(QDateTime::currentDateTime());
 
-   std::cout << audio_cache;
+   //std::cout << audio_cache;
 
-   m_audio_cache_manager->queue_audio(std::move(audio_cache));
-
-   print_schedule_items();  // debugging purposes only
+    for (auto const& cq_thread : m_cache_queue_threads){
+        if (cq_thread->thread_status() == AUDIO::ThreadStatus::READY){
+            cq_thread->queue_add(std::move(audio_cache));
+            if (!cq_thread->isRunning()){
+                cq_thread->start();
+                break;
+            }
+        }
+    }
 
 }
+
 
 void MainWindow::show_commercial(int schedule_ref)
 {
@@ -1895,7 +1962,7 @@ void MainWindow::show_commercial(int schedule_ref)
     m_comm_viewer->clear();
     m_comm_viewer->create_view_headers();
 
-    fetch_commercial_in_db(schedule->id());
+    fetch_commercial_from_db(schedule->id());
 
     m_comm_viewer->set_title("Commercial Break: "+schedule->schedule_time().toString("HH:mm"));
 
@@ -1946,7 +2013,6 @@ History MainWindow::make_history(int audio_id)
     } catch(DatabaseException& de) {
         showMessage(de.errorMessage());
     }
-
 
     for (auto& [name, entity] : edm->modelEntities()){
         Schedule* sched = dynamic_cast<Schedule*>(entity.get());
@@ -2021,7 +2087,7 @@ void MainWindow::print_schedule_items()
 }
 
 
-void MainWindow::fetch_commercial_in_db(int schedule_id)
+void MainWindow::fetch_commercial_from_db(int schedule_id)
 {
     std::stringstream sql;
 

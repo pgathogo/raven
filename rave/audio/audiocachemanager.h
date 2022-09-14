@@ -2,6 +2,7 @@
 #define AUDIOCACHEMANAGER_H
 
 #include <memory>
+#include <algorithm>
 #include <QFile>
 
 #include "audiocache.h"
@@ -26,6 +27,9 @@ namespace AUDIO
         void queue_to_cache();
         void clear_queue();
         void clear_cache();
+        void persist_cache();
+        std::string get_audio_cache_path(int);
+        void set_cache_audio_last_play_dtime(int);
     private:
         std::unique_ptr<T> m_dbmanager;
         AudioCache m_audio_cache;
@@ -33,6 +37,7 @@ namespace AUDIO
         std::vector<std::unique_ptr<AudioCache>> m_cache;
         QString m_cache_db;
         QString m_cache_audio_store;
+
     };
 
     template<typename T>
@@ -55,6 +60,8 @@ namespace AUDIO
     {
        int data_count = m_dbmanager->fetchAll(m_audio_cache);
 
+       qDebug() << "load_cached_audio: "<< data_count;
+
        if (data_count > 0){
            populate_cache();
        }
@@ -62,9 +69,11 @@ namespace AUDIO
        return data_count;
     }
 
+
     template<typename T>
     void AudioCacheManager<T>::queue_audio(std::unique_ptr<AudioCache> audio_cache)
     {
+
         for (auto const& ac : m_queue){
             if (ac == audio_cache)
                 return;
@@ -81,29 +90,51 @@ namespace AUDIO
 
         while (it != m_queue.end())
         {
-            AudioTool at;
+            if (std::find_if(m_cache.begin(),  m_cache.end(),
+                          [&](auto const&  ac){return ((*it)->audio_id()->value() == ac->audio_id()->value());
+                             }) != m_cache.end())
+            {
+                m_queue.erase(it);
+                continue;
+            }
 
-            qDebug() << "AUDIO ID: "<< (*it)->audio_id()->value();
+            AudioTool at;
 
             auto audio_name =  QString::fromStdString(at.make_audio_filename((*it)->audio_id()->value()));
 
+            auto ogg_name = audio_name+".ogg";
+            auto adf_name = audio_name+".adf";
+            auto png_name = audio_name+".png";
 
-            QString audio_filename = m_cache_audio_store+audio_name+".ogg";
-            auto audio_adf = m_cache_audio_store+audio_name+".adf";
-            auto audio_wave = m_cache_audio_store+audio_name+".png";
+            QString file_path = stoq((*it)->orig_filepath()->value());
+
+            QString orig_audio_filename = file_path+ogg_name;
+            auto orig_audio_adf = file_path+adf_name;
+            auto orig_audio_wave = file_path+png_name;
+
+            QString cache_audio_filename = m_cache_audio_store+ogg_name;
+            auto cache_audio_adf = m_cache_audio_store+adf_name;
+            auto cache_audio_wave = m_cache_audio_store+png_name;
 
             // Handle copy failure
-            if (!QFile::exists(audio_filename))
-                    QFile::copy(stoq((*it)->orig_filepath()->value())+audio_filename,
-                                 audio_filename);
 
-            if (!QFile::exists(audio_adf))
-                    QFile::copy(stoq((*it)->orig_filepath()->value())+audio_adf,
-                                 audio_adf);
+            bool is_copied = false;
 
-            if (!QFile::exists(audio_wave))
-                    QFile::copy(stoq((*it)->orig_filepath()->value())+audio_wave,
-                                 audio_wave);
+            if (!QFile::exists(cache_audio_filename)){
+                    is_copied = QFile::copy(orig_audio_filename, cache_audio_filename);
+                    // log this event
+            }
+
+            if (!QFile::exists(cache_audio_adf))
+                    is_copied = QFile::copy(orig_audio_adf+adf_name, cache_audio_adf);
+
+            if (!QFile::exists(cache_audio_wave))
+                    is_copied = QFile::copy(orig_audio_wave+png_name, cache_audio_wave);
+
+            (*it)->set_is_cached(true);
+            (*it)->set_cache_filepath(m_cache_audio_store.toStdString());
+
+            m_dbmanager->createEntity(*((*it).get()));
 
             m_cache.push_back(std::move(*it));
 
@@ -117,10 +148,13 @@ namespace AUDIO
    void AudioCacheManager<T>::print_queue()
    {
        printstr("---- QUEUE -----");
+       qDebug() << "Queue Size: "<< m_queue.size();
+
        for (auto const& ac : m_queue)
        {
            qDebug() << ac->audio_id()->value() << ": "<< stoq(ac->title()->value());
        }
+
        printstr("---- END-QUEUE -----");
 
    }
@@ -129,10 +163,16 @@ namespace AUDIO
    void AudioCacheManager<T>::print_cache()
    {
        printstr("---- CACHED -----");
+
        for (auto const& ac : m_cache)
        {
-           qDebug() << ac->audio_id()->value() << ": "<< stoq(ac->title()->value());
+           qDebug() << "Audio ID: " << ac->audio_id()->value();
+           qDebug() << "*Title*: " << stoq(ac->title()->value());
+           qDebug() << "Artist Name: " << stoq(ac->artist_name()->value());
+           qDebug() << "Last Play DTime: " << stoq(ac->last_play_datetime()->valueToString());
+           qDebug() << "Cache Status : " << ac->is_dirty()->value();
        }
+
        printstr("---- END-CACHED -----");
    }
 
@@ -165,34 +205,43 @@ namespace AUDIO
 
            std::unique_ptr<AudioCache> ac = std::make_unique<AudioCache>();
 
-           auto [column, value] = (*data_provider->cache()->currentElement()->begin());
+           auto it_begin = data_provider->cache()->currentElement()->begin();
+           auto it_end = data_provider->cache()->currentElement()->end();
 
-           if (column == "id")
-               ac->setId(str_to_int(value));
+           for (; it_begin != it_end; ++it_begin)
+           {
 
-           if (column == "audio_id")
-               ac->set_audio_id(str_to_int(value));
+                   auto [column, value] = (*it_begin);
 
-           if (column == "title")
-               ac->set_title(value);
+                   if (column == "id")
+                       ac->setId(str_to_int(value));
 
-           if (column == "artist_name")
-               ac->set_artist_name(value);
+                   if (column == "audio_id")
+                       ac->set_audio_id(str_to_int(value));
 
-           if (column == "orig_filepath")
-               ac->set_orig_filepath(value);
+                   if (column == "title")
+                       ac->set_title(value);
 
-           if (column == "cache_filepath")
-               ac->set_cache_filepath(value);
+                   if (column == "artist_name")
+                       ac->set_artist_name(value);
 
-           if (column == "cache_datetime")
-               ac->set_cache_datetime(QDateTime::fromString(QString::fromStdString(value)));
+                   if (column == "orig_filepath")
+                       ac->set_orig_filepath(value);
 
-           if (column == "last_play_datatime")
-               ac->set_last_play_datetime(QDateTime::fromString(QString::fromStdString(value)));
+                   if (column == "cache_filepath")
+                       ac->set_cache_filepath(value);
 
-           if (column == "audio_type")
-               ac->set_audio_type(value);
+                   if (column == "cache_datetime")
+                       ac->set_cache_datetime(QDateTime::fromString(QString::fromStdString(value)));
+
+                   if (column == "last_play_datatime")
+                       ac->set_last_play_datetime(QDateTime::fromString(QString::fromStdString(value)));
+
+                   if (column == "audio_type")
+                       ac->set_audio_type(value);
+
+                   ac->set_is_cached(true);
+           }
 
             m_cache.push_back(std::move(ac));
 
@@ -209,6 +258,41 @@ namespace AUDIO
         return m_dbmanager.get();
     }
 
+    template<typename T>
+    std::string AudioCacheManager<T>::get_audio_cache_path(int audio_id)
+    {
+        for (auto const& cache_audio: m_cache)
+        {
+            if (cache_audio->audio_id()->value() == audio_id){
+                return cache_audio->cache_filepath()->value();
+            }
+        }
+        return "";
+    }
+
+    template<typename T>
+    void AudioCacheManager<T>::set_cache_audio_last_play_dtime(int audio_id)
+    {
+       for (auto const& cache_audio: m_cache){
+           if (cache_audio->audio_id()->value() == audio_id){
+               cache_audio->set_last_play_datetime(QDateTime::currentDateTime());
+               cache_audio->set_is_dirty(true);
+               break;
+           }
+       }
+    }
+
+    template<typename T>
+    void AudioCacheManager<T>::persist_cache()
+    {
+        for (auto const& cache_audio : m_cache){
+            if (cache_audio->is_dirty()->value()){
+                m_dbmanager->updateEntity(*(cache_audio.get()));
+                cache_audio->set_is_dirty(false);
+            }
+        }
+
+    }
 
 }
 

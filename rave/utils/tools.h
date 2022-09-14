@@ -87,6 +87,18 @@ inline double str_to_double(std::string s){
     return (s.empty()) ? 0.0 : std::stod(s);
 }
 
+inline std::vector<std::string> split_string(std::string source, char delim)
+{
+    std::vector<std::string> results;
+    std::stringstream ss(source);
+    std::string item;
+
+    while(getline(ss, item, delim)){
+        results.push_back(item);
+    }
+    return results;
+}
+
 
 inline std::tuple<int, int, int> ymd(const std::string date_str)
 {

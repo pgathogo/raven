@@ -7,11 +7,13 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QTimer>
+#include <QMutex>
 
 #include "scheduleitem.h"
 #include "../audio/audio.h"
 #include "../audio/artist.h"
 #include "../audio/audiotool.h"
+#include "../audio/audiocache.h"
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/relationmapper.h"
@@ -22,6 +24,7 @@ QT_END_NAMESPACE
 
 //#define TEMP_SCHEDULE
 #define DB_SCHEDULE
+#define ENABLE_CACHE
 
 class QPushButton;
 class QLabel;
@@ -53,6 +56,12 @@ namespace AUDIO{
 
    template<typename T>
    class AudioCacheManager;
+
+   template<typename T>
+   class AudioCacheQueueThread;
+
+   template<typename T>
+   class CacheUpdaterThread;
 }
 
 struct CurrentPlayItem{
@@ -95,7 +104,7 @@ public:
     const std::string ChannelC = "C";
 
     const QString CACHE_DB_SQLITE = "audiocache.db";
-    const QString AUDIO_CACHE_LOCATION = "d:/audio/cache/";   // Temporary
+    const QString AUDIO_CACHE_LOCATION = "d:/music/cache/";   // Temporary
 
     enum class ControlPage{Home, Commercial, Segue, Cart, Jingle, TrackInfo, Load};
 
@@ -151,7 +160,7 @@ public:
 
     void load_item(int, int);
     void show_commercial(int);
-    void fetch_commercial_in_db(int);
+    void fetch_commercial_from_db(int);
     void show_track_info(int);
     History make_history(int);
 
@@ -159,6 +168,8 @@ public:
     void print(QString);
 
     int get_comm_duration(int);
+    void set_scheduled_item_filepath(OATS::ScheduleItem*);
+    void set_cache_last_play_dtime(OATS::ScheduleItem*);
 
 private slots:
     void close_win();
@@ -188,7 +199,9 @@ private slots:
 
     void push_items_down(int);
     void reprint_schedule(int);
+    void queue_for_caching(AUDIO::Audio*);
 //    void insert_schedule_item(int, std::unique_ptr<OATS::ScheduleItem>);
+    void persist_cache();
 
 private:
     Ui::MainWindow *ui;
@@ -237,7 +250,18 @@ private:
 
     std::map<int, std::vector<CommBreak>> m_comm_breaks;
 
-    std::unique_ptr<AUDIO::AudioCacheManager<SQLiteDatabaseManager>> m_audio_cache_manager;
+    std::shared_ptr<AUDIO::AudioCacheManager<SQLiteDatabaseManager>> m_audio_cache_manager;
+
+    std::unique_ptr<AUDIO::AudioCacheQueueThread<SQLiteDatabaseManager>> m_cache_queue_thread;
+
+    std::vector<std::unique_ptr<AUDIO::AudioCacheQueueThread<SQLiteDatabaseManager>>> m_cache_queue_threads;
+
+    std::unique_ptr<AUDIO::CacheUpdaterThread<SQLiteDatabaseManager>> m_cache_updater;
+
+    std::unique_ptr<QTimer> m_cache_updater_timer;
+
+    std::shared_ptr<QMutex> m_queue_mutex;
+
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate, int);

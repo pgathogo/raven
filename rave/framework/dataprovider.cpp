@@ -359,17 +359,29 @@ SQLiteDataProvider::~SQLiteDataProvider()
         delete m_conn;
 }
 
-int SQLiteDataProvider::read_data(void* database, int argc, char** argv, char** azColName)
+int SQLiteDataProvider::read_data(void* context, int argc, char** argv, char** azColName)
 {
-    //std::map<std::string, std::string> record;
     StringMapped* record = new StringMapped;
-
     for (int i=0; i<argc; ++i){
         record->insert(std::make_pair(azColName[i], (argv[i] ? argv[i] : "NULL")));
     }
 
-    SQLiteDataProvider* db_provider = reinterpret_cast<SQLiteDataProvider*>(database);
+    SQLiteDataProvider* db_provider = reinterpret_cast<SQLiteDataProvider*>(context);
     db_provider->add_record(record);
+
+    return 0;
+
+}
+
+int SQLiteDataProvider::exec_return_id(void* _id, int argc, char** argv, char** azColName)
+{
+    const char* last_id = argv[0];
+    return std::stoi(last_id);
+}
+
+int SQLiteDataProvider::empty_callback(void* _id, int argc, char** argv, char** azColName)
+{
+    return 0;
 }
 
 void SQLiteDataProvider::add_record(StringMapped* record)
@@ -415,9 +427,23 @@ char* SQLiteDataProvider::make_error_message(char*, char*)
 {
 
 }
+
 bool SQLiteDataProvider::executeQuery(const std::string query)
 {
+    SQLiteResult result = open_connection();
+    const char* sql = query.c_str();
+    char* err_msg = 0;
 
+    int last_id = -1;
+    result.result_status = sqlite3_exec(m_conn, sql, SQLiteDataProvider::empty_callback, this, &err_msg);
+
+    if (result.result_status != SQLITE_OK){
+       sqlite3_free(err_msg);
+       return false;
+    }
+
+    sqlite3_close(m_conn);
+    return true;
 }
 
 int SQLiteDataProvider::fetchLastId(const std::string tableName)
@@ -428,8 +454,6 @@ int SQLiteDataProvider::fetchLastId(const std::string tableName)
 int SQLiteDataProvider::read(const std::string query)
 {
     SQLiteResult result = open_connection();
-
-    qDebug() << "Result: "<< result.result_message << "Status: "<< result.result_status;
 
     const char* sql = query.c_str();
     char* err_msg = 0;
@@ -458,5 +482,23 @@ std::string SQLiteDataProvider::provider_type()
 
 int SQLiteDataProvider::insert_returning_id(const std::string query)
 {
+    SQLiteResult result = open_connection();
 
+    const char* sql = query.c_str();
+    char* err_msg = 0;
+
+    int last_id = -1;
+    result.result_status = sqlite3_exec(m_conn, sql, SQLiteDataProvider::exec_return_id, &last_id, &err_msg);
+
+    if (result.result_status != SQLITE_OK){
+       // raise exception
+       sqlite3_free(err_msg);
+       return -1;
+    }
+
+    last_id = sqlite3_last_insert_rowid(m_conn);
+
+    sqlite3_close(m_conn);
+
+    return last_id;
 }

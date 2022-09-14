@@ -13,6 +13,7 @@ namespace AUDIO
         , m_cache_datetime{}
         , m_last_play_datetime{}
         , m_audio_type{}
+        , m_is_dirty{}
     {
         m_audio_id = createField<IntegerField>("audio_id", "Audio ID");
         m_title = createField<StringField>("title", "Title");
@@ -30,6 +31,10 @@ namespace AUDIO
         m_audio_type->addChoice({"NBITE", "News Bite"});
 
         m_is_cached = createField<BooleanField>("is_cached", "Audio Cached");
+        m_is_cached->setFormOnly(true);
+
+        m_is_dirty = createField<BooleanField>("is_dirty", "Audio Dirty");
+        m_is_dirty->setFormOnly(true);
 
         m_header << QString::fromStdString(m_title->fieldLabel());
         setTableName("audio_cache");
@@ -37,6 +42,12 @@ namespace AUDIO
         m_cache_datetime->setValue(QDateTime::currentDateTime());
 
     }
+
+   bool operator ==(const AudioCache& lhs, const AudioCache& rhs)
+   {
+       qDebug() << "comparing ...";
+       return (lhs.m_audio_id->value() == rhs.m_audio_id->value());
+   }
 
    std::ostream& operator<<(std::ostream& os, const AudioCache& ac)
    {
@@ -94,6 +105,11 @@ namespace AUDIO
             return m_is_cached;
         }
 
+        BooleanField* AudioCache::is_dirty() const
+        {
+            return m_is_dirty;
+        }
+
         void AudioCache::set_audio_id(int id)
         {
             m_audio_id->setValue(id);
@@ -140,6 +156,11 @@ namespace AUDIO
         void AudioCache::set_is_cached(bool cached)
         {
             m_is_cached->setValue(cached);
+        }
+
+        void AudioCache::set_is_dirty(bool dirt)
+        {
+            m_is_dirty->setValue(dirt);
         }
 
         std::string AudioCache::tableName() const

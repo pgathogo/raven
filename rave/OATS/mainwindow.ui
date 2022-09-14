@@ -90,7 +90,7 @@
                 <string notr="true">background-color: rgb(170, 255, 127);S</string>
                </property>
                <property name="currentIndex">
-                <number>7</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="pgHome">
                 <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -192,9 +192,9 @@
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QPushButton" name="pushButton_7">
+              <widget class="QPushButton" name="btnPrintCache">
                <property name="text">
-                <string>PushButton</string>
+                <string>Print Cache</string>
                </property>
               </widget>
              </item>
@@ -283,7 +283,7 @@
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

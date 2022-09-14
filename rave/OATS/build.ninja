@@ -519,7 +519,7 @@ build OATS_autogen/EWIEGA46WW/qrc_oats.cpp | ${cmake_ninja_workdir}OATS_autogen/
 #############################################
 # Phony custom command for CMakeFiles\OATS_autogen_timestamp_deps
 
-build CMakeFiles/OATS_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/OATS_autogen_timestamp_deps: phony C$:/Qt/6.2.4/mingw_64/./bin/uic.exe C$:/Qt/6.2.4/mingw_64/lib/libQt6Core.a C$:/Qt/6.2.4/mingw_64/./bin/moc.exe
+build CMakeFiles/OATS_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/OATS_autogen_timestamp_deps: phony C$:/Qt/6.2.4/mingw_64/lib/libQt6Core.a C$:/Qt/6.2.4/mingw_64/./bin/moc.exe C$:/Qt/6.2.4/mingw_64/./bin/uic.exe
 
 
 #############################################

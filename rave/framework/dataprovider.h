@@ -82,13 +82,17 @@ class SQLiteDataProvider : public BaseDataProvider
         int read(const std::string query) override;
         SQLiteResult open_connection();
         char* make_error_message(char*, char*);
-        static int read_data(void*, int, char**, char**);
+
         void add_record(StringMapped*);
         int fetch_data(const std::string);
         bool exec_query(const std::string);
 
         const std::string db_name();
         std::string provider_type() override;
+
+        static int read_data(void*, int, char**, char**);
+        static int exec_return_id(void* , int , char** , char** );
+        static int empty_callback(void*, int, char**, char**);
 
     private:
         std::string m_dbname;

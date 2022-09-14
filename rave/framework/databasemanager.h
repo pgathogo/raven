@@ -134,6 +134,7 @@ public:
 
 protected:
     void loadEntity(BaseEntity& entity)override;
+    std::string makeUpdateString(const BaseEntity& entity) override;
 private:
     SQLiteDataProvider* m_data_provider;
     std::string mConninfo;

@@ -1,6 +1,7 @@
 #ifndef AUDIOCACHE_H
 #define AUDIOCACHE_H
 
+#include <iostream>
 
 #include "../framework/baseentity.h"
 
@@ -26,6 +27,7 @@ namespace AUDIO
         DateTimeField* last_play_datetime() const;
         ChoiceField<std::string>* audio_type() const;
         BooleanField* is_cached() const;
+        BooleanField* is_dirty() const;
 
         void set_audio_id(int);
         void set_title(const std::string);
@@ -36,6 +38,7 @@ namespace AUDIO
         void set_last_play_datetime(QDateTime);
         void set_audio_type(std::string);
         void set_is_cached(bool);
+        void set_is_dirty(bool);
 
         std::string tableName() const override;
         void setTableName(const std::string table_name) override;
@@ -51,7 +54,8 @@ namespace AUDIO
         std::unique_ptr<BaseEntity> cloneAsUnique() override;
         void afterMapping(BaseEntity& entity) override;
 
-        friend bool operator ==(const AudioCache& lhs, const AudioCache& rhs) {return (lhs.m_audio_id == rhs.m_audio_id); }
+        friend bool operator ==(const AudioCache& lhs, const AudioCache& rhs);
+        friend std::ostream& operator<<(std::ostream& os, const AudioCache& ac);
 
     private:
         IntegerField* m_audio_id;
@@ -63,6 +67,7 @@ namespace AUDIO
         DateTimeField* m_last_play_datetime;
         ChoiceField<std::string>* m_audio_type;
         BooleanField* m_is_cached;
+        BooleanField* m_is_dirty;
 
         QStringList m_header;
         std::string m_table_name;
