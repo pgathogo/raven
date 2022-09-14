@@ -37,4 +37,5 @@ Debug
 Release
 CMakeFiles/
 Testing/
+.qtc_clangd/
 *_autogen
