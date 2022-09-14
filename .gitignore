@@ -12,7 +12,7 @@ __*__
 CMake*
 *ninja*
 *ninja_*
-*.log*
+*.log
 #Folders
 media
 images
@@ -37,4 +37,5 @@ Debug
 Release
 CMakeFiles/
 Testing/
+.qtc_clangd/
 *_autogen
