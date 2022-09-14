@@ -929,6 +929,8 @@ void MainWindow::search_audio()
 
     r_map->map_data();
 
+    //TODO: Refactor this code
+
     for (auto const& [record_id, record] : r_map->mapped_entities()){
 
         auto audio_uPtr = std::make_unique<AUDIO::Audio>();
