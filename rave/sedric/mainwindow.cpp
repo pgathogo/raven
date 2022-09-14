@@ -792,7 +792,7 @@ void MainWindow::play_audio()
     if (audio == nullptr)
         return;
 
-    AudioTool audio_tool;
+    AUDIO::AudioTool audio_tool;
     auto ogg_file = audio_tool.make_audio_filename(audio->id())+".ogg";
     auto full_audio_name = audio->file_path()->value()+ogg_file;
 
