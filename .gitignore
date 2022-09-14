@@ -13,8 +13,12 @@ CMake*
 *ninja*
 *ninja_*
 *.log
-.ninja_log
+rave/OATS/.ninja_log
+rave/AudioExplorer/.ninja_log
+rave/sedric/.ninja_log
+rave/Traffik/.ninja_log
 build.ninja
+*.cmake
 #Folders
 media
 images
