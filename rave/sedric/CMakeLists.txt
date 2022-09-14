@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER "C:/mingw64/bin/x86_64-w64-mingw32-g++.exe")
+set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
 project(sedric LANGUAGES CXX)
 
@@ -157,6 +157,18 @@ endif()
 
 target_link_directories(sedric PRIVATE ${BASS_LIBRARY_DIR})
 target_link_libraries(sedric PRIVATE ${BASS_LIBRARY})
+
+set(sqlite3_INCLUDE_DIR "../lib/sqlite3/include")
+set(sqlite3_LIBRARY_DIR "../lib/sqlite3/lib")
+
+find_library(SQLite3_LIBRARY sqlite3 ${sqlite3_LIBRARY_DIR})
+if (SQLite3_LIBRARY)
+    message(STATUS "SQLite3 library found.")
+endif()
+
+include_directories(${sqlite3_INCLUDE_DIR})
+target_link_directories(sedric PRIVATE ${sqlite3_LIBRARY_DIR})
+target_link_libraries(sedric PRIVATE ${SQLite3_LIBRARY})
 
 #set_target_properties(sedric PROPERTIES
 #    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

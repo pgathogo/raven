@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-#set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
+#set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/bin/Hostx64/x64/cl.exe")
 
 project(Traffik VERSION 0.1 LANGUAGES CXX)
 

@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_PREFIX_PATH "C:/Qt/6.2.4/mingw_64/lib/cmake")
+set(CMAKE_PREFIX_PATH "C:/Qt/6.4.0/mingw_64/lib/cmake")
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
@@ -26,7 +26,7 @@ set(rave_framework_INCLUDE_DIRS "../framework")
 set(rave_security_INCLUDE_DIRS "../framework")
 set(rave_audiolib_INCLUDE_DIRS "../audio")
 
-set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/9.5")
+set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})

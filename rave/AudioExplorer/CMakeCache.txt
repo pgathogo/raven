@@ -83,11 +83,62 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Enable/Disable output of compile commands during generation.
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
 
+//Value Computed by CMake.
+CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=D:/Home/Clients/PMS/Raven/rave/AudioExplorer/CMakeFiles/pkgRedirects
+
 //Convert GNU import libraries to MS format (requires Visual Studio)
 CMAKE_GNUtoMS:BOOL=OFF
 
+//User executables (bin)
+CMAKE_INSTALL_BINDIR:PATH=bin
+
+//Read-only architecture-independent data (DATAROOTDIR)
+CMAKE_INSTALL_DATADIR:PATH=
+
+//Read-only architecture-independent data root (share)
+CMAKE_INSTALL_DATAROOTDIR:PATH=share
+
+//Documentation root (DATAROOTDIR/doc/PROJECT_NAME)
+CMAKE_INSTALL_DOCDIR:PATH=
+
+//C header files (include)
+CMAKE_INSTALL_INCLUDEDIR:PATH=include
+
+//Info documentation (DATAROOTDIR/info)
+CMAKE_INSTALL_INFODIR:PATH=
+
+//Object code libraries (lib)
+CMAKE_INSTALL_LIBDIR:PATH=lib
+
+//Program executables (libexec)
+CMAKE_INSTALL_LIBEXECDIR:PATH=libexec
+
+//Locale-dependent data (DATAROOTDIR/locale)
+CMAKE_INSTALL_LOCALEDIR:PATH=
+
+//Modifiable single-machine data (var)
+CMAKE_INSTALL_LOCALSTATEDIR:PATH=var
+
+//Man documentation (DATAROOTDIR/man)
+CMAKE_INSTALL_MANDIR:PATH=
+
+//C header files for non-gcc (/usr/include)
+CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
+
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/AudioExplorer
+
+//Run-time variable data (LOCALSTATEDIR/run)
+CMAKE_INSTALL_RUNSTATEDIR:PATH=
+
+//System admin executables (sbin)
+CMAKE_INSTALL_SBINDIR:PATH=sbin
+
+//Modifiable architecture-independent data (com)
+CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
+
+//Read-only single-machine data (etc)
+CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/mingw64/bin/ld.exe
@@ -254,31 +305,37 @@ QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH:STRING=
 QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 
 //The directory containing a CMake configuration file for QT.
-QT_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6
+QT_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6
 
 //The directory containing a CMake configuration file for Qt6CoreTools.
-Qt6CoreTools_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6CoreTools
+Qt6CoreTools_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6CoreTools
 
 //The directory containing a CMake configuration file for Qt6Core.
-Qt6Core_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6Core
+Qt6Core_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6Core
 
 //The directory containing a CMake configuration file for Qt6EntryPointPrivate.
-Qt6EntryPointPrivate_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6EntryPointPrivate
+Qt6EntryPointPrivate_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6EntryPointPrivate
 
 //The directory containing a CMake configuration file for Qt6GuiTools.
-Qt6GuiTools_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6GuiTools
+Qt6GuiTools_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6GuiTools
 
 //The directory containing a CMake configuration file for Qt6Gui.
-Qt6Gui_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6Gui
+Qt6Gui_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6Gui
 
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
-Qt6WidgetsTools_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6WidgetsTools
+Qt6WidgetsTools_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6WidgetsTools
 
 //The directory containing a CMake configuration file for Qt6Widgets.
-Qt6Widgets_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6Widgets
+Qt6Widgets_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6Widgets
+
+//The directory containing a CMake configuration file for Qt6ZlibPrivate.
+Qt6ZlibPrivate_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6ZlibPrivate
 
 //The directory containing a CMake configuration file for Qt6.
-Qt6_DIR:PATH=C:/Qt/6.2.4/mingw_64/lib/cmake/Qt6
+Qt6_DIR:PATH=C:/Qt/6.4.0/mingw_64/lib/cmake/Qt6
+
+//Path to a library.
+SQLite3_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib
 
 //Path to a program.
 Vulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=Vulkan_GLSLANG_VALIDATOR_EXECUTABLE-NOTFOUND
@@ -291,6 +348,9 @@ Vulkan_INCLUDE_DIR:PATH=Vulkan_INCLUDE_DIR-NOTFOUND
 
 //Path to a library.
 Vulkan_LIBRARY:FILEPATH=Vulkan_LIBRARY-NOTFOUND
+
+//Path to a program.
+WINDEPLOYQT_EXECUTABLE:FILEPATH=C:/Qt/6.4.0/mingw_64/bin/windeployqt.exe
 
 
 ########################
@@ -306,9 +366,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=d:/Home/Clients/PMS/Raven/rave/AudioExplorer
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=23
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=24
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=1
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake.exe
 //Path to cpack program executable.
@@ -366,6 +426,38 @@ CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=D:/Home/Clients/PMS/raven/rave/AudioExplorer
+//ADVANCED property for variable: CMAKE_INSTALL_BINDIR
+CMAKE_INSTALL_BINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATADIR
+CMAKE_INSTALL_DATADIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATAROOTDIR
+CMAKE_INSTALL_DATAROOTDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DOCDIR
+CMAKE_INSTALL_DOCDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INCLUDEDIR
+CMAKE_INSTALL_INCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INFODIR
+CMAKE_INSTALL_INFODIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBDIR
+CMAKE_INSTALL_LIBDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBEXECDIR
+CMAKE_INSTALL_LIBEXECDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALEDIR
+CMAKE_INSTALL_LOCALEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALSTATEDIR
+CMAKE_INSTALL_LOCALSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_MANDIR
+CMAKE_INSTALL_MANDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_OLDINCLUDEDIR
+CMAKE_INSTALL_OLDINCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_RUNSTATEDIR
+CMAKE_INSTALL_RUNSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SBINDIR
+CMAKE_INSTALL_SBINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SHAREDSTATEDIR
+CMAKE_INSTALL_SHAREDSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SYSCONFDIR
+CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MAKE_PROGRAM
@@ -408,7 +500,7 @@ CMAKE_RC_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_READELF
 CMAKE_READELF-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.23
+CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.24
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG
@@ -438,7 +530,7 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding PostgreSQL
-FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/Program Files/PostgreSQL/14/lib/libpq.lib][C:/Program Files/PostgreSQL/14/include][c ][v14.3()]
+FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/Program Files/PostgreSQL/14/lib/libpq.lib][C:/Program Files/PostgreSQL/14/include][c ][v14.5()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding WrapAtomic
@@ -482,27 +574,29 @@ QT_FEATURE_arm_crc32:INTERNAL=OFF
 //Qt feature: arm_crypto (from target Qt6::Core)
 QT_FEATURE_arm_crypto:INTERNAL=OFF
 //Qt feature: avx (from target Qt6::Core)
-QT_FEATURE_avx:INTERNAL=OFF
+QT_FEATURE_avx:INTERNAL=ON
 //Qt feature: avx2 (from target Qt6::Core)
-QT_FEATURE_avx2:INTERNAL=OFF
+QT_FEATURE_avx2:INTERNAL=ON
 //Qt feature: avx512bw (from target Qt6::Core)
-QT_FEATURE_avx512bw:INTERNAL=OFF
+QT_FEATURE_avx512bw:INTERNAL=ON
 //Qt feature: avx512cd (from target Qt6::Core)
-QT_FEATURE_avx512cd:INTERNAL=OFF
+QT_FEATURE_avx512cd:INTERNAL=ON
 //Qt feature: avx512dq (from target Qt6::Core)
-QT_FEATURE_avx512dq:INTERNAL=OFF
+QT_FEATURE_avx512dq:INTERNAL=ON
 //Qt feature: avx512er (from target Qt6::Core)
-QT_FEATURE_avx512er:INTERNAL=OFF
+QT_FEATURE_avx512er:INTERNAL=ON
 //Qt feature: avx512f (from target Qt6::Core)
-QT_FEATURE_avx512f:INTERNAL=OFF
+QT_FEATURE_avx512f:INTERNAL=ON
 //Qt feature: avx512ifma (from target Qt6::Core)
-QT_FEATURE_avx512ifma:INTERNAL=OFF
+QT_FEATURE_avx512ifma:INTERNAL=ON
 //Qt feature: avx512pf (from target Qt6::Core)
-QT_FEATURE_avx512pf:INTERNAL=OFF
+QT_FEATURE_avx512pf:INTERNAL=ON
 //Qt feature: avx512vbmi (from target Qt6::Core)
-QT_FEATURE_avx512vbmi:INTERNAL=OFF
+QT_FEATURE_avx512vbmi:INTERNAL=ON
+//Qt feature: avx512vbmi2 (from target Qt6::Core)
+QT_FEATURE_avx512vbmi2:INTERNAL=ON
 //Qt feature: avx512vl (from target Qt6::Core)
-QT_FEATURE_avx512vl:INTERNAL=OFF
+QT_FEATURE_avx512vl:INTERNAL=ON
 //Qt feature: backtrace (from target Qt6::Core)
 QT_FEATURE_backtrace:INTERNAL=OFF
 //Qt feature: buttongroup (from target Qt6::Widgets)
@@ -569,6 +663,8 @@ QT_FEATURE_cxx1z:INTERNAL=ON
 QT_FEATURE_cxx20:INTERNAL=OFF
 //Qt feature: cxx2a (from target Qt6::Core)
 QT_FEATURE_cxx2a:INTERNAL=OFF
+//Qt feature: cxx2b (from target Qt6::Core)
+QT_FEATURE_cxx2b:INTERNAL=OFF
 //Qt feature: datawidgetmapper (from target Qt6::Widgets)
 QT_FEATURE_datawidgetmapper:INTERNAL=ON
 //Qt feature: datestring (from target Qt6::Core)
@@ -587,6 +683,8 @@ QT_FEATURE_debug:INTERNAL=OFF
 QT_FEATURE_debug_and_release:INTERNAL=OFF
 //Qt feature: desktopservices (from target Qt6::Gui)
 QT_FEATURE_desktopservices:INTERNAL=ON
+//Qt feature: developer_build (from target Qt6::Core)
+QT_FEATURE_developer_build:INTERNAL=OFF
 //Qt feature: dial (from target Qt6::Widgets)
 QT_FEATURE_dial:INTERNAL=ON
 //Qt feature: dialog (from target Qt6::Widgets)
@@ -603,6 +701,8 @@ QT_FEATURE_directfb:INTERNAL=OFF
 QT_FEATURE_directwrite:INTERNAL=ON
 //Qt feature: directwrite3 (from target Qt6::Gui)
 QT_FEATURE_directwrite3:INTERNAL=ON
+//Qt feature: dladdr (from target Qt6::Core)
+QT_FEATURE_dladdr:INTERNAL=OFF
 //Qt feature: dlopen (from target Qt6::Core)
 QT_FEATURE_dlopen:INTERNAL=OFF
 //Qt feature: dockwidget (from target Qt6::Widgets)
@@ -654,7 +754,7 @@ QT_FEATURE_evdev:INTERNAL=OFF
 //Qt feature: eventfd (from target Qt6::Core)
 QT_FEATURE_eventfd:INTERNAL=OFF
 //Qt feature: f16c (from target Qt6::Core)
-QT_FEATURE_f16c:INTERNAL=OFF
+QT_FEATURE_f16c:INTERNAL=ON
 //Qt feature: filedialog (from target Qt6::Widgets)
 QT_FEATURE_filedialog:INTERNAL=ON
 //Qt feature: filesystemiterator (from target Qt6::Core)
@@ -783,6 +883,8 @@ QT_FEATURE_lcdnumber:INTERNAL=ON
 QT_FEATURE_libinput:INTERNAL=OFF
 //Qt feature: libinput_axis_api (from target Qt6::Gui)
 QT_FEATURE_libinput_axis_api:INTERNAL=OFF
+//Qt feature: libinput_hires_wheel_support (from target Qt6::Gui)
+QT_FEATURE_libinput_hires_wheel_support:INTERNAL=OFF
 //Qt feature: library (from target Qt6::Core)
 QT_FEATURE_library:INTERNAL=ON
 //Qt feature: libudev (from target Qt6::Core)
@@ -827,8 +929,12 @@ QT_FEATURE_multiprocess:INTERNAL=ON
 QT_FEATURE_neon:INTERNAL=OFF
 //Qt feature: network (from target Qt6::Core)
 QT_FEATURE_network:INTERNAL=ON
+//Qt feature: no_direct_extern_access (from target Qt6::Core)
+QT_FEATURE_no_direct_extern_access:INTERNAL=OFF
 //Qt feature: no_pkg_config (from target Qt6::Core)
 QT_FEATURE_no_pkg_config:INTERNAL=ON
+//Qt feature: no_prefix (from target Qt6::Core)
+QT_FEATURE_no_prefix:INTERNAL=OFF
 //Qt feature: opengl (from target Qt6::Gui)
 QT_FEATURE_opengl:INTERNAL=ON
 //Qt feature: opengles2 (from target Qt6::Gui)
@@ -983,6 +1089,8 @@ QT_FEATURE_statustip:INTERNAL=ON
 QT_FEATURE_statx:INTERNAL=OFF
 //Qt feature: std_atomic64 (from target Qt6::Core)
 QT_FEATURE_std_atomic64:INTERNAL=ON
+//Qt feature: stdlib_libcpp (from target Qt6::Core)
+QT_FEATURE_stdlib_libcpp:INTERNAL=OFF
 //Qt feature: stringlistmodel (from target Qt6::Core)
 QT_FEATURE_stringlistmodel:INTERNAL=ON
 //Qt feature: style_android (from target Qt6::Widgets)
@@ -1093,6 +1201,8 @@ QT_FEATURE_use_gold_linker:INTERNAL=OFF
 QT_FEATURE_use_lld_linker:INTERNAL=OFF
 //Qt feature: use_mold_linker (from target Qt6::Core)
 QT_FEATURE_use_mold_linker:INTERNAL=OFF
+//Qt feature: vaes (from target Qt6::Core)
+QT_FEATURE_vaes:INTERNAL=ON
 //Qt feature: validator (from target Qt6::Gui)
 QT_FEATURE_validator:INTERNAL=ON
 //Qt feature: vkgen (from target Qt6::Gui)
@@ -1155,4 +1265,8 @@ Vulkan_GLSLC_EXECUTABLE-ADVANCED:INTERNAL=1
 Vulkan_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: Vulkan_LIBRARY
 Vulkan_LIBRARY-ADVANCED:INTERNAL=1
+//linker supports push/pop state
+_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
+//CMAKE_INSTALL_PREFIX during last run
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/AudioExplorer
 
