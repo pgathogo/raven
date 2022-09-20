@@ -19,6 +19,25 @@ rave/sedric/.ninja_log
 rave/Traffik/.ninja_log
 build.ninja
 *.cmake
+qt6vars.bat
+qt6vars.cmd
+#Ninja files
+rave/AudioExplorer/.ninja_deps
+rave/AudioExplorer/.ninja_log
+rave/AudioExplorer/Testing/Temporary/LastTest.log
+rave/OATS/.ninja_deps
+rave/OATS/.ninja_log
+rave/OATS/Testing/Temporary/LastTest.log
+rave/OATS/build.ninja
+rave/OATS/qtcsettings.cmake
+rave/Traffik/.ninja_deps
+rave/Traffik/.qt/QtDeploySupport.cmake
+rave/Traffik/Traffik_autogen/moc_predefs.h
+rave/Traffik/build.ninja
+rave/sedric/.ninja_deps
+rave/sedric/.ninja_log
+rave/sedric/build.ninja
+rave/sedric/cmake_install.cmake
 #Folders
 media
 images
