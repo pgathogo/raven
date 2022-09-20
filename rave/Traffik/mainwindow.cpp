@@ -112,7 +112,7 @@ void MainWindow::createActions()
     scheduleAction->setIcon(QIcon(":/images/media/icons/schedule.png"));
     setupMenu->addAction(scheduleAction);
     scheduleAction->setStatusTip(tr("Schedule"));
-    connect(scheduleAction, &QAction::triggered, this, &MainWindow::openSchedule);
+    connect(scheduleAction, &QAction::triggered, this, &MainWindow::open_schedule);
 
     /*
     */
@@ -179,7 +179,7 @@ void MainWindow::openSetupForm()
 }
 
 
-void MainWindow::openSchedule()
+void MainWindow::open_schedule()
 {
     ScheduleForm* schedForm = createSubWindow<ScheduleForm>();
     schedForm->exec();

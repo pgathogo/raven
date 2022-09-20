@@ -68,7 +68,7 @@ private slots:
     void browseClients();
     void showRegister();
     void openSetupForm();
-    void openSchedule();
+    void open_schedule();
     void open_merged_browser();
     void open_setup_browser();
     void open_cue_editor();

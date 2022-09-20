@@ -28,6 +28,8 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
 
     ui->dtSchedule->setDate(QDate::currentDate());
 
+    ui->btnDelete->setEnabled(false);
+
     setWindowTitle("Schedule Management Form");
 }
 
@@ -126,6 +128,8 @@ void ScheduleForm::build_tree_view()
         ui->tvSchedule->setModel(sched_model);
 
         ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
+
+        ui->btnDelete->setEnabled(true);
     }
 
 }
