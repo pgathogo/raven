@@ -222,6 +222,9 @@ namespace SEDRIC{
 
     void SedricScheduleItem::clear_display_items()
     {
+        if (m_display_items.size() == 0)
+            return;
+
         auto it_start = m_display_items.begin();
         auto it_end = m_display_items.end();
 

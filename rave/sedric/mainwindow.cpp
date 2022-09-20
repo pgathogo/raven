@@ -488,7 +488,10 @@ void MainWindow::new_schedule()
                           QMessageBox::Cancel) == QMessageBox::Ok)
     {
        clear_schedule_model();
-       m_scheduler->new_schedule(m_datetime_selection.sel_date, get_selected_hours_asInt());
+
+       auto  hrs = get_selected_hours_asInt();
+       if(hrs.size() > 0)
+           m_scheduler->new_schedule(m_datetime_selection.sel_date, get_selected_hours_asInt());
     }
 }
 
@@ -536,6 +539,7 @@ void MainWindow::remove_items_by_date_hour(QDate date, int hour)
 void MainWindow::clear_schedule_model()
 {
     m_scheduler->clear_display_items();
+
     m_schedule_model->clear();
     create_model_headers();
     set_column_width();
@@ -661,7 +665,11 @@ void MainWindow::hour_cb_closed()
 
 void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
 {
+    if (sel_hours.size() == 0)
+        return
+
     clear_schedule_model();
+
     auto processed = fetch_schedule_from_cache(sel_date, sel_hours); //selected_hours);
 
     std::vector<int> uncached_hours;
@@ -679,8 +687,16 @@ void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
 
 std::vector<int> MainWindow::get_selected_hours_asInt()
 {
+    std::vector<int> hours;
+
+    qDebug() << m_cb_hour->count();
+
+    if (m_cb_hour->count() == 0)
+        return hours;
+
     auto selected_hours = split_string(m_cb_hour->currentText().toStdString(), ',');
-    std::vector<int> hours = vector_str_to_int(selected_hours);
+    hours = vector_str_to_int(selected_hours);
+
     return hours;
 }
 
