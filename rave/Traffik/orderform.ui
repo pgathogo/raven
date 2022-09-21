@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
-    <height>480</height>
+    <width>767</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -164,6 +164,9 @@
          <property name="readOnly">
           <bool>true</bool>
          </property>
+         <property name="buttonSymbols">
+          <enum>QAbstractSpinBox::NoButtons</enum>
+         </property>
          <property name="maximum">
           <number>9999</number>
          </property>
@@ -183,6 +186,9 @@
         <widget class="QSpinBox" name="sbSBooked">
          <property name="readOnly">
           <bool>true</bool>
+         </property>
+         <property name="buttonSymbols">
+          <enum>QAbstractSpinBox::NoButtons</enum>
          </property>
          <property name="maximum">
           <number>9999</number>
