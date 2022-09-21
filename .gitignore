@@ -34,6 +34,7 @@ rave/Traffik/.ninja_deps
 rave/Traffik/.qt/QtDeploySupport.cmake
 rave/Traffik/Traffik_autogen/moc_predefs.h
 rave/Traffik/build.ninja
+Traffik/cmake_install.cmake
 rave/sedric/.ninja_deps
 rave/sedric/.ninja_log
 rave/sedric/build.ninja

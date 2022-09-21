@@ -487,11 +487,12 @@ void MainWindow::new_schedule()
                           QMessageBox::Ok | QMessageBox::Cancel,
                           QMessageBox::Cancel) == QMessageBox::Ok)
     {
+       if (m_datetime_selection.sel_hours.size()== 0)
+           return;
+
        clear_schedule_model();
 
-       auto  hrs = get_selected_hours_asInt();
-       if(hrs.size() > 0)
-           m_scheduler->new_schedule(m_datetime_selection.sel_date, get_selected_hours_asInt());
+       m_scheduler->new_schedule(m_datetime_selection.sel_date, m_datetime_selection.sel_hours);
     }
 }
 
@@ -688,8 +689,6 @@ void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
 std::vector<int> MainWindow::get_selected_hours_asInt()
 {
     std::vector<int> hours;
-
-    qDebug() << m_cb_hour->count();
 
     if (m_cb_hour->count() == 0)
         return hours;

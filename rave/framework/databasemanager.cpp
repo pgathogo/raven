@@ -183,8 +183,9 @@ int PostgresDatabaseManager::searchByStr(const BaseEntity& entity, std::tuple<st
     std::string sql{};
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
-                    " WHERE LOWER("+ std::get<0>(sf)+") LIKE '%"+
-                    std::get<1>(sf)+"%'";
+                    " WHERE "+ std::get<0>(sf)+" ~* '"+std::get<1>(sf)+"'";
+
+    qDebug() << stoq(sql);
     return provider()->read(sql);
 }
 
