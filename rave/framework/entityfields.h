@@ -45,6 +45,9 @@ class Field{
 
         virtual std::string displayName() const = 0;
 
+        int display_width();
+        void set_display_width(int);
+
         void setMandatory(bool value);
         bool mandatory() const;
 
@@ -75,6 +78,7 @@ class Field{
         bool mMandatory;
         bool mReadOnly;  // Read from db but no write
         bool m_nullable;
+        int m_display_width;
         BaseEntity* m_parent;
 };
 

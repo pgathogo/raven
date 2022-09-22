@@ -86,6 +86,11 @@ std::unique_ptr<BaseEntity> Client::mapFields(StringMap* raw_entity)
 
 std::vector<std::string> Client::tableViewColumns() const
 {
+    name()->set_display_width(300);
+    telephone()->set_display_width(200);
+    contact_name()->set_display_width(200);
+    contact_mobile()->set_display_width(200);
+
     return tableViewCols<std::string>(
                 name()->displayName(),
                 telephone()->displayName(),

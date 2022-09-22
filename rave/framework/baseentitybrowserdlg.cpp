@@ -30,6 +30,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
         ,bui(new Ui::BaseEntityBrowserDlg)
         ,mEntityDataModel{nullptr}
         ,m_letter_filter_widget{nullptr}
+        ,m_entity{entity.get()}
 {
 
     bui->setupUi(this);
@@ -41,7 +42,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
 
     bui->tvEntity->setModel(mEntityDataModel.get());
-    bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
 
     set_button_icons();
@@ -80,6 +81,8 @@ void BaseEntityBrowserDlg::connectSlots()
     connect(bui->btnEdit, &QPushButton::clicked, this, &BaseEntityBrowserDlg::editBtnClicked);
     connect(bui->btnDelete, &QPushButton::clicked, this, &BaseEntityBrowserDlg::deleteBtnClicked);
     connect(bui->btnSearch, &QPushButton::clicked, this, &BaseEntityBrowserDlg::searchBtnClicked);
+
+    connect(bui->edtFilter, &QLineEdit::returnPressed, this, &BaseEntityBrowserDlg::searchBtnClicked );
 
 }
 
@@ -156,7 +159,22 @@ void BaseEntityBrowserDlg::searchRecord()
         std::string item = bui->edtFilter->text().toStdString();
         auto searchItem = std::make_tuple(columnName, item);
         entityDataModel().searchByStr(searchItem);
+
+        set_view_column_width();
     }
+}
+
+void BaseEntityBrowserDlg::set_view_column_width()
+{
+   int col = 0;
+   for (auto display_name: m_entity->tableViewColumns()){
+       for(auto const& [name, field]: m_entity->fields()){
+           if (field->displayName() == display_name){
+               if (field->display_width() > 0)
+                   bui->tvEntity->setColumnWidth(col++, field->display_width());
+           }
+       }
+   }
 }
 
 void BaseEntityBrowserDlg::filter_by_letter(int index)

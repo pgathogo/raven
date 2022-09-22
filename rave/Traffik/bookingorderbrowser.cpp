@@ -463,6 +463,14 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
     tree_labels << "Start Date" << "End Date" << "Spots Ordered" << "Spots Booked";
     ui->twOrders->setHeaderLabels(tree_labels);
 
+    ui->twOrders->setColumnWidth(0, 300);
+    ui->twOrders->setColumnWidth(0, 200);
+    ui->twOrders->setColumnWidth(0, 200);
+    ui->twOrders->setColumnWidth(0, 200);
+    ui->twOrders->setColumnWidth(0, 200);
+    ui->twOrders->setColumnWidth(0, 150);
+    ui->twOrders->setColumnWidth(0, 150);
+
     for (auto& [key, bookings] : records){
         int child_id = 0;
         parent_is_created = false;
@@ -554,12 +562,10 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
         connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
     }
 
-    for (int i=0; i<6; ++i)
-        ui->twOrders->resizeColumnToContents(i);
+//    for (int i=0; i<6; ++i)
+//        ui->twOrders->resizeColumnToContents(i);
 
-    //ui->twOrders->header()->setStretchLastSection(false);
-    ui->twOrders->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-   //resizeColumnsToContents(*ui->twOrders);
+//    ui->twOrders->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 }
 

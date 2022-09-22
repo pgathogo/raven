@@ -66,6 +66,8 @@ public:
 
     void set_button_icons();
 
+    void set_view_column_width();
+
     template<typename T1, typename T2, typename T3 >
     bool add_related_record(T3* parent)
     {
@@ -294,6 +296,8 @@ private:
     std::unique_ptr<EntityDataModel> mEntityDataModel;
     std::unique_ptr<LetterFilterWidget> m_letter_filter_widget;
     void populateFilterCombo();
+
+    BaseEntity* m_entity;
 };
 
 #endif // BASEENTITYBROWSERDLG_H

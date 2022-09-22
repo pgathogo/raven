@@ -185,7 +185,6 @@ int PostgresDatabaseManager::searchByStr(const BaseEntity& entity, std::tuple<st
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ std::get<0>(sf)+" ~* '"+std::get<1>(sf)+"'";
 
-    qDebug() << stoq(sql);
     return provider()->read(sql);
 }
 

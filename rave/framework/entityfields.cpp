@@ -24,6 +24,7 @@ Field::Field()
      ,mReadOnly{false}
      ,m_nullable{true}
      ,m_parent{nullptr}
+     ,m_display_width{0}
 {
 }
 
@@ -38,6 +39,7 @@ Field::Field(const std::string aName, const std::string aLabel)
      ,mReadOnly{false}
      ,m_nullable{true}
      ,m_parent{nullptr}
+     ,m_display_width{0}
 {
 }
 
@@ -147,6 +149,16 @@ void Field::set_parent(BaseEntity* parent)
 BaseEntity* Field::parent() const
 {
     return m_parent;
+}
+
+int Field::display_width()
+{
+    return m_display_width;
+}
+
+void Field::set_display_width(int value)
+{
+    m_display_width = value;
 }
 
 /* ------ IntegerField ------ */
@@ -374,6 +386,8 @@ std::string StringField::displayName() const
 {
     return valueToString();
 }
+
+
 std::string StringField::field_type()
 {
     return "StringField";
