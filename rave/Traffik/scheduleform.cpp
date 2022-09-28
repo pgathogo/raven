@@ -38,8 +38,21 @@ ScheduleForm::~ScheduleForm()
     delete ui;
 }
 
+void ScheduleForm::clear_schedule()
+{
+    auto model = ui->tvSchedule->model();
+    if (model != nullptr){
+        for(auto row = ui->tvSchedule->model()->rowCount(); row >= 0;){
+            ui->tvSchedule->model()->removeRow(--row);
+        }
+    }
+
+}
+
 void ScheduleForm::load_schedule(const QDate &date)
 {
+    clear_schedule();
+
     m_edm_schedule->clearEntities();
 
     Schedule sched;
@@ -136,7 +149,7 @@ void ScheduleForm::build_tree_view()
 
 QDate ScheduleForm::current_date()
 {
-    return ui->dtSchedule->date().currentDate();
+    return ui->dtSchedule->date();  //   date().currentDate();
 }
 
 void ScheduleForm::setMdiArea(QMdiArea* mdi)
@@ -156,7 +169,9 @@ void ScheduleForm::delete_all_empty_breaks(QDate date, int hour)
     EntityDataModel edm;
 
     try{
+        qDebug() << stoq(sql.str());
         edm.executeRawSQL(sql.str());
+        showMessage("Break(s) deleted successfully.");
     }catch(DatabaseException& de){
         showMessage(de.errorMessage());
     }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <QApplication>
 #include <QMainWindow>
 #include <QComboBox>
@@ -15,6 +17,7 @@ class TreeViewModel;
 class TableViewModel;
 class SaveAs;
 class QCloseEvent;
+class BookedCommercialDlg;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -80,7 +83,7 @@ public:
     void save_schedule();
     void setup_hour_combobox();
     std::vector<std::string> split_string(std::string, char);
-    std::tuple<int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
+    std::tuple<int, int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
 
     void print_activity_details();
     std::vector<int> get_selected_hours_asInt();
@@ -92,6 +95,7 @@ public:
     AUDIO::Audio* get_selected_audio();
     void show_selection(DateTimeSelection);
     History make_history(int);
+    void selected_comm_break();
 
     struct UnCachedHours{
         template <typename T>
@@ -135,6 +139,9 @@ public slots:
 
     void select_date_time();
 
+    void contextMenuRequested(QPoint);
+    void view_commercial(int);
+
 private:
     Ui::MainWindow *ui;
     QApplication* m_qapp;
@@ -166,5 +173,10 @@ private:
     std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);
     void fetch_schedule_from_db(QDate, std::vector<int>);
     void set_column_width();
+
+    std::unique_ptr<QMenu> m_schedule_context_menu;
+    std::unique_ptr<QAction> m_view_comm;
+
+    std::unique_ptr<BookedCommercialDlg> m_booked_comm_dlg;
 };
 

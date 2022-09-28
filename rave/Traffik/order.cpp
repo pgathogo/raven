@@ -493,6 +493,10 @@ std::unique_ptr<BaseEntity> Order::mapFields(StringMap *raw_entity)
 
 std::vector<std::string> Order::tableViewColumns() const
 {
+    title()->set_display_width(300);
+    spotsOrdered()->set_display_width(200);
+    spotsBooked()->set_display_width(200);
+
     return tableViewCols<std::string>(
                 title()->displayName(),
                 spotsOrdered()->displayName(),

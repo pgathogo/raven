@@ -24,6 +24,8 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
     //createOrderButton();
     show_letter_filter();
     connect(bui->tvEntity->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ClientBrowser::selection_changed);
+
+    bui->edtFilter->setFocus();
 }
 
 ClientBrowser::~ClientBrowser()

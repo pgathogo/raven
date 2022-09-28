@@ -46,6 +46,8 @@
 #include "../traffik/spot.h"
 #include "../traffik/client.h"
 
+#include "bookedcommercialdlg.h"
+
 
 MainWindow::MainWindow(QApplication* app, QWidget *parent)
     : QMainWindow(parent)
@@ -116,6 +118,8 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     connect(ui->btnHistory, &QPushButton::clicked, this, &MainWindow::show_audio_history);
 
     connect(ui->btnSearch, &QPushButton::clicked, this, &MainWindow::search_audio);
+    connect(ui->edtTitle, &QLineEdit::returnPressed, this, &MainWindow::search_audio);
+    connect(ui->edtArtist, &QLineEdit::returnPressed, this, &MainWindow::search_audio);
 
     connect(ui->btnDateTimeSelector, &QPushButton::clicked, this, &MainWindow::select_date_time);
 
@@ -136,6 +140,9 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     show_selection(m_datetime_selection);
 
     m_audio_history = std::make_unique<AudioHistoryForm>();
+
+    ui->tvSchedule->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tvSchedule, &QTableView::customContextMenuRequested, this, &MainWindow::contextMenuRequested);
 }
 
 
@@ -310,6 +317,54 @@ void MainWindow::set_ui_style()
 
 }
 
+void MainWindow::contextMenuRequested(QPoint pos)
+{
+    QModelIndex index = ui->tvSchedule->indexAt(pos);
+    m_schedule_context_menu = std::make_unique<QMenu>();
+
+
+    auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
+
+    auto [row_id, schedule_id, schedule_hour, time_stamp] = get_sched_item_hour_time(selected_index);
+
+
+    m_view_comm = std::make_unique<QAction>("View Commercial(s)...");
+
+    connect(m_view_comm.get(), &QAction::triggered, this, [schedule_id = schedule_id, this](){
+        view_commercial(schedule_id);});
+
+
+    if (schedule_id <= 0)
+        m_view_comm->setDisabled(true);
+
+    m_schedule_context_menu->addAction(m_view_comm.get());
+    m_schedule_context_menu->popup(ui->tvSchedule->mapToGlobal(pos));
+
+}
+
+void MainWindow::view_commercial(int schedule_id)
+{
+
+    if (m_booked_comm_dlg == nullptr)
+        m_booked_comm_dlg = std::make_unique<BookedCommercialDlg>(this);
+
+    m_booked_comm_dlg->show_booked_commercial(schedule_id);
+    m_booked_comm_dlg->exec();
+
+}
+
+void MainWindow::selected_comm_break()
+{
+    auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
+    auto [row_id, schedule_id, schedule_hour, time_stamp] = get_sched_item_hour_time(selected_index);
+
+    qDebug() << "Row ID: "<< row_id;
+    qDebug() << "Schedule ID: "<< schedule_id;
+    qDebug() << "Schedule Hour: "<< schedule_hour;
+    qDebug() << "Time Stamp: "<< time_stamp;
+
+}
+
 void MainWindow::copy_schedule()
 {
     m_save_as = new SaveAs(get_selected_hours_asInt(), this);
@@ -347,16 +402,17 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     fetch_audio(filter_str);
 }
 
-std::tuple<int, int, QTime> MainWindow::get_sched_item_hour_time(const QModelIndex& index)
+std::tuple<int, int, int, QTime> MainWindow::get_sched_item_hour_time(const QModelIndex& index)
 {
     auto time_col = ui->tvSchedule->model()->index(index.row(), 0);
     auto item_data = time_col.data(Qt::UserRole).toMap();
 
     auto row_id = item_data["row_id"].toInt();
+    auto schedule_id = item_data["schedule_id"].toInt();
     auto sched_hour = item_data["hour"].toInt();
     auto time_stamp = item_data["time"].toTime();
 
-    auto results = std::make_tuple(row_id, sched_hour, time_stamp);
+    auto results = std::make_tuple(row_id, schedule_id, sched_hour, time_stamp);
     return results;
 }
 
@@ -397,7 +453,7 @@ void MainWindow::insert_item(const QModelIndex& index)
 
     Schedule* schedule = new Schedule();
 
-    auto [row_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
+    auto [row_id, schedule_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
 
     schedule->setId(-1);
     schedule->set_schedule_date(m_datetime_selection.sel_date);
@@ -430,7 +486,7 @@ void MainWindow::remove_current_schedule_item()
     if (index.row() < 0)
         return;
 
-    auto [row_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
+    auto [row_id, schedule_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
 
     auto schedule = m_scheduler->find_schedule_item(row_id);
     if (schedule == nullptr)

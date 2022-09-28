@@ -148,6 +148,9 @@ namespace TRAFFIK {
     {
         std::list<std::string> cols;
 
+        name()->set_display_width(300);
+        spot_duration()->set_display_width(200);
+
         return tableViewCols<std::string>(
                     name()->displayName(),
                     spot_duration()->displayName()

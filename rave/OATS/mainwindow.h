@@ -44,9 +44,12 @@ namespace OATS{
     class ScheduleGridItem;
     class OutputPanel;
     class PlayModePanel;
-    class CommercialViewer;
     class JingleGrid;
     class CartPanel;
+}
+
+namespace DATA{
+    class CommercialViewer;
 }
 
 namespace AUDIO{
@@ -234,7 +237,7 @@ private:
 
     std::unique_ptr<EntityDataModel> m_audio_edm;
 
-    std::unique_ptr<OATS::CommercialViewer> m_comm_viewer;
+    std::unique_ptr<DATA::CommercialViewer> m_comm_viewer;
     std::unique_ptr<TrackInfo> m_track_info;
     std::unique_ptr<OATS::JingleGrid> m_jingle_grid;
 

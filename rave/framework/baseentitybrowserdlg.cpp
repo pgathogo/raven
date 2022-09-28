@@ -47,6 +47,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
 
     set_button_icons();
 
+
 }
 
 void BaseEntityBrowserDlg::set_button_icons()
@@ -167,7 +168,7 @@ void BaseEntityBrowserDlg::searchRecord()
 void BaseEntityBrowserDlg::set_view_column_width()
 {
    int col = 0;
-   for (auto display_name: m_entity->tableViewColumns()){
+   for (auto& display_name: m_entity->tableViewColumns()){
        for(auto const& [name, field]: m_entity->fields()){
            if (field->displayName() == display_name){
                if (field->display_width() > 0)

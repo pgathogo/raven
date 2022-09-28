@@ -66,6 +66,9 @@
     height: 32px;
 }</string>
        </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
        <property name="columnCount">
         <number>0</number>
        </property>

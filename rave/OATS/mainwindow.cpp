@@ -49,7 +49,7 @@
 #include "schedulegriditem.h"
 #include "outputpanel.h"
 #include "playmodepanel.h"
-#include "commercialviewer.h"
+#include "../data/commercialviewer.h"
 #include "trackinfo.h"
 #include "jinglegrid.h"
 #include "cartpanel.h"
@@ -859,7 +859,7 @@ void MainWindow::make_play_mode_panel()
 
 void MainWindow::make_comm_viewer_widget()
 {
-    m_comm_viewer = std::make_unique<OATS::CommercialViewer>(this);
+    m_comm_viewer = std::make_unique<DATA::CommercialViewer>(this);
     ui->vlCommViewer->addWidget(m_comm_viewer.get());
 }
 

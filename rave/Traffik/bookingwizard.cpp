@@ -185,18 +185,15 @@ bool BookingWizard::make_booking()
                                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes){
         commit_booking();
         return true;
-    }else{
-        return false;
     }
+
+    return false;
 
 }
 
 void BookingWizard::commit_booking()
 {
-    qDebug() << "Commit booking... ";
     try{
-
-        qDebug() << "Book segment";
 
         BookingSegment book_segment;
         book_segment.set_booking_date(QDate::currentDate());
@@ -363,6 +360,7 @@ void BookingWizard::build_breaks()
 
         if (m_engine_data.break_count == 0){
             showMessage("No Breaks for the selected data range!");
+            this->button(QWizard::NextButton)->setDisabled(true);
             return;
         }
 

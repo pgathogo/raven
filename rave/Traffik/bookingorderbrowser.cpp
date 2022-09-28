@@ -515,11 +515,21 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
                 table->setHorizontalHeaderLabels(header_labels);
                 table->resizeColumnsToContents();
 //                table->horizontalHeader()->setStretchLastSection(true);
-                table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+                //table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
                 table->horizontalHeader()->setVisible(true);
-
+                table->setEditTriggers(QAbstractItemView::NoEditTriggers);
                 table->setSelectionBehavior(QAbstractItemView::SelectRows);
                 table->setSelectionMode(QAbstractItemView::MultiSelection);
+
+                table->setColumnWidth(0, 200);
+                table->setColumnWidth(1, 200);
+                table->setColumnWidth(2, 300);
+                table->setColumnWidth(3, 300);
+                table->setColumnWidth(4, 150);
+                table->setColumnWidth(5, 200);
+                table->setColumnWidth(6, 200);
+                table->setColumnWidth(7, 100);
+
                 ui->twOrders->setItemWidget(booking_node, 0, table);
 
                 booking_node->setFirstColumnSpanned(true);

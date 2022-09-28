@@ -23,6 +23,7 @@ public:
     void load_schedule(const QDate& date);
     void setMdiArea(QMdiArea* mdi);
     void delete_all_empty_breaks(QDate, int);
+    void clear_schedule();
 
 private slots:
     void create_breaks();
