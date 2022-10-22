@@ -38,6 +38,7 @@ public:
 private slots:
     void user_browser();
     void cluster_browser();
+    void cluster_manager();
 
 private:
     Ui::MainWindow *ui;

@@ -105,7 +105,7 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     connect(ui->btnNew, &QPushButton::clicked, this, &MainWindow::new_schedule);
     connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::save_schedule);
-    connect(ui->btnSaveAs, &QPushButton::clicked, this, &MainWindow::copy_schedule);
+    connect(ui->btnSaveAs, &QPushButton::clicked, this, &MainWindow::save_as);
     connect(ui->btnRemove, &QPushButton::clicked, this, &MainWindow::remove_current_schedule_item);
     connect(ui->btnPrint, &QPushButton::clicked, this, &MainWindow::print_schedule);
     connect(ui->tvSchedule, &QTableView::clicked, this, &MainWindow::print_details);
@@ -325,16 +325,16 @@ void MainWindow::contextMenuRequested(QPoint pos)
 
     auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
 
-    auto [row_id, schedule_id, schedule_hour, time_stamp] = get_sched_item_hour_time(selected_index);
+    SelectedScheduleItem ssi = get_sched_item_hour_time(selected_index);
 
 
     m_view_comm = std::make_unique<QAction>("View Commercial(s)...");
 
-    connect(m_view_comm.get(), &QAction::triggered, this, [schedule_id = schedule_id, this](){
+    connect(m_view_comm.get(), &QAction::triggered, this, [schedule_id = ssi.schedule_id, this](){
         view_commercial(schedule_id);});
 
 
-    if (schedule_id <= 0)
+    if (ssi.schedule_id <= 0)
         m_view_comm->setDisabled(true);
 
     m_schedule_context_menu->addAction(m_view_comm.get());
@@ -356,18 +356,25 @@ void MainWindow::view_commercial(int schedule_id)
 void MainWindow::selected_comm_break()
 {
     auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
-    auto [row_id, schedule_id, schedule_hour, time_stamp] = get_sched_item_hour_time(selected_index);
+    SelectedScheduleItem ssi = get_sched_item_hour_time(selected_index);
 
-    qDebug() << "Row ID: "<< row_id;
-    qDebug() << "Schedule ID: "<< schedule_id;
-    qDebug() << "Schedule Hour: "<< schedule_hour;
-    qDebug() << "Time Stamp: "<< time_stamp;
+    qDebug() << "Row ID: "<< ssi.row_id;
+    qDebug() << "Schedule ID: "<< ssi.schedule_id;
+    qDebug() << "Schedule Hour: "<< ssi.schedule_hour;
+    qDebug() << "Time Stamp: "<< ssi.time_stamp;
 
 }
 
-void MainWindow::copy_schedule()
+void MainWindow::save_as()
 {
-    m_save_as = new SaveAs(get_selected_hours_asInt(), this);
+    //m_save_as = new SaveAs(get_selected_hours_asInt(), this);
+    if (m_datetime_selection.sel_hours.size() == 0){
+        showMessage("Nothing selected for saving!");
+        return;
+    }
+
+    m_save_as = new SaveAs(m_datetime_selection.sel_hours, this);
+
     if (m_save_as->exec() == 1){
         Result result = m_save_as->save_result();
         m_scheduler->copy_schedule(m_datetime_selection.sel_date  , result.dest_date, result.dest_map);
@@ -402,18 +409,21 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     fetch_audio(filter_str);
 }
 
-std::tuple<int, int, int, QTime> MainWindow::get_sched_item_hour_time(const QModelIndex& index)
+SelectedScheduleItem MainWindow::get_sched_item_hour_time(const QModelIndex& index)
 {
+    SelectedScheduleItem si;
+
     auto time_col = ui->tvSchedule->model()->index(index.row(), 0);
     auto item_data = time_col.data(Qt::UserRole).toMap();
 
-    auto row_id = item_data["row_id"].toInt();
-    auto schedule_id = item_data["schedule_id"].toInt();
-    auto sched_hour = item_data["hour"].toInt();
-    auto time_stamp = item_data["time"].toTime();
+    si.row_id = item_data["row_id"].toInt();
+    si.schedule_id = item_data["schedule_id"].toInt();
+    si.schedule_type = item_data["schedule_type"].toString();
+    si.schedule_hour = item_data["hour"].toInt();
+    si.time_stamp = item_data["time"].toTime();
 
-    auto results = std::make_tuple(row_id, schedule_id, sched_hour, time_stamp);
-    return results;
+    return si;
+
 }
 
 void MainWindow::print_details(const QModelIndex& index)
@@ -453,12 +463,12 @@ void MainWindow::insert_item(const QModelIndex& index)
 
     Schedule* schedule = new Schedule();
 
-    auto [row_id, schedule_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
+    SelectedScheduleItem ssi = get_sched_item_hour_time(index);
 
     schedule->setId(-1);
     schedule->set_schedule_date(m_datetime_selection.sel_date);
-    schedule->set_schedule_time(time_stamp);
-    schedule->set_schedule_hour(sched_hour);
+    schedule->set_schedule_time(ssi.time_stamp);
+    schedule->set_schedule_hour(ssi.schedule_hour);
 
     schedule->set_auto_transition(SEDRIC::SedricScheduleItem::AudioTransition::Mix);
     schedule->set_schedule_item_type(audio->audio_type()->value());
@@ -475,9 +485,9 @@ void MainWindow::insert_item(const QModelIndex& index)
     if (audio->audio_type()->value() == "COMM-AUDIO")
         m_scheduler->create_row_item<SEDRIC::CommercialAudioItem>(schedule, index.row());
 
-    m_scheduler->update_time(sched_hour, index.row(), audio->duration()->value());
+    m_scheduler->update_time(ssi.schedule_hour, index.row(), audio->duration()->value());
 
-    m_scheduler->log_activity(m_datetime_selection.sel_date, sched_hour);
+    m_scheduler->log_activity(m_datetime_selection.sel_date, ssi.schedule_hour);
 }
 
 void MainWindow::remove_current_schedule_item()
@@ -486,22 +496,22 @@ void MainWindow::remove_current_schedule_item()
     if (index.row() < 0)
         return;
 
-    auto [row_id, schedule_id, sched_hour, time_stamp] = get_sched_item_hour_time(index);
+    SelectedScheduleItem ssi = get_sched_item_hour_time(index);
 
-    auto schedule = m_scheduler->find_schedule_item(row_id);
+    auto schedule = m_scheduler->find_schedule_item(ssi.row_id);
     if (schedule == nullptr)
         return;
 
     if (!is_item_deletable(stoq(schedule->schedule_item_type()->value())))
         return;
 
-    m_scheduler->delete_row(row_id);
+    m_scheduler->delete_row(ssi.row_id);
 
     remove_item(index.row());
 
-    m_scheduler->update_time(sched_hour, index.row(), schedule->break_duration()->value()*-1);
+    m_scheduler->update_time(ssi.schedule_hour, index.row(), schedule->break_duration()->value()*-1);
 
-    m_scheduler->log_activity(m_datetime_selection.sel_date, sched_hour);
+    m_scheduler->log_activity(m_datetime_selection.sel_date, ssi.schedule_hour);
 }
 
 
@@ -829,6 +839,11 @@ void MainWindow::print_activity_details()
 
 void MainWindow::save_schedule()
 {
+    if (m_datetime_selection.sel_hours.size() == 0){
+        showMessage("Nothing selected for saving!");
+        return;
+    }
+
     std::string delete_stmts = m_scheduler->make_delete_stmts();
 
     std::string insert_stmts = m_scheduler->make_insert_stmts(m_scheduler->cached_items());

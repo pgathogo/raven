@@ -11,6 +11,7 @@
 #include "../../../rave/security/userbrowser.h"
 
 #include "clusterbrowser.h"
+#include "clustermanagerdlg.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -64,7 +65,7 @@ void MainWindow::setup_menu()
     m_cluster_act->setStatusTip("Cluster setup window");
 
     connect(m_setup_act, &QAction::triggered, this, &MainWindow::user_browser);
-    connect(m_cluster_act, &QAction::triggered, this, &MainWindow::cluster_browser);
+    connect(m_cluster_act, &QAction::triggered, this, &MainWindow::cluster_manager);
 }
 
 void MainWindow::user_browser()
@@ -77,4 +78,10 @@ void MainWindow::cluster_browser()
 {
     ClusterBrowser* cluster_browser = create_sub_window<ClusterBrowser>();
     cluster_browser->exec();
+}
+
+void MainWindow::cluster_manager()
+{
+    ClusterManagerDlg* cluster_manager = create_sub_window<ClusterManagerDlg>();
+    cluster_manager->exec();
 }

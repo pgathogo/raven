@@ -4,6 +4,15 @@ namespace ClusterManager
 {
     Cluster::Cluster()
     {
+        m_cluster_name = createField<StringField>("cluster_name", "Cluster Name");
+        m_cluster_name->setMandatory(true);
+
+        m_notes = createField<TextField>("notes", "Notes");
+
+        m_header << QString::fromStdString(m_cluster_name->fieldName());
+
+        setTableName("rave_cluster");
+
     }
 
     Cluster::~Cluster()

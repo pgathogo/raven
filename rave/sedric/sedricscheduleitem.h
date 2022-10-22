@@ -113,6 +113,7 @@ namespace SEDRIC
             QMap<QString, QVariant> item_data;
             item_data["row_id"] = schedule->display_row_id()->value();
             item_data["schedule_id"] = schedule->id();
+            item_data["schedule_type"] = stoq(schedule->schedule_item_type()->valueToString());
             item_data["hour"] = schedule->schedule_hour()->value();
             item_data["time"] = schedule->schedule_time()->value();
             time->setData(item_data, Qt::UserRole);

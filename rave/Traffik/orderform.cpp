@@ -202,7 +202,6 @@ void OrderForm::setDefaults()
     ui->sbGracePeriod->setValue(mSetup->gracePeriod()->value());
     ui->sbLateFee->setValue(mSetup->lateFee()->value());
 
-
     ui->cbBrand->setCurrentIndex(-1);
     ui->cbAgency->setCurrentIndex(-1);
     ui->cbAccountRep->setCurrentIndex(-1);

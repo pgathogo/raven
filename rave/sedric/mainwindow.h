@@ -53,6 +53,13 @@ signals:
     void hourComboBoxClosed();
 };
 
+struct SelectedScheduleItem{
+    int row_id{-1};
+    int schedule_id{-1};
+    QString schedule_type;
+    int schedule_hour{-1};
+    QTime time_stamp;
+};
 
 using History = std::map<int, std::vector<int>>;
 
@@ -83,7 +90,8 @@ public:
     void save_schedule();
     void setup_hour_combobox();
     std::vector<std::string> split_string(std::string, char);
-    std::tuple<int, int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
+    //std::tuple<int, int, int, QTime> get_sched_item_hour_time(const QModelIndex& index);
+    SelectedScheduleItem get_sched_item_hour_time(const QModelIndex& index);
 
     void print_activity_details();
     std::vector<int> get_selected_hours_asInt();
@@ -110,6 +118,8 @@ public:
     {
         return std::make_tuple(field, op, value);
     }
+
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 
@@ -126,7 +136,7 @@ public slots:
 //    void hour_cb_closed();
     void print_details(const QModelIndex&);
     void print_schedule();
-    void copy_schedule();
+    void save_as();
 
     void play_audio();
     void stop_play();
@@ -141,6 +151,8 @@ public slots:
 
     void contextMenuRequested(QPoint);
     void view_commercial(int);
+
+
 
 private:
     Ui::MainWindow *ui;

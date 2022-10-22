@@ -1,5 +1,5 @@
 # RadioWavesCluster - RaveCluster models
-# source /d/virtualenvs/raven/script/activate
+# source /d/home/virtualenvs/raven/script/activate
 # python manage.py makemigrations
 # python manage.py migrate
 #
@@ -17,17 +17,49 @@ class Cluster(models.Model):
     notes = models.TextField(blank=True, null=True)
 
 SERVER_TYPE = (
-        ('DS', 'DB-SERVER'),
-        ('AS','AUDIO-SERVER'),
+        ('DBS', 'DB-SERVER'),
+        ('ADS','AUDIO-SERVER'),
         )
 
 class Server(models.Model):
     server_name = models.CharField(max_length=200)
-    server_type = models.CharField(max_length=2, choices=SERVER_TYPE)
+    server_type = models.CharField(max_length=3, choices=SERVER_TYPE)
     server_ip = models.CharField(max_length=24, blank=True, null=True)
-    server_port= models.IntegerField(default=0)
+    cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
     notes = models.TextField(blank=True, null=True)
 
 class Database(models.Model):
     db_name = models.CharField(max_length=200)
     server = models.ForeignKey(Server, models.DO_NOTHING)
+    db_port= models.IntegerField(default=0)
+    
+
+class Station(models.Model):
+    station_name = models.CharField(max_length=200)
+    cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
+
+
+class AudioStore(models.Model):
+    store_name = models.CharField(max_length=200)
+    server = models.ForeignKey(Server, models.DO_NOTHING)
+    station = models.ForeignKey(Station, models.DO_NOTHING)
+    notes = models.TextField(blank=True, null=True)
+
+
+class StorageDisk(models.Model):
+    disk_name = models.CharField(max_length=100)
+    audio_server = models.ForeignKey(Server, models.DO_NOTHING)
+    capacity = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+
+
+class AudioFolder(models.Model):
+    folder_name = models.CharField(max_length = 200)
+    disk = models.ForeignKey(StorageDisk, models.DO_NOTHING, null=True)
+
+
+class StationSetup(models.Model):
+    station = models.ForeignKey(Station, models.DO_NOTHING)
+    audio_store = models.ForeignKey(AudioStore, models.DO_NOTHING)
+    audio_folder = models.ForeignKey(AudioFolder, models.DO_NOTHING)
+    database = models.ForeignKey(Database, models.DO_NOTHING)
+

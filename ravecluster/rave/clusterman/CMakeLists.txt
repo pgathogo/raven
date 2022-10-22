@@ -10,7 +10,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(rave_framework_INCLUDE_DIRS "../../../rave/framework")
@@ -38,6 +38,36 @@ set(PROJECT_SOURCES
         clusterbrowser.h
         clusterbrowser.cpp
         clusterbrowser.ui
+        server.h
+        server.cpp
+        database.h
+        database.cpp
+        station.h
+        station.cpp
+        audiostore.h
+        audiostore.cpp
+        storagedisk.h
+        storagedisk.cpp
+        audiofolder.h
+        audiofolder.cpp
+        stationsetup.h
+        stationsetup.cpp
+        clustermanagerdlg.h
+        clustermanagerdlg.cpp
+        clusterform.h
+        clusterform.cpp
+        stationform.h
+        stationform.cpp
+        confignode.h
+        server.h
+        server.cpp
+        serverform.h
+        serverform.cpp
+        storagediskform.h
+        storagediskform.cpp
+        audiofolderform.h
+        audiofolderform.cpp
+        audiofolderform.ui
         ../../../rave/security/authentication.h
         ../../../rave/security/authentication.cpp
         ../../../rave/security/user.h
@@ -53,6 +83,7 @@ set(PROJECT_SOURCES
         ${rave_framework_INCLUDE_DIRS}/baseentitybrowserdlg.cpp
         ${rave_framework_INCLUDE_DIRS}/letterfilterwidget.h
         ${rave_framework_INCLUDE_DIRS}/letterfilterwidget.cpp
+        ${rave_framework_INCLUDE_DIRS}/baseentitydetaildlg.cpp
         ../../../rave/framework/entityfields.h
         ../../../rave/framework/entityfields.cpp
         ../../../rave/framework/dataprovider.h
@@ -99,6 +130,19 @@ target_include_directories(clusterman PRIVATE ${rave_framework_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
+
+set(sqlite3_INCLUDE_DIR "../../../rave/lib/sqlite3/include")
+set(sqlite3_LIBRARY_DIR "../../../rave/lib/sqlite3/lib")
+
+find_library(SQLite3_LIBRARY sqlite3 ${sqlite3_LIBARRY_DIR})
+if (SQLite3_LIBRARY)
+    message(STATUS "SQLite3 library found!")
+endif()
+
+include_directories(${sqlite3_INCLUDE_DIR})
+target_link_directories(clusterman PRIVATE ${sqlite3_LIBRARY_DIR})
+target_link_libraries(clusterman PRIVATE ${SQLite3_LIBRARY})
+
 
 set_target_properties(clusterman PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
