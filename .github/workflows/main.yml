@@ -1,0 +1,15 @@
+name: Test Send Email 
+
+on:
+   push:
+     branches:
+         - main
+   
+jobs:
+    send_email:
+      runs-on: ubuntu-latest
+      steps:
+         - name: Send email
+         - uses: dawidd6/action-send-mail@v3.7.1
+
+  
