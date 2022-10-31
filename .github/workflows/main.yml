@@ -9,7 +9,7 @@ jobs:
     send_email:
       runs-on: ubuntu-latest
       steps:
-         - name: Send email
-         - uses: dawidd6/action-send-mail@v3.7.1
+        - uses: dawidd6/action-send-mail@v3.7.1
+        - name: Send email
 
   
