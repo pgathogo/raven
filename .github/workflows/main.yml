@@ -10,7 +10,16 @@ jobs:
       runs-on: ubuntu-latest
       steps:
       - name: Send email
-        uses: dawidd6/action-send-mail@v3.7.1
-      
+        uses: dawidd6/action-send-mail@v3.7.1 
+        with:
+             server_address: smtp.gmail.com
+             server_port: 465
+             secure: true
+             username: pgathogo
+             password: gmtvqgzkjzhhkcau
+             subject: Github Actions Job result
+             to: pgathogo@gmail.com
+             from: pgathogo@gmail.com
+        
 
   
