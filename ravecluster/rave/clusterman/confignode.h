@@ -12,7 +12,11 @@ enum class ConfigItemType{
     AudioServer,
     DBServer,
     Disk,
-    AudioFolder
+    AudioFolder,
+    ClusterGroup,
+    UserGroup,
+    ApplicationGroup
+
 };
 
 enum class NodeType{
@@ -36,31 +40,33 @@ namespace ClusterManager
         switch(item_type){
         case ConfigItemType::Root : {
             return "Root";
-            break;
         }
         case ConfigItemType::Cluster: {
             return "Cluster";
-            break;
         }
         case ConfigItemType::AudioServer: {
            return "AudioServer";
-           break;
         }
         case ConfigItemType::DBServer: {
             return "DBServer";
-            break;
         }
         case ConfigItemType::Station: {
             return "Station";
-            break;
         }
         case ConfigItemType::Disk: {
             return "Disk";
-            break;
         }
         case ConfigItemType::AudioFolder: {
             return "Folder";
-            break;
+        }
+        case ConfigItemType::ClusterGroup: {
+            return "";
+        }
+        case ConfigItemType::UserGroup: {
+            return "";
+        }
+        case ConfigItemType::ApplicationGroup: {
+            return "";
         }
         default:{
             return "Unknow Item Type";
@@ -71,6 +77,9 @@ namespace ClusterManager
     }
 
     class RootConfigNode : public QObject, public QTreeWidgetItem { };
+    class ClusterGroupConfig: public QObject, public QTreeWidgetItem {};
+    class UserGroupConfig: public QObject, public QTreeWidgetItem {};
+    class AppGroupConfig: public QObject, public QTreeWidgetItem {};
 
     class BaseNode: public QObject, public QTreeWidgetItem
     {

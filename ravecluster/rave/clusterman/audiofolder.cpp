@@ -7,21 +7,13 @@ namespace ClusterManager
 {
     AudioFolder::AudioFolder()
     {
-        qDebug() << " 111 ";
-
         m_folder_name = createField<StringField>("folder_name", "Folder Name");
-
-        qDebug() << " 222 ";
 
         m_disk = createField<ForeignKeyField>("disk_id", "Storage Disk",
                                              std::make_unique<Cluster>(), "disk_name");
 
-        qDebug() << " 333 ";
-
         m_header << QString::fromStdString(m_folder_name->fieldName())
                  << QString::fromStdString(m_disk->fieldName());
-
-        qDebug() << " 444 ";
 
         setTableName("rave_audiofolder");
     }

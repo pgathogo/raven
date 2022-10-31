@@ -32,8 +32,16 @@ using ServerNode = ClusterManager::ConfigNode<ClusterManager::Server>;
 using DiskNode = ClusterManager::ConfigNode<ClusterManager::StorageDisk>;
 using AudioFolderNode = ClusterManager::ConfigNode<ClusterManager::AudioFolder>;
 
+using ClusterGroupNode = ClusterManager::ConfigNode<ClusterManager::ClusterGroupConfig>;
+using UserGroupNode = ClusterManager::ConfigNode<ClusterManager::UserGroupConfig>;
+using AppGroupNode = ClusterManager::ConfigNode<ClusterManager::AppGroupConfig>;
 
-using VarNodes =  std::map<QString, std::variant<RootNode*, ClusterNode*, StationNode*, ServerNode*, DiskNode*, AudioFolderNode*>>;
+
+using VarNodes =  std::map<QString, std::variant<RootNode*, ClusterNode*, StationNode*,
+            ServerNode*, DiskNode*, AudioFolderNode*, ClusterGroupNode*, UserGroupNode*, AppGroupNode*>>;
+using VarPairNodes =  std::pair<QString, std::variant<RootNode*, ClusterNode*, StationNode*,
+            ServerNode*, DiskNode*, AudioFolderNode*, ClusterGroupNode*, UserGroupNode*, AppGroupNode*>>;
+
 struct ClusterConfiguration {
     static int temp_id;
     int next_temp_id();
@@ -52,14 +60,21 @@ public:
     void setMdiArea(QMdiArea* mdi);
     void show_cluster_context_menu(QString, QPoint);
     void show_root_context_menu(QString, QPoint);
+    void show_user_group_context_menu(QString, QPoint);
+    void show_app_group_context_menu(QString, QPoint);
     void show_audio_server_context_menu(QString, QPoint);
     void show_disk_context_menu(QString, QPoint);
     void show_folder_context_menu(QString, QPoint);
     void tree_printer(std::map<QString, std::tuple<ConfigItemType, std::any>>);
     void save_tree(std::map<QString, std::tuple<ConfigItemType, std::any>>, int);
+    void make_root_node();
+    void make_group_nodes();
+    QMap<QString, QVariant> make_node_data(ConfigItemType);
+
+    void make_cluster_node(std::unique_ptr<ClusterManager::Cluster>);
 
     template<typename T1, typename T2, typename T3>
-    void make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item){
+    T2* make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item){
 
         auto node = new T2(config_item);
 
@@ -85,7 +100,9 @@ public:
         parent_node->add_child(uuid_str, config_item.config_item_type, node) ;
 
         parent_node->addChild(node);
-        m_cluster_config->cluster_nodes[uuid_str]=node;
+        m_cluster_config->cluster_nodes[uuid_str] = node;
+
+        return node;
 
     }
 
@@ -105,6 +122,48 @@ public:
 
         return nullptr;
    }
+
+   template<typename T1, typename T2 = VarPairNodes>
+    struct FindNodeById{
+        FindNodeById(int id): m_id{id}{}
+        bool operator()(T2 node){
+            const auto&[key, value] = node;
+            try{
+                auto node_type = std::get<T1*>(value);
+                auto cluster_node = dynamic_cast<T1*>(node_type);
+                return cluster_node->id() == m_id;
+            }catch(std::bad_variant_access) {
+                return false;
+            }
+        }
+      private:
+            int m_id{-1};
+    };
+
+
+   template<typename T>
+   T* get_cluster_node_by_id(int id)
+   {
+      auto it = std::find_if(m_cluster_config->cluster_nodes.begin(),
+                             m_cluster_config->cluster_nodes.end(), FindNodeById<T>(id));
+      if (it != m_cluster_config->cluster_nodes.end()){
+          const auto&[key, value] {*it};
+          auto node = dynamic_cast<T*>(std::get<T*>(value));
+          return node;
+      }
+      return nullptr;
+   }
+
+   template<ConfigItemType T1, NodeType T2>
+   ClusterManager::ConfigItem node_context(QString title)
+   {
+       ClusterManager::ConfigItem item;
+       item.config_item_type = T1;
+       item.node_type = T2;
+       item.node_text = ClusterManager::item_type_to_string(T1)+": "+title;
+       return item;
+   }
+
 
     template<typename T1, typename T2>
     void delete_node(T1* node, T2* parent_node)
@@ -136,6 +195,7 @@ public slots:
     void delete_server();
     void delete_disk();
     void delete_folder();
+    void user_browers();
 
     void toggle_new_station_button(boolean);
     void on_item_clicked(QTreeWidgetItem* item, int col);
@@ -143,11 +203,16 @@ public slots:
     void print_tree();
 
     void save_data();
+    void load_data();
 
 private:
     Ui::ClusterManagerDlg* ui;
 
     std::unique_ptr<RootNode> m_root_node;
+    std::unique_ptr<ClusterGroupNode> m_cluster_group_node;
+    std::unique_ptr<UserGroupNode> m_user_group_node;
+    std::unique_ptr<AppGroupNode> m_app_group_node;
+
     QMdiArea* m_mdi_area;
 
     std::unique_ptr<ClusterConfiguration> m_cluster_config;
@@ -159,6 +224,10 @@ private:
     AudioFolderNode* m_current_folder_node;
 
     std::unique_ptr<QMenu> m_root_context_menu;
+    std::unique_ptr<QMenu> m_cluster_group_context_menu;
+    std::unique_ptr<QMenu> m_user_group_context_menu;
+    std::unique_ptr<QMenu> m_app_group_context_menu;
+
     std::unique_ptr<QMenu> m_cluster_context_menu;
     std::unique_ptr<QMenu> m_audio_server_context_menu;
     std::unique_ptr<QMenu> m_disk_context_menu;
@@ -181,8 +250,6 @@ private:
     std::unique_ptr<QAction> m_act_audio_server;
 
 };
-
-
 
 
 #endif // CLUSTERMANAGERDLG_H

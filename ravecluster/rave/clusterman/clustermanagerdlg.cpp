@@ -1,3 +1,4 @@
+#include <sstream>
 #include <QTreeWidgetItem>
 #include <QUuid>
 #include <QAction>
@@ -7,6 +8,7 @@
 #include "ui_clustermanagerdlg.h"
 
 #include "../../../framework/choicefield.h"
+#include "../../../rave/security/userbrowser.h"
 
 #include "cluster.h"
 #include "station.h"
@@ -50,8 +52,33 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
 
     toggle_new_station_button(false);
 
-    m_cluster_config = std::make_unique<ClusterConfiguration>();
+    make_root_node();
 
+    make_group_nodes();
+
+    connect(ui->treeWidget, &QTreeWidget::itemClicked, this, &ClusterManagerDlg::on_item_clicked);
+    connect(ui->btnPrintTree, &QPushButton::clicked, this, &ClusterManagerDlg::print_tree);
+
+    ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ClusterManagerDlg::context_menu_requested);
+
+    connect(ui->btnTest, &QPushButton::clicked, this, &ClusterManagerDlg::load_data);
+
+}
+
+QMap<QString, QVariant> ClusterManagerDlg::make_node_data(ConfigItemType node_type)
+{
+    QMap<QString, QVariant> node_data;
+    auto uuid = QUuid().createUuid();
+    QString uuid_str = uuid.toString(QUuid::WithoutBraces).left(8);
+    node_data["type"] = static_cast<int>(node_type);
+    node_data["uuid"] = uuid_str;
+
+    return node_data;
+}
+
+void ClusterManagerDlg::make_root_node()
+{
     ClusterManager::ConfigItem root_item;
     root_item.config_item_type = ConfigItemType::Root;
     root_item.node_type = NodeType::Group;
@@ -69,17 +96,60 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     m_root_node->setData(0, Qt::UserRole, item_data);
     ui->treeWidget->addTopLevelItem(m_root_node.get());
 
+    m_cluster_config = std::make_unique<ClusterConfiguration>();
     m_cluster_config->cluster_nodes[uuid_str] = m_root_node.get();
-
-    connect(ui->treeWidget, &QTreeWidget::itemClicked, this, &ClusterManagerDlg::on_item_clicked);
-    connect(ui->btnPrintTree, &QPushButton::clicked, this, &ClusterManagerDlg::print_tree);
-
     m_cluster_config->cluster_nodes[uuid_str] = m_root_node.get();
+}
 
-    ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ClusterManagerDlg::context_menu_requested);
+void ClusterManagerDlg::make_group_nodes()
+{
+    // Cluster Group
+    auto context = node_context<ConfigItemType::ClusterGroup, NodeType::Group>(
+                "Clusters");
+    auto node_data = make_node_data(context.config_item_type);
+
+    m_cluster_group_node = std::make_unique<ClusterGroupNode>(context);
+    m_cluster_group_node->set_config_item_type(context.config_item_type);
+    m_cluster_group_node->setText(0, context.node_text);
+    m_cluster_group_node->setData(0, Qt::UserRole, node_data);
+
+    // Users Group
+    auto user_context = node_context<ConfigItemType::UserGroup, NodeType::Group>(
+                "Users");
+    auto user_node_data = make_node_data(user_context.config_item_type);
+    m_user_group_node = std::make_unique<UserGroupNode>(user_context);
+    m_user_group_node->set_config_item_type(user_context.config_item_type);
+    m_user_group_node->setText(0, user_context.node_text);
+    m_user_group_node->setData(0, Qt::UserRole, user_node_data);
+
+    // Applications Group
+    auto app_context = node_context<ConfigItemType::ApplicationGroup, NodeType::Group>(
+                "Applications");
+    auto app_node_data = make_node_data(app_context.config_item_type);
+    m_app_group_node = std::make_unique<AppGroupNode>(app_context);
+    m_app_group_node->set_config_item_type(app_context.config_item_type);
+    m_app_group_node->setText(0, app_context.node_text);
+    m_app_group_node->setData(0, Qt::UserRole, app_node_data);
+
+    m_root_node->addChild(m_cluster_group_node.get());
+    m_root_node->addChild(m_user_group_node.get());
+    m_root_node->addChild(m_app_group_node.get());
+}
+
+void ClusterManagerDlg::make_cluster_node(std::unique_ptr<ClusterManager::Cluster> cluster)
+{
+    auto context = node_context<ConfigItemType::Cluster, NodeType::Group>(
+            stoq(cluster->cluster_name()->value()));
+
+    EntityDataModel edm;
+    context.id = edm.createEntityDB(*cluster);
+
+    make_node<std::unique_ptr<ClusterManager::Cluster>, ClusterNode, ClusterGroupNode>(
+            std::move(cluster), m_cluster_group_node.get(), context);
 
 }
+
+
 
 void ClusterManagerDlg::toggle_new_station_button(boolean state)
 {
@@ -104,27 +174,19 @@ void ClusterManagerDlg::new_cluster()
             std::make_unique<ClusterForm>(cluster.get());
 
     if (cform->exec() > 0){
-        ClusterManager::ConfigItem cluster_item;
-        auto item_type = ConfigItemType::Cluster;
-        cluster_item.config_item_type = item_type;
-        cluster_item.node_type = NodeType::Group;
-        cluster_item.node_text = ClusterManager::item_type_to_string(item_type)+": "+
-                stoq(cluster->cluster_name()->value());
+        make_cluster_node(std::move(cluster));
+    }
 
-        EntityDataModel edm;
-        int id = edm.createEntityDB(*cluster);
-        cluster_item.id = id;
+    m_act_cluster = nullptr;
+    m_act_user = nullptr;
+    m_act_app = nullptr;
+    m_root_context_menu = nullptr;
+}
 
-        make_node<std::unique_ptr<ClusterManager::Cluster>, ClusterNode, RootNode>(
-                    std::move(cluster), m_root_node.get(), cluster_item);
-
-        for (auto&[key, node_t]: m_root_node->child_nodes()){
-            auto&[n_type, node] = node_t;
-            qDebug() << "Parent ID: "<< std::any_cast<ClusterNode*>(node)->parent_id();
-            qDebug() << "CHILD TYPE: "<< ClusterManager::item_type_to_string(n_type);
-
-        }
-
+void ClusterManagerDlg::user_browers()
+{
+    std::unique_ptr<UserBrowser> uform = std::make_unique<UserBrowser>();
+    if (uform->exec() > 0){
 
     }
 
@@ -137,6 +199,7 @@ void ClusterManagerDlg::new_station()
     std::unique_ptr<StationForm> sform = std::make_unique<StationForm>(station.get());
 
     if (sform->exec() > 0 ){
+
         ClusterManager::ConfigItem station_item;
         auto item_type = ConfigItemType::Station;
         station_item.config_item_type = item_type;
@@ -153,6 +216,9 @@ void ClusterManagerDlg::new_station()
                     std::move(station), m_current_cluster_node, station_item);
 
     }
+
+    m_act_station = nullptr;
+    m_cluster_context_menu = nullptr;
 
 }
 
@@ -183,11 +249,16 @@ void ClusterManagerDlg::new_server()
                     std::move(server), m_current_cluster_node, server_item );
     }
 
+    m_act_server = nullptr;
+    m_cluster_context_menu = nullptr;
+
 }
 
 void ClusterManagerDlg::delete_cluster()
 {
     delete_node<ClusterNode, RootNode>(m_current_cluster_node, m_root_node.get());
+    m_act_delete_cluster = nullptr;
+    m_cluster_context_menu = nullptr;
 }
 
 
@@ -195,16 +266,24 @@ void ClusterManagerDlg::delete_server()
 {
     delete_node<ServerNode, ClusterNode>(m_current_audio_server_node, m_current_cluster_node);
 
+    m_act_delete_server = nullptr;
+    m_cluster_context_menu = nullptr;
 }
 
 void ClusterManagerDlg::delete_disk()
 {
     delete_node<DiskNode, ServerNode>(m_current_disk_node, m_current_audio_server_node);
+    m_act_delete_disk = nullptr;
+    m_audio_server_context_menu = nullptr;
+
 }
 
 void ClusterManagerDlg::delete_folder()
 {
     delete_node<AudioFolderNode, DiskNode>(m_current_folder_node, m_current_disk_node);
+
+    m_act_delete_folder = nullptr;
+    m_folder_context_menu = nullptr;
 }
 
 
@@ -236,6 +315,10 @@ void ClusterManagerDlg::new_disk(ClusterManager::Server* server)
 
     }
 
+    m_act_audio_server = nullptr;
+    m_act_delete_server = nullptr;
+    m_audio_server_context_menu = nullptr;
+
 }
 
 void ClusterManagerDlg::new_audio_folder(ClusterManager::StorageDisk* storage_disk)
@@ -265,6 +348,10 @@ void ClusterManagerDlg::new_audio_folder(ClusterManager::StorageDisk* storage_di
                     std::move(audio_folder), m_current_disk_node, folder_item);
 
     }
+
+    m_act_folder = nullptr;
+    m_act_delete_disk = nullptr;
+    m_disk_context_menu = nullptr;
 
 }
 
@@ -313,9 +400,9 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
 
    switch(node_type)
    {
-     case static_cast<int>(ConfigItemType::Root):
+     case static_cast<int>(ConfigItemType::ClusterGroup):
      {
-       auto root_node = get_cluster_node<RootNode>(uuid);
+       auto root_node = get_cluster_node<ClusterGroupNode>(uuid);
 
        if (m_root_context_menu != nullptr){
            m_root_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
@@ -325,6 +412,28 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
        show_root_context_menu(uuid, pos);
        break;
 
+     }
+
+     case static_cast<int>(ConfigItemType::UserGroup):
+     {
+       auto user_group_node = get_cluster_node<UserGroupNode>(uuid);
+       if (m_user_group_context_menu != nullptr){
+           m_user_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+           return;
+       }
+       show_user_group_context_menu(uuid, pos);
+       break;
+     }
+
+     case static_cast<int>(ConfigItemType::ApplicationGroup):
+     {
+       auto app_group_node = get_cluster_node<AppGroupNode>(uuid);
+       if (m_app_group_context_menu != nullptr){
+           m_app_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+           return;
+       }
+       show_app_group_context_menu(uuid, pos);
+       break;
      }
 
      case static_cast<int>(ConfigItemType::Cluster):
@@ -344,11 +453,6 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
     case static_cast<int>(ConfigItemType::AudioServer):
    {
        m_current_audio_server_node = get_cluster_node<ServerNode>(uuid);
-
-       if (m_audio_server_context_menu != nullptr){
-           m_audio_server_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
-           return;
-       }
 
        show_audio_server_context_menu(uuid, pos);
 
@@ -387,23 +491,43 @@ void ClusterManagerDlg::show_root_context_menu(QString node_id, QPoint pos)
 {
     m_root_context_menu = std::make_unique<QMenu>();
 
-
     if (m_act_cluster == nullptr)
        m_act_cluster = std::make_unique<QAction>("New Cluster...");
-    if (m_act_user == nullptr )
-       m_act_user = std::make_unique<QAction>("New User...");
-    if (m_act_app == nullptr)
-       m_act_app = std::make_unique<QAction>("New Application...");
 
     connect(m_act_cluster.get(), &QAction::triggered, this, [this](){ new_cluster(); });
 
     m_root_context_menu->addAction(m_act_cluster.get());
-    m_root_context_menu->addAction(m_act_user.get());
-    m_root_context_menu->addAction(m_act_app.get());
 
     m_root_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 
 }
+
+
+void ClusterManagerDlg::show_user_group_context_menu(QString node_id, QPoint pos)
+{
+    m_user_group_context_menu = std::make_unique<QMenu>();
+
+    if (m_act_user == nullptr )
+       m_act_user = std::make_unique<QAction>("New User...");
+
+    connect(m_act_user.get(), &QAction::triggered, this, &ClusterManagerDlg::user_browers);
+    m_user_group_context_menu->addAction(m_act_user.get());
+
+    m_user_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+}
+
+void ClusterManagerDlg::show_app_group_context_menu(QString node_id, QPoint pos)
+{
+    m_app_group_context_menu = std::make_unique<QMenu>();
+
+    if (m_act_app == nullptr)
+       m_act_app = std::make_unique<QAction>("New Application...");
+
+    m_app_group_context_menu->addAction(m_act_app.get());
+
+    m_app_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+}
+
 
 void ClusterManagerDlg::show_cluster_context_menu(QString node_id, QPoint pos)
 {
@@ -433,24 +557,23 @@ void ClusterManagerDlg::show_cluster_context_menu(QString node_id, QPoint pos)
 
 void ClusterManagerDlg::show_audio_server_context_menu(QString node_id, QPoint pos)
 {
-    m_audio_server_context_menu = std::make_unique<QMenu>();
-
-     auto node = get_cluster_node<ServerNode>(node_id);
-
-    if (node == nullptr)
-        return;
+    if (m_audio_server_context_menu == nullptr)
+        m_audio_server_context_menu = std::make_unique<QMenu>();
 
     if (m_act_audio_server == nullptr)
        m_act_audio_server = std::make_unique<QAction>("New Disk...");
     if (m_act_delete_server == nullptr)
         m_act_delete_server = std::make_unique<QAction>("Delete Server");
 
+
+    auto node = get_cluster_node<ServerNode>(node_id);
+
+    if (node == nullptr)
+        return;
+
     ClusterManager::Server* server = node->node_entity();
 
-    connect(m_act_audio_server.get(), &QAction::triggered, this, [server, this](){
-        new_disk(server);
-    });
-
+    connect(m_act_audio_server.get(), &QAction::triggered, this, [server, this](){ new_disk(server); });
     connect(m_act_delete_server.get(), &QAction::triggered, this, &ClusterManagerDlg::delete_server);
 
     m_audio_server_context_menu->addAction(m_act_audio_server.get());
@@ -476,8 +599,6 @@ void ClusterManagerDlg::show_disk_context_menu(QString node_id, QPoint pos)
 
     //ClusterManager::StorageDisk* storage_disk = m_current_disk_node->node_entity();
     ClusterManager::StorageDisk* storage_disk = node->node_entity();
-
-    qDebug() << "SHOW DISK CONTENT:: "<< stoq(storage_disk->disk_name()->value());
 
     connect(m_act_folder.get(), &QAction::triggered, this, [storage_disk, this](){
         new_audio_folder(storage_disk);
@@ -509,7 +630,6 @@ void ClusterManagerDlg::show_folder_context_menu(QString node_id, QPoint pos)
 
 void ClusterManagerDlg::print_tree()
 {
-
     tree_printer(m_root_node->child_nodes());
 }
 
@@ -656,5 +776,165 @@ void ClusterManagerDlg::save_tree(std::map<QString, std::tuple<ConfigItemType, s
       }
 
     }
+
+}
+
+void ClusterManagerDlg::load_data()
+{
+
+    std::stringstream sql;
+
+    sql << "select a.id as cluster_id, a.cluster_name, "
+        << " b.id as station_id, b.station_name, b.cluster_id as station_cluster_id, "
+        << "      c.id as server_id, c.server_name, c.server_type, c.server_ip, c.cluster_id as server_cluster_id, "
+        << "      d.id as disk_id, d.disk_name, d.capacity, d.audio_server_id, "
+        << "      e.id as folder_id, e.folder_name, e.disk_id as folder_disk_id "
+        << " from rave_cluster a "
+        << " left outer join rave_station b on a.id = b.cluster_id "
+        << " left  join rave_server c on a.id = c.cluster_id "
+        << " left outer join rave_storagedisk d on c.id = d.audio_server_id "
+        << " left outer join rave_audiofolder e on d.id = e.disk_id "
+        << " order by a.id ";
+
+    EntityDataModel edm;
+
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+
+    if (provider->cacheSize() > 0){
+        provider->cache()->first();
+       do{
+            auto itb = provider->cache()->currentElement()->begin();
+            auto ite = provider->cache()->currentElement()->end();
+
+            auto cluster = std::make_unique<ClusterManager::Cluster>();
+            auto station = std::make_unique<ClusterManager::Station>();
+            auto server = std::make_unique<ClusterManager::Server>();
+            auto disk = std::make_unique<ClusterManager::StorageDisk>();
+            auto folder = std::make_unique<ClusterManager::AudioFolder>();
+
+            for(; itb != ite; ++itb){
+
+                std::string field = (*itb).first;
+                std::string value = (*itb).second;
+
+                // Cluster
+                if (field == "cluster_id"){
+                    cluster->setId(std::stoi(value));
+                }
+                if (field == "cluster_name"){
+                    cluster->set_cluster_name(value);
+                }
+
+                // Station
+                if (field == "station_id"){
+                    if (!value.empty()){
+                        station->setId(std::stoi(value));
+                    }
+                }
+
+                if (field == "station_name" && station->id() > -1){
+                    station->set_station_name(value) ;
+                }
+
+                // Server
+                if (field == "server_id"){
+                    if (!value.empty()){
+                        server->setId(std::stoi(value));
+                    }
+                }
+                if (field == "server_name" && server->id() > -1 ){
+                   server->set_server_name(value) ;
+                }
+                if (field == "server_type" && server->id() > -1 ){
+                    server->set_server_type(value);
+                }
+                if (field == "server_ip" && server->id() > -1 ){
+                    server->set_server_ip(value);
+                }
+
+                // Disk
+                if (field == "disk_id"){
+                    if (!value.empty()){
+                        disk->setId(std::stoi(value));
+                    }
+                }
+                if (field == "disk_name" && disk->id() > -1 ){
+                    disk->set_disk_name(value);
+                }
+                if (field == "capacity" && disk->id() > -1 ){
+                    disk->set_capacity(std::stod(value));
+                }
+
+                // Folder
+                if (field == "folder_id"){
+                    if (!value.empty()){
+                        folder->setId(std::stoi(value));
+                    }
+                }
+                if (field == "folder_name" && folder->id() > -1 ){
+                    folder->set_folder_name(value);
+                }
+
+            }
+
+            // Cluster
+            auto cluster_node = get_cluster_node_by_id<ClusterNode>(cluster->id());
+            if (cluster_node == nullptr)
+            {
+                auto item = node_context<ConfigItemType::Cluster, NodeType::Group>(
+                            stoq(cluster->cluster_name()->value()));
+
+                cluster_node = make_node<std::unique_ptr<ClusterManager::Cluster>, ClusterNode, ClusterGroupNode>(
+                            std::move(cluster), m_cluster_group_node.get(), item);
+            }
+
+            // Station
+            auto station_node = get_cluster_node_by_id<StationNode>(station->id());
+            if (station_node == nullptr)
+            {
+                auto station_item = node_context<ConfigItemType::Station, NodeType::Leaf>(
+                            stoq(station->station_name()->value()));
+                station_node = make_node<std::unique_ptr<ClusterManager::Station>, StationNode, ClusterNode>(
+                            std::move(station), cluster_node, station_item);
+            }
+
+            // Audio Server
+            auto audio_server_node = get_cluster_node_by_id<ServerNode>(server->id());
+            if (audio_server_node == nullptr)
+            {
+                auto server_item = node_context<ConfigItemType::AudioServer, NodeType::Leaf>(
+                            stoq(server->server_name()->value()));
+                audio_server_node = make_node<std::unique_ptr<ClusterManager::Server>, ServerNode, ClusterNode>(
+                            std::move(server), cluster_node, server_item);
+            }
+
+            // Disk
+            auto disk_node = get_cluster_node_by_id<DiskNode>(disk->id());
+            if (disk_node == nullptr)
+            {
+                auto disk_item = node_context<ConfigItemType::Disk, NodeType::Leaf>(
+                            stoq(disk->disk_name()->value()));
+                disk_node = make_node<std::unique_ptr<ClusterManager::StorageDisk>, DiskNode, ServerNode>(
+                            std::move(disk), audio_server_node, disk_item);
+            }
+
+            // Folder
+            auto folder_node = get_cluster_node_by_id<AudioFolderNode>(folder->id());
+            if (folder_node == nullptr)
+            {
+                auto folder_item = node_context<ConfigItemType::AudioFolder, NodeType::Leaf>(
+                            stoq(folder->folder_name()->value()));
+                folder_node = make_node<std::unique_ptr<ClusterManager::AudioFolder>, AudioFolderNode, DiskNode>(
+                            std::move(folder), disk_node, folder_item);
+
+            }
+
+
+        provider->cache()->next();
+       } while(!provider->cache()->isLast());
+
+   }
 
 }
