@@ -1022,7 +1022,9 @@ void ClusterManagerDlg::save_tree(std::map<QString, std::tuple<ConfigItemType, s
 void ClusterManagerDlg::load_data()
 {
     load_cluster_data();
+    load_roles_data();
     load_users_data();
+
 }
 
 void ClusterManagerDlg::load_cluster_data()
@@ -1252,3 +1254,27 @@ void ClusterManagerDlg::load_users_data()
 
 
 }
+
+
+void ClusterManagerDlg::load_roles_data()
+{
+    std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(
+                std::make_unique<Role>());
+    edm->all();
+
+    for (auto const&[name, entity] : edm->modelEntities()){
+        Role* role_ptr = dynamic_cast<Role*>(entity.get());
+        Role* tmp_ptr = new Role();
+        *tmp_ptr = *role_ptr;
+        std::unique_ptr<Role> role = std::make_unique<Role>();
+        role.reset(tmp_ptr);
+
+        auto item = node_context<ConfigItemType::Role, NodeType::Leaf>(
+                    stoq(role->roleName()->value()));
+        auto role_node = make_node<std::unique_ptr<Role>, RoleNode, RoleNode>(
+                    std::move(role), m_current_role_group_node, item);
+    }
+}
+
+
+

@@ -32,6 +32,26 @@ Role::Role()
     mRoleMember = std::make_unique<RoleMember> (this, mUser.get());
 }
 
+Role& Role::operator=(const Role& other)
+{
+   mOId->setValue(other.mOId->value());
+   mOId->setMandatory(true);
+   mRoleName->setValue(other.mRoleName->value());
+   mRoleName->setMandatory(true);
+   mValidUntil->setValue(other.mValidUntil->value());
+   mRoleExpire->setValue(other.mRoleExpire->value());
+   mComment->setValue(other.mComment->value());
+   mRoleCanLogin->setValue(other.mRoleCanLogin->value());
+   mHeader = other.mHeader;
+   setTableName("pg_roles");
+   getId().setFormOnly(true);
+   mUser = std::make_unique<User>();
+   mRoleMember = std::make_unique<RoleMember>(this, mUser.get());
+
+   return *this;
+
+}
+
 Role::~Role()
 {
 

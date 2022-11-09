@@ -9,6 +9,7 @@
 #include <QMap>
 #include <QVariant>
 
+#include "../../../framework/entitydatamodel.h"
 #include "confignode.h"
 
 namespace Ui {
@@ -217,7 +218,6 @@ public:
 
         node = nullptr;
     }
-
 
 public slots:
     void new_cluster();

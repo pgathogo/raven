@@ -11,6 +11,7 @@ class Role : public BaseEntity
 public:
     Role();
     ~Role() override;
+    Role& operator=(const Role&);
 
     int id() const override;
 
