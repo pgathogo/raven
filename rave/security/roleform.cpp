@@ -86,18 +86,22 @@ ActionResult RoleForm::saveRecord()
             return ar;
 
     if (ui->edtRoleName->isEnabled()){
-        EntityDataModel edm = EntityDataModel(std::make_unique<Role>());
-        auto role_filter = std::make_tuple(mRole->roleName()->dbColumnName(),
-                                           "=",
-                                           mRole->roleName()->value());
-        std::string filter = edm.prepareFilter(role_filter);
-        edm.search(filter);
+        try{
+            EntityDataModel edm = EntityDataModel(std::make_unique<Role>());
+            auto role_filter = std::make_tuple(mRole->roleName()->dbColumnName(),
+                               "like",
+                               mRole->roleName()->value());
+            std::string filter = edm.prepareFilter(role_filter);
+            edm.search(filter);
 
-        if (edm.entitiesCount() > 0){
-            ar = std::make_tuple(ActionResultType::arERROR,
-                                 "The role name is already in use!");
-            return ar;
-         }
+            if (edm.entitiesCount() > 0){
+                ar = std::make_tuple(ActionResultType::arERROR,
+                         "The role name is already in use!");
+                return ar;
+             }
+        } catch(DatabaseException& de) {
+            showMessage(de.errorMessage());
+        }
     }
 
     return ar;

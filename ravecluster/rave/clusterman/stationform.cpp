@@ -13,7 +13,7 @@ StationForm::StationForm(ClusterManager::Station* station, QDialog* parent)
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
-    populateEntityFields();
+    populateFormWidgets();
 
     ui->edtStation->setFocusPolicy(Qt::StrongFocus);
     ui->edtStation->setFocus();

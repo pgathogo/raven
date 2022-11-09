@@ -31,6 +31,32 @@ User::User()
 
 }
 
+User& User::operator=(const User& other)
+{
+    mUseSysId->setValue(other.mUseSysId->value());
+    mUserName->setValue(other.mUserName->value());
+    mPassword->setValue(other.mPassword->value());
+    mPassword->setMandatory(true);
+    mPassword->setFormOnly(true);
+
+    mConfirmPassword->setValue(other.mConfirmPassword->value());
+    mConfirmPassword->setMandatory(true);
+    mConfirmPassword->setFormOnly(true);
+    mValidUntil->setValue(other.mValidUntil->value());
+
+    mPasswordExpire->setValue(other.mPasswordExpire->value());
+    mPasswordExpire->setFormOnly(true);
+
+    mHeader << QString::fromStdString(mUserName->fieldLabel());
+
+    setTableName("pg_user");
+
+    // pg_user table does not have an Id column
+    getId().setFormOnly(true);
+
+    return *this;
+}
+
 User::User(const std::string username, const std::string password)
 {
     mUseSysId = createField<IntegerField>("usesysid", "User System ID");

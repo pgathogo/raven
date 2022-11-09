@@ -30,26 +30,6 @@ void RoleBrowser::updateRecord()
 {
     rawUpdate<Role, RoleForm, ManyToMany>();
 
-    /*
-    BaseEntity* entity = findSelectedEntity();
-    Role* role = dynamic_cast<Role*>(entity);
-
-    std::unique_ptr<RoleForm> form =
-            std::make_unique<RoleForm>(role, this);
-
-    if (form->exec() > 0){
-        std::string alter_stmt =
-                role->make_alter_stmt(role->displayName());
-        try{
-            entityDataModel().executeRawSQL( alter_stmt );
-            updateTableViewRecord(role->tableViewValues());
-            entityDataModel().updateEntity(*role);
-
-        }catch (DatabaseException& de){
-            showMessage(de.errorMessage());
-        }
-    }
-    */
 }
 
 void RoleBrowser::deleteRecord()

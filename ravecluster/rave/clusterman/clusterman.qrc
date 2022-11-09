@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icons/cluster.png</file>
+        <file>images/icons/master_cluster.png</file>
+        <file>images/icons/master_users.png</file>
+        <file>images/icons/radio_tower.png</file>
+        <file>images/icons/mic.png</file>
+    </qresource>
+</RCC>

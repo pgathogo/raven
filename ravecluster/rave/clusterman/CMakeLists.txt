@@ -68,12 +68,19 @@ set(PROJECT_SOURCES
         audiofolderform.h
         audiofolderform.cpp
         audiofolderform.ui
+        clusterman.qrc
         ../../../rave/security/authentication.h
         ../../../rave/security/authentication.cpp
+        ../../../rave/security/rolemember.h
+        ../../../rave/security/rolemember.cpp
+        ../../../rave/security/role.h
+        ../../../rave/security/role.cpp
         ../../../rave/security/user.h
         ../../../rave/security/user.cpp
         ../../../rave/security/userbrowser.h
         ../../../rave/security/userbrowser.cpp
+        ${rave_security_INCLUDE_DIRS}/roleform.h
+        ${rave_security_INCLUDE_DIRS}/roleform.cpp
         ${rave_security_INCLUDE_DIRS}/userform.h
         ${rave_security_INCLUDE_DIRS}/userform.cpp
         ${rave_framework_INCLUDE_DIRS}/baseentity.cpp
@@ -84,6 +91,16 @@ set(PROJECT_SOURCES
         ${rave_framework_INCLUDE_DIRS}/letterfilterwidget.h
         ${rave_framework_INCLUDE_DIRS}/letterfilterwidget.cpp
         ${rave_framework_INCLUDE_DIRS}/baseentitydetaildlg.cpp
+        ${rave_framework_INCLUDE_DIRS}/manytomanybrowser.h
+        ${rave_framework_INCLUDE_DIRS}/manytomanybrowser.cpp
+        ${rave_framework_INCLUDE_DIRS}/selectclosewidget.h
+        ${rave_framework_INCLUDE_DIRS}/selectclosewidget.cpp
+        ${rave_framework_INCLUDE_DIRS}/picklistbrowser.h
+        ${rave_framework_INCLUDE_DIRS}/picklistbrowser.cpp
+        ${rave_framework_INCLUDE_DIRS}/manytomany.h
+        ${rave_framework_INCLUDE_DIRS}/manytomany.cpp
+        ${rave_framework_INCLUDE_DIRS}/typeexclusion.h
+        ${rave_framework_INCLUDE_DIRS}/typeexclusion.cpp
         ../../../rave/framework/entityfields.h
         ../../../rave/framework/entityfields.cpp
         ../../../rave/framework/dataprovider.h
