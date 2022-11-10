@@ -155,6 +155,7 @@ namespace ClusterManager
         void addChild(QTreeWidgetItem* child);
         void set_uuid(QString);
         void add_child(QString, ConfigItemType, std::any);
+        void update_node_text(QString);
         std::map<QString, std::tuple<ConfigItemType, std::any>> child_nodes();
         std::map<QString, std::tuple<ConfigItemType, std::any>>& child_nodes_by_ref();
 
@@ -294,6 +295,11 @@ namespace ClusterManager
         void ConfigNode<T>::set_node_type(NodeType n_type)
         {
             m_node_type = n_type;
+        }
+        template<typename T>
+        void ConfigNode<T>::update_node_text(QString text)
+        {
+            setText(0, text);
         }
 
 }

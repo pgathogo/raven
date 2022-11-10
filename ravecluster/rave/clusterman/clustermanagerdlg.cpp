@@ -39,7 +39,7 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     ,m_root_context_menu{nullptr}
     ,m_cluster_context_menu{nullptr}
     ,m_act_cluster{nullptr}
-    ,m_act_user{nullptr}
+    ,m_act_user_group{nullptr}
     ,m_act_app{nullptr}
     ,m_context_action{nullptr}
     ,m_act_group_station{nullptr}
@@ -160,7 +160,7 @@ void ClusterManagerDlg::make_group_nodes()
                 "Users");
     auto user_group_data = make_node_data(user_group_context.config_item_type);
     auto user_group = std::make_unique<User>();
-    m_current_user_group_node = make_node<std::unique_ptr<User>, UserNode, RoleAndUserGroupNode>(
+    m_current_user_node = make_node<std::unique_ptr<User>, UserNode, RoleAndUserGroupNode>(
                 std::move(user_group), m_role_user_group_node.get(), user_group_context);
 
 
@@ -239,7 +239,7 @@ void ClusterManagerDlg::new_cluster()
     }
 
     m_act_cluster = nullptr;
-    m_act_user = nullptr;
+    m_act_user_group = nullptr;
     m_act_app = nullptr;
     m_root_context_menu = nullptr;
 }
@@ -287,6 +287,19 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
         } catch (DatabaseException& de) {
             showMessage(de.errorMessage());
         }
+    }
+
+}
+
+void ClusterManagerDlg::edit_user(UserNode* user_node)
+{
+    auto selected_user = m_current_user_node->node_entity();
+    std::unique_ptr<UserForm> uform =
+            std::make_unique<UserForm>(selected_user);
+    if (uform->exec() > 0){
+        EntityDataModel edm;
+        edm.updateEntity(*selected_user);
+        m_current_user_node->update_node_text(stoq(selected_user->userName()->value()));
     }
 
 }
@@ -365,7 +378,7 @@ void ClusterManagerDlg::edit_cluster()
         EntityDataModel edm;
         // TODO: Add try catch for database action
         edm.updateEntity(*selected_cluster);
-        m_current_cluster_node->setText(0, stoq(selected_cluster->cluster_name()->value()));
+        m_current_cluster_node->update_node_text(stoq(selected_cluster->cluster_name()->value()));
     }
 }
 
@@ -573,7 +586,14 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
        show_user_group_context_menu(uuid, pos);
        break;
      }
-
+     case static_cast<int>(ConfigItemType::User):
+   {
+       if (m_user_context_menu != nullptr){
+           m_user_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+           return;
+       }
+       show_user_context_menu(uuid, pos);
+   }
      case static_cast<int>(ConfigItemType::ApplicationGroup):
      {
        auto app_group_node = get_cluster_node<AppGroupNode>(uuid);
@@ -697,18 +717,39 @@ void ClusterManagerDlg::show_user_group_context_menu(QString node_id, QPoint pos
 {
     m_user_group_context_menu = std::make_unique<QMenu>();
 
-    if (m_act_user == nullptr )
-       m_act_user = std::make_unique<QAction>("New User...");
+    if (m_act_user_group == nullptr )
+       m_act_user_group = std::make_unique<QAction>("New User...");
 
-    auto user_group_node = get_cluster_node_by_id<UserNode, NodeType::Group>(m_current_user_group_node->id());
+    auto user_group_node = get_cluster_node_by_id<UserNode, NodeType::Group>(m_current_user_node->id());
 
     if (user_group_node == nullptr)
         return;
 
-    connect(m_act_user.get(), &QAction::triggered, this, [this, user_group_node](){new_user(user_group_node);});
-    m_user_group_context_menu->addAction(m_act_user.get());
+    connect(m_act_user_group.get(), &QAction::triggered, this, [this, user_group_node](){new_user(user_group_node);});
+    m_user_group_context_menu->addAction(m_act_user_group.get());
 
     m_user_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+}
+void ClusterManagerDlg::show_user_context_menu(QString node_id, QPoint pos)
+{
+    m_user_context_menu = std::make_unique<QMenu>();
+    if (m_act_user == nullptr)
+        m_act_user = std::make_unique<QAction>("Edit User...");
+
+    qDebug() << "AA";
+    auto user_node = get_cluster_node<UserNode>(node_id);
+    //auto user_node = get_cluster_node_by_id<UserNode, NodeType::Leaf>(m_current_user_node->id());
+    qDebug() << "BB";
+
+    qDebug() << user_node->id();
+
+    if (user_node == nullptr)
+        return;
+
+    qDebug() << "CC";
+    connect(m_act_user.get(), &QAction::triggered, this, [this, user_node](){edit_user(user_node);});
+    m_user_context_menu->addAction(m_act_user.get());
+    m_user_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 }
 
 void ClusterManagerDlg::show_app_group_context_menu(QString node_id, QPoint pos)
@@ -1249,7 +1290,9 @@ void ClusterManagerDlg::load_users_data()
                     stoq(user->userName()->value()));
 
         auto user_node = make_node<std::unique_ptr<User>, UserNode,  UserNode>(
-                    std::move(user), m_current_user_group_node, item);
+                    std::move(user), m_current_user_node, item);
+
+        qDebug() << "Load_users_data: "<< user_node->id();
     }
 
 

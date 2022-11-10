@@ -83,6 +83,7 @@ public:
     void show_root_context_menu(QString, QPoint);
     void show_role_group_context_menu(QString, QPoint);
     void show_user_group_context_menu(QString, QPoint);
+    void show_user_context_menu(QString, QPoint);
     void show_app_group_context_menu(QString, QPoint);
     void show_audio_server_context_menu(QString, QPoint);
     void show_disk_context_menu(QString, QPoint);
@@ -233,6 +234,7 @@ public slots:
     void delete_folder();
     void new_role(RoleNode*);
     void new_user(UserNode*);
+    void edit_user(UserNode*);
 
     void toggle_new_station_button(boolean);
     void on_item_clicked(QTreeWidgetItem* item, int col);
@@ -268,12 +270,13 @@ private:
     AudioFolderNode* m_current_folder_node;
 
     RoleNode* m_current_role_group_node;
-    UserNode* m_current_user_group_node;
+    UserNode* m_current_user_node;
 
 
     std::unique_ptr<QMenu> m_root_context_menu;
     std::unique_ptr<QMenu> m_cluster_group_context_menu;
     std::unique_ptr<QMenu> m_role_group_context_menu;
+    std::unique_ptr<QMenu> m_user_context_menu;
     std::unique_ptr<QMenu> m_user_group_context_menu;
     std::unique_ptr<QMenu> m_app_group_context_menu;
 
@@ -288,7 +291,9 @@ private:
 
     std::unique_ptr<QAction> m_act_cluster;
     std::unique_ptr<QAction> m_act_role;
+    std::unique_ptr<QAction> m_act_user_group;
     std::unique_ptr<QAction> m_act_user;
+
     std::unique_ptr<QAction> m_act_app;
 
     std::unique_ptr<QAction> m_context_action;
