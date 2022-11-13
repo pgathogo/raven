@@ -21,6 +21,19 @@ StorageDiskForm::StorageDiskForm(std::string server_name,
     ui->edtDiskName->setFocus();
 }
 
+StorageDiskForm::StorageDiskForm(ClusterManager::StorageDisk* storage_disk,
+                                 QDialog* parent)
+    :BaseEntityDetailDlg(parent)
+    ,ui(new Ui::StorageDiskForm)
+    ,m_storage_disk{storage_disk}
+{
+    ui->setupUi(bui->baseContainer);
+    populateFormWidgets();
+
+    ui->edtDiskName->setFocusPolicy(Qt::StrongFocus);
+    ui->edtDiskName->setFocus();
+}
+
 StorageDiskForm::~StorageDiskForm()
 {
     delete ui;

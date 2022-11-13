@@ -20,6 +20,9 @@ public:
     explicit StorageDiskForm(std::string server_name,
                              ClusterManager::StorageDisk* storage_disk,
                              QDialog* parent = nullptr);
+
+    StorageDiskForm(ClusterManager::StorageDisk* storage_disk, QDialog* parent = nullptr);
+
     ~StorageDiskForm();
 
     ActionResult saveRecord() override;

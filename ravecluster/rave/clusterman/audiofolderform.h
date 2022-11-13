@@ -20,6 +20,7 @@ public:
     explicit AudioFolderForm(std::string disk_name,
                              ClusterManager::AudioFolder* audio_folder,
                              QDialog* parent = nullptr);
+    AudioFolderForm(ClusterManager::AudioFolder* audio_folder, QDialog* parent=nullptr);
     ~AudioFolderForm();
 
     ActionResult saveRecord() override;

@@ -83,6 +83,7 @@ public:
     void show_root_context_menu(QString, QPoint);
     void show_role_group_context_menu(QString, QPoint);
     void show_user_group_context_menu(QString, QPoint);
+    void show_role_context_menu(QString, QPoint);
     void show_user_context_menu(QString, QPoint);
     void show_app_group_context_menu(QString, QPoint);
     void show_audio_server_context_menu(QString, QPoint);
@@ -220,6 +221,19 @@ public:
         node = nullptr;
     }
 
+    template<typename T1, typename T2, typename T3>
+    void edit_node(T1* current_node, StringField* (T3::*mp)()const)
+    {
+        T3* node_entity = current_node->node_entity();
+        auto edit_form = std::make_unique<T2>(node_entity);
+        if (edit_form->exec() > 0){
+            EntityDataModel edm;
+            edm.updateEntity(*node_entity);
+            current_node->update_node_text(stoq((node_entity->*mp)()->value()));
+        }
+
+    }
+
 public slots:
     void new_cluster();
     void new_station(int, int);
@@ -235,6 +249,10 @@ public slots:
     void new_role(RoleNode*);
     void new_user(UserNode*);
     void edit_user(UserNode*);
+    void edit_role(RoleNode*);
+    void edit_folder(AudioFolderNode*);
+    void edit_server(ServerNode*);
+    void edit_disk(DiskNode*);
 
     void toggle_new_station_button(boolean);
     void on_item_clicked(QTreeWidgetItem* item, int col);
@@ -271,11 +289,13 @@ private:
 
     RoleNode* m_current_role_group_node;
     UserNode* m_current_user_node;
+    RoleNode* m_current_role_node;
 
 
     std::unique_ptr<QMenu> m_root_context_menu;
     std::unique_ptr<QMenu> m_cluster_group_context_menu;
     std::unique_ptr<QMenu> m_role_group_context_menu;
+    std::unique_ptr<QMenu> m_role_context_menu;
     std::unique_ptr<QMenu> m_user_context_menu;
     std::unique_ptr<QMenu> m_user_group_context_menu;
     std::unique_ptr<QMenu> m_app_group_context_menu;
@@ -290,6 +310,7 @@ private:
     std::unique_ptr<QMenu> m_server_group_context_menu;
 
     std::unique_ptr<QAction> m_act_cluster;
+    std::unique_ptr<QAction> m_act_group_role;
     std::unique_ptr<QAction> m_act_role;
     std::unique_ptr<QAction> m_act_user_group;
     std::unique_ptr<QAction> m_act_user;
@@ -306,9 +327,12 @@ private:
     std::unique_ptr<QAction>m_act_delete_disk;
 
     std::unique_ptr<QAction> m_act_folder;
+    std::unique_ptr<QAction> m_act_edit_folder;
     std::unique_ptr<QAction> m_act_delete_folder;
 
     std::unique_ptr<QAction> m_act_audio_server;
+    std::unique_ptr<QAction> m_act_edit_audio_server;
+    std::unique_ptr<QAction> m_act_edit_disk;
 
 };
 

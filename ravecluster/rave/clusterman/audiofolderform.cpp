@@ -21,6 +21,20 @@ AudioFolderForm::AudioFolderForm(std::string disk_name,
     ui->edtFolderName->setFocus();
 }
 
+AudioFolderForm::AudioFolderForm(ClusterManager::AudioFolder* audio_folder,
+                                 QDialog* parent)
+    :BaseEntityDetailDlg(parent)
+    ,ui(new Ui::AudioFolderForm)
+    ,m_disk_name{""}
+    ,m_audio_folder{audio_folder}
+{
+    ui->setupUi(bui->baseContainer);
+    populateFormWidgets();
+
+    ui->edtFolderName->setFocusPolicy(Qt::StrongFocus);
+    ui->edtFolderName->setFocus();
+}
+
 AudioFolderForm::~AudioFolderForm()
 {
     delete ui;

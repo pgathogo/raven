@@ -293,16 +293,44 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
 
 void ClusterManagerDlg::edit_user(UserNode* user_node)
 {
-    auto selected_user = m_current_user_node->node_entity();
-    std::unique_ptr<UserForm> uform =
-            std::make_unique<UserForm>(selected_user);
-    if (uform->exec() > 0){
-        EntityDataModel edm;
-        edm.updateEntity(*selected_user);
-        m_current_user_node->update_node_text(stoq(selected_user->userName()->value()));
-    }
+
+    edit_node<UserNode, UserForm, User>(user_node, &User::userName);
 
 }
+
+void ClusterManagerDlg::edit_role(RoleNode* role_node)
+{
+
+    edit_node<RoleNode, RoleForm, Role>(role_node, &Role::roleName);
+
+}
+
+void ClusterManagerDlg::edit_server(ServerNode* server_node)
+{
+    edit_node<ServerNode, ServerForm, ClusterManager::Server>(server_node, &ClusterManager::Server::server_name);
+
+    m_act_audio_server = nullptr;
+    m_act_edit_audio_server = nullptr;
+
+}
+
+
+void ClusterManagerDlg::edit_folder(AudioFolderNode* folder_node)
+{
+    edit_node<AudioFolderNode, AudioFolderForm, ClusterManager::AudioFolder>(folder_node,
+                                                                             &ClusterManager::AudioFolder::folder_name);
+}
+
+void ClusterManagerDlg::edit_disk(DiskNode* disk_node)
+{
+    edit_node<DiskNode, StorageDiskForm, ClusterManager::StorageDisk>(disk_node, &ClusterManager::StorageDisk::disk_name);
+
+    m_act_folder = nullptr;
+    m_act_edit_disk = nullptr;
+    m_act_delete_disk = nullptr;
+
+}
+
 
 void ClusterManagerDlg::new_station(int group_id, int cluster_id)
 {
@@ -463,6 +491,7 @@ void ClusterManagerDlg::new_disk(ClusterManager::Server* server)
     }
 
     m_act_audio_server = nullptr;
+    m_act_edit_audio_server = nullptr;
     m_act_delete_server = nullptr;
     m_audio_server_context_menu = nullptr;
 
@@ -576,6 +605,16 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
        show_role_group_context_menu(uuid, pos);
        break;
    }
+   case static_cast<int>(ConfigItemType::Role):
+   {
+       if (m_role_context_menu != nullptr){
+          m_role_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+       }
+
+       show_role_context_menu(uuid, pos);
+       break;
+   }
+
 
      case static_cast<int>(ConfigItemType::UserGroup):
      {
@@ -593,6 +632,7 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
            return;
        }
        show_user_context_menu(uuid, pos);
+       break;
    }
      case static_cast<int>(ConfigItemType::ApplicationGroup):
      {
@@ -701,14 +741,14 @@ void ClusterManagerDlg::show_root_context_menu(QString node_id, QPoint pos)
 void ClusterManagerDlg::show_role_group_context_menu(QString node_id, QPoint pos)
 {
     m_role_group_context_menu = std::make_unique<QMenu>();
-    if (m_act_role == nullptr)
-        m_act_role = std::make_unique<QAction>("New Role...");
+    if (m_act_group_role == nullptr)
+        m_act_group_role = std::make_unique<QAction>("New Role...");
 
     auto role_group_node = get_cluster_node_by_id<RoleNode, NodeType::Group>(m_current_role_group_node->id());
     if (role_group_node == nullptr)
         return;
-    connect(m_act_role.get(), &QAction::triggered, this, [this, role_group_node](){ new_role(role_group_node);});
-    m_role_group_context_menu->addAction(m_act_role.get());
+    connect(m_act_group_role.get(), &QAction::triggered, this, [this, role_group_node](){ new_role(role_group_node);});
+    m_role_group_context_menu->addAction(m_act_group_role.get());
     m_role_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 
 }
@@ -736,20 +776,34 @@ void ClusterManagerDlg::show_user_context_menu(QString node_id, QPoint pos)
     if (m_act_user == nullptr)
         m_act_user = std::make_unique<QAction>("Edit User...");
 
-    qDebug() << "AA";
     auto user_node = get_cluster_node<UserNode>(node_id);
-    //auto user_node = get_cluster_node_by_id<UserNode, NodeType::Leaf>(m_current_user_node->id());
-    qDebug() << "BB";
-
-    qDebug() << user_node->id();
 
     if (user_node == nullptr)
         return;
 
-    qDebug() << "CC";
     connect(m_act_user.get(), &QAction::triggered, this, [this, user_node](){edit_user(user_node);});
     m_user_context_menu->addAction(m_act_user.get());
     m_user_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+}
+
+void ClusterManagerDlg::show_role_context_menu(QString node_id, QPoint pos)
+{
+    m_role_context_menu = std::make_unique<QMenu>();
+    if (m_act_role == nullptr)
+        m_act_role = std::make_unique<QAction>("Edit Role...");
+
+    auto role_node = get_cluster_node<RoleNode>(node_id);
+
+    if (role_node == nullptr)
+        return;
+
+    connect(m_act_role.get(), &QAction::triggered, this, [this, role_node](){edit_role(role_node);});
+
+    m_role_context_menu->addAction(m_act_role.get());
+    m_role_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
+
+
+
 }
 
 void ClusterManagerDlg::show_app_group_context_menu(QString node_id, QPoint pos)
@@ -838,27 +892,40 @@ void ClusterManagerDlg::show_server_group_context_menu(QString node_id, QPoint p
 
 void ClusterManagerDlg::show_audio_server_context_menu(QString node_id, QPoint pos)
 {
-    if (m_audio_server_context_menu == nullptr)
-        m_audio_server_context_menu = std::make_unique<QMenu>();
-
-    if (m_act_audio_server == nullptr)
-       m_act_audio_server = std::make_unique<QAction>("New Disk...");
-    if (m_act_delete_server == nullptr)
-        m_act_delete_server = std::make_unique<QAction>("Delete Server");
-
-
     auto node = get_cluster_node<ServerNode>(node_id);
 
     if (node == nullptr)
         return;
 
+
+    if (m_audio_server_context_menu == nullptr)
+        m_audio_server_context_menu = std::make_unique<QMenu>();
+
+    if (m_act_audio_server == nullptr)
+       m_act_audio_server = std::make_unique<QAction>("New Disk...");
+
+    if (m_act_edit_audio_server == nullptr)
+        m_act_edit_audio_server = std::make_unique<QAction>("Edit Server...");
+
+    if (m_act_delete_server == nullptr)
+        m_act_delete_server = std::make_unique<QAction>("Delete Server");
+
+
+
     ClusterManager::Server* server = node->node_entity();
 
     connect(m_act_audio_server.get(), &QAction::triggered, this, [server, this](){ new_disk(server); });
+    connect(m_act_edit_audio_server.get(), &QAction::triggered, this,[node, this](){edit_server(node);});
     connect(m_act_delete_server.get(), &QAction::triggered, this, &ClusterManagerDlg::delete_server);
 
-    m_audio_server_context_menu->addAction(m_act_audio_server.get());
-    m_audio_server_context_menu->addSeparator();
+    if (server->server_type()->value() == "ADS"){
+        m_audio_server_context_menu->addAction(m_act_audio_server.get());
+        m_audio_server_context_menu->addSeparator();
+    }else {
+        m_audio_server_context_menu->removeAction(m_act_audio_server.get());
+    }
+
+    m_audio_server_context_menu->addAction(m_act_edit_audio_server.get());
     m_audio_server_context_menu->addAction(m_act_delete_server.get());
 
     m_audio_server_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
@@ -875,6 +942,10 @@ void ClusterManagerDlg::show_disk_context_menu(QString node_id, QPoint pos)
 
     if (m_act_folder == nullptr)
         m_act_folder = std::make_unique<QAction>("New Folder...");
+
+    if (m_act_edit_disk == nullptr)
+        m_act_edit_disk = std::make_unique<QAction>("Edit Disk...");
+
     if (m_act_delete_disk == nullptr)
         m_act_delete_disk = std::make_unique<QAction>("Delete Disk");
 
@@ -882,29 +953,42 @@ void ClusterManagerDlg::show_disk_context_menu(QString node_id, QPoint pos)
     ClusterManager::StorageDisk* storage_disk = node->node_entity();
 
     connect(m_act_folder.get(), &QAction::triggered, this, [storage_disk, this](){
-        new_audio_folder(storage_disk);
-    });
+        new_audio_folder(storage_disk); });
+
+    connect(m_act_edit_disk.get(), &QAction::triggered, this, [this, node](){edit_disk(node);});
+
     connect(m_act_delete_disk.get(), &QAction::triggered, this, &ClusterManagerDlg::delete_disk);
 
     m_disk_context_menu->addAction(m_act_folder.get());
+    m_disk_context_menu->addAction(m_act_edit_disk.get());
     m_disk_context_menu->addSeparator();
     m_disk_context_menu->addAction(m_act_delete_disk.get());
+    m_disk_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 }
 
 void ClusterManagerDlg::show_folder_context_menu(QString node_id, QPoint pos)
 {
     m_folder_context_menu = std::make_unique<QMenu>();
+
     auto node = get_cluster_node<AudioFolderNode>(node_id);
+
     if (node == nullptr)
         return;
+
+    if (m_act_edit_folder == nullptr)
+        m_act_edit_folder = std::make_unique<QAction>("Edit Folder");
 
     if (m_act_delete_folder == nullptr)
         m_act_delete_folder = std::make_unique<QAction>("Delete Folder");
 
     ClusterManager::AudioFolder* folder = node->node_entity();
+    connect(m_act_edit_folder.get(), &QAction::triggered, this, [this, node](){ edit_folder(node);} );
     connect(m_act_delete_folder.get(), &QAction::triggered, this, &ClusterManagerDlg::delete_folder);
 
+
+    m_folder_context_menu->addAction(m_act_edit_folder.get());
     m_folder_context_menu->addAction(m_act_delete_folder.get());
+    m_folder_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 
 }
 
@@ -1292,7 +1376,6 @@ void ClusterManagerDlg::load_users_data()
         auto user_node = make_node<std::unique_ptr<User>, UserNode,  UserNode>(
                     std::move(user), m_current_user_node, item);
 
-        qDebug() << "Load_users_data: "<< user_node->id();
     }
 
 
@@ -1307,6 +1390,10 @@ void ClusterManagerDlg::load_roles_data()
 
     for (auto const&[name, entity] : edm->modelEntities()){
         Role* role_ptr = dynamic_cast<Role*>(entity.get());
+
+        if (role_ptr->roleName()->value().substr(0,3) == "pg_")
+            continue;
+
         Role* tmp_ptr = new Role();
         *tmp_ptr = *role_ptr;
         std::unique_ptr<Role> role = std::make_unique<Role>();
