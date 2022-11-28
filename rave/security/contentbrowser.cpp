@@ -31,13 +31,17 @@ void ContentBrowser::addRecord()
             std::make_unique<ContentForm>(content.get(),
                                           entityDataModel());
 
-    if (contentForm->exec() > 0){
-        for (auto& [name, entity] : entityDataModel().modelEntities()){
+    if (contentForm->exec() > 0)
+    {
+        for (auto& [name, entity] : entityDataModel().modelEntities())
+        {
             Content* cont = dynamic_cast<Content*>(entity.get());
-            if (cont->dbAction() == DBAction::dbaCREATE){
+            if (cont->dbAction() == DBAction::dbaCREATE)
+            {
                 entityDataModel().createEntityDB(*cont);
             }
-            if (cont->dbAction() == DBAction::dbaDELETE){
+            if (cont->dbAction() == DBAction::dbaDELETE)
+            {
                 entityDataModel().deleteEntity(*cont);
                 removeSelectedRow();
             }

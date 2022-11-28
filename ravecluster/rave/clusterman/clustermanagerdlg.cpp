@@ -12,6 +12,9 @@
 #include "../../../rave/security/userform.h"
 #include "../../../rave/security/user.h"
 #include "../../../rave/security/role.h"
+#include "../../../rave/security/content.h"
+#include "../../../rave/security/contentform.h"
+
 
 #include "cluster.h"
 #include "station.h"
@@ -48,6 +51,8 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Cluster Management");
 
+    m_content_edm = std::make_unique<EntityDataModel>(std::make_unique<Content>());
+
     connect(ui->btnNewCluster, &QPushButton::clicked, this, &ClusterManagerDlg::new_cluster);
     //connect(ui->btnNewStation, &QPushButton::clicked, this, &ClusterManagerDlg::new_station);
 //    connect(ui->btnNewAudioServer, &QPushButton::clicked, this, &ClusterManagerDlg::new_server);
@@ -66,6 +71,8 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ClusterManagerDlg::context_menu_requested);
 
     connect(ui->btnTest, &QPushButton::clicked, this, &ClusterManagerDlg::load_data);
+
+    connect(ui->btnClear, &QPushButton::clicked, this, &ClusterManagerDlg::clear_configuration);
 
 }
 
@@ -274,6 +281,7 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
     std::unique_ptr<UserForm> uform = std::make_unique<UserForm>(user.get());
     if (uform->exec() > 0){
         std::string create_stmt = user->make_create_stmt();
+        qDebug() << stoq(create_stmt);
         try {
             EntityDataModel edm;
             edm.executeRawSQL(create_stmt);
@@ -291,6 +299,19 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
 
 }
 
+void ClusterManagerDlg::new_application(AppGroupNode* app_group_node)
+{
+    auto content = std::make_unique<Content>();
+
+    std::unique_ptr<ContentForm> cform =
+            std::make_unique<ContentForm>(content.get(), *m_content_edm.get());
+
+    if (cform->exec() > 0){
+
+    }
+
+}
+
 void ClusterManagerDlg::edit_user(UserNode* user_node)
 {
 
@@ -300,8 +321,12 @@ void ClusterManagerDlg::edit_user(UserNode* user_node)
 
 void ClusterManagerDlg::edit_role(RoleNode* role_node)
 {
+    try{
+        edit_node<RoleNode, RoleForm, Role>(role_node, &Role::roleName);
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
 
-    edit_node<RoleNode, RoleForm, Role>(role_node, &Role::roleName);
 
 }
 
@@ -636,7 +661,6 @@ void ClusterManagerDlg::context_menu_requested(QPoint pos)
    }
      case static_cast<int>(ConfigItemType::ApplicationGroup):
      {
-       auto app_group_node = get_cluster_node<AppGroupNode>(uuid);
        if (m_app_group_context_menu != nullptr){
            m_app_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
            return;
@@ -812,6 +836,9 @@ void ClusterManagerDlg::show_app_group_context_menu(QString node_id, QPoint pos)
 
     if (m_act_app == nullptr)
        m_act_app = std::make_unique<QAction>("New Application...");
+
+    auto app_group_node = get_cluster_node<AppGroupNode>(node_id);
+    connect(m_act_app.get(), &QAction::triggered, this, [this, app_group_node](){new_application(app_group_node);});
 
     m_app_group_context_menu->addAction(m_act_app.get());
 
@@ -1146,9 +1173,36 @@ void ClusterManagerDlg::save_tree(std::map<QString, std::tuple<ConfigItemType, s
 
 void ClusterManagerDlg::load_data()
 {
+    //clear_configuration();
     load_cluster_data();
     load_roles_data();
     load_users_data();
+    load_content_data();
+
+}
+
+void ClusterManagerDlg::load_content_data()
+{
+    m_content_edm->all();
+
+    qDebug() << "Content Count: " << m_content_edm->count();
+
+}
+
+void ClusterManagerDlg::clear_configuration()
+{
+    std::vector<QString> keys;
+
+    for (auto it=m_cluster_config->cluster_nodes.begin(); it != m_cluster_config->cluster_nodes.end(); ++it){
+        const auto&[key, value] {*it};
+        keys.push_back(key);
+        auto t = std::get<0>(value);
+        auto* node = dynamic_cast<decltype(t)>(t);
+        delete node;
+    }
+
+    for(auto& k : keys)
+        m_cluster_config->cluster_nodes.erase(k);
 
 }
 

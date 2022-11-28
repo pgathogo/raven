@@ -82,15 +82,19 @@ void AudioForm::populateEntityFields()
 
 }
 
+
 void AudioForm::populateFormWidgets()
 {
 
     ui->edtTitle->setText(stoq(m_audio->title()->value()));
     ui->edtArtist->setText(stoq(m_audio->artist()->displayName()));
+
     populate_choice_combo(ui->cbClass, m_audio->audio_type());
+
     ui->cbGenre->setModel(m_audio->genre()->dataModel());
-    ui->cbGenre->setCurrentIndex(ui->cbGenre->findText(
-                                     stoq(m_audio->genre()->displayName())));
+
+    ui->cbGenre->setCurrentIndex( item_index(ui->cbGenre,
+                                             stoq(m_audio->genre()->displayName())));
 
     ui->edtYear->setValue(m_audio->audio_year()->value());
     ui->edtFolder->setText(stoq(m_audio->folder()->displayName()));
@@ -113,6 +117,12 @@ void AudioForm::populateFormWidgets()
     ui->dtCreation->setDate(m_audio->creation_date()->value());
 }
 
+int AudioForm::item_index(QComboBox* cbox, const QString item)
+{
+    int index = ui->cbGenre->findText(item);
+    return ( index < 0) ? 0 : index;
+}
+
 void AudioForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
 {
     for(const auto& c : cf->choices())
@@ -122,7 +132,11 @@ void AudioForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::st
 
 void AudioForm::set_choice_field_default(QComboBox* cbox, const std::string value)
 {
-    cbox->setCurrentIndex(cbox->findData(QVariant(stoq(value))));
+    if (value.empty()){
+        cbox->setCurrentIndex(0);
+    }else{
+        cbox->setCurrentIndex(cbox->findData(QVariant(stoq(value))));
+    }
 }
 
 void AudioForm::pick_artist()
@@ -148,4 +162,5 @@ void AudioForm::genre_combo_changed(int i)
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbGenre->model());
     m_audio->genre()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }
+
 

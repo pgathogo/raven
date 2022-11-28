@@ -1,1 +1,1 @@
-D:/home/PMS/Raven/rave/audioexplorer/ffprobe.exe -v error -show_format -of json D:/home/PMS/Raven/audio/00000042.ogg > D:/home/PMS/Raven/audio/00000042.prb
+D:/home/clients/pms/raven/rave/AudioExplorer/ffprobe.exe -v error -show_format -of json D:/Home/Clients/PMS/RavenData/Audio/IMedia/CHA/CHA0000.MTS > D:/Home/Clients/PMS/RavenData/Audio/IMedia/CHA/CHA0000.prb

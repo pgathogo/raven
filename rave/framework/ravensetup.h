@@ -84,6 +84,9 @@ public:
     StringField* comm_audio_folder() const;
     void set_comm_audio_folder(const std::string path);
 
+    BooleanField* convert_to_ogg() const;
+    void set_convert_to_ogg(bool val);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -123,6 +126,7 @@ private:
 
     StringField* m_audio_path;
     StringField* m_comm_audio_path;
+    BooleanField* m_convert_to_ogg;
 
     QStringList mHeader;
     std::string mTableName;

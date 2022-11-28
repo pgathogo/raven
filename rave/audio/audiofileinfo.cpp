@@ -52,6 +52,8 @@ namespace AUDIO{
             return;
         }
 
+        // TODO: Check if probe.exe exist !!
+
         QTextStream out_stream(&temp_batch_file);
         QString probe_tool = QDir::currentPath()+"/"+PROBE_TOOL;
 

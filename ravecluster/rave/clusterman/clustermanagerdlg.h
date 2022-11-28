@@ -96,6 +96,7 @@ public:
     QMap<QString, QVariant> make_node_data(ConfigItemType);
 
     void make_cluster_node(std::unique_ptr<ClusterManager::Cluster>);
+    void clear_configuration();
 
     template<typename T1, typename T2, typename T3>
     T2* make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item){
@@ -147,8 +148,6 @@ public:
             const auto&[key, value] {*it};
 
             auto node = dynamic_cast<T*>(std::get<T*>(value));
-
-            qDebug() << "get_cluster_node: "<< node->uuid();
 
             if (node->uuid() == uid)
                 return node;
@@ -253,6 +252,7 @@ public slots:
     void edit_folder(AudioFolderNode*);
     void edit_server(ServerNode*);
     void edit_disk(DiskNode*);
+    void new_application(AppGroupNode*);
 
     void toggle_new_station_button(boolean);
     void on_item_clicked(QTreeWidgetItem* item, int col);
@@ -264,6 +264,7 @@ public slots:
     void load_cluster_data();
     void load_users_data();
     void load_roles_data();
+    void load_content_data();
 
 private:
     Ui::ClusterManagerDlg* ui;
@@ -279,6 +280,7 @@ private:
     QMdiArea* m_mdi_area;
 
     std::unique_ptr<ClusterConfiguration> m_cluster_config;
+    std::unique_ptr<EntityDataModel> m_content_edm;
 
     ClusterNode* m_current_cluster_node;
     StationNode* m_current_station_node;

@@ -32,7 +32,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle("Cluster Manager");
 
-    connect_rave_db();
+    try{
+        connect_rave_db();
+    } catch(DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
 }
 
 MainWindow::~MainWindow()

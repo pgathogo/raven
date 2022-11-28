@@ -221,6 +221,7 @@ class Setup(models.Model):
     break_max_spots = models.IntegerField(default=4)
     audio_path = models.CharField(max_length=255, null=True, blank=True)
     comm_audio_path = models.CharField(max_length=255, null=True, blank=True)
+    convert_to_ogg = models.BooleanField(null=True, blank=True)
 
 
 class Content(models.Model):

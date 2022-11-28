@@ -95,18 +95,25 @@ ActionResult UserForm::saveRecord()
 
     // For new user, check if there is an existing user with the same name
     if (ui->edtUserName->isEnabled()){
-        EntityDataModel edm = EntityDataModel(std::make_unique<User>());
-        auto user_filter = std::make_tuple("lower("+mUser->userName()->dbColumnName()+")",
-                                           "=",
-                                           mUser->userName()->value());
-        std::string filter = edm.prepareFilter(user_filter);
-        edm.search(filter);
 
-        if (edm.entitiesCount() > 0){
-            ar = std::make_tuple(ActionResultType::arERROR,
-                                 "The user name is already in use!");
-            return ar;
+        try{
+            EntityDataModel edm = EntityDataModel(std::make_unique<User>());
+            auto user_filter = std::make_tuple("lower("+mUser->userName()->dbColumnName()+")",
+                               "=",
+                               mUser->userName()->value());
+            std::string filter = edm.prepareFilter(user_filter);
+            edm.search(filter);
+
+            if (edm.entitiesCount() > 0){
+                ar = std::make_tuple(ActionResultType::arERROR,
+                         "The user name is already in use!");
+                return ar;
+            }
+        } catch(DatabaseException& de) {
+            showMessage(de.errorMessage());
         }
+
+
     }
 
     return ar;

@@ -32,7 +32,7 @@ namespace AUDIO
     }
 
 
-    void Mp3ToOggConverter::convert()
+    bool Mp3ToOggConverter::convert()
     {
         qDebug() << "MP3 to OGG conversion started ...";
 
@@ -84,6 +84,8 @@ namespace AUDIO
         m_progress_dialog->exec();
 
         m_converter_process->waitForReadyRead();
+
+        return true;
     }
 
     QString Mp3ToOggConverter::mp3_filename()

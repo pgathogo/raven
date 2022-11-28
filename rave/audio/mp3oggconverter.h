@@ -20,7 +20,7 @@ namespace AUDIO
         Mp3ToOggConverter(const QString mp3_file);
         ~Mp3ToOggConverter() override;
 
-        void convert() override;
+        bool convert() override;
         QString mp3_filename();
         void set_mp3_filename(QString);
 

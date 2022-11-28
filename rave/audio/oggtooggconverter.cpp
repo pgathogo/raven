@@ -14,7 +14,7 @@ namespace AUDIO
     }
 
 
-    void OggToOggConverter::convert()
+    bool OggToOggConverter::convert()
     {
     }
 

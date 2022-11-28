@@ -14,6 +14,7 @@
 #include "audioform.h"
 #include "foldernameform.h"
 #include "trashcanform.h"
+#include "setupform.h"
 #include "bookedaudiocheckerform.h"
 
 #include "../audio/audiolibrary.h"
@@ -25,6 +26,7 @@
 #include "../audio/audioconverter.h"
 #include "../audio/mp3oggconverter.h"
 #include "../audio/oggtooggconverter.h"
+#include "../audio/mtstomp3converter.h"
 #include "../audio/audiowaveformgenerator.h"
 #include "../audio/audiofileinfo.h"
 
@@ -52,6 +54,7 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
 
     // Menubar
     connect(ui->actTrashCan, &QAction::triggered, this, &MainWindow::open_trash_can);
+    connect(ui->actSettings, &QAction::triggered, this, &MainWindow::open_settings);
 
     m_artist_toolbar = new DataToolBar();
     ui->hlArtist->addWidget(m_artist_toolbar);
@@ -915,12 +918,9 @@ void MainWindow::import_audio()
 
     auto audio_file = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), QDir::currentPath(),
-                                                   tr("Audio Files (*.mp3 *.ogg)"));
+                                                   tr("Audio Files (*.mp3 *.ogg *.mts)"));
     if (audio_file.isEmpty())
         return;
-
-    AUDIO::AudioFileInfo afi(audio_file);
-    QString file_format = afi.file_format();
 
     auto audio = std::make_unique<AUDIO::Audio>(audio_file.toStdString());
     audio->set_folder(folder_id);
@@ -930,10 +930,12 @@ void MainWindow::import_audio()
     if (audio_form->exec() > 0)
     {
 
-        m_wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(audio_file);
-        m_wave_gen->generate();
+//	    AUDIO::AudioFileInfo afi(audio_file);
+//	    QString file_format = afi.file_format();
 
-        audio->audio_file().set_wave_file(m_wave_gen->wave_filename().toStdString());
+        QFileInfo afi(audio_file);
+        QString file_format = afi.suffix().toLower();
+
 
         if (file_format == "mp3"){
             m_audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_file);
@@ -945,8 +947,18 @@ void MainWindow::import_audio()
             m_audio_converter->convert();
         }
 
-//        auto cue_editor = std::make_unique<CueEditor>(audio_file_info, m_qapp);
-//        if (cue_editor->editor() == 1)
+        if (file_format == "mts"){
+            m_audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio_file);
+            m_audio_converter->convert();
+            auto mp3_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(m_audio_converter.get());
+            audio_file = mp3_file->dest_mp3_filename();
+            audio->audio_file().set_audio_filename(audio_file.toStdString());
+
+        }
+
+        m_wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(audio_file);
+        m_wave_gen->generate();
+        audio->audio_file().set_wave_file(m_wave_gen->wave_filename().toStdString());
 
         auto audio_file_info = audio->audio_file();
         auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(audio_file_info);
@@ -959,6 +971,7 @@ void MainWindow::import_audio()
             audio_file_info.set_marker(wave_form->cue_marker());
 
             int audio_id = write_audio_to_db(std::move(audio));
+
             if (audio_id == -1){
                 m_audio_converter->remove_ogg_file();
                 m_wave_gen->remove_wave_file();
@@ -1352,4 +1365,22 @@ void MainWindow::open_trash_can()
 {
     auto trash_can = std::make_unique<TrashCanForm>(this);
     trash_can->exec();
+}
+
+void MainWindow::open_settings()
+{
+    EntityDataModel edm(std::make_unique<RavenSetup>());
+    edm.all();
+
+    if (edm.count() > 0)
+    {
+        BaseEntity* be = edm.firstEntity();
+        RavenSetup* rs = dynamic_cast<RavenSetup*>(be);
+
+        auto sform = std::make_unique<AUDIOEXP::SetupForm>(rs);
+        if (sform->exec() > 0){
+            edm.updateEntity(*rs);
+        }
+    }
+
 }

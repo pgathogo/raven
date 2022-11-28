@@ -63,3 +63,17 @@ class StationSetup(models.Model):
     audio_folder = models.ForeignKey(AudioFolder, models.DO_NOTHING)
     database = models.ForeignKey(Database, models.DO_NOTHING)
 
+class ManyToMany(models.Model):
+    parent_id = models.IntegerField()
+    detail_id = models.IntegerField()
+    class Meta:
+        abstract = True
+
+class Content(models.Model):
+    name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255, null=True, blank=True)
+    table_name = models.CharField(max_length=255, null=True, blank=True)
+    code = models.CharField(max_length=255, null=True, blank=True)
+
+class ContentAuth(ManyToMany):
+    access_bit = models.CharField(max_length=8, default='00000000')

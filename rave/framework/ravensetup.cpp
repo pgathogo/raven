@@ -54,6 +54,8 @@ RavenSetup::RavenSetup()
     m_audio_path = createField<StringField>("audio_path", "Audio Path");
     m_comm_audio_path = createField<StringField>("comm_audio_path", "Comm Audio Path");
 
+    m_convert_to_ogg = createField<BooleanField>("convert_to_ogg", "Convert Audio to OGG");
+
     mHeader << stoq(m_station_name->fieldName());
     setTableName("rave_setup");
 }
@@ -292,6 +294,17 @@ StringField *RavenSetup::comm_audio_folder() const
 void RavenSetup::set_comm_audio_folder(const std::string path)
 {
     m_comm_audio_path->setValue(path);
+}
+
+BooleanField* RavenSetup::convert_to_ogg() const
+{
+    return m_convert_to_ogg;
+
+}
+
+void RavenSetup::set_convert_to_ogg(bool val)
+{
+    m_convert_to_ogg->setValue(val);
 }
 
 std::string RavenSetup::tableName() const

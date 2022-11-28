@@ -24,7 +24,6 @@ class ChoiceField;
 
 class RavenSetup;
 
-
 class AudioForm : public BaseEntityDetailDlg
 {
     Q_OBJECT
@@ -46,11 +45,14 @@ public:
     void populate_choice_combo(QComboBox*, const ChoiceField<std::string>*);
     void set_choice_field_default(QComboBox*, const std::string);
 
+    int item_index(QComboBox*, const QString);
+
     template<typename T>
     void set_choice_field(T* cf, QComboBox* cbox)
     {
         cf->setValue(cbox->itemData(cbox->currentIndex()).toString().toStdString());
     }
+
 private slots:
     void pick_artist();
     void genre_combo_changed(int);

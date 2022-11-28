@@ -83,6 +83,14 @@ set(PROJECT_SOURCES
         ${rave_security_INCLUDE_DIRS}/roleform.cpp
         ${rave_security_INCLUDE_DIRS}/userform.h
         ${rave_security_INCLUDE_DIRS}/userform.cpp
+        ${rave_security_INCLUDE_DIRS}/content.h
+        ${rave_security_INCLUDE_DIRS}/content.cpp
+        ${rave_security_INCLUDE_DIRS}/contentform.h
+        ${rave_security_INCLUDE_DIRS}/contentform.cpp
+        ${rave_security_INCLUDE_DIRS}/contentform.ui
+        ${rave_security_INCLUDE_DIRS}/contentdetailform.h
+        ${rave_security_INCLUDE_DIRS}/contentdetailform.cpp
+
         ${rave_framework_INCLUDE_DIRS}/baseentity.cpp
         ${rave_framework_INCLUDE_DIRS}/baseentitydetaildlg.h
         ${rave_framework_INCLUDE_DIRS}/baseentitydetaildlg.cpp

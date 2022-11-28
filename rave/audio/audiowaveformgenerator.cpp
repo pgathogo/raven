@@ -31,6 +31,8 @@ namespace AUDIO{
     {
         auto gen_engine = QDir::currentPath()+"/"+AUDIO_WAVE_FILE_EXE;
 
+        qDebug() << "GEN ENGINE: " << gen_engine;
+
         QFileInfo fi(gen_engine);
         if (!fi.exists()){
             throw AudioImportException("GEN-ENGINE",
@@ -59,6 +61,7 @@ namespace AUDIO{
 
         qDebug() << "INPUT File: "<< input_file;
         qDebug() << "OUTPUT File: "<< output_file;
+        qDebug() << args;
 
         m_generator_process->start(gen_engine, args);
         m_progress_dialog->exec();

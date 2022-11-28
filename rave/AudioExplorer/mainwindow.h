@@ -163,6 +163,7 @@ public slots:
     void paste_folder();
 
     void end_of_play();
+    void open_settings();
 
 private:
     Ui::MainWindow *ui;
