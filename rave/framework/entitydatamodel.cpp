@@ -32,7 +32,7 @@ void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
     BaseEntity* be = entity.get();
     addRow(be->tableViewColumns());
     std::string key = entity->searchColumn();
-    // we need a way to check that key is not empty!!
+     // TODO:: we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
     mEntities.push_back(std::move(record));
 }

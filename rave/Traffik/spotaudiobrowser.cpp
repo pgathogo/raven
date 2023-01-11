@@ -180,6 +180,8 @@ void SpotAudioBrowser::import_audio()
     QString file_format = afi.file_format();
 
     auto audio = std::make_unique<AUDIO::Audio>(audio_filename.toStdString());
+    auto audio_shared = std::make_shared<AUDIO::Audio>(audio_filename.toStdString());
+
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
     if (fs::exists(audio->audio_file().adf_file()) ){
@@ -188,7 +190,6 @@ void SpotAudioBrowser::import_audio()
         audio->audio_file().set_marker(cue_marker);
     }
 
-    //auto spot_audio = std::make_unique<TRAFFIK::SpotAudio>(m_mtom->parentEntity(), new AUDIO::Audio(audio_file.audio_file()));
     auto spot_audio = std::make_unique<TRAFFIK::SpotAudio>(m_mtom->parentEntity(), audio.get());
 
     // Add some audio attributes - name, description etc.
@@ -208,9 +209,9 @@ void SpotAudioBrowser::import_audio()
 
             if (file_format == "mp3"){
                 try{
-                    auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_filename);
+                    auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_shared);
                     audio_converter->convert();
-                    qDebug() << "OGG: "<< audio_converter->ogg_filename();
+
                     spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
                 } catch (AudioImportException& aie) {
                     showMessage(aie.errorMessage());
@@ -231,26 +232,17 @@ void SpotAudioBrowser::import_audio()
         af.set_audio_filename(audio_filename.toStdString());
         af.set_audio_title(spot_audio->title()->value());
         af.set_artist_name("");
-//        fs::path path{audio_file_full_path.toStdString()};
-        //std::string file_no_path = path.filename().u8string();
 
-        //af.set_ogg_filename(m_setup->comm_audio_folder()->value()+af.short_filename()+".ogg");
-
-//        auto cue_editor = std::make_unique<CueEditor>(af);
         auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(af);
         if (wave_form->exec() == 1){
-//        if (cue_editor->editor() == 1){
             spot_audio->audio()->set_audio_file(af);
             spot_audio->set_marker(wave_form->cue_marker());
             spot_audio->set_duration(af.duration());
 
             spot_audio->setDBAction(DBAction::dbaCREATE);
-            //spot_audio->setDetailId() // We don't have this id yet!
 
             auto& p_audio = spot_audio->get_paudio();
             p_audio = *spot_audio->audio();
-
-            qDebug() << "Before Caching: "<< stoq(spot_audio->audio()->audio_file().ogg_filename());
 
             entityDataModel().cacheEntity(std::move(spot_audio));
         }

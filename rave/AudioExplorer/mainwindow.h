@@ -44,6 +44,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
+using FileOperationResult = std::tuple<bool, std::string>;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -52,6 +55,11 @@ public:
     enum ArtistColumn{FirstName=0, LastName, FullName, ArtistType, Notes};
     enum GenreColumn{GenreName};
     enum TrackColumns : int{Title=0, Artist=1, Duration=2, AudioType=3, AudioFileName=4};
+
+    struct ImportResult{
+        int audio_id = -1;
+        std::vector<std::string> temp_files;
+    };
 
     MainWindow(QApplication* qapp, QWidget *parent = nullptr);
     ~MainWindow();
@@ -101,9 +109,12 @@ public:
     void delete_audio_from_db(const std::string);
 
     int write_audio_to_db(std::unique_ptr<AUDIO::Audio>);
-    bool copy_new_audio_to_library(int);
-    bool copy_wave_file_to_library(int);
-    bool create_adf_file(int, AudioFile);
+    FileOperationResult copy_new_audio_to_library(int);
+    FileOperationResult copy_wave_file_to_library(int);
+    FileOperationResult create_adf_file(int, AudioFile);
+
+    void rollback_import_process(ImportResult& import_result);
+    bool convert_audio(std::shared_ptr<AUDIO::Audio>);
 
     template<typename T>
     void fetch_filtered_audio(T arg)
@@ -121,6 +132,7 @@ public:
         fetch_folder_audio(r_mapper);
 
     }
+
 
 
 public slots:

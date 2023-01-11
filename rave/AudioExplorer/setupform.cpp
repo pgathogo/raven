@@ -28,6 +28,7 @@ namespace AUDIOEXP
     ActionResult SetupForm::saveRecord()
     {
         populateEntityFields();
+        return ActionResult(ActionResultType::arSUCCESS, "");
     }
 
     std::string SetupForm::windowTitle()

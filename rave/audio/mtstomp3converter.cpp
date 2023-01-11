@@ -2,11 +2,13 @@
 #include <QFileInfo>
 #include "mtstomp3converter.h"
 
+#include "audio.h"
+
 namespace AUDIO
 {
-    MtsToMp3Converter::MtsToMp3Converter(const QString src_mts_file)
-        :AudioConverter(src_mts_file)
-         ,m_src_mts_filename{src_mts_file}
+    MtsToMp3Converter::MtsToMp3Converter(std::shared_ptr<Audio> audio)
+        :AudioConverter(QString::fromStdString(audio->audio_filename()->valueToString()))
+         ,m_src_mts_filename{QString::fromStdString(audio->audio_filename()->valueToString())}
         ,m_dest_mp3_filename{}
     {
     }

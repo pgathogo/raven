@@ -153,6 +153,7 @@ namespace AUDIO {
         CueMarker cue_marker() const;
 
         StringField* audio_filename() const;
+        StringField* file_extension() const;
         std::string artist_fullname() const;
 
         void set_title(const std::string);
@@ -181,6 +182,7 @@ namespace AUDIO {
         void set_cue_marker(CueMarker marker);
 
         void set_audio_filename(const std::string);
+        void set_file_extension(const std::string);
 
         std::string tableName() const override;
         void setTableName(const std::string table_name) override;
@@ -199,6 +201,8 @@ namespace AUDIO {
         //[[nodiscard]] ActionResult validate() override;
 
     private:
+        std::string get_file_extension(std::string);
+
         StringField* m_title;
 
         StringField* m_short_desc;
@@ -233,6 +237,7 @@ namespace AUDIO {
         CueMarker m_marker;
 
         StringField* m_audio_filename;
+        StringField* m_file_extension;
 
         AudioFile m_file_info;
 

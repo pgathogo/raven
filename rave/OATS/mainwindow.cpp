@@ -96,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_cache_updater_timer->start(five_seconds);
 
     // Load data from DB
-    load_schedule(QDate::currentDate(), QTime::currentTime().hour());
+    load_schedule(QDate::currentDate(), QTime::currentTime().hour()-1);
 
     set_playout_widgets();
 
@@ -1046,8 +1046,8 @@ void MainWindow::play_jingle(const QString jingle)
 
 void MainWindow::set_current_play_item()
 {
-    if (m_schedule_items.size() > 0){
-
+    if (m_schedule_items.size() > 0)
+    {
         auto s_item = schedule_item(0);
 
         if (s_item == nullptr)

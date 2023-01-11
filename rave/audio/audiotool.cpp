@@ -353,9 +353,10 @@ namespace AUDIO
         object_to_json(audio_file, adf_data);
 
         QJsonDocument save_adf(adf_data);
-        adf_file.write(save_adf.toJson());
+        auto bytes = adf_file.write(save_adf.toJson());
 
-        return true;
+        return (bytes > -1) ? true : false;
+
     }
 
     CueMarker ADFRepository::read_markers(const std::string adf_filename)

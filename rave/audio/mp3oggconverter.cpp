@@ -12,12 +12,13 @@
 #include "../framework/ravenexception.h"
 #include "mp3oggconverter.h"
 #include "audiotool.h"
+#include "audio.h"
 
 namespace AUDIO
 {
-    Mp3ToOggConverter::Mp3ToOggConverter(const QString mp3_file)
-        :AudioConverter(mp3_file)
-        ,m_mp3_filename{mp3_file}
+    Mp3ToOggConverter::Mp3ToOggConverter(std::shared_ptr<AUDIO::Audio> audio)
+        :AudioConverter(QString::fromStdString(audio->audio_filename()->valueToString()))
+        ,m_mp3_filename{QString::fromStdString(audio->audio_filename()->valueToString())}
     {
         m_converter_process = new QProcess(this);
         //connect(m_converter_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Mp3ToOggConverter::conversion_finished);

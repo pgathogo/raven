@@ -116,7 +116,7 @@ namespace OATS
 
         m_v_layout->addWidget(m_bottom_toolbar.get());
 
-        m_v_layout->setContentsMargins(0,10,0,0);
+        m_v_layout->setContentsMargins(0,5,0,0);
 
         m_v_layout->addStretch();
 
@@ -271,21 +271,23 @@ namespace OATS
         ,m_remove_btn{nullptr}
         ,m_down_btn{nullptr}
     {
-        m_up_btn = std::make_unique<QPushButton>("UP", this);
-        m_up_btn->setMaximumWidth(50);
-        connect(m_up_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::move_item_up);
+        m_up_btn = std::make_unique<QToolButton>(this);
+        m_up_btn->setToolTip("Move Audio Up");
+        m_up_btn->setIcon(QIcon(":/images/icons/up_arrow.png"));
+        connect(m_up_btn.get(), &QToolButton::clicked, this, &AudioLoadWidget::move_item_up);
 
-        m_add_btn = std::make_unique<QPushButton>("A", this);
-        m_add_btn->setMaximumWidth(50);
-        connect(m_add_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::open_track_picker);
+        m_add_btn = std::make_unique<QToolButton>(this);
+        m_add_btn->setToolTip("Add Audio");
+        m_add_btn->setIcon(QIcon(":/images/icons/add.png"));
+        connect(m_add_btn.get(), &QToolButton::clicked, this, &AudioLoadWidget::open_track_picker);
 
-        m_remove_btn = std::make_unique<QPushButton>("R", this);
-        m_remove_btn->setMaximumWidth(50);
-        connect(m_remove_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::remove_item);
+        m_remove_btn = std::make_unique<QToolButton>(this);
+        m_remove_btn->setIcon(QIcon(":/images/icons/remove.png"));
+        connect(m_remove_btn.get(), &QToolButton::clicked, this, &AudioLoadWidget::remove_item);
 
-        m_down_btn = std::make_unique<QPushButton>("D", this);
-        m_down_btn->setMaximumWidth(50);
-        connect(m_down_btn.get(), &QPushButton::clicked, this, &AudioLoadWidget::move_item_down);
+        m_down_btn = std::make_unique<QToolButton>(this);
+        m_down_btn->setIcon(QIcon(":/images/icons/down_arrow.png"));
+        connect(m_down_btn.get(), &QToolButton::clicked, this, &AudioLoadWidget::move_item_down);
 
         m_v_layout = std::make_unique<QVBoxLayout>();
 
@@ -637,15 +639,20 @@ namespace OATS
         ,m_group_btn{nullptr}
         ,m_next_btn{nullptr}
     {
-        m_preview_btn = std::make_unique<QPushButton>("Preview", this);
-        m_clear_btn = std::make_unique<QPushButton>("Clear", this);
-        connect(m_clear_btn.get(), &QPushButton::clicked, this, &AudioViewControllerWidget::emit_clear_items);
+        m_preview_btn = std::make_unique<QToolButton>(this);
+        m_preview_btn->setIcon(QIcon(":/images/icons/preview_audio.png"));
 
-        m_group_btn = std::make_unique<QPushButton>("Group", this);
+        m_clear_btn = std::make_unique<QToolButton>(this);
+        m_clear_btn->setIcon(QIcon(":/images/icons/clear_group.png"));
+        connect(m_clear_btn.get(), &QToolButton::clicked, this, &AudioViewControllerWidget::emit_clear_items);
+
+        m_group_btn = std::make_unique<QToolButton>(this);
+        m_group_btn->setIcon(QIcon(":/images/icons/group.png"));
         m_group_btn->setCheckable(true);
-        connect(m_group_btn.get(), &QPushButton::clicked, this, &AudioViewControllerWidget::emit_group_clicked);
+        connect(m_group_btn.get(), &QToolButton::clicked, this, &AudioViewControllerWidget::emit_group_clicked);
 
-        m_next_btn = std::make_unique<QPushButton>("Next", this);
+        m_next_btn = std::make_unique<QToolButton>(this);
+        m_next_btn->setIcon(QIcon(":/images/icons/play_next.png"));
 
         m_v_layout = std::make_unique<QVBoxLayout>();
 
@@ -688,11 +695,13 @@ namespace OATS
      {
         m_timer_lbl = std::make_unique<QLabel>("00:00", this);
 
-        m_play_btn = std::make_unique<QPushButton>("P", this);
-        connect(m_play_btn.get(), &QPushButton::clicked, this, &CartPlayerWidget::play_button_clicked);
+        m_play_btn = std::make_unique<QToolButton>(this);
+        m_play_btn->setIcon(QIcon(":/images/icons/play_cart.png"));
+        connect(m_play_btn.get(), &QToolButton::clicked, this, &CartPlayerWidget::play_button_clicked);
 
-        m_stop_btn = std::make_unique<QPushButton>("S", this);
-        connect(m_stop_btn.get(), &QPushButton::clicked, this, &CartPlayerWidget::stop_play);
+        m_stop_btn = std::make_unique<QToolButton>(this);
+        m_stop_btn->setIcon(QIcon(":/images/icons/stop.png"));
+        connect(m_stop_btn.get(), &QToolButton::clicked, this, &CartPlayerWidget::stop_play);
 
         m_countdown_timer = std::make_unique<QTimer>(this);
         connect(m_countdown_timer.get(), &QTimer::timeout, this, &CartPlayerWidget::count_down);
@@ -824,6 +833,8 @@ namespace OATS
         m_h_layout->addWidget(m_audio_view_widget.get());
         m_h_layout->addWidget(m_audio_view_controller_widget.get());
         m_h_layout->addWidget(m_play_widget.get());
+
+        m_h_layout->setStretch(1,1);
 
         setLayout(m_h_layout.get());
 

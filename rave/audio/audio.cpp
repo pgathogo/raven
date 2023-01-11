@@ -1,6 +1,8 @@
 #include <cstring>
 #include <filesystem>
 
+#include <QFileInfo>
+
 #include "audio.h"
 #include "artist.h"
 #include "../framework/choicefield.h"
@@ -163,6 +165,10 @@ namespace AUDIO {
         m_play_count->setValue(0);
         m_add_dtime->setValue(QDateTime::currentDateTime());
 
+        m_file_extension = createField<StringField>("file_extension", "File Extension");
+        m_file_extension->setFormOnly(true);
+        m_file_extension->setValue("");
+
         m_creation_date->setValue(QDate::currentDate());
         auto dt = QDate(QDate::currentDate());
         m_audio_year->setValue(dt.year());
@@ -249,6 +255,10 @@ namespace AUDIO {
         m_creation_date->setValue(QDate::currentDate());
         auto dt = QDate(QDate::currentDate());
         m_audio_year->setValue(dt.year());
+
+        m_file_extension = createField<StringField>("file_extension", "File Extension");
+        m_file_extension->setFormOnly(true);
+        m_file_extension->setValue(get_file_extension(audio_file));
 
         m_audio_filename = createField<StringField>("audio_filename", "Audio Filename");
         m_audio_filename->setFormOnly(true);
@@ -638,6 +648,19 @@ namespace AUDIO {
     {
     }
 
+
+    StringField* Audio::file_extension() const
+    {
+        return m_file_extension;
+    }
+
+    std::string Audio::get_file_extension(std::string file_name)
+    {
+        QFileInfo afi(QString::fromStdString(file_name));
+        QString file_ext = afi.suffix().toLower();
+        return file_ext.toStdString();
+    }
+
     /* ------ Folder ------ */
 
     Folder::Folder()
@@ -884,6 +907,7 @@ namespace AUDIO {
         return ActionResult();
 
     }
+
 
 
 }

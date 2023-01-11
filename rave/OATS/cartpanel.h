@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include <QToolButton>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QTableView>
@@ -137,10 +138,10 @@ namespace OATS
         void selected_audio(AUDIO::Audio*);
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
-        std::unique_ptr<QPushButton> m_up_btn;
-        std::unique_ptr<QPushButton> m_add_btn;
-        std::unique_ptr<QPushButton> m_remove_btn;
-        std::unique_ptr<QPushButton> m_down_btn;
+        std::unique_ptr<QToolButton> m_up_btn;
+        std::unique_ptr<QToolButton> m_add_btn;
+        std::unique_ptr<QToolButton> m_remove_btn;
+        std::unique_ptr<QToolButton> m_down_btn;
 
         std::unique_ptr<AUDIO::TrackPickerDialog> m_track_picker_dialog;
     };
@@ -208,10 +209,10 @@ namespace OATS
          void emit_group_clicked();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
-        std::unique_ptr<QPushButton> m_preview_btn;
-        std::unique_ptr<QPushButton> m_clear_btn;
-        std::unique_ptr<QPushButton> m_group_btn;
-        std::unique_ptr<QPushButton> m_next_btn;
+        std::unique_ptr<QToolButton> m_preview_btn;
+        std::unique_ptr<QToolButton> m_clear_btn;
+        std::unique_ptr<QToolButton> m_group_btn;
+        std::unique_ptr<QToolButton> m_next_btn;
     };
 
     /* ---- AudioPlayWidget ---- */
@@ -235,8 +236,8 @@ namespace OATS
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QLabel> m_timer_lbl;
-        std::unique_ptr<QPushButton> m_play_btn;
-        std::unique_ptr<QPushButton> m_stop_btn;
+        std::unique_ptr<QToolButton> m_play_btn;
+        std::unique_ptr<QToolButton> m_stop_btn;
         std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
 
         AUDIO::AudioTool m_audio_tool;

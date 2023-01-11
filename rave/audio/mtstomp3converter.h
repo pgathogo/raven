@@ -1,14 +1,18 @@
 #ifndef MTSTOMP3CONVERTER_H
 #define MTSTOMP3CONVERTER_H
 
+#include <memory>
 #include "audioconverter.h"
 
 namespace AUDIO
 {
+    class Audio;
+
     class MtsToMp3Converter : public AudioConverter
     {
     public:
-        MtsToMp3Converter(const QString);
+        //MtsToMp3Converter(const QString);
+        MtsToMp3Converter(std::shared_ptr<Audio>);
         ~MtsToMp3Converter() override;
 
         bool convert() override;

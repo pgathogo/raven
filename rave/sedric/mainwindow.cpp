@@ -79,9 +79,6 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     ui->tvTracks->setModel(m_tracks_model);
     ui->tvTracks->verticalHeader()->setVisible(false);
 
-    // For Width adjustment to take effect, it *MUST* be done after
-    // the "setModel" method
-
     m_audio_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_tracks_model);
 //    ScheduleDelegate delegate;
 //    ui->tvSchedule->setItemDelegate(&delegate);
@@ -97,8 +94,8 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     ui->tvSchedule->horizontalHeader()->setStretchLastSection(true);
     ui->tvSchedule->verticalHeader()->setVisible(false);
 
-    //setup_hour_combobox();
-
+    // For Width adjustment to take effect, it *MUST* be done after
+    // the "setModel" method
     set_column_width();
 
     m_scheduler = std::make_unique<SEDRIC::SedricScheduleItem>(m_schedule_model);
@@ -122,7 +119,6 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     connect(ui->edtArtist, &QLineEdit::returnPressed, this, &MainWindow::search_audio);
 
     connect(ui->btnDateTimeSelector, &QPushButton::clicked, this, &MainWindow::select_date_time);
-
 
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::highlighted), this, &MainWindow::combo_highlight);
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -357,12 +353,6 @@ void MainWindow::selected_comm_break()
 {
     auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
     SelectedScheduleItem ssi = get_sched_item_hour_time(selected_index);
-
-    qDebug() << "Row ID: "<< ssi.row_id;
-    qDebug() << "Schedule ID: "<< ssi.schedule_id;
-    qDebug() << "Schedule Hour: "<< ssi.schedule_hour;
-    qDebug() << "Time Stamp: "<< ssi.time_stamp;
-
 }
 
 void MainWindow::save_as()
