@@ -26,6 +26,16 @@ namespace OATS {
         return m_file_path;
     }
 
+    std::string Audio::file_extension()
+    {
+        return m_file_extension;
+    }
+
+    std::string Audio::audio_type()
+    {
+        return m_audio_type;
+    }
+
     int Audio::duration()
     {
         return m_duration;
@@ -49,6 +59,16 @@ namespace OATS {
     void Audio::set_file_path(std::string path)
     {
         m_file_path = path;
+    }
+
+    void Audio::set_file_extension(const std::string file_ext)
+    {
+        m_file_extension = file_ext;
+    }
+
+    void Audio::set_audio_type(const std::string a_type)
+    {
+        m_audio_type = a_type;
     }
 
     void Audio::set_duration(int dur)
@@ -215,9 +235,9 @@ namespace OATS {
         m_play_channel = channel;
     }
 
-    void ScheduleItem::set_schedule_type(ScheduleType sched_type)
+    void ScheduleItem::set_schedule_type(std::string sched_type)
     {
-        m_schedule_type = sched_type;
+        m_schedule_type = str_to_schedule_type(sched_type);
     }
 
     ScheduleType ScheduleItem::str_to_schedule_type(std::string s_type)

@@ -96,7 +96,6 @@ namespace AUDIO
     void TrackBrowser::selected_audio(AUDIO::Audio* audio)
     {
         m_current_selected_audio = audio;
-        qDebug() << "TrackBrowser::selected_audio: " << QString::fromStdString(audio->title()->value());
     }
 
     AUDIO::Audio* TrackBrowser::current_selected_audio()
@@ -331,49 +330,50 @@ namespace AUDIO
 
     r_mapper->map_data();
 
-    for (auto const& [record_id, record] : r_mapper->mapped_entities()){
-    auto audio_Uptr = std::make_unique<AUDIO::Audio>();
-    bool audio_is_constructed = false;
-
-    for(auto const& [table_name, entities] : record)
+    for (auto const& [record_id, record] : r_mapper->mapped_entities())
     {
-        for (auto const& entity : entities)
+        auto audio_Uptr = std::make_unique<AUDIO::Audio>();
+        bool audio_is_constructed = false;
+
+        for(auto const& [table_name, entities] : record)
         {
-        if (audio_Uptr->tableName() == entity->tableName() &&
-            !audio_is_constructed)
-        {
-            if (entity->id() > -1){
-            auto audio_ptr = dynamic_cast<AUDIO::Audio*>(entity.get());
-            *audio_Uptr.get() = *audio_ptr;
-            audio_is_constructed = true;
-            break;
-            }
+            for (auto const& entity : entities)
+            {
+                if (audio_Uptr->tableName() == entity->tableName() &&
+                    !audio_is_constructed)
+                {
+                    if (entity->id() > -1){
+                    auto audio_ptr = dynamic_cast<AUDIO::Audio*>(entity.get());
+                    *audio_Uptr.get() = *audio_ptr;
+                    audio_is_constructed = true;
+                    break;
+                    }
+                }
+
+                auto const& artist = audio_Uptr->artist()->data_model_entity();
+
+                if (artist == nullptr){
+                    continue;
+                }
+
+                if (artist->tableName() == entity->tableName())
+                {
+                    auto artist_ptr = dynamic_cast<AUDIO::Artist*>(entity.get());
+                    auto artist_uptr = std::make_unique<AUDIO::Artist>();
+                    *artist_uptr.get() = *artist_ptr;
+                    audio->artist()->set_fk_entity(std::move(artist_uptr));
+                }
+              }
         }
 
-        auto const& artist = audio_Uptr->artist()->data_model_entity();
-
-        if (artist == nullptr){
-            continue;
+        if (audio_Uptr->audio_type()->value() != ""){
+            m_audio_edm->add_entity(std::move(audio_Uptr));
         }
-
-        if (artist->tableName() == entity->tableName())
-        {
-            auto artist_ptr = dynamic_cast<AUDIO::Artist*>(entity.get());
-            auto artist_uptr = std::make_unique<AUDIO::Artist>();
-            *artist_uptr.get() = *artist_ptr;
-            audio->artist()->set_fk_entity(std::move(artist_uptr));
-        }
-      }
-    }
-
-    if (audio_Uptr->audio_type()->value() != ""){
-        m_audio_edm->add_entity(std::move(audio_Uptr));
-     }
     }
 
     show_data();
 
-    }
+  }
 
 
    void AudioDataModel::show_data()

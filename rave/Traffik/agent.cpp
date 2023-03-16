@@ -162,11 +162,12 @@ void Agent::afterMapping(BaseEntity &entity)
 
 }
 
-
+/*
 std::string Agent::className()
 {
     std::string cname = demangle(typeid(this).name());
     cname.erase(cname.end()-1);
     return cname;
 }
+*/
 

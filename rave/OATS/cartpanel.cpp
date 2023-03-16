@@ -282,7 +282,7 @@ namespace OATS
         connect(m_add_btn.get(), &QToolButton::clicked, this, &AudioLoadWidget::open_track_picker);
 
         m_remove_btn = std::make_unique<QToolButton>(this);
-        m_remove_btn->setIcon(QIcon(":/images/icons/remove.png"));
+        m_remove_btn->setIcon(QIcon(":/images/icons/cart_remove.png"));
         connect(m_remove_btn.get(), &QToolButton::clicked, this, &AudioLoadWidget::remove_item);
 
         m_down_btn = std::make_unique<QToolButton>(this);
@@ -692,11 +692,12 @@ namespace OATS
          ,m_play_btn{nullptr}
          ,m_stop_btn{nullptr}
          ,m_start_tick_time_stamp{0}
+         ,m_item_index{0}
      {
         m_timer_lbl = std::make_unique<QLabel>("00:00", this);
 
         m_play_btn = std::make_unique<QToolButton>(this);
-        m_play_btn->setIcon(QIcon(":/images/icons/play_cart.png"));
+        m_play_btn->setIcon(QIcon(":/images/icons/play_01.png"));
         connect(m_play_btn.get(), &QToolButton::clicked, this, &CartPlayerWidget::play_button_clicked);
 
         m_stop_btn = std::make_unique<QToolButton>(this);
@@ -715,6 +716,9 @@ namespace OATS
 
         setLayout(m_v_layout.get());
 
+       m_audio_player = std::make_unique<AUDIO::AudioPlayer>();
+       connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &CartPlayerWidget::play_next);
+       connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &CartPlayerWidget::end_of_play);
      }
 
      void CartPlayerWidget::play_button_clicked()
@@ -729,43 +733,55 @@ namespace OATS
              m_audio_player->stop_play();
              m_countdown_timer->stop();
              m_cart_status = CartStatus::Waiting;
+             m_item_index = 0;
          }
      }
 
-     void CartPlayerWidget::play_audio(CartItems cart_items)
+     void CartPlayerWidget::play_audio()
      {
 
-       std::vector<QString> play_items;
-
-       double duration = 0;
-       for (auto ci : cart_items){
-           duration += ci->track_duration();
-           play_items.push_back(ci->track_fullname());
-       }
+       if (m_cart_items.size() == 0)
+           return;
 
        m_start_tick_time_stamp = m_audio_tool.get_tick_count();
-       auto COUNT_DOWN_INTERVAL = 100ms;
+       auto COUNT_DOWN_INTERVAL = 50ms;
+
+       set_timer_label(m_audio_tool.format_time(get_items_duration()));
+
+       m_audio_player->play_audio("A", m_cart_items[m_item_index++]->track_fullname());
+
        m_countdown_timer->start(COUNT_DOWN_INTERVAL);
-
-       set_timer_label(m_audio_tool.format_time(duration));
-
-       m_audio_player = std::make_unique<AUDIO::AudioPlayer>(play_items);
-       connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &CartPlayerWidget::play_next);
-       connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &CartPlayerWidget::end_of_play);
-       m_audio_player->play_audio();
 
        m_cart_status = CartStatus::Playing;
 
      }
 
+    double CartPlayerWidget::get_items_duration()
+    {
+
+       double duration = 0;
+       for (auto ci : m_cart_items)
+           duration += ci->track_duration();
+       return duration;
+    }
+
      void CartPlayerWidget::play_next()
      {
+         m_audio_player->stop_play();
+         m_audio_player->play_audio("A", m_cart_items[m_item_index++]->track_fullname());
          qDebug() << "Play next item ...";
      }
 
      void CartPlayerWidget::end_of_play()
      {
-         stop_play();
+         qDebug() << "Index: " << m_item_index;
+         qDebug() << "Cart Items: " << m_cart_items.size();
+
+         if (m_item_index < m_cart_items.size()){
+             play_next();
+         }else{
+             stop_play();
+         }
      }
 
      void CartPlayerWidget::set_timer_label(QString text)
@@ -786,8 +802,8 @@ namespace OATS
         long long remaining = m_selected_items_duration - elapsed;
 
         int duration_seconds = (int)remaining / 1000;
-        int ds_u1 = (int)duration_seconds / 60;
-        int ds_u2 = duration_seconds % 60;
+        int ds_u1 = (int)duration_seconds /  60;
+        int ds_u2 = duration_seconds %  60;
 
         QString duration_str = QString("%1:%2").arg(ds_u1, 2, 10, QChar('0'))
                                                .arg(ds_u2, 2, 10, QChar('0'));
@@ -797,6 +813,11 @@ namespace OATS
     CartStatus CartPlayerWidget::cart_status()
     {
         return m_cart_status;
+    }
+
+    void CartPlayerWidget::set_cart_items(CartItems cart_items)
+    {
+        m_cart_items = cart_items;
     }
 
     /* ----- CartWidget ----- */
@@ -886,8 +907,9 @@ namespace OATS
       if (cart_items.size() == 0)
           return;
 
+      m_play_widget->set_cart_items(cart_items);
       m_play_widget->set_selected_items_duration(m_audio_view_widget->get_selected_items_duration(cart_items));
-      m_play_widget->play_audio(cart_items);
+      m_play_widget->play_audio();
    }
 
    void CartWidget::clear_items_signal_handler()

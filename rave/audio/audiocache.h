@@ -23,6 +23,7 @@ namespace AUDIO
         StringField* artist_name() const;
         StringField* orig_filepath() const;
         StringField* cache_filepath() const;
+        StringField* file_extension() const;
         DateTimeField* cache_datetime() const;
         DateTimeField* last_play_datetime() const;
         ChoiceField<std::string>* audio_type() const;
@@ -34,6 +35,7 @@ namespace AUDIO
         void set_artist_name(const std::string);
         void set_orig_filepath(const std::string);
         void set_cache_filepath(const std::string);
+        void set_file_extension(const std::string);
         void set_cache_datetime(QDateTime);
         void set_last_play_datetime(QDateTime);
         void set_audio_type(std::string);
@@ -63,6 +65,7 @@ namespace AUDIO
         StringField* m_artist_name;
         StringField* m_orig_filepath;
         StringField* m_cache_filepath;
+        StringField* m_file_extension;
         DateTimeField* m_cache_datetime;
         DateTimeField* m_last_play_datetime;
         ChoiceField<std::string>* m_audio_type;

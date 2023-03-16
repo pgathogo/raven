@@ -10,6 +10,7 @@ namespace AUDIO
         , m_artist_name{}
         , m_orig_filepath{}
         , m_cache_filepath{}
+        , m_file_extension{}
         , m_cache_datetime{}
         , m_last_play_datetime{}
         , m_audio_type{}
@@ -20,6 +21,7 @@ namespace AUDIO
         m_artist_name = createField<StringField>("artist_name", "Artist Name");
         m_orig_filepath = createField<StringField>("orig_filepath", "Orig Filepath");
         m_cache_filepath = createField<StringField>("cache_filepath", "Cache Filepath");
+        m_file_extension = createField<StringField>("file_extension", "File Extension");
         m_cache_datetime = createField<DateTimeField>("cache_datetime", "Cache Datetime");
         m_last_play_datetime = createField<DateTimeField>("last_play_datetime", "Last play datetime");
 
@@ -79,7 +81,11 @@ namespace AUDIO
         StringField* AudioCache::cache_filepath() const
         {
             return m_cache_filepath;
+        }
 
+        StringField* AudioCache::file_extension() const
+        {
+            return m_file_extension;
         }
 
         DateTimeField* AudioCache::cache_datetime() const
@@ -116,41 +122,44 @@ namespace AUDIO
 
         }
 
-
         void AudioCache::set_title(const std::string a_title)
         {
             m_title->setValue(a_title);
-
         }
+
         void AudioCache::set_artist_name(const std::string a_name)
         {
             m_artist_name->setValue(a_name);
-
         }
+
         void AudioCache::set_orig_filepath(const std::string o_filepath)
         {
             m_orig_filepath->setValue(o_filepath);
-
         }
+
         void AudioCache::set_cache_filepath(const std::string c_filepath)
         {
             m_cache_filepath->setValue(c_filepath);
-
         }
+
+        void AudioCache::set_file_extension(const std::string file_ext)
+        {
+            m_file_extension->setValue(file_ext);
+        }
+
         void AudioCache::set_cache_datetime(QDateTime c_datetime)
         {
             m_cache_datetime->setValue(c_datetime);
-
         }
+
         void AudioCache::set_last_play_datetime(QDateTime lp_datetime)
         {
             m_last_play_datetime->setValue(lp_datetime);
-
         }
+
         void AudioCache::set_audio_type(const std::string a_type)
         {
             m_audio_type->setValue(a_type);
-
         }
 
         void AudioCache::set_is_cached(bool cached)

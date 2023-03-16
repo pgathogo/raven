@@ -13,14 +13,18 @@ namespace AUDIO
     {
         Q_OBJECT
     public:
+        enum class OutputChannel {ChannelA=1, ChannelB=2};
+
+        AudioPlayer();
         AudioPlayer(AudioFile& audio_file);
-        AudioPlayer(std::vector<QString> play_list);
+//        AudioPlayer(std::vector<QString> play_list);
         ~AudioPlayer();
 
-        void play_audio();
+        void play_audio(QString, QString);
         void stop_play();
 
-        void add_to_playlist(QString);
+        void update_output_channel(QString, QString);
+        OutputChannel str_to_channel(QString);
     signals:
         void play_next();
         void end_of_play();
@@ -29,8 +33,8 @@ namespace AUDIO
     private:
         std::unique_ptr<AudioThread> m_audio_thread;
         AudioFile m_audio_file;
-        std::vector<QString> m_play_list;
-        static int play_count;
+        std::map<OutputChannel, QString> m_output_channel;
+        static OutputChannel current_output_channel;
 
     };
 }

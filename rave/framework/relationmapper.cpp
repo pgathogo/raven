@@ -294,17 +294,6 @@ namespace FRAMEWORK{
     }
 
 
-    void RelationMapper::map_data_main_entity()
-    {
-        for(auto const&[record_id, record] : m_query_results){
-            for(auto const&[table_name, fields] : record){
-                if (table_name == m_main_entity->tableName()){
-                    data_to_object(record_id, table_name, m_main_entity, fields);
-                    break;
-                }
-            }
-        }
-    }
 
     void RelationMapper::map_data_object()
     {
@@ -321,6 +310,18 @@ namespace FRAMEWORK{
                     break;
                 }
 
+            }
+        }
+    }
+
+    void RelationMapper::map_data_main_entity()
+    {
+        for(auto const&[record_id, record] : m_query_results){
+            for(auto const&[table_name, fields] : record){
+                if (table_name == m_main_entity->tableName()){
+                    data_to_object(record_id, table_name, m_main_entity, fields);
+                    break;
+                }
             }
         }
     }

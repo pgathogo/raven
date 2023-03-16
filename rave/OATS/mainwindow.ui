@@ -87,7 +87,7 @@
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(170, 255, 127);S</string>
+                <string notr="true"/>
                </property>
                <property name="currentIndex">
                 <number>0</number>

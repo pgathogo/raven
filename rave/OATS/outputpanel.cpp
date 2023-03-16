@@ -33,6 +33,7 @@ namespace OATS{
         m_play_button->setObjectName("PlayButton");
         connect(m_play_button.get(), &QPushButton::clicked, this, &OutputPanel::play);
 
+        m_play_button->setIcon(QIcon(":/images/icons/play_01.png"));
         m_play_button->setStyleSheet(btn_style);
 
         m_stop_button = std::make_unique<QPushButton>("STOP "+name);

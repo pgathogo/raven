@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <chrono>
+#include <concepts>
 
 #include <QMainWindow>
 #include <QLabel>
@@ -44,6 +45,7 @@ namespace OATS{
     class ScheduleGridItem;
     class OutputPanel;
     class PlayModePanel;
+    class Jingle;
     class JingleGrid;
     class CartPanel;
 }
@@ -56,6 +58,7 @@ namespace AUDIO{
    class AudioTrackViewer;
    class AudioLibItem;
    class TrackBrowser;
+   class AudioPlayer;
 
    template<typename T>
    class AudioCacheManager;
@@ -74,6 +77,11 @@ struct CurrentPlayItem{
     int grid_index{-1};
 };
 
+struct CurrentDateTime{
+    QDate current_date();
+    int current_hour();
+};
+
 struct CommBreak{
     int booking_id{-1};
     int schedule_id{-1};
@@ -85,6 +93,19 @@ struct CommBreak{
     int duration;
 };
 
+template<typename T>
+concept integral = std::is_integral_v<T>;
+
+template<typename T>
+concept floating_point = std::is_floating_point_v<T>;
+
+template<typename T>
+requires integral<T> || floating_point<T>
+constexpr double Average(std::vector<T> const& v)
+{
+    const double sum = std::accumulate(v.begin(), v.end(), 0);
+    return sum /v.size();
+}
 
 using History = std::map<int, std::vector<int>>;
 using CurrentCuedItem = CurrentPlayItem;
@@ -105,6 +126,8 @@ public:
     const std::string ChannelA = "A";
     const std::string ChannelB = "B";
     const std::string ChannelC = "C";
+
+    const QString JinglePlayoutChannel = "C";
 
     const QString CACHE_DB_SQLITE = "audiocache.db";
     const QString AUDIO_CACHE_LOCATION = "d:/music/cache/";   // Temporary
@@ -140,12 +163,14 @@ public:
     void make_jingle_grid_widget();
 
     int index_of(int);
-    void stop_audio(OATS::OutputPanel*);
     void play_audio(OATS::OutputPanel*);
+    void stop_audio(OATS::OutputPanel*);
+    void play_outputC(OATS::OutputPanel*);
+
     int next_output_panel_id(int);
     OATS::OutputPanel* find_output_panel(int);
     OATS::ScheduleItem* find_next_schedule_item(OATS::ScheduleItem*);
-    void cue_next_schedule(OATS::ScheduleItem*, OATS::OutputPanel*);
+    void cue_schedule_item(OATS::ScheduleItem*, OATS::OutputPanel*);
     void calculate_trigger_times();
     int calculate_yield_contribution(OATS::ScheduleItem*);
 
@@ -174,6 +199,7 @@ public:
     void set_scheduled_item_filepath(OATS::ScheduleItem*);
     void set_cache_last_play_dtime(OATS::ScheduleItem*);
 
+
 private slots:
     void close_win();
     void scroll_changed(int);
@@ -198,13 +224,19 @@ private slots:
     void stop_button(OATS::OutputPanel*);
     void go_current();
     void keep_current(bool);
-    void play_jingle(const QString);
+    void play_jingle(OATS::Jingle*);
+    void stop_all_jingles();
+    //void play_jingle(const QString);
 
     void push_items_down(int);
     void reprint_schedule(int);
-    void queue_for_caching(AUDIO::Audio*);
+    //void queue_for_caching(AUDIO::Audio*);
+    void queue_for_caching(OATS::Audio);
 //    void insert_schedule_item(int, std::unique_ptr<OATS::ScheduleItem>);
     void persist_cache();
+    void end_of_play();
+    void play_next();
+    void jingle_end_of_play();
 
 private:
     Ui::MainWindow *ui;
@@ -265,10 +297,19 @@ private:
 
     std::shared_ptr<QMutex> m_queue_mutex;
 
+    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+
+    std::unique_ptr<AUDIO::AudioPlayer> m_jingle_player;
+    std::unique_ptr<OATS::ScheduleItem> m_current_jingle_item;
+
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate, int);
     void setup_timers();
+    void to_lower(std::string&);
+    OATS::Audio make_schedule_audio(AUDIO::Audio*);
+
+    void test_concept();
 };
 
 struct FindByRef{
@@ -276,6 +317,8 @@ struct FindByRef{
     bool operator()(std::unique_ptr<OATS::ScheduleItem> const& item){
         return (item->schedule_ref() == m_ref);
     }
+
+
 private:
     int m_ref;
 };

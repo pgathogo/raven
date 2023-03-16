@@ -3,7 +3,7 @@
 
 #include "../framework/baseentity.h"
 
-class Agent : public BaseEntity::Registrar<Agent>
+class Agent : public BaseEntity //::Registrar<Agent>
 {
 public:
     Agent();
@@ -46,7 +46,7 @@ public:
     TextField* address() const;
     void setAddress(std::string paddress);
 
-    std::string className() override;
+    //std::string className() override;
 private:
     StringField* m_name;
     StringField* m_town;

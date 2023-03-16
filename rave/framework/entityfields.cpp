@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <chrono>
 
 #include <QDebug>
@@ -5,6 +6,7 @@
 #include <QTextEdit>
 #include <QComboBox>
 #include <QTime>
+#include <QString>
 
 #include "entityfields.h"
 #include "entitydatamodel.h"
@@ -391,6 +393,20 @@ std::string StringField::displayName() const
 std::string StringField::field_type()
 {
     return "StringField";
+}
+
+std::string StringField::value_tolower()
+{
+    std::transform(mValue.begin(), mValue.end(), mValue.begin(), [](unsigned char c){
+      return std::tolower(c) ;
+    });
+    return mValue;
+}
+
+
+QString StringField::to_qstring()
+{
+    return QString::fromStdString(mValue);
 }
 
 /* ---- TextField ---- */

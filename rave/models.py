@@ -352,6 +352,7 @@ class Audio(Daypart):
     artist = models.ForeignKey(Artist,models.DO_NOTHING,  null=True)
     filepath = models.CharField(max_length=255)
     audio_type = models.CharField(max_length=20, choices=AUDIO_TYPE, default='SONG')
+    file_extension = models.CharField(max_length=5, default='OGG')
     duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     start_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     fade_in_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)

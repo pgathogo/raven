@@ -19,12 +19,16 @@ namespace OATS{
         std::string title();
         std::string artist();
         std::string file_path();
+        std::string file_extension();
+        std::string audio_type();
         int duration();
 
         void set_id(int);
         void set_title(std::string);
         void set_artist(std::string);
         void set_file_path(std::string);
+        void set_file_extension(const std::string);
+        void set_audio_type(const std::string);
         void set_duration(int);
 
         int fade_delay();
@@ -41,11 +45,14 @@ namespace OATS{
         std::string m_title;
         std::string m_artist;
         std::string m_file_path;
+        std::string m_file_extension;
+        std::string m_audio_type;
         int m_duration{0};
         int m_fade_delay{0};
         int m_fade_out{0};
         int m_intro{0};
         int m_extro{0};
+
 
     };
 
@@ -82,7 +89,7 @@ namespace OATS{
         void set_schedule_ref(int);
         void set_item_status(ItemStatus);
         void set_play_channel(std::string);
-        void set_schedule_type(ScheduleType);
+        void set_schedule_type(std::string);
         void set_transition_type(TransitionType);
         void set_hour(int);
         void set_booked_spots(int);

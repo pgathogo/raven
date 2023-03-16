@@ -221,12 +221,14 @@ namespace OATS
         Q_OBJECT
     public:
         CartPlayerWidget();
-        void play_audio(CartItems);
+        void play_audio();
         void set_timer_label(QString);
         void set_selected_items_duration(double);
         void count_down();
         CartStatus cart_status();
         void stop_play();
+        void set_cart_items(CartItems);
+        double get_items_duration();
     signals:
         void play_audio_request();
     private slots:
@@ -246,6 +248,10 @@ namespace OATS
         std::unique_ptr<QTimer> m_countdown_timer;
 
         CartStatus m_cart_status;
+
+        CartItems m_cart_items;
+
+        int m_item_index;
 
     };
 

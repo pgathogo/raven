@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include <ranges>
 
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -48,6 +49,7 @@
 
 #include "bookedcommercialdlg.h"
 
+namespace rv = std::ranges::views;
 
 MainWindow::MainWindow(QApplication* app, QWidget *parent)
     : QMainWindow(parent)
@@ -139,14 +141,24 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     ui->tvSchedule->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tvSchedule, &QTableView::customContextMenuRequested, this, &MainWindow::contextMenuRequested);
-}
 
+    test_ranges();
+}
 
 MainWindow::~MainWindow()
 {
     if (m_save_as)
         delete m_save_as;
     delete ui;
+}
+
+void MainWindow::test_ranges()
+{
+    std::vector<int> vecs{1, 2, 3, 4, 5, 6, 7};
+    for(int v: vecs | rv::reverse | rv::take(3) | rv::reverse){
+        qDebug() << v << ", ";
+    }
+    qDebug() << "\n";
 }
 
 void MainWindow::set_ui_style()

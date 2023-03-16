@@ -1,4 +1,5 @@
 #include <chrono>
+#include <limits>
 
 #include <QGridLayout>
 #include <QButtonGroup>
@@ -12,6 +13,7 @@
 #include <QPropertyAnimation>
 #include <QProgressBar>
 #include <QTimer>
+#include <QPainter>
 
 #include <QVBoxLayout>
 #include <QPalette>
@@ -31,6 +33,7 @@ namespace OATS
         ,m_title{""}
         ,m_jingle_id{""}
         ,m_jingle_status{Jingle::JingleStatus::Ready}
+        ,m_audio{}
     {
     }
 
@@ -40,14 +43,18 @@ namespace OATS
         ,m_col{col}
         ,m_title{title}
         ,m_jingle_status{Jingle::JingleStatus::Ready}
+        ,m_audio{}
     {
         m_jingle_id = QString::number(page_id)+
                QString::number(row)+
                QString::number(col);
+
     }
 
     Jingle::~Jingle()
     {
+        //if (m_audio != nullptr)
+         //   delete m_audio;
     }
 
     QString Jingle::title() const{
@@ -134,6 +141,15 @@ namespace OATS
         m_jingle_status = status;
     }
 
+    void Jingle::set_audio(AUDIO::Audio* audio)
+    {
+       m_audio = audio;
+    }
+
+    AUDIO::Audio* Jingle::audio()
+    {
+        return m_audio;
+    }
 
     /* ---------------- GridButton ----------------------------- */
 
@@ -144,6 +160,7 @@ namespace OATS
     {
         m_count_down_timer = std::make_unique<QTimer>(this);
         connect(m_count_down_timer.get(), &QTimer::timeout, this, &GridButton::count_down);
+        setCheckable(true);
     }
 
     GridButton::GridButton(int id, Jingle* const jingle)
@@ -165,12 +182,7 @@ namespace OATS
     void GridButton::set_jingle(Jingle* const jingle)
     {
         m_jingle = jingle;
-
-        if (jingle == nullptr){
-            setText("");
-        }else{
-            setText(m_jingle->title());
-        }
+        (jingle == nullptr) ? setText("") : setText(m_jingle->title());
     }
 
     void GridButton::start_countdown_timer()
@@ -189,20 +201,65 @@ namespace OATS
         auto progress_value = (100 - round((float)remaining/m_jingle->track_duration() * 100));
         m_color_value = progress_value / 100;
 
+        /*
         setStyleSheet(QString("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
                                                "stop:0 rgba(230, 103, 192, 255), stop:%1 rgba(230, 103, 192, 255),"
                                                "stop:%2 rgba(79, 179, 228, 255), stop:1 rgba(79, 179, 228, 255));")
                                                 .arg(m_color_value-0.01f)
                                                 .arg(m_color_value));
+
         if ( (progress_value >= 100) || (m_color_value >= 1.0f)){
             m_count_down_timer->stop();
         }
+        */
+
+       if (progress_value >= 100){
+           m_count_down_timer->stop();
+           switch_off();
+       }
 
     }
 
     void GridButton::stop_countdown_timer()
     {
         m_count_down_timer->stop();
+    }
+
+    void GridButton::switch_on()
+    {
+        set_pixmap(QPixmap(":/images/icons/live_dot.png"));
+    }
+
+    void GridButton::switch_off()
+    {
+        set_pixmap(QPixmap(":/images/icons/off_dot.png"));
+        update(rect());
+        setChecked(false);
+    }
+
+    void GridButton::set_pixmap(const QPixmap& pixmap)
+    {
+        m_pixmap = pixmap;
+    }
+
+    QSize GridButton::sizeHint() const
+    {
+       #undef max
+       const auto parent_hint = QPushButton::sizeHint();
+       // add margins here if neeeded
+       return QSize(parent_hint.width() + m_pixmap.width(), std::max(parent_hint.height(), m_pixmap.height()));
+    }
+
+    void GridButton::paintEvent(QPaintEvent* e)
+    {
+        QPushButton::paintEvent(e);
+        if (!m_pixmap.isNull())
+        {
+            const int y = (height() - m_pixmap.height())/2;
+            QPainter painter(this);
+            //painter.drawPixmap(5, y, m_pixmap);
+            painter.drawPixmap(width()-20, y, m_pixmap);
+        }
     }
 
     /* ----------------------------------------------- */
@@ -217,7 +274,7 @@ namespace OATS
     {
         m_main_layout = std::make_unique<QVBoxLayout>();
 
-        make_jingles();
+        //make_jingles();
         make_toolbar(m_main_layout.get());
 
         m_file_path = std::make_unique<QLabel>("Jingle fiile... ");
@@ -228,6 +285,8 @@ namespace OATS
         make_stop_button(m_main_layout.get());
         make_pager(m_main_layout.get());
         //make_context_menu();
+        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
+        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio);
 
         attach_jingle_to_buttons(JINGLE_PAGE_ONE);
 
@@ -363,8 +422,9 @@ namespace OATS
         m_current_grid_cell.row = row;
         m_current_grid_cell.col = col;
 
-        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
-        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio);
+//        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
+//        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio);
+
         m_track_picker_dialog->exec();
 
         m_load_action = nullptr;
@@ -379,7 +439,7 @@ namespace OATS
    void JingleGrid::selected_audio(AUDIO::Audio* audio)
    {
        AUDIO::AudioTool at;
-       auto audio_fullname = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+".ogg";
+       auto audio_fullname = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+"."+audio->file_extension()->value_tolower();
 
        QString title = QString::fromStdString(audio->title()->value());
        QString path = QString::fromStdString(audio->audio_lib_path()->value());
@@ -399,8 +459,11 @@ namespace OATS
             jingle->set_track_path(path);
             jingle->set_track_duration(audio->duration()->value());
 
+            jingle->set_audio(audio);
+
             m_grid_buttons[row][col]->set_jingle(jingle.get());
             m_jingles.push_back(std::move(jingle));
+
             return;
         }
 
@@ -422,6 +485,7 @@ namespace OATS
             (*it)->set_title(title);
             (*it)->set_track_path(path);
             (*it)->set_track_duration(audio->duration()->value());
+            (*it)->set_audio(audio);
             m_grid_buttons[row][col]->set_jingle((*it).get());
        }
 
@@ -429,24 +493,37 @@ namespace OATS
 
     void JingleGrid::play_jingle_at(int row, int col)
     {
-        if (m_grid_buttons[row][col]->jingle() == nullptr)
+
+        auto grid_button = m_grid_buttons[row][col].get();
+
+        if (grid_button->jingle() == nullptr)
             return;
 
-        auto jingle = m_grid_buttons[row][col]->jingle()->title();
+        grid_button->switch_on();
 
-        qDebug() << jingle;
-        qDebug() << m_grid_buttons[row][col]->jingle()->track_path();
-        qDebug() << m_grid_buttons[row][col]->jingle()->track_duration();
+        Jingle* jingle = grid_button->jingle();
 
-        m_grid_buttons[row][col]->start_countdown_timer();
+        grid_button->start_countdown_timer();
 
-        emit play_jingle(jingle);
+        emit play_jingle(grid_button->jingle());
+    }
+
+    void JingleGrid::stop_all()
+    {
+        emit stop_all_jingles();
+
+        for (int row=0; row <= GRID_ROWS-1; ++row){
+            for (int col=0; col <= GRID_COLS-1; ++col){
+                m_grid_buttons[row][col]->stop_countdown_timer();
+                // Reset jingle button background color
+            }
+        }
     }
 
     void JingleGrid::clear_buttons()
     {
         for(int row=0; row<= GRID_ROWS-1; ++row){
-            for (int col=0; col<GRID_COLS; ++col){
+            for (int col=0; col<GRID_COLS-1; ++col){
                 m_grid_buttons[row][col]->set_jingle(nullptr);
             }
         }
@@ -556,6 +633,7 @@ namespace OATS
    void JingleGrid::make_stop_button(QVBoxLayout* main_layout)
    {
        m_stop_button = std::make_unique<QPushButton>("Stop All");
+       connect(m_stop_button.get(), &QPushButton::clicked, this, &JingleGrid::stop_all);
 
        main_layout->addWidget(m_stop_button.get());
 
@@ -667,6 +745,11 @@ namespace OATS
      }
 
      file.write(jingle_doc.toJson(QJsonDocument::Indented));
+  }
+
+  void JingleGrid::print(const QString& msg)
+  {
+      qDebug() << msg;
   }
 
 }

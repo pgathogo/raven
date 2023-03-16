@@ -173,11 +173,12 @@ std::string BaseEntity::order_by() const
 }
 
 
+/*
 std::string BaseEntity::className()
 {
     return  demangle(typeid(this).name());
 }
-
+*/
 
 void BaseEntity::print_members(const QStringList& members) const
 {

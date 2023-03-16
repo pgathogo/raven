@@ -1,170 +1,558 @@
 {
-	"BUILD_DIR" : "D:/home/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen",
-	"CMAKE_BINARY_DIR" : "D:/home/PMS/Raven/ravecluster/rave/clusterman",
-	"CMAKE_CURRENT_BINARY_DIR" : "D:/home/PMS/Raven/ravecluster/rave/clusterman",
-	"CMAKE_CURRENT_SOURCE_DIR" : "D:/home/PMS/Raven/ravecluster/rave/clusterman",
-	"CMAKE_EXECUTABLE" : "C:/CMake/bin/cmake.exe",
+	"BUILD_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen",
+	"CMAKE_BINARY_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman",
+	"CMAKE_EXECUTABLE" : "C:/Program Files/CMake/bin/cmake.exe",
 	"CMAKE_LIST_FILES" : 
 	[
-		"D:/home/PMS/Raven/ravecluster/rave/clusterman/CMakeLists.txt",
-		"D:/home/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/3.18.4/CMakeSystem.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeSystemSpecificInitialize.cmake",
-		"D:/home/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/3.18.4/CMakeCXXCompiler.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeSystemSpecificInformation.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeGenericSystem.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeInitializeConfigs.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Platform/WindowsPaths.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeCXXInformation.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeLanguageInformation.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Compiler/GNU-CXX.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Compiler/GNU.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Internal/CMakeCheckCompilerFlag.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows-GNU-CXX.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows-GNU.cmake",
-		"D:/home/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/3.18.4/CMakeRCCompiler.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeRCInformation.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows-windres.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/Platform/Windows-GNU-CXX-ABI.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeCommonLanguageInclude.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/FindPostgreSQL.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/SelectLibraryConfigurations.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/FindPackageMessage.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5Config.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5Config.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Core/Qt5CoreConfig.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Core/Qt5CoreMacros.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QWebGLIntegrationPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QWindowsDirect2DIntegrationPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5Gui_QXdgDesktopPortalThemePlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5Widgets_QWindowsVistaStylePlugin.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeParseArguments.cmake"
+		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeLists.txt",
+		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/3.24.1/CMakeSystem.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake",
+		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/3.24.1/CMakeCXXCompiler.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeGenericSystem.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Platform/Windows.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Platform/WindowsPaths.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeCXXInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Compiler/MSVC-CXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Compiler/MSVC.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Platform/Windows-MSVC-CXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Platform/Windows-MSVC.cmake",
+		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/3.24.1/CMakeRCCompiler.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeRCInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPostgreSQL.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/SelectLibraryConfigurations.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Config.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Targets.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeature.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXCompilerFlag.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Internal/CheckSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Internal/CheckCompilerFlag.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Internal/CheckFlagCommonConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/Internal/CheckSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Config.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Targets.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeature.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXCompilerFlag.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Config.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Targets.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeature.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXCompilerFlag.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsTargets-debug.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets-debug.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Config.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Targets.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeature.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXCompilerFlag.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6/FindWrapAtomic.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6CoreTools/Qt6CoreToolsVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets-debug.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeParseArguments.cmake",
+		"C:/QT632/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/GNUInstallDirs.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Config.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Targets.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeature.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXCompilerFlag.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6GuiTools/Qt6GuiToolsVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6Gui/Qt6GuiVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsMacros.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeParseArguments.cmake",
+		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman.qrc"
 	],
-	"CMAKE_SOURCE_DIR" : "D:/home/PMS/Raven/ravecluster/rave/clusterman",
-	"DEP_FILE" : "",
-	"DEP_FILE_RULE_NAME" : "",
+	"CMAKE_SOURCE_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman",
+	"DEP_FILE" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "clusterman_autogen/timestamp",
 	"HEADERS" : 
 	[
 		[
-			"D:/home/PMS/Raven/rave/framework/baseentity.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/baseentity.h",
 			"MU",
-			"TXBK5VWLEF/moc_baseentity.cpp"
+			"DX5S3JBGB7/moc_baseentity.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/baseentitybrowserdlg.h",
 			"MU",
-			"TXBK5VWLEF/moc_baseentitybrowserdlg.cpp"
+			"DX5S3JBGB7/moc_baseentitybrowserdlg.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/baseentitydetaildlg.h",
 			"MU",
-			"TXBK5VWLEF/moc_baseentitydetaildlg.cpp"
+			"DX5S3JBGB7/moc_baseentitydetaildlg.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/databaseconnector.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/databaseconnector.h",
 			"MU",
-			"TXBK5VWLEF/moc_databaseconnector.cpp"
+			"DX5S3JBGB7/moc_databaseconnector.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/databasemanager.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/databasemanager.h",
 			"MU",
-			"TXBK5VWLEF/moc_databasemanager.cpp"
+			"DX5S3JBGB7/moc_databasemanager.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/dataprovider.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/dataprovider.h",
 			"MU",
-			"TXBK5VWLEF/moc_dataprovider.cpp"
+			"DX5S3JBGB7/moc_dataprovider.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/entitydatamodel.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.h",
 			"MU",
-			"TXBK5VWLEF/moc_entitydatamodel.cpp"
+			"DX5S3JBGB7/moc_entitydatamodel.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/entityfields.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/entityfields.h",
 			"MU",
-			"TXBK5VWLEF/moc_entityfields.cpp"
+			"DX5S3JBGB7/moc_entityfields.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/ravenexception.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.h",
 			"MU",
-			"TXBK5VWLEF/moc_ravenexception.cpp"
+			"DX5S3JBGB7/moc_letterfilterwidget.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/framework/relationmapper.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/manytomany.h",
 			"MU",
-			"TXBK5VWLEF/moc_relationmapper.cpp"
+			"DX5S3JBGB7/moc_manytomany.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/security/authentication.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/manytomanybrowser.h",
 			"MU",
-			"AD4PYRWGU2/moc_authentication.cpp"
+			"DX5S3JBGB7/moc_manytomanybrowser.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/security/user.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/picklistbrowser.h",
 			"MU",
-			"AD4PYRWGU2/moc_user.cpp"
+			"DX5S3JBGB7/moc_picklistbrowser.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/security/userbrowser.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/ravenexception.h",
 			"MU",
-			"AD4PYRWGU2/moc_userbrowser.cpp"
+			"DX5S3JBGB7/moc_ravenexception.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/security/userform.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/relationmapper.h",
 			"MU",
-			"AD4PYRWGU2/moc_userform.cpp"
+			"DX5S3JBGB7/moc_relationmapper.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/utils/notificationbar.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/selectclosewidget.h",
 			"MU",
-			"CMVTXRXFX7/moc_notificationbar.cpp"
+			"DX5S3JBGB7/moc_selectclosewidget.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/rave/utils/notificationitem.h",
+			"D:/Home/Clients/PMS/Raven/rave/framework/typeexclusion.h",
 			"MU",
-			"CMVTXRXFX7/moc_notificationitem.cpp"
+			"DX5S3JBGB7/moc_typeexclusion.cpp",
+			null
 		],
 		[
-			"D:/home/PMS/Raven/ravecluster/rave/clusterman/mainwindow.h",
+			"D:/Home/Clients/PMS/Raven/rave/security/authentication.h",
 			"MU",
-			"EWIEGA46WW/moc_mainwindow.cpp"
+			"QCNHDQ7SKX/moc_authentication.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/content.h",
+			"MU",
+			"QCNHDQ7SKX/moc_content.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/contentdetailform.h",
+			"MU",
+			"QCNHDQ7SKX/moc_contentdetailform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/contentform.h",
+			"MU",
+			"QCNHDQ7SKX/moc_contentform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/role.h",
+			"MU",
+			"QCNHDQ7SKX/moc_role.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/roleform.h",
+			"MU",
+			"QCNHDQ7SKX/moc_roleform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/rolemember.h",
+			"MU",
+			"QCNHDQ7SKX/moc_rolemember.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/user.h",
+			"MU",
+			"QCNHDQ7SKX/moc_user.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/userbrowser.h",
+			"MU",
+			"QCNHDQ7SKX/moc_userbrowser.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/userform.h",
+			"MU",
+			"QCNHDQ7SKX/moc_userform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/utils/notificationbar.h",
+			"MU",
+			"DLICU2EZZF/moc_notificationbar.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/utils/notificationitem.h",
+			"MU",
+			"DLICU2EZZF/moc_notificationitem.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/audiofolder.h",
+			"MU",
+			"EWIEGA46WW/moc_audiofolder.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/audiofolderform.h",
+			"MU",
+			"EWIEGA46WW/moc_audiofolderform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/audiostore.h",
+			"MU",
+			"EWIEGA46WW/moc_audiostore.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/cluster.h",
+			"MU",
+			"EWIEGA46WW/moc_cluster.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterbrowser.h",
+			"MU",
+			"EWIEGA46WW/moc_clusterbrowser.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterform.h",
+			"MU",
+			"EWIEGA46WW/moc_clusterform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustermanagerdlg.h",
+			"MU",
+			"EWIEGA46WW/moc_clustermanagerdlg.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/confignode.h",
+			"MU",
+			"EWIEGA46WW/moc_confignode.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/database.h",
+			"MU",
+			"EWIEGA46WW/moc_database.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/mainwindow.h",
+			"MU",
+			"EWIEGA46WW/moc_mainwindow.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/server.h",
+			"MU",
+			"EWIEGA46WW/moc_server.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/serverform.h",
+			"MU",
+			"EWIEGA46WW/moc_serverform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/station.h",
+			"MU",
+			"EWIEGA46WW/moc_station.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/stationform.h",
+			"MU",
+			"EWIEGA46WW/moc_stationform.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/stationsetup.h",
+			"MU",
+			"EWIEGA46WW/moc_stationsetup.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/storagedisk.h",
+			"MU",
+			"EWIEGA46WW/moc_storagedisk.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/storagediskform.h",
+			"MU",
+			"EWIEGA46WW/moc_storagediskform.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "D:/home/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/include",
-	"MOC_COMPILATION_FILE" : "D:/home/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/mocs_compilation.cpp",
-	"MOC_DEFINITIONS" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB" ],
+	"INCLUDE_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"UNICODE",
+		"WIN32",
+		"WIN64",
+		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
+		"_UNICODE",
+		"_WIN64"
+	],
 	"MOC_DEPEND_FILTERS" : 
 	[
 		[
@@ -174,65 +562,226 @@
 	],
 	"MOC_INCLUDES" : 
 	[
-		"D:/home/PMS/Raven/ravecluster/rave/clusterman",
-		"C:/Program Files/PostgreSQL/9.5/include",
-		"C:/Program Files/PostgreSQL/9.5/include/server",
-		"D:/home/PMS/Raven/rave/framework",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtWidgets",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtGui",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtANGLE",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/include/QtCore",
-		"D:/Qt/Qt5.13.2/5.13.2/mingw73_64/mkspecs/win32-g++",
-		"D:/MinGW/MinGW/include/c++/9.2.0",
-		"D:/MinGW/MinGW/include/c++/9.2.0/x86_64-w64-mingw32",
-		"D:/MinGW/MinGW/include/c++/9.2.0/backward",
-		"D:/MinGW/MinGW/lib/gcc/x86_64-w64-mingw32/9.2.0/include",
-		"D:/MinGW/MinGW/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed",
-		"D:/MinGW/MinGW/x86_64-w64-mingw32/include"
+		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman",
+		"C:/Program Files/PostgreSQL/14/include",
+		"C:/Program Files/PostgreSQL/14/include/server",
+		"D:/Home/Clients/PMS/Raven/rave/framework",
+		"D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/include",
+		"C:/QT632/include/QtCore",
+		"C:/QT632/include",
+		"C:/QT632/mkspecs/win32-msvc",
+		"C:/QT632/include/QtWidgets",
+		"C:/QT632/include/QtGui"
 	],
-	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_GADGET_EXPORT",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT"
+	],
 	"MOC_OPTIONS" : [],
 	"MOC_PATH_PREFIX" : false,
-	"MOC_PREDEFS_CMD" : 
-	[
-		"D:/MinGW/MinGW/bin/g++.exe",
-		"-dM",
-		"-E",
-		"-c",
-		"C:/CMake/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp"
-	],
-	"MOC_PREDEFS_FILE" : "D:/home/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/moc_predefs.h",
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 2,
-	"PARSE_CACHE_FILE" : "D:/home/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/clusterman_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Qt/Qt5.13.2/5.13.2/mingw73_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Qt/Qt5.13.2/5.13.2/mingw73_64/bin/uic.exe",
-	"QT_VERSION_MAJOR" : 5,
-	"QT_VERSION_MINOR" : 13,
-	"SETTINGS_FILE" : "D:/home/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/clusterman_autogen.dir/AutogenUsed.txt",
+	"PARALLEL" : 4,
+	"PARSE_CACHE_FILE" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/clusterman_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "C:/QT632/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "C:/QT632/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 3,
+	"SETTINGS_FILE" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/clusterman_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[ "D:/home/PMS/Raven/rave/framework/baseentity.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/baseentitydetaildlg.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/databaseconnector.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/databasemanager.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/dataprovider.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/entitydatamodel.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/entityfields.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/ravenexception.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/framework/relationmapper.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/security/authentication.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/security/user.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/security/userbrowser.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/security/userform.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/utils/notificationbar.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/rave/utils/notificationitem.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/ravecluster/rave/clusterman/main.cpp", "MU" ],
-		[ "D:/home/PMS/Raven/ravecluster/rave/clusterman/mainwindow.cpp", "MU" ]
+		[ "D:/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp", "MU", null ],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/baseentitydetaildlg.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/databaseconnector.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/databasemanager.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/dataprovider.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/entityfields.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.cpp",
+			"MU",
+			null
+		],
+		[ "D:/Home/Clients/PMS/Raven/rave/framework/manytomany.cpp", "MU", null ],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/manytomanybrowser.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/picklistbrowser.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/ravenexception.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/relationmapper.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/selectclosewidget.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/typeexclusion.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/authentication.cpp",
+			"MU",
+			null
+		],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/content.cpp", "MU", null ],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/security/contentdetailform.cpp",
+			"MU",
+			null
+		],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/contentform.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/role.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/roleform.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/rolemember.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/user.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/userbrowser.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/userform.cpp", "MU", null ],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/utils/notificationbar.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/utils/notificationitem.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/audiofolder.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/audiofolderform.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/audiostore.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/cluster.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterbrowser.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterform.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustermanagerdlg.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/database.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/main.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/mainwindow.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/server.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/serverform.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/station.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/stationform.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/stationsetup.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/storagedisk.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/storagediskform.cpp",
+			"MU",
+			null
+		]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

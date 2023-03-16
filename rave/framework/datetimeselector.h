@@ -7,7 +7,7 @@ namespace Ui {
 class DateTimeSelector;
 }
 
-using IsSelected = boolean;
+using IsSelected = bool;
 
 struct DateTimeSelection{
     QDate sel_date;

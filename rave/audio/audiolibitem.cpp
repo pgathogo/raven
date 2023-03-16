@@ -69,6 +69,11 @@ namespace AUDIO{
         return QString::fromStdString(audio()->folder()->displayName());
     }
 
+    QString AudioLibItem::file_extension()
+    {
+        return QString::fromStdString(audio()->file_extension()->displayName());
+    }
+
     AUDIO::Audio* AudioLibItem::audio() const
     {
         return m_audio;

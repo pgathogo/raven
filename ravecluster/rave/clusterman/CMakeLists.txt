@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15)
 
-set(CMAKE_CXX_COMPLIER "C:/mingw64/bin/g++.exe")
+#set(CMAKE_CXX_COMPLIER "C:/mingw64/bin/g++.exe")
+
+string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe")
 
 project(clusterman VERSION 0.1 LANGUAGES CXX)
 
@@ -144,6 +147,37 @@ else()
         )
     endif()
 endif()
+
+set(CMAKE_EXE_LINKER_FLAGS "-static")
+
+if (MSVC)
+    target_compile_options(clusterman PRIVATE "/W0")
+    target_compile_options(clusterman PUBLIC "/wd4716")
+    target_compile_options(clusterman PUBLIC "/w34100")
+    target_compile_options(clusterman PUBLIC "/w34189")
+    target_compile_options(clusterman PUBLIC "/w44996")
+    target_compile_options(clusterman PUBLIC "/w44456")
+    target_compile_options(clusterman PUBLIC "/w44457")
+    target_compile_options(clusterman PUBLIC "/w44458")
+
+    target_compile_options(clusterman PUBLIC "/Zc:__cplusplus")
+
+    target_compile_options(clusterman PUBLIC "/Zc:rvalueCast")
+    target_compile_options(clusterman PUBLIC "/Zc:inline")
+    target_compile_options(clusterman PUBLIC "/Zc:strictStrings")
+    target_compile_options(clusterman PUBLIC "/Zc:throwingNew")
+    target_compile_options(clusterman PUBLIC "/Zc:externConstexpr")
+
+#    -permissive-
+#    -utf-8
+
+    target_compile_options(clusterman PUBLIC "/EHsc")
+ else()
+     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
+ endif()
+
+target_compile_options(clusterman PRIVATE /MT)
+target_link_options(clusterman PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
 target_link_libraries(clusterman PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(clusterman PRIVATE ${PostgreSQL_LIBRARIES})

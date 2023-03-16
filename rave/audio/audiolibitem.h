@@ -32,6 +32,7 @@ namespace AUDIO{
         virtual QString audio_year();
         virtual QString file_path();
         virtual QString folder();
+        virtual QString file_extension();
 
         AUDIO::Audio* audio() const;
 
@@ -59,6 +60,7 @@ namespace AUDIO{
             auto audio_type = new T(item->audio_type());
             auto file_path = new T(item->file_path());
             auto folder = new T(item->folder());
+            auto file_extension = new T(item->file_extension());
 
             if (audio->title()->visible())
                 columns.append(title);
@@ -72,6 +74,8 @@ namespace AUDIO{
                 columns.append(file_path);
             if (audio->folder()->visible())
                 columns.append(folder);
+            if (audio->file_extension()->visible())
+                columns.append(file_extension);
 
             m_model->appendRow(columns);
             m_lib_items.push_back(std::move(item));

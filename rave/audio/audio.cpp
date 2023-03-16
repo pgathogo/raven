@@ -166,7 +166,6 @@ namespace AUDIO {
         m_add_dtime->setValue(QDateTime::currentDateTime());
 
         m_file_extension = createField<StringField>("file_extension", "File Extension");
-        m_file_extension->setFormOnly(true);
         m_file_extension->setValue("");
 
         m_creation_date->setValue(QDate::currentDate());
@@ -257,7 +256,6 @@ namespace AUDIO {
         m_audio_year->setValue(dt.year());
 
         m_file_extension = createField<StringField>("file_extension", "File Extension");
-        m_file_extension->setFormOnly(true);
         m_file_extension->setValue(get_file_extension(audio_file));
 
         m_audio_filename = createField<StringField>("audio_filename", "Audio Filename");
@@ -301,6 +299,8 @@ namespace AUDIO {
         m_header = other.m_header;
 
         m_audio_filename->setValue(other.audio_filename()->value());
+        m_file_extension->setValue(other.file_extension()->value());
+
         m_file_info = other.m_file_info;
 
         setTableName("rave_audio");
@@ -549,6 +549,11 @@ namespace AUDIO {
         m_file_info = audio_file;
     }
 
+    void Audio::set_file_extension(const std::string extension)
+    {
+        m_file_extension->setValue(extension);
+    }
+
     void Audio::set_cue_marker(CueMarker marker)
     {
         m_marker = marker;
@@ -620,7 +625,8 @@ namespace AUDIO {
             artist()->displayName(),
             duration()->displayName(),
             audio_type()->valueToString(),
-            file_path()->displayName()
+            file_path()->displayName(),
+            m_file_extension->displayName()
         };
     }
 

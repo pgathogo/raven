@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <concepts>
 
 #include <QApplication>
 #include <QMainWindow>
@@ -62,6 +63,16 @@ struct SelectedScheduleItem{
 };
 
 using History = std::map<int, std::vector<int>>;
+
+
+template<typename T>
+concept Integral = std::is_integral_v<T>;
+
+template<typename T>
+int sum(T a, T b) requires Integral<T>
+{
+    return a + b;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -151,6 +162,8 @@ public slots:
 
     void contextMenuRequested(QPoint);
     void view_commercial(int);
+
+    void test_ranges();
 
 
 

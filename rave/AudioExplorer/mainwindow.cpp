@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <algorithm>
 
 #include <QDebug>
 #include <QStandardItemModel>
@@ -931,15 +932,17 @@ void MainWindow::import_audio()
 
     auto audio_form = std::make_unique<AudioForm>(audio.get(), m_setup);
 
+    // open the audio property window
     if (audio_form->exec() > 0)
     {
-
-        QFileInfo afi(audio_file);
-        QString file_format = afi.suffix().toLower();
 
         auto shared_audio = std::make_shared<AUDIO::Audio>(audio_file.toStdString());
         convert_audio(shared_audio);
 
+        QFileInfo afi(audio_file);
+        QString file_format = afi.suffix().toLower();
+
+        // TODO: Check if we are allowed to use MP3 before converting it to OGG
 
         if (file_format == "mp3"){
             m_audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(shared_audio);
@@ -957,8 +960,9 @@ void MainWindow::import_audio()
             auto mp3_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(m_audio_converter.get());
             audio_file = mp3_file->dest_mp3_filename();
             audio->audio_file().set_audio_filename(audio_file.toStdString());
-
         }
+
+        audio->set_file_extension(file_format.toUpper().toStdString());
 
         //convert_audio(audio);
        /*
@@ -991,6 +995,7 @@ void MainWindow::import_audio()
 
             if (audio_id == -1){
                 rollback_import_process(import_result);
+                audio->setDBAction(DBAction::dbaNONE);
                 return;
             }
 
@@ -998,6 +1003,7 @@ void MainWindow::import_audio()
             import_result.temp_files.push_back(new_filename);
             if (!status) {
                 rollback_import_process(import_result);
+                audio->setDBAction(DBAction::dbaNONE);
                 return;
             }
 
@@ -1005,6 +1011,7 @@ void MainWindow::import_audio()
             import_result.temp_files.push_back(wave_file);
             if (!wave_file_is_created){
                 rollback_import_process(import_result);
+                audio->setDBAction(DBAction::dbaNONE);
                 return;
             }
 
@@ -1012,6 +1019,7 @@ void MainWindow::import_audio()
             import_result.temp_files.push_back(adf_file);
             if (!adf_file_is_created){
                 rollback_import_process(import_result);
+                audio->setDBAction(DBAction::dbaNONE);
                 return;
             }
 
@@ -1181,8 +1189,11 @@ void MainWindow::play_audio()
     if (audio == nullptr)
         return;
 
+    std::string audio_format = audio->file_extension()->value();
+    std::transform(audio_format.begin(), audio_format.end(), audio_format.begin(), [](unsigned char c){return std::tolower(c);});
+
     AUDIO::AudioTool at;
-    auto ogg_file = at.make_audio_filename(audio->id())+".ogg";
+    auto ogg_file = at.make_audio_filename(audio->id())+"."+audio_format;
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
 
     if (!QFile::exists(QString::fromStdString(full_audio_name))){
@@ -1232,8 +1243,11 @@ void MainWindow::cue_edit()
     if (audio == nullptr)
         return;
 
+    std::string extension = audio->file_extension()->value();
+    std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c){return std::tolower(c);});
+
     AUDIO::AudioTool at;
-    auto ogg_file = at.make_audio_filename(audio->id())+".ogg";
+    auto ogg_file = at.make_audio_filename(audio->id())+"."+extension;
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
     AudioFile aud_file(full_audio_name);
 

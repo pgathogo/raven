@@ -2,8 +2,9 @@
 
 #include <tuple>
 #include <vector>
+#include <string>
 
-class NodeData;
+struct NodeData;
 
 using LineTokens = std::tuple<std::string, std::string, std::string>;
 

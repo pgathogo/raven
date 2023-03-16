@@ -8,6 +8,7 @@
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
 //#include "../framework/applicationcontext.h"
+#include <format>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -54,6 +55,9 @@ MainWindow::MainWindow(QApplication* app,
     setCentralWidget(mdiArea);
 
     createActions();
+
+    std::string str = std::format("My Name is {0}", "NEO");
+    qDebug() << QString::fromStdString(str);
 
 //    m_report = new LimeReport::ReportEngine(this);
 

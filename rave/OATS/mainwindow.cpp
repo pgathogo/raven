@@ -41,6 +41,8 @@
 #include "../audio/audiocachequeuethread.h"
 #include "../audio/cacheupdaterthread.h"
 #include "../audio/audiocache.h"
+#include "../audio/editor/audioplayer.h"
+#include "../audio/audiofile.h"
 
 //#include "timeanalyzerwidget.h"
 #include "datetimewidget.h"
@@ -112,6 +114,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::keep_current, this, &MainWindow::keep_current);
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
+    connect(m_jingle_grid.get(), &OATS::JingleGrid::stop_all_jingles, this, &MainWindow::stop_all_jingles);
 
     connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
     connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1); m_control_page = ControlPage::Commercial; });
@@ -142,7 +145,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     start_timers();
 
+    m_audio_player = std::make_unique<AUDIO::AudioPlayer>();
+    connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
+    connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &MainWindow::play_next);
+
+    m_jingle_player = std::make_unique<AUDIO::AudioPlayer>();
+    connect(m_jingle_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::jingle_end_of_play);
+
+    m_current_jingle_item = std::make_unique<OATS::ScheduleItem>();
+    //test_concept();
+
     //QMainWindow::showFullScreen();
+}
+
+void MainWindow::test_concept()
+{
+    std::vector ints{1, 2, 3,4,4,3,6,7};
+    std::cout << Average(ints);
+
 }
 
 
@@ -300,7 +320,8 @@ void MainWindow::fetch_db_data(QDate date, int hr)
     sql << " SELECT a.id, a.schedule_date, a.schedule_hour, a.schedule_time, "
         << " a.auto_transition, a.play_date, a.play_time, "
         << " a.schedule_item_type, a.comment, a.booked_spots, "
-        << " a.audio_id, b.title, b.filepath, b.duration, c.fullname "
+        << " a.audio_id, b.title, b.filepath, b.duration, b.file_extension,"
+        << " b.audio_type, c.fullname "
         << " FROM rave_schedule a  "
         << " left outer join rave_audio b on a.audio_id = b.id "
         << " left outer join rave_artist c on b.artist_id = c.id ";
@@ -411,7 +432,7 @@ void MainWindow::cache_commercial_break_data(QDate date, int hr)
 
     sql << " select a.id, a.schedule_id, a.spot_id,  a.booking_status, "
            " a.book_date, a.book_hour, a.book_time,"
-           " d.title, d.duration "
+           " d.title, d.duration, d.file_extension "
            " From rave_orderbooking a "
            " left outer join rave_spot b on b.id = a.spot_id "
            " left outer join rave_spotaudio c on c.spot_id = b.id "
@@ -469,7 +490,8 @@ void MainWindow::cache_commercial_break_data(QDate date, int hr)
 
 void MainWindow::set_header_item(OATS::ScheduleItem* header, int hr, QDate dt)
 {
-    header->set_schedule_type(OATS::ScheduleType::HOUR_HEADER);
+    //header->set_schedule_type(OATS::ScheduleType::HOUR_HEADER);
+    header->set_schedule_type("HOUR_HEADER");
     OATS::Audio audio;
     audio.set_title("HOUR: "+std::to_string(hr)+" Header "+dt.toString("dd/MM/yyyy").toStdString());
     audio.set_duration(0);
@@ -507,7 +529,7 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
         schedule->set_play_channel(play_channel());
 
         if (field_name == "schedule_item_type"){
-            schedule->set_schedule_type(schedule->str_to_schedule_type(field_value) );
+            schedule->set_schedule_type(field_value);
         }
 
         if (field_name == "schedule_hour")
@@ -515,7 +537,6 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
 
         if (field_name == "schedule_time")
             schedule->set_schedule_time(QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"));
-
 
         if (field_name == "schedule_date"){
             schedule->set_schedule_date(QDate::fromString(QString::fromStdString(field_value), "yyyy-MM-dd"));
@@ -554,6 +575,12 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
 
         if (field_name == "fullname")
             audio.set_artist(field_value);
+
+        if (field_name == "file_extension")
+            audio.set_file_extension(field_value);
+
+        if (field_name == "audio_type")
+            audio.set_audio_type(field_value);
     }
 
     schedule->set_audio(audio);
@@ -572,7 +599,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item->set_schedule_ref(s_sched_ref++);
     sched_item->set_item_status(OATS::ItemStatus::WAITING);
     sched_item->set_play_channel(play_channel());
-    sched_item->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item->set_schedule_type("SONG");
     sched_item->set_hour(hr);
     sched_item->set_schedule_time((QTime::fromString("08:08:09", "HH:mm:ss")));
     sched_item->set_audio(audio);
@@ -589,7 +616,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item1->set_schedule_ref(s_sched_ref++);
     sched_item1->set_item_status(OATS::ItemStatus::WAITING);
     sched_item1->set_play_channel("B");
-    sched_item1->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item1->set_schedule_type("SONG");
     sched_item1->set_hour(hr);
     sched_item1->set_schedule_time(QTime::fromString("08:12:02", "HH:mm:ss"));
     sched_item1->set_audio(audio1);
@@ -606,7 +633,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item2->set_schedule_ref(s_sched_ref++);
     sched_item2->set_item_status(OATS::ItemStatus::WAITING);
     sched_item2->set_play_channel("A");
-    sched_item2->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item2->set_schedule_type("SONG");
     sched_item2->set_hour(hr);
     sched_item2->set_schedule_time(QTime::fromString("08:15:02", "HH:mm:ss"));
     sched_item2->set_audio(audio2);
@@ -623,7 +650,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item3->set_schedule_ref(s_sched_ref++);
     sched_item3->set_item_status(OATS::ItemStatus::WAITING);
     sched_item3->set_play_channel("B");
-    sched_item3->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item3->set_schedule_type("SONG");
     sched_item3->set_hour(hr);
     sched_item3->set_schedule_time(QTime::fromString("08:17:05", "HH:mm:ss"));
     sched_item3->set_audio(audio3);
@@ -639,12 +666,12 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item4->set_schedule_ref(s_sched_ref++);
     sched_item4->set_item_status(OATS::ItemStatus::WAITING);
     sched_item4->set_play_channel("A");
-    sched_item4->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item4->set_schedule_type("SONG");
     sched_item4->set_hour(hr);
     sched_item4->set_schedule_time(QTime::fromString("08:21:11", "HH:mm:ss"));
     sched_item4->set_audio(audio4);
     sched_item4->set_index(m_schedule_items.size());
-    sched_item4->set_schedule_type(OATS::ScheduleType::COMM);
+    sched_item4->set_schedule_type("COMM");
     m_schedule_items.push_back(std::move(sched_item4));
 
     OATS::Audio audio5;
@@ -656,7 +683,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item5->set_schedule_ref(s_sched_ref++);
     sched_item5->set_item_status(OATS::ItemStatus::WAITING);
     sched_item5->set_play_channel("B");
-    sched_item5->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item5->set_schedule_type("SONG");
     sched_item5->set_hour(hr);
     sched_item5->set_schedule_time(QTime::fromString("08:25:32", "HH:mm:ss"));
     sched_item5->set_audio(audio5);
@@ -672,7 +699,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item6->set_schedule_ref(s_sched_ref++);
     sched_item6->set_item_status(OATS::ItemStatus::WAITING);
     sched_item6->set_play_channel("A");
-    sched_item6->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item6->set_schedule_type("SONG");
     sched_item6->set_hour(hr);
     sched_item6->set_schedule_time(QTime::fromString("08:27:37", "HH:mm:ss"));
     sched_item6->set_audio(audio6);
@@ -688,7 +715,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item7->set_schedule_ref(s_sched_ref++);
     sched_item7->set_item_status(OATS::ItemStatus::WAITING);
     sched_item7->set_play_channel("B");
-    sched_item7->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item7->set_schedule_type("SONG");
     sched_item7->set_hour(hr);
     sched_item7->set_schedule_time(QTime::fromString("08:31:30", "HH:mm:ss"));
     sched_item7->set_audio(audio7);
@@ -704,7 +731,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item8->set_schedule_ref(s_sched_ref++);
     sched_item8->set_item_status(OATS::ItemStatus::WAITING);
     sched_item8->set_play_channel("A");
-    sched_item8->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item8->set_schedule_type("SONG");
     sched_item8->set_hour(hr);
     sched_item8->set_schedule_time(QTime::fromString("08:35:40", "HH:mm:ss"));
     sched_item8->set_audio(audio8);
@@ -720,7 +747,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item9->set_schedule_ref(s_sched_ref++);
     sched_item9->set_item_status(OATS::ItemStatus::WAITING);
     sched_item9->set_play_channel("B");
-    sched_item9->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item9->set_schedule_type("SONG");
     sched_item9->set_hour(hr);
     sched_item9->set_schedule_time(QTime::fromString("08:38:22", "HH:mm:ss"));
     sched_item9->set_audio(audio9);
@@ -736,7 +763,7 @@ void MainWindow::fetch_temp_data(int hr)
     sched_item10->set_schedule_ref(s_sched_ref++);
     sched_item10->set_item_status(OATS::ItemStatus::WAITING);
     sched_item10->set_play_channel("A");
-    sched_item10->set_schedule_type(OATS::ScheduleType::SONG);
+    sched_item10->set_schedule_type("SONG");
     sched_item10->set_hour(hr);
     sched_item10->set_schedule_time(QTime::fromString("08:42:55", "HH:mm:ss"));
     sched_item10->set_audio(audio10);
@@ -874,6 +901,7 @@ void MainWindow::make_track_info_widget()
 void MainWindow::make_jingle_grid_widget()
 {
     m_jingle_grid = std::make_unique<OATS::JingleGrid>();
+
     ui->vlJingle->addWidget(m_jingle_grid.get());
 }
 
@@ -1039,9 +1067,43 @@ void MainWindow::keep_current(bool checked)
         go_current();
 }
 
-void MainWindow::play_jingle(const QString jingle)
+void MainWindow::play_jingle(OATS::Jingle* jingle)
 {
-    qDebug() << "Playing jingle: " << jingle;
+
+    std::string audio_filename = jingle->audio()->audio_lib_path()->value()+
+        m_audio_tool.make_audio_filename(jingle->audio()->id())+"."+jingle->audio()->file_extension()->value();
+
+    m_current_jingle_item->set_schedule_date(QDate::currentDate());
+    m_current_jingle_item->set_hour(QTime::currentTime().hour());
+    m_current_jingle_item->set_schedule_type("JINGLE");
+    m_current_jingle_item->set_transition_type(OATS::TransitionType::STOP);
+    m_current_jingle_item->set_id(-1);
+    m_current_jingle_item->set_schedule_ref(999);
+    m_current_jingle_item->set_comment("JINGLE-PLAY");
+    m_current_jingle_item->set_schedule_time(QTime::currentTime());
+
+    OATS::Audio audio;
+    audio.set_id(jingle->audio()->id());
+    audio.set_title(jingle->audio()->title()->value());
+    audio.set_duration(jingle->audio()->duration()->value());
+    audio.set_file_path(jingle->audio()->file_path()->value());
+    audio.set_artist(jingle->audio()->artist()->displayName());
+    audio.set_file_path(jingle->audio()->audio_lib_path()->value());
+    audio.set_file_extension(jingle->audio()->file_extension()->value_tolower());
+
+    m_current_jingle_item->set_audio(audio);
+    m_current_jingle_item->set_play_channel("C");
+
+    cue_schedule_item(m_current_jingle_item.get(), m_outputC.get());
+
+    play_outputC(m_outputC.get());
+//    m_jingle_player->play_audio(JinglePlayoutChannel, QString::fromStdString(audio_filename));
+
+}
+
+void MainWindow::stop_all_jingles()
+{
+    m_jingle_player->stop_play();
 }
 
 void MainWindow::set_current_play_item()
@@ -1114,6 +1176,24 @@ void MainWindow::slow_flash()
         }
     }
 
+    // Output C
+
+    if (m_outputC->panel_status() == OATS::PanelStatus::CUED) {
+        auto tick_count_diff_OPC = m_outputC->start_trigger_tick_stamp() - current_time;
+        if (tick_count_diff_OPC < TEN_SECONDS.count() &&
+                tick_count_diff_OPC > FIVE_SECONDS.count()) {
+            m_outputC->slow_flash_play_button();
+        }
+        else if (m_outputC->panel_status() == OATS::PanelStatus::PLAYING) {
+            if ((m_outputC->time_remaining() < TEN_SECONDS.count()) &&
+               (m_outputC->time_remaining() > FIVE_SECONDS.count()) ) {
+               m_outputC->slow_flash_stop_button();
+            }
+
+        }
+
+    }
+
 }
 
 void MainWindow::fast_flash()
@@ -1150,6 +1230,25 @@ void MainWindow::fast_flash()
                 m_outputB->fast_flash_stop_button();
             }
         }
+    }
+
+    // Output C
+    if (m_outputC->panel_status() == OATS::PanelStatus::CUED){
+        auto tick_count_diff_OPC = m_outputC->start_trigger_tick_stamp() - current_time;
+        if ((tick_count_diff_OPC < FIVE_SECONDS.count()) &&
+            (tick_count_diff_OPC > 0) ){
+            m_outputC->fast_flash_play_button(OATS::ButtonFlashColor::GREEN);
+        }
+        else {
+            if (m_outputC->panel_status() == OATS::PanelStatus::PLAYING){
+                if ((m_outputC->time_remaining() < FIVE_SECONDS.count()) &&
+                    (m_outputC->time_remaining() > 0)){
+                    m_outputC->fast_flash_stop_button();
+                }
+            }
+        }
+
+
     }
 }
 
@@ -1305,6 +1404,79 @@ void MainWindow::count_down()
 
     }
 
+    switch (m_outputC->panel_status())
+    {
+    case OATS::PanelStatus::WAITING:
+        break;
+    case OATS::PanelStatus::CUED:
+        break;
+    case OATS::PanelStatus::PLAYING: {
+        long long elapsed = trigger_ticker - m_outputC->start_tick_stamp();
+        long long remaining = m_outputC->schedule_item()->audio().duration() - elapsed;
+
+        if (elapsed < m_outputC->schedule_item()->audio().intro() ) {
+            // intro is still in progress
+            auto duration_seconds = (int)(m_outputC->schedule_item()->audio().intro() - elapsed)/100;
+            int ds_u1 = (int)duration_seconds / 10;
+            int ds_u2 = duration_seconds % 10;
+            QString cue_string = QString("%1:%2").arg(ds_u1, 2, 10, QChar('0'))
+                                                                   .arg(ds_u2, 2, 10, QChar('0'));
+            m_outputC->set_cue_time_string(cue_string);
+            m_outputC->set_progress_bar_background(OATS::ProgressBarBGColor::RED);
+
+            m_outputC->update_progress_bar( 100 - round(( ((float)(m_outputC->schedule_item()->audio().intro() - elapsed ) /
+                                     m_outputC->schedule_item()->audio().intro()) * 100 )
+                    ) );
+        } else if ( remaining < m_outputC->schedule_item()->audio().fade_out()) {
+            int duration_seconds = (int)remaining / 1000;
+            int ds_u1 = (int)duration_seconds / 60;
+            int ds_u2 = duration_seconds % 60;
+            QString cue_string = QString("%1:%2").arg(ds_u1, 2, 10, QChar('0'))
+                                                                 .arg(ds_u2, 2, 10, QChar('0'));
+            m_outputC->set_cue_time_string(cue_string);
+            m_outputC->set_progress_bar_background(OATS::ProgressBarBGColor::GREEN);
+
+            if (m_outputC->schedule_item()->audio().fade_out() > 0) {
+                m_outputC->update_progress_bar(
+                            100 - round( ((float)m_outputC->time_remaining() /
+                                          m_outputC->schedule_item()->audio().fade_out()
+                                          ) * 100 )
+                            );
+            }
+        } else {
+            int duration_seconds = (int)remaining / 1000;
+            int ds_u1 = (int)duration_seconds / 60;
+            int ds_u2 = duration_seconds % 60;
+            QString cue_string = QString("%1:%2").arg(ds_u1, 2, 10, QChar('0'))
+                                                 .arg(ds_u2, 2, 10, QChar('0'));
+            m_outputC->set_cue_time_string(cue_string);
+
+            m_outputC->set_progress_bar_background(OATS::ProgressBarBGColor::BLUE);
+
+            /*
+            // Chunck Color!!!!!
+            if (m_outputA->schedule_item()->audio().fade_out() > 0) {
+                m_outputA->set_progress_bar_background();
+            } else {
+                m_outputA->set_progress_bar_background();
+            }
+            */
+
+            m_outputC->update_progress_bar(100 - round(  ((float)m_outputC->time_remaining() /
+                                 (m_outputC->schedule_item()->audio().duration() -
+                                  m_outputC->schedule_item()->audio().intro()) ) * 100 )
+                    );
+        }
+    }
+    break;
+
+    case OATS::PanelStatus::STOP:
+        calculate_trigger_times();
+        break;
+
+
+        }
+
 }
 
 void MainWindow::status_timer()
@@ -1323,7 +1495,7 @@ void MainWindow::status_timer()
         break;
      case OATS::PanelStatus::CUED:
         if ( (m_outputA->start_trigger_tick_stamp() > -1) &&
-             (m_outputA->start_trigger_tick_stamp() <= (trigger_ticker+0)))
+             (m_outputA->start_trigger_tick_stamp() <= (trigger_ticker)))
         {
             if (m_outputB->panel_status() == OATS::PanelStatus::PLAYING)
                 stop_audio(m_outputB);
@@ -1343,13 +1515,13 @@ void MainWindow::status_timer()
             m_outputA->set_time_remaining(remaining);
 
             if ( (remaining <= 0) || (m_outputA->start_tick_stamp() < 0) ){
-                // protect C output
                 stop_audio(m_outputA);
             }
 
           }
-
     }
+
+    // Output B
 
     switch(m_outputB->panel_status())
     {
@@ -1370,7 +1542,7 @@ void MainWindow::status_timer()
         }
         break;
 
-    case OATS::PanelStatus::PLAYING:
+     case OATS::PanelStatus::PLAYING:
          if (m_outputB->start_tick_stamp() > 0) {
 
             elapsed = trigger_ticker - m_outputB->start_tick_stamp();
@@ -1383,6 +1555,32 @@ void MainWindow::status_timer()
          }
     }
 
+
+    // Output C
+
+    switch(m_outputC->panel_status())
+    {
+       case OATS::PanelStatus::STOP:
+        m_outputC->set_start_trigger_tick_stamp(-1);
+        break;
+       case OATS::PanelStatus::WAITING:
+        m_outputC->set_start_trigger_tick_stamp(-1);
+        break;
+       case OATS::PanelStatus::CUED:
+        break;
+       case OATS::PanelStatus::PLAYING:
+        if (m_outputC->start_tick_stamp() > 0) {
+            elapsed = trigger_ticker - m_outputC->start_tick_stamp();
+            remaining = m_outputC->schedule_item()->audio().duration()- elapsed;
+            m_outputC->set_time_remaining(remaining);
+
+            if ((remaining <= 0 ) || (m_outputC->start_tick_stamp() < 0)){
+                stop_audio(m_outputC.get());
+            }
+
+        }
+
+    }
 
 }
 
@@ -1436,7 +1634,7 @@ OATS::ScheduleItem* MainWindow::find_next_schedule_item(OATS::ScheduleItem* curr
     return next_schedule_item;
 }
 
-void MainWindow::cue_next_schedule(OATS::ScheduleItem* next_schedule_item, OATS::OutputPanel* next_output_panel)
+void MainWindow::cue_schedule_item(OATS::ScheduleItem* next_schedule_item, OATS::OutputPanel* next_output_panel)
 {
     set_scheduled_item_filepath(next_schedule_item);
 
@@ -1476,6 +1674,9 @@ void MainWindow::cue_next_schedule(OATS::ScheduleItem* next_schedule_item, OATS:
     }
 
     calculate_trigger_times();
+
+    queue_for_caching(next_schedule_item->audio());
+
 }
 
 void MainWindow::set_scheduled_item_filepath(OATS::ScheduleItem* schedule_item)
@@ -1609,9 +1810,16 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         op->schedule_item()->notify();
 
         auto audio = op->schedule_item()->audio();
+
+        std::string file_ext = audio.file_extension();
+        to_lower(file_ext);
         std::string audio_filename = audio.file_path()+
-                m_audio_tool.make_audio_filename(audio.id())+".ogg";
-        qDebug() << "FULL FILENAME >>" << stoq(audio_filename);
+                m_audio_tool.make_audio_filename(audio.id())+"."+file_ext;
+
+        QString audio_file = QString::fromStdString(audio_filename);
+
+        qDebug() << "Playing Audio: "<< audio_file;
+        m_audio_player->play_audio(op->panel_name(), audio_file);
 
         int grid_index = index_of(op->schedule_item()->schedule_ref());
 
@@ -1627,7 +1835,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         if (m_current_playing_item.item != next_schedule_item){
 
             if (next_schedule_item != nullptr){
-                cue_next_schedule(next_schedule_item, next_output_panel);
+                cue_schedule_item(next_schedule_item, next_output_panel);
             }
 
         }
@@ -1654,12 +1862,32 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
 //        m_current_playing_item.item->set_item_status(OATS::ItemStatus::PLAYED);
     }
 
+    m_audio_player->stop_play();
+
     display_schedule(ui->gridScroll->value()+1);
 
     op->reset_play_button();
     op->reset_stop_button();
 
     op->update_progress_bar(100);
+}
+
+
+void MainWindow::play_outputC(OATS::OutputPanel* op)
+{
+    op->set_panel_status(OATS::PanelStatus::CUED);
+    op->schedule_item()->set_item_status(OATS::ItemStatus::CUED);
+    op->schedule_item()->set_play_start_time(QTime::currentTime());
+    op->set_start_tick_stamp(m_audio_tool.get_tick_count());
+
+//    op->schedule_item()->notify();
+
+    play_audio(op);
+
+//    m_jingle_player->play_audio(JinglePlayoutChannel,
+//                                QString::fromStdString(audio_file));
+
+
 }
 
 void MainWindow::item_move_up(int schedule_ref, int grid_pos)
@@ -1849,11 +2077,12 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     new_item->set_hour(item_at_cursor->hour());
     new_item->set_schedule_date(item_at_cursor->schedule_date());
-    new_item->set_schedule_type(new_item->str_to_schedule_type(audio->audio_type()->value()));
+    //new_item->set_schedule_type(new_item->str_to_schedule_type(audio->audio_type()->value()));
+    new_item->set_schedule_type(audio->audio_type()->value());
     new_item->set_transition_type(OATS::TransitionType::MIX);
     new_item->set_id(-1);
     new_item->set_schedule_ref(s_sched_ref++);
-    new_item->set_schedule_date(item_at_cursor->schedule_date());
+    //new_item->set_schedule_date(item_at_cursor->schedule_date());
     new_item->set_comment("MANUAL-INSERT");
 
     QTime new_time;
@@ -1873,10 +2102,14 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     new_audio.set_artist(audio->artist()->displayName());
     new_audio.set_file_path(audio->audio_lib_path()->value());
 
+    std::string file_ext = audio->file_extension()->value_tolower();
+    new_audio.set_file_extension(file_ext);
+
     new_item->set_audio(new_audio);
 
     // check if audio exist
-    std::string filename = audio->audio_lib_path()->value()+m_audio_tool.make_audio_filename(audio->id())+".ogg";
+    std::string filename = audio->audio_lib_path()->value()+m_audio_tool.make_audio_filename(audio->id())+"."+file_ext;
+
     if (!m_audio_tool.audio_exist(QString::fromStdString(filename))){
         new_item->set_item_status(OATS::ItemStatus::ERROR_01);
         new_item->set_transition_type(OATS::TransitionType::SKIP);
@@ -1908,8 +2141,10 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
         m_schedule_items.insert(it,  std::move(new_item));
     };
 
-   if (new_item->transition_type() != OATS::TransitionType::SKIP)
-       queue_for_caching(audio);
+   if (new_item->transition_type() != OATS::TransitionType::SKIP){
+       OATS::Audio schedule_audio = make_schedule_audio(audio);
+       queue_for_caching(schedule_audio);
+   }
 
     if (item_at_cursor->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
         push_items_down(grid_pos+1);
@@ -1926,11 +2161,25 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
    //print_schedule_items();  // debugging purposes only
 }
 
+OATS::Audio MainWindow::make_schedule_audio(AUDIO::Audio* audio)
+{
+    OATS::Audio schedule_audio;
 
-void MainWindow::queue_for_caching(AUDIO::Audio* audio)
+    schedule_audio.set_id(audio->id());
+    schedule_audio.set_title(audio->title()->value());
+    schedule_audio.set_file_path(audio->audio_lib_path()->value());
+    schedule_audio.set_artist(audio->artist_fullname());
+    schedule_audio.set_file_extension(audio->file_extension()->value());
+    schedule_audio.set_audio_type(audio->audio_type()->value());
+
+    return schedule_audio;
+}
+
+void MainWindow::queue_for_caching(OATS::Audio audio)
 {
    auto audio_cache = std::make_unique<AUDIO::AudioCache>();
 
+   /*
    audio_cache->set_audio_id(audio->id());
    audio_cache->set_title(audio->title()->value());
    audio_cache->set_artist_name(audio->artist_fullname());
@@ -1938,6 +2187,17 @@ void MainWindow::queue_for_caching(AUDIO::Audio* audio)
    audio_cache->set_cache_filepath(AUDIO_CACHE_LOCATION.toStdString());
    audio_cache->set_audio_type(audio->audio_type()->value());
    audio_cache->set_cache_datetime(QDateTime::currentDateTime());
+   audio_cache->set_file_extension(audio->file_extension()->value());
+   */
+
+   audio_cache->set_audio_id(audio.id());
+   audio_cache->set_title(audio.title());
+   audio_cache->set_artist_name(audio.artist());
+   audio_cache->set_orig_filepath(audio.file_path());
+   audio_cache->set_cache_filepath(AUDIO_CACHE_LOCATION.toStdString());
+   audio_cache->set_audio_type(audio.audio_type());
+   audio_cache->set_cache_datetime(QDateTime::currentDateTime());
+   audio_cache->set_file_extension(audio.file_extension());
 
    //std::cout << audio_cache;
 
@@ -2158,6 +2418,30 @@ void MainWindow::fetch_commercial_from_db(int schedule_id)
    } while (!provider->cache()->isLast());
 
 
+}
+
+void MainWindow::end_of_play()
+{
+    qDebug() << "Audio play finished.";
+    m_audio_player->stop_play();
+}
+
+void MainWindow::play_next()
+{
+    qDebug() << "Playing next audio...";
+}
+
+void MainWindow::jingle_end_of_play()
+{
+    m_jingle_player->stop_play();
+    qDebug() << "Stopped jingle player";
+}
+
+void MainWindow::to_lower(std::string& str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){
+      return std::tolower(c) ;
+    });
 }
 
 void MainWindow::print(QString msg)

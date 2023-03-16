@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_mdi_area{new QMdiArea }
     , m_file_menu{}
     , m_setup_act{}
+    , m_coroutine {}
 {
     ui->setupUi(this);
 
@@ -69,8 +70,13 @@ void MainWindow::setup_menu()
     m_cluster_act = m_file_menu->addAction("&Cluster Setup");
     m_cluster_act->setStatusTip("Cluster setup window");
 
+    m_file_menu->addSeparator();
+
+    m_coroutine = m_file_menu->addAction("Run Coroutine");
+
     connect(m_setup_act, &QAction::triggered, this, &MainWindow::user_browser);
     connect(m_cluster_act, &QAction::triggered, this, &MainWindow::cluster_manager);
+    connect(m_coroutine, &QAction::triggered, this, &MainWindow::run_coroutine);
 }
 
 void MainWindow::user_browser()
@@ -90,3 +96,10 @@ void MainWindow::cluster_manager()
     ClusterManagerDlg* cluster_manager = create_sub_window<ClusterManagerDlg>();
     cluster_manager->exec();
 }
+
+
+
+void MainWindow::run_coroutine()
+{
+}
+

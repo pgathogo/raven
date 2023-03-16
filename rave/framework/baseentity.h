@@ -84,7 +84,7 @@ public:
     virtual std::string order_by() const;
 
 
-    virtual std::string className();
+    //virtual std::string className();
 
     virtual void print_members(const QStringList& members=QStringList()) const;
 

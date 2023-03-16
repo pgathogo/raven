@@ -3,8 +3,8 @@
 #include <QStandardItem>
 #include <QDebug>
 
-#include "treeviewmodel.h"
 #include "tree.h"
+#include "treeviewmodel.h"
 
 #include "../utils/tools.h"
 

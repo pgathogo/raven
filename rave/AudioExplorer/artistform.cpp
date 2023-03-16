@@ -22,7 +22,7 @@ ArtistForm::ArtistForm(AUDIO::Artist* artist,
     connect(ui->edtFirstName, &QLineEdit::textChanged, this, &ArtistForm::update_fullname_first);
     connect(ui->edtSurname, &QLineEdit::textChanged, this, &ArtistForm::update_fullname_last);
 
-    connect(ui->cbArtistType, QOverload<int>::of(QComboBox::currentIndexChanged),
+    connect(ui->cbArtistType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &ArtistForm::artist_type_changed);
 
 }

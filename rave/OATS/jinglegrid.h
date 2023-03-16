@@ -53,6 +53,9 @@ namespace OATS
       int track_duration();
       void set_track_duration(int);
       void set_jingle_status(Jingle::JingleStatus);
+
+      void set_audio(AUDIO::Audio*);
+      AUDIO::Audio* audio();
     private:
         QString m_jingle_id{""};
         int m_grid_page_id{-1};
@@ -64,6 +67,8 @@ namespace OATS
         QString m_track_path;
         int m_track_duration;
         Jingle::JingleStatus m_jingle_status;
+
+        AUDIO::Audio* m_audio;
     };
 
     /* GridButton */
@@ -79,8 +84,18 @@ namespace OATS
         Jingle* jingle();
         void start_countdown_timer();
         void stop_countdown_timer();
+
+        void switch_on();
+        void switch_off();
+
+        void set_pixmap(const QPixmap&);
+        virtual QSize sizeHint() const override;
+    protected:
+        virtual void paintEvent(QPaintEvent*) override;
+
     private slots:
         void count_down();
+
     private:
         int m_id{-1};
         Jingle* m_jingle;
@@ -88,6 +103,8 @@ namespace OATS
         long long m_start_tick_count;
         AUDIO::AudioTool m_audio_tool;
         float m_color_value{0.0f};
+
+        QPixmap m_pixmap;
     };
 
     /* JingleGrid */
@@ -118,6 +135,7 @@ namespace OATS
         void attach_jingle_to_buttons(int page_id);
         void clear_buttons();
         void play_jingle_at(int, int);
+        void stop_all();
         void open_menu_at(int, int,  const QPoint&);
         void make_context_menu();
         void open_load_dialog(int, int);
@@ -130,8 +148,11 @@ namespace OATS
         void open_from_file(const QString);
         void clear_page(int);
 
+        void print(const QString&);
     signals:
-        void play_jingle(const QString);
+        //void play_jingle(const QString);
+        void play_jingle(Jingle*);
+        void stop_all_jingles();
 
     private slots:
         void get_jingles();

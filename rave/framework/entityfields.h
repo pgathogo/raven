@@ -155,6 +155,9 @@ class StringField : public Field{
 
         std::string displayName() const override;
         std::string field_type() override;
+
+        std::string value_tolower();
+        QString to_qstring();
     private:
         std::string mValue;
 };

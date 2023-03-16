@@ -200,6 +200,7 @@ public:
         return sf;
     }
 
+
     template<typename T, typename... Types>
     void related_query(const T& firstArg,  const Types&... args)
     {
@@ -232,6 +233,7 @@ public:
         m_relation_mapper->set_main_table(getEntity().tableName());
 
         for(auto f : fields){
+
             std::string full_field_name = getEntity().tableName()+"."+f;
             m_relation_mapper->append_query_fields(full_field_name);
         }

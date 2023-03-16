@@ -102,7 +102,7 @@ namespace AUDIO
 
             auto audio_name =  QString::fromStdString(at.make_audio_filename((*it)->audio_id()->value()));
 
-            auto ogg_name = audio_name+".ogg";
+            auto ogg_name = audio_name+"."+QString::fromStdString((*it)->file_extension()->value());
             auto adf_name = audio_name+".adf";
             auto png_name = audio_name+".png";
 
@@ -116,13 +116,13 @@ namespace AUDIO
             auto cache_audio_adf = m_cache_audio_store+adf_name;
             auto cache_audio_wave = m_cache_audio_store+png_name;
 
-            // Handle copy failure
+            // TODO: Handle copy failure
 
             bool is_copied = false;
 
             if (!QFile::exists(cache_audio_filename)){
                     is_copied = QFile::copy(orig_audio_filename, cache_audio_filename);
-                    // log this event
+                    // TODO: log this event
             }
 
             if (!QFile::exists(cache_audio_adf))

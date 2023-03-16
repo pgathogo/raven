@@ -1,0 +1,24 @@
+{
+    "jingles": [
+        {
+            "col": 0,
+            "duration": 7000,
+            "jingle_id": "100",
+            "page_id": 1,
+            "row": 0,
+            "title": "Stereo Test",
+            "track_id": -1,
+            "track_path": "D:/music/studio1/"
+        },
+        {
+            "col": 1,
+            "duration": 30000,
+            "jingle_id": "101",
+            "page_id": 1,
+            "row": 0,
+            "title": "Coffee Coffee",
+            "track_id": -1,
+            "track_path": "D:/music/studio1/"
+        }
+    ]
+}

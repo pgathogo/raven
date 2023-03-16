@@ -63,6 +63,7 @@ namespace AUDIO
         m_track_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
         m_track_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
         m_track_model->setHorizontalHeaderItem(5, new QStandardItem("Folder"));
+        m_track_model->setHorizontalHeaderItem(6, new QStandardItem("Extension"));
 
         set_track_view_column_width();
     }
@@ -74,7 +75,7 @@ namespace AUDIO
 
     void AudioTrackViewer::set_track_view_column_width()
     {
-        enum Column{Title, Artist, Duration, AudioType, AudioFile, Folder};
+        enum Column{Title, Artist, Duration, AudioType, AudioFile, Folder, FileExtension};
 
         m_track_view->setColumnWidth(Column::Title, 300);
         m_track_view->setColumnWidth(Column::Artist,250);
@@ -82,6 +83,7 @@ namespace AUDIO
         m_track_view->setColumnWidth(Column::AudioType, 150);
         m_track_view->setColumnWidth(Column::AudioFile, 250);
         m_track_view->setColumnWidth(Column::Folder, 250);
+        m_track_view->setColumnWidth(Column::FileExtension, 250);
     }
 
     void AudioTrackViewer::tv_clicked(const QModelIndex& index)

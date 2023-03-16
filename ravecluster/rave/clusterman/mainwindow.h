@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <concepts>
+#include <coroutine>
 
 #include <QMainWindow>
 #include <QMdiArea>
@@ -11,8 +13,17 @@ QT_END_NAMESPACE
 
 class QMenu;
 class QAction;
-
 class EntityDataModel;
+
+
+template<typename T>
+concept Integral = std::is_integral_v<T>;
+
+template<typename T> requires Integral<T>
+int sum(T a, T b)
+{
+    return a + b;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -35,10 +46,13 @@ public:
         return sub_win;
     }
 
+
+
 private slots:
     void user_browser();
     void cluster_browser();
     void cluster_manager();
+    void run_coroutine();
 
 private:
     Ui::MainWindow *ui;
@@ -49,4 +63,5 @@ private:
     QMenu* m_file_menu;
     QAction* m_setup_act;
     QAction* m_cluster_act;
+    QAction* m_coroutine;
 };
