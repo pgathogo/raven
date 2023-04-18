@@ -381,9 +381,9 @@ void Schedule::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> Schedule::cloneAsUnique()
+std::shared_ptr<BaseEntity> Schedule::cloneAsShared()
 {
-    return std::make_unique<Schedule>();
+    return std::make_shared<Schedule>();
 }
 
 void Schedule::afterMapping(BaseEntity& entity)

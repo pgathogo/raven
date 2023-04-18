@@ -122,15 +122,15 @@ BaseEntity *SpotTypeExclusion::mtomEntity()
     return this;
 }
 
-std::unique_ptr<BaseEntity> SpotTypeExclusion::cloneAsUnique()
+std::shared_ptr<BaseEntity> SpotTypeExclusion::cloneAsShared()
 {
-    return std::make_unique<SpotTypeExclusion>(mParentEntity, mDetailEntity);
+    return std::make_shared<SpotTypeExclusion>(mParentEntity, mDetailEntity);
 }
 
 void SpotTypeExclusion::afterMapping(BaseEntity &entity)
 {
     SpotTypeExclusion& svo = dynamic_cast<SpotTypeExclusion&>(entity);
-    auto vo = svo.detailEntity()->cloneAsUnique();
+    auto vo = svo.detailEntity()->cloneAsShared();
     svo.setDetailEntity( vo.get() );
     getEntityById(std::move(vo), svo.detailId()->value());
 }

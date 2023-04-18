@@ -88,9 +88,9 @@ namespace TRAFFIK {
         mTableName = table_name;
     }
 
-    std::unique_ptr<BaseEntity> Brand::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Brand::cloneAsShared()
     {
-        return std::make_unique<Brand>();
+        return std::make_shared<Brand>();
     }
 
     void Brand::afterMapping(BaseEntity &entity)

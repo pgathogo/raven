@@ -23,7 +23,7 @@
 namespace fs = std::filesystem;
 
 SpotBrowser::SpotBrowser(Client* client, QWidget* parent)
-    :BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Spot>(client))
+    :BaseEntityBrowserDlg(parent, std::make_shared<TRAFFIK::Spot>(client))
     ,ui{new Ui::SpotBrowser}
     ,m_client{client}
 {
@@ -44,7 +44,7 @@ SpotBrowser::~SpotBrowser()
 
 void SpotBrowser::addRecord()
 {
-    auto spot = std::make_unique<TRAFFIK::Spot>();
+    auto spot = std::make_shared<TRAFFIK::Spot>();
     auto spot_form = std::make_unique<SpotForm>(m_client, spot.get(), this);
 
     if (spot_form->exec() > 0){
@@ -72,9 +72,9 @@ void SpotBrowser::updateRecord()
 
     if (!search_name.empty()){
 
-        BaseEntity* be = entityDataModel().findEntityByName(search_name);
+        std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
 
-        TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be);
+        TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be.get());
         spot->client()->setValue(m_client->id());
 
         std::unique_ptr<SpotForm> spot_form =
@@ -91,11 +91,8 @@ void SpotBrowser::updateRecord()
 
                 save_type_exclusions(*spot_form);
 
-                printstr("EE");
-
                 save_spot_audio(*spot_form);
 
-                printstr("FF");
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -119,11 +116,11 @@ void SpotBrowser::set_client(Client *client)
     m_client = client;
 }
 
-bool SpotBrowser::okay_to_delete(BaseEntity* entity)
+bool SpotBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
 //   BaseEntity* entity = findSelectedEntity();
-   TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(entity);
-   EntityDataModel edm = EntityDataModel(std::make_unique<OrderBooking>());
+   TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(entity.get());
+   EntityDataModel edm = EntityDataModel(std::make_shared<OrderBooking>());
    edm.searchByInt({"spot_id", "=", spot->id()});
 
    if (edm.count() > 0){
@@ -181,15 +178,11 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
     for(auto& sa : spot_audios){
         TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());
 
-//        s_audio->print_members();
-
         if (s_audio->dbAction() == DBAction::dbaCREATE){
 
             AUDIO::AudioTool at;
 
             auto& audio = s_audio->get_paudio();
-
-//            audio.print_members();
 
             int id = edm->createEntityDB(audio);
             s_audio->setDetailId(id);
@@ -199,12 +192,6 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             const std::string OGG_EXT = ".ogg";
             const std::string ADF_EXT = ".adf";
             const std::string WAVE_EXT = ".png";
-
-            qDebug() << "New ID: "<< id;
-
-            printstr("111");
-
-            printstr("Audio Lib Path: "+ audio.audio_lib_path()->value());
 
             // Format audio name from Id
             std::string ogg_file = at.make_audio_filename(id);
@@ -217,17 +204,12 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             fs::path old_f{old_filename};
             fs::path new_f{new_filename};
 
-            printstr("OLD Name: "+old_filename);
-            printstr("NEW Name: "+new_filename);
-
             try{
                 fs::copy(old_f, new_f);
             } catch (fs::filesystem_error& fe) {
                 qDebug() << "Unable to copy audio file: "+stoq(fe.what());
                 return;
             }
-
-            printstr("222");
 
             // Write ADF file
             AUDIO::ADFRepository adf_repo;
@@ -236,23 +218,15 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             audio_file.set_ogg_filename(ogg_file);
             adf_repo.write(audio_file);
 
-            printstr("333");
-
             // Copy Wave File to AudioLib directory
             if (fs::exists(audio.audio_file().wave_file()) ){
-
-                printstr("444");
 
                 fs::path old_wave_file{audio.audio_file().wave_file()};
                 auto wave_file = old_wave_file.filename();
                 fs::path new_wave_file{lib_path+ogg_file+WAVE_EXT};
 
-                printstr("555");
-
                 fs::copy(old_wave_file, new_wave_file);
                 fs::remove(old_wave_file);
-
-                printstr("666");
 
             }
         }

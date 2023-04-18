@@ -154,9 +154,9 @@ namespace AUDIO{
 
     }
 
-    std::unique_ptr<BaseEntity> Artist::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Artist::cloneAsShared()
     {
-        return std::make_unique<Artist>();
+        return std::make_shared<Artist>();
     }
 
     void Artist::afterMapping(BaseEntity &entity)

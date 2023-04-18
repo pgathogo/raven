@@ -125,9 +125,9 @@ void ClientGroup::populateEntity()
     //mDescription->setValueFromWidget();
 }
 
-std::unique_ptr<BaseEntity> ClientGroup::cloneAsUnique()
+std::shared_ptr<BaseEntity> ClientGroup::cloneAsShared()
 {
-    return std::make_unique<ClientGroup>();
+    return std::make_shared<ClientGroup>();
 }
 
 void ClientGroup::afterMapping(BaseEntity &entity)

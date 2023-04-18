@@ -104,9 +104,9 @@ void SalesPerson::setGender(int index)
 }
 
 
-std::unique_ptr<BaseEntity> SalesPerson::cloneAsUnique()
+std::shared_ptr<BaseEntity> SalesPerson::cloneAsShared()
 {
-    return std::make_unique<SalesPerson>();
+    return std::make_shared<SalesPerson>();
 }
 
 void SalesPerson::afterMapping(BaseEntity &entity)

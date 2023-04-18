@@ -93,17 +93,17 @@ namespace AUDIO
         m_audio_data_model->fetch_filtered_audio(folder_filter);
     }
 
-    void TrackBrowser::selected_audio(AUDIO::Audio* audio)
+    void TrackBrowser::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
         m_current_selected_audio = audio;
     }
 
-    AUDIO::Audio* TrackBrowser::current_selected_audio()
+    std::shared_ptr<AUDIO::Audio> TrackBrowser::current_selected_audio()
     {
         return m_current_selected_audio;
     }
 
-    AUDIO::Audio* TrackBrowser::find_audio_by_id(int audio_id)
+    std::shared_ptr<AUDIO::Audio> TrackBrowser::find_audio_by_id(int audio_id)
     {
         m_audio_data_model->find_audio_by_id(audio_id);
 
@@ -306,11 +306,11 @@ namespace AUDIO
 
    void AudioDataModel::track_selected(int track_id)
    {
-        AUDIO::Audio* audio = m_lib_item->find_audio_by_id(track_id);
+        std::shared_ptr<AUDIO::Audio> audio = m_lib_item->find_audio_by_id(track_id);
         emit selected_audio(audio);
    }
 
-   AUDIO::Audio* AudioDataModel::find_audio_by_id(int audio_id)
+   std::shared_ptr<AUDIO::Audio> AudioDataModel::find_audio_by_id(int audio_id)
    {
        return m_lib_item->find_audio_by_id(audio_id);
    }
@@ -385,15 +385,16 @@ namespace AUDIO
     for(auto&[name, entity] : m_audio_edm->modelEntities())
     {
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
+        std::shared_ptr<AUDIO::Audio> s_audio(audio);
 
         if (audio->audio_type()->displayName() == "Song")
-            m_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
+            m_lib_item->create_row_item<AUDIO::SongAudioLibItem>(s_audio);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
+            m_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(s_audio);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
+            m_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(s_audio);
 
     }
 

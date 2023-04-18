@@ -127,7 +127,7 @@ void ContentForm::deregisterContent()
 
         auto modIdx = ui->lvRegContent->currentIndex();
         std::string sel_item = modIdx.data(Qt::DisplayRole).toString().toStdString();
-        BaseEntity* entity = edmContent.findEntityByName(sel_item);
+        std::shared_ptr<BaseEntity> entity = edmContent.findEntityByName(sel_item);
         entity->setDBAction(DBAction::dbaDELETE);
         edmContent.removeRow(ui->lvRegContent->currentIndex().row());
         ui->lvAppContent->addItem(QString::fromStdString(sel_item));

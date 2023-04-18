@@ -527,9 +527,9 @@ void Order::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> Order::cloneAsUnique()
+std::shared_ptr<BaseEntity> Order::cloneAsShared()
 {
-    return std::make_unique<Order>();
+    return std::make_shared<Order>();
 }
 
 void Order::afterMapping(BaseEntity &entity)

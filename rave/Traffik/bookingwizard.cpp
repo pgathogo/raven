@@ -91,7 +91,7 @@ void BookingWizard::populate_spots_table(int client_id)
 {
 
     m_spot_EDM = std::make_unique<EntityDataModel>(
-                std::make_unique<TRAFFIK::Spot>());
+                std::make_shared<TRAFFIK::Spot>());
 
    auto spot = std::make_unique<TRAFFIK::Spot>();
 
@@ -436,13 +436,13 @@ void BookingWizard::spot_details(int spot_id)
 {
     auto spot_edm = std::make_unique<EntityDataModel>(std::make_unique<TRAFFIK::Spot>());
     spot_edm->getById({"id", "=", spot_id});
-    TRAFFIK::Spot& spot_ref = dynamic_cast<TRAFFIK::Spot&>(spot_edm->getEntity());
-    TRAFFIK::Spot* spot = &spot_ref;
+    TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(spot_edm->getEntity().get());
+//    TRAFFIK::Spot* spot = &spot_ref;
 
     auto client_edm = std::make_unique<EntityDataModel>(std::make_unique<Client>());
     client_edm->getById({"id", "=", spot->client()->value()});
-    Client& client_ref = dynamic_cast<Client&>(client_edm->getEntity());
-    Client* client = &client_ref;
+    Client* client = dynamic_cast<Client*>(client_edm->getEntity().get());
+//    Client* client = &client_ref;
 
     spot->voice_over().setParentId(spot_id);
     spot->type_exclusion().setParentId(spot_id);
@@ -592,7 +592,7 @@ void BookingWizard::auto_select_breaks_by_dow()
 bool BookingWizard::spot_has_audio(const TRAFFIK::Spot* spot)
 {
     auto edm = EntityDataModel(
-               std::make_unique<TRAFFIK::SpotAudio>());
+               std::make_shared<TRAFFIK::SpotAudio>());
 
     auto saudio = std::make_unique<TRAFFIK::SpotAudio>();
 
@@ -738,7 +738,6 @@ bool BookingWizard::validateCurrentPage()
         case 0:
            {
             TRAFFIK::Spot* sel_spot = selected_spot();
-            qDebug() << sel_spot->id();
             bool has_audio = spot_has_audio(sel_spot);
             if (!has_audio){
                 showMessage("Selected spot has no audio!");
@@ -794,9 +793,9 @@ TRAFFIK::Spot* BookingWizard::selected_spot()
     std::string spot_name = q_col_name.toString().toStdString();
 
     if (!spot_name.empty()){
-        BaseEntity* be = m_spot_EDM->findEntityByName(spot_name);
+        std::shared_ptr<BaseEntity> be = m_spot_EDM->findEntityByName(spot_name);
         if (be != nullptr){
-            spot = dynamic_cast<TRAFFIK::Spot*>(be);
+            spot = dynamic_cast<TRAFFIK::Spot*>(be.get());
         }
     }
 

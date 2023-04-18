@@ -27,7 +27,7 @@ TrackInfo::~TrackInfo()
     delete ui;
 }
 
-void TrackInfo::show_audio_info(const AUDIO::Audio* audio, History& history)
+void TrackInfo::show_audio_info(const std::shared_ptr<AUDIO::Audio> audio, History& history)
 {
 
     ui->lblTitle->setText(stoq(audio->title()->value()));

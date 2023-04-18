@@ -6,7 +6,7 @@
 
 AgentBrowser::AgentBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<Agent>()),
+                         std::make_shared<Agent>()),
     ui(new Ui::AgentBrowser)
 {
     ui->setupUi(this);
@@ -20,7 +20,7 @@ AgentBrowser::~AgentBrowser()
 
 void AgentBrowser::addRecord()
 {
-    std::unique_ptr<Agent> agent = std::make_unique<Agent>();
+    std::shared_ptr<Agent> agent = std::make_shared<Agent>();
     std::unique_ptr<AgentForm> aForm =
             std::make_unique<AgentForm>(agent.get());
     if (aForm->exec() > 0)

@@ -7,6 +7,7 @@
 #include "artist.h"
 #include "../framework/choicefield.h"
 #include "../framework/entitydatamodel.h"
+#include "../audio/audiotool.h"
 
 namespace fs = std::filesystem;
 
@@ -74,9 +75,9 @@ namespace AUDIO {
 
     }
 
-    std::unique_ptr<BaseEntity> Genre::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Genre::cloneAsShared()
     {
-        return std::make_unique<Genre>();
+        return std::make_shared<Genre>();
     }
 
     void Genre::afterMapping(BaseEntity &entity)
@@ -105,6 +106,7 @@ namespace AUDIO {
          ,m_intro_marker{}
          ,m_extro_marker{}
          ,m_fade_out_marker{}
+         ,m_fade_delay_marker{}
          ,m_end_marker{}
          ,m_file_path{}
          ,m_folder{}
@@ -133,9 +135,11 @@ namespace AUDIO {
         m_duration = createField<DecimalField>("duration","Duration");
         m_start_marker = createField<DecimalField>("start_marker", "Start Marker");
         m_fade_in_marker = createField<DecimalField>("fade_in_marker", "Fade in Marker");
+        m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
         m_intro_marker= createField<DecimalField>("intro_marker", "Intro Marker");
         m_extro_marker = createField<DecimalField>("extro_marker", "Extro Marker");
         m_fade_out_marker = createField<DecimalField>("fade_out_marker", "Fade Out Marker");
+        m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
         m_end_marker = createField<DecimalField>("end_marker", "End Marker");
 
         m_file_path = createField<StringField>("filepath", "File Path");
@@ -178,27 +182,28 @@ namespace AUDIO {
 
 
     Audio::Audio(const std::string audio_file)
-        :m_title{},
-         m_short_desc{},
-         m_artist{},
-         m_add_dtime{},
-         m_audio_lib_path{},
-         m_is_deleted{},
-         m_play_count{},
-         m_duration{},
-         m_start_marker{},
-         m_fade_in_marker{},
-         m_intro_marker{},
-         m_extro_marker{},
-         m_fade_out_marker{},
-         m_end_marker{},
-         m_file_path{},
-         m_folder{},
-         m_genre{},
-         m_mood{},
-         m_creation_date{},
-         m_audio_type{},
-         m_audio_filename{}
+        :m_title{}
+         ,m_short_desc{}
+         ,m_artist{}
+         ,m_add_dtime{}
+         ,m_audio_lib_path{}
+         ,m_is_deleted{}
+         ,m_play_count{}
+         ,m_duration{}
+         ,m_start_marker{}
+         ,m_fade_in_marker{}
+         ,m_fade_delay_marker{}
+         ,m_intro_marker{}
+         ,m_extro_marker{}
+         ,m_fade_out_marker{}
+         ,m_end_marker{}
+         ,m_file_path{}
+         ,m_folder{}
+         ,m_genre{}
+         ,m_mood{}
+         ,m_creation_date{}
+         ,m_audio_type{}
+         ,m_audio_filename{}
     {
 
         m_title = createField<StringField>("title", "Title");
@@ -222,6 +227,7 @@ namespace AUDIO {
         m_intro_marker= createField<DecimalField>("intro_marker", "Intro Marker");
         m_extro_marker = createField<DecimalField>("extro_marker", "Extro Marker");
         m_fade_out_marker = createField<DecimalField>("fade_out_marker", "Fade Out Marker");
+        m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
         m_end_marker = createField<DecimalField>("end_marker", "End Marker");
 
         m_file_path = createField<StringField>("filepath", "File Path");
@@ -285,6 +291,7 @@ namespace AUDIO {
         m_intro_marker->setValue(other.intro_marker()->value());
         m_extro_marker->setValue(other.extro_marker()->value());
         m_fade_out_marker->setValue(other.fade_out_marker()->value());
+        m_fade_delay_marker->setValue(other.fade_delay_marker()->value());
         m_end_marker->setValue(other.end_marker()->value());
 
         m_file_path->setValue(other.file_path()->value());
@@ -371,6 +378,11 @@ namespace AUDIO {
     DecimalField *Audio::fade_out_marker() const
     {
         return m_fade_out_marker;
+    }
+
+    DecimalField* Audio::fade_delay_marker() const
+    {
+        return m_fade_delay_marker;
     }
 
     DecimalField *Audio::end_marker() const
@@ -495,6 +507,11 @@ namespace AUDIO {
     void Audio::set_fade_out_marker(double fade_out)
     {
         m_fade_out_marker->setValue(fade_out);
+    }
+
+    void Audio::set_fade_delay_marker(double fade_delay)
+    {
+        m_fade_delay_marker->setValue(fade_delay);
     }
 
     void Audio::set_end_marker(double end_marker)
@@ -645,9 +662,9 @@ namespace AUDIO {
 
     }
 
-    std::unique_ptr<BaseEntity> Audio::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Audio::cloneAsShared()
     {
-        return std::make_unique<AUDIO::Audio>("");
+        return std::make_shared<AUDIO::Audio>("");
     }
 
     void Audio::afterMapping(BaseEntity &entity)
@@ -666,6 +683,25 @@ namespace AUDIO {
         QString file_ext = afi.suffix().toLower();
         return file_ext.toStdString();
     }
+
+    QString Audio::full_audio_filename() const
+    {
+        AUDIO::AudioTool audio_tool;
+        QString name = QString::fromStdString(this->audio_lib_path()->value()+
+                audio_tool.make_audio_filename(this->id())+"."+this->file_extension()->value_tolower());
+        return name;
+    }
+
+   bool operator ==(const AUDIO::Audio& lhs, const AUDIO::Audio& rhs)
+   {
+       return (lhs.id() == rhs.id());
+   }
+
+   std::ostream& operator<<(std::ostream& os, const Audio& audio)
+   {
+       //os << audio.audio_id()->value() << " : "<< audio.title()->value();
+       return os << " FIXME:: Operator << not implemented!! ";
+   }
 
     /* ------ Folder ------ */
 
@@ -743,9 +779,9 @@ namespace AUDIO {
 
     }
 
-    std::unique_ptr<BaseEntity> Folder::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Folder::cloneAsShared()
     {
-        return std::make_unique<Folder>();
+        return std::make_shared<Folder>();
     }
 
     void Folder::afterMapping(BaseEntity &entity)
@@ -898,9 +934,9 @@ namespace AUDIO {
 
     }
 
-    std::unique_ptr<BaseEntity> Mood::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Mood::cloneAsShared()
     {
-        return std::make_unique<Mood>();
+        return std::make_shared<Mood>();
     }
 
     void Mood::afterMapping(BaseEntity &entity)

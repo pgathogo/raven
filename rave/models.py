@@ -359,6 +359,7 @@ class Audio(Daypart):
     intro_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     extro_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     fade_out_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
+    fade_delay_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     end_marker = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     genre = models.ForeignKey(Genre, models.DO_NOTHING, blank=True, null=True)
     mood = models.ForeignKey(Mood, models.DO_NOTHING, blank=True, null=True)

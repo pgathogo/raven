@@ -95,7 +95,7 @@ public:
     void make_group_nodes();
     QMap<QString, QVariant> make_node_data(ConfigItemType);
 
-    void make_cluster_node(std::unique_ptr<ClusterManager::Cluster>);
+    void make_cluster_node(std::shared_ptr<ClusterManager::Cluster>);
     void clear_configuration();
 
     template<typename T1, typename T2, typename T3>
@@ -148,6 +148,8 @@ public:
             const auto&[key, value] {*it};
 
             auto node = dynamic_cast<T*>(std::get<T*>(value));
+
+            qDebug() << "GET CLUSTER UID: "<< uid << "NODE ID: "<< node->uuid();
 
             if (node->uuid() == uid)
                 return node;

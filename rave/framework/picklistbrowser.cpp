@@ -7,7 +7,7 @@
 #include "selectclosewidget.h"
 #include "manytomany.h"
 
-PickListSetting::PickListSetting(std::unique_ptr<BaseEntity> entity,
+PickListSetting::PickListSetting(std::shared_ptr<BaseEntity> entity,
                                  int search_col_index,
                                  PickListMode plm)
     :listEntity{std::move(entity)}
@@ -66,9 +66,9 @@ void PickListBrowser::onSelectItem()
     if (search_name.empty())
         return;
 
-    BaseEntity* entity = entityDataModel().findEntityByName(search_name);
+    std::shared_ptr<BaseEntity> entity = entityDataModel().findEntityByName(search_name);
     entity->setDBAction(DBAction::dbaCREATE); // ?????
-    m_picklist_setting.selectedEntities.push_back(entity);
+    m_picklist_setting.selectedEntities.push_back(entity.get());
 
     if (m_picklist_setting.pickMode == PickListMode::plmSINGLE_SELECT)
         done(1);

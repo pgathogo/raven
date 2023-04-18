@@ -160,9 +160,9 @@ void BookingSegment::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> BookingSegment::cloneAsUnique()
+std::shared_ptr<BaseEntity> BookingSegment::cloneAsShared()
 {
-    return std::make_unique<BookingSegment>();
+    return std::make_shared<BookingSegment>();
 }
 
 void BookingSegment::afterMapping(BaseEntity &entity)

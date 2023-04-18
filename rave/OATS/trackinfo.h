@@ -24,7 +24,7 @@ public:
     explicit TrackInfo(QWidget *parent = nullptr);
     ~TrackInfo();
 
-    void show_audio_info(const AUDIO::Audio*, History&);
+    void show_audio_info(const std::shared_ptr<AUDIO::Audio>, History&);
     QTime msec_to_time(int h, int ms);
 
 private:

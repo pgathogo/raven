@@ -65,7 +65,7 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
     m_edm_setup = std::make_unique<EntityDataModel>(
                 std::make_unique<RavenSetup>());
     m_edm_setup->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity());
+    m_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
 }
 
 SpotForm::~SpotForm()

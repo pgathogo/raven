@@ -153,7 +153,7 @@ void VoiceExclusion::setDetailEntity(BaseEntity* other)
 void VoiceExclusion::afterMapping(BaseEntity& entity)
 {
     VoiceExclusion& ve = dynamic_cast<VoiceExclusion&>(entity);
-    auto te = ve.detailEntity()->cloneAsUnique();
+    auto te = ve.detailEntity()->cloneAsShared();
     ve.setDetailEntity(te.get());
     getEntityById(std::move(te), ve.detailId()->value());
 }
@@ -231,8 +231,8 @@ BaseEntity* VoiceExclusion::mtomEntity()
     return this;
 }
 
-std::unique_ptr<BaseEntity> VoiceExclusion::cloneAsUnique()
+std::shared_ptr<BaseEntity> VoiceExclusion::cloneAsShared()
 {
-    return std::make_unique<VoiceExclusion>(mParentEntity, mDetailEntity);
+    return std::make_shared<VoiceExclusion>(mParentEntity, mDetailEntity);
 }
 

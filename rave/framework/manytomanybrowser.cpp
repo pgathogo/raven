@@ -13,7 +13,7 @@ ManyToManyBrowser::ManyToManyBrowser(
         QWidget *parent
         ):
     BaseEntityBrowserDlg(parent,
-                        mtom->cloneAsUnique()),
+                        mtom->cloneAsShared()),
     ui(new Ui::ManyToManyBrowser),
     plb{},
     mMtoM{mtom}
@@ -45,7 +45,7 @@ ManyToManyBrowser::~ManyToManyBrowser()
 
 void ManyToManyBrowser::addRecord()
 {
-    PickListSetting plset(mMtoM->detailEntity()->cloneAsUnique(), 0);
+    PickListSetting plset(mMtoM->detailEntity()->cloneAsShared(), 0);
     plb = new PickListBrowser(plset);
     plb->exec();
 
@@ -70,7 +70,7 @@ void ManyToManyBrowser::updateRecord()
 void ManyToManyBrowser::deleteRecord()
 {
    std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = entityDataModel().findEntityByName(searchName);
+   std::shared_ptr<BaseEntity> entity = entityDataModel().findEntityByName(searchName);
    entity->setDBAction(DBAction::dbaDELETE);
    bui->tvEntity->hideRow(selectedRowId());
 }

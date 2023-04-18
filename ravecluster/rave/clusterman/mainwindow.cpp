@@ -102,4 +102,3 @@ void MainWindow::cluster_manager()
 void MainWindow::run_coroutine()
 {
 }
-

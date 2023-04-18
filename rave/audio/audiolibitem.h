@@ -20,7 +20,7 @@ namespace AUDIO{
     class AudioLibItem{
     public:
         AudioLibItem();
-        AudioLibItem(AUDIO::Audio*);
+        AudioLibItem(std::shared_ptr<AUDIO::Audio>);
         AudioLibItem(QStandardItemModel*);
         ~AudioLibItem();
 
@@ -34,9 +34,9 @@ namespace AUDIO{
         virtual QString folder();
         virtual QString file_extension();
 
-        AUDIO::Audio* audio() const;
+        std::shared_ptr<AUDIO::Audio> audio() const;
 
-        AUDIO::Audio* find_audio_by_id(int);
+        std::shared_ptr<AUDIO::Audio> find_audio_by_id(int);
 
         std::unique_ptr<AUDIO::AudioLibItem> const& one_item() const;
 
@@ -44,7 +44,7 @@ namespace AUDIO{
 
 
         template<typename T>
-        void create_row_item(AUDIO::Audio* audio)
+        void create_row_item(std::shared_ptr<AUDIO::Audio> audio)
         {
             static_assert(std::is_base_of<AUDIO::AudioLibItem, T>::value, "`T` must be derived from AudioLibItem");
 
@@ -81,7 +81,7 @@ namespace AUDIO{
             m_lib_items.push_back(std::move(item));
         }
     private:
-        AUDIO::Audio* m_audio;
+        std::shared_ptr<AUDIO::Audio> m_audio;
         QStandardItemModel* m_model;
         std::vector<std::unique_ptr<AUDIO::AudioLibItem>> m_lib_items;
     };
@@ -89,7 +89,7 @@ namespace AUDIO{
     class SongAudioLibItem : public AudioLibItem, public QStandardItem
     {
      public:
-        SongAudioLibItem(AUDIO::Audio*);
+        SongAudioLibItem(std::shared_ptr<AUDIO::Audio>);
         SongAudioLibItem(QString);
         ~SongAudioLibItem();
     };
@@ -97,7 +97,7 @@ namespace AUDIO{
     class JingleAudioLibItem : public AudioLibItem, public QStandardItem
     {
     public:
-        JingleAudioLibItem(AUDIO::Audio*);
+        JingleAudioLibItem(std::shared_ptr<AUDIO::Audio>);
         JingleAudioLibItem(QString);
         ~JingleAudioLibItem();
 
@@ -106,7 +106,7 @@ namespace AUDIO{
     class CommercialAudioLibItem: public AudioLibItem, public QStandardItem
     {
     public:
-        CommercialAudioLibItem(AUDIO::Audio*);
+        CommercialAudioLibItem(std::shared_ptr<AUDIO::Audio>);
         CommercialAudioLibItem(QString);
         ~CommercialAudioLibItem();
     };

@@ -329,7 +329,7 @@ namespace FRAMEWORK{
     void RelationMapper::data_to_object(int record_id, const std::string table_name,
                         BaseEntity* entity, const std::vector<std::tuple<std::string, std::string>>& fields)
     {
-        auto entity_object = entity->cloneAsUnique();
+        auto entity_object = entity->cloneAsShared();
 
         for (auto const& field_value : fields){
 

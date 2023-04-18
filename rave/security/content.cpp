@@ -103,9 +103,9 @@ void Content::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> Content::cloneAsUnique()
+std::shared_ptr<BaseEntity> Content::cloneAsShared()
 {
-    return std::make_unique<Content>();
+    return std::make_shared<Content>();
 }
 
 void Content::afterMapping(BaseEntity& /*entity*/)

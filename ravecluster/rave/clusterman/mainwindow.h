@@ -6,6 +6,7 @@
 
 #include <QMainWindow>
 #include <QMdiArea>
+#include <QShowEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -45,8 +46,6 @@ public:
         m_mdi_area->addSubWindow(sub_win);
         return sub_win;
     }
-
-
 
 private slots:
     void user_browser();

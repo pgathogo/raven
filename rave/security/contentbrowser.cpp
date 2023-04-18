@@ -59,9 +59,9 @@ void ContentBrowser::updateRecord()
 void ContentBrowser::deleteRecord()
 {
     // Check if content is been used for authorization
-    BaseEntity* entity = findSelectedEntity();
+    std::shared_ptr<BaseEntity> entity = findSelectedEntity();
 
-    if (roles_attached(entity)){
+    if (roles_attached(entity.get())){
         showMessage("Roles attached to this content!");
         return;
     }

@@ -98,9 +98,9 @@ namespace ClusterManager
         return store_name()->valueToString();
     }
 
-    std::unique_ptr<BaseEntity> AudioStore::cloneAsUnique()
+    std::shared_ptr<BaseEntity> AudioStore::cloneAsShared()
     {
-        return std::make_unique<Server>();
+        return std::make_shared<Server>();
     }
 
     void AudioStore::populateEntity()

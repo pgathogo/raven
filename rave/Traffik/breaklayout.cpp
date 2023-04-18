@@ -238,9 +238,9 @@ void BreakLayout::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> BreakLayout::cloneAsUnique()
+std::shared_ptr<BaseEntity> BreakLayout::cloneAsShared()
 {
-    return std::make_unique<BreakLayout>();
+    return std::make_shared<BreakLayout>();
 }
 
 void BreakLayout::afterMapping(BaseEntity &entity)

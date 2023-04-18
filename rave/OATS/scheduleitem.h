@@ -5,6 +5,7 @@
 #include <QTime>
 
 #include "subjectobserver.h"
+#include "../../../audio/audio.h"
 
 namespace OATS{
 
@@ -12,6 +13,7 @@ namespace OATS{
     enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, ERROR_01};
     enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
 
+    /*
     class Audio{
     public:
         Audio();
@@ -55,6 +57,7 @@ namespace OATS{
 
 
     };
+    */
 
 
     class ScheduleItem : public Subject
@@ -83,7 +86,7 @@ namespace OATS{
         QTime schedule_time();
         QTime play_start_time();
         int current_time();
-        Audio& audio();
+        std::shared_ptr<AUDIO::Audio> audio();
 
         void set_id(int);
         void set_schedule_ref(int);
@@ -102,7 +105,7 @@ namespace OATS{
         void set_schedule_time(QTime);
         void set_play_start_time(QTime);
         void set_current_time(int);
-        void set_audio(Audio);
+        void set_audio(std::shared_ptr<AUDIO::Audio>);
 
         std::string item_status_text();
         std::string transition_type_text();
@@ -132,7 +135,8 @@ namespace OATS{
         QTime m_schedule_time;    // Time from the scheduler - Sedric
         QTime m_play_start_time;  // Actual time the item was played
         int m_current_time;  // Computed time in millisecs
-        Audio m_audio;
+        //Audio m_audio;
+        std::shared_ptr<AUDIO::Audio> m_audio;
     };
 
 }

@@ -119,7 +119,8 @@ void BaseEntity::populateEntity()
 
 }
 
-void BaseEntity::getEntityById(std::unique_ptr<BaseEntity> entity, int id)
+// Very strange function!!
+void BaseEntity::getEntityById(std::shared_ptr<BaseEntity> entity, int id)
 {
     // To be refactored
     std::string id_column = entity->uniqueId()->dbColumnName();
@@ -228,7 +229,7 @@ bool BaseEntity::isNew()
     return (id() == -1) ? true : false;
 }
 
-BaseEntity const& BaseEntity::get_entity() const
+std::shared_ptr<BaseEntity> const& BaseEntity::get_entity() const
 {
     return mEDM->getEntity();
 }

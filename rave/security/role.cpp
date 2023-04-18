@@ -4,7 +4,6 @@
 #include "user.h"
 #include "rolemember.h"
 
-
 Role::Role()
 {
 
@@ -28,12 +27,17 @@ Role::Role()
 
     getId().setFormOnly(true);
 
-    mUser =  std::make_unique<User>();
-    mRoleMember = std::make_unique<RoleMember> (this, mUser.get());
+    qDebug() << "AAA";
+
+//    mUser =  std::make_unique<SECURITY::RoleUser>();
+  //  mRoleMember = std::make_unique<RoleMember> (this, mUser.get());
+
+    qDebug() << "BBB";
 }
 
 Role& Role::operator=(const Role& other)
 {
+   this->setId(other.id());
    mOId->setValue(other.mOId->value());
    mOId->setMandatory(true);
    mRoleName->setValue(other.mRoleName->value());
@@ -43,10 +47,16 @@ Role& Role::operator=(const Role& other)
    mComment->setValue(other.mComment->value());
    mRoleCanLogin->setValue(other.mRoleCanLogin->value());
    mHeader = other.mHeader;
-   setTableName("pg_roles");
+
+//   mUser = std::make_unique<SECURITY::RoleUser>();
+//   if (mUser != other.mUser)
+//       *mUser = *other.mUser;
+
+//   mRoleMember = std::make_unique<RoleMember>(this, mUser.get());
+ //  mRoleMember->setParentId(other.mOId->value());
+
    getId().setFormOnly(true);
-   mUser = std::make_unique<User>();
-   mRoleMember = std::make_unique<RoleMember>(this, mUser.get());
+   setTableName("pg_roles");
 
    return *this;
 
@@ -54,7 +64,6 @@ Role& Role::operator=(const Role& other)
 
 Role::~Role()
 {
-
 }
 
 int Role::id() const
@@ -240,14 +249,15 @@ void Role::populateEntity()
 
 }
 
-std::unique_ptr<BaseEntity> Role::cloneAsUnique()
+std::shared_ptr<BaseEntity> Role::cloneAsShared()
 {
-    return std::make_unique<Role>();
+    return std::make_shared<Role>();
 }
 
 void Role::afterMapping(BaseEntity& entity)
 {
-    mRoleMember->setParentId(entity.id());
+    Role& role = dynamic_cast<Role&>(entity);
+    mRoleMember->setParentId(role.oid()->value());
 }
 
 std::string Role::displayName()
@@ -275,10 +285,10 @@ std::string Role::order_by() const
     return "rolname";
 }
 
-User &Role::user()
-{
-    return *mUser;
-}
+//SECURITY::RoleUser &Role::user()
+//{
+//    return *mUser;
+//}
 
 RoleMember& Role::roleMember()
 {

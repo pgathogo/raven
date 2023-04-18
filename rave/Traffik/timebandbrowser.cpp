@@ -9,7 +9,7 @@
 
 TimeBandBrowser::TimeBandBrowser(QWidget* parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<TimeBand>()),
+                         std::make_shared<TimeBand>()),
     ui(new Ui::TimeBandBrowser)
 {
     ui->setupUi(this);
@@ -23,7 +23,7 @@ TimeBandBrowser::~TimeBandBrowser()
 
 void TimeBandBrowser::addRecord()
 {
-    std::unique_ptr<TimeBand> tband = std::make_unique<TimeBand>();
+    auto tband = std::make_shared<TimeBand>();
 
     std::unique_ptr<TimeBandForm> tbandForm =
             std::make_unique<TimeBandForm>(tband.get());

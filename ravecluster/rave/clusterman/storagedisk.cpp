@@ -83,7 +83,7 @@ namespace ClusterManager
         return disk_name()->valueToString();
     }
 
-    std::unique_ptr<BaseEntity> StorageDisk::cloneAsUnique()
+    std::shared_ptr<BaseEntity> StorageDisk::cloneAsShared()
     {
     }
 

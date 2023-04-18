@@ -160,9 +160,9 @@ void ContentAuth::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> ContentAuth::cloneAsUnique()
+std::shared_ptr<BaseEntity> ContentAuth::cloneAsShared()
 {
-    return std::make_unique<ContentAuth>();
+    return std::make_shared<ContentAuth>();
 }
 
 void ContentAuth::afterMapping(BaseEntity& entity)

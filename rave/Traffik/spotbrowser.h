@@ -25,7 +25,7 @@ public:
     void updateRecord() override;
     void searchRecord() override;
 
-    bool okay_to_delete(BaseEntity*) override;
+    bool okay_to_delete(std::shared_ptr<BaseEntity>) override;
 
     void save_voice_overs(const SpotForm&);
     void save_type_exclusions(const SpotForm&);

@@ -36,8 +36,8 @@ void OrderBrowser::updateRecord()
 {
     std::string search_name = selectedRowName().toStdString();
     if (!search_name.empty()){
-        BaseEntity* be = entityDataModel().findEntityByName(search_name);
-        Order* order = dynamic_cast<Order*>(be);
+        std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
+        Order* order = dynamic_cast<Order*>(be.get());
         auto order_form = std::make_unique<OrderForm>(mClient, order, this);
         if (order_form->exec() > 0){
             try{
@@ -56,10 +56,10 @@ void OrderBrowser::searchRecord()
 }
 
 
-bool OrderBrowser::okay_to_delete(BaseEntity* entity)
+bool OrderBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
-   Order* order = dynamic_cast<Order*>(entity);
-   EntityDataModel edm = EntityDataModel(std::make_unique<BookingSegment>());
+   Order* order = dynamic_cast<Order*>(entity.get());
+   EntityDataModel edm = EntityDataModel(std::make_shared<BookingSegment>());
    edm.searchByInt({"order_id", "=", order->id()});
 
    if (edm.count() > 0){

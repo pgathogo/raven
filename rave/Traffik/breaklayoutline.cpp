@@ -135,9 +135,9 @@ std::string BreakLayoutLine::searchColumn() const
     return breakTime()->valueToString();
 }
 
-std::unique_ptr<BaseEntity> BreakLayoutLine::cloneAsUnique()
+std::shared_ptr<BaseEntity> BreakLayoutLine::cloneAsShared()
 {
-    return std::make_unique<BreakLayoutLine>();
+    return std::make_shared<BreakLayoutLine>();
 }
 
 void BreakLayoutLine::afterMapping(BaseEntity &entity)

@@ -40,7 +40,7 @@ namespace AUDIO
         void audio_selected();
         void cancel_selection();
     signals:
-        void selected_audio(AUDIO::Audio*);
+        void selected_audio(std::shared_ptr<AUDIO::Audio>);
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<TrackBrowser> m_track_browser;

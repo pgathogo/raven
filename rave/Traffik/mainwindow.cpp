@@ -164,8 +164,8 @@ void MainWindow::openSetupForm()
     EntityDataModel edm(std::make_unique<RavenSetup>());
     edm.all();
     if (edm.count() > 0){
-        BaseEntity* be = edm.firstEntity();
-        RavenSetup* ts = dynamic_cast<RavenSetup*>(be);
+        std::shared_ptr<BaseEntity> be = edm.firstEntity();
+        RavenSetup* ts = dynamic_cast<RavenSetup*>(be.get());
         setupForm = std::make_unique<SetupForm>(ts);
         if (setupForm->exec() > 0 ){
             edm.updateEntity(*ts);

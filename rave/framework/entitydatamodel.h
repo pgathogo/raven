@@ -15,23 +15,26 @@
 #include "dataprovider.h"
 #include "relationmapper.h"
 
-using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
-using VecIter = std::vector<EntityRecord>::iterator;
+using EntityName = std::string;
+using Entity = std::shared_ptr<BaseEntity>;
+using EntityRecord = std::tuple<EntityName, Entity>;
+
+using IteratorEntityRecords = std::vector<EntityRecord>::iterator;
 
 class EntityModel : public QStandardItemModel{
     public:
         EntityModel();
         //EntityModel(BaseEntity* entity);
-        EntityModel(std::unique_ptr<BaseEntity> entity);
+        EntityModel(std::shared_ptr<BaseEntity> entity);
         ~EntityModel() override;
         size_t entitiesCount();
-        BaseEntity* findEntityByName(const std::string name);
-        BaseEntity* find_entity_by_id(int);
+        std::shared_ptr<BaseEntity> findEntityByName(const std::string name);
+        std::shared_ptr<BaseEntity> find_entity_by_id(int);
         void clearEntities();
         void setHeader();
 
-        VecIter vecBegin();
-        VecIter vecEnd();
+        IteratorEntityRecords vecBegin();
+        IteratorEntityRecords vecEnd();
 
         std::vector<EntityRecord> const& modelEntities() const;
         std::vector<EntityRecord> const& temp_entities() const;
@@ -43,27 +46,28 @@ class EntityModel : public QStandardItemModel{
 
         std::string entityTableName() const;
 
-        BaseEntity& getEntity();
-        void set_entity(std::unique_ptr<BaseEntity>);
+        std::shared_ptr<BaseEntity> getEntity();
 
-        std::unique_ptr<BaseEntity> const& get_entity() const;
+        void set_entity(std::shared_ptr<BaseEntity>);
 
-        BaseEntity* firstEntity();
+        std::shared_ptr<BaseEntity> const& get_entity() const;
+
+        std::shared_ptr<BaseEntity> firstEntity();
 
         std::list<std::string> keys();
         void deleteFromModel();
 
         bool removeRows(int position, int rows, const QModelIndex& parent) override;
 
-        void add_entity(std::unique_ptr<BaseEntity> entity);
+        void add_entity(std::shared_ptr<BaseEntity> entity);
 
         std::size_t temp_size();
 
     protected:
-        void addEntity(std::unique_ptr<BaseEntity> entity);
+        void addEntity(std::shared_ptr<BaseEntity> entity);
         //void addEntity(BaseEntity* entity);
     private:
-        std::unique_ptr<BaseEntity> mEntity;
+        std::shared_ptr<BaseEntity> mEntity;
         std::vector<EntityRecord> mEntities;
 
         std::vector<EntityRecord>m_temp_entities;
@@ -76,13 +80,14 @@ class EntityDataModel : public EntityModel
 {
 public:
     EntityDataModel();
-    EntityDataModel(std::unique_ptr<BaseEntity> baseEntity);
+    EntityDataModel(std::shared_ptr<BaseEntity> baseEntity);
     ~EntityDataModel();
 
-    int createEntity(std::unique_ptr<BaseEntity> entity);
-    void cacheEntity(std::unique_ptr<BaseEntity> entity);
+    int createEntity(std::shared_ptr<BaseEntity> entity);
+    void cacheEntity(std::shared_ptr<BaseEntity> entity);
 
-    void updateEntity(const BaseEntity& entity);
+    void updateEntity(const BaseEntity&);
+    void update_entity(const BaseEntity*);
     void deleteEntity(const BaseEntity& entity);
     void deleteEntityByValue(std::tuple<ColumnName, ColumnValue> value);
 
@@ -227,18 +232,18 @@ public:
         m_relation_mapper->clear_query_results();
         m_relation_mapper->clear_mapped_entities();
 
-        auto fields = getEntity().dbColumnNames();
+        auto fields = getEntity()->dbColumnNames();
 
-        m_relation_mapper->set_main_entity(&(getEntity()));
-        m_relation_mapper->set_main_table(getEntity().tableName());
+        m_relation_mapper->set_main_entity(getEntity().get());
+        m_relation_mapper->set_main_table(getEntity()->tableName());
 
         for(auto f : fields){
 
-            std::string full_field_name = getEntity().tableName()+"."+f;
+            std::string full_field_name = getEntity()->tableName()+"."+f;
             m_relation_mapper->append_query_fields(full_field_name);
         }
 
-        for (auto const& [field_name, field] : getEntity().fields()){
+        for (auto const& [field_name, field] : getEntity()->fields()){
             if (field->field_type() == "ForeignKeyField"){
                 auto fk_field = dynamic_cast<ForeignKeyField*>(field.get());
                 auto fk_field_entity = std::make_tuple(fk_field->fk_entity(field_name).get(), field->nullable());
@@ -271,7 +276,7 @@ public:
 
         auto column_names = getEntity().dbColumnNames();
 
-        m_relation_mapper->set_main_entity(&(getEntity()));
+        m_relation_mapper->set_main_entity(&(getEntity().get()));
         m_relation_mapper->set_main_table(getEntity().tableName());
 
         for(auto column_name : column_names){

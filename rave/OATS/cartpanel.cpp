@@ -310,7 +310,7 @@ namespace OATS
         m_track_picker_dialog->exec();
     }
 
-    void AudioLoadWidget::selected_audio(AUDIO::Audio* audio)
+    void AudioLoadWidget::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
         emit cart_add_audio(audio);
 
@@ -384,7 +384,7 @@ namespace OATS
          m_table_view->setColumnWidth(2, 20);
      }
 
-     void AudioViewWidget::add_audio(AUDIO::Audio* audio, int cart_id)
+     void AudioViewWidget::add_audio(std::shared_ptr<AUDIO::Audio> audio, int cart_id)
      {
          AUDIO::AudioTool at;
 
@@ -873,7 +873,7 @@ namespace OATS
     }
 
 
-   void CartWidget::cart_add_audio(AUDIO::Audio* audio)
+   void CartWidget::cart_add_audio(std::shared_ptr<AUDIO::Audio> audio)
    {
        m_audio_view_widget->add_audio(audio, m_cart_id);
    }

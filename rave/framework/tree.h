@@ -14,6 +14,7 @@ using TreeNode = std::map<NodeID, Node*>;
 using TreeData = std::tuple<std::string, std::string, std::string>;
 
 struct NodeData{
+    NodeData();
     int id{ 0 };
     int parent_id { 0 };
     std::string name{""};

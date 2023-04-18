@@ -11,7 +11,7 @@ namespace AUDIOEXP{
         :m_model{nullptr}
     {
         m_model = std::make_unique<EntityDataModel>(
-                    std::make_unique<AUDIO::Artist>());
+                    std::make_shared<AUDIO::Artist>());
     }
 
     void ArtistManager::create(std::unique_ptr<AUDIO::Artist> artist)
@@ -29,8 +29,8 @@ namespace AUDIOEXP{
         if (search_value.empty())
             return nullptr;
 
-        BaseEntity* be = m_model->findEntityByName(search_value);
-        AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(be);
+        std::shared_ptr<BaseEntity> be = m_model->findEntityByName(search_value);
+        AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(be.get());
         return artist;
     }
 
@@ -42,7 +42,7 @@ namespace AUDIOEXP{
 
     bool ArtistManager::artist_has_audio(AUDIO::Artist* artist)
     {
-        auto audio = std::make_unique<AUDIO::Audio>();
+        auto audio = std::make_shared<AUDIO::Audio>();
         std::string column_name = audio->artist()->dbColumnName();
         std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(
                     std::move(audio));

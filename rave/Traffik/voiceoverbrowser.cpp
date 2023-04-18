@@ -24,8 +24,7 @@ VoiceOverBrowser::~VoiceOverBrowser()
 
 void VoiceOverBrowser::addRecord()
 {
-    std::unique_ptr<VoiceOver> vo =
-            std::make_unique<VoiceOver>();
+    auto vo = std::make_shared<VoiceOver>();
 
     std::unique_ptr<VoiceOverForm> voForm =
            std::make_unique<VoiceOverForm>(vo.get(), this);
@@ -76,10 +75,10 @@ void VoiceOverBrowser::saveVoiceExclusions(const VoiceOverForm& vof)
 void VoiceOverBrowser::deleteRecord()
 {
     try{
-        BaseEntity* entity = findSelectedEntity();
-        EntityDataModel edm(std::make_unique<VoiceExclusion>());
+        std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+        EntityDataModel edm(std::make_shared<VoiceExclusion>());
         edm.deleteEntityByValue({"parent_id", entity->id()});
-        entityDataModel().deleteEntity(*entity);
+        entityDataModel().deleteEntity(*(entity.get()));
         removeSelectedRow();
     }
     catch(DatabaseException& de){

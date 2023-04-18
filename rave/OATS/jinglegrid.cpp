@@ -30,7 +30,6 @@ namespace OATS
         :m_grid_page_id{-1}
         ,m_row{-1}
         ,m_col{-1}
-        ,m_title{""}
         ,m_jingle_id{""}
         ,m_jingle_status{Jingle::JingleStatus::Ready}
         ,m_audio{}
@@ -41,7 +40,6 @@ namespace OATS
         :m_grid_page_id{page_id}
         ,m_row{row}
         ,m_col{col}
-        ,m_title{title}
         ,m_jingle_status{Jingle::JingleStatus::Ready}
         ,m_audio{}
     {
@@ -57,6 +55,7 @@ namespace OATS
          //   delete m_audio;
     }
 
+    /*
     QString Jingle::title() const{
         return m_title;
     }
@@ -65,6 +64,7 @@ namespace OATS
     {
         m_title = title;
     }
+    */
 
     int Jingle::page_id() const
     {
@@ -106,6 +106,7 @@ namespace OATS
         m_jingle_id = id;
     }
 
+    /*
     int Jingle::track_id()
     {
         return m_track_id;
@@ -135,18 +136,19 @@ namespace OATS
     {
         m_track_duration = duration;
     }
+    */
 
     void Jingle::set_jingle_status(Jingle::JingleStatus status)
     {
         m_jingle_status = status;
     }
 
-    void Jingle::set_audio(AUDIO::Audio* audio)
+    void Jingle::set_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
        m_audio = audio;
     }
 
-    AUDIO::Audio* Jingle::audio()
+    std::shared_ptr<AUDIO::Audio> Jingle::audio()
     {
         return m_audio;
     }
@@ -167,7 +169,7 @@ namespace OATS
         :m_id{id}
          ,m_jingle{jingle}
     {
-        setText(jingle->title());
+        setText(QString::fromStdString(jingle->audio()->title()->value()));
     }
 
     GridButton::~GridButton()
@@ -182,7 +184,8 @@ namespace OATS
     void GridButton::set_jingle(Jingle* const jingle)
     {
         m_jingle = jingle;
-        (jingle == nullptr) ? setText("") : setText(m_jingle->title());
+        (jingle == nullptr) ?  setText("") :
+                              setText(QString::fromStdString(m_jingle->audio()->title()->value()));
     }
 
     void GridButton::start_countdown_timer()
@@ -196,9 +199,10 @@ namespace OATS
     {
         auto trigger_tick = m_audio_tool.get_tick_count();
         int elapsed = trigger_tick - m_start_tick_count;
-        int remaining = m_jingle->track_duration() - elapsed;
+        int remaining = m_jingle->audio()->duration()->value() - elapsed;
 
-        auto progress_value = (100 - round((float)remaining/m_jingle->track_duration() * 100));
+        auto progress_value = (100 - round((float)remaining/
+                                           m_jingle->audio()->duration()->value() * 100));
         m_color_value = progress_value / 100;
 
         /*
@@ -303,6 +307,7 @@ namespace OATS
 
     void JingleGrid::make_jingles()
     {
+        /*
         auto jingle1 = std::make_unique<Jingle>(1,0,0, "Jingle1");
         jingle1->set_track_id(1);
         jingle1->set_track_path("D:/Music/Studio1/");
@@ -333,6 +338,8 @@ namespace OATS
         m_jingles.push_back(std::move(jingle4));
         m_jingles.push_back(std::move(jingle5));
         m_jingles.push_back(std::move(jingle6));
+        */
+
     }
 
 
@@ -436,13 +443,13 @@ namespace OATS
         m_grid_buttons[row][col]->set_jingle(nullptr);
     }
 
-   void JingleGrid::selected_audio(AUDIO::Audio* audio)
+   void JingleGrid::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
    {
        AUDIO::AudioTool at;
        auto audio_fullname = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+"."+audio->file_extension()->value_tolower();
 
        QString title = QString::fromStdString(audio->title()->value());
-       QString path = QString::fromStdString(audio->audio_lib_path()->value());
+//       QString path = QString::fromStdString(audio->audio_lib_path()->value());
 
        int row = m_current_grid_cell.row;
        int col = m_current_grid_cell.col;
@@ -455,9 +462,6 @@ namespace OATS
                 title += " - ERROR_01: File Not Found!";
                 jingle->set_jingle_status(Jingle::JingleStatus::Error);
             }
-
-            jingle->set_track_path(path);
-            jingle->set_track_duration(audio->duration()->value());
 
             jingle->set_audio(audio);
 
@@ -481,10 +485,6 @@ namespace OATS
             title += " - ERROR_01: File Not Found!";
             (*it)->set_jingle_status(Jingle::JingleStatus::Error);
         }
-
-            (*it)->set_title(title);
-            (*it)->set_track_path(path);
-            (*it)->set_track_duration(audio->duration()->value());
             (*it)->set_audio(audio);
             m_grid_buttons[row][col]->set_jingle((*it).get());
        }
@@ -493,7 +493,6 @@ namespace OATS
 
     void JingleGrid::play_jingle_at(int row, int col)
     {
-
         auto grid_button = m_grid_buttons[row][col].get();
 
         if (grid_button->jingle() == nullptr)
@@ -679,10 +678,15 @@ namespace OATS
          jingle->set_page_id(obj["page_id"].toInt());
          jingle->set_row(obj["row"].toInt());
          jingle->set_col(obj["col"].toInt());
-         jingle->set_title(obj["title"].toString());
-         jingle->set_track_id(obj["track_id"].toInt());
-         jingle->set_track_path(obj["track_path"].toString());
-         jingle->set_track_duration(obj["duration"].toInt());
+
+         auto audio = std::make_shared<AUDIO::Audio>();
+         audio->setId(obj["track_id"].toInt());
+         audio->set_title(obj["title"].toString().toStdString());
+         audio->set_audio_lib_path(obj["track_path"].toString().toStdString());
+         audio->set_duration(obj["duration"].toInt());
+         audio->set_file_extension(obj["extension"].toString().toStdString());
+
+         jingle->set_audio(std::move(audio));
 
          m_jingles.push_back(std::move(jingle));
       }
@@ -697,10 +701,12 @@ namespace OATS
      json["page_id"] = jingle->page_id();
      json["row"] = jingle->row();
      json["col"] = jingle->col();
-     json["title"] = jingle->title();
-     json["track_id"] = jingle->track_id();
-     json["track_path"] = jingle->track_path();
-     json["duration"] = jingle->track_duration();
+
+     json["track_id"] = jingle->audio()->id();
+     json["title"] = QString::fromStdString(jingle->audio()->title()->value());
+     json["track_path"] = QString::fromStdString(jingle->audio()->audio_lib_path()->value());
+     json["extension"] = QString::fromStdString(jingle->audio()->file_extension()->value());
+     json["duration"] = jingle->audio()->duration()->value();
 
      return json;
   }

@@ -46,7 +46,7 @@ ClientForm::ClientForm(Client* client,
     m_edm_setup->all();
 
     if (m_edm_setup->count() > 0)
-        m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity());
+        m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
 
     if (m_client->isNew())
         set_defaults();

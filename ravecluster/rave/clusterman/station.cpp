@@ -71,9 +71,9 @@ namespace ClusterManager
         return station_name()->valueToString();
     }
 
-    std::unique_ptr<BaseEntity> Station::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Station::cloneAsShared()
     {
-        return std::make_unique<Station>();
+        return std::make_shared<Station>();
     }
 
     void Station::populateEntity()

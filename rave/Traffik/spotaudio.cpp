@@ -165,7 +165,6 @@ namespace TRAFFIK{
     {
         return m_header;
     }
-
     std::string SpotAudio::searchColumn() const
     {
         return detailEntity()->searchColumn();
@@ -175,22 +174,23 @@ namespace TRAFFIK{
     {
     }
 
-    std::unique_ptr<BaseEntity> SpotAudio::cloneAsUnique()
+    std::shared_ptr<BaseEntity> SpotAudio::cloneAsShared()
     {
-        return std::make_unique<SpotAudio>(m_parent_entity, m_detail_entity);
+        return std::make_shared<SpotAudio>(m_parent_entity, m_detail_entity);
     }
 
     void SpotAudio::afterMapping(BaseEntity &entity)
     {
         SpotAudio& spot_audio = dynamic_cast<SpotAudio&>(entity);
-        auto audio = spot_audio.detailEntity()->cloneAsUnique();
+        auto audio = spot_audio.detailEntity()->cloneAsShared();
         spot_audio.set_detail_entity(audio.get());
 
         getEntityById(std::move(audio), spot_audio.detailId()->value());
 
-        AUDIO::Audio& fetched_audio = const_cast<AUDIO::Audio&>(dynamic_cast<const AUDIO::Audio&>((get_entity())));
+        //AUDIO::Audio& fetched_audio = const_cast<AUDIO::Audio&>(dynamic_cast<const AUDIO::Audio&>((get_entity())));
+        AUDIO::Audio* fetched_audio = const_cast<AUDIO::Audio*>(dynamic_cast<const AUDIO::Audio*>( get_entity().get()));
         auto de = spot_audio.detailEntity();
-        de = &fetched_audio;
+        de = fetched_audio;
 
     }
 

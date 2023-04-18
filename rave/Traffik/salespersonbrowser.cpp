@@ -6,7 +6,7 @@
 
 SalesPersonBrowser::SalesPersonBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<SalesPerson>()),
+                         std::make_shared<SalesPerson>()),
     ui(new Ui::SalesPersonBrowser)
 {
     ui->setupUi(this);
@@ -20,7 +20,7 @@ SalesPersonBrowser::~SalesPersonBrowser()
 
 void SalesPersonBrowser::addRecord()
 {
-    std::unique_ptr<SalesPerson> sp = std::make_unique<SalesPerson>();
+    auto sp = std::make_shared<SalesPerson>();
 
     std::unique_ptr<SalesPersonForm> spForm = std::make_unique<SalesPersonForm>(sp.get());
 

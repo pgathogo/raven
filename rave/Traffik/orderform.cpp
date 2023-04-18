@@ -57,9 +57,9 @@ OrderForm::OrderForm(Client* client, Order* order,
             this, &OrderForm::tradeCreditTypeCBChanged);
 
     dmSetup = std::make_unique<EntityDataModel>(
-                std::make_unique<RavenSetup>());
+                std::make_shared<RavenSetup>());
     dmSetup->all();
-    mSetup = dynamic_cast<RavenSetup*>(dmSetup->firstEntity());
+    mSetup = dynamic_cast<RavenSetup*>(dmSetup->firstEntity().get());
 
     if (mOrder->isNew())
         prepareNewOrder();

@@ -2,6 +2,7 @@
 
 namespace OATS {
 
+/*
     Audio::Audio()
     {
     }
@@ -113,6 +114,8 @@ namespace OATS {
         m_fade_out = fout;
     }
 
+    */
+
     /* ----------- ScheduleItem ----------------- */
 
     ScheduleItem::ScheduleItem()
@@ -209,7 +212,7 @@ namespace OATS {
         return m_current_time;
     }
 
-    Audio& ScheduleItem::audio()
+    std::shared_ptr<AUDIO::Audio> ScheduleItem::audio()
     {
         return m_audio;
     }
@@ -350,7 +353,7 @@ namespace OATS {
         m_current_time = msec;
     }
 
-    void ScheduleItem::set_audio(Audio audio)
+    void ScheduleItem::set_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
         m_audio = audio;
     }

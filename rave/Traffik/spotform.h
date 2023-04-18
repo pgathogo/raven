@@ -24,7 +24,7 @@ class AudioFile;
 class CueEditor;
 class SpotAudioBrowser;
 
-using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
+using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
 
 class SpotForm : public BaseEntityDetailDlg
 {

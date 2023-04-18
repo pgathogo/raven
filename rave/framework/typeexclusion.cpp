@@ -235,9 +235,9 @@ namespace TRAFFIK {
     {
     }
 
-    std::unique_ptr<BaseEntity> TypeExclusion::cloneAsUnique()
+    std::shared_ptr<BaseEntity> TypeExclusion::cloneAsShared()
     {
-        return std::make_unique<TypeExclusion>();
+        return std::make_shared<TypeExclusion>();
     }
 
     void TypeExclusion::afterMapping(BaseEntity &entity)

@@ -28,7 +28,7 @@ namespace AUDIO {
         std::string searchColumn() const override;
         void populateEntity() override;
 
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
         void afterMapping(BaseEntity& entity) override;
 
         [[nodiscard]] ActionResult validate() override;
@@ -68,7 +68,7 @@ namespace AUDIO {
         std::string searchColumn() const override;
         void populateEntity() override;
 
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
         void afterMapping(BaseEntity& entity) override;
 
         [[nodiscard]] ActionResult validate() override;
@@ -107,7 +107,7 @@ namespace AUDIO {
         std::string searchColumn() const override;
         void populateEntity() override;
 
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
         void afterMapping(BaseEntity& entity) override;
 
         [[nodiscard]] ActionResult validate() override;
@@ -140,6 +140,7 @@ namespace AUDIO {
         DecimalField* intro_marker() const;
         DecimalField* extro_marker() const;
         DecimalField* fade_out_marker() const;
+        DecimalField* fade_delay_marker() const;
         DecimalField* end_marker() const;
         StringField* file_path() const;
         ForeignKeyField* folder() const;
@@ -169,6 +170,7 @@ namespace AUDIO {
         void set_intro_marker(double);
         void set_extro_marker(double);
         void set_fade_out_marker(double);
+        void set_fade_delay_marker(double);
         void set_end_marker(double);
         void set_file_path(const std::string);
         void set_folder(int);
@@ -195,8 +197,13 @@ namespace AUDIO {
         std::string searchColumn() const override;
         void populateEntity() override;
 
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
         void afterMapping(BaseEntity& entity) override;
+
+        QString full_audio_filename() const;
+
+        friend bool operator ==(const Audio& lhs, const Audio& rhs);
+        friend std::ostream& operator<<(std::ostream& os, const Audio& ac);
 
         //[[nodiscard]] ActionResult validate() override;
 
@@ -219,6 +226,7 @@ namespace AUDIO {
         DecimalField* m_intro_marker;
         DecimalField* m_extro_marker;
         DecimalField* m_fade_out_marker;
+        DecimalField* m_fade_delay_marker;
         DecimalField* m_end_marker;
 
         StringField* m_file_path;

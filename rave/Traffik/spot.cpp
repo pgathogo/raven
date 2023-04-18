@@ -176,10 +176,10 @@ namespace TRAFFIK {
     {
     }
 
-    std::unique_ptr<BaseEntity> Spot::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Spot::cloneAsShared()
     {
         qDebug() << "<<< Spot::cloneAsUnique >>>" ;
-        return std::make_unique<Spot>();
+        return std::make_shared<Spot>();
     }
 
     void Spot::afterMapping(BaseEntity& entity)

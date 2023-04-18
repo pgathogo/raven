@@ -7,6 +7,12 @@
 
 #include "tree.h"
 
+NodeData::NodeData()
+    :id{0}
+    ,parent_id{0}
+    ,name{""}
+{}
+
 Node::Node()
     :node_name{},
       node_id{-1},

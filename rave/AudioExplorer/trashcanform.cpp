@@ -19,7 +19,7 @@ TrashCanForm::TrashCanForm(QWidget *parent) :
 
     setWindowTitle("Audio Trash Can");
 
-    m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
+    m_audio_edm = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
 
     m_tracks_model = new QStandardItemModel(this);
     create_track_view_headers();
@@ -175,7 +175,7 @@ void TrashCanForm::restore()
         int row_count = rows.count();
         for (int i = row_count; i > 0; i--){
             auto text = rows.at(i-1).data().toString();
-            BaseEntity* entity = m_audio_edm->findEntityByName(text.toStdString());
+            std::shared_ptr<BaseEntity> entity = m_audio_edm->findEntityByName(text.toStdString());
             entity->setDBAction(DBAction::dbaDELETE);
             m_audio_edm->deleteFromModel();
             ui->tvTracks->model()->removeRow(rows.at(i-1).row(), rows.at(i-1).parent());

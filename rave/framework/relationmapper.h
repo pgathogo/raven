@@ -9,7 +9,7 @@
 
 using Nullable = bool;
 using QueryResults = std::map<int, std::map<std::string, std::vector<std::tuple<std::string, std::string>>>>;
-using MappedEntity = std::map<int, std::map<std::string, std::vector<std::unique_ptr<BaseEntity>>>>;
+using MappedEntity = std::map<int, std::map<std::string, std::vector<std::shared_ptr<BaseEntity>>>>;
 
 class BaseEntity;
 class EntityDataModel;

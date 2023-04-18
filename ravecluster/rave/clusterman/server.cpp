@@ -101,9 +101,9 @@ namespace ClusterManager
         return server_name()->valueToString();
     }
 
-    std::unique_ptr<BaseEntity> Server::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Server::cloneAsShared()
     {
-        return std::make_unique<Server>();
+        return std::make_shared<Server>();
     }
 
     void Server::populateEntity()

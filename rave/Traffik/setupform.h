@@ -41,7 +41,7 @@ private slots:
       void billingBasisChanged(int);
       void addApprover();
       void deleteApprover();
-      BaseEntity* findSelectedEntity();
+      std::shared_ptr<BaseEntity> findSelectedEntity();
       QString selectedRowName();
       int selectedRowId() const;
       void set_audio_path();

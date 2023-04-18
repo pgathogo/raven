@@ -40,8 +40,8 @@ void RoleBrowser::deleteRecord()
 void RoleBrowser::searchRecord()
 {
     if (bui->edtFilter->text().isEmpty()){
-        Role& role = dynamic_cast<Role&>(entityDataModel().getEntity());
-        auto si = searchItem(role.roleCanLogin()->dbColumnName(), "=", false);
+        Role* role = dynamic_cast<Role*>(entityDataModel().getEntity().get());
+        auto si = searchItem(role->roleCanLogin()->dbColumnName(), "=", false);
         std::string filter = entityDataModel().prepareFilter(si);
         entityDataModel().search(filter);
     }else{
@@ -52,8 +52,8 @@ void RoleBrowser::searchRecord()
 
         auto role_name = std::make_tuple(columnName, "=", item);
 
-        Role& role = dynamic_cast<Role&>(entityDataModel().getEntity());
-        auto role_filter = searchItem(role.roleCanLogin()->dbColumnName(), "=", false);
+        Role* role = dynamic_cast<Role*>(entityDataModel().getEntity().get());
+        auto role_filter = searchItem(role->roleCanLogin()->dbColumnName(), "=", false);
 
         std::string filter = entityDataModel().prepareFilter(role_name, role_filter);
         entityDataModel().search(filter);

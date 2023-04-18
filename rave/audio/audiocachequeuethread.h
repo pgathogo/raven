@@ -23,7 +23,7 @@ namespace AUDIO {
                                        QObject* parent = nullptr);
 
         void run() override;
-        void queue_add(std::unique_ptr<AudioCache>);
+        void queue_add(std::shared_ptr<AudioCache>);
         ThreadStatus thread_status();
         int thread_id();
     private:
@@ -77,12 +77,12 @@ namespace AUDIO {
     }
 
     template<typename T>
-    void AudioCacheQueueThread<T>::queue_add(std::unique_ptr<AudioCache> audio)
+    void AudioCacheQueueThread<T>::queue_add(std::shared_ptr<AudioCache> audio)
     {
         m_mutex->try_lock();
 
         m_thread_status = ThreadStatus::BUSY;
-        m_cache_manager->queue_audio(std::move(audio));
+        m_cache_manager->queue_cache(std::move(audio));
 
         m_mutex->unlock();
 

@@ -89,10 +89,10 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
     connect(ui->btnDelete, &QPushButton::clicked, this, &MainWindow::delete_audio);
 
 
-    m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-    m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
+    m_audio_edm = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
+    m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
 
-    m_genre_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Genre>());
+    m_genre_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Genre>());
 
     setup_audio_folders();
 
@@ -129,9 +129,9 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
 
     show_letter_filter();
 
-    m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
+    m_setup_edm = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_setup_edm->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity());
+    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
@@ -550,7 +550,7 @@ void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
 {
     m_audio_entity_data_model->clearEntities();
 
-    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
+    auto audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
 
     try{
         m_audio_entity_data_model->readRaw(r_mapper->query());
@@ -745,12 +745,12 @@ void MainWindow::edit_genre()
     if (search_value.empty())
         return;
 
-    BaseEntity* be = m_genre_entity_data_model->findEntityByName(search_value);
+    std::shared_ptr<BaseEntity> be = m_genre_entity_data_model->findEntityByName(search_value);
     if (be == nullptr)
         return;
 
     std::unique_ptr<GenreForm> dlg(nullptr);
-    AUDIO::Genre* entity = dynamic_cast<AUDIO::Genre*>(be);
+    AUDIO::Genre* entity = dynamic_cast<AUDIO::Genre*>(be.get());
     dlg = std::make_unique<GenreForm>(entity);
     if(dlg->exec() > 0){
         try{
@@ -811,7 +811,7 @@ void MainWindow::delete_entity(EntityDataModel* edm, QTableView* tv, int col)
     if (selected_row_id(tv) < 0)
         return;
 
-    BaseEntity* entity = find_selected_entity(edm, tv, col);
+    std::shared_ptr<BaseEntity> entity = find_selected_entity(edm, tv, col);
 
     if (okay_to_delete(entity)){
 
@@ -826,7 +826,7 @@ void MainWindow::delete_entity(EntityDataModel* edm, QTableView* tv, int col)
     }
 }
 
-bool MainWindow::okay_to_delete(const BaseEntity* entity)
+bool MainWindow::okay_to_delete(const std::shared_ptr<BaseEntity> entity)
 {
     QMessageBox::StandardButton result_btn = QMessageBox::Yes;
     result_btn = QMessageBox::question(this, "Audio Explorer",
@@ -856,10 +856,10 @@ std::string MainWindow::get_search_value(const QTableView* tv, int col)
     return search_value;
 }
 
-BaseEntity* MainWindow::find_selected_entity(EntityDataModel* edm, QTableView* tv, int col)
+std::shared_ptr<BaseEntity> MainWindow::find_selected_entity(EntityDataModel* edm, QTableView* tv, int col)
 {
     std::string search_value = get_search_value(tv, col);
-    BaseEntity* entity = edm->findEntityByName(search_value);
+    std::shared_ptr<BaseEntity> entity = edm->findEntityByName(search_value);
     return entity;
 }
 
@@ -1145,11 +1145,11 @@ void MainWindow::audio_properties()
     if (search_value.empty())
         return;
 
-    BaseEntity* be = m_audio_entity_data_model->findEntityByName(search_value);
+    std::shared_ptr<BaseEntity> be = m_audio_entity_data_model->findEntityByName(search_value);
     if (be == nullptr)
         return;
 
-    AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be);
+    AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be.get());
 
     std::unique_ptr<AudioForm> audio_form = std::make_unique<AudioForm>(audio, m_setup);
     if (audio_form->exec() > 0){
@@ -1204,7 +1204,7 @@ void MainWindow::play_audio()
     AudioFile af(full_audio_name);
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
-    m_audio_player->play_audio();
+    m_audio_player->play_audio("C", QString::fromStdString(full_audio_name));
 
 //    m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
 //    m_cue_editor->play_audio();
@@ -1375,7 +1375,7 @@ void MainWindow::delete_audio()
     try{
         for (int i=row_count; i > 0; i--){
             auto text = rows.at(i-1).data().toString();
-            BaseEntity* audio = m_audio_entity_data_model->findEntityByName(text.toStdString());
+            std::shared_ptr<BaseEntity> audio = m_audio_entity_data_model->findEntityByName(text.toStdString());
             audio->setDBAction(DBAction::dbaDELETE);
 
             delete_audio_from_db(ids);
@@ -1451,13 +1451,13 @@ void MainWindow::open_trash_can()
 
 void MainWindow::open_settings()
 {
-    EntityDataModel edm(std::make_unique<RavenSetup>());
+    EntityDataModel edm(std::make_shared<RavenSetup>());
     edm.all();
 
     if (edm.count() > 0)
     {
-        BaseEntity* be = edm.firstEntity();
-        RavenSetup* rs = dynamic_cast<RavenSetup*>(be);
+        std::shared_ptr<BaseEntity> be = edm.firstEntity();
+        RavenSetup* rs = dynamic_cast<RavenSetup*>(be.get());
 
         auto sform = std::make_unique<AUDIOEXP::SetupForm>(rs);
         if (sform->exec() > 0){

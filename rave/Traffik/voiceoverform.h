@@ -12,7 +12,7 @@ class ManyToMany;
 class ManyToManyBrowser;
 class EntityDataModel;
 
-using EntityRecord = std::tuple<std::string, std::unique_ptr<BaseEntity>>;
+using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
 using TimeBandDayParts = std::map<std::string, std::map<int, std::string>>;
 
 namespace Ui {

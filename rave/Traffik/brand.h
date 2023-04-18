@@ -36,7 +36,7 @@ namespace TRAFFIK {
         std::string searchColumn() const override;
         void populateEntity() override;
 
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
         void afterMapping(BaseEntity& entity) override;
 
     private:

@@ -15,7 +15,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
 {
     ui->setupUi(this);
     m_edm_break_layout = std::make_unique<EntityDataModel>(
-                std::make_unique<BreakLayout>());
+                std::make_shared<BreakLayout>());
     ui->tvBreakLayouts->setModel(m_edm_break_layout.get());
     ui->tvBreakLayouts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_edm_break_layout->all();
@@ -23,7 +23,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     connect(ui->tvBreakLayouts, &QTableView::clicked, this, &BreakCreateForm::break_layout_selected);
 
     m_edm_break_line = std::make_unique<EntityDataModel>(
-                std::make_unique<BreakLayoutLine>());
+                std::make_shared<BreakLayoutLine>());
 
     ui->tvBreakLines->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvBreakLines->setModel(m_edm_break_line.get());
@@ -59,8 +59,8 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
                     ui->tvBreakLayouts->model()->index(
                         sel_row, 0)).toString().toStdString();
 
-        BaseEntity* be = m_edm_break_layout->findEntityByName(layout_name);
-        BreakLayout* breakLayout = dynamic_cast<BreakLayout*>(be);
+        std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(layout_name);
+        BreakLayout* breakLayout = dynamic_cast<BreakLayout*>(be.get());
 
         BreakLayoutLine bbl;
         auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),

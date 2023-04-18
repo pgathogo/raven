@@ -233,9 +233,9 @@ void User::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> User::cloneAsUnique()
+std::shared_ptr<BaseEntity> User::cloneAsShared()
 {
-    return std::make_unique<User>();
+    return std::make_shared<User>();
 }
 
 void User::afterMapping(BaseEntity &entity)

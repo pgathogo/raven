@@ -153,7 +153,7 @@ QString SetupForm::get_audio_folder(QString default_folder)
 void SetupForm::load_order_approvers()
 {
     m_edm_approver = std::make_unique<EntityDataModel>(
-                std::make_unique<OrderApprover>());
+                std::make_shared<OrderApprover>());
     m_edm_approver->all();
     ui->tvApprovers->setModel(m_edm_approver.get());
 
@@ -177,7 +177,7 @@ std::set<int> SetupForm::make_aprv_levels()
 
 void SetupForm::save_approvers()
 {
-    EntityDataModel edm(std::make_unique<OrderApprover>());
+    EntityDataModel edm(std::make_shared<OrderApprover>());
     for (auto& [name, entity] : m_edm_approver->modelEntities()){
         if (entity->dbAction() == DBAction::dbaCREATE){
             edm.createEntityDB(*entity);
@@ -231,7 +231,7 @@ void SetupForm::addApprover()
     if (ui->sbAprvLevels->value() > 0 &&
             m_edm_approver->count() < ui->sbAprvLevels->value() ) {
 
-        auto approver = std::make_unique<OrderApprover>();
+        auto approver = std::make_shared<OrderApprover>();
 
         auto levels = make_aprv_levels();
 
@@ -257,10 +257,10 @@ void SetupForm::deleteApprover()
 
 }
 
-BaseEntity* SetupForm::findSelectedEntity()
+std::shared_ptr<BaseEntity> SetupForm::findSelectedEntity()
 {
    std::string searchName = selectedRowName().toStdString();
-   BaseEntity* entity = m_edm_approver->findEntityByName(searchName);
+   std::shared_ptr<BaseEntity> entity = m_edm_approver->findEntityByName(searchName);
    return entity;
 }
 

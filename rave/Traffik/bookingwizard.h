@@ -94,12 +94,10 @@ private:
     std::unique_ptr<EntityDataModel> m_spot_EDM;
     EntityDataModel* m_timeband_EDM;
     std::unique_ptr<DayPartGrid> m_daypart_grid;
-//    std::unique_ptr<EntityDataModel> m_schedule_EDM;
     std::unique_ptr<EntityDataModel> m_booking_EDM;
 
     TRAFFIK::EngineData m_engine_data;
     std::unique_ptr<TRAFFIK::RuleEngine> m_rule_engine;
-//    std::set<QString> m_selected_breaks;
 
     std::map<int, std::vector<std::string>> m_dow_selection;
 

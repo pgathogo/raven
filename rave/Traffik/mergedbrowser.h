@@ -30,7 +30,7 @@ public:
 
 public slots:
     void change_tab(int);
-    void change_client(BaseEntity*);
+    void change_client(std::shared_ptr<BaseEntity>);
 
 private:
     Ui::MergedBrowser *ui;

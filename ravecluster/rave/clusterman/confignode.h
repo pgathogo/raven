@@ -145,7 +145,7 @@ namespace ClusterManager
         NodeType node_type();
         void set_id(int);
         void set_temp_id(int);
-        void set_node_entity(std::unique_ptr<T>);
+        void set_node_entity(std::shared_ptr<T>);
         void set_config_item_type(ConfigItemType ci_type);
         void set_node_type(NodeType);
         //std::unique_ptr<T> const& node_entity();
@@ -169,7 +169,7 @@ namespace ClusterManager
         int m_parent_id{-1};
         QString m_uuid;
         ConfigItemType m_config_item_type;
-        std::unique_ptr<T> m_node_entity;
+        std::shared_ptr<T> m_node_entity;
         NodeType m_node_type;
         std::map<QString, std::tuple<ConfigItemType, std::any>> m_child_nodes;
         std::map<QString, std::any>m_group_nodes;
@@ -224,7 +224,7 @@ namespace ClusterManager
         }
 
         template<typename T>
-        void ConfigNode<T>::set_node_entity(std::unique_ptr<T> node_item)
+        void ConfigNode<T>::set_node_entity(std::shared_ptr<T> node_item)
         {
             m_node_entity = std::move(node_item);
         }

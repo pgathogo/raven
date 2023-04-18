@@ -21,15 +21,15 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
     setTitle(windowTitle());
 
     mEDMBreakLine = std::make_unique<EntityDataModel>(
-                std::make_unique<BreakLayoutLine>());
+                std::make_shared<BreakLayoutLine>());
 
     ui->tvBreakLayoutLine->setModel(mEDMBreakLine.get());
     ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     mEdmTSetup = std::make_unique<EntityDataModel>(
-                std::make_unique<RavenSetup>());
+                std::make_shared<RavenSetup>());
     mEdmTSetup->all();
-    mRavenSetup = dynamic_cast<RavenSetup*>(mEdmTSetup->firstEntity());
+    mRavenSetup = dynamic_cast<RavenSetup*>(mEdmTSetup->firstEntity().get());
 
     populateFormWidgets();
 

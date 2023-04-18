@@ -24,7 +24,7 @@ public:
 
     void search_by_client(Client*);
 
-    bool okay_to_delete(BaseEntity* entity) override;
+    bool okay_to_delete(std::shared_ptr<BaseEntity> entity) override;
 
     void set_client(Client* client);
 

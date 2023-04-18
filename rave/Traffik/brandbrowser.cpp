@@ -38,8 +38,8 @@ void BrandBrowser::updateRecord()
 
     if (!searchName.empty()){
 
-        BaseEntity* be = entityDataModel().findEntityByName(searchName);
-        TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(be);
+        std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(searchName);
+        TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(be.get());
         std::unique_ptr<BrandForm> brandForm =
                 std::make_unique<BrandForm>(m_client, brand, this);
         if (brandForm->exec() > 0){
@@ -64,9 +64,9 @@ void BrandBrowser::search_by_client(Client* client)
     search_related<TRAFFIK::Brand, Client>(client);
 }
 
-bool BrandBrowser::okay_to_delete(BaseEntity *entity)
+bool BrandBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
-   TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(entity);
+   TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(entity.get());
 
     std::stringstream sql;
     qDebug() << ">>" << entity->id() << "<<";

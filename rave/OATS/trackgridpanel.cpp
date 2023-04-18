@@ -126,11 +126,11 @@ namespace OATS{
     {
         m_schedule_item = schedule_item;
 
-        m_track_label->setText(QString::fromStdString(schedule_item->audio().title()));
-        m_artist_label->setText(QString::fromStdString(schedule_item->audio().artist()));
+        m_track_label->setText(QString::fromStdString(schedule_item->audio()->title()->value()));
+        m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
 
         AUDIO::AudioTool at;
-        QTime t = at. msec_to_time(schedule_item->hour(), schedule_item->audio().duration());
+        QTime t = at. msec_to_time(schedule_item->hour(), schedule_item->audio()->duration()->value());
 
         m_duration_label->setText(t.toString("mm:ss"));
 

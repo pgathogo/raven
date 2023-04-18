@@ -27,7 +27,7 @@ namespace ClusterManager
         std::vector<std::string> tableViewValues() override;
         QStringList tableHeaders() const override;
         std::string searchColumn() const override;
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
 
         void populateEntity() override;
         void afterMapping(BaseEntity&) override;

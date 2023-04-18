@@ -178,8 +178,8 @@ namespace OATS{
 
     void OutputPanel::cue_item(ScheduleItem* s_item)
     {
-        m_title->setText(QString::fromStdString(s_item->audio().title()));
-        m_artist->setText(QString::fromStdString(s_item->audio().artist()));
+        m_title->setText(QString::fromStdString(s_item->audio()->title()->value()));
+        m_artist->setText(QString::fromStdString(s_item->audio()->artist_fullname()));
         m_schedule_item = s_item;
     }
 

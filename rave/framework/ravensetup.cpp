@@ -347,9 +347,9 @@ void RavenSetup::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> RavenSetup::cloneAsUnique()
+std::shared_ptr<BaseEntity> RavenSetup::cloneAsShared()
 {
-    return std::make_unique<RavenSetup>();
+    return std::make_shared<RavenSetup>();
 
 }
 

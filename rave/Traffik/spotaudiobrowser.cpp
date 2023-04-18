@@ -31,7 +31,7 @@ namespace fs = std::filesystem;
 
 SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
                                     QVBoxLayout* layout, QWidget *parent)
-        :BaseEntityBrowserDlg(parent, mtom->cloneAsUnique())
+        :BaseEntityBrowserDlg(parent, mtom->cloneAsShared())
         ,ui(new Ui::SpotAudioBrowser)
         ,m_mtom{mtom}
         ,m_audio_wave_form{nullptr}
@@ -50,7 +50,7 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
     m_setup_edm->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity());
+    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
 
     layout->addWidget(this);
 
@@ -86,7 +86,7 @@ void SpotAudioBrowser::updateRecord()
 
 void SpotAudioBrowser::deleteRecord()
 {
-    BaseEntity* entity = findSelectedEntity();
+    std::shared_ptr<BaseEntity> entity = findSelectedEntity();
 
     // Check if it is okay  to delete the selected entity
 
@@ -94,7 +94,7 @@ void SpotAudioBrowser::deleteRecord()
 
 }
 
-bool SpotAudioBrowser::okay_to_delete(BaseEntity *entity)
+bool SpotAudioBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
     // check that the Audio is not attached to a running Spot.
     return true;
@@ -115,13 +115,13 @@ AUDIO::Audio* SpotAudioBrowser::audio_from_selection()
     if (search_name.empty())
         return nullptr;
 
-    BaseEntity* be = entityDataModel().findEntityByName(search_name);
+    std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
     if (be == nullptr){
         qDebug() << "`be` is NULL! ";
         return nullptr;
     }
 
-    auto s_audio = dynamic_cast<TRAFFIK::SpotAudio*>(be);
+    auto s_audio = dynamic_cast<TRAFFIK::SpotAudio*>(be.get());
 
     auto audio = dynamic_cast<AUDIO::Audio*>(s_audio->detailEntity());
 
@@ -268,7 +268,7 @@ void SpotAudioBrowser::play_back()
     AudioFile af(audio_file);
 
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
-    m_audio_player->play_audio();
+    m_audio_player->play_audio("C", QString::fromStdString(audio_file));
 
 }
 

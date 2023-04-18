@@ -346,9 +346,9 @@ void Client::set_bill_cycle(const std::string bCycle)
     m_bill_cycle->setValue(bCycle);
 }
 
-std::unique_ptr<BaseEntity> Client::cloneAsUnique()
+std::shared_ptr<BaseEntity> Client::cloneAsShared()
 {
-    return std::make_unique<Client>();
+    return std::make_shared<Client>();
 }
 
 void Client::afterMapping(BaseEntity &entity)

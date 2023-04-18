@@ -130,9 +130,9 @@ void ValueList::populateEntity()
     //mListValue->setValueFromWidget();
 }
 
-std::unique_ptr<BaseEntity> ValueList::cloneAsUnique()
+std::shared_ptr<BaseEntity> ValueList::cloneAsShared()
 {
-    return std::make_unique<ValueList>();
+    return std::make_shared<ValueList>();
 }
 
 void ValueList::afterMapping(BaseEntity &entity)

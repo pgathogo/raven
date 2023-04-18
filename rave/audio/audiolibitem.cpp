@@ -12,7 +12,7 @@ namespace AUDIO{
     {
     }
 
-    AudioLibItem::AudioLibItem(AUDIO::Audio* audio)
+    AudioLibItem::AudioLibItem(std::shared_ptr<AUDIO::Audio> audio)
         :m_audio{audio}
     {
     }
@@ -74,7 +74,7 @@ namespace AUDIO{
         return QString::fromStdString(audio()->file_extension()->displayName());
     }
 
-    AUDIO::Audio* AudioLibItem::audio() const
+    std::shared_ptr<AUDIO::Audio> AudioLibItem::audio() const
     {
         return m_audio;
     }
@@ -89,7 +89,7 @@ namespace AUDIO{
         m_lib_items.clear();
     }
 
-    AUDIO::Audio* AudioLibItem::find_audio_by_id(int audio_id)
+    std::shared_ptr<AUDIO::Audio> AudioLibItem::find_audio_by_id(int audio_id)
     {
         auto iter = std::find_if(m_lib_items.cbegin(), m_lib_items.cend(),
                                  FindAudioById(audio_id));
@@ -103,7 +103,7 @@ namespace AUDIO{
 
     /*  ---- SongAudioLibItem ------ */
 
-    SongAudioLibItem::SongAudioLibItem(AUDIO::Audio* audio)
+    SongAudioLibItem::SongAudioLibItem(std::shared_ptr<AUDIO::Audio> audio)
         :AudioLibItem(audio)
     {
     }
@@ -120,7 +120,7 @@ namespace AUDIO{
 
  /* ------- Jingle -------------- */
 
-    JingleAudioLibItem::JingleAudioLibItem(AUDIO::Audio* audio)
+    JingleAudioLibItem::JingleAudioLibItem(std::shared_ptr<AUDIO::Audio> audio)
         :AudioLibItem(audio)
     {
     }
@@ -138,7 +138,7 @@ namespace AUDIO{
 
 /* ---------  CommercialAudioLibItem -------------- */
 
-    CommercialAudioLibItem::CommercialAudioLibItem(AUDIO::Audio* audio)
+    CommercialAudioLibItem::CommercialAudioLibItem(std::shared_ptr<AUDIO::Audio> audio)
         :AudioLibItem(audio)
     {
     }

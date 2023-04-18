@@ -189,9 +189,9 @@ void OrderBooking::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> OrderBooking::cloneAsUnique()
+std::shared_ptr<BaseEntity> OrderBooking::cloneAsShared()
 {
-    return std::make_unique<OrderBooking>();
+    return std::make_shared<OrderBooking>();
 }
 
 void OrderBooking::afterMapping(BaseEntity &entity)

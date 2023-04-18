@@ -42,7 +42,7 @@ class BaseEntityBrowserDlg : public QDialog
 public:
     explicit BaseEntityBrowserDlg(QWidget *parent = nullptr);
     BaseEntityBrowserDlg(QWidget* parent,
-                         std::unique_ptr<BaseEntity> entity);
+                         std::shared_ptr<BaseEntity> entity);
     ~BaseEntityBrowserDlg();
 
     void setDialogTitle(const QString title);
@@ -52,7 +52,7 @@ public:
     virtual void updateRecord()=0;
     virtual void deleteRecord();
     virtual void searchRecord();
-    virtual bool okay_to_delete(BaseEntity* entity);
+    virtual bool okay_to_delete(std::shared_ptr<BaseEntity> entity);
 
     virtual std::string typeID();
 
@@ -62,7 +62,7 @@ public:
     void setMdiArea(QMdiArea* mdi);
 
     void show_letter_filter();
-    BaseEntity* findSelectedEntity();
+    std::shared_ptr<BaseEntity> findSelectedEntity();
 
     void set_button_icons();
 
@@ -71,7 +71,7 @@ public:
     template<typename T1, typename T2, typename T3 >
     bool add_related_record(T3* parent)
     {
-        std::unique_ptr<T1> entity = std::make_unique<T1>(parent);
+        std::shared_ptr<T1> entity = std::make_shared<T1>(parent);
         std::unique_ptr<T2> form = std::make_unique<T2>(parent, entity.get());
 
         bool created = false;
@@ -95,14 +95,14 @@ public:
 
         std::string searchName = selectedRowName().toStdString();
         if (!searchName.empty()){
-            BaseEntity* be = mEntityDataModel->findEntityByName(searchName);
-            if (be != nullptr){
-                T1* entity = dynamic_cast<T1*>(be);
-                dlg = std::make_unique<T2>(entity);
+            std::shared_ptr<BaseEntity> be = mEntityDataModel->findEntityByName(searchName);
+            if (be){  // != nullptr){
+                T1* update_entity = dynamic_cast<T1*>(be.get());
+                dlg = std::make_unique<T2>(update_entity);
                 if(dlg->exec() > 0){
                     try{
-                        updateTableViewRecord(entity->tableViewValues());
-                        mEntityDataModel->updateEntity(*entity);
+                        updateTableViewRecord(update_entity->tableViewValues());
+                        mEntityDataModel->updateEntity(*update_entity);
                     }
                     catch(DatabaseException& de){
                         showMessage(de.errorMessage());
@@ -175,8 +175,8 @@ public:
     template<typename T1, typename T2, typename T3 = void>
     void rawUpdate()
     {
-        BaseEntity* entity = findSelectedEntity();
-        T1* t1 = dynamic_cast<T1*>(entity);
+        std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+        T1* t1 = dynamic_cast<T1*>(entity.get());
 
         std::unique_ptr<T2> form =
                 std::make_unique<T2>(t1, this);
@@ -186,13 +186,10 @@ public:
                     t1->make_alter_stmt(t1->displayName());
             try{
                 entityDataModel().executeRawSQL( alter_stmt );
-                //updateTableViewRecord(t1->tableViewValues());
-                //entityDataModel().updateEntity(*t1);
 
                 for(auto& mtomForm : form->get_forms()){
                     auto& items = mtomForm->entityDataModel().modelEntities();
                     for (auto&[name, entity] : items){
-                        //ManyToMany* mtom = dynamic_cast<ManyToMany*>(entity.get());
                         T3* mtom = dynamic_cast<T3*>(entity.get());
                        if constexpr(HasParentId<T2>::value > 0)
                             save_detail_item<T3>(t1->id(),  mtom);
@@ -208,8 +205,8 @@ public:
     template<typename T1>
     void rawDelete()
     {
-        BaseEntity* entity = findSelectedEntity();
-        T1* t1 = dynamic_cast<T1*>(entity);
+        std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+        T1* t1 = dynamic_cast<T1*>(entity.get());
 
         std::string drop_stmt = t1->make_drop_stmt(
                     t1->displayName());
@@ -243,9 +240,9 @@ public:
     void search_related(T2* parent)
     {
         if (bui->edtFilter->text().isEmpty()){
-            T& t = dynamic_cast<T&>(entityDataModel().getEntity());
+            T* t = dynamic_cast<T*>(entityDataModel().getEntity().get());
            if constexpr(HasClientId<T>::value > 0){
-                auto si = std::make_tuple(t.client()->dbColumnName(), "=", parent->id());
+                auto si = std::make_tuple(t->client()->dbColumnName(), "=", parent->id());
                 try{
                     qDebug() << "<<< Going: searchByInt >>>";
                     entityDataModel().searchByInt(si);
@@ -255,16 +252,13 @@ public:
            }
         }else{
             auto var_data = bui->cbFilter->itemData(bui->cbFilter->currentIndex());
-//            auto data = var_data.value<QString>();
-//            std::string columnName = data.toStdString();
             std::string columnName = var_data.toString().toStdString();
             std::string item = bui->edtFilter->text().toStdString();
             auto brand_filter = std::make_tuple(columnName, "=", item);
 
-            T& t = dynamic_cast<T&>(entityDataModel().getEntity());
+            T* t = dynamic_cast<T*>(entityDataModel().getEntity().get());
             if constexpr(HasClientId<T>::value > 0){
-                //auto parent_filter = searchItem(t.client()->dbColumnName(), "=", parent->id());
-                auto parent_filter = std::make_tuple(t.client()->dbColumnName(), "=", parent->id());
+                auto parent_filter = std::make_tuple(t->client()->dbColumnName(), "=", parent->id());
                 std::string filter = entityDataModel().prepareFilter(brand_filter, parent_filter);
                 entityDataModel().search(filter);
             }

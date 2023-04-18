@@ -16,7 +16,6 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
     m_edm_schedule{nullptr},
     mMdiArea{nullptr}
 {
-    qDebug() << "AAA";
 
     ui->setupUi(this);
     connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &ScheduleForm::scheduleDateChanged);
@@ -24,13 +23,11 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
     connect(ui->btnDelete, &QPushButton::clicked, this, &ScheduleForm::delete_breaks);
 
     m_edm_schedule = std::make_unique<EntityDataModel>(
-                std::make_unique<Schedule>());
+                std::make_shared<Schedule>());
 
     ui->dtSchedule->setDate(QDate::currentDate());
 
     ui->btnDelete->setEnabled(false);
-
-    qDebug() << "BBB";
 
     setWindowTitle("Schedule Management Form");
 }

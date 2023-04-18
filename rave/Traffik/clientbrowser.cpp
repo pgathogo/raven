@@ -14,7 +14,7 @@
 
 ClientBrowser::ClientBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<Client>()),
+                         std::make_shared<Client>()),
     ui(new Ui::ClientBrowser)
 {
     ui->setupUi(this);
@@ -35,7 +35,7 @@ ClientBrowser::~ClientBrowser()
 
 void ClientBrowser::addRecord()
 {
-    std::unique_ptr<Client> client = std::make_unique<Client>();
+    auto client = std::make_shared<Client>();
 
     std::unique_ptr<ClientForm> cForm =
             std::make_unique<ClientForm>(client.get());
@@ -52,9 +52,9 @@ void ClientBrowser::updateRecord()
 void ClientBrowser::deleteRecord()
 {
     if (selectedRowId() > 0){
-       BaseEntity* entity = findSelectedEntity();
-       Client* client = dynamic_cast<Client*>(entity);
-       EntityDataModel edm = EntityDataModel(std::make_unique<Order>());
+       std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+       Client* client = dynamic_cast<Client*>(entity.get());
+       EntityDataModel edm = EntityDataModel(std::make_shared<Order>());
        edm.searchByInt({"client_id", "=", client->id()});
 
        if (edm.count() > 0){
@@ -113,10 +113,11 @@ void ClientBrowser::openOrderBrowser()
     openBrowserWindow<Client, OrderBrowser>();
 }
 
-void ClientBrowser::selection_changed(const QItemSelection& selected, const QItemSelection& diselected)
+void ClientBrowser::selection_changed(const QItemSelection& /*selected*/, const QItemSelection& /*diselected*/)
 {
-        BaseEntity* entity = findSelectedEntity();
-        emit client_selection_changed(entity);
+        std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+        if (entity != nullptr)
+            emit client_selection_changed(entity);
 
 }
 

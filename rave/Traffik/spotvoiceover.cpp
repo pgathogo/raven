@@ -120,15 +120,15 @@ BaseEntity *SpotVoiceOver::mtomEntity()
     return this;
 }
 
-std::unique_ptr<BaseEntity> SpotVoiceOver::cloneAsUnique()
+std::shared_ptr<BaseEntity> SpotVoiceOver::cloneAsShared()
 {
-    return std::make_unique<SpotVoiceOver>(mParentEntity, mDetailEntity);
+    return std::make_shared<SpotVoiceOver>(mParentEntity, mDetailEntity);
 }
 
 void SpotVoiceOver::afterMapping(BaseEntity &entity)
 {
     SpotVoiceOver& svo = dynamic_cast<SpotVoiceOver&>(entity);
-    auto vo = svo.detailEntity()->cloneAsUnique();
+    auto vo = svo.detailEntity()->cloneAsShared();
     svo.setDetailEntity( vo.get() );
     getEntityById(std::move(vo), svo.detailId()->value());
 }

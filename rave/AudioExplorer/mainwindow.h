@@ -87,9 +87,9 @@ public:
 
     int selected_row_id(QTableView*);
     std::string get_search_value(const QTableView*, int);
-    BaseEntity* find_selected_entity(EntityDataModel*, QTableView*, int);
+    std::shared_ptr<BaseEntity> find_selected_entity(EntityDataModel*, QTableView*, int);
     void delete_entity(EntityDataModel*, QTableView*, int);
-    bool okay_to_delete(const BaseEntity* entity);
+    bool okay_to_delete(const std::shared_ptr<BaseEntity> entity);
     void remove_tv_selected_row(QTableView*);
     std::string make_selection(EntityDataModel* edm, std::string, int);
     AUDIO::Audio* get_selected_audio();

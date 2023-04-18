@@ -85,9 +85,9 @@ void OrderPackage::populateEntity()
 
 }
 
-std::unique_ptr<BaseEntity> OrderPackage::cloneAsUnique()
+std::shared_ptr<BaseEntity> OrderPackage::cloneAsShared()
 {
-    return std::make_unique<OrderPackage>();
+    return std::make_shared<OrderPackage>();
 }
 
 void OrderPackage::afterMapping(BaseEntity &entity)

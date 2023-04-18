@@ -16,7 +16,7 @@ EntityModel::~EntityModel()
     clear();
 }
 
-EntityModel::EntityModel(std::unique_ptr<BaseEntity> entity)
+EntityModel::EntityModel(std::shared_ptr<BaseEntity> entity)
     :mEntity{std::move(entity)}
 {
     setHeader();
@@ -27,20 +27,25 @@ void EntityModel::setHeader()
     this->setHorizontalHeaderLabels(mEntity->tableHeaders());
 }
 
-void EntityModel::addEntity(std::unique_ptr<BaseEntity> entity)
+void EntityModel::addEntity(std::shared_ptr<BaseEntity> entity)
 {
-    BaseEntity* be = entity.get();
-    addRow(be->tableViewColumns());
+    //BaseEntity* be = entity.get();
+    //addRow(be->tableViewColumns());
+
+    addRow(entity->tableViewColumns());
     std::string key = entity->searchColumn();
      // TODO:: we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
     mEntities.push_back(std::move(record));
 }
 
-void EntityModel::add_entity(std::unique_ptr<BaseEntity> entity)
+void EntityModel::add_entity(std::shared_ptr<BaseEntity> entity)
 {
-    BaseEntity* be = entity.get();
-    addRow(be->tableViewColumns());
+//    BaseEntity* be = entity.get();
+//    addRow(be->tableViewColumns());
+
+    addRow(entity->tableViewColumns());
+
     std::string key = entity->searchColumn();
     // we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
@@ -55,7 +60,8 @@ void EntityModel::addRow(const std::vector<std::string> entity_cols)
     appendRow(view_names);
 }
 
-BaseEntity* EntityModel::findEntityByName(const std::string name)
+/*
+BaseEntity* EntityModel::findEntityByNameX(const std::string name)
 {
     BaseEntity* be = nullptr;
 
@@ -68,9 +74,28 @@ BaseEntity* EntityModel::findEntityByName(const std::string name)
 
     }
 
+
     return be;
 }
+*/
 
+std::shared_ptr<BaseEntity> EntityModel::findEntityByName(const std::string name)
+{
+    //auto be = std::make_shared<BaseEntity>();
+    //be = nullptr;
+
+    for (auto& record: mEntities){
+         const auto& [entity_name, entity] = record;
+        if (entity_name == name){
+            return entity;
+            //break;
+        }
+    }
+
+    return nullptr;
+}
+
+/*
 BaseEntity* EntityModel::find_entity_by_id(int id)
 {
     BaseEntity* be = nullptr;
@@ -83,7 +108,24 @@ BaseEntity* EntityModel::find_entity_by_id(int id)
 
     return be;
 }
+*/
 
+std::shared_ptr<BaseEntity> EntityModel::find_entity_by_id(int id)
+{
+    //auto be = std::make_shared<BaseEntity>();
+    //be = nullptr;
+
+    for (auto& record : mEntities){
+        const auto& [name, entity] = record;
+        if (entity->id() == id){
+                return entity;
+                //break;
+        }
+
+    }
+
+    return nullptr;
+}
 void EntityModel::deleteFromModel()
 {
     mEntities.erase(std::remove_if(
@@ -109,12 +151,12 @@ void EntityModel::clearEntities()
     setHeader();
 }
 
-VecIter EntityModel::vecBegin()
+IteratorEntityRecords EntityModel::vecBegin()
 {
     return mEntities.begin();
 }
 
-VecIter EntityModel::vecEnd()
+IteratorEntityRecords EntityModel::vecEnd()
 {
     return mEntities.end();
 }
@@ -142,6 +184,7 @@ void EntityModel::append_temp(EntityRecord er)
 void EntityModel::move_to_temp()
 {
     auto it = mEntities.begin();
+
     while(mEntities.size() > 0) {
         m_temp_entities.push_back(std::move(*it));
         mEntities.erase(it);
@@ -194,24 +237,24 @@ std::string EntityModel::entityTableName() const
     return mEntity->tableName();
 }
 
-BaseEntity& EntityModel::getEntity()
-{
-    return *mEntity;
-}
-
-void EntityModel::set_entity(std::unique_ptr<BaseEntity> entity)
-{
-    mEntity = std::move(entity);
-}
-
-std::unique_ptr<BaseEntity> const& EntityModel::get_entity() const
+std::shared_ptr<BaseEntity> EntityModel::getEntity()
 {
     return mEntity;
 }
 
-BaseEntity* EntityModel::firstEntity()
+void EntityModel::set_entity(std::shared_ptr<BaseEntity> entity)
 {
-    return std::get<1>(mEntities[0]).get();
+    mEntity = std::move(entity);
+}
+
+std::shared_ptr<BaseEntity> const& EntityModel::get_entity() const
+{
+    return mEntity;
+}
+
+std::shared_ptr<BaseEntity> EntityModel::firstEntity()
+{
+    return std::get<1>(mEntities[0]);
 }
 
 std::list<std::string> EntityModel::keys()
@@ -240,7 +283,7 @@ EntityDataModel::EntityDataModel()
     m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
 }
 
-EntityDataModel::EntityDataModel(std::unique_ptr<BaseEntity> baseEntity)
+EntityDataModel::EntityDataModel(std::shared_ptr<BaseEntity> baseEntity)
     :EntityModel(std::move(baseEntity))
     ,dbManager{}
     ,m_relation_mapper{nullptr}
@@ -265,7 +308,7 @@ void EntityDataModel::populateEntities()
     dbManager->provider()->cache()->first();
     do{
        auto e = dbManager->provider()->cache()->currentElement();
-       auto ent = getEntity().cloneAsUnique();
+       auto ent = getEntity()->cloneAsShared();
 
        ent->baseMapFields(e);
 
@@ -280,9 +323,10 @@ void EntityDataModel::populateEntities()
 void EntityDataModel::populateMToMDetails()
 {
     std::vector<int> ids;
-    VecIter it = vecBegin();
+    IteratorEntityRecords it = vecBegin();
     for (; it != vecEnd(); ++it){
-        ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(*it).get());
+        //ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(*it).get());
+        ManyToMany* mtom = dynamic_cast<ManyToMany*>((std::get<1>(*it)).get());
         ids.push_back(mtom->detailId()->value());
     }
 
@@ -293,7 +337,7 @@ const std::unique_ptr<BaseDatabaseManager> &EntityDataModel::getDBManager() cons
     return dbManager;
 }
 
-int EntityDataModel::createEntity(std::unique_ptr<BaseEntity> entity)
+int EntityDataModel::createEntity(std::shared_ptr<BaseEntity> entity)
 {
     int id = dbManager->createEntity(*entity.get());
     if (id > 0){
@@ -308,10 +352,20 @@ int EntityDataModel::createEntityDB(const BaseEntity& entity)
     return dbManager->createEntity(entity);
 }
 
-void EntityDataModel::updateEntity(const BaseEntity& entity)
+void EntityDataModel::updateEntity(const BaseEntity& updated_entity)
 {
-    if (entity.id() > 0)
-        dbManager->updateEntity(entity);
+    if (updated_entity.id() > 0)
+    {
+        dbManager->updateEntity(updated_entity);
+        all();
+    }
+}
+
+void EntityDataModel::update_entity(const BaseEntity* new_entity)
+{
+    deleteFromModel();
+    std::shared_ptr<BaseEntity> shd_entity(const_cast<BaseEntity*>(new_entity));
+    addEntity(std::move(shd_entity));
 }
 
 void EntityDataModel::deleteEntity(const BaseEntity& entity)
@@ -332,11 +386,11 @@ void EntityDataModel::deleteMarkedEntities()
 
 void EntityDataModel::all()
 {
-    if (dbManager->fetchAll(getEntity()) > 0)
+    if (dbManager->fetchAll(*(getEntity())) > 0)
         populateEntities();
 }
 
-void EntityDataModel::cacheEntity(std::unique_ptr<BaseEntity> entity)
+void EntityDataModel::cacheEntity(std::shared_ptr<BaseEntity> entity)
 {
     addEntity(std::move(entity));
 }
@@ -348,26 +402,26 @@ size_t EntityDataModel::count()
 
 void EntityDataModel::searchByStr(std::tuple<std::string, std::string> searchItem)
 {
-    if (dbManager->searchByStr(getEntity(), searchItem) > 0)
+    if (dbManager->searchByStr(*(getEntity()), searchItem) > 0)
         populateEntities();
 }
 
 void EntityDataModel::searchByInt(std::tuple<std::string, std::string, int> searchItem)
 {
-    if (dbManager->searchByInt(getEntity(), searchItem) > 0)
+    if (dbManager->searchByInt(*(getEntity()), searchItem) > 0)
         populateEntities();
 }
 
 void EntityDataModel::search(const std::string searchFilter)
 {
-    if (dbManager->search(getEntity(), searchFilter) > 0)
+    if (dbManager->search(*(getEntity()), searchFilter) > 0)
         populateEntities();
 
 }
 
 void EntityDataModel::starts_with(std::tuple<std::string, std::string> search_item)
 {
-    if (dbManager->starts_with(getEntity(), search_item) > 0)
+    if (dbManager->starts_with(*(getEntity()), search_item) > 0)
         populateEntities();
 }
 
@@ -399,15 +453,14 @@ int EntityDataModel::insert_returning_id(const std::string sql)
 int EntityDataModel::readRaw(const std::string sql)
 {
     return dbManager->readRaw( sql );
-
 }
 
 void EntityDataModel::getById(std::tuple<std::string, std::string, int> searchItem)
 {
-    if (dbManager->searchByInt(getEntity(), searchItem) > 0){
+    if (dbManager->searchByInt(*(getEntity()), searchItem) > 0){
         dbManager->provider()->cache()->first();
         auto e = dbManager->provider()->cache()->currentElement();
-        mapEntity(e, getEntity());
+        mapEntity(e, *(getEntity()));
     }
 }
 

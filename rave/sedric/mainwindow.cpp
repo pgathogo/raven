@@ -126,7 +126,7 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
 //            this, &MainWindow::hour_changed);
 
-    m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
+    m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
 
 //    ui->dtSchedule->setDate(QDate::currentDate());
 
@@ -891,7 +891,7 @@ void MainWindow::play_audio()
 
     AudioFile af(full_audio_name);
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
-    m_audio_player->play_audio();
+    m_audio_player->play_audio("C", QString::fromStdString(full_audio_name));
 
 }
 
@@ -905,7 +905,7 @@ History MainWindow::make_history(int id)
 {
     Schedule schedule;
 
-    auto edm = std::make_unique<EntityDataModel>(std::make_unique<Schedule>());
+    auto edm = std::make_unique<EntityDataModel>(std::make_shared<Schedule>());
 
     QString date_format = "yyyy-MM-dd";
     QString d_range1 = m_datetime_selection.sel_date.addDays(-7).toString(date_format);
@@ -975,7 +975,7 @@ void MainWindow::select_date_time()
 
 void MainWindow::show_selection(DateTimeSelection selection)
 {
-    ui->btnDateTimeSelector->setText(selection.sel_date.toString("dd/MM/yyyy"));
+    ui->btnDateTimeSelector->setText(selection.sel_date.toString("dd/MM/yyyy")+" ...");
     QString label = "[ ";
     QString h{""};
     std::sort(selection.sel_hours.begin(),selection.sel_hours.end());

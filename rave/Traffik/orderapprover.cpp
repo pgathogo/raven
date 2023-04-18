@@ -105,9 +105,9 @@ void OrderApprover::populateEntity()
 {
 }
 
-std::unique_ptr<BaseEntity> OrderApprover::cloneAsUnique()
+std::shared_ptr<BaseEntity> OrderApprover::cloneAsShared()
 {
-    return std::make_unique<OrderApprover>();
+    return std::make_shared<OrderApprover>();
 }
 
 void OrderApprover::afterMapping(BaseEntity&)

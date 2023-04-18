@@ -225,12 +225,13 @@ void BookingOrderBrowser::new_booking()
     if (ui->twOrders->selectedItems().size() > 0){
 
         int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
-        auto order_edm = std::make_unique<EntityDataModel>(std::make_unique<Order>());
+        auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
 
         order_edm->getById({"id", "=", order_id});
 
-        Order& order_ref = dynamic_cast<Order&>(order_edm->getEntity());
-        Order* order = &order_ref;
+        //Order* order_ref = dynamic_cast<Order*>(order_edm->getEntity().get());
+        //Order* order = order_ref;
+        Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
 
         if (order != nullptr){
             auto bw = std::make_unique<BookingWizard>(order);
@@ -282,15 +283,15 @@ void BookingOrderBrowser::show_spot_details(const QPoint& pos)
 
 void BookingOrderBrowser::spot_details(int spot_id)
 {
-    auto spot_edm = std::make_unique<EntityDataModel>(std::make_unique<TRAFFIK::Spot>());
+    auto spot_edm = std::make_unique<EntityDataModel>(std::make_shared<TRAFFIK::Spot>());
     spot_edm->getById({"id", "=", spot_id});
-    TRAFFIK::Spot& spot_ref = dynamic_cast<TRAFFIK::Spot&>(spot_edm->getEntity());
-    TRAFFIK::Spot* spot = &spot_ref;
+    TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(spot_edm->getEntity().get());
+//    TRAFFIK::Spot* spot = spot_ref;
 
-    auto client_edm = std::make_unique<EntityDataModel>(std::make_unique<Client>());
+    auto client_edm = std::make_unique<EntityDataModel>(std::make_shared<Client>());
     client_edm->getById({"id", "=", spot->client()->value()});
-    Client& client_ref = dynamic_cast<Client&>(client_edm->getEntity());
-    Client* client = &client_ref;
+    Client* client = dynamic_cast<Client*>(client_edm->getEntity().get());
+//    Client* client = client_ref;
 
     spot->voice_over().setParentId(spot_id);
     spot->type_exclusion().setParentId(spot_id);
@@ -305,7 +306,7 @@ void BookingOrderBrowser::spot_details(int spot_id)
 
 void BookingOrderBrowser::find_orders(QString text)
 {
-    auto entity = m_client_edm->findEntityByName(text.toStdString());
+    auto entity = m_client_edm->findEntityByName(text.toStdString()).get();
     if (entity == nullptr)
         return;
 
@@ -315,7 +316,6 @@ void BookingOrderBrowser::find_orders(QString text)
 QTableWidget* BookingOrderBrowser::get_selected_grid()
 {
     QTableWidget* tbl{nullptr};
-    bool table_found{false};
 
     for (auto table: m_grid_tables){
         for (auto& item : table->selectedItems()){
@@ -329,7 +329,7 @@ QTableWidget* BookingOrderBrowser::get_selected_grid()
 void BookingOrderBrowser::set_autocompleter()
 {
     m_client_edm = std::make_unique<EntityDataModel>(
-                std::make_unique<Client>());
+                std::make_shared<Client>());
 
     m_client_edm->all();
 
@@ -417,9 +417,9 @@ std::string BookingOrderBrowser::make_filter(int id)
 {
 
     std::unique_ptr<EntityDataModel> setupEDM;
-    setupEDM = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
+    setupEDM = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     setupEDM->all();
-    auto setup = dynamic_cast<RavenSetup*>(setupEDM->firstEntity());
+    auto setup = dynamic_cast<RavenSetup*>(setupEDM->firstEntity().get());
 
     std::string order_approval_filter{};
     if (setup->orderAprvdBB()->value()){
@@ -514,8 +514,6 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
 
                 table->setHorizontalHeaderLabels(header_labels);
                 table->resizeColumnsToContents();
-//                table->horizontalHeader()->setStretchLastSection(true);
-                //table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
                 table->horizontalHeader()->setVisible(true);
                 table->setEditTriggers(QAbstractItemView::NoEditTriggers);
                 table->setSelectionBehavior(QAbstractItemView::SelectRows);

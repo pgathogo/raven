@@ -428,9 +428,9 @@ void TimeBand::setPercent9(int val)
     m_percent9->setValue( val );
 }
 
-std::unique_ptr<BaseEntity> TimeBand::cloneAsUnique()
+std::shared_ptr<BaseEntity> TimeBand::cloneAsShared()
 {
-    return std::make_unique<TimeBand>();
+    return std::make_shared<TimeBand>();
 }
 
 void TimeBand::afterMapping(BaseEntity &entity)

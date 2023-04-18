@@ -38,9 +38,9 @@ public:
             showMessage("Select a Client to view Bla Bla Bla");
         }else{
 
-           BaseEntity* be = findSelectedEntity();
+           std::shared_ptr<BaseEntity> be = findSelectedEntity();
 
-           T1* entity = dynamic_cast<T1*>(be);
+           T1* entity = dynamic_cast<T1*>(be.get());
 
            auto browser = std::make_unique<T2>(entity, this);
 
@@ -55,7 +55,7 @@ private slots:
     void openOrderBrowser();
     void selection_changed(const QItemSelection&, const QItemSelection&);
 signals:
-    void client_selection_changed(BaseEntity*);
+    void client_selection_changed(std::shared_ptr<BaseEntity>);
 
 private:
     Ui::ClientBrowser *ui;

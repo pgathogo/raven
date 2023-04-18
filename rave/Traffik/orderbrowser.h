@@ -21,7 +21,7 @@ public:
     void addRecord() override;
     void updateRecord() override;
     void searchRecord() override;
-    bool okay_to_delete(BaseEntity* entity) override;
+    bool okay_to_delete(std::shared_ptr<BaseEntity> entity) override;
 
     void search_by_client(Client*);
 

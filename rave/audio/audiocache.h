@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "../framework/baseentity.h"
+#include "audio.h"
+
 
 
 template<typename T>
@@ -17,30 +19,25 @@ namespace AUDIO
     {
     public:
         AudioCache();
+        AudioCache(std::shared_ptr<AUDIO::Audio>);
 
-        IntegerField* audio_id() const;
-        StringField* title() const;
-        StringField* artist_name() const;
-        StringField* orig_filepath() const;
+        IntegerField* audio_id();
         StringField* cache_filepath() const;
-        StringField* file_extension() const;
         DateTimeField* cache_datetime() const;
         DateTimeField* last_play_datetime() const;
-        ChoiceField<std::string>* audio_type() const;
         BooleanField* is_cached() const;
         BooleanField* is_dirty() const;
 
+        std::shared_ptr<AUDIO::Audio> audio();
+
         void set_audio_id(int);
-        void set_title(const std::string);
-        void set_artist_name(const std::string);
-        void set_orig_filepath(const std::string);
         void set_cache_filepath(const std::string);
-        void set_file_extension(const std::string);
         void set_cache_datetime(QDateTime);
         void set_last_play_datetime(QDateTime);
-        void set_audio_type(std::string);
         void set_is_cached(bool);
         void set_is_dirty(bool);
+
+        void set_audio(std::shared_ptr<AUDIO::Audio>);
 
         std::string tableName() const override;
         void setTableName(const std::string table_name) override;
@@ -53,24 +50,21 @@ namespace AUDIO
         std::string searchColumn() const override;
         void populateEntity() override;
 
-        std::unique_ptr<BaseEntity> cloneAsUnique() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
         void afterMapping(BaseEntity& entity) override;
 
         friend bool operator ==(const AudioCache& lhs, const AudioCache& rhs);
-        friend std::ostream& operator<<(std::ostream& os, const AudioCache& ac);
+        friend std::ostream& operator<<(std::ostream& os, AudioCache& ac);
 
     private:
         IntegerField* m_audio_id;
-        StringField* m_title;
-        StringField* m_artist_name;
-        StringField* m_orig_filepath;
         StringField* m_cache_filepath;
-        StringField* m_file_extension;
         DateTimeField* m_cache_datetime;
         DateTimeField* m_last_play_datetime;
-        ChoiceField<std::string>* m_audio_type;
         BooleanField* m_is_cached;
         BooleanField* m_is_dirty;
+
+        std::shared_ptr<Audio> m_audio;
 
         QStringList m_header;
         std::string m_table_name;

@@ -405,6 +405,12 @@
 			null
 		],
 		[
+			"D:/Home/Clients/PMS/Raven/rave/security/roleuser.h",
+			"MU",
+			"QCNHDQ7SKX/moc_roleuser.cpp",
+			null
+		],
+		[
 			"D:/Home/Clients/PMS/Raven/rave/security/user.h",
 			"MU",
 			"QCNHDQ7SKX/moc_user.cpp",
@@ -684,6 +690,7 @@
 		[ "D:/Home/Clients/PMS/Raven/rave/security/role.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/security/roleform.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/security/rolemember.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/roleuser.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/security/user.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/security/userbrowser.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/security/userform.cpp", "MU", null ],

@@ -145,15 +145,15 @@ BaseEntity* RoleMember::mtomEntity()
     return this;
 }
 
-std::unique_ptr<BaseEntity> RoleMember::cloneAsUnique()
+std::shared_ptr<BaseEntity> RoleMember::cloneAsShared()
 {
-    return std::make_unique<RoleMember>(mParentEntity, mDetailEntity);
+    return std::make_shared<RoleMember>(mParentEntity, mDetailEntity);
 }
 
 void RoleMember::afterMapping(BaseEntity &entity)
 {
     RoleMember& rm = dynamic_cast<RoleMember&>(entity);
-    auto user = rm.detailEntity()->cloneAsUnique();
+    auto user = rm.detailEntity()->cloneAsShared();
     rm.setDetailEntity( user.get() );
 
     /**********/

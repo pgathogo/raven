@@ -231,7 +231,7 @@ private slots:
     void push_items_down(int);
     void reprint_schedule(int);
     //void queue_for_caching(AUDIO::Audio*);
-    void queue_for_caching(OATS::Audio);
+    void queue_for_caching(std::shared_ptr<AUDIO::Audio>);
 //    void insert_schedule_item(int, std::unique_ptr<OATS::ScheduleItem>);
     void persist_cache();
     void end_of_play();
@@ -307,7 +307,6 @@ private:
     void fill_schedule_headers(QDate, int);
     void setup_timers();
     void to_lower(std::string&);
-    OATS::Audio make_schedule_audio(AUDIO::Audio*);
 
     void test_concept();
 };

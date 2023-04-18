@@ -205,9 +205,9 @@ VoiceExclusion& VoiceOver::voiceEx()
 }
 
 
-std::unique_ptr<BaseEntity> VoiceOver::cloneAsUnique()
+std::shared_ptr<BaseEntity> VoiceOver::cloneAsShared()
 {
-    return std::make_unique<VoiceOver>();
+    return std::make_shared<VoiceOver>();
 }
 
 void VoiceOver::afterMapping(BaseEntity &entity)

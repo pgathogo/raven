@@ -63,7 +63,7 @@ public:
 
     virtual void populateEntity();
 
-    void getEntityById(std::unique_ptr<BaseEntity> entity, int id);
+    void getEntityById(std::shared_ptr<BaseEntity> entity, int id);
 
     void setDBAction(DBAction dbact);
     DBAction dbAction() const;
@@ -72,7 +72,8 @@ public:
 
     std::vector<FieldMap> const& fields() const;
 
-    virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
+//    virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
+    virtual std::shared_ptr<BaseEntity> cloneAsShared() = 0;
 
     virtual void afterMapping(BaseEntity& entity) = 0;
 
@@ -118,7 +119,7 @@ public:
     }
 
     template<typename T, typename... Args>
-    std::vector<T> tableViewCols(Args&& ...args) const
+    std::vector<T> tableViewCols(Args&& ...args)  const
     {
         std::vector<T> cols;
         (cols.push_back(args), ...);
@@ -129,7 +130,7 @@ public:
 
     bool isNew();
 
-    BaseEntity const& get_entity() const;
+    std::shared_ptr<BaseEntity> const& get_entity() const;
 
 private:
     void print_selected_members(const QStringList& members) const;

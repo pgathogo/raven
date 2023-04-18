@@ -1,9 +1,14 @@
 #ifndef ROLE_H
 #define ROLE_H
 
+#include <memory>
+
 #include "../framework/baseentity.h"
 
-class User;
+namespace SECURITY{
+    class RoleUser;
+}
+
 class RoleMember;
 
 class Role : public BaseEntity
@@ -54,7 +59,7 @@ public:
     std::string searchColumn() const override;
 
     void populateEntity() override;
-    std::unique_ptr<BaseEntity> cloneAsUnique() override;
+    std::shared_ptr<BaseEntity> cloneAsShared() override;
     void afterMapping(BaseEntity& entity) override;
 
     std::string displayName() override;
@@ -64,7 +69,7 @@ public:
 
     std::string order_by() const override;
 
-    User& user();
+    //SECURITY::RoleUser& user();
     RoleMember& roleMember();
 
 private:
@@ -78,7 +83,7 @@ private:
     QStringList mHeader;
     std::string mTableName;
 
-    std::unique_ptr<User> mUser;
+    std::unique_ptr<SECURITY::RoleUser> mUser;
     std::unique_ptr<RoleMember> mRoleMember;
 
 };

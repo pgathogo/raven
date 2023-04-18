@@ -1,10 +1,11 @@
 #ifndef TREEVIEWMODEL_H
 #define TREEVIEWMODEL_H
 
+
 #include <string>
 #include <QStandardItemModel>
 
-struct NodeData;
+#include "tree.h"
 class Node;
 
 using NodeId = int;

@@ -77,9 +77,9 @@ namespace ClusterManager
     {
     }
 
-    std::unique_ptr<BaseEntity> Cluster::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Cluster::cloneAsShared()
     {
-        return std::make_unique<Cluster>();
+        return std::make_shared<Cluster>();
     }
 
     void Cluster::afterMapping(BaseEntity& entity)

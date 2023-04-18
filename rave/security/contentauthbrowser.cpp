@@ -49,8 +49,8 @@ void ContentAuthBrowser::updateRecord()
 
     int entity_id = id_from_name(selectedRowName().toStdString());
 
-    BaseEntity* be = entityDataModel().findEntityByName(std::to_string(entity_id));
-    ContentAuth* contAuth = dynamic_cast<ContentAuth*>(be);
+    std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(std::to_string(entity_id));
+    ContentAuth* contAuth = dynamic_cast<ContentAuth*>(be.get());
     std::unique_ptr<ContentAuthForm> authForm =
             std::make_unique<ContentAuthForm>(contAuth, this);
 

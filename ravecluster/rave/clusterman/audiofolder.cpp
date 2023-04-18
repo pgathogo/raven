@@ -71,9 +71,9 @@ namespace ClusterManager
         return folder_name()->valueToString();
     }
 
-    std::unique_ptr<BaseEntity> AudioFolder::cloneAsUnique()
+    std::shared_ptr<BaseEntity> AudioFolder::cloneAsShared()
     {
-        return std::make_unique<AudioFolder>();
+        return std::make_shared<AudioFolder>();
     }
 
     void AudioFolder::populateEntity()

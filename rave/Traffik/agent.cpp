@@ -152,9 +152,9 @@ void Agent::setAddress(std::string paddress)
     mAddress->setValue(paddress);
 }
 
-std::unique_ptr<BaseEntity> Agent::cloneAsUnique()
+std::shared_ptr<BaseEntity> Agent::cloneAsShared()
 {
-    return std::make_unique<Agent>();
+    return std::make_shared<Agent>();
 }
 
 void Agent::afterMapping(BaseEntity &entity)

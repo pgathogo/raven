@@ -21,7 +21,7 @@ TypeExclusionBrowser::~TypeExclusionBrowser()
 
 void TypeExclusionBrowser::addRecord()
 {
-    std::unique_ptr<TRAFFIK::TypeExclusion> tex = std::make_unique<TRAFFIK::TypeExclusion>();
+    auto tex = std::make_shared<TRAFFIK::TypeExclusion>();
 
     std::unique_ptr<TypeExclusionDetails> texForm =
             std::make_unique<TypeExclusionDetails>(tex.get());

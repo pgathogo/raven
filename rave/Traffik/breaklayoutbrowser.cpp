@@ -10,7 +10,7 @@
 
 BreakLayoutBrowser::BreakLayoutBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<BreakLayout>()),
+                         std::make_shared<BreakLayout>()),
     ui(new Ui::BreakLayoutBrowser)
 {
     ui->setupUi(this);
@@ -26,7 +26,7 @@ BreakLayoutBrowser::~BreakLayoutBrowser()
 
 void BreakLayoutBrowser::addRecord()
 {
-    auto bl = std::make_unique<BreakLayout>();
+    auto bl = std::make_shared<BreakLayout>();
     auto blForm = std::make_unique<BreakLayoutForm>(bl.get());
 
     if (blForm->exec() > 0){
@@ -45,8 +45,8 @@ void BreakLayoutBrowser::updateRecord()
 {
     std::string searchName = selectedRowName().toStdString();
     if (!searchName.empty()){
-        BaseEntity* be = entityDataModel().findEntityByName(searchName);
-        auto breakLayout = dynamic_cast<BreakLayout*>(be);
+        std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(searchName);
+        auto breakLayout = dynamic_cast<BreakLayout*>(be.get());
         auto blForm = std::make_unique<BreakLayoutForm>(breakLayout);
         if (blForm->exec() > 0){
         }
@@ -55,7 +55,7 @@ void BreakLayoutBrowser::updateRecord()
 
 void BreakLayoutBrowser::deleteRecord()
 {
-    BaseEntity* entity = findSelectedEntity();
+    std::shared_ptr<BaseEntity> entity = findSelectedEntity();
     entity->setDBAction(DBAction::dbaDELETE);
 
     try{
@@ -66,7 +66,7 @@ void BreakLayoutBrowser::deleteRecord()
         edm.executeRawSQL(delStr);
 
         // delete BreakLayout
-        entityDataModel().deleteEntity(*entity);
+        entityDataModel().deleteEntity(*entity.get());
         removeSelectedRow();
 
     } catch (DatabaseException& de){

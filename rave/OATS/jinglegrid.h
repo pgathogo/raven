@@ -34,8 +34,6 @@ namespace OATS
       Jingle();
       Jingle(int page_id, int row, int col,  QString title);
       ~Jingle();
-      QString title() const;
-      void set_title(const QString);
       void set_page_id(int);
       void set_row(int);
       void set_col(int);
@@ -44,31 +42,37 @@ namespace OATS
       int col() const;
       QString jingle_id() const;
       void set_jingle_id(const QString);
+      void set_jingle_status(Jingle::JingleStatus);
 
+      /*
+      QString title() const;
+      void set_title(const QString);
       int track_id();
       void set_track_id(int);
       QString track_path();
       void set_track_path(QString);
-
       int track_duration();
       void set_track_duration(int);
-      void set_jingle_status(Jingle::JingleStatus);
+      */
 
-      void set_audio(AUDIO::Audio*);
-      AUDIO::Audio* audio();
+      void set_audio(std::shared_ptr<AUDIO::Audio>);
+      std::shared_ptr<AUDIO::Audio> audio();
     private:
         QString m_jingle_id{""};
         int m_grid_page_id{-1};
         int m_row{-1};
         int m_col{-1};
-        QString m_title;
 
+        Jingle::JingleStatus m_jingle_status;
+        std::shared_ptr<AUDIO::Audio> m_audio;
+
+        /*
+        QString m_title;
         int m_track_id{-1};
         QString m_track_path;
         int m_track_duration;
-        Jingle::JingleStatus m_jingle_status;
+        */
 
-        AUDIO::Audio* m_audio;
     };
 
     /* GridButton */
@@ -159,7 +163,7 @@ namespace OATS
         void save_jingles();
         void clear_all();
         void save_as();
-        void selected_audio(AUDIO::Audio*);
+        void selected_audio(std::shared_ptr<AUDIO::Audio>);
 
     private:
         std::unique_ptr<QVBoxLayout> m_main_layout;

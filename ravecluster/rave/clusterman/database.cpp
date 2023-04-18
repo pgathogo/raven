@@ -82,9 +82,9 @@ namespace ClusterManager
         return db_name()->valueToString();
     }
 
-    std::unique_ptr<BaseEntity> Database::cloneAsUnique()
+    std::shared_ptr<BaseEntity> Database::cloneAsShared()
     {
-        return std::make_unique<Server>();
+        return std::make_shared<Server>();
     }
 
     void Database::populateEntity()

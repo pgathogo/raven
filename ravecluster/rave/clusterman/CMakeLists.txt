@@ -76,6 +76,8 @@ set(PROJECT_SOURCES
         ../../../rave/security/authentication.cpp
         ../../../rave/security/rolemember.h
         ../../../rave/security/rolemember.cpp
+        ../../../rave/security/roleuser.h
+        ../../../rave/security/roleuser.cpp
         ../../../rave/security/role.h
         ../../../rave/security/role.cpp
         ../../../rave/security/user.h

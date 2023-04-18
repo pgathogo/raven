@@ -129,13 +129,13 @@ namespace OATS
     public:
         AudioLoadWidget();
     signals:
-        void cart_add_audio(AUDIO::Audio*);
+        void cart_add_audio(std::shared_ptr<AUDIO::Audio>);
         void move_item_up();
         void move_item_down();
         void remove_item();
     private slots:
         void open_track_picker();
-        void selected_audio(AUDIO::Audio*);
+        void selected_audio(std::shared_ptr<AUDIO::Audio>);
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QToolButton> m_up_btn;
@@ -155,7 +155,7 @@ namespace OATS
 
          AudioViewWidget();
          void create_table_view_headers();
-         void add_audio(AUDIO::Audio*, int);
+         void add_audio(std::shared_ptr<AUDIO::Audio>, int);
          void move_selected_item_up();
          void move_selected_item_down();
          void move_selected_item(MoveDirection);
@@ -267,7 +267,7 @@ namespace OATS
         void stop_all();
         void clear_all();
     private slots:
-        void cart_add_audio(AUDIO::Audio*);
+        void cart_add_audio(std::shared_ptr<AUDIO::Audio>);
         void move_item_up();
         void move_item_down();
         void remove_item();

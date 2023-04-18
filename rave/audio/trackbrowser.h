@@ -46,13 +46,13 @@ namespace AUDIO
         void init_top_widget(QSplitter*);
         void init_bottom_widget(QSplitter*);
 
-        AUDIO::Audio* current_selected_audio();
-        AUDIO::Audio* find_audio_by_id(int);
+        std::shared_ptr<AUDIO::Audio> current_selected_audio();
+        std::shared_ptr<AUDIO::Audio> find_audio_by_id(int);
 
     signals:
     private slots:
         void folder_clicked(int);
-        void selected_audio(AUDIO::Audio*);
+        void selected_audio(std::shared_ptr<AUDIO::Audio>);
         void search_filter(Filter);
 
     private:
@@ -75,7 +75,7 @@ namespace AUDIO
 
        QSplitter* m_main_splitter;
 
-       AUDIO::Audio* m_current_selected_audio;
+       std::shared_ptr<AUDIO::Audio> m_current_selected_audio;
     };
 
 
@@ -183,7 +183,7 @@ namespace AUDIO
         AudioDataModel(AUDIO::AudioTrackViewer* viewer);
         void fetch_audio_data(FRAMEWORK::RelationMapper*);
         void show_data();
-        AUDIO::Audio* find_audio_by_id(int);
+        std::shared_ptr<AUDIO::Audio> find_audio_by_id(int);
 
         template<typename T>
         void fetch_filtered_audio(T arg)
@@ -200,7 +200,7 @@ namespace AUDIO
            fetch_audio_data(r_mapper);
         }
     signals:
-        void selected_audio(AUDIO::Audio*);
+        void selected_audio(std::shared_ptr<AUDIO::Audio>);
 
     private slots:
         void track_selected(int);
