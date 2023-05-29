@@ -2,7 +2,10 @@
 # source /d/home/virtualenvs/raven/script/activate
 # python manage.py makemigrations
 # python manage.py migrate
-#
+
+#  select * from pg_authid
+#  select * from pg_shadow
+
 from django.db import models
 from django.utils import timezone
 

@@ -12,6 +12,7 @@
 #include "../../../rave/security/userform.h"
 #include "../../../rave/security/user.h"
 #include "../../../rave/security/role.h"
+#include "../../../rave/security/roleuser.h"
 #include "../../../rave/security/content.h"
 #include "../../../rave/security/contentform.h"
 
@@ -49,7 +50,8 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     ,m_context_action{nullptr}
     ,m_act_group_station{nullptr}
     ,m_act_server{nullptr}
-    ,m_act_role{nullptr}
+    ,m_act_edit_role{nullptr}
+    ,m_act_delete_role{nullptr}
     ,m_act_user{nullptr}
 {
     ui->setupUi(this);
@@ -85,8 +87,6 @@ QMap<QString, QVariant> ClusterManagerDlg::make_node_data(ConfigItemType node_ty
     QMap<QString, QVariant> node_data;
     auto uuid = QUuid().createUuid();
     QString uuid_str = uuid.toString(QUuid::WithoutBraces).left(8);
-
-    qDebug() << "make_node_data: "<< uuid_str;
 
     node_data["type"] = static_cast<int>(node_type);
     node_data["uuid"] = uuid_str;
@@ -142,7 +142,6 @@ void ClusterManagerDlg::make_group_nodes()
     m_role_user_group_node = std::make_unique<RoleAndUserGroupNode>(role_user_group_context);
 
 
-
     m_role_user_group_node->set_config_item_type(role_user_group_context.config_item_type);
     m_role_user_group_node->setText(0, role_user_group_context.node_text);
     m_role_user_group_node->setData(0, Qt::UserRole, user_node_data);
@@ -154,8 +153,8 @@ void ClusterManagerDlg::make_group_nodes()
                 "Roles");
     auto role_group_data = make_node_data(role_group_context.config_item_type);
 
-    auto role_group = std::make_shared<Role>();
-    m_current_role_group_node = make_node<std::shared_ptr<Role>, RoleNode, RoleAndUserGroupNode>(
+    auto role_group = std::make_shared<SECURITY::Role>();
+    m_current_role_group_node = make_node<std::shared_ptr<SECURITY::Role>, RoleNode, RoleAndUserGroupNode>(
                 std::move(role_group), m_role_user_group_node.get(), role_group_context);
 
 //    m_role_group_node = std::make_unique<RoleGroupNode>(role_group_context);
@@ -170,8 +169,8 @@ void ClusterManagerDlg::make_group_nodes()
     auto user_group_context = node_context<ConfigItemType::UserGroup, NodeType::Group>(
                 "Users");
     auto user_group_data = make_node_data(user_group_context.config_item_type);
-    auto user_group = std::make_shared<User>();
-    m_current_user_node = make_node<std::shared_ptr<User>, UserNode, RoleAndUserGroupNode>(
+    auto user_group = std::make_shared<SECURITY::User>();
+    m_current_user_node = make_node<std::shared_ptr<SECURITY::User>, UserNode, RoleAndUserGroupNode>(
                 std::move(user_group), m_role_user_group_node.get(), user_group_context);
 
 
@@ -257,7 +256,7 @@ void ClusterManagerDlg::new_cluster()
 
 void ClusterManagerDlg::new_role(RoleNode* role_group_node)
 {
-    auto role = std::make_shared<Role>();
+    auto role = std::make_shared<SECURITY::Role>();
     std::unique_ptr<RoleForm> rform = std::make_unique<RoleForm>(role.get());
     if (rform->exec() > 0 ){
        std::string create_stmt = role->make_create_stmt();
@@ -266,8 +265,8 @@ void ClusterManagerDlg::new_role(RoleNode* role_group_node)
            edm.executeRawSQL(create_stmt);
 
            auto role_context = node_context<ConfigItemType::Role, NodeType::Leaf>(
-                       stoq(role->roleName()->value()));
-           make_node<std::shared_ptr<Role>, RoleNode, RoleNode>(
+                       stoq(role->role_name()->value()));
+           make_node<std::shared_ptr<SECURITY::Role>, RoleNode, RoleNode>(
                        std::move(role), m_current_role_group_node, role_context);
 
        } catch (DatabaseException& de) {
@@ -280,20 +279,19 @@ void ClusterManagerDlg::new_role(RoleNode* role_group_node)
 
 void ClusterManagerDlg::new_user(UserNode* user_group_node)
 {
-    //std::unique_ptr<UserBrowser> uform = std::make_unique<UserBrowser>();
-    auto user = std::make_shared<User>();
+    std::shared_ptr<SECURITY::User> user = std::make_shared<SECURITY::User>();
     std::unique_ptr<UserForm> uform = std::make_unique<UserForm>(user.get());
-    if (uform->exec() > 0){
+    if (uform->exec() > 0)
+    {
         std::string create_stmt = user->make_create_stmt();
-        qDebug() << stoq(create_stmt);
         try {
             EntityDataModel edm;
             edm.executeRawSQL(create_stmt);
 
             auto user_context = node_context<ConfigItemType::User, NodeType::Leaf>(
-                        stoq(user->userName()->value()));
+                        stoq(user->role_name()->value()));
 
-            make_node<std::shared_ptr<User>, UserNode, UserNode>(
+            make_node<std::shared_ptr<SECURITY::User>, UserNode, UserNode>(
                         std::move(user), user_group_node, user_context);
 
         } catch (DatabaseException& de) {
@@ -319,19 +317,57 @@ void ClusterManagerDlg::new_application(AppGroupNode* app_group_node)
 void ClusterManagerDlg::edit_user(UserNode* user_node)
 {
 
-    edit_node<UserNode, UserForm, User>(user_node, &User::userName);
+    edit_node<UserNode, UserForm, SECURITY::User>(user_node, &SECURITY::User::role_name);
 
 }
 
 void ClusterManagerDlg::edit_role(RoleNode* role_node)
 {
-    try{
-        edit_node<RoleNode, RoleForm, Role>(role_node, &Role::roleName);
-    } catch (DatabaseException& de) {
-        showMessage(de.errorMessage());
+
+    SECURITY::Role* role = role_node->node_entity();
+
+    role->roleMember().setParentId(role->role_id());
+
+    auto edit_form = std::make_unique<RoleForm>(role);
+
+    if (edit_form->exec() > 0){
+        std::vector<std::string> members;
+        auto& role_members = edit_form->role_members();
+
+        for(auto& [name, base_entity] : role_members){
+            ManyToMany* mtom = dynamic_cast<ManyToMany*>(base_entity.get());
+            if (mtom->dbAction() == DBAction::dbaCREATE){
+                members.push_back(name);
+            }
+        }
+
+        if (members.size() > 0){
+            try{
+                std::string grant_stmt = role->make_grant_member_stmt(members);
+                EntityDataModel edm;
+                edm.executeRawSQL(grant_stmt);
+            }catch (DatabaseException& de) {
+                showMessage(de.errorMessage()) ;
+            }
+        }
     }
 
 
+    //current_node->update_node_text(stoq((node_entity->*mp)()->value()));
+
+   /*
+    try{
+        edit_node<RoleNode, RoleForm, Role>(role_node, &Role::role_name);
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+  */
+
+}
+
+void ClusterManagerDlg::delete_role(RoleNode* role_node)
+{
+    qDebug() << "Delete role ....";
 }
 
 void ClusterManagerDlg::edit_server(ServerNode* server_node)
@@ -819,18 +855,23 @@ void ClusterManagerDlg::show_role_context_menu(QString node_id, QPoint pos)
 {
     m_role_context_menu = std::make_unique<QMenu>();
 
-    m_act_role = nullptr;
+    m_act_edit_role = nullptr;
+    m_act_delete_role = nullptr;
 
-    m_act_role = std::make_unique<QAction>("Edit Role...");
+    m_act_edit_role = std::make_unique<QAction>("Edit Role...");
+    m_act_delete_role = std::make_unique<QAction>("Delete Role...");
 
     auto role_node = get_cluster_node<RoleNode>(node_id);
 
     if (role_node == nullptr)
         return;
 
-    connect(m_act_role.get(), &QAction::triggered, this, [this, role_node](){edit_role(role_node);});
+    connect(m_act_edit_role.get(), &QAction::triggered, this, [this, role_node](){edit_role(role_node);});
+    connect(m_act_delete_role.get(), &QAction::triggered, this, [this, role_node](){delete_role(role_node);});
 
-    m_role_context_menu->addAction(m_act_role.get());
+    m_role_context_menu->addAction(m_act_edit_role.get());
+    m_role_context_menu->addSeparator();
+    m_role_context_menu->addAction(m_act_delete_role.get());
     m_role_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 
 }
@@ -1177,7 +1218,6 @@ void ClusterManagerDlg::load_data()
 {
     //clear_configuration();
     load_cluster_data();
-
     load_roles_data();
     load_users_data();
     load_content_data();
@@ -1187,8 +1227,6 @@ void ClusterManagerDlg::load_data()
 void ClusterManagerDlg::load_content_data()
 {
     m_content_edm->all();
-
-    qDebug() << "Content Count: " << m_content_edm->count();
 
 }
 
@@ -1305,6 +1343,7 @@ void ClusterManagerDlg::load_cluster_data()
                         folder->setId(std::stoi(value));
                     }
                 }
+
                 if (field == "folder_name" && folder->id() > -1 ){
                     folder->set_folder_name(value);
                 }
@@ -1416,19 +1455,25 @@ void ClusterManagerDlg::load_cluster_data()
 void ClusterManagerDlg::load_users_data()
 {
     std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(
-                std::make_shared<User>());
+                std::make_shared<SECURITY::User>());
     edm->all();
 
     for(auto const&[name, entity] : edm->modelEntities()){
-        User* user_ptr= dynamic_cast<User*>(entity.get());
+        SECURITY::User* user_ptr= dynamic_cast<SECURITY::User*>(entity.get());
 
-        std::shared_ptr<User> user = std::make_shared<User>();
+        std::shared_ptr<SECURITY::User> user = std::make_shared<SECURITY::User>();
         *user = *user_ptr;
 
-        auto item = node_context<ConfigItemType::User, NodeType::Leaf>(
-                    stoq(user_ptr->userName()->value()));
+        if (user->role_name()->value().substr(0,3) == "pg_")
+            continue;
 
-        auto user_node = make_node<std::shared_ptr<User>, UserNode,  UserNode>(
+        if (!user->rol_can_login()->value())
+            continue;
+
+        auto item = node_context<ConfigItemType::User, NodeType::Leaf>(
+                    stoq(user_ptr->role_name()->value()));
+
+        auto user_node = make_node<std::shared_ptr<SECURITY::User>, UserNode,  UserNode>(
                     user, m_current_user_node, item);
 
     }
@@ -1440,26 +1485,47 @@ void ClusterManagerDlg::load_users_data()
 void ClusterManagerDlg::load_roles_data()
 {
     std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(
-                std::make_shared<Role>());
+        std::make_shared<SECURITY::Role>());
+
     edm->all();
 
     for (auto const&[name, entity] : edm->modelEntities()){
-        Role* role_ptr = dynamic_cast<Role*>(entity.get());
 
-//        if (role_ptr->roleName()->value().substr(0,3) == "pg_")
-//            continue;
+        SECURITY::Role* role_ptr = dynamic_cast<SECURITY::Role*>(entity.get());
 
-        std::shared_ptr<Role> role = std::make_shared<Role>();
+
+        if (role_ptr->role_name()->value().substr(0,3) == "pg_")
+            continue;
+
+        if (role_ptr->rol_can_login()->value())
+            continue;
+
+        std::shared_ptr<SECURITY::Role> role = std::make_shared<SECURITY::Role>();
         *role = *role_ptr;
 
-        qDebug() << "Role Member ID: "<< role->roleMember().parentId()->value();
-
         auto item = node_context<ConfigItemType::Role, NodeType::Leaf>(
-                    stoq(role_ptr->roleName()->value()));
-        auto role_node = make_node<std::shared_ptr<Role>, RoleNode, RoleNode>(
+                    stoq(role_ptr->role_name()->value()));
+
+        auto role_node = make_node<std::shared_ptr<SECURITY::Role>, RoleNode, RoleNode>(
                     role, m_current_role_group_node, item);
+
     }
 }
 
 
+/*  Droping user
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM jdoe;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM jdoe;
+REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM jdoe;
+REVOKE ALL PRIVILEGES ON SCHEMA public FROM jdoe;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON SEQUENCES FROM jdoe;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON TABLES FROM jdoe;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON FUNCTIONS FROM jdoe;
+REVOKE USAGE ON SCHEMA public FROM jdoe;
+REASSIGN OWNED BY jdoe TO postgres;
+DROP USER jdoe ;
+
+
+*/
 

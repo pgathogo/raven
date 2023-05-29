@@ -19,8 +19,14 @@ RoleMember::RoleMember(BaseEntity *pEnt, BaseEntity *dEnt)
     mAdminOption = createField<BooleanField>("admin_option", "Admin Option");
 
     mHeader = mDetailEntity->tableHeaders();
+
     setTableName("pg_auth_members");
     getId().setFormOnly(true);
+
+
+    mParentId->setValue(mParentEntity->id());
+    mDetailId->setValue(mDetailEntity->id());
+
 }
 
 RoleMember::~RoleMember()
@@ -28,9 +34,9 @@ RoleMember::~RoleMember()
 
 }
 
-std::unique_ptr<ManyToMany> RoleMember::copy(BaseEntity *pEnt, BaseEntity *dEnt) const
+std::shared_ptr<ManyToMany> RoleMember::copy(BaseEntity *pEnt, BaseEntity *dEnt) const
 {
-    return std::make_unique<RoleMember>(pEnt, dEnt);
+    return std::make_shared<RoleMember>(pEnt, dEnt);
 
 }
 
@@ -99,18 +105,15 @@ std::unique_ptr<BaseEntity> RoleMember::mapFields(StringMap *sm)
 
 std::vector<std::string> RoleMember::tableViewColumns() const
 {
-    User* user = dynamic_cast<User*>(mDetailEntity);
-
-    return tableViewCols<std::string>(user->userName()->displayName());
+    SECURITY::User* user = dynamic_cast<SECURITY::User*>(mDetailEntity);
+    return tableViewCols<std::string>(user->role_name()->displayName());
 
 }
 
 std::vector<std::string> RoleMember::tableViewValues()
 {
-    User* user = dynamic_cast<User*>(mDetailEntity);
-
-    std::string name = user->userName()->valueToString();
-
+    SECURITY::User* user = dynamic_cast<SECURITY::User*>(mDetailEntity);
+    std::string name = user->role_name()->valueToString();
     return {name};
 }
 
@@ -147,18 +150,20 @@ BaseEntity* RoleMember::mtomEntity()
 
 std::shared_ptr<BaseEntity> RoleMember::cloneAsShared()
 {
-    return std::make_shared<RoleMember>(mParentEntity, mDetailEntity);
+
+    auto role_member = std::make_shared<RoleMember>(mParentEntity, mDetailEntity);
+    return role_member;
+
 }
 
 void RoleMember::afterMapping(BaseEntity &entity)
 {
     RoleMember& rm = dynamic_cast<RoleMember&>(entity);
     auto user = rm.detailEntity()->cloneAsShared();
+
     rm.setDetailEntity( user.get() );
 
-    /**********/
     getEntityById(std::move(user), rm.detailId()->value());
-    /**********/
 
 }
 

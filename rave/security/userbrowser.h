@@ -4,8 +4,6 @@
 #include <QDialog>
 #include "../framework/baseentitybrowserdlg.h"
 
-class Role;
-
 
 namespace Ui {
 class UserBrowser;

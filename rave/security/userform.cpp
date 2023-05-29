@@ -3,11 +3,12 @@
 #include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/entitydatamodel.h"
-#include "user.h"
-#include "role.h"
 #include "../utils/tools.h"
 
-UserForm::UserForm(User* user, QDialog *parent) :
+#include "user.h"
+#include "role.h"
+
+UserForm::UserForm(SECURITY::User* user, QDialog *parent) :
     BaseEntityDetailDlg(parent),
     ui(new Ui::UserForm),
     mUser{user}
@@ -33,24 +34,24 @@ std::string UserForm::windowTitle()
 
 void UserForm::populateEntityFields()
 {
-    mUser->setUserName(ui->edtUserName->text().toStdString());
-    mUser->setPassword(ui->edtPassword->text().toStdString());
-    mUser->setPassword(ui->edtPassword->text().toStdString());
-    mUser->setConfirmPassword(ui->edtConfirmPassword->text().toStdString());
-    mUser->setValidUntil(ui->edtExpireDate->date().toString("yyyy-MM-dd").toStdString());
-    bool canExpire = [&](){ return (ui->cbExpiry->checkState()==Qt::Checked) ? true : false ; }();
-    mUser->setPasswordExpire(canExpire);
+    mUser->set_role_name(ui->edtUserName->text().toStdString());
+    mUser->set_rol_password(ui->edtPassword->text().toStdString());
+    bool canExpire = [&](){ return (ui->cbExpiry->checkState()==Qt::Unchecked) ? true : false ; }();
+    if (canExpire)
+        mUser->set_valid_until(ui->edtExpireDate->date().toString("yyyy-MM-dd").toStdString());
+    else
+        mUser->set_valid_until("infinity");
 }
 
 void UserForm::populateFormWidgets()
 {
-    ui->edtUserName->setText(stoq(mUser->userName()->value()));
-    ui->edtUserName->setEnabled(mUser->userName()->value().empty());
+    ui->edtUserName->setText(stoq(mUser->role_name()->value()));
+    ui->edtUserName->setEnabled(mUser->role_name()->value().empty());
 
-    if (!mUser->validUntil()->value().empty() &&
-            mUser->validUntil()->value() != "infinity"){
+    if (!mUser->valid_until()->value().empty() &&
+            mUser->valid_until()->value() != "infinity"){
 
-        auto [y, m, d] = ymd(mUser->validUntil()->value());
+        auto [y, m, d] = ymd(mUser->valid_until()->value());
 
         QDate qdate = QDate(y, m, d);
 
@@ -58,9 +59,10 @@ void UserForm::populateFormWidgets()
         ui->edtExpireDate->setEnabled(true);
     }
 
-    if (mUser->validUntil()->value() == "infinity" ||
-            mUser->validUntil()->value().empty()){
+    if (mUser->valid_until()->value() == "infinity" ||
+            mUser->valid_until()->value().empty()){
         ui->cbExpiry->setCheckState(Qt::Checked);
+        //ui->edtExpireDate->setDate(QDate(QDate::currentDate().addYears(5)));
     }
 }
 
@@ -76,31 +78,31 @@ ActionResult UserForm::saveRecord()
     if (result_type != ActionResultType::arSUCCESS)
             return ar;
 
-    if (mUser->password()->value() != mUser->confirmPassword()->value()){
-        ar = std::make_tuple(ActionResultType::arERROR,
-                             "Password and Confirmation password not same!");
-        return ar;
-    }
+//    if (mUser->password()->value() != mUser->confirmPassword()->value()){
+//        ar = std::make_tuple(ActionResultType::arERROR,
+//                             "Password and Confirmation password not same!");
+//        return ar;
+//    }
 
     // check length of password
-    if (mUser->password()->value().length() < min_password_length){
+    if (mUser->rol_password()->value().length() < min_password_length){
         ar = std::make_tuple(ActionResultType::arERROR,
                              "To few characters in password!");
         return ar;
     }
 
-    if (mUser->passwordExpire()->value()){
-        // check if expiry is > than current date
-    }
+//    if (mUser->passwordExpire()->value()){
+//        // check if expiry is > than current date
+//    }
 
     // For new user, check if there is an existing user with the same name
     if (ui->edtUserName->isEnabled()){
 
         try{
-            EntityDataModel edm = EntityDataModel(std::make_unique<User>());
-            auto user_filter = std::make_tuple("lower("+mUser->userName()->dbColumnName()+")",
+            EntityDataModel edm = EntityDataModel(std::make_unique<SECURITY::User>());
+            auto user_filter = std::make_tuple("lower("+mUser->role_name()->dbColumnName()+")",
                                "=",
-                               mUser->userName()->value());
+                               mUser->role_name()->dbValueFormatter());
             std::string filter = edm.prepareFilter(user_filter);
             edm.search(filter);
 

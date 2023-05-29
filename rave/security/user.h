@@ -2,75 +2,44 @@
 #define USER_H
 
 #include "../framework/baseentity.h"
+#include "baserole.h"
 
 class StringField;
 
-class User : public BaseEntity
+namespace SECURITY
 {
-public:
-    User();
-    User(const std::string username, const std::string password);
-    User& operator=(const User&);
+    class User : public BaseRole
+    {
+    public:
+        User();
+        User(const std::string username, const std::string password);
+        ~User() override;
 
-    ~User() override;
+        std::shared_ptr<BaseEntity> cloneAsShared() override;
+        void afterMapping(BaseEntity& entity) override;
+        std::string make_create_role_stmt() override;
 
-    IntegerField* useSysId() const;
-    void setUseSysId(int val);
+        IntegerField* uniqueId() const override;
 
-    int id() const override;
+    private:
+        IntegerField* m_id;
 
-    StringField* userName() const;
-    void setUserName(const std::string uname);
+        IntegerField* m_OId;
+        StringField* m_role_name;
 
-    StringField* password() const;
-    void setPassword(const std::string pword);
+        BooleanField* m_rol_super;
+        BooleanField* m_rol_inherit;
+        BooleanField* m_rol_can_create_role;
+        BooleanField* m_rol_can_create_db;
+        BooleanField* m_rol_can_login;
+        BooleanField* m_rol_replication;
+        StringField* m_rol_password;
+        StringField* m_valid_until;
 
-    StringField* confirmPassword() const;
-    void setConfirmPassword(const std::string pword);
+        QStringList mHeader;
+        std::string mTableName;
 
-    StringField* validUntil() const;
-    void setValidUntil(const std::string validity);
-
-    BooleanField* passwordExpire() const;
-    void setPasswordExpire(bool val);
-
-    std::string password_validity();
-    std::string make_create_user_stmt();
-    std::string role_rights();
-    std::string make_drop_user_stmt(const std::string username);
-    std::string make_alter_user_stmt(const std::string username);
-
-    std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
-
-    std::vector<std::string> tableViewColumns() const override;
-    std::vector<std::string> tableViewValues() override;
-    QStringList tableHeaders() const override;
-
-    std::string tableName() const override;
-    void setTableName(const std::string table_name) override;
-    std::string searchColumn() const override;
-
-    void populateEntity() override;
-    std::shared_ptr<BaseEntity> cloneAsShared() override;
-    void afterMapping(BaseEntity& entity) override;
-
-    IntegerField* uniqueId() const override;
-
-    std::string displayName() override;
-    std::string make_create_stmt() override;
-    std::string make_alter_stmt(const std::string name) override;
-    std::string make_drop_stmt(const std::string name) override;
-
-private:
-    IntegerField* mUseSysId;
-    StringField* mUserName;
-    StringField* mPassword;
-    StringField* mConfirmPassword;
-    StringField* mValidUntil;
-    BooleanField* mPasswordExpire;
-
-    QStringList mHeader;
-    std::string mTableName;
-};
+    };
+}
 
 #endif // USER_H

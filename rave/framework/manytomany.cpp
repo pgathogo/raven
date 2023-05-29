@@ -119,9 +119,9 @@ VoiceExclusion::~VoiceExclusion()
 {
 }
 
-std::unique_ptr<ManyToMany> VoiceExclusion::copy(BaseEntity* pEnt, BaseEntity* dEnt) const
+std::shared_ptr<ManyToMany> VoiceExclusion::copy(BaseEntity* pEnt, BaseEntity* dEnt) const
 {
-    return std::make_unique<VoiceExclusion>(pEnt, dEnt);
+    return std::make_shared<VoiceExclusion>(pEnt, dEnt);
 }
 
 std::string VoiceExclusion::tableName() const

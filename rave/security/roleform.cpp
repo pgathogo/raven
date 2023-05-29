@@ -4,13 +4,13 @@
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/manytomanybrowser.h"
-#include "role.h"
 #include "../utils/tools.h"
 
+#include "role.h"
 #include "user.h"
 #include "rolemember.h"
 
-RoleForm::RoleForm(Role* role, QDialog* parent) :
+RoleForm::RoleForm(SECURITY::Role* role, QDialog* parent) :
     BaseEntityDetailDlg(parent),
     ui(new Ui::RoleForm),
     mRole{role}
@@ -22,13 +22,10 @@ RoleForm::RoleForm(Role* role, QDialog* parent) :
 
     populateFormWidgets();
 
-    //mMtoMUserBrowser = std::make_unique<ManyToManyBrowser>(&mRole->roleMember(),
-    //                                                       ui->vlUsers,
-    //                                                       this);
-
     mMtoMUserBrowser = createMtoM<ManyToManyBrowser>(&mRole->roleMember(),
                                                            ui->vlUsers,
                                                            this);
+    qDebug() << "XXXXX " ;
     ui->twRole->setCurrentIndex(0);
 }
 
@@ -44,24 +41,25 @@ std::string RoleForm::windowTitle()
 
 void RoleForm::populateEntityFields()
 {
-    mRole->setRoleName(ui->edtRoleName->text().toStdString());
-    mRole->setComment(ui->edtComment->text().toStdString());
-    mRole->setValidUntil(ui->edtValidUntil->date().toString("yyyy-MM-dd").toStdString());
-    bool canExpire = [&](){ return (ui->cbExpiry->checkState()==Qt::Checked) ? true : false; }();
-    mRole->setRoleExpire(canExpire);
+    mRole->set_role_name(ui->edtRoleName->text().toStdString());
+    mRole->set_valid_until(ui->edtValidUntil->date().toString("yyyy-MM-dd").toStdString());
+
+   // mRole->setComment(ui->edtComment->text().toStdString());
+    //bool canExpire = [&](){ return (ui->cbExpiry->checkState()==Qt::Checked) ? true : false; }();
+    //mRole->setRoleExpire(canExpire);
 }
 
 void RoleForm::populateFormWidgets()
 {
-    ui->edtRoleName->setText(stoq(mRole->roleName()->value()));
-    ui->edtRoleName->setEnabled(mRole->roleName()->value().empty());
+    ui->edtRoleName->setText(stoq(mRole->role_name()->value()));
+    ui->edtRoleName->setEnabled(mRole->role_name()->value().empty());
 
-    ui->edtComment->setText(stoq(mRole->comment()->value()));
+    //ui->edtComment->setText(stoq(mRole->comment()->value()));
 
-    if (!mRole->validUntil()->value().empty() &&
-            mRole->validUntil()->value() != "infinity"){
+    if (!mRole->valid_until()->value().empty() &&
+            mRole->valid_until()->value() != "infinity"){
 
-        auto [y, m, d] = ymd(mRole->validUntil()->value());
+        auto [y, m, d] = ymd(mRole->valid_until()->value());
 
         QDate qdate = QDate(y, m, d);
 
@@ -69,8 +67,8 @@ void RoleForm::populateFormWidgets()
         ui->edtValidUntil->setEnabled(true);
     }
 
-    if (mRole->validUntil()->value() == "infinity" ||
-                mRole->validUntil()->value().empty()){
+    if (mRole->valid_until()->value() == "infinity" ||
+                mRole->valid_until()->value().empty()){
             ui->cbExpiry->setCheckState(Qt::Checked);
         }
 }
@@ -87,10 +85,10 @@ ActionResult RoleForm::saveRecord()
 
     if (ui->edtRoleName->isEnabled()){
         try{
-            EntityDataModel edm = EntityDataModel(std::make_unique<Role>());
-            auto role_filter = std::make_tuple(mRole->roleName()->dbColumnName(),
+            EntityDataModel edm = EntityDataModel(std::make_unique<SECURITY::Role>());
+            auto role_filter = std::make_tuple(mRole->role_name()->dbColumnName(),
                                "like",
-                               mRole->roleName()->value());
+                               mRole->role_name()->value());
             std::string filter = edm.prepareFilter(role_filter);
             edm.search(filter);
 
@@ -119,4 +117,9 @@ void RoleForm::updateValidity(int state)
         ui->edtValidUntil->setEnabled(false);
     else
         ui->edtValidUntil->setEnabled(true);
+}
+
+std::vector<EntityRecord> const& RoleForm::role_members() const
+{
+    return  mMtoMUserBrowser->entityDataModel().modelEntities();
 }

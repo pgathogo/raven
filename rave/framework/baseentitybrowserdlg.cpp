@@ -47,7 +47,6 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
 
     set_button_icons();
 
-
 }
 
 void BaseEntityBrowserDlg::set_button_icons()

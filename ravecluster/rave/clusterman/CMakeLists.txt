@@ -74,6 +74,8 @@ set(PROJECT_SOURCES
         clusterman.qrc
         ../../../rave/security/authentication.h
         ../../../rave/security/authentication.cpp
+        ../../../rave/security/baserole.h
+        ../../../rave/security/baserole.cpp
         ../../../rave/security/rolemember.h
         ../../../rave/security/rolemember.cpp
         ../../../rave/security/roleuser.h

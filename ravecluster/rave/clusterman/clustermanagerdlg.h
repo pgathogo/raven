@@ -16,8 +16,10 @@ namespace Ui {
 class ClusterManagerDlg;
 }
 
-class Role;
-class User;
+namespace SECURITY{
+    class Role;
+    class User;
+}
 
 namespace ClusterManager{
     class Cluster;
@@ -44,8 +46,8 @@ using UserGroupNode = ClusterManager::ConfigNode<ClusterManager::UserGroupConfig
 
 using AppGroupNode = ClusterManager::ConfigNode<ClusterManager::AppGroupConfig>;
 
-using RoleNode = ClusterManager::ConfigNode<Role>;
-using UserNode = ClusterManager::ConfigNode<User>;
+using RoleNode = ClusterManager::ConfigNode<SECURITY::Role>;
+using UserNode = ClusterManager::ConfigNode<SECURITY::User>;
 
 using AppNode = ClusterManager::ConfigNode<ClusterManager::ApplicationConfig>;
 
@@ -235,6 +237,12 @@ public:
 
     }
 
+    inline void print(std::string msg)
+    {
+        // print
+        qDebug() << QString::fromStdString(msg);
+    }
+
 public slots:
     void new_cluster();
     void new_station(int, int);
@@ -251,6 +259,7 @@ public slots:
     void new_user(UserNode*);
     void edit_user(UserNode*);
     void edit_role(RoleNode*);
+    void delete_role(RoleNode*);
     void edit_folder(AudioFolderNode*);
     void edit_server(ServerNode*);
     void edit_disk(DiskNode*);
@@ -315,7 +324,8 @@ private:
 
     std::unique_ptr<QAction> m_act_cluster;
     std::unique_ptr<QAction> m_act_group_role;
-    std::unique_ptr<QAction> m_act_role;
+    std::unique_ptr<QAction> m_act_edit_role;
+    std::unique_ptr<QAction> m_act_delete_role;
     std::unique_ptr<QAction> m_act_user_group;
     std::unique_ptr<QAction> m_act_user;
 
@@ -337,6 +347,7 @@ private:
     std::unique_ptr<QAction> m_act_audio_server;
     std::unique_ptr<QAction> m_act_edit_audio_server;
     std::unique_ptr<QAction> m_act_edit_disk;
+
 
 };
 

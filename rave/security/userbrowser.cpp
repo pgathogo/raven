@@ -6,7 +6,7 @@
 
 UserBrowser::UserBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<User>()),
+                         std::make_unique<SECURITY::User>()),
     ui(new Ui::UserBrowser)
 
 {
@@ -22,18 +22,18 @@ UserBrowser::~UserBrowser()
 
 void UserBrowser::addRecord()
 {
-    rawAdd<User, UserForm>();
+    rawAdd<SECURITY::User, UserForm>();
 
 }
 
 void UserBrowser::updateRecord()
 {
-    rawUpdate<User, UserForm>();
+    rawUpdate<SECURITY::User, UserForm>();
 
 }
 
 void UserBrowser::deleteRecord()
 {
-    rawDelete<User>();
+    rawDelete<SECURITY::User>();
 
 }

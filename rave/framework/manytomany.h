@@ -14,7 +14,7 @@ public:
     ManyToMany(){}
     virtual ~ManyToMany() override;
 
-    virtual std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const = 0;
+    virtual std::shared_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const = 0;
 
     virtual IntegerField* parentId() const = 0;
     virtual void setParentId(int id) = 0;
@@ -60,7 +60,7 @@ class VoiceExclusion : public ManyToMany{
 
         ~VoiceExclusion() override;
 
-        std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const override;
+        std::shared_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const override;
         void setTable(const std::string tablename) override { setTableName(tablename); }
 
         IntegerField* parentId() const override;

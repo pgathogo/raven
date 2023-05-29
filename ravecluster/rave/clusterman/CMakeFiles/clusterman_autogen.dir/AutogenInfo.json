@@ -369,6 +369,12 @@
 			null
 		],
 		[
+			"D:/Home/Clients/PMS/Raven/rave/security/baserole.h",
+			"MU",
+			"QCNHDQ7SKX/moc_baserole.cpp",
+			null
+		],
+		[
 			"D:/Home/Clients/PMS/Raven/rave/security/content.h",
 			"MU",
 			"QCNHDQ7SKX/moc_content.cpp",
@@ -680,6 +686,7 @@
 			"MU",
 			null
 		],
+		[ "D:/Home/Clients/PMS/Raven/rave/security/baserole.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/security/content.cpp", "MU", null ],
 		[
 			"D:/Home/Clients/PMS/Raven/rave/security/contentdetailform.cpp",

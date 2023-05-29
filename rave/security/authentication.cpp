@@ -103,9 +103,9 @@ void Authentication::access_controller(const std::string uname)
 
 std::tuple<std::string, std::string> Authentication::get_user_details(const std::string uname)
 {
-    std::unique_ptr<User> user = std::make_unique<User>();
+    std::unique_ptr<SECURITY::User> user = std::make_unique<SECURITY::User>();
     auto filter_username = std::make_tuple(
-                "lower("+user->userName()->dbColumnName()+")",
+                "lower("+user->role_name()->dbColumnName()+")",
                 "=",
                 uname);
     EntityDataModel edm(std::move(user));

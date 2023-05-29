@@ -29,14 +29,16 @@ void EntityModel::setHeader()
 
 void EntityModel::addEntity(std::shared_ptr<BaseEntity> entity)
 {
-    //BaseEntity* be = entity.get();
-    //addRow(be->tableViewColumns());
-
+    qDebug() << "4444";
     addRow(entity->tableViewColumns());
+    qDebug() << "5555";
     std::string key = entity->searchColumn();
+    qDebug() << "6666";
+
      // TODO:: we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
     mEntities.push_back(std::move(record));
+    qDebug() << "7777";
 }
 
 void EntityModel::add_entity(std::shared_ptr<BaseEntity> entity)
@@ -73,7 +75,6 @@ BaseEntity* EntityModel::findEntityByNameX(const std::string name)
         }
 
     }
-
 
     return be;
 }
@@ -305,15 +306,19 @@ EntityDataModel::~EntityDataModel()
 void EntityDataModel::populateEntities()
 {
     clearEntities();
+
     dbManager->provider()->cache()->first();
     do{
        auto e = dbManager->provider()->cache()->currentElement();
        auto ent = getEntity()->cloneAsShared();
 
        ent->baseMapFields(e);
-
        ent->afterMapping(*ent.get());
+
+       qDebug() << "22222";
+       qDebug() << QString::fromStdString(ent->tableName());
        addEntity(std::move(ent));
+       qDebug() << "3333";
 
        dbManager->provider()->cache()->next();
     }while(!dbManager->provider()->cache()->isLast());
@@ -388,6 +393,7 @@ void EntityDataModel::all()
 {
     if (dbManager->fetchAll(*(getEntity())) > 0)
         populateEntities();
+
 }
 
 void EntityDataModel::cacheEntity(std::shared_ptr<BaseEntity> entity)
@@ -410,6 +416,9 @@ void EntityDataModel::searchByInt(std::tuple<std::string, std::string, int> sear
 {
     if (dbManager->searchByInt(*(getEntity()), searchItem) > 0)
         populateEntities();
+
+
+
 }
 
 void EntityDataModel::search(const std::string searchFilter)

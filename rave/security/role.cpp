@@ -1,296 +1,71 @@
+#include <format>
+
 #include "../framework/entitydatamodel.h"
 #include "role.h"
 
 #include "user.h"
 #include "rolemember.h"
 
-Role::Role()
+namespace SECURITY
 {
-
-    mOId = createField<IntegerField>("oid", "Role ID");
-    mOId->setReadOnly(true);
-
-    mRoleName = createField<StringField>("rolname", "Role Name");
-    mRoleName->setMandatory(true);
-    mValidUntil = createField<StringField>("rolvaliduntil", "Role Valid Until");
-
-    mRoleExpire = createField<BooleanField>("role_expire", "Can Role Expire");
-    mRoleExpire->setFormOnly(true);
-
-    mComment = createField<StringField>("role_comment", "Comment");
-    mComment->setFormOnly(true);
-
-    mRoleCanLogin = createField<BooleanField>("rolcanlogin", "Role Can Login");
-
-    mHeader << QString::fromStdString(mRoleName->fieldLabel());
-    setTableName("pg_roles");
-
-    getId().setFormOnly(true);
-
-    qDebug() << "AAA";
-
-//    mUser =  std::make_unique<SECURITY::RoleUser>();
-  //  mRoleMember = std::make_unique<RoleMember> (this, mUser.get());
-
-    qDebug() << "BBB";
-}
-
-Role& Role::operator=(const Role& other)
-{
-   this->setId(other.id());
-   mOId->setValue(other.mOId->value());
-   mOId->setMandatory(true);
-   mRoleName->setValue(other.mRoleName->value());
-   mRoleName->setMandatory(true);
-   mValidUntil->setValue(other.mValidUntil->value());
-   mRoleExpire->setValue(other.mRoleExpire->value());
-   mComment->setValue(other.mComment->value());
-   mRoleCanLogin->setValue(other.mRoleCanLogin->value());
-   mHeader = other.mHeader;
-
-//   mUser = std::make_unique<SECURITY::RoleUser>();
-//   if (mUser != other.mUser)
-//       *mUser = *other.mUser;
-
-//   mRoleMember = std::make_unique<RoleMember>(this, mUser.get());
- //  mRoleMember->setParentId(other.mOId->value());
-
-   getId().setFormOnly(true);
-   setTableName("pg_roles");
-
-   return *this;
-
-}
-
-Role::~Role()
-{
-}
-
-int Role::id() const
-{
-    return oid()->value();
-}
-
-IntegerField *Role::uniqueId() const
-{
-    return mOId;
-}
-
-IntegerField *Role::oid() const
-{
-    return mOId;
-}
-
-void Role::setOId(int id)
-{
-    mOId->setValue( id );
-}
-
-StringField *Role::roleName() const
-{
-    return mRoleName;
-}
-
-void Role::setRoleName(const std::string name)
-{
-    mRoleName->setValue( name );
-}
-
-StringField *Role::validUntil() const
-{
-    return mValidUntil;
-}
-
-void Role::setValidUntil(const std::string validity)
-{
-    mValidUntil->setValue( validity );
-}
-
-BooleanField *Role::roleExpire() const
-{
-    return mRoleExpire;
-}
-
-void Role::setRoleExpire(bool val)
-{
-    mRoleExpire->setValue( val );
-}
-
-StringField *Role::comment() const
-{
-    return mComment;
-}
-
-void Role::setComment(const std::string comm)
-{
-    mComment->setValue( comm );
-}
-
-BooleanField *Role::roleCanLogin() const
-{
-    return mRoleCanLogin;
-}
-
-void Role::setRoleCanLogin(bool val)
-{
-    mRoleCanLogin->setValue( val );
-}
-
-std::string Role::role_validity()
-{
-    std::string validity{};
-    if (!roleExpire()->value())
-        validity = " VALID UNTIL '"+validUntil()->value()+"'";
-    else
-        validity = " VALID UNTIL 'infinity' ";
-
-    return validity;
-}
-
-std::string Role::make_create_role_stmt()
-{
-    std::string s1 = "CREATE ROLE "+roleName()->value();
-
-    std::string s2{};
-
-    if (!comment()->value().empty())
-        s2 = " COMMENT ON ROLE "+roleName()->value()+
-                " is '"+comment()->value()+"';";
-
-    std::string s3 = "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "+
-            roleName()->value()+";";
-
-    std::vector<std::string> seqs;
-    table_sequences(seqs);
-    std::string s4{};
-    for(auto& seq : seqs){
-        s4 += "GRANT ALL ON SEQUENCE public."+seq+" TO GROUP "+
-                roleName()->value()+" WITH GRANT OPTION;";
+    Role::Role()
+        :BaseRole()
+        ,m_id{-1}
+    {
+        m_user =  std::make_unique<SECURITY::User>();
+        m_role_member = std::make_unique<RoleMember> (this, m_user.get());
     }
 
-    return s1+role_validity()+role_rights()+s2+s3+s4;
-}
+    Role::~Role()
+    {
+    }
 
-std::string Role::role_rights()
-{
-    return " NOSUPERUSER INHERIT NOCREATEDB CREATEROLE NOREPLICATION;";
-}
-
-std::string Role::make_alter_role_stmt(const std::string username)
-{
-   std::string s1 = "ALTER ROLE "+username;
-
-   return s1+role_validity()+role_rights();
-}
-
-std::string Role::make_drop_role_stmt(const std::string username)
-{
-    return "DROP ROLE "+username+";";
-}
-
-void Role::table_sequences(std::vector<std::string>& tseq)
-{
-   EntityDataModel edm;
-   std::string sql = "SELECT sequence_name FROM information_schema.sequences;";
-   edm.readRaw(sql);
-
-   auto cache = edm.getDBManager()->provider()->cache();
-   cache->first();
-   do{
-       auto elem = cache->currentElement();
-
-       auto it = elem->begin();
-       tseq.push_back((*it).second);
-
-       cache->next();
-
-   }while(!cache->isLast());
+    Role& Role::operator=(const Role& other)
+    {
+        m_id = other.id();
+    }
 
 
-}
+    int Role::role_id()
+    {
+        return m_id;
+    }
 
-std::unique_ptr<BaseEntity> Role::mapFields(StringMap *e)
-{
 
-}
+    std::shared_ptr<BaseEntity> Role::cloneAsShared()
+    {
+        return std::make_shared<Role>();
+    }
 
-std::vector<std::string> Role::tableViewColumns() const
-{
-    return tableViewCols<std::string>(roleName()->displayName());
-}
+    void Role::afterMapping(BaseEntity& entity)
+    {
 
-std::vector<std::string> Role::tableViewValues()
-{
-    return{roleName()->valueToString()};
-}
+    }
 
-QStringList Role::tableHeaders() const
-{
-    return mHeader;
-}
+    RoleMember& Role::roleMember()
+    {
+        return *m_role_member;
+    }
 
-std::string Role::tableName() const
-{
-    return mTableName;
-}
+    std::string Role::make_create_role_stmt()
+    {
+        std::string s1 = "CREATE ROLE "+role_name()->value();
 
-void Role::setTableName(const std::string table_name)
-{
-    mTableName = table_name;
-}
+        std::string s2{};
 
-std::string Role::searchColumn() const
-{
-    return roleName()->valueToString();
-}
+        std::string s3 = "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "+
+            role_name()->value()+";";
 
-void Role::populateEntity()
-{
+        std::vector<std::string> seqs;
+        table_sequences(seqs);
+        std::string s4{};
+        for(auto& seq : seqs){
 
-}
+        s4 += "GRANT ALL ON SEQUENCE public."+seq+" TO GROUP "+
+            role_name()->value()+" WITH GRANT OPTION;";
 
-std::shared_ptr<BaseEntity> Role::cloneAsShared()
-{
-    return std::make_shared<Role>();
-}
+        }
 
-void Role::afterMapping(BaseEntity& entity)
-{
-    Role& role = dynamic_cast<Role&>(entity);
-    mRoleMember->setParentId(role.oid()->value());
-}
-
-std::string Role::displayName()
-{
-    return roleName()->value();
-}
-
-std::string Role::make_create_stmt()
-{
-    return make_create_role_stmt();
-}
-
-std::string Role::make_alter_stmt(const std::string name)
-{
-    return make_alter_role_stmt(name);
-}
-
-std::string Role::make_drop_stmt(const std::string name)
-{
-    return make_drop_role_stmt( name );
-}
-
-std::string Role::order_by() const
-{
-    return "rolname";
-}
-
-//SECURITY::RoleUser &Role::user()
-//{
-//    return *mUser;
-//}
-
-RoleMember& Role::roleMember()
-{
-    return *mRoleMember;
+        return s1+role_validity()+role_rights()+s2+s3+s4;
+    }
 }

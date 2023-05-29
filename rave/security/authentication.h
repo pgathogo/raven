@@ -22,7 +22,7 @@ public:
     static AccessMap mAccessMap;
 private:
     std::unique_ptr<EntityDataModel> mEdm;
-    User mUser;
+    SECURITY::User mUser;
     PostgresDatabaseManager* mDBManager;
 };
 

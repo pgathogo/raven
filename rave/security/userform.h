@@ -4,7 +4,9 @@
 #include <QDialog>
 #include "../framework/baseentitydetaildlg.h"
 
-class User;
+namespace SECURITY{
+    class User;
+}
 
 namespace Ui {
 class UserForm;
@@ -17,7 +19,7 @@ class UserForm : public BaseEntityDetailDlg
 public:
     const size_t min_password_length = 4;
 
-    explicit UserForm(User* user, QDialog *parent = nullptr);
+    explicit UserForm(SECURITY::User* user, QDialog *parent = nullptr);
     ~UserForm() override;
 
     std::string windowTitle() override;
@@ -30,7 +32,7 @@ private slots:
 
 private:
     Ui::UserForm *ui;
-    User* mUser;
+    SECURITY::User* mUser;
 };
 
 #endif // USERFORM_H

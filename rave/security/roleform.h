@@ -6,20 +6,25 @@
 #include <QWidget>
 #include "../framework/baseentitydetaildlg.h"
 
-class Role;
-class ManyToManyBrowser;
+namespace SECURITY{
+    class Role;
+}
 
+class ManyToManyBrowser;
 
 namespace Ui {
 class RoleForm;
 }
+
+
+using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
 
 class RoleForm : public BaseEntityDetailDlg
 {
     Q_OBJECT
 
 public:
-    explicit RoleForm(Role* role, QDialog* parent = nullptr);
+    explicit RoleForm(SECURITY::Role* role, QDialog* parent = nullptr);
     ~RoleForm() override;
 
     std::string windowTitle() override;
@@ -29,12 +34,14 @@ public:
 
     int parentId() const;
 
+    std::vector<EntityRecord> const& role_members() const;
+
 private slots:
     void updateValidity(int);
 
 private:
     Ui::RoleForm *ui;
-    Role* mRole;
+    SECURITY::Role* mRole;
     ManyToManyBrowser* mMtoMUserBrowser;
 
 };
