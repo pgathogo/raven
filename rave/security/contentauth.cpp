@@ -7,7 +7,7 @@ ContentAuth::ContentAuth()
    mContent = createField<ForeignKeyField>("parent_id", "Content",
                                            std::make_unique<Content>(),"name");
    mRole = createField<ForeignKeyField>("detail_id", "Role",
-                                        std::make_unique<Role>(), "rolname",
+                                        std::make_unique<SECURITY::Role>(), "rolname",
                                         "rolcanlogin=false");
    mAccessBit = createField<StringField>("access_bit", "Access Bit");
 

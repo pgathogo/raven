@@ -9,7 +9,7 @@
 
 RoleBrowser::RoleBrowser(QWidget *parent) :
     BaseEntityBrowserDlg(parent,
-                         std::make_unique<Role>()),
+                           std::make_unique<SECURITY::Role>()),
     ui(new Ui::RoleBrowser)
 {
     ui->setupUi(this);
@@ -23,25 +23,24 @@ RoleBrowser::~RoleBrowser()
 
 void RoleBrowser::addRecord()
 {
-    rawAdd<Role, RoleForm>();
+    rawAdd<SECURITY::Role, RoleForm>();
 }
 
 void RoleBrowser::updateRecord()
 {
-    rawUpdate<Role, RoleForm, ManyToMany>();
-
+    rawUpdate<SECURITY::Role, RoleForm, ManyToMany>();
 }
 
 void RoleBrowser::deleteRecord()
 {
-    rawDelete<Role>();
+    rawDelete<SECURITY::Role>();
 }
 
 void RoleBrowser::searchRecord()
 {
     if (bui->edtFilter->text().isEmpty()){
-        Role* role = dynamic_cast<Role*>(entityDataModel().getEntity().get());
-        auto si = searchItem(role->roleCanLogin()->dbColumnName(), "=", false);
+        SECURITY::Role* role = dynamic_cast<SECURITY::Role*>(entityDataModel().getEntity().get());
+        auto si = searchItem(role->rol_can_login()->dbColumnName(), "=", false);
         std::string filter = entityDataModel().prepareFilter(si);
         entityDataModel().search(filter);
     }else{
@@ -52,8 +51,8 @@ void RoleBrowser::searchRecord()
 
         auto role_name = std::make_tuple(columnName, "=", item);
 
-        Role* role = dynamic_cast<Role*>(entityDataModel().getEntity().get());
-        auto role_filter = searchItem(role->roleCanLogin()->dbColumnName(), "=", false);
+        SECURITY::Role* role = dynamic_cast<SECURITY::Role*>(entityDataModel().getEntity().get());
+        auto role_filter = searchItem(role->rol_can_login()->dbColumnName(), "=", false);
 
         std::string filter = entityDataModel().prepareFilter(role_name, role_filter);
         entityDataModel().search(filter);

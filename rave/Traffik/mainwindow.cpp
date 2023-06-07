@@ -169,6 +169,7 @@ void MainWindow::openSetupForm()
         setupForm = std::make_unique<SetupForm>(ts);
         if (setupForm->exec() > 0 ){
             edm.updateEntity(*ts);
+            edm.all();
             setupForm->save_approvers();
         }
     }else{

@@ -25,9 +25,9 @@ SpotTypeExclusion::~SpotTypeExclusion()
 
 }
 
-std::unique_ptr<ManyToMany> SpotTypeExclusion::copy(BaseEntity *pEnt, BaseEntity *dEnt) const
+std::shared_ptr<ManyToMany> SpotTypeExclusion::copy(BaseEntity *pEnt, BaseEntity *dEnt) const
 {
-    return std::make_unique<SpotTypeExclusion>(pEnt, dEnt);
+    return std::make_shared<SpotTypeExclusion>(pEnt, dEnt);
 }
 
 IntegerField *SpotTypeExclusion::parentId() const

@@ -5,7 +5,7 @@ OrderApprover::OrderApprover()
 {
 
     mUserId = createField<ForeignKeyField>("user_id", "User ID",
-                                           std::make_unique<User>(), "usename");
+                                           std::make_unique<SECURITY::User>(), "usename");
     mUserName = createField<StringField>("username", "User Name");
     mUserTitle = createField<StringField>("user_title", "User Title");
     mLevel = createField<IntegerField>("level", "Level");

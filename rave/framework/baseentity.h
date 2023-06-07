@@ -34,60 +34,46 @@ public:
     BaseEntity(Key);
     virtual ~BaseEntity();
 
-    [[nodiscard]] virtual int id() const;
     void setId(int i);
     IntegerField& getId();
-
-    virtual IntegerField* uniqueId() const;
-
-    virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
-
-    virtual std::vector<std::string> tableViewColumns() const = 0;
-    virtual std::vector<std::string> tableViewValues() = 0;
-
-    virtual QStringList tableHeaders() const = 0;
-
-    virtual std::string tableName() const = 0;
-    virtual void setTableName(const std::string table_name)=0;
-
-    virtual std::string searchColumn() const = 0;
-
+    void baseMapFields(StringMap* map);
+    bool isNew();
+    std::shared_ptr<BaseEntity> const& get_entity() const;
     std::vector<std::string> dbColumnNames() const;
-
     size_t fieldsCount() const { return mFields.size(); }
-
-    [[nodiscard]] virtual ActionResult validate();
-
     void setValueByField(const Field& fld, const std::string& val);
     FieldValues mapping(StringMap* e);
-
-    virtual void populateEntity();
-
     void getEntityById(std::shared_ptr<BaseEntity> entity, int id);
-
     void setDBAction(DBAction dbact);
     DBAction dbAction() const;
-
     void clearFields();
-
     std::vector<FieldMap> const& fields() const;
 
-//    virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
-    virtual std::shared_ptr<BaseEntity> cloneAsShared() = 0;
+    [[nodiscard]] virtual int id() const;
+    [[nodiscard]] virtual ActionResult validate();
 
-    virtual void afterMapping(BaseEntity& entity) = 0;
-
+    virtual IntegerField* uniqueId() const;
+    virtual void populateEntity();
+    virtual std::string order_by() const;
+    virtual void print_members(const QStringList& members=QStringList()) const;
     virtual std::string displayName();
     virtual std::string make_create_stmt();
     virtual std::string make_alter_stmt(const std::string name);
     virtual std::string make_drop_stmt(const std::string name);
+    virtual std::string filter();
 
-    virtual std::string order_by() const;
+    virtual std::unique_ptr<BaseEntity> mapFields(StringMap* e) = 0;
+    virtual std::vector<std::string> tableViewColumns() const = 0;
+    virtual std::vector<std::string> tableViewValues() = 0;
+    virtual QStringList tableHeaders() const = 0;
+    virtual std::string tableName() const = 0;
+    virtual void setTableName(const std::string table_name)=0;
+    virtual std::string searchColumn() const = 0;
+    virtual std::shared_ptr<BaseEntity> cloneAsShared() = 0;
+    virtual void afterMapping(BaseEntity& entity) = 0;
 
-
-    //virtual std::string className();
-
-    virtual void print_members(const QStringList& members=QStringList()) const;
+    // virtual std::string className();
+    // virtual std::unique_ptr<BaseEntity> cloneAsUnique() = 0;
 
     template<typename T>
     std::unique_ptr<T> clone()
@@ -126,11 +112,6 @@ public:
         return cols;
     }
 
-    void baseMapFields(StringMap* map);
-
-    bool isNew();
-
-    std::shared_ptr<BaseEntity> const& get_entity() const;
 
 private:
     void print_selected_members(const QStringList& members) const;

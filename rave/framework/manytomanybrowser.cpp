@@ -18,8 +18,6 @@ ManyToManyBrowser::ManyToManyBrowser(
     plb{},
     mMtoM{mtom}
 {
-
-
     ui->setupUi(this);
     hideEditButton();
     layout->addWidget(this);

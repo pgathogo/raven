@@ -29,16 +29,12 @@ void EntityModel::setHeader()
 
 void EntityModel::addEntity(std::shared_ptr<BaseEntity> entity)
 {
-    qDebug() << "4444";
     addRow(entity->tableViewColumns());
-    qDebug() << "5555";
     std::string key = entity->searchColumn();
-    qDebug() << "6666";
 
      // TODO:: we need a way to check that key is not empty!!
     EntityRecord record = make_tuple(key, std::move(entity));
     mEntities.push_back(std::move(record));
-    qDebug() << "7777";
 }
 
 void EntityModel::add_entity(std::shared_ptr<BaseEntity> entity)
@@ -267,8 +263,8 @@ std::list<std::string> EntityModel::keys()
     }
 
     return keys;
-
 }
+
 std::size_t EntityModel::temp_size()
 {
     return m_temp_entities.size();
@@ -315,10 +311,7 @@ void EntityDataModel::populateEntities()
        ent->baseMapFields(e);
        ent->afterMapping(*ent.get());
 
-       qDebug() << "22222";
-       qDebug() << QString::fromStdString(ent->tableName());
        addEntity(std::move(ent));
-       qDebug() << "3333";
 
        dbManager->provider()->cache()->next();
     }while(!dbManager->provider()->cache()->isLast());
@@ -362,7 +355,6 @@ void EntityDataModel::updateEntity(const BaseEntity& updated_entity)
     if (updated_entity.id() > 0)
     {
         dbManager->updateEntity(updated_entity);
-        all();
     }
 }
 
@@ -416,16 +408,18 @@ void EntityDataModel::searchByInt(std::tuple<std::string, std::string, int> sear
 {
     if (dbManager->searchByInt(*(getEntity()), searchItem) > 0)
         populateEntities();
-
-
-
 }
 
 void EntityDataModel::search(const std::string searchFilter)
 {
     if (dbManager->search(*(getEntity()), searchFilter) > 0)
         populateEntities();
+}
 
+void EntityDataModel::search_with_filter(const std::string filter)
+{
+    if (dbManager->search_with_filter(*(getEntity()), filter) > 0)
+        populateEntities();
 }
 
 void EntityDataModel::starts_with(std::tuple<std::string, std::string> search_item)

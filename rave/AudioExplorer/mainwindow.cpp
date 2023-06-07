@@ -627,14 +627,16 @@ void MainWindow::show_audio_data()
     for(auto& [name, entity] : m_audio_entity_data_model->modelEntities()){
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
 
+        std::shared_ptr<AUDIO::Audio>shared_audio(audio);
+
         if (audio->audio_type()->displayName() == "Song")
-            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(shared_audio);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(shared_audio);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(shared_audio);
     }
 
 }
@@ -756,6 +758,7 @@ void MainWindow::edit_genre()
         try{
             update_table_view_record(ui->tvGenre, entity->tableViewValues());
             m_genre_entity_data_model->updateEntity(*entity);
+            m_genre_entity_data_model->all();
             }
             catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -1156,6 +1159,7 @@ void MainWindow::audio_properties()
         try{
                 update_table_view_record(ui->tvTracks, audio->tableViewValues());
                 m_audio_entity_data_model->updateEntity(*audio);
+                m_audio_entity_data_model->all();
             }
             catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -1185,7 +1189,7 @@ void MainWindow::play_audio()
     if (select->selectedRows().size() == 0)
         return;
 
-    AUDIO::Audio* audio = get_selected_audio();
+    auto audio = get_selected_audio();
     if (audio == nullptr)
         return;
 
@@ -1221,7 +1225,7 @@ void MainWindow::end_of_play()
     qDebug() << "Play ended ...";
 }
 
-AUDIO::Audio* MainWindow::get_selected_audio()
+std::shared_ptr<AUDIO::Audio> MainWindow::get_selected_audio()
 {
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
@@ -1230,8 +1234,7 @@ AUDIO::Audio* MainWindow::get_selected_audio()
     if (audio_id == 0)
         return nullptr;
 
-    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
-
+    auto audio = m_audio_lib_item->find_audio_by_id(audio_id);
     return audio;
 }
 
@@ -1239,7 +1242,7 @@ AUDIO::Audio* MainWindow::get_selected_audio()
 void MainWindow::cue_edit()
 {
 
-    AUDIO::Audio* audio = get_selected_audio();
+    auto audio = get_selected_audio();
     if (audio == nullptr)
         return;
 
@@ -1462,6 +1465,7 @@ void MainWindow::open_settings()
         auto sform = std::make_unique<AUDIOEXP::SetupForm>(rs);
         if (sform->exec() > 0){
             edm.updateEntity(*rs);
+            edm.all();
         }
     }
 

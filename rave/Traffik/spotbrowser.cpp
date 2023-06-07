@@ -86,6 +86,7 @@ void SpotBrowser::updateRecord()
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);
+                entityDataModel().all();
 
                 save_voice_overs(*spot_form);
 

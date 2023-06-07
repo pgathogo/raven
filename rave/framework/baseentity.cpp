@@ -173,6 +173,10 @@ std::string BaseEntity::order_by() const
     return "ID";
 }
 
+std::string BaseEntity::filter()
+{
+    return "";
+}
 
 /*
 std::string BaseEntity::className()

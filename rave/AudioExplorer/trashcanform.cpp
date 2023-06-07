@@ -128,19 +128,21 @@ void TrashCanForm::show_audio_data()
 
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
 
+        std::shared_ptr<AUDIO::Audio>audio_shared(audio);
+
         audio->artist()->setVisible(false);
         audio->duration()->setVisible(false);
         audio->audio_type()->setVisible(false);
         audio->file_path()->setVisible(false);
 
         if (audio->audio_type()->displayName() == "Song")
-            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio_shared);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio_shared);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio_shared);
 
     }
 }

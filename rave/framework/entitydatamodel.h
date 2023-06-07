@@ -100,6 +100,7 @@ public:
     void searchByInt(std::tuple<std::string, std::string, int>);
     void getById(std::tuple<std::string, std::string, int>);
     void search(const std::string searchFilter);
+    void search_with_filter(const std::string);
 
     void starts_with(std::tuple<std::string, std::string>);
     void starts_with_view(std::tuple<std::string, std::string>);

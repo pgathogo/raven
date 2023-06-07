@@ -150,15 +150,30 @@ void BaseEntityBrowserDlg::searchRecord()
 {
     entityDataModel().clearEntities();
 
-    if (bui->edtFilter->text().isEmpty()){
+    if (bui->edtFilter->text().isEmpty() &&
+        m_entity->filter() == "")
+    {
         entityDataModel().all();
-    }else{
+    }
+    else
+    {
         auto data = bui->cbFilter->itemData(
                             bui->cbFilter->currentIndex()).value<QVariant>();
         std::string columnName = data.toString().toStdString();
         std::string item = bui->edtFilter->text().toStdString();
-        auto searchItem = std::make_tuple(columnName, item);
-        entityDataModel().searchByStr(searchItem);
+
+        std::string where_clause = " WHERE 1=1 ";
+        std::string and_clause = " AND 1=1 ";
+
+        if (item != "")
+            where_clause = " WHERE "+columnName+" ~* '"+item+"'";
+
+        if (m_entity->filter() != "")
+            and_clause = " AND "+ m_entity->filter();
+
+        std::string filter = where_clause + and_clause;
+
+        entityDataModel().search_with_filter(filter);
 
         set_view_column_width();
     }

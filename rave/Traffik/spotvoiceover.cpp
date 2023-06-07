@@ -23,9 +23,9 @@ SpotVoiceOver::~SpotVoiceOver()
 
 }
 
-std::unique_ptr<ManyToMany> SpotVoiceOver::copy(BaseEntity *pEnt, BaseEntity *dEnt) const
+std::shared_ptr<ManyToMany> SpotVoiceOver::copy(BaseEntity *pEnt, BaseEntity *dEnt) const
 {
-    return std::make_unique<SpotVoiceOver>(pEnt, dEnt);
+    return std::make_shared<SpotVoiceOver>(pEnt, dEnt);
 }
 
 IntegerField *SpotVoiceOver::parentId() const

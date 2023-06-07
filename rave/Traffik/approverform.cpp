@@ -86,8 +86,8 @@ namespace TRAFFIK {
             return;
 
         EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbUsers->model());
-        User* user = dynamic_cast<User*>(std::get<1>(*(edm->vecBegin()+i)).get());
-        mOrderAprv->userId()->setValue(user->useSysId()->value());
+        SECURITY::User* user = dynamic_cast<SECURITY::User*>(std::get<1>(*(edm->vecBegin()+i)).get());
+        mOrderAprv->userId()->setValue(user->oid()->value());
     }
 
 }

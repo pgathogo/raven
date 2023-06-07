@@ -92,7 +92,7 @@ public:
     bool okay_to_delete(const std::shared_ptr<BaseEntity> entity);
     void remove_tv_selected_row(QTableView*);
     std::string make_selection(EntityDataModel* edm, std::string, int);
-    AUDIO::Audio* get_selected_audio();
+    std::shared_ptr<AUDIO::Audio> get_selected_audio();
 
     void play_audio();
     void stop_play();

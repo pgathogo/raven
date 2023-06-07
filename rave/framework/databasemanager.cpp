@@ -168,6 +168,7 @@ void PostgresDatabaseManager::updateEntity(const BaseEntity& entity)
 {
     std::string sqlQuery;
     sqlQuery = makeUpdateString(entity);
+    qDebug() << "UpdateEntity: "<< stoq(sqlQuery);
     provider()->executeQuery(sqlQuery);
 }
 
@@ -208,6 +209,14 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
 
+    return provider()->read(sql);
+}
+
+int PostgresDatabaseManager::search_with_filter(const BaseEntity& entity, const std::string filter)
+{
+    std::string sql{};
+    std::string flds = columnsForSelection(entity);
+    sql = "SELECT "+flds+" FROM "+entity.tableName()+filter+" ORDER BY "+entity.order_by();
     return provider()->read(sql);
 }
 
@@ -387,6 +396,11 @@ int SQLiteDatabaseManager::searchByInt(const BaseEntity& entity,
 }
 
 int SQLiteDatabaseManager::search(const BaseEntity& entity, const std::string filter)
+{
+
+}
+
+int SQLiteDatabaseManager::search_with_filter(const BaseEntity& entity, const std::string filter)
 {
 
 }

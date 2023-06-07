@@ -34,6 +34,8 @@ public:
     virtual int search(const BaseEntity& entity,
                        const std::string filter) = 0;
 
+    virtual int search_with_filter(const BaseEntity&, const std::string) = 0;
+
     virtual int starts_with(const BaseEntity& entity,
                             std::tuple<std::string, std::string>& sf) = 0;
 
@@ -81,6 +83,9 @@ public:
     int searchByInt(const BaseEntity& entity,
                            std::tuple<std::string,std::string,  int> field_value) override;
     int search(const BaseEntity& entity, const std::string filter) override;
+
+    int search_with_filter(const BaseEntity&, const std::string) override;
+
     int starts_with(const BaseEntity& entity,
                     std::tuple<std::string, std::string>& sf) override;
     void executeRawSQL(const std::string sql) override;
@@ -120,6 +125,8 @@ public:
     int searchByInt(const BaseEntity& entity,
                            std::tuple<std::string,std::string,  int> field_value) override;
     int search(const BaseEntity& entity, const std::string filter) override;
+    int search_with_filter(const BaseEntity&, const std::string) override;
+
     int starts_with(const BaseEntity& entity,
                     std::tuple<std::string, std::string>& sf) override;
     void executeRawSQL(const std::string sql) override;

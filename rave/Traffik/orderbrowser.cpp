@@ -43,6 +43,7 @@ void OrderBrowser::updateRecord()
             try{
                 updateTableViewRecord(order->tableViewValues());
                 entityDataModel().updateEntity(*order);
+                entityDataModel().all();
             } catch (DatabaseException& de){
                 showMessage(de.errorMessage());
             }

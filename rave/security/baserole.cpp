@@ -1,4 +1,5 @@
 #include <format>
+#include <sstream>
 
 #include "../framework/entitydatamodel.h"
 #include "baserole.h"
@@ -8,7 +9,7 @@ namespace SECURITY
 
     BaseRole::BaseRole()
     {
-
+        /*
         m_OId = createField<IntegerField>("oid", "Role ID");
         m_OId->setReadOnly(true);
 
@@ -28,11 +29,13 @@ namespace SECURITY
         setTableName("pg_authid");
 
         getId().setFormOnly(true);
+*/
 
     }
 
     BaseRole& BaseRole::operator=(const BaseRole& other)
     {
+        /*
        setId(other.id());
        m_OId->setValue(other.m_OId->value());
        m_OId->setMandatory(true);
@@ -54,6 +57,7 @@ namespace SECURITY
        setTableName("pg_authid");
 
        return *this;
+      */
 
     }
 
@@ -62,6 +66,8 @@ namespace SECURITY
     {
     }
 
+
+    /*
     void BaseRole::set_id(int id)
     {
        setId(id);
@@ -186,10 +192,29 @@ namespace SECURITY
 
         return validity;
     }
+  */
+
 
     std::string BaseRole::make_create_role_stmt()
     {
-        return "";
+        std::string s1 = "CREATE ROLE "+role_name()->value();
+
+        std::string s2{};
+
+        std::string s3 = "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "+
+            role_name()->value()+";";
+
+        std::vector<std::string> seqs;
+        table_sequences(seqs);
+        std::string s4{};
+        for(auto& seq : seqs){
+
+        s4 += "GRANT ALL ON SEQUENCE public."+seq+" TO GROUP "+
+            role_name()->value()+" WITH GRANT OPTION;";
+
+        }
+
+        return s1+role_validity()+role_rights()+s2+s3+s4;
     }
 
     std::string BaseRole::role_rights()
@@ -197,9 +222,9 @@ namespace SECURITY
         return " NOSUPERUSER INHERIT NOCREATEDB CREATEROLE NOREPLICATION;";
     }
 
-    std::string BaseRole::make_alter_role_stmt(const std::string username)
+    std::string BaseRole::make_alter_role_stmt(const std::string role_name)
     {
-       std::string s1 = "ALTER ROLE "+username;
+       std::string s1 = "ALTER ROLE "+role_name;
 
        return s1+role_validity()+role_rights();
     }
@@ -221,16 +246,28 @@ namespace SECURITY
 
     }
 
-    std::string BaseRole::make_drop_role_stmt(const std::string username)
+    std::string BaseRole::make_drop_role_stmt(const std::string role_name)
     {
-        return "DROP ROLE "+username+";";
+       // TODO: Try the 'REASSIGN' method in the future
+       // REASSIGN OWNED BY role_name TO postgres;
+       // DROP OWNED BY role_name;
+
+       auto s1 = std::format(" REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM {}; ",role_name);
+       auto s2 = std::format(" REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM {}; ",role_name);
+       auto s3 = std::format(" REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM {}; ",role_name);
+       auto s4 = std::format(" DROP ROLE {}; ",role_name);
+       auto stmt = s1+s2+s3+s4;
+       return stmt;
     }
 
     void BaseRole::table_sequences(std::vector<std::string>& tseq)
     {
        EntityDataModel edm;
-       std::string sql = "SELECT sequence_name FROM information_schema.sequences;";
-       edm.readRaw(sql);
+       std::stringstream sql;
+       sql << "SELECT sequence_name FROM information_schema.sequences "
+           << " WHERE sequence_name ~* 'rave_'; ";
+
+       edm.readRaw(sql.str());
 
        auto cache = edm.getDBManager()->provider()->cache();
        cache->first();
@@ -247,9 +284,10 @@ namespace SECURITY
 
     }
 
+  /* ---  Methods in BaseEntity --- */
+
     std::unique_ptr<BaseEntity> BaseRole::mapFields(StringMap *e)
     {
-
     }
 
     std::vector<std::string> BaseRole::tableViewColumns() const
@@ -262,6 +300,7 @@ namespace SECURITY
         return{role_name()->valueToString()};
     }
 
+    /*
     QStringList BaseRole::tableHeaders() const
     {
         return mHeader;
@@ -276,6 +315,7 @@ namespace SECURITY
     {
         mTableName = table_name;
     }
+   */
 
     std::string BaseRole::searchColumn() const
     {
@@ -301,6 +341,7 @@ namespace SECURITY
         return role_name()->value();
     }
 
+
     std::string BaseRole::make_create_stmt()
     {
         return make_create_role_stmt();
@@ -315,6 +356,7 @@ namespace SECURITY
     {
         return make_drop_role_stmt( name );
     }
+
 
     std::string BaseRole::order_by() const
     {

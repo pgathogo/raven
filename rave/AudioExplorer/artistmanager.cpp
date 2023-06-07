@@ -22,6 +22,7 @@ namespace AUDIOEXP{
     void ArtistManager::update(AUDIO::Artist* artist)
     {
         m_model->updateEntity(*artist);
+	m_model->all();
     }
 
     AUDIO::Artist* ArtistManager::find_artist(std::string search_value)

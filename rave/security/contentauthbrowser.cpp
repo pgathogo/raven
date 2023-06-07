@@ -60,6 +60,7 @@ void ContentAuthBrowser::updateRecord()
         grant_revoke_content_access(contAuth);
 
         entityDataModel().updateEntity(*contAuth);
+        entityDataModel().all();
 
         }catch(DatabaseException& de){
             showMessage(de.errorMessage());

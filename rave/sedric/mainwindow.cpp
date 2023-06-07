@@ -436,7 +436,7 @@ void MainWindow::print_schedule()
 {
 }
 
-AUDIO::Audio* MainWindow::get_selected_audio()
+std::shared_ptr<AUDIO::Audio> MainWindow::get_selected_audio()
 {
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
@@ -445,8 +445,7 @@ AUDIO::Audio* MainWindow::get_selected_audio()
     if (audio_id == 0)
         return nullptr;
 
-    AUDIO::Audio* audio = m_audio_lib_item->find_audio_by_id(audio_id);
-
+    auto audio = m_audio_lib_item->find_audio_by_id(audio_id);
     return audio;
 }
 
@@ -820,16 +819,19 @@ void MainWindow::show_audio_data()
     set_track_view();
 
     for (auto&[name, entity] : m_audio_entity_data_model->modelEntities()){
+
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
 
+        std::shared_ptr<AUDIO::Audio>shared_audio(audio);
+
         if (audio->audio_type()->displayName() == "Song")
-            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(shared_audio);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(shared_audio);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
+            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(shared_audio);
     }
 
 }
@@ -876,7 +878,7 @@ void MainWindow::play_audio()
     if (select->selectedRows().size() == 0)
         return;
 
-    AUDIO::Audio* audio = this->get_selected_audio();
+    auto audio = this->get_selected_audio();
     if (audio == nullptr)
         return;
 
@@ -942,7 +944,7 @@ History MainWindow::make_history(int id)
 void MainWindow::show_audio_history()
 {
 
-    AUDIO::Audio* audio = this->get_selected_audio();
+    auto audio = this->get_selected_audio();
 
     if (audio == nullptr)
         return;

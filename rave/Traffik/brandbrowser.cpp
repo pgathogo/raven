@@ -46,6 +46,7 @@ void BrandBrowser::updateRecord()
             try{
                 updateTableViewRecord(brand->tableViewValues());
                 entityDataModel().updateEntity(*brand);
+                entityDataModel().all();
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());

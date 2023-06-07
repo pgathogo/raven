@@ -23,7 +23,6 @@ RoleMember::RoleMember(BaseEntity *pEnt, BaseEntity *dEnt)
     setTableName("pg_auth_members");
     getId().setFormOnly(true);
 
-
     mParentId->setValue(mParentEntity->id());
     mDetailId->setValue(mDetailEntity->id());
 

@@ -111,7 +111,7 @@ public:
     void clear_schedule_model();
     QString get_selected_hours_asString();
     void fetch_data(QDate, const std::vector<int>&);
-    AUDIO::Audio* get_selected_audio();
+    std::shared_ptr<AUDIO::Audio> get_selected_audio();
     void show_selection(DateTimeSelection);
     History make_history(int);
     void selected_comm_break();

@@ -76,6 +76,7 @@ ActionResult OrderForm::saveRecord()
     auto ar = mOrder->validate();
     if (std::get<0>(ar) == ActionResultType::arSUCCESS){
         dmSetup->updateEntity(*mSetup);
+        dmSetup->all();
     }
     return ar;
 }

@@ -13,7 +13,7 @@ public:
 
     ~SpotTypeExclusion() override;
 
-    std::unique_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const override;
+    std::shared_ptr<ManyToMany> copy(BaseEntity* pEnt, BaseEntity* dEnt) const override;
     void setTable(const std::string tablename) override { setTableName(tablename); }
 
     IntegerField* parentId() const override;

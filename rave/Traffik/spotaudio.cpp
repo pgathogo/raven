@@ -199,9 +199,9 @@ namespace TRAFFIK{
         return this;
     }
 
-    std::unique_ptr<ManyToMany> SpotAudio::copy(BaseEntity *parent_entity, BaseEntity *detail_entity) const
+    std::shared_ptr<ManyToMany> SpotAudio::copy(BaseEntity *parent_entity, BaseEntity *detail_entity) const
     {
-        return std::make_unique<SpotAudio>(parent_entity, detail_entity);
+        return std::make_shared<SpotAudio>(parent_entity, detail_entity);
     }
 
     IntegerField *SpotAudio::parentId() const

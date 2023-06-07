@@ -14,56 +14,60 @@ namespace SECURITY
         ~BaseRole() override;
         BaseRole& operator=(const BaseRole&);
 
-        int id() const override;
+        //int id() const override;
 
-        IntegerField* oid() const;
-        void set_OId(int id);
+        virtual IntegerField* oid() const = 0;
+        virtual void set_OId(int id) = 0;
 
-        StringField* role_name()const;
-        void set_role_name(const std::string);
+        virtual StringField* role_name()const = 0;
+        virtual void set_role_name(const std::string) = 0;
 
-        BooleanField* rol_super();
-        void set_rol_super(bool);
+        virtual BooleanField* rol_super() = 0;
+        virtual void set_rol_super(bool) = 0;
 
-        BooleanField* rol_inherit();
-        void set_rol_inherit(bool);
+        virtual BooleanField* rol_inherit() = 0;
+        virtual void set_rol_inherit(bool) = 0;
 
-        BooleanField* rol_can_create_role();
-        void set_rol_can_create_role(bool);
+        virtual BooleanField* rol_can_create_role() = 0;
+        virtual void set_rol_can_create_role(bool) = 0;
 
-        BooleanField* rol_can_create_db();
-        void set_rol_can_create_db(bool);
+        virtual BooleanField* rol_can_create_db() = 0;
+        virtual void set_rol_can_create_db(bool) = 0;
 
-        BooleanField* rol_can_login();
-        void set_rol_can_login(bool);
+        virtual BooleanField* rol_can_login() = 0;
+        virtual void set_rol_can_login(bool) = 0;
 
-        BooleanField* rol_replication();
-        void set_rol_replication(bool);
+        virtual BooleanField* rol_replication() = 0;
+        virtual void set_rol_replication(bool) = 0;
 
-        StringField* rol_password();
-        void set_rol_password(const std::string);
+        virtual StringField* rol_password() = 0;
+        virtual void set_rol_password(const std::string) = 0;
 
-        StringField* valid_until() const;
-        void set_valid_until(const std::string);
-
+        virtual StringField* valid_until() const = 0;
+        virtual void set_valid_until(const std::string) = 0;
+        virtual std::string role_validity() = 0;
 
         virtual std::string make_create_role_stmt();
+        virtual std::string make_grant_member_stmt(std::vector<std::string>&);
+        virtual std::string role_rights();
+        virtual std::string make_alter_role_stmt(const std::string);
+        virtual std::string make_drop_role_stmt(const std::string);
+        virtual void table_sequences(std::vector<std::string>& tseq);
 
-        std::string role_validity();
-        std::string role_rights();
-        std::string make_alter_role_stmt(const std::string username);
-        std::string make_drop_role_stmt(const std::string username);
+        std::string make_create_stmt() override;
+        std::string make_alter_stmt(const std::string name) override;
+        std::string make_drop_stmt(const std::string name) override;
 
-        void table_sequences(std::vector<std::string>& tseq);
 
         std::unique_ptr<BaseEntity> mapFields(StringMap* e) override;
 
         std::vector<std::string> tableViewColumns() const override;
         std::vector<std::string> tableViewValues() override;
-        QStringList tableHeaders() const override;
 
-        std::string tableName() const override;
-        void setTableName(const std::string table_name) override;
+//        QStringList tableHeaders() const override;
+//        std::string tableName() const override;
+//        void setTableName(const std::string table_name) override;
+
         std::string searchColumn() const override;
 
         void populateEntity() override;
@@ -71,18 +75,14 @@ namespace SECURITY
         void afterMapping(BaseEntity& entity) override;
 
         std::string displayName() override;
-        std::string make_create_stmt() override;
-        std::string make_alter_stmt(const std::string name) override;
-        std::string make_drop_stmt(const std::string name) override;
-
         std::string order_by() const override;
 
-        std::string make_grant_member_stmt(std::vector<std::string>&);
 
     protected:
         void set_id(int);
 
     private:
+       /*
         IntegerField* m_OId;
         StringField* m_role_name;
 
@@ -97,6 +97,7 @@ namespace SECURITY
 
         QStringList mHeader;
         std::string mTableName;
+     */
 
     };
 }

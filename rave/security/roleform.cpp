@@ -25,7 +25,6 @@ RoleForm::RoleForm(SECURITY::Role* role, QDialog* parent) :
     mMtoMUserBrowser = createMtoM<ManyToManyBrowser>(&mRole->roleMember(),
                                                            ui->vlUsers,
                                                            this);
-    qDebug() << "XXXXX " ;
     ui->twRole->setCurrentIndex(0);
 }
 
@@ -78,6 +77,9 @@ ActionResult RoleForm::saveRecord()
     populateEntityFields();
 
     ActionResult ar = std::make_tuple(ActionResultType::arSUCCESS, "");
+
+    qDebug() << "SAVE RECORD: "<< stoq(mRole->role_name()->valueToString());
+
     ar = mRole->validate();
     auto [result_type, msg] = ar;
     if (result_type != ActionResultType::arSUCCESS)

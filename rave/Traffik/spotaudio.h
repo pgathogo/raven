@@ -67,7 +67,7 @@ namespace TRAFFIK{
 
         BaseEntity* mtomEntity() override;
 
-        std::unique_ptr<ManyToMany> copy(BaseEntity* parent_entity, BaseEntity* detail_entity) const override;
+        std::shared_ptr<ManyToMany> copy(BaseEntity* parent_entity, BaseEntity* detail_entity) const override;
         void setTable(const std::string tablename) override { setTableName(tablename); }
         IntegerField* parentId() const override;
         void setParentId(int id) override;

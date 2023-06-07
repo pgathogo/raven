@@ -33,11 +33,11 @@ void AccessController::setAccessMap(AccessMap access_map)
     mAccessMap = access_map;
 }
 
-User AccessController::user()
+SECURITY::User AccessController::user()
 {
 }
 
-void AccessController::setUser(User)
+void AccessController::setUser(SECURITY::User)
 {
 }
 
