@@ -2,9 +2,8 @@
 #include "datetimeselector.h"
 #include "ui_datetimeselector.h"
 
-DateTimeSelector::DateTimeSelector(DateTimeSelection selection, QWidget *parent)
+DateTimeSelector::DateTimeSelector(QWidget *parent)
     :QDialog(parent)
-    ,m_selection{selection}
     ,ui(new Ui::DateTimeSelector)
 {
     ui->setupUi(this);

@@ -627,16 +627,14 @@ void MainWindow::show_audio_data()
     for(auto& [name, entity] : m_audio_entity_data_model->modelEntities()){
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
 
-        std::shared_ptr<AUDIO::Audio>shared_audio(audio);
-
         if (audio->audio_type()->displayName() == "Song")
-            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(shared_audio);
+            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(shared_audio);
+            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(shared_audio);
+            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
     }
 
 }
@@ -1225,7 +1223,7 @@ void MainWindow::end_of_play()
     qDebug() << "Play ended ...";
 }
 
-std::shared_ptr<AUDIO::Audio> MainWindow::get_selected_audio()
+AUDIO::Audio* MainWindow::get_selected_audio()
 {
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);

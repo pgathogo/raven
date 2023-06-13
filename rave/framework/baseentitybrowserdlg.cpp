@@ -83,7 +83,12 @@ void BaseEntityBrowserDlg::connectSlots()
     connect(bui->btnSearch, &QPushButton::clicked, this, &BaseEntityBrowserDlg::searchBtnClicked);
 
     connect(bui->edtFilter, &QLineEdit::returnPressed, this, &BaseEntityBrowserDlg::searchBtnClicked );
+    connect(bui->tvEntity, &QTableView::doubleClicked, this, &BaseEntityBrowserDlg::edit_item);
 
+}
+void BaseEntityBrowserDlg::edit_item(const QModelIndex& model)
+{
+    updateRecord();
 }
 
 void BaseEntityBrowserDlg::setDialogTitle(const QString title)

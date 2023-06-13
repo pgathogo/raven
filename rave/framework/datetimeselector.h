@@ -25,7 +25,7 @@ class DateTimeSelector : public QDialog
     Q_OBJECT
 
 public:
-    explicit DateTimeSelector(DateTimeSelection selection, QWidget *parent = nullptr);
+    explicit DateTimeSelector(QWidget *parent = nullptr);
     ~DateTimeSelector();
 
     void build_time_buttons();

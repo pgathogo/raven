@@ -20,7 +20,7 @@ namespace AUDIO{
     class AudioLibItem{
     public:
         AudioLibItem();
-        AudioLibItem(std::shared_ptr<AUDIO::Audio>);
+        AudioLibItem(AUDIO::Audio*);
         AudioLibItem(QStandardItemModel*);
         ~AudioLibItem();
 
@@ -34,17 +34,16 @@ namespace AUDIO{
         virtual QString folder();
         virtual QString file_extension();
 
-        std::shared_ptr<AUDIO::Audio> audio() const;
+        AUDIO::Audio* audio() const;
 
-        std::shared_ptr<AUDIO::Audio> find_audio_by_id(int);
+        AUDIO::Audio* find_audio_by_id(int);
 
         std::unique_ptr<AUDIO::AudioLibItem> const& one_item() const;
 
         void clear();
 
-
         template<typename T>
-        void create_row_item(std::shared_ptr<AUDIO::Audio> audio)
+        void create_row_item(AUDIO::Audio* audio)
         {
             static_assert(std::is_base_of<AUDIO::AudioLibItem, T>::value, "`T` must be derived from AudioLibItem");
 
@@ -53,6 +52,8 @@ namespace AUDIO{
             auto item = std::make_unique<T>(audio);
 
             auto title = new T(item->title());
+
+
             title->setData(audio->id(), Qt::UserRole);
 
             auto artist = new T(item->artist());
@@ -77,11 +78,15 @@ namespace AUDIO{
             if (audio->file_extension()->visible())
                 columns.append(file_extension);
 
+
             m_model->appendRow(columns);
             m_lib_items.push_back(std::move(item));
+
+            qDebug() << "Audio ID: "<< audio->id() << audio->title()->to_qstring();
         }
+
     private:
-        std::shared_ptr<AUDIO::Audio> m_audio;
+        AUDIO::Audio* m_audio;
         QStandardItemModel* m_model;
         std::vector<std::unique_ptr<AUDIO::AudioLibItem>> m_lib_items;
     };
@@ -89,7 +94,7 @@ namespace AUDIO{
     class SongAudioLibItem : public AudioLibItem, public QStandardItem
     {
      public:
-        SongAudioLibItem(std::shared_ptr<AUDIO::Audio>);
+        SongAudioLibItem(AUDIO::Audio*);
         SongAudioLibItem(QString);
         ~SongAudioLibItem();
     };
@@ -97,7 +102,7 @@ namespace AUDIO{
     class JingleAudioLibItem : public AudioLibItem, public QStandardItem
     {
     public:
-        JingleAudioLibItem(std::shared_ptr<AUDIO::Audio>);
+        JingleAudioLibItem(AUDIO::Audio*);
         JingleAudioLibItem(QString);
         ~JingleAudioLibItem();
 
@@ -106,7 +111,7 @@ namespace AUDIO{
     class CommercialAudioLibItem: public AudioLibItem, public QStandardItem
     {
     public:
-        CommercialAudioLibItem(std::shared_ptr<AUDIO::Audio>);
+        CommercialAudioLibItem(AUDIO::Audio*);
         CommercialAudioLibItem(QString);
         ~CommercialAudioLibItem();
     };

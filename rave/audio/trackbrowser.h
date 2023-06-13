@@ -107,6 +107,7 @@ namespace AUDIO
     public:
         const int COL0 = 0;
         const int COL1 = 1;
+        const int COL2 = 2;
         const int ROW0 = 0;
         const int ROW1 = 1;
         const int ROW2 = 2;

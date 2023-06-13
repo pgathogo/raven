@@ -39,6 +39,8 @@ public:
 
         void closeEvent(QCloseEvent* event);
 
+        BrowserForms const& get_forms() const;
+
         template<typename T, typename... TArgs>
         T* createMtoM(TArgs... mArgs){
             //static_assert(std::is_base_of<BaseEntityBrowserDlg, T>::value, "`T` must be derived from BaseEntityBrowserDlg");
@@ -53,8 +55,6 @@ public:
         {
             connect(edit, &T::textChanged, this, [&](){m_okay_to_close = false;});
         }
-
-       BrowserForms const& get_forms() const;
 
 
 signals:
@@ -80,6 +80,7 @@ private:
    NotificationBar* mNoticeBar;
    bool m_okay_to_close;
    std::vector<std::unique_ptr<ManyToManyBrowser>> mForms;
+
 };
 
 #endif // BASEENTITYDETAILDLG_H

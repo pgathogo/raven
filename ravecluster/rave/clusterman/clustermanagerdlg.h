@@ -62,6 +62,8 @@ using VarPairNodes =  std::pair<QString, std::variant<RootNode*, ClusterNode*, S
             ServerNode*, DiskNode*, AudioFolderNode*, ClusterGroupNode*, UserGroupNode*, AppGroupNode*,
             RoleNode*, UserNode*, AppNode*, StationGroupNode*, ServerGroupNode*>>;
 
+using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
+
 struct ClusterConfiguration {
     static int temp_id;
     int next_temp_id();
@@ -99,6 +101,7 @@ public:
 
     void make_cluster_node(std::shared_ptr<ClusterManager::Cluster>);
     void clear_configuration();
+    void add_members_to_role(std::shared_ptr<SECURITY::Role>, std::vector<EntityRecord> const&);
 
     template<typename T1, typename T2, typename T3>
     T2* make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item){
@@ -260,6 +263,9 @@ public slots:
     void edit_user(UserNode*);
     void edit_role(RoleNode*);
     void delete_role(RoleNode*);
+
+    bool drop_role(SECURITY::Role*);
+
     void edit_folder(AudioFolderNode*);
     void edit_server(ServerNode*);
     void edit_disk(DiskNode*);
@@ -273,6 +279,7 @@ public slots:
     void save_data();
     void load_data();
     void load_cluster_data();
+    void load_cluster_data_new();
     void load_users_data();
     void load_roles_data();
     void load_content_data();
@@ -303,7 +310,6 @@ private:
     RoleNode* m_current_role_group_node;
     UserNode* m_current_user_node;
     RoleNode* m_current_role_node;
-
 
     std::unique_ptr<QMenu> m_root_context_menu;
     std::unique_ptr<QMenu> m_cluster_group_context_menu;

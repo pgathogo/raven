@@ -1,120 +1,25 @@
 #include "scheduleitem.h"
 
+
 namespace OATS {
 
 /*
-    Audio::Audio()
-    {
-    }
+std::ostream operator<<(std::ostream& os,
+                        const ScheduleItem& si)
+{
+    os << "ID: " << si.m_id;
+    os << "Output: "<< si.m_play_channel;
+}
+*/
 
-    int Audio::id()
-    {
-        return m_id;
-    }
 
-    std::string Audio::title()
-    {
-        return m_title;
-    }
-
-    std::string Audio::artist()
-    {
-        return m_artist;
-    }
-
-    std::string Audio::file_path()
-    {
-        return m_file_path;
-    }
-
-    std::string Audio::file_extension()
-    {
-        return m_file_extension;
-    }
-
-    std::string Audio::audio_type()
-    {
-        return m_audio_type;
-    }
-
-    int Audio::duration()
-    {
-        return m_duration;
-    }
-
-    void Audio::set_id(int id)
-    {
-        m_id = id;
-    }
-
-    void Audio::set_title(std::string title)
-    {
-        m_title =  title;
-    }
-
-    void Audio::set_artist(std::string art)
-    {
-        m_artist = art;
-    }
-
-    void Audio::set_file_path(std::string path)
-    {
-        m_file_path = path;
-    }
-
-    void Audio::set_file_extension(const std::string file_ext)
-    {
-        m_file_extension = file_ext;
-    }
-
-    void Audio::set_audio_type(const std::string a_type)
-    {
-        m_audio_type = a_type;
-    }
-
-    void Audio::set_duration(int dur)
-    {
-        m_duration = dur;
-    }
-
-    int Audio::fade_delay()
-    {
-        return m_fade_delay;
-    }
-    void Audio::set_fade_delay(int delay)
-    {
-        m_fade_delay = delay;
-    }
-
-    int Audio::intro()
-    {
-        return m_intro;
-    }
-
-    void Audio::set_intro(int i)
-    {
-        m_intro = i;
-    }
-
-    int Audio::extro()
-    {
-        return m_extro;
-    }
-
-    void Audio::set_extro(int e)
-    {
-        m_extro = e;
-    }
-    int Audio::fade_out()
-    {
-        return m_fade_out;
-    }
-    void Audio::set_fade_out(int fout)
-    {
-        m_fade_out = fout;
-    }
-
-    */
+QDebug operator<<(QDebug qd, ScheduleItem& si)
+{
+    qd << "ID: " << si.id();
+    qd << "OutCH: " << QString::fromStdString(si.play_channel());
+    qd << "Audio: " << si.audio()->title()->to_qstring();
+    return qd;
+}
 
     /* ----------- ScheduleItem ----------------- */
 
@@ -126,7 +31,7 @@ namespace OATS {
     {
     }
 
-    int ScheduleItem::id()
+    int ScheduleItem::id() const
     {
         return m_id;
     }
@@ -152,7 +57,7 @@ namespace OATS {
         return m_item_status;
     }
 
-    std::string ScheduleItem::play_channel()
+    std::string ScheduleItem::play_channel() const
     {
         return m_play_channel;
     }

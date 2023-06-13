@@ -406,9 +406,14 @@ void MainWindow::folder_clicked(const QModelIndex& index)
 
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
+    qDebug() << "AAA";
     std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
+    qDebug() << "BBB";
+
+    qDebug() << stoq(filter_str);
 
     fetch_audio(filter_str);
+    qDebug() << "CCC";
 }
 
 SelectedScheduleItem MainWindow::get_sched_item_hour_time(const QModelIndex& index)
@@ -436,7 +441,7 @@ void MainWindow::print_schedule()
 {
 }
 
-std::shared_ptr<AUDIO::Audio> MainWindow::get_selected_audio()
+AUDIO::Audio* MainWindow::get_selected_audio()
 {
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
@@ -806,6 +811,7 @@ void MainWindow::set_track_view()
 
 void MainWindow::fetch_audio(const std::string filter)
 {
+
     m_audio_entity_data_model->clearEntities();
 
     m_audio_entity_data_model->search(filter);
@@ -822,16 +828,15 @@ void MainWindow::show_audio_data()
 
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
 
-        std::shared_ptr<AUDIO::Audio>shared_audio(audio);
-
         if (audio->audio_type()->displayName() == "Song")
-            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(shared_audio);
+            m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(shared_audio);
+            m_audio_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(shared_audio);
+            m_audio_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
+
     }
 
 }
@@ -964,7 +969,7 @@ void MainWindow::show_audio_history()
 
 void MainWindow::select_date_time()
 {
-    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(m_datetime_selection, this);
+    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this);
     if (dts->exec() == 1){
         m_datetime_selection = dts->selection();
         std::sort(m_datetime_selection.sel_hours.begin(), m_datetime_selection.sel_hours.end());

@@ -7,6 +7,7 @@
 #include "breaklayout.h"
 #include "breaklayoutline.h"
 #include "../framework/schedule.h"
+#include "../framework/datetimeselector.h"
 
 
 BreakCreateForm::BreakCreateForm(QWidget *parent) :
@@ -47,7 +48,7 @@ void BreakCreateForm::set_defaults()
     setWindowTitle("Generate Schedule Breaks Form");
     ui->dtFrom->setDate(QDate::currentDate());
     ui->dtTo->setDate(QDate::currentDate());
-    populate_hour_combo();
+    //populate_hour_combo();
 }
 
 void BreakCreateForm::break_layout_selected(const QModelIndex &index)
@@ -165,16 +166,18 @@ bool BreakCreateForm::write_breaks_to_db(const std::string sql)
 
 void BreakCreateForm::populate_hour_combo()
 {
-    for (int i=0; i <= 23; ++i){
-        ui->cbHours->addItem(QString::number(i));
-    }
 }
 
 void BreakCreateForm::add_hour()
 {
-    if (ui->cbSelectedHours->findText(ui->cbHours->currentText()) == -1 ){
-        ui->cbSelectedHours->addItem(ui->cbHours->currentText());
+    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this);
+
+    if (dts->exec() == 1){
+        DateTimeSelection selection = dts->selection();
+        for(int hour : selection.sel_hours)
+            ui->cbSelectedHours->addItem(QString::number(hour));
     }
+
 }
 
 void BreakCreateForm::remove_hour()

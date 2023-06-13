@@ -258,21 +258,49 @@ void ClusterManagerDlg::new_role(RoleNode* role_group_node)
 {
     auto role = std::make_shared<SECURITY::Role>();
     std::unique_ptr<RoleForm> rform = std::make_unique<RoleForm>(role.get());
-    if (rform->exec() > 0 ){
+
+    if (rform->exec() > 0 )
+    {
        std::string create_stmt = role->make_create_stmt();
        try {
            EntityDataModel edm;
            edm.executeRawSQL(create_stmt);
 
+           // Add role members
+           auto& role_members = rform->role_members();
+           add_members_to_role(role, role_members);
+
            auto role_context = node_context<ConfigItemType::Role, NodeType::Leaf>(
                        stoq(role->role_name()->value()));
-           make_node<std::shared_ptr<SECURITY::Role>, RoleNode, RoleNode>(
-                       std::move(role), m_current_role_group_node, role_context);
 
+           make_node<std::shared_ptr<SECURITY::Role>, RoleNode, RoleNode>(
+                       std::move(role), role_group_node, role_context);
+
+                       //std::move(role), m_current_role_group_node, role_context);
        } catch (DatabaseException& de) {
            showMessage(de.errorMessage());
        }
 
+    }
+}
+
+void ClusterManagerDlg::add_members_to_role(std::shared_ptr<SECURITY::Role> role, std::vector<EntityRecord> const& role_members)
+{
+    std::vector<std::string> members;
+
+    for(auto& [name, base_entity]: role_members)
+    {
+       ManyToMany* mtom = dynamic_cast<ManyToMany*>(base_entity.get());
+       if (mtom->dbAction() == DBAction::dbaCREATE){
+           members.push_back(name);
+       }
+    }
+
+    if (members.size() > 0)
+    {
+       std::string grant_stmt = role->make_grant_member_stmt(members);
+       EntityDataModel edm;
+       edm.executeRawSQL(grant_stmt);
     }
 
 }
@@ -323,51 +351,63 @@ void ClusterManagerDlg::edit_user(UserNode* user_node)
 
 void ClusterManagerDlg::edit_role(RoleNode* role_node)
 {
+    auto role = role_node->node_entity_shared();
 
-    SECURITY::Role* role = role_node->node_entity();
+    role->roleMember().setParentId(role->oid()->value());
 
-    role->roleMember().setParentId(role->role_id());
+    auto role_form = std::make_unique<RoleForm>(role.get());
 
-    auto edit_form = std::make_unique<RoleForm>(role);
-
-    if (edit_form->exec() > 0){
-        std::vector<std::string> members;
-        auto& role_members = edit_form->role_members();
-
-        for(auto& [name, base_entity] : role_members){
-            ManyToMany* mtom = dynamic_cast<ManyToMany*>(base_entity.get());
-            if (mtom->dbAction() == DBAction::dbaCREATE){
-                members.push_back(name);
-            }
-        }
-
-        if (members.size() > 0){
-            try{
-                std::string grant_stmt = role->make_grant_member_stmt(members);
-                EntityDataModel edm;
-                edm.executeRawSQL(grant_stmt);
-            }catch (DatabaseException& de) {
-                showMessage(de.errorMessage()) ;
-            }
+    if (role_form->exec() > 0)
+    {
+        try{
+            auto& role_members = role_form->role_members();
+            add_members_to_role(role, role_members);
+        }catch(DatabaseException& de){
+            showMessage(de.errorMessage());
         }
     }
-
-
-    //current_node->update_node_text(stoq((node_entity->*mp)()->value()));
-
-   /*
-    try{
-        edit_node<RoleNode, RoleForm, Role>(role_node, &Role::role_name);
-    } catch (DatabaseException& de) {
-        showMessage(de.errorMessage());
-    }
-  */
 
 }
 
 void ClusterManagerDlg::delete_role(RoleNode* role_node)
 {
-    qDebug() << "Delete role ....";
+    SECURITY::Role* role = role_node->node_entity();
+
+    int answer = QMessageBox::warning(this, tr("Cluster Manager"),
+                                      tr("Delete the selected role?"),
+                                      QMessageBox::Yes | QMessageBox::No);
+    switch(answer)
+    {
+    case QMessageBox::Yes:
+
+        bool result = drop_role(role);
+        if (result){
+            delete_node<RoleNode, RoleNode>(role_node, m_current_role_group_node);
+            m_act_delete_role = nullptr;
+            m_role_context_menu = nullptr;
+        }
+
+        break;
+    }
+}
+
+
+bool ClusterManagerDlg::drop_role(SECURITY::Role* role)
+{
+    bool result = false;
+
+    try{
+        std::string drop_role_stmt = role->make_drop_role_stmt(role->role_name()->value());
+        qDebug() << stoq(drop_role_stmt);
+
+        EntityDataModel edm;
+        edm.executeRawSQL(drop_role_stmt);
+        result = true;
+    }catch (DatabaseException& de){
+        showMessage(de.errorMessage());
+    }
+
+    return result;
 }
 
 void ClusterManagerDlg::edit_server(ServerNode* server_node)
@@ -485,6 +525,7 @@ void ClusterManagerDlg::edit_station(StationNode* station_node)
     if (sform->exec()){
         EntityDataModel edm;
         edm.updateEntity(*station);
+
         station_node->setText(0, stoq(station->station_name()->value()));
     }
 
@@ -833,6 +874,9 @@ void ClusterManagerDlg::show_user_group_context_menu(QString node_id, QPoint pos
 
     m_user_group_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 }
+
+
+
 void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
 {
     m_user_context_menu = std::make_unique<QMenu>();
@@ -1247,6 +1291,17 @@ void ClusterManagerDlg::clear_configuration()
 
 }
 
+void ClusterManagerDlg::load_cluster_data_new()
+{
+//    struct cluster_tree{
+//        int node_id;
+//        int parent_id;
+//        std::string node_name;
+//    };
+
+
+}
+
 void ClusterManagerDlg::load_cluster_data()
 {
     std::stringstream sql;
@@ -1298,50 +1353,57 @@ void ClusterManagerDlg::load_cluster_data()
                 }
 
                 // Station
-                if (field == "station_id"){
-                    if (!value.empty()){
+                if (field == "station_id" && (!value.empty()) ){
                         station->setId(std::stoi(value));
-                    }
                 }
 
                 if (field == "station_name" && station->id() > -1){
                     station->set_station_name(value) ;
                 }
 
-                // Server
-                if (field == "server_id"){
-                    if (!value.empty()){
-                        server->setId(std::stoi(value));
-                    }
+
+                if (field == "station_cluster_id" && (!value.empty()) ){
+                    station->set_cluster(std::stoi(value));
                 }
+
+                // Server
+                if (field == "server_id" && (!value.empty()) ){
+                        server->setId(std::stoi(value));
+                }
+
                 if (field == "server_name" && server->id() > -1 ){
                    server->set_server_name(value) ;
                 }
+
                 if (field == "server_type" && server->id() > -1 ){
                     server->set_server_type(value);
+                   if (value == "ADS"){
+                        disk->set_audio_server(server->id());
+                    }
                 }
+
                 if (field == "server_ip" && server->id() > -1 ){
                     server->set_server_ip(value);
                 }
 
                 // Disk
-                if (field == "disk_id"){
-                    if (!value.empty()){
+                if (field == "disk_id" && (!value.empty()) ){
                         disk->setId(std::stoi(value));
-                    }
                 }
+
                 if (field == "disk_name" && disk->id() > -1 ){
                     disk->set_disk_name(value);
                 }
+
                 if (field == "capacity" && disk->id() > -1 ){
                     disk->set_capacity(std::stod(value));
                 }
 
                 // Folder
-                if (field == "folder_id"){
-                    if (!value.empty()){
-                        folder->setId(std::stoi(value));
-                    }
+                if (field == "folder_id" && (!value.empty()) ){
+                    folder->setId(std::stoi(value));
+                    if (disk->id() > -1)
+                        folder->set_disk(disk->id());
                 }
 
                 if (field == "folder_name" && folder->id() > -1 ){
@@ -1388,60 +1450,76 @@ void ClusterManagerDlg::load_cluster_data()
             }
 
             // Station
-            auto station_node = get_cluster_node_by_id<StationNode, NodeType::Leaf>(station->id());
-            if (station_node == nullptr)
+            if (station->id() > -1 )
             {
-                auto station_item = node_context<ConfigItemType::Station, NodeType::Leaf>(
+                auto station_node = get_cluster_node_by_id<StationNode, NodeType::Leaf>(station->id());
+                if (station_node == nullptr)
+                {
+                    auto station_item = node_context<ConfigItemType::Station, NodeType::Leaf>(
                             stoq(station->station_name()->value()), "mic.png");
 
-                if (station_group_id != -1){
-                    auto station_group_node = get_cluster_node_by_id<StationNode, NodeType::Group>(station_group_id);
-                    make_node<std::shared_ptr<ClusterManager::Station>, StationNode, StationNode>(
+                    if (station_group_id != -1)
+                {
+                        auto station_group_node = get_cluster_node_by_id<StationNode, NodeType::Group>(station_group_id);
+                        make_node<std::shared_ptr<ClusterManager::Station>, StationNode, StationNode>(
                             std::move(station), station_group_node, station_item);
+                   }
                 }
+
             }
 
             // Audio Server
-            auto audio_server_node = get_cluster_node_by_id<ServerNode, NodeType::Leaf>(server->id());
+            ServerNode* audio_server_node = nullptr;
+            DiskNode* disk_node = nullptr;
 
-            if (audio_server_node == nullptr)
+            if (server->id() > -1 )
             {
-                auto server_item = node_context<ConfigItemType::AudioServer, NodeType::Leaf>(
+                audio_server_node = get_cluster_node_by_id<ServerNode, NodeType::Leaf>(server->id());
+
+                if (audio_server_node == nullptr)
+                {
+                    auto server_item = node_context<ConfigItemType::AudioServer, NodeType::Leaf>(
                             stoq(server->server_name()->value()));
 
-                if (server_group_id != -1)
-                {
-                    auto server_group_node = get_cluster_node_by_id<ServerNode, NodeType::Group>(server_group_id);
-                    if (server_group_node != nullptr)
+                    if (server_group_id != -1)
                     {
+                        auto server_group_node = get_cluster_node_by_id<ServerNode, NodeType::Group>(server_group_id);
+                        if (server_group_node != nullptr)
+                        {
 
                         server_item.node_text = server_item.node_text+"("+QString::number(server_group_id)+")";
                         audio_server_node = make_node<std::shared_ptr<ClusterManager::Server>, ServerNode, ServerNode>(
-                                std::move(server), server_group_node, server_item);
+                            std::move(server), server_group_node, server_item);
+                        }
+
                     }
 
                 }
 
-              }
 
-            // Disk
-            auto disk_node = get_cluster_node_by_id<DiskNode, NodeType::Leaf>(disk->id());
-            if (disk_node == nullptr)
-            {
+                // Disk
+                auto disk_node = get_cluster_node_by_id<DiskNode, NodeType::Leaf>(disk->id());
+                if (disk_node == nullptr)
+                {
                     auto disk_item = node_context<ConfigItemType::Disk, NodeType::Leaf>(
-                            stoq(disk->disk_name()->value()));
+                        stoq(disk->disk_name()->value()));
                     disk_node = make_node<std::shared_ptr<ClusterManager::StorageDisk>, DiskNode, ServerNode>(
-                            std::move(disk), audio_server_node, disk_item);
+                        std::move(disk), audio_server_node, disk_item);
+                }
+
             }
 
             // Folder
             auto folder_node = get_cluster_node_by_id<AudioFolderNode, NodeType::Leaf>(folder->id());
             if (folder_node == nullptr)
             {
-                auto folder_item = node_context<ConfigItemType::AudioFolder, NodeType::Leaf>(
+                if (disk_node != nullptr)
+                {
+                        auto folder_item = node_context<ConfigItemType::AudioFolder, NodeType::Leaf>(
                             stoq(folder->folder_name()->value()));
-                make_node<std::shared_ptr<ClusterManager::AudioFolder>, AudioFolderNode, DiskNode>(
+                        make_node<std::shared_ptr<ClusterManager::AudioFolder>, AudioFolderNode, DiskNode>(
                             std::move(folder), disk_node, folder_item);
+                }
 
             }
 

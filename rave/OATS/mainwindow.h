@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QMutex>
+#include <QWheelEvent>
 
 #include "scheduleitem.h"
 #include "../audio/audio.h"
@@ -116,7 +117,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    constexpr static int HOURS_IN_A_DAY = 23;
+    constexpr static int HOURS_IN_A_DAY = 24;
     constexpr static int MAX_GRID_ITEMS = 10;
     constexpr static int MAX_PLAYLIST_ITEMS = 10;
 
@@ -183,6 +184,7 @@ public:
     void create_track_view_headers();
 
     void print_schedule_items();
+    void print_grid();
 
     void recompute_time(int);
 
@@ -194,10 +196,14 @@ public:
 
     void start_timers();
     void print(QString);
+    void print_output_status();
 
     int get_comm_duration(int);
     void set_scheduled_item_filepath(OATS::ScheduleItem*);
     void set_cache_last_play_dtime(OATS::ScheduleItem*);
+
+protected:
+    void wheelEvent(QWheelEvent* event) override;
 
 
 private slots:

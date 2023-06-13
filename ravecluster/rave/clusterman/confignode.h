@@ -148,8 +148,8 @@ namespace ClusterManager
         void set_node_entity(std::shared_ptr<T>);
         void set_config_item_type(ConfigItemType ci_type);
         void set_node_type(NodeType);
-        //std::unique_ptr<T> const& node_entity();
-        T* node_entity();
+        T* node_entity();  // FIXME: Replace this with node_entity_shared
+        std::shared_ptr<T> node_entity_shared();
         void set_parent_id(int parent_id);
         void setText(int column, const QString& aText);
         void addChild(QTreeWidgetItem* child);
@@ -181,7 +181,7 @@ namespace ClusterManager
              :m_config_item_type{config_item.config_item_type}
              ,m_node_type{config_item.node_type}
         {
-            m_node_entity = std::make_unique<T>();
+            m_node_entity = std::make_shared<T>();
         }
 
         template<typename T>
@@ -239,6 +239,12 @@ namespace ClusterManager
         T* ConfigNode<T>::node_entity()
         {
             return m_node_entity.get();
+        }
+
+        template<typename T>
+        std::shared_ptr<T> ConfigNode<T>::node_entity_shared()
+        {
+            return m_node_entity;
         }
 
         template<typename T>

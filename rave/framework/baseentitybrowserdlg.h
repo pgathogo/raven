@@ -285,6 +285,7 @@ public slots:
     void deleteBtnClicked();
     void searchBtnClicked();
     void filter_by_letter(int);
+    void edit_item(const QModelIndex&);
 
 private:
     std::unique_ptr<EntityDataModel> mEntityDataModel;

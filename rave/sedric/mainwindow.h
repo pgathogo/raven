@@ -111,7 +111,7 @@ public:
     void clear_schedule_model();
     QString get_selected_hours_asString();
     void fetch_data(QDate, const std::vector<int>&);
-    std::shared_ptr<AUDIO::Audio> get_selected_audio();
+    AUDIO::Audio* get_selected_audio();
     void show_selection(DateTimeSelection);
     History make_history(int);
     void selected_comm_break();
@@ -128,6 +128,11 @@ public:
     T2 search_filter(std::string field, std::string op, T1 value)
     {
         return std::make_tuple(field, op, value);
+    }
+
+    inline void printlog(std::string msg)
+    {
+        qDebug() << __FILE__ << __LINE__ <<": "<< QString::fromStdString(msg);
     }
 
 

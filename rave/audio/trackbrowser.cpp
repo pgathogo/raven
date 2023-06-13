@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QStandardItem>
 #include <QStandardItemModel>
+#include <QSpacerItem>
 
 #include "trackbrowser.h"
 
@@ -105,7 +106,8 @@ namespace AUDIO
 
     std::shared_ptr<AUDIO::Audio> TrackBrowser::find_audio_by_id(int audio_id)
     {
-        m_audio_data_model->find_audio_by_id(audio_id);
+       auto audio = m_audio_data_model->find_audio_by_id(audio_id);
+        return audio;
 
     }
 
@@ -185,7 +187,9 @@ namespace AUDIO
        m_grid_layout->addWidget(m_lbl_artist.get(), ROW1, COL0);
        m_grid_layout->addWidget(m_edt_artist.get(), ROW1, COL1);
 
-       m_grid_layout->addWidget(m_btn_search.get(), ROW2, COL1, 1, 1);
+       auto spacer = new QSpacerItem(20,20);
+       m_grid_layout->addItem(spacer, ROW2, COL1, 1, 1);
+       m_grid_layout->addWidget(m_btn_search.get(), ROW2, COL2, 1, 1);
 
    }
 
@@ -306,13 +310,14 @@ namespace AUDIO
 
    void AudioDataModel::track_selected(int track_id)
    {
-        std::shared_ptr<AUDIO::Audio> audio = m_lib_item->find_audio_by_id(track_id);
+        std::shared_ptr<AUDIO::Audio> audio(m_lib_item->find_audio_by_id(track_id));
         emit selected_audio(audio);
    }
 
    std::shared_ptr<AUDIO::Audio> AudioDataModel::find_audio_by_id(int audio_id)
    {
-       return m_lib_item->find_audio_by_id(audio_id);
+        std::shared_ptr<AUDIO::Audio> shared_ptr(m_lib_item->find_audio_by_id(audio_id));
+        return shared_ptr;
    }
 
 
@@ -385,16 +390,15 @@ namespace AUDIO
     for(auto&[name, entity] : m_audio_edm->modelEntities())
     {
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
-        std::shared_ptr<AUDIO::Audio> s_audio(audio);
 
         if (audio->audio_type()->displayName() == "Song")
-            m_lib_item->create_row_item<AUDIO::SongAudioLibItem>(s_audio);
+            m_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
 
         if (audio->audio_type()->displayName() == "Jingle")
-            m_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(s_audio);
+            m_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
 
         if (audio->audio_type()->displayName() == "Commercial")
-            m_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(s_audio);
+            m_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
 
     }
 

@@ -13,53 +13,6 @@ namespace OATS{
     enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, ERROR_01};
     enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
 
-    /*
-    class Audio{
-    public:
-        Audio();
-        int id();
-        std::string title();
-        std::string artist();
-        std::string file_path();
-        std::string file_extension();
-        std::string audio_type();
-        int duration();
-
-        void set_id(int);
-        void set_title(std::string);
-        void set_artist(std::string);
-        void set_file_path(std::string);
-        void set_file_extension(const std::string);
-        void set_audio_type(const std::string);
-        void set_duration(int);
-
-        int fade_delay();
-        void set_fade_delay(int);
-        int fade_out();
-        void set_fade_out(int);
-        int intro();
-        void set_intro(int);
-        int extro();
-        void set_extro(int);
-
-    private:
-        int m_id{-1};
-        std::string m_title;
-        std::string m_artist;
-        std::string m_file_path;
-        std::string m_file_extension;
-        std::string m_audio_type;
-        int m_duration{0};
-        int m_fade_delay{0};
-        int m_fade_out{0};
-        int m_intro{0};
-        int m_extro{0};
-
-
-    };
-    */
-
-
     class ScheduleItem : public Subject
     {
     public:
@@ -67,12 +20,12 @@ namespace OATS{
         ScheduleItem(const ScheduleItem& other);
 
         int schedule_ref();
-        int id();
+        int id() const;
         int index();
         void set_index(int);
 
         ItemStatus item_status();
-        std::string play_channel();
+        std::string play_channel() const;
         ScheduleType schedule_type();
         TransitionType transition_type();
         int hour();
@@ -113,6 +66,11 @@ namespace OATS{
         ScheduleType str_to_schedule_type(std::string);
         OATS::ItemStatus str_to_status(std::string);
         QString schedule_type_to_str(ScheduleType);
+
+//        friend std::ostream operator<<(std::ostream& os,
+//                                       const ScheduleItem& si);
+
+        friend QDebug operator<<(QDebug qd, ScheduleItem& si);
 
     private:
         int m_id;

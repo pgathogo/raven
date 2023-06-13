@@ -207,10 +207,13 @@ void SpotAudioBrowser::import_audio()
                 showMessage(aie.errorMessage());
             }
 
-            if (file_format == "mp3"){
+            if (file_format == "mp3")
+            {
                 try{
                     auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_shared);
                     audio_converter->convert();
+
+                    qDebug() << "CONVERTED AF: " << audio_converter->ogg_filename() ;
 
                     spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
                 } catch (AudioImportException& aie) {
