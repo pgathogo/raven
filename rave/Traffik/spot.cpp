@@ -178,7 +178,6 @@ namespace TRAFFIK {
 
     std::shared_ptr<BaseEntity> Spot::cloneAsShared()
     {
-        qDebug() << "<<< Spot::cloneAsShared >>>" ;
         return std::make_shared<Spot>();
     }
 

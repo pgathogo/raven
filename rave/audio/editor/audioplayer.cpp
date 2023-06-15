@@ -1,11 +1,14 @@
 #include "audioplayer.h"
 #include "audiothread.h"
 
+
 namespace AUDIO
 {
     using OPChannel = AudioPlayer::OutputChannel;
 
     AudioPlayer::OutputChannel current_output_channel = AudioPlayer::OutputChannel::ChannelA;
+
+    int AudioPlayer::play_list_index = 0;
 
     AudioPlayer::AudioPlayer()
         :m_audio_thread{nullptr}
@@ -55,6 +58,29 @@ namespace AUDIO
         //m_audio_thread->play(m_output_channel[op_ch]);
     }
 
+    void AudioPlayer::play_audio()
+    {
+        qDebug() << "Playlist Index: " << AudioPlayer::play_list_index;
+        qDebug() << "Playlist Size: " << m_playlist.size();
+
+        if (m_playlist.size() > 0){
+            qDebug() << "AD::play: "<< m_playlist[0].audio_filename;
+            m_audio_thread->play(m_playlist[0].audio_filename);
+            m_playlist.erase(m_playlist.begin());
+            --AudioPlayer::play_list_index;
+        }
+    }
+
+    void AudioPlayer::append_playlist(QString output, QString filename)
+    {
+        PlayList pl;
+        pl.output_channel = output;
+        pl.audio_filename = filename;
+        qDebug() << "Audio Player: "<<filename;
+        m_playlist.push_back(pl);
+        ++AudioPlayer::play_list_index;
+    }
+
     void AudioPlayer::stop_play()
     {
         if (m_audio_thread != nullptr)
@@ -64,14 +90,14 @@ namespace AUDIO
     void AudioPlayer::end_of_playback()
     {
         m_audio_thread->stop();
-        emit end_of_play();
 
-//        if (current_channel < m_output_channel.size()){
-//            play_audio();
-//            emit play_next();
-//        }else {
-//            emit end_of_play();
-//        }
+        //emit end_of_play();
+
+        if (AudioPlayer::play_list_index > 0){
+            play_audio();
+        }else {
+            emit end_of_play();
+        }
 
     }
 

@@ -92,6 +92,9 @@ struct CommBreak{
     QTime book_time;
     QString comm_title;
     int duration;
+    int audio_id{-1};
+    QString filepath{""};
+    QString file_extension{""};
 };
 
 template<typename T>
@@ -112,6 +115,7 @@ using History = std::map<int, std::vector<int>>;
 using CurrentCuedItem = CurrentPlayItem;
 
 using namespace std::chrono_literals;
+using Hour = int;
 
 class MainWindow : public QMainWindow
 {
@@ -140,11 +144,16 @@ public:
 
     void compute_schedule_time();
     OATS::OutputPanel* create_output_panel(const QString);
-    void display_schedule(int start_index=0);
-    void display_schedule2(int start_index);
+//    void display_schedule(int start_index=0);
+    void display_schedule();
+    void go_current_hour();
     QTime schedule_time_at(int);
 
     void load_schedule(QDate, int);
+
+    void load_schedule_bydate(QDate);
+    void fetch_schedule_bydate(QDate);
+
     void fetch_temp_data(int);
 
     std::string play_channel();
@@ -155,6 +164,7 @@ public:
     void set_playlist_control_widget();
     void set_current_play_item();
     OATS::ScheduleItem* schedule_item(int);
+    std::vector<std::shared_ptr<OATS::ScheduleItem>>& get_schedule_item(int);
 
     void make_playlist_grid();
     void make_play_mode_panel();
@@ -171,12 +181,17 @@ public:
     int next_output_panel_id(int);
     OATS::OutputPanel* find_output_panel(int);
     OATS::ScheduleItem* find_next_schedule_item(OATS::ScheduleItem*);
+    void cue_commercial_item(OATS::ScheduleItem*, OATS::OutputPanel*);
     void cue_schedule_item(OATS::ScheduleItem*, OATS::OutputPanel*);
     void calculate_trigger_times();
     int calculate_yield_contribution(OATS::ScheduleItem*);
 
-    void fetch_db_data(QDate, int);
-    void cache_commercial_break_data(QDate, int);
+    void fetch_data_from_db(QDate, int);
+    void fetch_commercials_bydate(QDate);
+    void remove_empty_commercial_breaks();
+    void build_hour_headers(QDate);
+    void build_master_schedule();
+
     void set_schedule_fields(BaseDataProvider* provider,
                                      OATS::ScheduleItem* sched_item);
 
@@ -199,8 +214,12 @@ public:
     void print_output_status();
 
     int get_comm_duration(int);
+    //void set_commercial_items_filepath(int);
     void set_scheduled_item_filepath(OATS::ScheduleItem*);
     void set_cache_last_play_dtime(OATS::ScheduleItem*);
+
+    void scroll_down();
+    void scroll_up();
 
 protected:
     void wheelEvent(QWheelEvent* event) override;
@@ -234,7 +253,6 @@ private slots:
     void stop_all_jingles();
     //void play_jingle(const QString);
 
-    void push_items_down(int);
     void reprint_schedule(int);
     //void queue_for_caching(AUDIO::Audio*);
     void queue_for_caching(std::shared_ptr<AUDIO::Audio>);
@@ -243,6 +261,7 @@ private slots:
     void end_of_play();
     void play_next();
     void jingle_end_of_play();
+
 
 private:
     Ui::MainWindow *ui;
@@ -255,6 +274,9 @@ private:
 
     std::vector<std::unique_ptr<OATS::ScheduleItem>> m_schedule_items;
     std::vector<std::unique_ptr<OATS::ScheduleGridItem>> m_schedule_grid;
+
+    std::map<Hour, std::vector<std::shared_ptr<OATS::ScheduleItem>>> m_day_schedule_items;
+    std::vector<std::shared_ptr<OATS::ScheduleItem>> m_master_schedule;
 
     CurrentPlayItem m_current_playing_item;
     CurrentCuedItem m_current_cued_item;
@@ -308,9 +330,12 @@ private:
     std::unique_ptr<AUDIO::AudioPlayer> m_jingle_player;
     std::unique_ptr<OATS::ScheduleItem> m_current_jingle_item;
 
+    int m_schedule_top_index;
+    int m_scrollbar_current_value;
+
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
-    void fill_schedule_headers(QDate, int);
+    void fill_schedule_headers(QDate);
     void setup_timers();
     void to_lower(std::string&);
 

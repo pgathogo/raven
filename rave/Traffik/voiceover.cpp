@@ -53,7 +53,6 @@ VoiceOver::VoiceOver()
 VoiceOver::~VoiceOver()
 {
     //delete mGenderModel;
-    qDebug() << "VoiceOver::dtor";
 }
 
 std::string VoiceOver::tableName() const

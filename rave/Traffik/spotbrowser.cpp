@@ -83,6 +83,7 @@ void SpotBrowser::updateRecord()
         if (spot_form->exec() > 0){
             try{
 
+                /*
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);
@@ -91,6 +92,7 @@ void SpotBrowser::updateRecord()
                 save_voice_overs(*spot_form);
 
                 save_type_exclusions(*spot_form);
+               */
 
                 save_spot_audio(*spot_form);
 
@@ -184,8 +186,8 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
             AUDIO::AudioTool at;
 
             auto& audio = s_audio->get_paudio();
-
             int id = edm->createEntityDB(audio);
+
             s_audio->setDetailId(id);
             s_audio->setParentId(sf.parentId());
             edm->createEntityDB(*s_audio);

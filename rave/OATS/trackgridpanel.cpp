@@ -67,7 +67,7 @@ namespace OATS{
         m_act_move_up = std::make_unique<QAction>("Move Up");
         m_act_move_down = std::make_unique<QAction>("Move Down");
         m_act_make_current = std::make_unique<QAction>("Make Current");
-        m_act_delete_item = std::make_unique<QAction>("Delete Item");
+        m_act_delete_item = std::make_unique<QAction>("Remove Item");
 
         if (m_schedule_item->item_status() == OATS::ItemStatus::ERROR_01)
             m_act_make_current->setEnabled(false);

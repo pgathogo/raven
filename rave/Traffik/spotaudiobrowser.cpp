@@ -172,7 +172,7 @@ void SpotAudioBrowser::import_audio()
 
     auto audio_filename = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), QDir::currentPath(),
-                                                   tr("Audio Files (*.ogg *.mp3 *.wav)"));
+                                                   tr("OGG Files (*.ogg);; MP3 Files (*.mp3);; Wave Files (*.wav)"));
     if (audio_filename.isEmpty())
         return;
 
@@ -215,6 +215,9 @@ void SpotAudioBrowser::import_audio()
 
                     qDebug() << "CONVERTED AF: " << audio_converter->ogg_filename() ;
 
+                    // File has been converted to OGG, change the extension
+                    spot_audio->audio()->set_file_extension("OGG");
+
                     spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
                 } catch (AudioImportException& aie) {
                     showMessage(aie.errorMessage());
@@ -237,7 +240,8 @@ void SpotAudioBrowser::import_audio()
         af.set_artist_name("");
 
         auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(af);
-        if (wave_form->exec() == 1){
+        if (wave_form->exec() == 1)
+        {
             spot_audio->audio()->set_audio_file(af);
             spot_audio->set_marker(wave_form->cue_marker());
             spot_audio->set_duration(af.duration());
@@ -245,7 +249,11 @@ void SpotAudioBrowser::import_audio()
             spot_audio->setDBAction(DBAction::dbaCREATE);
 
             auto& p_audio = spot_audio->get_paudio();
+
             p_audio = *spot_audio->audio();
+
+            qDebug() << "FILE EXT: " << spot_audio->audio()->file_extension()->to_qstring();
+            qDebug() << "P_AUDIO FILE EXT: " << p_audio.file_extension()->to_qstring();
 
             entityDataModel().cacheEntity(std::move(spot_audio));
         }

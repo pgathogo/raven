@@ -6,13 +6,19 @@
 
 class AudioThread;
 
+
 namespace AUDIO
 {
+    struct PlayList{
+        QString output_channel{""};
+        QString audio_filename{""};
+    };
 
     class AudioPlayer : public QObject
     {
         Q_OBJECT
     public:
+
         enum class OutputChannel {ChannelA=1, ChannelB=2};
 
         AudioPlayer();
@@ -20,11 +26,14 @@ namespace AUDIO
 //        AudioPlayer(std::vector<QString> play_list);
         ~AudioPlayer();
 
+        void play_audio();
         void play_audio(QString, QString);
         void stop_play();
 
         void update_output_channel(QString, QString);
         OutputChannel str_to_channel(QString);
+
+        void append_playlist(QString, QString);
     signals:
         void play_next();
         void end_of_play();
@@ -34,7 +43,9 @@ namespace AUDIO
         std::unique_ptr<AudioThread> m_audio_thread;
         AudioFile m_audio_file;
         std::map<OutputChannel, QString> m_output_channel;
+        std::vector<PlayList> m_playlist;
         static OutputChannel current_output_channel;
+        static int play_list_index;
 
     };
 }

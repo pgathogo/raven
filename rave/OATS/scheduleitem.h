@@ -66,6 +66,7 @@ namespace OATS{
         ScheduleType str_to_schedule_type(std::string);
         OATS::ItemStatus str_to_status(std::string);
         QString schedule_type_to_str(ScheduleType);
+        QString schedule_type_to_str();
 
 //        friend std::ostream operator<<(std::ostream& os,
 //                                       const ScheduleItem& si);

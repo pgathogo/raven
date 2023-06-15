@@ -28,7 +28,7 @@ namespace AUDIO
         void clear_queue();
         void clear_cache();
         void persist_cache();
-        std::string get_audio_cache_path(int);
+        std::string get_cached_audio_path(int);
         void set_cache_audio_last_play_dtime(int);
     private:
         std::unique_ptr<T> m_dbmanager;
@@ -245,7 +245,7 @@ namespace AUDIO
     }
 
     template<typename T>
-    std::string AudioCacheManager<T>::get_audio_cache_path(int audio_id)
+    std::string AudioCacheManager<T>::get_cached_audio_path(int audio_id)
     {
         for (auto const& cache_audio: m_cache)
         {
