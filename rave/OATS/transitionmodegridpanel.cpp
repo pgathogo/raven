@@ -46,10 +46,12 @@ namespace OATS{
 
         if (schedule_item->transition_type() == OATS::TransitionType::MIX){
             //setStyleSheet("background-color: rgb(40, 133, 220)");
+            setStyleSheet("background-color: #87CEEB");
         }
 
         if (schedule_item->transition_type() == OATS::TransitionType::STOP){
-            setStyleSheet("background-color: rgb(251, 27, 4)");
+            //setStyleSheet("background-color: rgb(251, 27, 4)");
+            setStyleSheet("background-color: #DC143C");
         }
 
         if (schedule_item->transition_type() == OATS::TransitionType::CUT){

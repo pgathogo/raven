@@ -16,6 +16,8 @@ namespace OATS{
         explicit PlayListControlWidget(QWidget *parent = nullptr);
         ~PlayListControlWidget();
 
+        void style_button(const QString);
+
     public slots:
         void go_current_clicked();
         void keep_current_clicked();

@@ -8,6 +8,7 @@
 
 #include "scheduleitem.h"
 #include "outputpanel.h"
+#include "oats_styles.h"
 
 namespace OATS{
 
@@ -15,17 +16,6 @@ namespace OATS{
         :m_panel_name{name}
         ,m_status{OATS::PanelStatus::WAITING}
     {
-            //"border: 1px solid #9E9E9E;"
-        QString btn_style(
-            "background-color: #222222;"
-            "height: 20;"
-            "width:100;"
-            "font-family: Roboto;"
-            "font-size:12px;"
-            "font:bold;"
-            "color:#FFFFFF;"
-            );
-
         setFrameShape(QFrame::Panel);
         setFrameShadow(QFrame::Raised);
 
@@ -34,22 +24,13 @@ namespace OATS{
         connect(m_play_button.get(), &QPushButton::clicked, this, &OutputPanel::play);
 
         m_play_button->setIcon(QIcon(":/images/icons/play_01.png"));
-        m_play_button->setStyleSheet(btn_style);
+        m_play_button->setStyleSheet(OATSTYLE::play_button_style);
 
         m_stop_button = std::make_unique<QPushButton>("STOP "+name);
         m_stop_button->setObjectName("StopButton");
         connect(m_stop_button.get(), &QPushButton::clicked, this, &OutputPanel::stop);
 
-                        //"border:1px solid #FF0000;"
-        m_stop_button->setStyleSheet(
-                        "background-color: #222222;"
-                        "height:20;"
-                        "width:100;"
-                        "font-family: Roboto;"
-                        "font-size:12px;"
-                        "font:bold;"
-                        "color:#FFFFFF;"
-                         );
+        m_stop_button->setStyleSheet(OATSTYLE::stop_button_style);
 
         m_status_image = std::make_unique<QLabel>("img");
         m_layout_buttons = new QHBoxLayout();
@@ -109,6 +90,8 @@ namespace OATS{
         m_main_panel->addLayout(m_layout_time);
 
         setLayout(m_main_panel.get());
+
+//        setStyleSheet("background-color:#36454F;" );
 
     }
 
@@ -277,10 +260,10 @@ namespace OATS{
     void OutputPanel::slow_flash_play_button()
     {
         if (!m_slow_flash_bit){
-            m_play_button->setStyleSheet("background-color: #00C853");
+            m_play_button->setStyleSheet(OATSTYLE::play_button_slow_flash_style);
             m_slow_flash_bit = true;
         }else{
-            m_play_button->setStyleSheet("");
+            m_play_button->setStyleSheet(OATSTYLE::play_button_style);
             m_slow_flash_bit = false;
         }
     }
@@ -288,10 +271,10 @@ namespace OATS{
     void OutputPanel::slow_flash_stop_button()
     {
         if (!m_stop_slow_flash_bit){
-            m_stop_button->setStyleSheet("background-color: #FF0000");
+            m_stop_button->setStyleSheet(OATSTYLE::stop_button_slow_flash);
             m_stop_slow_flash_bit = true;
         } else {
-            m_stop_button->setStyleSheet("");
+            m_stop_button->setStyleSheet(OATSTYLE::play_button_style);
             m_stop_slow_flash_bit = false;
         }
     }
@@ -305,13 +288,13 @@ namespace OATS{
         case OATS::ButtonFlashColor::NONE:
             break;
         case OATS::ButtonFlashColor::GREEN:
-            flash_color = "background-color: rgb(170, 255, 0)";
+            flash_color = OATSTYLE::fast_flash_green;
             break;
         case OATS::ButtonFlashColor::ORANGE:
-            flash_color =  "background-color: rgb(255, 195, 0)";
+            flash_color = OATSTYLE::fast_flash_orange;
             break;
         case OATS::ButtonFlashColor::RED:
-            flash_color = "background-color: rgb(255, 0, 0)";
+            flash_color = OATSTYLE::fast_flash_red;
             break;
         default:
             flash_color = "";
@@ -321,7 +304,7 @@ namespace OATS{
             m_play_button->setStyleSheet(flash_color);
             m_fast_flash_on = true;
         }else {
-            m_play_button->setStyleSheet("");
+            m_play_button->setStyleSheet(OATSTYLE::play_button_style);
             m_fast_flash_on = false;
         }
     }
@@ -329,10 +312,10 @@ namespace OATS{
     void OutputPanel::fast_flash_stop_button()
     {
         if (!m_stop_fast_flash_bit){
-            m_stop_button->setStyleSheet(color_red);
+            m_stop_button->setStyleSheet(OATSTYLE::fast_flash_red);
             m_stop_fast_flash_bit = true;
         } else {
-            m_stop_button->setStyleSheet("");
+            m_stop_button->setStyleSheet(OATSTYLE::play_button_style);
             m_stop_fast_flash_bit = false;
         }
     }
@@ -346,12 +329,12 @@ namespace OATS{
 
     void OutputPanel::reset_play_button()
     {
-        m_play_button->setStyleSheet("");
+        m_play_button->setStyleSheet(OATSTYLE::play_button_style);
     }
 
     void OutputPanel::reset_stop_button()
     {
-        m_stop_button->setStyleSheet("");
+        m_stop_button->setStyleSheet(OATSTYLE::stop_button_style);
     }
 
     void OutputPanel::update_progress_bar(int value)

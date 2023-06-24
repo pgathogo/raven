@@ -353,6 +353,12 @@ namespace OATS
            m_grid_buttons[row].resize(GRID_COLS);
            for(int col=0; col<GRID_COLS; ++col){
                auto btn = std::make_unique<GridButton>(id++);
+               btn->setStyleSheet(
+                   "background-color:#D27D2D;"
+                   "color: #FFFFFF;"
+                   "height:35;"
+                   "font:bold;"
+                   );
                btn->setContextMenuPolicy(Qt::CustomContextMenu);
 
                connect(btn.get(), &GridButton::customContextMenuRequested, this,
@@ -568,12 +574,24 @@ namespace OATS
 
    void JingleGrid::make_toolbar(QVBoxLayout* main_layout)
    {
+
        m_toolbar_layout = new QHBoxLayout();
+
+       QString style(
+                "background-color:#FF7518;"
+                "color: #FFFFFF;"
+                "font:bold;"
+           );
 
        open_btn = std::make_unique<QPushButton>("Open...");
        save_btn = std::make_unique<QPushButton>("Save");
        save_as_btn = std::make_unique<QPushButton>("Save As...");
        clear_all_btn = std::make_unique<QPushButton>("Clear All");
+
+       open_btn->setStyleSheet(style);
+       save_btn->setStyleSheet(style);
+       save_as_btn->setStyleSheet(style);
+       clear_all_btn->setStyleSheet(style);
 
        connect(open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
        connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
@@ -606,6 +624,11 @@ namespace OATS
         for(int i=1; i < PAGE_COUNT; ++i){
             auto page_button = std::make_unique<QPushButton>(QString::number(i));
             page_button->setCheckable(true);
+            page_button->setStyleSheet(
+                "background-color:#FF7518;"
+                "color: #FFFFFF;"
+                "font:bold;"
+                );
             connect(page_button.get(), &QPushButton::clicked, this,
                     [=](){attach_jingle_to_buttons(i); set_current_page(i);});
             m_page_button_group->addButton(page_button.get());
@@ -632,6 +655,12 @@ namespace OATS
    void JingleGrid::make_stop_button(QVBoxLayout* main_layout)
    {
        m_stop_button = std::make_unique<QPushButton>("Stop All");
+       m_stop_button->setStyleSheet(
+           "background-color:#DC143C;"
+           "color: #FFFFFF;"
+           "height:30;"
+           "font:bold;"
+           );
        connect(m_stop_button.get(), &QPushButton::clicked, this, &JingleGrid::stop_all);
 
        main_layout->addWidget(m_stop_button.get());

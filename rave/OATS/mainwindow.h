@@ -220,6 +220,7 @@ public:
 
     void scroll_down();
     void scroll_up();
+    void style_page_controls();
 
 protected:
     void wheelEvent(QWheelEvent* event) override;

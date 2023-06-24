@@ -59,7 +59,6 @@
 #include "jinglegrid.h"
 #include "cartpanel.h"
 
-
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
 
@@ -160,7 +159,42 @@ MainWindow::MainWindow(QWidget *parent)
     m_current_jingle_item = std::make_unique<OATS::ScheduleItem>();
     //test_concept();
 
+    style_page_controls();
+
+    ui->gridScroll->setStyleSheet(
+         "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
+         "border: 2px solid grey;"
+         "width: 3px;"
+         "height: 3px;"
+         "background: green;"
+        );
+    //setStyleSheet("background-color: #222222;");
     //QMainWindow::showFullScreen();
+}
+
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::style_page_controls()
+{
+    QString style(
+            "background-color:#00A36C;"
+            "color: #FFFFFF;"
+            "font:bold;"
+            "height:30;"
+        );
+
+    ui->btnHome->setStyleSheet(style);
+    ui->btnComm->setStyleSheet(style);
+    ui->btnSegue->setStyleSheet(style);
+    ui->btnCarts->setStyleSheet(style);
+    ui->btnJingles->setStyleSheet(style);
+    ui->btnTrackInfo->setStyleSheet(style);
+    ui->btnLoad->setStyleSheet(style);
+    ui->btnPrintCache->setStyleSheet(style);
 }
 
 void MainWindow::wheelEvent(QWheelEvent* event)
@@ -187,13 +221,8 @@ void MainWindow::test_concept()
 }
 
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
 void MainWindow::setup_timers()
-{
+{        
     m_slow_flash_timer = std::make_unique<QTimer>(this);
     connect(m_slow_flash_timer.get(), &QTimer::timeout, this, &MainWindow::slow_flash);
 
@@ -278,6 +307,15 @@ void MainWindow::set_playlist_control_widget()
 {
     m_pcw = std::make_unique<OATS::PlayListControlWidget>();
     connect(m_pcw.get(), &OATS::PlayListControlWidget::go_current, this, &MainWindow::go_current);
+
+    QString style(
+            "background-color:#00A36C;"
+            "color: #FFFFFF;"
+            "font:bold;"
+        );
+
+    m_pcw->setStyleSheet(style);
+
     //ui->hlPlayMode->addWidget(m_pcw.get());
 }
 
@@ -318,17 +356,11 @@ void MainWindow::load_schedule_bydate(QDate date)
 
 void MainWindow::build_hour_headers(QDate date)
 {
-    for (int hour=0; hour < HOURS_IN_A_DAY; ++hour){
-
+    for (int hour=0; hour < HOURS_IN_A_DAY; ++hour)
+    {
         auto header = std::make_unique<OATS::ScheduleItem>();
         set_header_item(header.get(), hour, date);
         m_schedule_items.push_back(std::move(header));
-
-        /*
-        std::vector<std::shared_ptr<OATS::ScheduleItem>> sched_items;
-        sched_items.push_back(std::move(header));
-        m_day_schedule_items.insert({hour, sched_items});
-       */
     }
 
 }
@@ -395,7 +427,6 @@ void MainWindow::remove_empty_commercial_breaks()
 }
 
 
-
 void MainWindow::build_master_schedule()
 {
     for (int hr=0; hr <= HOURS_IN_A_DAY; ++hr)
@@ -405,7 +436,6 @@ void MainWindow::build_master_schedule()
         }
     }
 }
-
 
 
 
@@ -482,7 +512,7 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
             {
                 QTime item_time = sched_item->schedule_time().addMSecs(comm_duration);
                 sched_item->set_current_time(comm_duration);
-                sched_item->set_schedule_time(item_time);
+                //sched_item->set_schedule_time(item_time);
 
                 sched_item->audio()->set_duration(comm_duration);
                 sched_item->audio()->set_title(
@@ -715,8 +745,6 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
 
 void MainWindow::fetch_temp_data(int hr)
 {
-    /*
-    */
 }
 
 void MainWindow::make_playlist_grid()
@@ -775,21 +803,12 @@ void MainWindow::make_playlist_grid()
 
 OATS::ScheduleItem* MainWindow::schedule_item(int index)
 {
-
     if (index <= m_schedule_items.size()-1){
         return m_schedule_items[index].get();
     } else {
         return nullptr;
     }
 
-
-    /*
-    if (index <= m_master_schedule.size()-1){
-        return m_master_schedule[index].get();
-    } else {
-        return nullptr;
-    }
-   */
 }
 
 std::vector<std::shared_ptr<OATS::ScheduleItem>>& MainWindow::get_schedule_item(int hour)
@@ -1031,7 +1050,13 @@ void MainWindow::scroll_changed(int new_pos)
 
 void MainWindow::go_current()
 {
-    ui->gridScroll->setValue(m_current_playing_item.grid_index);
+    if (m_current_playing_item.grid_index > 0)
+    {
+       std::rotate(m_schedule_items.begin(), m_schedule_items.begin()+m_current_playing_item.grid_index, m_schedule_items.end());
+       display_schedule();
+       m_current_playing_item.grid_index = 0;
+       //ui->gridScroll->setValue(m_current_playing_item.grid_index);
+    }
 }
 
 void MainWindow::keep_current(bool checked)
@@ -1846,8 +1871,6 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         op->schedule_item()->notify();
 
-        // TODO: Commercials need to be played as a batch
-
         if (op->schedule_item()->schedule_type() == OATS::ScheduleType::COMM)
         {
             auto break_items = m_comm_breaks[op->schedule_item()->id()];
@@ -2000,12 +2023,6 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
     if (si->item_status() == OATS::ItemStatus::ERROR_01)
         return;
 
-    if ((m_current_cued_item.item != nullptr) &&
-        (m_current_cued_item.item->item_status() != OATS::ItemStatus::PLAYING) ){
-        m_current_cued_item.item->set_item_status(OATS::ItemStatus::WAITING);
-        m_current_cued_item.item->notify();
-    }
-
     if ( grid_pos < m_current_playing_item.grid_index)
     {
          if (m_current_playing_item.item->item_status()==OATS::ItemStatus::PLAYING) {
@@ -2014,6 +2031,12 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
                          QMessageBox::Ok);
             return;
          }
+    }
+
+    if ((m_current_cued_item.item != nullptr) &&
+        (m_current_cued_item.item->item_status() != OATS::ItemStatus::PLAYING) ){
+        m_current_cued_item.item->set_item_status(OATS::ItemStatus::WAITING);
+        m_current_cued_item.item->notify();
     }
 
     set_scheduled_item_filepath(si);
@@ -2041,43 +2064,8 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
         m_outputB->set_cue_time_string(cue_string);
     }
 
-
-    /*
-    for(int i=index+1; i < m_schedule_items.size()-1; ++i)
-    {
-        auto sched_item = schedule_item(i);
-        sched_item->set_schedule_time(curr_time.addMSecs(item_duration));
-
-        if (sched_item->item_status()== OATS::ItemStatus::ERROR_01)
-            continue;
-
-        sched_item->set_item_status(OATS::ItemStatus::WAITING);
-        curr_time = sched_item->schedule_time();
-        item_duration = sched_item->audio()->duration()->value();
-
-        sched_item->notify();
-    }
-*/
-
-
-    /*
-    for(int i=grid_pos+1; i < MAX_GRID_ITEMS-1; ++i){
-        auto sched_item = m_schedule_grid[i]->schedule_item();
-        sched_item->set_schedule_time(curr_time.addMSecs(item_duration));
-
-        if (sched_item->item_status() == OATS::ItemStatus::ERROR_01)
-            continue;
-
-        sched_item->set_item_status(OATS::ItemStatus::WAITING);
-        curr_time = sched_item->schedule_time();
-        item_duration = sched_item->audio()->duration()->value();
-        sched_item->notify();
-        m_schedule_grid[i]->set_subject(sched_item);
-    }
-  */
-
     //int gs_value = ui->gridScroll->value();
-    //display_schedule(gs_value);
+    //display_schedule();
 
 }
 

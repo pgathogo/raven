@@ -16,7 +16,9 @@ namespace OATS{
 
         setObjectName("TimePanel");
         setFixedWidth(80);
-        setStyleSheet("QFrame#TimePanel{background-color: #222222;}");
+        //setStyleSheet("QFrame#TimePanel{background-color: #222222;}");
+        setStyleSheet("background-color: rgb(40, 133, 220)");
+        //setStyleSheet("background-color: #899499");
 
         QFont f("JetBrains Mono", 10, QFont::Bold);
         f.setBold(true);

@@ -46,7 +46,8 @@ namespace OATS{
     void StatusGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
         if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
-            setStyleSheet("background-color: #222222;");
+            //setStyleSheet("background-color: #222222;");
+            setStyleSheet("background-color: rgb(40, 133, 220)");
             m_status1->setText("");
             m_status2->setText("");
             return;
@@ -59,7 +60,12 @@ namespace OATS{
         m_status1->setText(QString::fromStdString(schedule_item->item_status_text()));
         m_status2->setText(QString::fromStdString(schedule_item->play_channel()));
 
-        setStyleSheet("background-color: #222222;");
+        //setStyleSheet("background-color: #222222;");
+        setStyleSheet("background-color: rgb(40, 133, 220)");
+
+        if (schedule_item->item_status() == OATS::ItemStatus::WAITING){
+            setStyleSheet("background-color: #899499");
+        }
 
         if (schedule_item->item_status() == OATS::ItemStatus::CUED){
             setStyleSheet("background-color: #EF6C00");

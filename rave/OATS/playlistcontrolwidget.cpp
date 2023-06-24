@@ -11,6 +11,11 @@ namespace OATS {
     {
         m_title = std::make_unique<QLabel>("Playlist Mode:");
         m_go_current = std::make_unique<QPushButton>("Go Current");
+        m_go_current->setStyleSheet(
+            "background-color:#00A36C;"
+            "color: #FFFFFF;"
+            "font:bold;"
+            );
         connect(m_go_current.get(), &QPushButton::clicked, this, &PlayListControlWidget::go_current_clicked);
 
         m_keep_current = std::make_unique<QPushButton>("Keep Current");
@@ -24,6 +29,14 @@ namespace OATS {
         m_main_layout->addStretch(2);
 
         setLayout(m_main_layout);
+    }
+
+    void PlayListControlWidget::style_button(const QString style)
+    {
+       m_go_current->setStyleSheet(style);
+
+        setStyleSheet(style);
+
     }
 
     PlayListControlWidget::~PlayListControlWidget()

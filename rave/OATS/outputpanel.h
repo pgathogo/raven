@@ -12,6 +12,7 @@
 
 class QString;
 
+
 namespace OATS{
 
     class ScheduleItem;

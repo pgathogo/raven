@@ -32,6 +32,12 @@ QLabel#ArtistLabel, #DurationLabel, #OutputArtistLabel
 
 QPushButton#PlayButton
 {
-  background-color: #BB86FC;
+    background-color: #8A9A5B;
+    height: 30;
+    width:100;
+    font-family: Roboto;
+    font-size:12px;
+    font:bold;
+    color:#FFFFFF;
 }
 

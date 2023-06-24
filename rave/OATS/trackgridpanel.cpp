@@ -130,21 +130,25 @@ namespace OATS{
         m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
 
         AUDIO::AudioTool at;
-        QTime t = at. msec_to_time(schedule_item->hour(), schedule_item->audio()->duration()->value());
+        QTime t = at.msec_to_time(schedule_item->hour(), schedule_item->audio()->duration()->value());
 
         m_duration_label->setText(t.toString("mm:ss"));
 
         setStyleSheet("background-color: #636160;");
+        m_track_label->setStyleSheet("color: #FFFFFF");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
             //m_duration_label->setText("");
-            setStyleSheet("background-color: rgb(40, 133, 220)");
+            m_track_label->setStyleSheet("color: #353935");
+            setStyleSheet("background-color: #FFDB58");
         }
+            //setStyleSheet("background-color: rgb(40, 133, 220)");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::SONG){
-            setStyleSheet("background-color: #E0E0E0");
-        }
+            setStyleSheet("background-color: #40B5AD");
 
+        }
+            //setStyleSheet("background-color: #088F8F");
         if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
             setStyleSheet("background-color: #fb1d04");
             m_artist_label->setText(m_artist_label->text()+": ERROR - FILE NOT FOUND");
