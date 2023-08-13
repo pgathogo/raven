@@ -29,6 +29,7 @@ public:
 
     void populateEntityFields() override;
     void populateFormWidgets() override;
+    void clear_widgets() override;
 
     void populateChoiceCombo(QComboBox* cbox, const ChoiceField<int>* cf);
     void populateCopyCB();

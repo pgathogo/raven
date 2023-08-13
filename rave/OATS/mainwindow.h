@@ -35,7 +35,7 @@ class QStandardItemModel;
 class TreeViewModel;
 class BaseDataProvider;
 class ScheduleItem;
-class TimeAnalyzerWidget;
+//class TimeAnalyzerWidget;
 class NodeData;
 class TrackInfo;
 
@@ -49,6 +49,7 @@ namespace OATS{
     class Jingle;
     class JingleGrid;
     class CartPanel;
+    class TimeAnalyzerTextWidget;
 }
 
 namespace DATA{
@@ -145,8 +146,7 @@ public:
     void compute_schedule_time();
     OATS::OutputPanel* create_output_panel(const QString);
 //    void display_schedule(int start_index=0);
-    void display_schedule();
-    void go_current_hour();
+    void display_schedule(int grid_pos=0, int from_item_index=0);
     QTime schedule_time_at(int);
 
     void load_schedule(QDate, int);
@@ -163,6 +163,7 @@ public:
     void set_time_analytics_widget();
     void set_playlist_control_widget();
     void set_current_play_item();
+    void move_top_current_hour();
     OATS::ScheduleItem* schedule_item(int);
     std::vector<std::shared_ptr<OATS::ScheduleItem>>& get_schedule_item(int);
 
@@ -183,13 +184,15 @@ public:
     OATS::ScheduleItem* find_next_schedule_item(OATS::ScheduleItem*);
     void cue_commercial_item(OATS::ScheduleItem*, OATS::OutputPanel*);
     void cue_schedule_item(OATS::ScheduleItem*, OATS::OutputPanel*);
+
     void calculate_trigger_times();
     int calculate_yield_contribution(OATS::ScheduleItem*);
+    void calculate_time_stats();
 
     void fetch_data_from_db(QDate, int);
     void fetch_commercials_bydate(QDate);
     void remove_empty_commercial_breaks();
-    void build_hour_headers(QDate);
+    void build_hour_headers(QDate, int);
     void build_master_schedule();
 
     void set_schedule_fields(BaseDataProvider* provider,
@@ -221,6 +224,7 @@ public:
     void scroll_down();
     void scroll_up();
     void style_page_controls();
+    void refresh_data(int, int);
 
 protected:
     void wheelEvent(QWheelEvent* event) override;
@@ -235,12 +239,14 @@ private slots:
     //long long get_tick_count();
     void count_down();
     void status_timer();
+    void on_calc_time_stats();
 
     void item_move_up(int, int);
     void item_move_down(int, int);
     void make_item_current(int, int);
     void grid_clicked(int, int);
     void delete_schedule_item(int, int);
+    void reload_schedule(int, int);
 
     void transition_stop(int, int);
     void transition_mix(int, int);
@@ -263,11 +269,14 @@ private slots:
     void play_next();
     void jingle_end_of_play();
 
+    void close_window();
+
 
 private:
     Ui::MainWindow *ui;
 
    // std::unique_ptr<TimeAnalyzerWidget> m_taw;
+    std::unique_ptr<OATS::TimeAnalyzerTextWidget> m_tta_widget;
     std::unique_ptr<OATS::DateTimeWidget> m_dtw;
     std::unique_ptr<OATS::PlayListControlWidget> m_pcw;
     std::unique_ptr<OATS::PlayModePanel> m_play_mode_panel;
@@ -292,6 +301,7 @@ private:
     std::unique_ptr<QTimer> m_fast_flash_timer;
     std::unique_ptr<QTimer> m_countdown_timer;
     std::unique_ptr<QTimer> m_main_player_timer;
+    std::unique_ptr<QTimer> m_time_stats_timer;
 
     std::unique_ptr<TreeViewModel> m_folder_model;
     std::vector<NodeData*> m_folders;
@@ -333,7 +343,6 @@ private:
 
     int m_schedule_top_index;
     int m_scrollbar_current_value;
-
 
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate);

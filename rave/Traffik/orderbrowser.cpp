@@ -38,6 +38,9 @@ void OrderBrowser::updateRecord()
     if (!search_name.empty()){
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
         Order* order = dynamic_cast<Order*>(be.get());
+
+        qDebug() << *order;
+
         auto order_form = std::make_unique<OrderForm>(mClient, order, this);
         if (order_form->exec() > 0){
             try{

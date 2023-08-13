@@ -82,7 +82,6 @@ namespace AUDIO{
             m_model->appendRow(columns);
             m_lib_items.push_back(std::move(item));
 
-            qDebug() << "Audio ID: "<< audio->id() << audio->title()->to_qstring();
         }
 
     private:

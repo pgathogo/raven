@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QHash>
+#include <QString>
 
 class Logger {
 private:
@@ -16,8 +17,11 @@ private:
 	static QHash<QtMsgType, QString> contextNames;
 
 public:
-	/// @brief Initializes the logger.
-	static void init();
+    static bool add_file_header(QString);
+    static bool add_file_timestamp(QString);
+
+    /// @brief Initializes the logger.
+    static void init(QString);
 
 	/// @brief Cleans up the logger.
 	static void clean();

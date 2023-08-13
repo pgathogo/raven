@@ -120,6 +120,7 @@ namespace AUDIO
         void search_clicked();
     private:
         std::unique_ptr<QGridLayout> m_grid_layout;
+
         std::unique_ptr<QLabel> m_lbl_title;
         std::unique_ptr<QLineEdit> m_edt_title;
 
@@ -198,6 +199,7 @@ namespace AUDIO
                                                "=", false);
            FRAMEWORK::RelationMapper* r_mapper = new FRAMEWORK::RelationMapper();
            r_mapper = m_audio_edm->select_related(artist)->filter(base_filter, active_audio);
+
            fetch_audio_data(r_mapper);
         }
     signals:

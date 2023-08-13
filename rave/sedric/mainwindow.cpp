@@ -132,6 +132,7 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     setWindowTitle("Raven - SeDRic");
 
+
     //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();
@@ -142,7 +143,9 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     ui->tvSchedule->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tvSchedule, &QTableView::customContextMenuRequested, this, &MainWindow::contextMenuRequested);
 
-    test_ranges();
+    //test_ranges();
+
+    fetch_default_data();
 }
 
 MainWindow::~MainWindow()
@@ -156,7 +159,7 @@ void MainWindow::test_ranges()
 {
     std::vector<int> vecs{1, 2, 3, 4, 5, 6, 7};
     for(int v: vecs | rv::reverse | rv::take(3) | rv::reverse){
-        qDebug() << v << ", ";
+        qDebug() << v << ",";
     }
     qDebug() << "\n";
 }
@@ -371,7 +374,7 @@ void MainWindow::save_as()
 {
     //m_save_as = new SaveAs(get_selected_hours_asInt(), this);
     if (m_datetime_selection.sel_hours.size() == 0){
-        showMessage("Nothing selected for saving!");
+        showMessage("Nothing selected for saving!", QMessageBox::Critical);
         return;
     }
 
@@ -406,14 +409,11 @@ void MainWindow::folder_clicked(const QModelIndex& index)
 
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
-    qDebug() << "AAA";
     std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
-    qDebug() << "BBB";
 
     qDebug() << stoq(filter_str);
 
     fetch_audio(filter_str);
-    qDebug() << "CCC";
 }
 
 SelectedScheduleItem MainWindow::get_sched_item_hour_time(const QModelIndex& index)
@@ -466,6 +466,11 @@ void MainWindow::insert_item(const QModelIndex& index)
     auto audio = this->get_selected_audio();
     if (audio == nullptr)
         return;
+
+    if (!QFile::exists(audio->full_audio_filename())){
+        showMessage("Audio file does not exists!", QMessageBox::Critical);
+        return;
+    }
 
     Schedule* schedule = new Schedule();
 
@@ -543,12 +548,16 @@ void MainWindow::remove_item(int row)
 
 bool MainWindow::is_item_deletable(const QString item_type)
 {
+    return (item_type == "COMM-BREAK" || item_type == "END-MARKER") ? false : true;
+
+    /*
     if (item_type=="COMM-BREAK")
         return false;
     if (item_type=="END-MARKER")
         return false;
 
     return true;
+   */
 }
 
 
@@ -675,7 +684,7 @@ void MainWindow::set_column_width()
 {
     enum Column{TIME, TITLE, ARTIST, DURATION, AUDIO_TYPE, PLAY_DATE, PLAY_TIME, TRACK_PATH, COMMENT};
 
-    ui->tvSchedule->setColumnWidth(Column::TIME, 50);
+    ui->tvSchedule->setColumnWidth(Column::TIME, 100);
     ui->tvSchedule->setColumnWidth(Column::TITLE, 250);
     ui->tvSchedule->setColumnWidth(Column::ARTIST, 200);
     ui->tvSchedule->setColumnWidth(Column::DURATION, 80);
@@ -743,7 +752,7 @@ void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
 
     clear_schedule_model();
 
-    auto processed = fetch_schedule_from_cache(sel_date, sel_hours); //selected_hours);
+    auto processed = fetch_schedule_from_cache(sel_date, sel_hours);
 
     std::vector<int> uncached_hours;
     std::transform(processed.begin(), processed.end(), back_inserter(uncached_hours), UnCachedHours());
@@ -849,7 +858,7 @@ void MainWindow::print_activity_details()
 void MainWindow::save_schedule()
 {
     if (m_datetime_selection.sel_hours.size() == 0){
-        showMessage("Nothing selected for saving!");
+        showMessage("Nothing selected for saving!", QMessageBox::Critical);
         return;
     }
 
@@ -892,7 +901,7 @@ void MainWindow::play_audio()
     auto full_audio_name = audio->file_path()->value()+ogg_file;
 
     if (!QFile::exists(QString::fromStdString(full_audio_name))){
-        showMessage("File does not exits! "+full_audio_name);
+        showMessage("File does not exits! "+full_audio_name, QMessageBox::Critical);
         return;
     }
 
@@ -969,7 +978,7 @@ void MainWindow::show_audio_history()
 
 void MainWindow::select_date_time()
 {
-    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this);
+    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this, m_datetime_selection);
     if (dts->exec() == 1){
         m_datetime_selection = dts->selection();
         std::sort(m_datetime_selection.sel_hours.begin(), m_datetime_selection.sel_hours.end());
@@ -978,6 +987,35 @@ void MainWindow::select_date_time()
         show_selection(m_datetime_selection);
     }
 
+}
+
+void MainWindow::fetch_default_data()
+{
+    int prev_hour = 0;
+    int next_hour = 0;
+    int curr_hour = QTime::currentTime().hour();
+
+    constexpr int HOURS_IN_A_DAY = 23;
+
+    if ( (curr_hour - 1) < 0 ){
+        prev_hour = 0;
+    } else {
+        prev_hour = curr_hour - 1;
+    }
+
+    if ((curr_hour + 1) > HOURS_IN_A_DAY ){
+        next_hour = HOURS_IN_A_DAY;
+    } else {
+        next_hour = curr_hour + 1;
+    }
+
+    std::vector<int> def_hours{prev_hour, curr_hour, next_hour};
+
+    m_datetime_selection.sel_date = QDate::currentDate();
+    m_datetime_selection.sel_hours = def_hours;
+
+    fetch_data(QDate::currentDate(), def_hours);
+    show_selection(m_datetime_selection);
 }
 
 void MainWindow::show_selection(DateTimeSelection selection)
@@ -1019,7 +1057,7 @@ void MainWindow::search_audio()
     try{
         m_audio_entity_data_model->readRaw(r_map->query());
     } catch(DatabaseException& de) {
-        showMessage(de.errorMessage());
+        showMessage(de.errorMessage(), QMessageBox::Warning);
     }
 
     r_map->map_data();

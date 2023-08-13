@@ -25,9 +25,11 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
 
     ScheduleItem::ScheduleItem()
         :m_schedule_ref{-1}
+        ,m_id{0}
         ,m_index{-1}
         ,m_current_time{0}
         ,m_transition_type{OATS::TransitionType::MIX}
+        ,m_audio{nullptr}
     {
     }
 
@@ -281,6 +283,9 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
 
     void ScheduleItem::set_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
+//        if (m_audio == nullptr)
+//            m_audio = std::make_shared<AUDIO::Audio>();
+
         m_audio = audio;
     }
 

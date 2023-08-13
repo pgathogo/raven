@@ -46,4 +46,9 @@ void ClientGroupDetailDlg::populateEntityFields()
     clientGroup->description()->setValue(ui->edtDesc->toPlainText().toStdString());
 }
 
+void ClientGroupDetailDlg::clear_widgets()
+{
+    ui->edtName->clear();
+    ui->edtDesc->clear();
+}
 

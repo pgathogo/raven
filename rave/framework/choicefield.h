@@ -2,6 +2,8 @@
 #define CHOICEFIELDGEN_H
 
 #include "entityfields.h"
+
+
 template<typename T>
 class ChoiceField : public Field{
     public:

@@ -8,6 +8,7 @@
 #include "EWIEGA46WW/moc_playmodepanel.cpp"
 #include "EWIEGA46WW/moc_schedulegriditem.cpp"
 #include "EWIEGA46WW/moc_statusgridpanel.cpp"
+#include "EWIEGA46WW/moc_timeanalyzertextwidget.cpp"
 #include "EWIEGA46WW/moc_timegridpanel.cpp"
 #include "EWIEGA46WW/moc_trackgridpanel.cpp"
 #include "EWIEGA46WW/moc_trackinfo.cpp"

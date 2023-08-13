@@ -164,6 +164,7 @@ public slots:
     void set_ui_style();
 
     void select_date_time();
+    void fetch_default_data();
 
     void contextMenuRequested(QPoint);
     void view_commercial(int);

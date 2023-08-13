@@ -11,7 +11,7 @@ using IsSelected = bool;
 
 struct DateTimeSelection{
     QDate sel_date;
-    std::vector<int> sel_hours;
+    std::vector<int> sel_hours{};
 };
 
 struct HourButtonData{
@@ -25,7 +25,7 @@ class DateTimeSelector : public QDialog
     Q_OBJECT
 
 public:
-    explicit DateTimeSelector(QWidget *parent = nullptr);
+    explicit DateTimeSelector(QWidget *parent = nullptr, DateTimeSelection dts = {});
     ~DateTimeSelector();
 
     void build_time_buttons();

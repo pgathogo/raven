@@ -113,8 +113,6 @@ Raven - Audio Explorer
 #-------------------------------------------------------- #
 #     OATS
 #---------------------------------------------------------#
-
-
  
 
 
@@ -183,3 +181,51 @@ Voice Tracking - Cloud Radio
 https://www.cloudrad.io/voice-tracking
 
 https://www.youtube.com/watch?v=Yx_NzleQXjg
+
+14/07/2023 21:45:30
+--------
+#TODO
+#
+#OATS
+
+- Add slot for exit button XX
+- Reload schedule
+- Log all items played
+- Log commercial played
+- Adjust the size of search controls QLineEdits
+- Clean the UI section for the CaRT tab
+
+# ** TRAFFIK
+
+- Test the commercial booking
+- Test deleting commercial booking
+- Create logging framework - use it for testing
+- ** Report design **
+- Order creation and cancellation
+- 
+
+# SEDRIC
+- Find color for Sedric UI
+- Test loading huge schedules
+
+
+
+# Audio Explorer
+- Integrate Audacity to AudioExplorer
+
+# CLUSTER MANAGER
+
+- Test user creation - How to create user across multiple databases from the central
+  cluster manager
+- Design and test application rights
+- 
+
+# ** GENERAL **
+
+- Design a logger - Check out the sample logger you downloaded
+- Make sample audio for testing system
+- Start packaging and application depolyment strategy
+
+
+
+

@@ -88,11 +88,26 @@ namespace AUDIO
 
     void AudioTrackViewer::tv_clicked(const QModelIndex& index)
     {
-        //emit track_view_clicked(index);
-//        auto model_index = current_index();
+        auto indexes = m_track_view->selectionModel()->selectedRows();
+
+        qInfo() << "Selected Indexes: "<< indexes.size();
+
+        if (indexes.size() == 0)
+            return;
+
+        auto current_index = indexes[0];
+        int id = current_index.data(Qt::UserRole).toInt();
+
+        qInfo() << "Selected Audio ID: "<< id;
+
+        emit track_selected(id);
+
+        /*
         auto first_column = m_track_view->model()->index(index.row(), 0);
         auto audio_id = first_column.data(Qt::UserRole).toInt();
         emit track_selected(audio_id);
+       */
+
     }
 
     QModelIndex AudioTrackViewer::current_index()

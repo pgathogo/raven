@@ -27,6 +27,8 @@ namespace AUDIOEXP
         void populateEntityFields() override;
         void populateFormWidgets() override;
 
+    public slots:
+        void find_editor();
 
     private:
         Ui::SetupForm *ui;

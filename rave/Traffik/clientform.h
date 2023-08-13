@@ -34,6 +34,8 @@ public:
     void populateFormWidgets() override;
     void populateChoiceCombo(QComboBox*, const ChoiceField<std::string>*);
 
+    void clear_widgets() override;
+
 private slots:
     void saluteComboChanged(int i);
     void revenueTypeComboChanged(int i);

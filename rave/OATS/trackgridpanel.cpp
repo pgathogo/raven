@@ -21,6 +21,8 @@ namespace OATS{
         constexpr static int ROW_0 = 0;
         constexpr static int ROW_1 = 1;
 
+        m_schedule_item = dynamic_cast<ScheduleGridItem*>(parent)->schedule_item();
+
         setObjectName("TrackPanel");
         //setFixedWidth(450);
         setStyleSheet("QFrame#TrackPanel{background-color: #222222;}");
@@ -64,10 +66,12 @@ namespace OATS{
     {
         QMenu menu;
 
+
         m_act_move_up = std::make_unique<QAction>("Move Up");
         m_act_move_down = std::make_unique<QAction>("Move Down");
         m_act_make_current = std::make_unique<QAction>("Make Current");
         m_act_delete_item = std::make_unique<QAction>("Remove Item");
+        m_act_reload_schedule = std::make_unique<QAction>("Reload Schedule");
 
         if (m_schedule_item->item_status() == OATS::ItemStatus::ERROR_01)
             m_act_make_current->setEnabled(false);
@@ -80,15 +84,23 @@ namespace OATS{
             m_act_delete_item->setEnabled(false);
         }
 
+        int current_hour = QTime::currentTime().hour();
+        if (m_schedule_item->hour() <= current_hour){
+            m_act_reload_schedule->setEnabled(false);
+        }
+
         connect(m_act_move_up.get(), &QAction::triggered, this, &TrackGridPanel::move_up);
         connect(m_act_move_down.get(), &QAction::triggered, this, &TrackGridPanel::move_down);
         connect(m_act_make_current.get(), &QAction::triggered, this, &TrackGridPanel::make_audio_current);
         connect(m_act_delete_item.get(), &QAction::triggered, this, &TrackGridPanel::delete_item);
+        connect(m_act_reload_schedule.get(), &QAction::triggered, this, &TrackGridPanel::reload_schedule);
 
         menu.addAction(m_act_move_up.get());
         menu.addAction(m_act_move_down.get());
         menu.addAction(m_act_make_current.get());
         menu.addAction(m_act_delete_item.get());
+        menu.addSeparator();
+        menu.addAction(m_act_reload_schedule.get());
 
         menu.exec(event->globalPos());
 
@@ -120,6 +132,11 @@ namespace OATS{
     void TrackGridPanel::delete_item()
     {
         emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->delete_item(parent_ref(), index());
+    }
+
+    void TrackGridPanel::reload_schedule()
+    {
+        emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->reload_schedule(parent_ref(), index());
     }
 
     void TrackGridPanel::update(OATS::ScheduleItem* schedule_item)

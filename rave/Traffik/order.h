@@ -28,7 +28,9 @@ public:
     DateField* startDate()const;
     DateField* endDate()const;
     ForeignKeyField* package()const;
+
     ChoiceField<std::string>* revenueType()const;
+
     ChoiceField<std::string>* billingType()const;
     ChoiceField<std::string>* billingPeriod()const;
     ForeignKeyField* accountRep()const;
@@ -97,6 +99,8 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
     [[nodiscard]] ActionResult validate() override;
+
+    friend QDebug operator<<(QDebug os, const Order& order);
 
 
 private:

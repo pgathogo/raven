@@ -14,7 +14,7 @@ BaseEntityDetailDlg::BaseEntityDetailDlg(QDialog *parent) :
     bui->setupUi(this);
     connectSlots();
     mNoticeBar = new NotificationBar(bui->noticeLayout);
-
+    hideSaveNewBtn();
 }
 
 
@@ -35,7 +35,7 @@ void BaseEntityDetailDlg::connectSlots()
 {
     connect(bui->btnSave, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveClicked);
     connect(bui->btnClose, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnCloseClicked);
-    connect(bui->btnSaveNew, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveNewClicked);
+//    connect(bui->btnSaveNew, &QPushButton::clicked, this, &BaseEntityDetailDlg::btnSaveNewClicked);
     connect(this, SIGNAL(dialog_is_closing()), this, SLOT(onCloseDialog()));
 }
 
@@ -63,7 +63,7 @@ void BaseEntityDetailDlg::btnSaveClicked()
        done(1);
     }else{
        mNoticeBar->errorNotification(std::get<1>(ar));
-       m_okay_to_close = false;
+       //m_okay_to_close = false;
     }
 }
 
@@ -80,9 +80,23 @@ void BaseEntityDetailDlg::btnCloseClicked()
 
 void BaseEntityDetailDlg::btnSaveNewClicked()
 {
-   //mNoticeBar->errorNotification("Testing");
-    mNoticeBar->successNotification("Success");
+    ActionResult ar = saveRecord();
+
+    if (std::get<0>(ar) == ActionResultType::arSUCCESS){
+        mNoticeBar->successNotification("Success");
+        clear_widgets();
+        // clear fields
+    } else {
+        mNoticeBar->errorNotification(std::get<1>(ar));
+        m_okay_to_close = false;
+    }
 }
+
+void BaseEntityDetailDlg::clear_widgets()
+{
+
+}
+
 
 void BaseEntityDetailDlg::onCloseDialog()
 {

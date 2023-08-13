@@ -95,7 +95,108 @@
                <widget class="QWidget" name="pgHome">
                 <layout class="QVBoxLayout" name="verticalLayout_12">
                  <item>
-                  <layout class="QVBoxLayout" name="vlHome"/>
+                  <layout class="QVBoxLayout" name="vlHome" stretch="1,0,0">
+                   <item>
+                    <layout class="QHBoxLayout" name="hlTitle"/>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="vlLicense">
+                     <property name="spacing">
+                      <number>30</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="label">
+                       <property name="font">
+                        <font>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Licensed to:</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="lblClient">
+                       <property name="font">
+                        <font>
+                         <pointsize>16</pointsize>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>PHOTON FM</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_3">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Product by: PMSL&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="hlToolbar">
+                     <item>
+                      <spacer name="horizontalSpacer_2">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btnExit">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>1</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>100</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>EXIT</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="horizontalSpacer_3">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
                  </item>
                 </layout>
                </widget>
@@ -149,38 +250,10 @@
            </item>
            <item>
             <layout class="QGridLayout" name="gridStackControl">
-             <item row="0" column="0">
-              <widget class="QPushButton" name="btnHome">
+             <item row="1" column="2">
+              <widget class="QPushButton" name="btnLoad">
                <property name="text">
-                <string>Home</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QPushButton" name="btnSegue">
-               <property name="text">
-                <string>Segue</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="btnJingles">
-               <property name="text">
-                <string>Jingles</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QPushButton" name="btnComm">
-               <property name="text">
-                <string>Commercial</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="QPushButton" name="btnCarts">
-               <property name="text">
-                <string>Carts</string>
+                <string>Load ...</string>
                </property>
               </widget>
              </item>
@@ -191,17 +264,31 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="QPushButton" name="btnPrintCache">
+             <item row="1" column="0">
+              <widget class="QPushButton" name="btnJingles">
                <property name="text">
-                <string>Print Cache</string>
+                <string>Jingles</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="3">
-              <widget class="QPushButton" name="btnLoad">
+             <item row="0" column="0">
+              <widget class="QPushButton" name="btnHome">
                <property name="text">
-                <string>Load ...</string>
+                <string>Home</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="btnComm">
+               <property name="text">
+                <string>Commercial</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="btnCarts">
+               <property name="text">
+                <string>Carts</string>
                </property>
               </widget>
              </item>

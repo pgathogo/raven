@@ -16,6 +16,7 @@
 #include "../framework/entitydatamodel.h"
 #include "../utils/tools.h"
 
+
 BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     :QDialog(parent)
     ,ui(new Ui::BookingOrderBrowser)
@@ -97,7 +98,7 @@ void BookingOrderBrowser::search(int id)
         << " left outer join rave_client a on a.id = f.client_id "
         << " left outer join rave_schedule e on e.id = c.schedule_id "
         << " where f.spots_booked < f.spots_ordered "
-        << " and f.spots_booked < f.spots_ordered ";
+        << " and c.booking_status <> 'CANCELLED' ";
 
         sql << make_filter(id);
 
@@ -110,7 +111,8 @@ void BookingOrderBrowser::search(int id)
 
         Bookings bookings;
 
-        if (provider->cacheSize() > 0 ) {
+        if (provider->cacheSize() > 0 )
+        {
             provider->cache()->first();
             do {
                 auto itB = provider->cache()->currentElement()->begin();
@@ -170,7 +172,7 @@ void BookingOrderBrowser::search(int id)
 
     if (bookings.size() > 0){
         sort_bookings(bookings);
-        set_treewidget(bookings);
+        set_treewidget(bookings, id);
     }
 }
 
@@ -350,32 +352,37 @@ void BookingOrderBrowser::set_autocompleter()
 void BookingOrderBrowser::cancel_booking()
 {
     QStringList ids;
-
     std::map<int, int> revert_counter;
 
-    for (auto table : m_grid_tables){
-        int order_id = -1;
+    int order_id = -1;
+    int booking_id = -1;
 
-          for (auto& item : table->selectedItems()){
+    for (auto node: m_tree_nodes)
+    {
+        auto w = ui->twOrders->itemWidget(node, 0);
+        QTableWidget* table = dynamic_cast<QTableWidget*>(w);
 
-            if (item->column() == 0){
-                if (order_id == -1)
-                    order_id = item->data(Qt::UserRole).toInt();
+        for (auto& item : table->selectedItems())
+        {
+            if (item->column() == 0)
+            {
+                 order_id = item->data(Qt::UserRole).toInt();
             }
 
-            if (item->column() == 1){
-                int booking_id = item->data(Qt::UserRole).toInt();
+            if (item->column() == 1)
+            {
+                booking_id = item->data(Qt::UserRole).toInt();
                 ids << QString::number(booking_id);
                 ++revert_counter[order_id];
             }
 
         }
+
     }
 
     QString selected_ids = ids.join(",");
 
     std::stringstream sql;
-
 
     sql << "Update rave_orderbooking set booking_status = 'CANCELLED'"
         << " Where id in ( "+ selected_ids.toStdString()+ ")";
@@ -390,8 +397,8 @@ void BookingOrderBrowser::cancel_booking()
 
     std::stringstream revert_spots_booked;
 
-    for (auto [order_id, count] : revert_counter){
-
+    for (auto [order_id, count] : revert_counter)
+    {
         revert_spots_booked << "Update rave_order set "
                             << " spots_booked = spots_booked - "+ std::to_string(count)
                             << " where id = "+ std::to_string(order_id);
@@ -452,17 +459,42 @@ std::string BookingOrderBrowser::order_by(int id)
     return order_by_str;
 }
 
-void BookingOrderBrowser::set_treewidget(Bookings& records)
+void BookingOrderBrowser::set_treewidget(Bookings& records, int client_id)
 {
-    int parent_id = 0;
     bool parent_is_created;
+
+    ui->twOrders->setStyleSheet(
+        "QHeaderView::section {;"
+        "font: 75 10pt 'MS Shell Dlg 2';"
+        "font-weight: bold;"
+        "background-color: #87CEFA;"
+        "color: rgb(255, 255, 255);"
+        "border: none;"
+        "height: 32px;}"
+    );
+
+    std::stringstream sql;
+
+    sql << " select id, title, order_number, order_date, start_date,"
+        << " end_date, spots_ordered, spots_booked "
+        << " From rave_order ";
+
+    std::string filter = std::format(" Where client_id = {}", client_id);
+    sql << filter;
+
+    EntityDataModel edm;
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
 
     ui->twOrders->setColumnCount(7);
     QStringList tree_labels;
     tree_labels << "Order Title" << "Order Number" << "Order Date";
     tree_labels << "Start Date" << "End Date" << "Spots Ordered" << "Spots Booked";
-    ui->twOrders->setHeaderLabels(tree_labels);
 
+    ui->twOrders->setHeaderLabels(tree_labels);
     ui->twOrders->setColumnWidth(0, 300);
     ui->twOrders->setColumnWidth(0, 200);
     ui->twOrders->setColumnWidth(0, 200);
@@ -471,75 +503,104 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
     ui->twOrders->setColumnWidth(0, 150);
     ui->twOrders->setColumnWidth(0, 150);
 
-    for (auto& [key, bookings] : records){
-        int child_id = 0;
+    int order_id = -1;
+
+    provider->cache()->first();
+    do{
         parent_is_created = false;
         QTreeWidgetItem* order_node;
         QTreeWidgetItem* booking_node;
         QTableWidget* table{nullptr};
 
         int row=0;
-        for (auto booking : bookings ){
-            if (!parent_is_created){
-                order_node = new QTreeWidgetItem(ui->twOrders);
-                order_node->setText(0, stoq(booking.order_title));
-                order_node->setData(0, Qt::UserRole, booking.order_id);
-                order_node->setText(1, QString::number(booking.order_number));
-                order_node->setText(2, stoq(booking.order_date));
-                order_node->setText(3, stoq(booking.start_date));
-                order_node->setText(4, stoq(booking.end_date));
-                order_node->setText(5, QString::number(booking.spots_ordered));
-                order_node->setText(6, QString::number(booking.spots_booked));
 
-                parent_is_created = true;
+        order_node = new QTreeWidgetItem(ui->twOrders);
 
-                booking_node = new QTreeWidgetItem(order_node);
+        auto itB = provider->cache()->currentElement()->begin();
+        auto itE = provider->cache()->currentElement()->end();
 
-                table = new QTableWidget(ui->twOrders);
-                QStringList header_labels ;
+        for (; itB != itE; ++itB)
+        {
+                std::string field =  (*itB).first;
+                std::string value = (*itB).second;
 
-                table->setRowCount(bookings.size());
-                table->insertColumn(0);
-                table->insertColumn(1);
-                table->insertColumn(2);
-                table->insertColumn(3);
-                table->insertColumn(4);
-                table->insertColumn(5);
-                table->insertColumn(6);
-                table->insertColumn(7);
+                if (field == "id")
+                    order_id = std::stoi(value);
 
-                header_labels << "Schedule Date" << "Schedule Time" << "Client Name";
-                header_labels << "Spot Title" << "Spot Duration" << "TX Date";
-                header_labels << "TX Time" << "Status";
+                if (field == "title"){
+                    order_node->setText(0, stoq(value));
+                    order_node->setData(0, Qt::UserRole, order_id);
+                }
+                if (field == "order_number")
+                    order_node->setText(1, stoq(value));
+                if (field == "order_date")
+                    order_node->setText(2, stoq(value));
+                if (field == "start_date")
+                    order_node->setText(3, stoq(value));
+                if (field == "end_date")
+                    order_node->setText(4, stoq(value));
+                if (field == "spots_ordered")
+                    order_node->setText(5, stoq(value));
+                if (field == "spots_booked")
+                    order_node->setText(6, stoq(value));
+        }
 
-                table->setHorizontalHeaderLabels(header_labels);
-                table->resizeColumnsToContents();
-                table->horizontalHeader()->setVisible(true);
-                table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-                table->setSelectionBehavior(QAbstractItemView::SelectRows);
-                table->setSelectionMode(QAbstractItemView::MultiSelection);
+        std::vector<Booking> bookings = records[order_id];
 
-                table->setColumnWidth(0, 200);
-                table->setColumnWidth(1, 200);
-                table->setColumnWidth(2, 300);
-                table->setColumnWidth(3, 300);
-                table->setColumnWidth(4, 150);
-                table->setColumnWidth(5, 200);
-                table->setColumnWidth(6, 200);
-                table->setColumnWidth(7, 100);
+        for (auto booking : bookings )
+        {
+                if (!parent_is_created)
+                {
+                    booking_node = new QTreeWidgetItem(order_node);
+                    table = new QTableWidget(ui->twOrders);
 
-                ui->twOrders->setItemWidget(booking_node, 0, table);
+                    table->setRowCount(bookings.size());
+                    table->insertColumn(0);
+                    table->insertColumn(1);
+                    table->insertColumn(2);
+                    table->insertColumn(3);
+                    table->insertColumn(4);
+                    table->insertColumn(5);
+                    table->insertColumn(6);
+                    table->insertColumn(7);
 
-                booking_node->setFirstColumnSpanned(true);
+                    QStringList header_labels ;
 
-                m_grid_tables.push_back(table);
-            }
+                    header_labels << "Schedule Date" << "Schedule Time" << "Client Name";
+                    header_labels << "Spot Title" << "Spot Duration" << "TX Date";
+                    header_labels << "TX Time" << "Status";
+
+                    table->setHorizontalHeaderLabels(header_labels);
+                    table->resizeColumnsToContents();
+                    table->horizontalHeader()->setVisible(true);
+                    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+                    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+                    //table->setSelectionMode(QAbstractItemView::MultiSelection);
+
+                    table->setColumnWidth(0, 200);
+                    table->setColumnWidth(1, 200);
+                    table->setColumnWidth(2, 300);
+                    table->setColumnWidth(3, 300);
+                    table->setColumnWidth(4, 150);
+                    table->setColumnWidth(5, 200);
+                    table->setColumnWidth(6, 200);
+                    table->setColumnWidth(7, 100);
+
+                    ui->twOrders->setItemWidget(booking_node, 0, table);
+
+                    booking_node->setFirstColumnSpanned(true);
+
+                    m_grid_tables.push_back(table);
+                    m_tree_nodes.push_back(booking_node);
+
+                    parent_is_created = true;
+                }
 
             if (booking.schedule_date.empty())
                 continue;
 
             QTableWidgetItem* book_date = new QTableWidgetItem(stoq(booking.schedule_date));
-            book_date->setData(Qt::UserRole, booking.order_id); // Hide order_id in here
+            book_date->setData(Qt::UserRole, order_id); // Hide order_id in here
 
             QTableWidgetItem* book_time = new QTableWidgetItem(stoq(booking.schedule_time));
             book_time->setData(Qt::UserRole, booking.booking_id); // Hide bookind_id in here
@@ -564,16 +625,14 @@ void BookingOrderBrowser::set_treewidget(Bookings& records)
             table->setItem(row, 7, book_status);
 
             ++row;
+
+            table->setContextMenuPolicy(Qt::CustomContextMenu);
+            connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
+
         }
 
-        table->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
-    }
-
-//    for (int i=0; i<6; ++i)
-//        ui->twOrders->resizeColumnToContents(i);
-
-//    ui->twOrders->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        provider->cache()->next();
+    } while(!provider->cache()->isLast());
 
 }
 
@@ -594,12 +653,13 @@ void BookingOrderBrowser::resizeColumnsToContents(QTreeWidget& tree_widget)
 
 void BookingOrderBrowser::sort_bookings(Bookings& orders)
 {
-    for (auto& [key, bookings] : orders){
+  for (auto& [key, bookings] : orders)
+  {
         std::sort(bookings.begin(), bookings.end(),
                   [](const Booking& lhs, Booking& rhs ){
             return (lhs.schedule_id < rhs.schedule_id );
         });
-    }
+  }
 }
 
 PrintBookingMenu::PrintBookingMenu(QPushButton* button, QWidget* parent)

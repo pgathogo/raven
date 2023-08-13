@@ -21,6 +21,7 @@ public:
 
     ActionResult saveRecord() override;
     std::string windowTitle() override;
+    void clear_widgets() override;
 
     void populateEntityFields() override;
     void populateFormWidgets() override;

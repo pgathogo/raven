@@ -21,6 +21,7 @@ namespace AUDIO
 {
     TrackBrowser::TrackBrowser(QWidget *parent)
         : QWidget{parent}
+    , m_current_selected_audio{nullptr}
     {
 
         m_main_splitter	 = new QSplitter(Qt::Vertical);
@@ -101,7 +102,11 @@ namespace AUDIO
 
     std::shared_ptr<AUDIO::Audio> TrackBrowser::current_selected_audio()
     {
-        return m_current_selected_audio;
+        if (m_audio_track_widget->track_viewer()->get_selected_audio_id() < 0 )
+            return nullptr;
+
+       return m_current_selected_audio;
+
     }
 
     std::shared_ptr<AUDIO::Audio> TrackBrowser::find_audio_by_id(int audio_id)
@@ -123,15 +128,25 @@ namespace AUDIO
         ,m_folder_view{nullptr}
     {
         m_v_layout = std::make_unique<QVBoxLayout>();
-        layout_controls();
+
+        //layout_controls();
+
+        m_folder_view = std::make_unique<QTreeView>();
+        m_folder_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        connect(m_folder_view.get(), &QTreeView::clicked, this, &AudioFolderWidget::folder_clicked);
+
+        m_v_layout->addWidget(m_folder_view.get());
+
         setLayout(m_v_layout.get());
         set_model();
-        connect(m_folder_view.get(), &QTreeView::clicked, this, &AudioFolderWidget::folder_clicked);
     }
 
     void AudioFolderWidget::layout_controls()
     {
         m_folder_view = std::make_unique<QTreeView>();
+        m_folder_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        connect(m_folder_view.get(), &QTreeView::clicked, this, &AudioFolderWidget::folder_clicked);
+
         m_v_layout->addWidget(m_folder_view.get());
     }
 
@@ -187,9 +202,13 @@ namespace AUDIO
        m_grid_layout->addWidget(m_lbl_artist.get(), ROW1, COL0);
        m_grid_layout->addWidget(m_edt_artist.get(), ROW1, COL1);
 
-       auto spacer = new QSpacerItem(20,20);
-       m_grid_layout->addItem(spacer, ROW2, COL1, 1, 1);
-       m_grid_layout->addWidget(m_btn_search.get(), ROW2, COL2, 1, 1);
+//       auto l_spacer = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Expanding);
+//       m_grid_layout->addItem(l_spacer, ROW2, COL0, 1, 1);
+
+       m_grid_layout->addWidget(m_btn_search.get(), ROW2, COL1, 1, 1);
+
+//       auto r_spacer = new QSpacerItem(20,20,QSizePolicy::Expanding, QSizePolicy::Expanding);
+//       m_grid_layout->addItem(r_spacer, ROW2, COL2, 1, 1);
 
    }
 
@@ -199,7 +218,7 @@ namespace AUDIO
            auto audio = std::make_unique<AUDIO::Audio>();
            auto title_filter = std::make_tuple(
                        audio->title()->qualified_column_name<AUDIO::Audio>(),
-                       "like",
+                      "like",
                        m_edt_title->text().toStdString());
 
            emit search_filter(title_filter);
@@ -294,6 +313,7 @@ namespace AUDIO
 
    void AudioTrackWidget::track_selected(int track_id)
    {
+       qInfo() << "AudioTrackWidget:: "<< track_id;
        emit selected_track(track_id);
    }
 
@@ -310,6 +330,7 @@ namespace AUDIO
 
    void AudioDataModel::track_selected(int track_id)
    {
+        qInfo() << "AudioDataModel:: "<< track_id;
         std::shared_ptr<AUDIO::Audio> audio(m_lib_item->find_audio_by_id(track_id));
         emit selected_audio(audio);
    }

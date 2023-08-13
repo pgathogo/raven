@@ -65,6 +65,12 @@ namespace TRAFFIK {
         //ui->sbLevel->setValue(mOrderAprv->level()->value());
     }
 
+    void ApproverForm::clear_widgets()
+    {
+        ui->cbUsers->setCurrentIndex(-1);
+        ui->edtTitle->clear();
+    }
+
     void ApproverForm::populate_levels(std::set<int> &levels)
     {
         for ( int l : levels){

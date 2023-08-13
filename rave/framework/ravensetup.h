@@ -87,6 +87,9 @@ public:
     BooleanField* convert_to_ogg() const;
     void set_convert_to_ogg(bool val);
 
+    StringField* editor_filepath();
+    void set_editor_filepath(const std::string);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -127,6 +130,8 @@ private:
     StringField* m_audio_path;
     StringField* m_comm_audio_path;
     BooleanField* m_convert_to_ogg;
+
+    StringField* m_editor_filepath;
 
     QStringList mHeader;
     std::string mTableName;

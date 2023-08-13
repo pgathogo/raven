@@ -24,6 +24,8 @@ public:
     void populateEntityFields() override;
     void populateFormWidgets() override;
 
+    void clear_widgets() override;
+
 private:
     Ui::ClientGroupDetailDlg *ui;
     ClientGroup* clientGroup;

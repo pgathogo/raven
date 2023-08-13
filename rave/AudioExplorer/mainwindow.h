@@ -16,13 +16,13 @@
 
 class QStandardItemModel;
 class QTableView;
+class QProcess;
 
 class BaseEntity;
 class DataToolBar;
 class TreeViewModel;
 //class EntityDataModel;
 class LetterFilterWidget;
-
 
 namespace AUDIO{
   class Audio;
@@ -133,8 +133,6 @@ public:
 
     }
 
-
-
 public slots:
     void open_trash_can();
 
@@ -218,7 +216,10 @@ private:
     RavenSetup* m_setup;
     std::unique_ptr<EntityDataModel> m_setup_edm;
 
+    std::unique_ptr<QProcess> m_editor_process;
+
     int selected_folder_id();
+    int selected_folder_row();
 
 };
 

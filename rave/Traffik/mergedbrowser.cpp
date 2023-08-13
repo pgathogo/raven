@@ -48,6 +48,10 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     setWindowIcon(QIcon(":/images/icons/images/icons/clients.png"));
     setWindowTitle("Clients Data");
 
+    setFixedSize(800, 500);
+
+    ui->tabMain->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
 }
 
 void MergedBrowser::setMdiArea(QMdiArea* mdi)

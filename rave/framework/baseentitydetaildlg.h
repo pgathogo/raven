@@ -33,12 +33,12 @@ public:
 
         virtual void populateEntityFields()=0;
         virtual void populateFormWidgets()=0;
+        virtual std::string windowTitle() = 0;
+        virtual void clear_widgets();
+
 
         std::string title();
-        virtual std::string windowTitle() = 0;
-
         void closeEvent(QCloseEvent* event);
-
         BrowserForms const& get_forms() const;
 
         template<typename T, typename... TArgs>

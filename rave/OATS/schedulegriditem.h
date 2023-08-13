@@ -55,6 +55,7 @@ namespace OATS{
         void delete_item(int, int);
         void insert_item(int, int);
         void make_current(int, int);
+        void reload_schedule(int, int);
 
         void transition_stop(int, int);
         void transition_mix(int, int);

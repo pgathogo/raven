@@ -1,9 +1,12 @@
 #include <QLabel>
+#include <QLCDNumber>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTime>
 #include <QFont>
+#include <QFrame>
 #include <QDebug>
+
 
 #include "datetimewidget.h"
 
@@ -15,9 +18,35 @@ namespace OATS{
         m_days_of_week = {"Monday", "Tuesday", "Wednesday",
                          "Thursday", "Friday", "Saturday", "Sunday"};
 
-        m_time_digit = std::make_unique<QLabel>("00:00:00");
-        QFont td_font("DigifaceWide", 14, QFont::Bold);
-        m_time_digit->setFont(td_font);
+        //m_time_digit = std::make_unique<QLabel>("00:00:00");
+        m_time_digit = std::make_unique<QLCDNumber>(8);
+
+        //QFont td_font("DigifaceWide", 14, QFont::Bold);
+//        QFont td_font;
+//        td_font.setBold(true);
+//        td_font.setPointSize(16);
+//        m_time_digit->setFont(td_font);
+
+//        m_time_digit->setStyleSheet(
+//             "color:#00FF00;"
+//             "font: bold;"
+//             "height: 18;");
+
+        m_time_digit->setSegmentStyle(QLCDNumber::Flat);
+
+        auto palette = m_time_digit->palette();
+        palette.setColor(palette.WindowText, QColor(0, 255, 0));
+        m_time_digit->setPalette(palette);
+
+        m_time_digit->setMinimumHeight(14);
+
+
+        m_time_digit->setFrameStyle(QFrame::Panel | QFrame::Raised);
+
+
+        m_time_digit_layout = new QHBoxLayout();
+        m_time_digit_layout->addWidget(m_time_digit.get());
+        m_time_digit_layout->setContentsMargins(0,0, 50,0);
 
         m_time_text = std::make_unique<QLabel>("Time Text");
         QFont tt_font("JetBrains Mono", 14, QFont::Bold);
@@ -27,10 +56,7 @@ namespace OATS{
         QFont dt_font("JetBrains Mono", 8, QFont::Bold);
         m_date_text->setFont(dt_font);
 
-        m_time_digit_layout = new QVBoxLayout();
         m_time_date_layout = new QVBoxLayout();
-
-        m_time_digit_layout->addWidget(m_time_digit.get());
         m_time_date_layout->addWidget(m_time_text.get());
         m_time_date_layout->addWidget(m_date_text.get());
 
@@ -38,8 +64,7 @@ namespace OATS{
         m_datetime_layout->addLayout(m_time_digit_layout);
         m_datetime_layout->addLayout(m_time_date_layout);
         m_datetime_layout->setStretch(1, 2);
-        m_datetime_layout->setContentsMargins(0,0,0,0);
-        //m_datetime_layout->setSpacing(10);
+        m_datetime_layout->setContentsMargins(0,0,0,10);
 
         setLayout(m_datetime_layout.get());
 
@@ -47,6 +72,8 @@ namespace OATS{
 
         m_datetime_timer = std::make_unique<QTimer>(this);
         connect(m_datetime_timer.get(), &QTimer::timeout, this, &DateTimeWidget::update_time);
+
+        m_time_text->setText(time_to_timestr(QTime::currentTime().hour(), QTime::currentTime().minute()));
     }
 
 
@@ -58,12 +85,12 @@ namespace OATS{
 
     void DateTimeWidget::set_time(QTime time)
     {
-        m_time_digit->setText(time.toString("HH:mm:ss"));
+        //m_time_digit->setText(time.toString("HH:mm:ss"));
+        m_time_digit->display(time.toString("HH:mm:ss"));
 
         if (time.second() < 2)
             m_time_text->setText(time_to_timestr(time.hour(), time.minute()));
 
-        m_date_text->setText(formatted_date());
     }
 
     QString DateTimeWidget::time_to_timestr(int hour, int minutes)
@@ -189,8 +216,8 @@ namespace OATS{
 
     void DateTimeWidget::update_time()
     {
-        auto curr_time = QTime::currentTime();
-        set_time(curr_time);
+        set_time(QTime::currentTime());
+        m_date_text->setText(formatted_date());
         emit time_updated();
     }
 }

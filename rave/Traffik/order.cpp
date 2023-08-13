@@ -7,6 +7,19 @@
 #include "agent.h"
 #include "orderpackage.h"
 
+
+QDebug operator<<(QDebug debug, const Order& order)
+{
+    debug << "ID: " << order.id() << '\n'
+          << "Title: "<< order.title()->to_qstring() << '\n'
+          << "OrderNumber: "<< order.orderNumber()->value() << '\n'
+          << "Spots Ordered: "<< order.spotsOrdered()->value() << '\n'
+          << "Spots Booked: "<< order.spotsBooked()->value() << '\n'
+          << "Spots Played: "<< order.spotsPlayed()->value() << '\n';
+
+    return debug;
+}
+
 Order::Order()
 {
     m_title = createField<StringField>("title", "Title");
@@ -49,7 +62,7 @@ Order::Order()
 
     m_spots_ordered = createField<IntegerField>("spots_ordered", "Spots Ordered");
     m_spots_booked = createField<IntegerField>("spots_booked", "Spots Booked");
-    mSpotsPlayed = createField<IntegerField>("Spots_played", "Spots Played");
+    mSpotsPlayed = createField<IntegerField>("spots_played", "Spots Played");
     mDiscount = createField<DecimalField>("discount", "Discount");
 
     mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commission");
@@ -135,7 +148,7 @@ Order::Order(const Client* client)
 
     m_spots_ordered = createField<IntegerField>("spots_ordered", "Spots Ordered");
     m_spots_booked = createField<IntegerField>("spots_booked", "Spots Booked");
-    mSpotsPlayed = createField<IntegerField>("Spots_played", "Spots Played");
+    mSpotsPlayed = createField<IntegerField>("spots_played", "Spots Played");
     mDiscount = createField<DecimalField>("discount", "Discount");
 
     mAgencyComm = createField<DecimalField>("agency_comm", "Agency Commission");

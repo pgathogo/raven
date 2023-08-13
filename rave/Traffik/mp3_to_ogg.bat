@@ -1,1 +1,1 @@
-D:/Home/Clients/PMS/Raven/rave/Traffik/ffmpeg.exe -y -i D:\Home\Clients\PMS\SampleAudio\DreamingOfLove.mp3 -c:a libvorbis -q:a 4 -vsync 2 D:\Home\Clients\PMS\SampleAudio\DreamingOfLove.ogg
+D:/Home/Clients/PMS/Raven/rave/Traffik/ffmpeg.exe -y -i D:\Home\Clients\PMS\SampleAudio\Faster_sm.mp3 -c:a libvorbis -q:a 4 -vsync 2 D:\Home\Clients\PMS\SampleAudio\Faster_sm.ogg

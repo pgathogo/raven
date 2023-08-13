@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <algorithm>
+#include <format>
 
 #include <QDebug>
 #include <QStandardItemModel>
@@ -7,6 +8,7 @@
 #include <QFileDialog>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QFile>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -84,10 +86,10 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
     connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
+    connect(ui->btnEditor, &QPushButton::clicked, this, &MainWindow::audio_editor);
     connect(ui->btnCut, &QPushButton::clicked, this, &MainWindow::cut_audio);
     connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
     connect(ui->btnDelete, &QPushButton::clicked, this, &MainWindow::delete_audio);
-
 
     m_audio_edm = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
@@ -132,6 +134,8 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_setup_edm->all();
     m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
+
+    m_editor_process = std::make_unique<QProcess>(this);
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle("Raven - Audio Explorer");
@@ -238,7 +242,7 @@ void MainWindow::set_track_view_column_width()
 
 void MainWindow::folder_clicked(const QModelIndex& index)
 {
-    int folder_id = selected_folder_id(); // index.data(Qt::UserRole).toInt();
+    int folder_id = selected_folder_id();
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
     //fetch_folder_audio(folder_filter);
@@ -340,47 +344,61 @@ void MainWindow::connect_toolbutton_signals()
 
 int MainWindow::selected_folder_id()
 {
-  return ui->tvFolders->selectionModel()->currentIndex().data(Qt::UserRole).toInt();
+   auto selected_indexes = ui->tvFolders->selectionModel()->selectedIndexes();
+    int id = 0;
+    if (selected_indexes.size() > 0 ){
+        auto selected_index = selected_indexes[0];
+        id = selected_index.data(Qt::UserRole).toInt();
+    }
+    return id;
+}
+
+int MainWindow::selected_folder_row()
+{
+   auto selected_indexes = ui->tvFolders->selectionModel()->selectedIndexes();
+    int row = 0;
+    if (selected_indexes.size() > 0 ){
+        auto selected_index = selected_indexes[0];
+        row = selected_index.row();
+    }
+    return row;
+
 }
 
 void MainWindow::create_new_folder()
 {
     auto folder_name_form = std::make_unique<FolderNameForm>("",this);
-    if (folder_name_form->exec() > 0){
+
+    if (folder_name_form->exec() > 0)
+    {
         std::string folder_name = folder_name_form->folder_name().toStdString();
-        int folder_id = selected_folder_id();
 
         int id;
+        int folder_id = selected_folder_id();
         try{
             id = create_folder_to_db(folder_name, folder_id);
         }catch(DatabaseException& de){
             qDebug() << QString::fromStdString(de.errorMessage());
         }
 
-//        Node* node = new Node(folder_name, id, folder_id);
-//        node->setData(id, Qt::UserRole);
+        ui->tvFolders->setModel(nullptr);
 
         NodeData* nd = new NodeData();
         nd->id = id;
         nd->parent_id = folder_id;
         nd->name = folder_name;
-
-        auto current_row = ui->tvFolders->selectionModel()->currentIndex().row();
-
-        ui->tvFolders->setModel(nullptr);
         m_folders.push_back(nd);
+
         delete m_folder_model;
-
         m_folder_model = new TreeViewModel(m_folders, this);
-
         ui->tvFolders->setModel(m_folder_model);
         m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
 
+        auto current_row = selected_folder_row();
         QModelIndex index = m_folder_model->index(current_row, 0, QModelIndex());
 
         ui->tvFolders->setCurrentIndex(index);
         ui->tvFolders->expand(index);
-
     }
 }
 
@@ -1183,9 +1201,11 @@ void MainWindow::play_btn_clicked()
 
 void MainWindow::play_audio()
 {
+    /*
     QItemSelectionModel* select = ui->tvTracks->selectionModel();
     if (select->selectedRows().size() == 0)
         return;
+    */
 
     auto audio = get_selected_audio();
     if (audio == nullptr)
@@ -1225,14 +1245,24 @@ void MainWindow::end_of_play()
 
 AUDIO::Audio* MainWindow::get_selected_audio()
 {
+    AUDIO::Audio* audio = nullptr;
+
+    auto selected_indexes = ui->tvTracks->selectionModel()->selectedIndexes();
+    if (selected_indexes.size() == 0)
+        return audio;
+
+    auto selected_index = selected_indexes[0];
+    int audio_id = selected_index.data(Qt::UserRole).toInt();
+
+    /*
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
     auto audio_id = first_col.data(Qt::UserRole).toInt();
-
     if (audio_id == 0)
         return nullptr;
+    */
 
-    auto audio = m_audio_lib_item->find_audio_by_id(audio_id);
+    audio = m_audio_lib_item->find_audio_by_id(audio_id);
     return audio;
 }
 
@@ -1287,9 +1317,28 @@ void MainWindow::cue_edit()
 
 }
 
+
 void MainWindow::audio_editor()
 {
-    qDebug() << "Open audio editor - Audacity!";
+    auto audio = get_selected_audio();
+    if (audio == nullptr)
+        return;
+
+    QString editor = m_setup->editor_filepath()->to_qstring();
+    if (!QFile::exists(editor)) {
+        showMessage("Audio editor missing! Editing aborted.");
+        return;
+    }
+
+    if (!QFile::exists(audio->full_audio_filename())){
+        showMessage("Missing audio file! Editing aborted.");
+        return;
+    }
+
+    QStringList args;
+    args << audio->full_audio_filename();
+
+    m_editor_process->start(editor, args);
 }
 
 void MainWindow::cut_audio()

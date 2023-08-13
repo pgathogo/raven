@@ -2,9 +2,10 @@
 #include "datetimeselector.h"
 #include "ui_datetimeselector.h"
 
-DateTimeSelector::DateTimeSelector(QWidget *parent)
+DateTimeSelector::DateTimeSelector(QWidget *parent, DateTimeSelection dts)
     :QDialog(parent)
     ,ui(new Ui::DateTimeSelector)
+    ,m_selection{dts}
 {
     ui->setupUi(this);
     build_time_buttons();
@@ -12,6 +13,16 @@ DateTimeSelector::DateTimeSelector(QWidget *parent)
     connect(ui->btnOK, &QPushButton::clicked, this, &DateTimeSelector::pick_selection);
     connect(ui->btnCancel, &QPushButton::clicked, this, &DateTimeSelector::cancel_dialog);
     connect(ui->btnClear, &QPushButton::clicked, this, &DateTimeSelector::clear_selection);
+
+    if (dts.sel_hours.size() > 0)
+    {
+        m_selection.sel_hours = dts.sel_hours;
+        set_selected_buttons();
+    }
+
+    ui->calWidget->setSelectedDate(dts.sel_date);
+
+    setWindowTitle("Date & Time Selection");
 }
 
 DateTimeSelector::~DateTimeSelector()
@@ -50,9 +61,14 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int& long_hour)
     int row = 0;
     int	col = 0;
 
+    int current_hour = QTime::currentTime().hour();
+    QString am_pm = QTime::currentTime().toString("AP");
+
     for (int hr=0; hr < time_text_am.size(); ++hr){
         QString btn_text = time_text_am[hr]+" "+time_symbol;
+
         QPushButton* btn = new QPushButton(btn_text, this);
+
         btn->setMinimumHeight(40);
         btn->setCheckable(true);
         connect(btn, &QPushButton::clicked, this,
@@ -60,7 +76,20 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int& long_hour)
 
         if (time_symbol == "AM"){
             ui->gridTimeAM->addWidget(btn, row, col);
+            if (hr == current_hour && am_pm == "AM"){
+                btn->setStyleSheet(
+                "background-color: #7FFF00"
+                );
+            }
         }else{
+            if (current_hour > 12)
+                current_hour = current_hour - 12;
+
+            if (hr == current_hour && am_pm == "PM"){
+                btn->setStyleSheet(
+                "background-color: #7FFF00"
+                );
+            }
             ui->gridTimePM->addWidget(btn, row, col);
         }
 
@@ -70,6 +99,7 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int& long_hour)
             row = 0;
             ++col;
         }
+
 
         HourButtonData btn_data;
         btn_data.long_hour_fmt = long_hour++;

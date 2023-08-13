@@ -16,8 +16,10 @@ class BookingOrderBrowser;
 class QMdiArea;
 class QTreeWidget;
 class QTableWidget;
+class QTreeWidgetItem;
 class PickListBrowser;
 class Client;
+
 
 class TreeWidgetItemDelegate : public QItemDelegate
 {
@@ -68,6 +70,7 @@ struct Booking{
     std::string schedule_time{};
 };
 
+
 using Bookings = std::map<int, std::vector<Booking>>;
 
 class BookingOrderBrowser : public QDialog
@@ -109,12 +112,14 @@ private:
     std::vector<QTableWidget*> m_grid_tables;
     std::vector<int> booking_ids;
 
+    std::vector<QTreeWidgetItem*> m_tree_nodes;
+
     TreeWidgetItemDelegate m_item_delegate;
 
     QMenu* m_spot_ctx_menu;
     QAction* m_spot_ctx_action;
 
-    void set_treewidget(Bookings& records);
+    void set_treewidget(Bookings&, int);
     void resizeColumnsToContents(QTreeWidget& tree_widget);
     void sort_bookings(Bookings& orders);
     void cancel_booking();

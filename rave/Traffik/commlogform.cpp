@@ -9,19 +9,27 @@ CommLogForm::CommLogForm(QWidget *parent) :
     ui(new Ui::CommLogForm)
 {
     ui->setupUi(this);
-    set_hour_combobox();
+    //set_hour_combobox();
 
-    ui->dtCommDate->setDate(QDate::currentDate());
+//    ui->dtCommDate->setDate(QDate::currentDate());
+//    connect(ui->dtCommDate, &QDateEdit::dateChanged, this, &CommLogForm::comm_log_date_changed);
 
-    connect(ui->dtCommDate, &QDateEdit::dateChanged, this, &CommLogForm::comm_log_date_changed);
-    connect(this->m_hours, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &CommLogForm::comm_log_hours_changed);
-    connect(this->m_hours, &QCheckList::signalPopupHidden, this, &CommLogForm::hours_popup_hidden);
+    connect(ui->btnDateTime, &QPushButton::clicked, this, &CommLogForm::on_clicked_datetime);
+
+//    connect(this->m_hours, QOverload<int>::of(&QComboBox::currentIndexChanged),
+//            this, &CommLogForm::comm_log_hours_changed);
+//    connect(this->m_hours, &QCheckList::signalPopupHidden, this, &CommLogForm::hours_popup_hidden);
 
     connect(ui->cbExpand, &QCheckBox::stateChanged, this, &CommLogForm::change_view_mode);
     connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
 
-    setWindowState(this->windowState() | Qt::WindowFullScreen);
+//    setWindowState(this->windowState() | Qt::WindowFullScreen);
+
+    set_default_dts();
+
+    ui->btnDateTime->setText("Date: "+m_dts.sel_date.toString());
+    std::string hours = comma_sep(m_dts.sel_hours);
+    update_hours_label(hours);
 }
 
 CommLogForm::~CommLogForm()
@@ -34,14 +42,51 @@ void CommLogForm::setMdiArea(QMdiArea* mdi)
     m_mdi_area = mdi;
 }
 
-void CommLogForm::comm_log_date_changed()
+void CommLogForm::set_default_dts()
 {
-    fetch_bookings();
+    int prev_hour = 0;
+    int next_hour = 0;
+    int curr_hour = QTime::currentTime().hour();
+
+    if ((curr_hour - 1) < 0){
+        prev_hour = 0;
+    }else {
+        prev_hour = curr_hour - 1;
+    }
+
+    if ((curr_hour + 1) > 23){
+        next_hour = 23;
+    }else {
+        next_hour = curr_hour + 1;
+    }
+
+    m_dts.sel_date = QDate::currentDate();
+
+    m_dts.sel_hours.push_back(prev_hour);
+    m_dts.sel_hours.push_back(curr_hour);
+    m_dts.sel_hours.push_back(next_hour);
+
+    m_dts.sel_date = QDate::currentDate();
+
+}
+
+void CommLogForm::on_clicked_datetime()
+{
+    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this, m_dts);
+
+    if (dts->exec() == 1)
+    {
+        m_dts = dts->selection();
+        std::string hours = comma_sep(m_dts.sel_hours);
+        update_hours_label(hours);
+        fetch_bookings(m_dts);
+    }
+
 }
 
 void CommLogForm::comm_log_hours_changed(int /*i*/)
 {
-    fetch_bookings();
+    fetch_bookings(m_dts);
 }
 
 void CommLogForm::change_view_mode(int state)
@@ -68,7 +113,7 @@ void CommLogForm::select_all_hours(int state)
 
 void CommLogForm::hours_popup_hidden()
 {
-    fetch_bookings();
+    fetch_bookings(m_dts);
 }
 
 void CommLogForm::set_hour_combobox()
@@ -89,12 +134,40 @@ void CommLogForm::set_hour_combobox()
 
 }
 
-void CommLogForm::fetch_bookings()
+std::string CommLogForm::comma_sep(const std::vector<int>& vals)
 {
-    if (m_hours->currentText().isEmpty())
+    std::string str="";
+    int i=0;
+    for(int v : vals){
+        str += std::to_string(v);
+        if (i < vals.size()-1)
+            str += ",";
+        ++i;
+    }
+    return str;
+}
+
+void CommLogForm::update_hours_label(std::string hours)
+{
+    hours = "["+hours+"]";
+    ui->lblSelHours->setText("Hours: "+QString::fromStdString(hours));
+}
+
+
+
+void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
+{
+    if (dts.sel_hours.size() == 0)
         return;
 
-    std::string selected_hours = "("+m_hours->currentText().toStdString()+")";
+    //std::string selected_hours = "("+m_hours->currentText().toStdString()+")";
+
+
+    std::string selected_hours = comma_sep(dts.sel_hours);
+    selected_hours = "("+selected_hours+")";
+
+    qDebug() << "Selected Hours: "<< QString::fromStdString(selected_hours);
+
 
     std::stringstream sql;
 
@@ -108,9 +181,10 @@ void CommLogForm::fetch_bookings()
         << " and c.spot_id = b.id "
         << " and c.schedule_id = e.id "
         << " and b.client_id = a.id "
-        << " and e.schedule_date = '"+ui->dtCommDate->date().toString("yyyy-MM-dd").toStdString()+"'"
+        << " and e.schedule_date = '"+dts.sel_date.toString("yyyy-MM-dd").toStdString()+"'"
         << " and e.schedule_hour in "+selected_hours
         << " order by e.schedule_date, e.schedule_time ";
+
 
     EntityDataModel edm;
     edm.readRaw(sql.str());

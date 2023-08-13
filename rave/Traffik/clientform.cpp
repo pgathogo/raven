@@ -141,6 +141,49 @@ void ClientForm::populateEntityFields()
     m_client->set_discount_percent(ui->sbDiscount->value());
 }
 
+void ClientForm::clear_widgets()
+{
+    ui->edtName->clear();
+    ui->edtBillName->clear();
+    ui->edtAddress2->clear();
+    ui->edtPostNo->clear();
+    ui->edtAddress1->clear();
+    ui->edtTown->clear();
+    ui->edtEmail->clear();
+    ui->edtPostCode->clear();
+    ui->edtTele->clear();
+    ui->edtMobile->clear();
+
+    ui->edtContactName->clear();
+    ui->edtContactEmail->clear();
+    ui->edtContactMobile->clear();
+
+    ui->sbAgencyComm->setValue(m_client->agency_comm()->value());
+    ui->sbSaleRepComm->setValue(m_client->sale_rep_comm()->value());
+
+    ui->sbIntRate->setValue(m_client->interest_rate()->value());
+    ui->sbGracePeriod->setValue(m_client->grace_period()->value());
+    ui->sbLateFee->setValue(m_client->late_fee()->value());
+    ui->sbDiscount->setValue(m_client->discount_percent()->value());
+
+    populateChoiceCombo(ui->cbSalute, m_client->contact_salute());
+    populateChoiceCombo(ui->cbRevenueType, m_client->revenue_type());
+    populateChoiceCombo(ui->cbBillCycle, m_client->bill_cycle());
+
+    ui->cbAgency->setModel(m_client->agency()->dataModel());
+    ui->cbAgency->setCurrentIndex(ui->cbAgency->findText(
+                                 stoq(m_client->agency()->displayName())));
+
+    ui->cbClientGroup->setModel(m_client->group_manager()->dataModel());
+    ui->cbClientGroup->setCurrentIndex(ui->cbClientGroup->findText(
+                                 stoq(m_client->group_manager()->displayName())));
+
+    ui->cbAccountManager->setModel(m_client->account_manager()->dataModel());
+    ui->cbAccountManager->setCurrentIndex(ui->cbAccountManager->findText(
+                                 stoq(m_client->account_manager()->displayName())));
+
+}
+
 std::string ClientForm::windowTitle()
 {
     return "Client Details";

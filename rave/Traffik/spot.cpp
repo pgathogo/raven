@@ -332,6 +332,11 @@ namespace TRAFFIK {
                                    "Set spot duration!");
         }
 
+        if (m_client->value() == -1){
+            return std::make_tuple(ActionResultType::arERROR,
+                                   "Please select a spot client!");
+        }
+
         return BaseEntity::validate();
 
     }

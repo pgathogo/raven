@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QToolBar>
+#include <QApplication>
 
 #include "../framework/valuelistbrowser.h"
 #include "../framework/databasemanager.h"
@@ -65,6 +66,9 @@ MainWindow::MainWindow(QApplication* app,
 //    app_context = app_context->instance(app);
 
     this->setWindowTitle("Raven - Traffik");
+
+    setFixedSize(1300, 700);
+    update();
 }
 
 void MainWindow::createActions()

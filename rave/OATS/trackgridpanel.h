@@ -32,6 +32,8 @@ namespace OATS{
         void move_down();
         void make_audio_current();
         void delete_item();
+        void reload_schedule();
+
     private:
         QGridLayout* m_layout;
         std::unique_ptr<QLabel> m_track_label;
@@ -42,6 +44,7 @@ namespace OATS{
         std::unique_ptr<QAction> m_act_move_down;
         std::unique_ptr<QAction> m_act_make_current;
         std::unique_ptr<QAction> m_act_delete_item;
+        std::unique_ptr<QAction> m_act_reload_schedule;
 
         OATS::ScheduleItem* m_schedule_item;
     };

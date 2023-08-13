@@ -21,8 +21,8 @@ AgentBrowser::~AgentBrowser()
 void AgentBrowser::addRecord()
 {
     std::shared_ptr<Agent> agent = std::make_shared<Agent>();
-    std::unique_ptr<AgentForm> aForm =
-            std::make_unique<AgentForm>(agent.get());
+    std::unique_ptr<AgentForm> aForm = std::make_unique<AgentForm>(agent.get());
+
     if (aForm->exec() > 0)
         entityDataModel().createEntity(std::move(agent));
 }

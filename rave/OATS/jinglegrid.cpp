@@ -353,12 +353,24 @@ namespace OATS
            m_grid_buttons[row].resize(GRID_COLS);
            for(int col=0; col<GRID_COLS; ++col){
                auto btn = std::make_unique<GridButton>(id++);
-               btn->setStyleSheet(
-                   "background-color:#D27D2D;"
-                   "color: #FFFFFF;"
-                   "height:35;"
-                   "font:bold;"
+
+               if (col < GRID_COLS/2) {
+                   btn->setStyleSheet(
+                       "background-color:#D27D2D;"
+                       "color: #FFFFFF;"
+                       "height:35;"
+                       "font:bold;"
                    );
+               }else {
+                   btn->setStyleSheet(
+                       "background-color:#FFA07A;"
+                       "color: #FFFFFF;"
+                       "height:35;"
+                       "font:bold;"
+                   );
+
+               }
+
                btn->setContextMenuPolicy(Qt::CustomContextMenu);
 
                connect(btn.get(), &GridButton::customContextMenuRequested, this,

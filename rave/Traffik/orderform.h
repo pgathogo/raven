@@ -29,9 +29,11 @@ public:
     std::string windowTitle() override;
     void populateEntityFields() override;
     void populateFormWidgets() override;
+    void clear_widgets() override;
 
     void populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf);
     void prepareNewOrder();
+    void prepare_for_edit(Order*);
     void setDefaults();
     void setChoiceFieldDefault(QComboBox* cbox, const std::string val);
     void setForeignKeyField(QComboBox* cbox, ForeignKeyField* fkf);

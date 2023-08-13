@@ -50,6 +50,9 @@ SetupBrowser::SetupBrowser(QWidget *parent)
     ui->tabMain->addTab(m_content_auth_tab, "Content Authorization");
 
     ui->tabMain->setCurrentIndex(0);
+
+    setFixedSize(1035, 500);
+
 }
 
 SetupBrowser::~SetupBrowser()

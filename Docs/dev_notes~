@@ -1,0 +1,233 @@
+ RadioWave - Raven
+
+ -- TRAFFIK --
+# OrderBooking Module
+- When you cancel an order, show a message that the booking has been cancelled successfully
+- When you cance an order, show the cancellation status on the grid immedietly
+
+# PickList Dialog
+- Show that an item has been picked 
+
+# Detailed Dialog Forms
+- How to check for dirty state when you select an item for editing.
+
+# Order Form
+- How to open the form for editing in ReadOnly mode
+
+
+# STDM1.8 - Python 3
+- dict - has_key - has been removed
+
+# Spot Audio
+- After importing, take and round the real audio duration and make it the Spot Audio for booking purpose
+- ** CAN you book a spot with no Audio **
+-
+
+21/07/2021 14:32:05
+-------
+- Icon for the main application window
+X Icon for the CLIENTS dialog
+X Title for the CLIENTS dialog
+X Combine all setup windows into one tabbed dialog
+X Order - Add letter filter
+X Spots - Add letter filter
+- Order - Allow editting of orders if :
+   - Order is current
+   - Order is not cancelled
+   - No booking has been done aganist the order
+- Integrate the printing (Lime) module
+- Schedule - Icon for Schedule window
+- Schedule - Icon for "Create Breaks" button
+- Schedule - Icon for "Delete Breaks" button
+
+
+18/08/2021 20:11:59
+-----
+SEDRIC - Issues
+
+* General *
+
+- What is the "NEW" button used for?
+  * Creates a new schedule, deleting any created items (songs)
+   
+- Save functionality
+  * Should remove any items for the current date/hour and replace with 
+    items new items on the cache/table view
+
+X Save-As functionality
+X Remove functionality
+- Print schedule functionality
+X Add Window title
+- Start window maximized
+- Find proper color schemes for various items
+
+* Schedule Grid *
+
+- Test edge cases - Add
+- Test edge cases - Remove item
+
+* Audio Library *
+
+- Icon for folders
+- Make folders readonly
+-
+
+* Tracks Sections *
+
+- Move color legend on the top section - legend removed
+X Play audio functionality
+X Stop play audio functionality
+- History functionality
+
+* Search section *
+
+X Search audio - By title
+X Search audio - By artist
+
+
+22/10/2021 11:58:28
+---------
+
+# ------------------------------------------------- #
+# ****    Tech Debt  ****
+# -------------------------------------------------#
+
+Audio::Remove player from CueEditor - CueEditor should request play, stop, ... from the AudioPlay class
+
+Traffik::Move Traffik project from QMake to CMake
+
+RelationMapper::append_related_tables - Remove the storing of typeid of class "&typeid(T)"
+
+
+01/11/2021 14:45:29
+-------
+
+# ------------------------------------------------- #
+Raven - Audio Explorer
+# ------------------------------------------------- #
+
+- Add a window Icon
+- Application should start on Maximized mode
+
+
+#-------------------------------------------------------- #
+#     OATS
+#---------------------------------------------------------#
+
+
+ 
+
+
+22/11/2021 19:41:53
+----
+# --------------------------------------------------------------- #
+#             SAP-IDEAS
+# ----------------------------------------------------------------#
+
+- Client specific data
+- Cross-client data and applications
+- Transports machinary
+- Workbench concept
+- Netweaver dialog server ***
+- ABAP repository
+- Packages
+   - Transportable packages
+- Sessions and sessions management
+- 
+
+
+
+
+
+
+# --------------------------------------------------------------- #
+#             HOW-TO
+# ----------------------------------------------------------------#
+
+- Working with QTreeView
+- Working with QTreeView Model
+- How-to add, edit and delete data to a custom model
+- How to add widgets to a TableView
+- 
+
+
+
+STDM 1.8 - What's New
+
+1. Options 
+  - Entity records sorting - X
+  
+2. Entity Browser
+  - STR viewer - X
+  - Search by multiple fields - X
+
+3. Data Entry Forms - X
+  - STR Viewer - X
+  -
+
+4. Data Import
+  - Persisted sessions - X
+  - Save process - X
+
+5. Document Designer
+
+6. Support for Python3
+
+7
+
+
+21/12/2021 14:51:23
+---
+Voice Tracking - Cloud Radio
+----
+https://www.cloudrad.io/voice-tracking
+
+https://www.youtube.com/watch?v=Yx_NzleQXjg
+
+14/07/2023 21:45:30
+--------
+#TODO
+#
+#OATS
+
+- Add slot for exit button
+- Reload schedule
+- Log all items played
+- Log commercial played
+- Adjust the size of search controls QLineEdits
+- Clean the UI section for the CaRT tab
+
+# ** TRAFFIK
+
+- Test the commercial booking
+- Test deleting commercial booking
+- Create logging framework - use it for testing
+- ** Report design **
+- Order creation and cancellation
+- 
+
+# SEDRIC
+- Find color for Sedric UI
+- Test loading huge schedules
+
+
+
+# Audio Explorer
+- Integrate Audacity to AudioExplorer
+
+# CLUSTER MANAGER
+
+- Test user creation - How to create user across multiple databases from the central
+  cluster manager
+- Design and test application rights
+- 
+
+# ** GENERAL **
+
+- Design a logger - Check out the sample logger you downloaded
+- Make sample audio for testing system
+- Start packaging and application depolyment strategy
+
+
+
+

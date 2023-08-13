@@ -61,8 +61,13 @@ OrderForm::OrderForm(Client* client, Order* order,
     dmSetup->all();
     mSetup = dynamic_cast<RavenSetup*>(dmSetup->firstEntity().get());
 
-    if (mOrder->isNew())
+    if (mOrder->isNew()){
         prepareNewOrder();
+    } else {
+        prepare_for_edit(mOrder);
+    }
+
+
 }
 
 OrderForm::~OrderForm()
@@ -142,6 +147,8 @@ void OrderForm::populateFormWidgets()
 
     ui->sbSOrdered->setValue(mOrder->spotsOrdered()->value());
     ui->sbSBooked->setValue(mOrder->spotsBooked()->value());
+
+    qDebug() << "Spots Played: "<< mOrder->spotsPlayed()->value();
     ui->sbSPlayed->setValue(mOrder->spotsPlayed()->value());
 
     populateChoiceCombo(ui->cbRevenueType, mOrder->revenueType());
@@ -164,6 +171,11 @@ void OrderForm::populateFormWidgets()
     ui->sbLateFee->setValue(mOrder->lateFee()->value());
 
 }
+void OrderForm::clear_widgets()
+{
+
+
+}
 
 void OrderForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf)
 {
@@ -183,6 +195,15 @@ void OrderForm::prepareNewOrder()
     ui->edtClient->setText(stoq(mClient->name()->value()));
 
     setDefaults();
+}
+
+void OrderForm::prepare_for_edit(Order* order)
+{
+    // If spots have been played from this order, don't edit.
+    if (order->spotsPlayed()->value() > 0){
+        disableSaveBtn();
+    }
+
 }
 
 void OrderForm::setDefaults()

@@ -222,6 +222,7 @@ class Setup(models.Model):
     audio_path = models.CharField(max_length=255, null=True, blank=True)
     comm_audio_path = models.CharField(max_length=255, null=True, blank=True)
     convert_to_ogg = models.BooleanField(null=True, blank=True)
+    editor_filepath = models.CharField(max_length=255, null=True, blank=True)
 
 
 class Content(models.Model):

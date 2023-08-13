@@ -23,8 +23,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
 
     connect(ui->tvBreakLayouts, &QTableView::clicked, this, &BreakCreateForm::break_layout_selected);
 
-    m_edm_break_line = std::make_unique<EntityDataModel>(
-                std::make_shared<BreakLayoutLine>());
+    m_edm_break_line = std::make_unique<EntityDataModel>(std::make_shared<BreakLayoutLine>());
 
     ui->tvBreakLines->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvBreakLines->setModel(m_edm_break_line.get());

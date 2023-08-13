@@ -63,6 +63,13 @@ void BrandForm::populateFormWidgets()
                                  stoq(mBrand->brand_manager()->displayName())));
 }
 
+void BrandForm::clear_widgets()
+{
+    ui->edtBrandName->clear();
+    ui->edtClient->clear();
+    ui->cbBrandManager->setCurrentIndex(-1);
+}
+
 void BrandForm::selectClient()
 {
     PickListSetting set(std::make_unique<Client>(), 0);

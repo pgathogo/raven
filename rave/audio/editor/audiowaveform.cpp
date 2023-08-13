@@ -143,6 +143,7 @@ namespace AUDIO {
     void AudioWaveForm::save()
     {
         save_cue_markers();
+        stop_play();
         done(1);
     }
 

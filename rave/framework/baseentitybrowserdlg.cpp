@@ -20,6 +20,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg( QWidget *parent)
 {
     bui->setupUi(this);
     connectSlots();
+    resize_window();
 }
 
 BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
@@ -46,7 +47,13 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     populateFilterCombo();
 
     set_button_icons();
+    resize_window();
 
+}
+
+void BaseEntityBrowserDlg::resize_window()
+{
+    resize(800, 600);
 }
 
 void BaseEntityBrowserDlg::set_button_icons()

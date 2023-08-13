@@ -3,7 +3,8 @@
 #include <memory>
 #include <QWidget>
 
-#include <QtCharts/QBarSet>
+//#include <QtCharts/QBarSet>
+#include <QChart>
 #include <QtCharts/QHorizontalStackedBarSeries>
 #include <QtCharts/QChart>
 #include <QtCharts/QChartView>

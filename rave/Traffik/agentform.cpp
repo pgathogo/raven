@@ -64,3 +64,13 @@ std::string AgentForm::windowTitle()
     return "Agent Details";
 }
 
+void AgentForm::clear_widgets()
+{
+    ui->edtName->clear();
+    ui->edtAddress->clear();
+    ui->edtTelephone->clear();
+    ui->edtTown->clear();
+    ui->edtEmail->clear();
+    ui->edtContact->clear();
+    ui->edtContactMobile->clear();
+}

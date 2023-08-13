@@ -29,6 +29,7 @@ namespace TRAFFIK {
 
         void populateEntityFields() override;
         void populateFormWidgets() override;
+        void clear_widgets() override;
 
         void populate_user_combo();
         void populate_levels(std::set<int>& levels);

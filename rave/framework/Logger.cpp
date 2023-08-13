@@ -16,21 +16,71 @@ QHash<QtMsgType, QString> Logger::contextNames = {
 	{QtMsgType::QtFatalMsg,		" Fatal  "}
 };
 
-void Logger::init() {
+std::vector<QString> dow{"None", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
+bool Logger::add_file_header(QString log_filepath)
+{
+    QFile logfile(log_filepath);
+    if(!logfile.open(QIODevice::Append | QIODevice::Text))
+        return false;
+
+    QString time_stamp =  QDateTime::currentDateTime().toString("dd/MM/yyyy HH:MM");
+
+    QTextStream out(&logfile);
+    QDate d = QDateTime::currentDateTime().date();
+    out << "---------------------------------------------------------------------------------" << "\n";
+    out << dow[d.dayOfWeek()]<<"  "<< time_stamp << "\n";
+    out << "---------------------------------------------------------------------------------" << "\n";
+
+    logfile.close();
+
+    return true;
+}
+
+bool Logger::add_file_timestamp(QString log_filepath)
+{
+    QFile logfile(log_filepath);
+    if(!logfile.open(QIODevice::Append | QIODevice::Text))
+        return false;
+
+    QString time_stamp =  QDateTime::currentDateTime().toString("dd/MM/yyyy HH:MM");
+
+    QTextStream out(&logfile);
+    out << "\n";
+    out << "---------------------------------------------------------------------------------" << "\n";
+    out << time_stamp << "\n";
+    out << "---------------------------------------------------------------------------------" << "\n";
+
+    logfile.close();
+
+    return true;
+}
+
+void Logger::init(QString log_file) {
 	if (isInit) {
 		return;
 	}
-	
-	// Create log file
-	logFile = new QFile;
-    logFile->setFileName("oatslog.log");
-	logFile->open(QIODevice::Append | QIODevice::Text);
+
+    logFile = new QFile;
+    logFile->setFileName(log_file);
+
+    if (QFile::exists(log_file)){
+        bool result = Logger::add_file_timestamp(log_file);
+        if (!result)
+            return;
+    } else {
+        bool result = Logger::add_file_header(log_file);
+        if (!result)
+            return;
+    }
+
+    logFile->open(QIODevice::Append | QIODevice::Text);
 
 	// Redirect logs to messageOutput
 	qInstallMessageHandler(Logger::messageOutput);
 
 	// Clear file contents
-	logFile->resize(0);
+    //logFile->resize(0);
 
 	Logger::isInit = true;
 }

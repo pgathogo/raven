@@ -94,6 +94,11 @@ void BreakLayoutForm::populateFormWidgets()
 
 }
 
+void BreakLayoutForm::clear_widgets()
+{
+    ui->edtName->clear();
+}
+
 void BreakLayoutForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<int>* cf)
 {
     for (const auto& c : cf->choices())

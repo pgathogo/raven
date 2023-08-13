@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "commlogtreeviewmodel.h"
+#include "../framework/datetimeselector.h"
 
 namespace Ui {
 class CommLogForm;
@@ -20,8 +21,10 @@ public:
     ~CommLogForm();
     void setMdiArea(QMdiArea* mdi);
 
+    void set_default_dts();
+
 private slots:
-    void comm_log_date_changed();
+    void on_clicked_datetime();
     void comm_log_hours_changed(int i);
     void change_view_mode(int state);
     void select_all_hours(int state);
@@ -34,8 +37,12 @@ private:
     std::vector<QStandardItem*> m_check_items;
     CommercialLogs m_comm_logs;
 
+    DateTimeSelection m_dts;
+
     void set_hour_combobox();
-    void fetch_bookings();
+    void fetch_bookings(const DateTimeSelection&);
+    std::string comma_sep(const std::vector<int>&);
+    void update_hours_label(std::string);
 };
 
 #endif // COMMLOGFORM_H

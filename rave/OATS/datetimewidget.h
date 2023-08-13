@@ -13,6 +13,7 @@ class QLabel;
 class QVBoxLayout;
 class QHBoxLayout;
 class QTime;
+class QLCDNumber;
 
 namespace OATS{
 
@@ -35,11 +36,12 @@ namespace OATS{
         void time_updated();
 
     private:
-        std::unique_ptr<QLabel> m_time_digit;
+        //std::unique_ptr<QLabel> m_time_digit;
+        std::unique_ptr<QLCDNumber> m_time_digit;
         std::unique_ptr<QLabel> m_time_text;
         std::unique_ptr<QLabel> m_date_text;
 
-        QVBoxLayout* m_time_digit_layout;
+        QHBoxLayout* m_time_digit_layout;
         QVBoxLayout* m_time_date_layout;
         std::unique_ptr<QHBoxLayout> m_datetime_layout;
 

@@ -29,10 +29,11 @@ inline QString stoq(std::string s)
     return QString::fromStdString(s);
 }
 
-inline void showMessage(std::string msg)
+inline void showMessage(std::string msg, QMessageBox::Icon icon = QMessageBox::Information)
 {
     QMessageBox msgBox;
     msgBox.setText(stoq(msg));
+    msgBox.setIcon(icon);
     msgBox.exec();
 }
 

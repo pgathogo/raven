@@ -122,6 +122,9 @@
              </property>
             </widget>
            </item>
+           <item>
+            <layout class="QHBoxLayout" name="hl_audio"/>
+           </item>
           </layout>
          </item>
          <item>
@@ -252,7 +255,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="btnEditor">
             <property name="text">
              <string>Audio Editor</string>
             </property>
@@ -332,7 +335,7 @@
      <x>0</x>
      <y>0</y>
      <width>1096</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

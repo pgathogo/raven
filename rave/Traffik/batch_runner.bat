@@ -1,1 +1,1 @@
-D:/Home/Clients/PMS/Raven/rave/Traffik/ffprobe.exe -v error -show_format -of json D:/Home/Clients/PMS/SampleAudio/DreamingOfLove.mp3 > D:/Home/Clients/PMS/SampleAudio/DreamingOfLove.prb
+D:/Home/Clients/PMS/Raven/rave/Traffik/ffprobe.exe -v error -show_format -of json D:/Home/Clients/PMS/Studio1/Audio/00147127.OGG > D:/Home/Clients/PMS/Studio1/Audio/00147127.prb
