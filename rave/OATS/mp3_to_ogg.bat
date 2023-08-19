@@ -1,0 +1,1 @@
+D:/Home/Clients/PMS/Raven/rave/OATS/ffmpeg.exe -y -i D:\Home\Clients\PMS\SampleAudio\AD_CHA0092.mp3 -c:a libvorbis -q:a 4 -vsync 2 D:\Home\Clients\PMS\SampleAudio\AD_CHA0092.ogg

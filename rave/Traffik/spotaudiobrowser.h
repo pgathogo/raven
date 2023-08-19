@@ -69,6 +69,9 @@ private slots:
      void stop_play();
      void cue_edit();
 
+signals:
+     void audio_duration(int);
+
 private:
     Ui::SpotAudioBrowser* ui;
 

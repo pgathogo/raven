@@ -34,6 +34,9 @@ public:
     ChoiceField<int>* timeInterval();
     void setTimeInterval(int ti);
 
+    ChoiceField<std::string>* break_fill_method();
+    void set_break_fill_method(const std::string);
+
     IntegerField* monBit() const;
     void setMonBit(int bit);
 
@@ -77,6 +80,7 @@ private:
     TextField* mDescription;
     StringField* mWeekDays;
     ChoiceField<int>* mTimeInterval;
+    ChoiceField<std::string>* m_break_fill_method;
 
     IntegerField* mMonBit;
     IntegerField* mTueBit;

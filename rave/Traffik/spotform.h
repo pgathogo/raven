@@ -51,6 +51,7 @@ public:
 
 public slots:
     void cue_edit();
+    void update_audio_duration(int);
 
 private slots:
     void brandsComboChanged(int);

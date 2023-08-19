@@ -31,10 +31,11 @@ public:
     void populateFormWidgets() override;
     void clear_widgets() override;
 
-    void populateChoiceCombo(QComboBox* cbox, const ChoiceField<int>* cf);
+    void populate_choice_combo_int(QComboBox* cbox, const ChoiceField<int>* cf);
+    void populate_choice_combo_string(QComboBox* cbox, const ChoiceField<std::string>* cf);
     void populateCopyCB();
     void populateBreakLine();
-    void setDefaults();
+    void set_defaults();
     void addBreakLines(int hour, int timeInterval=0);
     std::vector<EntityRecord> const& breakLines() const;
     void clearBreakTableView(int startRow, int endRow);
@@ -43,10 +44,24 @@ public:
     void undoCopy(int fromHr, int toHr);
     void clearBreaks();
 
+    QAbstractItemModel* breakline_model();
+
+    template<typename T>
+    void populateChoiceCombo(QComboBox* cbox, const T* cf)
+    {
+        for (const auto& [title, value] : cf->choices())
+        cbox->addItem(stoq(title), value);
+
+        cbox->setCurrentIndex( cbox->findData(QVariant(cf->value())) );
+    }
 private slots:
     void copyHourClicked();
     void undoCopyClicked();
     void timeIntervalChanged(int);
+    void break_fill_method_changed(int);
+    void test_data();
+    void test_model();
+
 
 private:
     Ui::BreakLayoutForm *ui;

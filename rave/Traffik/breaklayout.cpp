@@ -18,6 +18,10 @@ BreakLayout::BreakLayout()
     mTimeInterval->addChoice({5, "5 Mins"});
     mTimeInterval->addChoice({1, "1 Min"});
 
+    m_break_fill_method = createField<ChoiceField<std::string>>("break_fill_method", "Break Fill Method");
+    m_break_fill_method->addChoice({"S", "Sequence"});
+    m_break_fill_method->addChoice({"R", "Random"});
+
     mMonBit = createField<IntegerField>("Mon", "Monday");
     mMonBit->setFormOnly(true);
     mMonBit->setSearchable(false);
@@ -85,7 +89,7 @@ void BreakLayout::setWeekDays(const std::string wkdays)
 
 }
 
-ChoiceField<int> *BreakLayout::timeInterval()
+ChoiceField<int>* BreakLayout::timeInterval()
 {
     return mTimeInterval;
 }
@@ -93,6 +97,16 @@ ChoiceField<int> *BreakLayout::timeInterval()
 void BreakLayout::setTimeInterval(int ti)
 {
     mTimeInterval->setValue( ti );
+}
+
+ChoiceField<std::string>* BreakLayout::break_fill_method()
+{
+    return m_break_fill_method;
+}
+
+void BreakLayout::set_break_fill_method(const std::string method)
+{
+    m_break_fill_method->setValue(method);
 }
 
 IntegerField *BreakLayout::monBit() const

@@ -522,7 +522,7 @@ namespace AUDIO {
     void Audio::set_file_path(const std::string f_path)
     {
         m_file_path->setValue(f_path);
-        m_file_info.set_audio_lib_path(f_path);
+        set_audio_lib_path(f_path);
     }
 
     void Audio::set_folder(int folder_id)
@@ -689,6 +689,10 @@ namespace AUDIO {
         AUDIO::AudioTool audio_tool;
         QString name = QString::fromStdString(this->audio_lib_path()->value()+
                 audio_tool.make_audio_filename(this->id())+"."+this->file_extension()->value_tolower());
+
+        qDebug() << "Path: " << stoq(this->audio_lib_path()->value());
+        qDebug() << "Ext: " << stoq(this->file_extension()->value());
+
         return name;
     }
 

@@ -5,6 +5,9 @@
 
 #include "../framework/baseentity.h"
 
+template<typename T>
+class ChoiceField;
+
 
 class BreakLayoutLine : public BaseEntity
 {
@@ -33,6 +36,9 @@ public:
     IntegerField* rowId() const;
     void setRowId(int id);
 
+    ChoiceField<std::string>* break_fill_method() const;
+    void set_break_fill_method(const std::string);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -54,6 +60,8 @@ private:
     IntegerField* mDuration;
     IntegerField* mMaxSpots;
     IntegerField* mRowId;
+
+    ChoiceField<std::string>* m_break_fill_method;
 
     QStringList mHeader;
     std::string mTableName;

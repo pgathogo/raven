@@ -1,3 +1,5 @@
+#include <QAbstractItemModel>
+
 #include "breakcreateform.h"
 #include "ui_breakcreateform.h"
 
@@ -9,14 +11,18 @@
 #include "../framework/schedule.h"
 #include "../framework/datetimeselector.h"
 
+#include "breaklayoutform.h"
+
 
 BreakCreateForm::BreakCreateForm(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BreakCreateForm)
 {
     ui->setupUi(this);
-    m_edm_break_layout = std::make_unique<EntityDataModel>(
-                std::make_shared<BreakLayout>());
+    m_break_layout = std::make_shared<BreakLayout>();
+
+    m_edm_break_layout = std::make_unique<EntityDataModel>(m_break_layout);
+
     ui->tvBreakLayouts->setModel(m_edm_break_layout.get());
     ui->tvBreakLayouts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_edm_break_layout->all();
@@ -35,6 +41,8 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     connect(ui->btnRemoveHour, &QPushButton::clicked, this, &BreakCreateForm::remove_hour);
 
     set_defaults();
+
+    setup_ui();
 }
 
 BreakCreateForm::~BreakCreateForm()
@@ -44,10 +52,29 @@ BreakCreateForm::~BreakCreateForm()
 
 void BreakCreateForm::set_defaults()
 {
-    setWindowTitle("Generate Schedule Breaks Form");
+    setWindowTitle("Commercial Breaks");
     ui->dtFrom->setDate(QDate::currentDate());
     ui->dtTo->setDate(QDate::currentDate());
     //populate_hour_combo();
+}
+
+void BreakCreateForm::setup_ui()
+{
+    QPixmap add_pixmap(":/images/media/icons/add.png");
+    QIcon add_icon(add_pixmap);
+    ui->btnAdd->setIcon(add_icon);
+
+    QPixmap edit_pixmap(":/images/media/icons/edit.png");
+    QIcon edit_icon(edit_pixmap);
+    ui->btnEdit->setIcon(edit_icon);
+
+    QPixmap delete_pixmap(":/images/media/icons/delete.png");
+    QIcon delete_icon(delete_pixmap);
+    ui->btnDelete->setIcon(delete_icon);
+
+    connect(ui->btnAdd, &QToolButton::clicked, this, &BreakCreateForm::create_layout);
+    connect(ui->btnEdit, &QToolButton::clicked, this, &BreakCreateForm::edit_layout);
+    connect(ui->btnDelete, &QToolButton::clicked, this, &BreakCreateForm::delete_layout);
 }
 
 void BreakCreateForm::break_layout_selected(const QModelIndex &index)
@@ -182,4 +209,142 @@ void BreakCreateForm::add_hour()
 void BreakCreateForm::remove_hour()
 {
     ui->cbSelectedHours->removeItem(ui->cbSelectedHours->currentIndex());
+}
+
+void BreakCreateForm::create_layout()
+{
+    auto break_layout = std::make_shared<BreakLayout>();
+    std::shared_ptr<BreakLayoutForm> blform =
+        std::make_shared<BreakLayoutForm>(break_layout.get(), this);
+
+    if (blform->exec() > 0)
+    {
+        int layout_id = m_edm_break_layout->createEntity(std::move(break_layout));
+        save_break_layout_lines(blform, layout_id);
+    }
+}
+
+void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> blf,
+                                              int layout_header_id)
+{
+    auto edm = std::make_unique<EntityDataModel>();
+
+    /*
+    auto& break_lines = blf->breakLines();
+
+    for(auto& break_line : break_lines){
+        BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(std::get<1>(break_line).get());
+        bll->setBreakLayout(layout_header_id);
+        edm->createEntityDB(*bll);
+    }
+   */
+
+    auto model = blf->breakline_model();
+    int row_count = model->rowCount();
+    int col_count = model->columnCount();
+
+    std::map<QString, QString> fill_method;
+    fill_method["Sequence"] = "S";
+    fill_method["Random"] = "R";
+
+    int hour = -1;
+    for (int row=0; row < row_count; ++row)
+    {
+        std::unique_ptr<BreakLayoutLine> bll = std::make_unique<BreakLayoutLine>();
+
+        for (int col=0; col < col_count; ++col)
+        {
+            auto index = model->index(row, col);
+            switch (col)
+            {
+            case 0:
+                bll->setBreakTime(model->data(index).toTime());
+                hour = model->data(index).toTime().hour();
+                break;
+            case 1:
+                bll->setDuration(model->data(index).toInt());
+                break;
+            case 2:
+                bll->setMaxSpots(model->data(index).toInt());
+                break;
+            case 3:
+                bll->set_break_fill_method(
+                    fill_method[model->data(index).toString()].toStdString());
+                break;
+            }
+        }
+        bll->setBreakHour(hour);
+        bll->setWeekDay(1);
+        bll->setBreakLayout(layout_header_id);
+
+        edm->createEntity(std::move(bll));
+    }
+
+}
+
+void BreakCreateForm::edit_layout()
+{
+    auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
+    QVariant col_name{};
+    if (model_indexes.size() > 0){
+        col_name = ui->tvBreakLayouts->model()->data(model_indexes[0]);
+    }
+
+    if (col_name.toString().isEmpty())
+        return;
+
+    std::string search_name = col_name.toString().toStdString();
+    std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
+    auto break_layout = dynamic_cast<BreakLayout*>(be.get());
+    auto bl_form = std::make_shared<BreakLayoutForm>(break_layout);
+    if (bl_form->exec() > 0){
+
+    }
+
+}
+
+void BreakCreateForm::delete_layout()
+{
+    if (!confirmationMessage("Delete layout?"))
+        return;
+
+    auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
+
+    QVariant col_name{};
+    int selected_row = -1;
+    if (model_indexes.size() > 0){
+        selected_row  = model_indexes[0].row();
+        col_name = ui->tvBreakLayouts->model()->data(
+        model_indexes[0]);
+    }
+
+    if (selected_row == -1)
+        return;
+
+    if (col_name.toString().isEmpty())
+        return;
+
+    std::string search_name = col_name.toString().toStdString();
+    qDebug() << "Search Name: " << stoq(search_name);
+
+    std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
+    if (be == nullptr)
+        return;
+    auto break_layout = dynamic_cast<BreakLayout*>(be.get());
+
+    qDebug() << "Break Layout ID: " << break_layout->id();
+
+    // Delete details first
+    EntityDataModel edm(std::make_shared<BreakLayoutLine>());
+    edm.deleteEntityByValue({"break_layout_id", break_layout->id()});
+    m_edm_break_line->clearEntities();
+
+    qDebug() << "Break Lines deleted.";
+
+    // Delete header
+    m_edm_break_layout->deleteEntity(*break_layout);
+    ui->tvBreakLayouts->model()->removeRow(selected_row);
+
+    qDebug() << "Break Layout Header deleted.";
+
 }

@@ -97,8 +97,7 @@ void BookingOrderBrowser::search(int id)
         << " left outer join rave_spot b on b.id = c.spot_id "
         << " left outer join rave_client a on a.id = f.client_id "
         << " left outer join rave_schedule e on e.id = c.schedule_id "
-        << " where f.spots_booked < f.spots_ordered "
-        << " and c.booking_status <> 'CANCELLED' ";
+        << " where f.spots_booked < f.spots_ordered ";
 
         sql << make_filter(id);
 
@@ -417,7 +416,6 @@ void BookingOrderBrowser::make_spot_menu()
 {
     m_spot_ctx_menu = new QMenu(this);
     m_spot_ctx_menu->addAction("Properties...");
-
 }
 
 std::string BookingOrderBrowser::make_filter(int id)
@@ -643,7 +641,8 @@ void BookingOrderBrowser::resizeColumnsToContents(QTreeWidget& tree_widget)
   int w;
   int col;
   int i;
-  for( col = 0; col < cCols; col++ ) {
+  for( col = 0; col < cCols; col++ )
+  {
     w = tree_widget.header()->sectionSizeHint( col );
     for( i = 0; i < cItems; i++ )
       w = qMax( w, tree_widget.topLevelItem( i )->text( col ).size()*10 + (col == 0 ? tree_widget.indentation() : 0) );

@@ -55,6 +55,8 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
                                                ui->vlSpotAudio,
                                                this);
 
+    connect(m_spot_audio_browser.get(), &SpotAudioBrowser::audio_duration, this, &SpotForm::update_audio_duration);
+
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
 
@@ -66,6 +68,9 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
                 std::make_unique<RavenSetup>());
     m_edm_setup->all();
     m_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
+
+
+    ui->edtRealDuration->setMaximum(999999);
 }
 
 SpotForm::~SpotForm()
@@ -171,5 +176,10 @@ void SpotForm::on_import_audio()
 
 void SpotForm::cue_edit()
 {
+}
+
+void SpotForm::update_audio_duration(int audio_duration)
+{
+    ui->edtRealDuration->setValue(audio_duration);
 }
 

@@ -14,7 +14,10 @@ from django.urls import re_path as url
 urlpatterns = [
     url(r'^$', lambda x: x)
 ]
+
 ROOT_URLCONF = 'settings'
+
+USE_TZ=False
 
 DATABASES = {
     'default': {

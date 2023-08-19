@@ -10,6 +10,8 @@ class BreakCreateForm;
 
 class EntityDataModel;
 class BreakLayoutLine;
+class BreakLayout;
+class BreakLayoutForm;
 class Schedule;
 
 class BreakCreateForm : public QDialog
@@ -20,8 +22,9 @@ public:
     explicit BreakCreateForm(QWidget *parent = nullptr);
     ~BreakCreateForm();
 
-    void set_defaults();
     void populate_hour_combo();
+    void save_break_layout_lines(std::shared_ptr<BreakLayoutForm>, int);
+
 
     template<typename T>
     struct Vectored{
@@ -37,6 +40,7 @@ public:
         std::vector<T*> vec;
     };
 
+
 private slots:
     void break_layout_selected(const QModelIndex& index);
     void close_form();
@@ -45,13 +49,22 @@ private slots:
     void add_hour();
     void remove_hour();
 
+    void create_layout();
+    void edit_layout();
+    void delete_layout();
+
 private:
     Ui::BreakCreateForm *ui;
     std::unique_ptr<EntityDataModel> m_edm_break_layout;
     std::unique_ptr<EntityDataModel> m_edm_break_line;
+    std::shared_ptr<BreakLayout> m_break_layout;
+
     bool m_breaks_created{false};
     bool write_breaks_to_db(const std::string sql);
     std::string make_break_sql(QDate from, QDate to);
+
+    void set_defaults();
+    void setup_ui();
 };
 
 #endif // BREAKCREATEFORM_H

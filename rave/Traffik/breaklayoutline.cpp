@@ -2,6 +2,8 @@
 #include "breaklayout.h"
 #include "breaklayoutline.h"
 
+#include "../framework/choicefield.h"
+
 BreakLayoutLine::BreakLayoutLine()
 {
     mBreakLayout = createField<ForeignKeyField>("break_layout_id", "Break Layout",
@@ -15,9 +17,14 @@ BreakLayoutLine::BreakLayoutLine()
     mRowId = createField<IntegerField>("rowid", "RowId");
     mRowId->setFormOnly(true);
 
+    m_break_fill_method = createField<ChoiceField<std::string>>("break_fill_method", "Break Fill Method");
+    m_break_fill_method->addChoice({"S", "Sequence"});
+    m_break_fill_method->addChoice({"R", "Random"});
+
     mHeader << stoq(mBreakTime->fieldLabel())
             << stoq(mDuration->fieldLabel())
-            << stoq(mMaxSpots->fieldLabel());
+            << stoq(mMaxSpots->fieldLabel())
+            << stoq(m_break_fill_method->fieldLabel());
 
     setTableName("rave_breaklayoutline");
 }
@@ -96,6 +103,16 @@ void BreakLayoutLine::setRowId(int id)
     mRowId->setValue( id );
 }
 
+ChoiceField<std::string>* BreakLayoutLine::break_fill_method() const
+{
+    return m_break_fill_method;
+}
+
+void BreakLayoutLine::set_break_fill_method(const std::string method)
+{
+    m_break_fill_method->setValue(method);
+}
+
 std::string BreakLayoutLine::tableName() const
 {
     return mTableName;
@@ -116,7 +133,8 @@ std::vector<std::string> BreakLayoutLine::tableViewColumns() const
     return tableViewCols<std::string>(
                 breakTime()->displayName(),
                 duration()->displayName(),
-                maxSpots()->displayName()
+                maxSpots()->displayName(),
+                break_fill_method()->displayName()
                 );
 }
 

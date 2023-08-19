@@ -213,8 +213,6 @@ void SpotAudioBrowser::import_audio()
                     auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_shared);
                     audio_converter->convert();
 
-                    qDebug() << "CONVERTED AF: " << audio_converter->ogg_filename() ;
-
                     // File has been converted to OGG, change the extension
                     spot_audio->audio()->set_file_extension("OGG");
 
@@ -252,8 +250,8 @@ void SpotAudioBrowser::import_audio()
 
             p_audio = *spot_audio->audio();
 
-            qDebug() << "FILE EXT: " << spot_audio->audio()->file_extension()->to_qstring();
-            qDebug() << "P_AUDIO FILE EXT: " << p_audio.file_extension()->to_qstring();
+            // Emit audio duration signal
+            emit audio_duration(af.duration());
 
             entityDataModel().cacheEntity(std::move(spot_audio));
         }

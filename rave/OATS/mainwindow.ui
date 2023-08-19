@@ -128,7 +128,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>PHOTON FM</string>
+                        <string>PHOTONICS FM</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -341,6 +341,13 @@
           <widget class="QPushButton" name="btnClearCache">
            <property name="text">
             <string>Clear Cache</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnBreaks">
+           <property name="text">
+            <string>Print Breaks</string>
            </property>
           </widget>
          </item>

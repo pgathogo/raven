@@ -4,6 +4,7 @@
 #include <vector>
 #include <chrono>
 #include <concepts>
+#include <sstream>
 
 #include <QMainWindow>
 #include <QLabel>
@@ -88,15 +89,31 @@ struct CommBreak{
     int booking_id{-1};
     int schedule_id{-1};
     int spot_id{-1};
-    QString booking_status{""};
     int book_hour{-1};
-    QTime book_time;
-    QString comm_title;
     int duration;
     int audio_id{-1};
+    QString comm_title;
+    QString booking_status{""};
     QString filepath{""};
     QString file_extension{""};
+    QTime book_time;
+    bool break_played{false};
+    bool db_persisted{false};
 };
+
+template<typename T>
+std::string join(const T& items, std::string delim)
+{
+    std::ostringstream s;
+    for (const auto& i: items){
+        if (&i != &items[0]){
+            s << delim;
+        }
+        s << i;
+    }
+    return s.str();
+}
+
 
 template<typename T>
 concept integral = std::is_integral_v<T>;
@@ -341,6 +358,9 @@ private:
     std::unique_ptr<AUDIO::AudioPlayer> m_jingle_player;
     std::unique_ptr<OATS::ScheduleItem> m_current_jingle_item;
 
+    std::shared_ptr<QMutex> m_updatedb_mutex;
+    std::unique_ptr<QTimer> m_updatedb_timer;
+
     int m_schedule_top_index;
     int m_scrollbar_current_value;
 
@@ -348,6 +368,11 @@ private:
     void fill_schedule_headers(QDate);
     void setup_timers();
     void to_lower(std::string&);
+
+    void mark_comm_as_played(int);
+    void db_update_comm_break_play_status();
+
+    void print_comm_breaks();
 
     void test_concept();
 };

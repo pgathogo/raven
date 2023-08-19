@@ -4,6 +4,7 @@
 #include "../framework/choicefield.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
+#include "../framework/comboboxitemdelegate.h"
 #include "../utils/notificationbar.h"
 
 #include "breaklayout.h"
@@ -26,6 +27,13 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
     ui->tvBreakLayoutLine->setModel(mEDMBreakLine.get());
     ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    std::map<QString, QVariant> data;
+    data["Sequence"] = "S";
+    data["Random"] = "R";
+    ComboBoxItemDelegate*  cbid = new ComboBoxItemDelegate(data, ui->tvBreakLayoutLine);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(3, cbid);
+
+
     mEdmTSetup = std::make_unique<EntityDataModel>(
                 std::make_shared<RavenSetup>());
     mEdmTSetup->all();
@@ -35,12 +43,18 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
 
     connect(ui->cbTimeInterval, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &BreakLayoutForm::timeIntervalChanged);
+    connect(ui->cbBreakFillMethod, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &BreakLayoutForm::break_fill_method_changed );
+
     connect(ui->btnCopy, &QPushButton::clicked, this, &BreakLayoutForm::copyHourClicked);
     connect(ui->btnUndo, &QPushButton::clicked, this, &BreakLayoutForm::undoCopyClicked);
 
+    connect(ui->btnTest, &QPushButton::clicked, this, &BreakLayoutForm::test_data);
+    connect(ui->btnTest2, &QPushButton::clicked, this, &BreakLayoutForm::test_model);
+
     hideSaveNewBtn();
 
-    setDefaults();
+    set_defaults();
 }
 
 BreakLayoutForm::~BreakLayoutForm()
@@ -56,7 +70,7 @@ ActionResult BreakLayoutForm::saveRecord()
 
 std::string BreakLayoutForm::windowTitle()
 {
-    return "Break Layout";
+    return "Create Break Layout";
 }
 
 void BreakLayoutForm::populateEntityFields()
@@ -77,7 +91,7 @@ void BreakLayoutForm::populateEntityFields()
 void BreakLayoutForm::populateFormWidgets()
 {
     ui->edtName->setText(stoq(mBreakLayout->name()->value()));
-    populateChoiceCombo(ui->cbTimeInterval, mBreakLayout->timeInterval());
+    populate_choice_combo_int(ui->cbTimeInterval, mBreakLayout->timeInterval());
 
     auto cs = [](int i){ return (i==0) ? Qt::Unchecked : Qt::Checked; };
     ui->cbMon->setCheckState(cs(mBreakLayout->monBit()->value()));
@@ -90,6 +104,7 @@ void BreakLayoutForm::populateFormWidgets()
 
     populateCopyCB();
 
+
     //populateBreakLine();
 
 }
@@ -99,12 +114,21 @@ void BreakLayoutForm::clear_widgets()
     ui->edtName->clear();
 }
 
-void BreakLayoutForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<int>* cf)
+void BreakLayoutForm::populate_choice_combo_int(QComboBox* cbox, const ChoiceField<int>* cf)
 {
     for (const auto& c : cf->choices())
         cbox->addItem(stoq(std::get<1>(c)), std::get<0>(c));
 
-    cbox->setCurrentIndex( cbox->findData(QVariant(cf->value())) ); }
+    cbox->setCurrentIndex( cbox->findData(QVariant(cf->value())) );
+}
+
+void BreakLayoutForm::populate_choice_combo_string(QComboBox* cbox, const ChoiceField<std::string>* cf)
+{
+    for (const auto& [value, title] : cf->choices())
+        cbox->addItem(stoq(title), stoq(value));
+
+    cbox->setCurrentIndex( cbox->findData(QVariant(QString::fromStdString(cf->value()))) );
+}
 
 void BreakLayoutForm::populateCopyCB()
 {
@@ -143,20 +167,25 @@ void BreakLayoutForm::addBreakLines(int hour, int timeInterval)
     int break_dur = mRavenSetup->breakDuration()->value();
     int max_spots = mRavenSetup->breakMaxSpots()->value();
 
-        int min = 0;
+    std::string fill_method = ui->cbBreakFillMethod->itemData(
+                                                       ui->cbBreakFillMethod->currentIndex()).toString().toStdString();
+    int min = 0;
 
-        for (int ti=1; ti <= breaks_per_hr; ++ti){
-            auto breakLine = std::make_unique<BreakLayoutLine>();
-            QTime time(hour, min, 0);
-            breakLine->setBreakTime(time);
-            breakLine->setBreakHour(hour);
-            breakLine->setDuration(break_dur);
-            breakLine->setMaxSpots(max_spots);
-            breakLine->setWeekDay(1);
-            breakLine->setDBAction(DBAction::dbaCREATE);
-            mEDMBreakLine->cacheEntity(std::move(breakLine));
-            min += time_interval;
-        }
+    for (int ti=1; ti <= breaks_per_hr; ++ti){
+        auto breakLine = std::make_unique<BreakLayoutLine>();
+        QTime time(hour, min, 0);
+        breakLine->setBreakTime(time);
+        breakLine->setBreakHour(hour);
+        breakLine->setDuration(break_dur);
+        breakLine->setMaxSpots(max_spots);
+        breakLine->setWeekDay(1);
+        breakLine->set_break_fill_method(fill_method);
+
+        breakLine->setDBAction(DBAction::dbaCREATE);
+        mEDMBreakLine->cacheEntity(std::move(breakLine));
+
+        min += time_interval;
+    }
 }
 
 std::vector<EntityRecord> const& BreakLayoutForm::breakLines() const
@@ -212,12 +241,19 @@ void BreakLayoutForm::clearBreakTableView(int startRow, int endRow)
 
 }
 
-void BreakLayoutForm::setDefaults()
+void BreakLayoutForm::set_defaults()
 {
-    if (mBreakLayout->isNew())
+    ui->cbBreakFillMethod->addItem("Sequence", "S");
+    ui->cbBreakFillMethod->addItem("Random", "R");
+
+    if (mBreakLayout->isNew()){
         ui->cbTimeInterval->setCurrentIndex(0);
-    else
+        ui->cbBreakFillMethod->setCurrentIndex(0);
+    }
+    else{
+        populate_choice_combo_string(ui->cbBreakFillMethod, mBreakLayout->break_fill_method());
         populateBreakLine();
+    }
 }
 
 void BreakLayoutForm::copyHour(int fromHr, int toHr)
@@ -282,4 +318,37 @@ void BreakLayoutForm::timeIntervalChanged(int i)
                 ui->cbTimeInterval->itemData(i).toInt());
 
     populateBreakLine();
+}
+
+void BreakLayoutForm::break_fill_method_changed(int index)
+{
+    mBreakLayout->set_break_fill_method(
+        ui->cbBreakFillMethod->itemData(index).toString().toStdString());
+}
+
+void BreakLayoutForm::test_data()
+{
+    auto model = ui->tvBreakLayoutLine->model();
+    for(int r=0; r < ui->tvBreakLayoutLine->model()->rowCount(); ++r){
+        for(int c=0; c< ui->tvBreakLayoutLine->model()->columnCount(); ++c){
+            auto index = model->index(r, c);
+            qDebug() << model->data(index).toString();
+        }
+
+    }
+}
+
+QAbstractItemModel* BreakLayoutForm::breakline_model()
+{
+    return ui->tvBreakLayoutLine->model();
+}
+
+void BreakLayoutForm::test_model()
+{
+    auto& break_lines = breakLines();
+
+    for(auto& break_line : break_lines){
+        BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(std::get<1>(break_line).get());
+        qDebug() << "MAX Spot: "<< bll->maxSpots()->value();
+    }
 }

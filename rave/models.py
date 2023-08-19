@@ -197,6 +197,7 @@ BILLING_BASIS = (
         ('PRD', 'Billing Period'),
         )
 
+
 class Setup(models.Model):
     station_name = models.CharField(max_length=255, null=True, blank=True)
     station_logo = models.CharField(max_length=255, null=True, blank=True)
@@ -290,11 +291,18 @@ TIME_INTERVAL = (
         (5,   '5 Mins'),
         (1,   '1 Min'),
         )
+
+BREAK_FILL_METHOD = (
+        ('S', 'Sequential'),
+        ('R', 'Random')
+        )
+
 class BreakLayout(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     time_interval = models.IntegerField(choices=TIME_INTERVAL, default=15)
     week_days = models.CharField(max_length=7)
+    break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD);
 
 class BreakLayoutLine(models.Model):
     break_layout = models.ForeignKey(BreakLayout, models.DO_NOTHING)
@@ -303,6 +311,7 @@ class BreakLayoutLine(models.Model):
     break_hour = models.IntegerField(default=0)
     duration = models.IntegerField()
     max_spots = models.IntegerField()
+    break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD);
 
 ARTIST_TYPE = (
         ('F','FEMALE'),
@@ -467,3 +476,4 @@ class OrderBooking(models.Model):
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
     spot = models.ForeignKey(Spot, models.DO_NOTHING, default=-1)
     audio = models.ForeignKey(SpotAudio, models.DO_NOTHING, null=True)
+    book_seq = models.IntegerField(default=1, null=True)
