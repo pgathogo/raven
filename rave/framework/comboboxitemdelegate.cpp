@@ -17,13 +17,18 @@ ComboBoxItemDelegate::~ComboBoxItemDelegate()
 QWidget* ComboBoxItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 
-    QComboBox* cb = new QComboBox(parent);
+    m_combobox = new QComboBox(parent);
 
     for(auto&[title, value]: m_data){
-        cb->addItem(title, value);
+        m_combobox->addItem(title, value);
     }
 
-    return cb;
+    return m_combobox;
+}
+
+QComboBox* ComboBoxItemDelegate::get_combobox()
+{
+    return m_combobox;
 }
 
 void ComboBoxItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const

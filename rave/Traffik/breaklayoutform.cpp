@@ -1,10 +1,15 @@
 #include "breaklayoutform.h"
 #include "ui_breaklayoutform.h"
+
 #include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/choicefield.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
 #include "../framework/comboboxitemdelegate.h"
+#include "../framework/readonlydelegate.h"
+#include "../framework/spinboxdelegate.h"
+#include "../framework/timeeditdelegate.h"
+
 #include "../utils/notificationbar.h"
 
 #include "breaklayout.h"
@@ -27,12 +32,21 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
     ui->tvBreakLayoutLine->setModel(mEDMBreakLine.get());
     ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    TimeEditDelegate* ted = new TimeEditDelegate(ui->tvBreakLayoutLine);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(0, ted);
+
+    SpinBoxDelegate* sbd = new SpinBoxDelegate(ui->tvBreakLayoutLine);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(1, sbd);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(2, sbd);
+
     std::map<QString, QVariant> data;
     data["Sequence"] = "S";
     data["Random"] = "R";
     ComboBoxItemDelegate*  cbid = new ComboBoxItemDelegate(data, ui->tvBreakLayoutLine);
     ui->tvBreakLayoutLine->setItemDelegateForColumn(3, cbid);
 
+    ReadOnlyDelegate* rod = new ReadOnlyDelegate(ui->tvBreakLayoutLine);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(4, rod);
 
     mEdmTSetup = std::make_unique<EntityDataModel>(
                 std::make_shared<RavenSetup>());
@@ -48,9 +62,6 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
 
     connect(ui->btnCopy, &QPushButton::clicked, this, &BreakLayoutForm::copyHourClicked);
     connect(ui->btnUndo, &QPushButton::clicked, this, &BreakLayoutForm::undoCopyClicked);
-
-    connect(ui->btnTest, &QPushButton::clicked, this, &BreakLayoutForm::test_data);
-    connect(ui->btnTest2, &QPushButton::clicked, this, &BreakLayoutForm::test_model);
 
     hideSaveNewBtn();
 
@@ -243,22 +254,20 @@ void BreakLayoutForm::clearBreakTableView(int startRow, int endRow)
 
 void BreakLayoutForm::set_defaults()
 {
-    ui->cbBreakFillMethod->addItem("Sequence", "S");
-    ui->cbBreakFillMethod->addItem("Random", "R");
+
+    populate_choice_combo_string(ui->cbBreakFillMethod, mBreakLayout->break_fill_method());
 
     if (mBreakLayout->isNew()){
         ui->cbTimeInterval->setCurrentIndex(0);
         ui->cbBreakFillMethod->setCurrentIndex(0);
     }
     else{
-        populate_choice_combo_string(ui->cbBreakFillMethod, mBreakLayout->break_fill_method());
         populateBreakLine();
     }
 }
 
 void BreakLayoutForm::copyHour(int fromHr, int toHr)
 {
-
     if (toHr <= fromHr){
         showMessage("`To` hour less than `From` hour!");
         return;
@@ -267,7 +276,6 @@ void BreakLayoutForm::copyHour(int fromHr, int toHr)
     for (; fromHr <= toHr; ++fromHr){
         addBreakLines(fromHr);
     }
-
 
 }
 
@@ -324,15 +332,25 @@ void BreakLayoutForm::break_fill_method_changed(int index)
 {
     mBreakLayout->set_break_fill_method(
         ui->cbBreakFillMethod->itemData(index).toString().toStdString());
+
+    set_break_fill_method( ui->cbBreakFillMethod->currentText() );
 }
 
-void BreakLayoutForm::test_data()
+void BreakLayoutForm::set_break_fill_method(QString text)
 {
+    const int COL_BREAK_FILL_METHOD = 3;
+
     auto model = ui->tvBreakLayoutLine->model();
-    for(int r=0; r < ui->tvBreakLayoutLine->model()->rowCount(); ++r){
-        for(int c=0; c< ui->tvBreakLayoutLine->model()->columnCount(); ++c){
-            auto index = model->index(r, c);
-            qDebug() << model->data(index).toString();
+
+    for(int row=0; row < ui->tvBreakLayoutLine->model()->rowCount(); ++row)
+    {
+        for(int col=0; col< ui->tvBreakLayoutLine->model()->columnCount(); ++col)
+        {
+            if (col == COL_BREAK_FILL_METHOD)
+            {
+                auto index = model->index(row, col);
+                model->setData(index, text);
+            }
         }
 
     }

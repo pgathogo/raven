@@ -85,6 +85,9 @@ public:
     ChoiceField<std::string>* break_status() const;
     void set_break_status(const std::string val);
 
+    StringField* break_fill_method() const;
+    StringField* set_break_fill_method(std::string);
+
     TextField* comment()const;
     void set_comment(const std::string val);
 
@@ -139,6 +142,7 @@ private:
     IntegerField* m_break_end_win;
     IntegerField* m_break_max_spots;
     IntegerField* m_booked_spots;
+    StringField* m_break_fill_method;
     IntegerField* m_break_duration_left;
     ChoiceField<std::string>* m_break_mode;
     ChoiceField<std::string>* m_break_status;

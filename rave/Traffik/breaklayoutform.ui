@@ -136,14 +136,45 @@
      <property name="title">
       <string>Copy Hour</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2" columnminimumwidth="0,0,0,0,0,0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_2">
       <property name="rightMargin">
        <number>9</number>
       </property>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="btnUndo">
+        <property name="text">
+         <string>Undo</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>From Hour:</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="3">
        <widget class="QComboBox" name="cbToHour"/>
       </item>
-      <item row="0" column="8">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="cbFromHour"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>To Hour:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="btnCopy">
+        <property name="text">
+         <string>Copy</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -155,51 +186,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="btnUndo">
-        <property name="text">
-         <string>Undo</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>To Hour:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>From Hour:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6">
-       <widget class="QPushButton" name="btnTest">
-        <property name="text">
-         <string>Test</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QPushButton" name="btnCopy">
-        <property name="text">
-         <string>Copy</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="cbFromHour"/>
-      </item>
-      <item row="0" column="7">
-       <widget class="QPushButton" name="btnTest2">
-        <property name="text">
-         <string>Test2</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>

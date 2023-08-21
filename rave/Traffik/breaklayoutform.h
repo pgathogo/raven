@@ -43,6 +43,7 @@ public:
     void copyHour(int fromHr, int toHr);
     void undoCopy(int fromHr, int toHr);
     void clearBreaks();
+    void set_break_fill_method(QString);
 
     QAbstractItemModel* breakline_model();
 
@@ -59,7 +60,6 @@ private slots:
     void undoCopyClicked();
     void timeIntervalChanged(int);
     void break_fill_method_changed(int);
-    void test_data();
     void test_model();
 
 

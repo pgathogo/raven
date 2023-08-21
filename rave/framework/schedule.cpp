@@ -56,6 +56,8 @@ Schedule::Schedule()
     m_break_status->addChoice({"LOCKED", "Locked"});
     m_break_status->addChoice({"OPEN", "Open"});
 
+    m_break_fill_method = createField<StringField>("break_fill_method", "Break Fill Method");
+
     m_comment = createField<TextField>("comment", "Comment");
 
     m_header << stoq(m_schedule_time->fieldLabel())
@@ -310,6 +312,17 @@ void Schedule::set_break_status(const std::string val)
 TextField *Schedule::comment() const
 {
     return m_comment;
+}
+
+StringField* Schedule::break_fill_method() const
+{
+    return m_break_fill_method;
+}
+
+StringField* Schedule::set_break_fill_method(std::string fill_method)
+{
+    m_break_fill_method->setValue(fill_method);
+    return m_break_fill_method;
 }
 
 void Schedule::set_comment(const std::string val)

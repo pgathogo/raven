@@ -24,7 +24,8 @@ BreakLayoutLine::BreakLayoutLine()
     mHeader << stoq(mBreakTime->fieldLabel())
             << stoq(mDuration->fieldLabel())
             << stoq(mMaxSpots->fieldLabel())
-            << stoq(m_break_fill_method->fieldLabel());
+            << stoq(m_break_fill_method->fieldLabel())
+            << stoq(uniqueId()->fieldLabel());
 
     setTableName("rave_breaklayoutline");
 }
@@ -32,6 +33,7 @@ BreakLayoutLine::BreakLayoutLine()
 BreakLayoutLine::~BreakLayoutLine()
 {
 }
+
 
 ForeignKeyField *BreakLayoutLine::breakLayout() const
 {
@@ -134,7 +136,8 @@ std::vector<std::string> BreakLayoutLine::tableViewColumns() const
                 breakTime()->displayName(),
                 duration()->displayName(),
                 maxSpots()->displayName(),
-                break_fill_method()->displayName()
+                break_fill_method()->displayName(),
+                uniqueId()->displayName()
                 );
 }
 

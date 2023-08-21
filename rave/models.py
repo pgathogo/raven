@@ -436,6 +436,7 @@ class Schedule(models.Model):
     break_start_win = models.IntegerField(default=0, null=True)
     break_end_win = models.IntegerField(default=0, null=True)
     break_max_spots = models.IntegerField(default=0, null=True)
+    break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD, default='S')
     booked_spots = models.IntegerField(default=0, null=True)
     break_duration_left = models.IntegerField(default=0, null=True)
     break_mode = models.CharField(max_length=8, choices=BREAK_MODE, default='MIXED', null=True, blank=True)

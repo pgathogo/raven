@@ -153,7 +153,8 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_break_duration_left(bll->duration()->value())
                     << sched.set_booked_spots(0)
                     << sched.set_schedule_item_type("COMM-BREAK")
-                    << sched.set_break_mode("MIXED");
+                   << sched.set_break_mode("MIXED")
+                    << sched.set_break_fill_method(bll->break_fill_method()->value());
 
 
             if (ui->cbSelectedHours->count() == 0)
@@ -308,43 +309,34 @@ void BreakCreateForm::delete_layout()
     if (!confirmationMessage("Delete layout?"))
         return;
 
-    auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
-
     QVariant col_name{};
     int selected_row = -1;
+
+    auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
+
     if (model_indexes.size() > 0){
-        selected_row  = model_indexes[0].row();
-        col_name = ui->tvBreakLayouts->model()->data(
-        model_indexes[0]);
+        auto model_index = model_indexes[0];
+        selected_row  = model_index.row();
+        col_name = ui->tvBreakLayouts->model()->data(model_index);
     }
 
     if (selected_row == -1)
         return;
 
-    if (col_name.toString().isEmpty())
-        return;
-
     std::string search_name = col_name.toString().toStdString();
-    qDebug() << "Search Name: " << stoq(search_name);
-
     std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
     if (be == nullptr)
         return;
-    auto break_layout = dynamic_cast<BreakLayout*>(be.get());
 
-    qDebug() << "Break Layout ID: " << break_layout->id();
+    auto break_layout = dynamic_cast<BreakLayout*>(be.get());
 
     // Delete details first
     EntityDataModel edm(std::make_shared<BreakLayoutLine>());
     edm.deleteEntityByValue({"break_layout_id", break_layout->id()});
     m_edm_break_line->clearEntities();
 
-    qDebug() << "Break Lines deleted.";
-
     // Delete header
     m_edm_break_layout->deleteEntity(*break_layout);
     ui->tvBreakLayouts->model()->removeRow(selected_row);
-
-    qDebug() << "Break Layout Header deleted.";
 
 }
