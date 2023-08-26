@@ -220,7 +220,7 @@
      <item>
       <widget class="QPushButton" name="btnCreate">
        <property name="text">
-        <string>Generate Schedule Breaks</string>
+        <string>Generate Breaks</string>
        </property>
       </widget>
      </item>

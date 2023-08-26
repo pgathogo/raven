@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <random>
+
 #include "bookingwizard.h"
 #include "ui_bookingwizard.h"
 
@@ -171,6 +173,9 @@ void BookingWizard::setup_break_select_grid()
             sel_break.break_date = comm_break->schedule_date()->value();
             sel_break.break_time = comm_break->schedule_time()->value();
             sel_break.break_hour = comm_break->schedule_hour()->value();
+            sel_break.booked_spots = comm_break->booked_spots()->value();
+            sel_break.break_fill_method = comm_break->break_fill_method()->value();
+            sel_break.max_spots = comm_break->break_max_spots()->value();
             m_selected_breaks[comm_break->id()] = sel_break;
 
             ++row;
@@ -183,12 +188,25 @@ bool BookingWizard::make_booking()
     if (QMessageBox::question(this, tr("Traffik"),
                                 tr("Are you sure you want to commit the booking(s)?"),
                                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes){
+        //print_selected_breaks();
         commit_booking();
         return true;
     }
 
     return false;
 
+}
+
+
+void BookingWizard::print_selected_breaks()
+{
+    for (auto& [key, sel_break]: m_selected_breaks)
+    {
+        qDebug() << "Key: "<< key;
+        qDebug() << "Break Id: "<< sel_break.break_id;
+        qDebug() << "Booked Spots: "<< sel_break.booked_spots;
+        qDebug() << "Break Fill Method: "<< stoq(sel_break.break_fill_method);
+    }
 }
 
 void BookingWizard::commit_booking()
@@ -212,19 +230,17 @@ void BookingWizard::commit_booking()
 
         int book_segment_id = edm.createEntityDB(book_segment);
 
-        for (int i=0; i<selected_breaks.count(); ++i){
+        for (int i=0; i<selected_breaks.count(); ++i)
+        {
             auto item = selected_breaks.at(i);
 
-            if (item->column() == 0){
+            if (item->column() == 0)
+            {
                 OrderBooking order_booking;
 
                 int break_id = item->data(Qt::UserRole).toInt();
 
                 SelectedBreak selected_break = m_selected_breaks[break_id];
-
-                qDebug() << selected_break.break_date;
-                qDebug() << selected_break.break_time;
-                qDebug() << selected_break.break_hour;
 
                 order_booking.set_booking_status("READY");
                 order_booking.set_schedule(break_id);
@@ -236,6 +252,20 @@ void BookingWizard::commit_booking()
                 order_booking.set_book_date(selected_break.break_date);
                 order_booking.set_book_time(selected_break.break_time);
                 order_booking.set_book_hour(selected_break.break_hour);
+
+                // Sequential slotting
+                if (selected_break.break_fill_method == "S"){
+                    order_booking.set_book_seq(++selected_break.booked_spots);
+                }
+
+
+                // Random slotting
+                if (selected_break.break_fill_method == "R"){
+                    int break_slot = find_break_slot(break_id, selected_break.max_spots);
+                    order_booking.set_book_seq(break_slot);
+                }
+
+
                 edm.createEntityDB(order_booking);
 
                 // Deduct time remainining on this break
@@ -262,6 +292,33 @@ void BookingWizard::commit_booking()
         showMessage(de.errorMessage());
     }
 
+}
+
+int BookingWizard::find_break_slot(int break_id, int max_spots)
+{
+    std::vector<int> prev_seq;
+
+    for(auto booking : m_engine_data.prev_bookings){
+        if (booking.schedule_id == break_id){
+            prev_seq.push_back(booking.book_seq);
+        }
+    }
+
+    auto gen_next_seq = [&](int rand){
+        return (
+            ( std::find(prev_seq.begin(), prev_seq.end(), rand) != prev_seq.end() ) ? true : false );
+    };
+
+    int next_seq{-1};
+    std::random_device engine;
+    std::uniform_int_distribution<int> distrib(1, max_spots);
+
+    do{
+        next_seq = distrib(engine);
+    }while(gen_next_seq(next_seq));
+
+
+    return next_seq;
 }
 
 void BookingWizard::show_order_details(Order* order)
@@ -623,7 +680,7 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
     schedule_ids = "("+schedule_ids+")";
 
     std::stringstream sql;
-    sql << "SELECT a.id AS booking_id, a.schedule_id, a.spot_id, a.bookingsegment_id, "
+    sql << "SELECT a.id AS booking_id, a.schedule_id, a.spot_id, a.bookingsegment_id, a.book_seq, "
         << " b.name, b.spot_duration, b.real_duration, b.brand_id, b.client_id, "
         << " b.daypart1 AS spotDP1, b.daypart2 AS spotDP2, b.daypart3 AS spotDP3, "
         << " b.daypart4 AS spotDP4, b.daypart5 AS spotDP5, b.daypart6 AS spotDP6,b.daypart7 AS spotDP7, "
@@ -671,12 +728,13 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
                     br.schedule_id = to_int(value);
                 if (field == "bookingsegment_id")
                     br.bookingsegment_id = to_int(value);
+                if (field == "book_seq")
+                    br.book_seq = to_int(value);
+
                 if (field == "brand_id")
                     br.booked_spot.brand_id = to_int(value);
-
                 if (field == "client_id")
                     br.booked_spot.client_id = to_int(value);
-
                 if (field == "spot_excl")
                     type_excl_id = to_int(value);
                 if (field == "spot_vo")

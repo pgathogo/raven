@@ -38,6 +38,8 @@ OrderBooking::OrderBooking()
     m_book_time = createField<TimeField>("book_time", "Book Time");
     m_book_hour = createField<IntegerField>("book_hour", "Book Hour");
 
+    m_book_seq = createField<IntegerField>("book_seq", "Book Sequence");
+
     mHeader << QString::fromStdString(schedule()->displayName());
 
     setTableName("rave_orderbooking");
@@ -106,6 +108,17 @@ IntegerField* OrderBooking::book_hour()
 void OrderBooking::set_book_hour(int val)
 {
     m_book_hour->setValue(val);
+}
+
+IntegerField* OrderBooking::book_seq()
+{
+    return m_book_seq;
+
+}
+
+void OrderBooking::set_book_seq(int seq)
+{
+    m_book_seq->setValue(seq);
 }
 
 DateField *OrderBooking::play_date() const

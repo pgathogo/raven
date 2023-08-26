@@ -226,6 +226,8 @@ void MainWindow::set_artist_view_columns_width()
 void MainWindow::set_track_view()
 {
     m_tracks_model->clear();
+    m_audio_lib_item->clear();
+
     create_track_view_headers();
     set_track_view_column_width();
 }
@@ -981,7 +983,10 @@ void MainWindow::import_audio()
             audio->audio_file().set_audio_filename(audio_file.toStdString());
         }
 
-        audio->set_file_extension(file_format.toUpper().toStdString());
+        //TODO: Resolve the file extension issue (Ogg, Mp3, or MTS)
+
+        //audio->set_file_extension(file_format.toUpper().toStdString());
+        audio->set_file_extension("OGG");
 
         //convert_audio(audio);
        /*
@@ -1170,12 +1175,14 @@ void MainWindow::audio_properties()
 
     AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be.get());
 
+    audio->set_file_path(audio->audio_lib_path()->value());
+
     std::unique_ptr<AudioForm> audio_form = std::make_unique<AudioForm>(audio, m_setup);
     if (audio_form->exec() > 0){
         try{
                 update_table_view_record(ui->tvTracks, audio->tableViewValues());
                 m_audio_entity_data_model->updateEntity(*audio);
-                m_audio_entity_data_model->all();
+                //m_audio_entity_data_model->all();
             }
             catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -1207,21 +1214,31 @@ void MainWindow::play_audio()
         return;
     */
 
+    qDebug() << "Play Audio";
+
     auto audio = get_selected_audio();
     if (audio == nullptr)
         return;
 
+    qDebug() << "AAAA";
+
     std::string audio_format = audio->file_extension()->value();
     std::transform(audio_format.begin(), audio_format.end(), audio_format.begin(), [](unsigned char c){return std::tolower(c);});
+
+    qDebug() << "BBBB";
 
     AUDIO::AudioTool at;
     auto ogg_file = at.make_audio_filename(audio->id())+"."+audio_format;
     auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
 
+    qDebug() << "CCCC";
+
     if (!QFile::exists(QString::fromStdString(full_audio_name))){
         showMessage("File does not exists! "+full_audio_name);
         return;
     }
+
+    qDebug() << "Full Audio Name: "<< stoq(full_audio_name);
 
     AudioFile af(full_audio_name);
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
@@ -1241,6 +1258,8 @@ void MainWindow::stop_play()
 void MainWindow::end_of_play()
 {
     qDebug() << "Play ended ...";
+    ui->btnPlay->setChecked(false);
+    ui->btnPlay->setText("Play");
 }
 
 AUDIO::Audio* MainWindow::get_selected_audio()
@@ -1254,6 +1273,7 @@ AUDIO::Audio* MainWindow::get_selected_audio()
     auto selected_index = selected_indexes[0];
     int audio_id = selected_index.data(Qt::UserRole).toInt();
 
+
     /*
     auto mod_index = ui->tvTracks->currentIndex();
     auto first_col = ui->tvTracks->model()->index(mod_index.row(), 0);
@@ -1262,7 +1282,11 @@ AUDIO::Audio* MainWindow::get_selected_audio()
         return nullptr;
     */
 
+    qDebug() << "Audio ID: "<< audio_id;
+
     audio = m_audio_lib_item->find_audio_by_id(audio_id);
+
+    qDebug() << "4444";
     return audio;
 }
 

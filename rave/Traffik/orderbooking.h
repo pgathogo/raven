@@ -30,6 +30,9 @@ public:
     IntegerField* book_hour();
     void set_book_hour(int);
 
+    IntegerField* book_seq();
+    void set_book_seq(int);
+
     DateField* play_date() const;
     void set_play_date(QDate val);
 
@@ -66,6 +69,7 @@ private:
     DateField* m_book_date;
     TimeField* m_book_time;
     IntegerField* m_book_hour;
+    IntegerField* m_book_seq;
 
     QStringList mHeader;
     std::string mTableName;

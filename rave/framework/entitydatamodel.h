@@ -346,6 +346,7 @@ public:
 
     }
 
+
 private:
     std::unique_ptr<BaseDatabaseManager> dbManager;
     void populateEntities();

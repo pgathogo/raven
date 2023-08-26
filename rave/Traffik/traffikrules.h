@@ -48,6 +48,7 @@ namespace TRAFFIK {
         int booking_id{-1};
         int schedule_id{-1};
         int bookingsegment_id{-1};
+        int book_seq{-1};
         SpotRecord booked_spot;
     };
 

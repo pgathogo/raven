@@ -598,7 +598,7 @@ void MainWindow::fetch_commercials_bydate(QDate date)
     std::string date_filter = std::format(" WHERE a.book_date = '{}'",date.toString("yyyy/MM/dd").toStdString());
     std::string audio_filter = " AND c.audio_id IS NOT NULL ";
 
-    std::string order_by     = " ORDER BY a.book_time ";
+    std::string order_by     = " ORDER BY a.book_time, a.book_seq ";
 
     sql << date_filter << audio_filter << order_by;
 

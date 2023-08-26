@@ -91,6 +91,7 @@ namespace AUDIO{
 
     AUDIO::Audio* AudioLibItem::find_audio_by_id(int audio_id)
     {
+
         auto iter = std::find_if(m_lib_items.cbegin(), m_lib_items.cend(),
                                  FindAudioById(audio_id));
 

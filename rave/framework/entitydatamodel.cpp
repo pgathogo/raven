@@ -123,6 +123,8 @@ std::shared_ptr<BaseEntity> EntityModel::find_entity_by_id(int id)
 
     return nullptr;
 }
+
+
 void EntityModel::deleteFromModel()
 {
     mEntities.erase(std::remove_if(

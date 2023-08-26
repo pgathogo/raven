@@ -639,7 +639,7 @@ namespace SEDRIC{
         :SedricScheduleItem()
     {
         setText(text);
-        setBackground(QBrush(QColor("darkCyan")));
+        setBackground(QBrush(QColor("#7393B3")));
         setForeground(QBrush(QColor("white")));
     }
 
@@ -724,7 +724,7 @@ namespace SEDRIC{
         :SedricScheduleItem()
     {
         setText(text);
-        setBackground(QBrush(QColor("#FF3131")));
+        setBackground(QBrush(QColor("#FA8072")));
     }
 
     EndMarkerItem::~EndMarkerItem()

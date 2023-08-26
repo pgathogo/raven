@@ -64,7 +64,6 @@ void AudioForm::populateEntityFields()
     m_audio->set_title(ui->edtTitle->text().toStdString());
     set_choice_field(m_audio->audio_type(), ui->cbClass);
     m_audio->set_audio_year(ui->edtYear->value());
-    m_audio->set_add_dtime(ui->dtCreation->dateTime());
     m_audio->set_creation_date(ui->dtCreation->date());
     m_audio->set_notes(ui->edtNotes->toPlainText().toStdString());
 

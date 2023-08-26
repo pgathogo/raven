@@ -374,7 +374,6 @@ class Audio(Daypart):
     genre = models.ForeignKey(Genre, models.DO_NOTHING, blank=True, null=True)
     mood = models.ForeignKey(Mood, models.DO_NOTHING, blank=True, null=True)
     folder = models.ForeignKey(Folder, models.DO_NOTHING, blank=True, null=True)
-    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     deleted = models.BooleanField(default=False)

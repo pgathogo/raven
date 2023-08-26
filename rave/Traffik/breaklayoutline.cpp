@@ -25,7 +25,8 @@ BreakLayoutLine::BreakLayoutLine()
             << stoq(mDuration->fieldLabel())
             << stoq(mMaxSpots->fieldLabel())
             << stoq(m_break_fill_method->fieldLabel())
-            << stoq(uniqueId()->fieldLabel());
+            << stoq(uniqueId()->fieldLabel())
+            << stoq(rowId()->fieldLabel());
 
     setTableName("rave_breaklayoutline");
 }
@@ -137,7 +138,8 @@ std::vector<std::string> BreakLayoutLine::tableViewColumns() const
                 duration()->displayName(),
                 maxSpots()->displayName(),
                 break_fill_method()->displayName(),
-                uniqueId()->displayName()
+                uniqueId()->displayName(),
+                rowId()->displayName()
                 );
 }
 

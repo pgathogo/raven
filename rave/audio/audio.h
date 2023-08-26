@@ -130,7 +130,6 @@ namespace AUDIO {
         StringField* title() const;
         StringField* short_desc() const;
         ForeignKeyField* artist() const;
-        DateTimeField* add_dtime() const;
         StringField* audio_lib_path() const;
         BooleanField* is_deleted() const;
         IntegerField* play_count() const;
@@ -160,7 +159,6 @@ namespace AUDIO {
         void set_title(const std::string);
         void set_short_desc(const std::string);
         void set_artist(int);
-        void set_add_dtime(QDateTime);
         void set_audio_lib_path(const std::string);
         void set_is_deleted(bool);
         void set_play_count(int);
@@ -235,7 +233,6 @@ namespace AUDIO {
         ForeignKeyField* m_genre;
         ForeignKeyField* m_mood;
 
-        DateTimeField* m_add_dtime;
         DateField* m_creation_date;
 
         IntegerField* m_audio_year;

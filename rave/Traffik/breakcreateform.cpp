@@ -72,6 +72,10 @@ void BreakCreateForm::setup_ui()
     QIcon delete_icon(delete_pixmap);
     ui->btnDelete->setIcon(delete_icon);
 
+    QPixmap create_pix(":/images/media/icons/schedule2.png");
+    QIcon create_icon(create_pix);
+    ui->btnCreate->setIcon(create_icon);
+
     connect(ui->btnAdd, &QToolButton::clicked, this, &BreakCreateForm::create_layout);
     connect(ui->btnEdit, &QToolButton::clicked, this, &BreakCreateForm::edit_layout);
     connect(ui->btnDelete, &QToolButton::clicked, this, &BreakCreateForm::delete_layout);
@@ -274,6 +278,7 @@ void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> b
                 break;
             }
         }
+
         bll->setBreakHour(hour);
         bll->setWeekDay(1);
         bll->setBreakLayout(layout_header_id);
@@ -298,7 +303,50 @@ void BreakCreateForm::edit_layout()
     std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
     auto break_layout = dynamic_cast<BreakLayout*>(be.get());
     auto bl_form = std::make_shared<BreakLayoutForm>(break_layout);
+
     if (bl_form->exec() > 0){
+
+        auto model = bl_form->breakline_model();
+        int row_count = model->rowCount();
+        int col_count = model->columnCount();
+
+        std::map<QString, QString> fill_method;
+        fill_method["Sequence"] = "S";
+        fill_method["Random"] = "R";
+
+        EntityDataModel edm(std::make_shared<BreakLayoutLine>());
+
+        for(int row=0; row < row_count; ++row)
+        {
+            BreakLayoutLine bll;
+            for(int col=0; col < col_count; ++col)
+            {
+                auto index = model->index(row, col);
+                QVariant data = model->data(index);
+                switch(col)
+                {
+                case 0:
+                    bll.setBreakTime(data.toTime());
+                    break;
+                case 1:
+                    bll.setDuration(data.toInt());
+                    break;
+                case 2:
+                    bll.setMaxSpots(data.toInt());
+                    break;
+                case 3:
+                    bll.set_break_fill_method(fill_method[data.toString()].toStdString());
+                    break;
+                case 4:
+                    bll.setId(data.toInt());
+                    break;
+                }
+            }
+            bll.setBreakHour(bll.breakTime()->value().hour());
+            bll.setWeekDay(1);
+            bll.setBreakLayout(break_layout->id());
+            edm.updateEntity(bll);
+        }
 
     }
 

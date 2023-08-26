@@ -230,8 +230,6 @@ void BookingOrderBrowser::new_booking()
 
         order_edm->getById({"id", "=", order_id});
 
-        //Order* order_ref = dynamic_cast<Order*>(order_edm->getEntity().get());
-        //Order* order = order_ref;
         Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
 
         if (order != nullptr){

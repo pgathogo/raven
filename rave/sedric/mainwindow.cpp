@@ -132,7 +132,6 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     setWindowTitle("Raven - SeDRic");
 
-
     //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();

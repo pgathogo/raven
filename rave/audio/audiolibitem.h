@@ -49,6 +49,7 @@ namespace AUDIO{
 
             Columns columns;
 
+
             auto item = std::make_unique<T>(audio);
 
             auto title = new T(item->title());
@@ -80,6 +81,12 @@ namespace AUDIO{
 
 
             m_model->appendRow(columns);
+
+            qDebug() << "Create Row Item: Audio: "
+                     << item->audio()->id()
+                     << " Title: "
+                     << item->audio()->title()->to_qstring();
+
             m_lib_items.push_back(std::move(item));
 
         }
@@ -123,6 +130,7 @@ namespace AUDIO{
 
         bool operator()(const std::unique_ptr<AUDIO::AudioLibItem>& audio_lib_item)
         {
+
             return (audio_lib_item->audio()->id() == m_id);
         }
 

@@ -122,6 +122,8 @@
         <file>media/icons/warning.png</file>
         <file>media/icons/warning_large.png</file>
         <file>media/icons/web.png</file>
+        <file>media/icons/insert_row.png</file>
+        <file>media/icons/remove_row.png</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

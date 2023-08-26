@@ -36,6 +36,7 @@ public:
     void populateCopyCB();
     void populateBreakLine();
     void set_defaults();
+    void setup_ui();
     void addBreakLines(int hour, int timeInterval=0);
     std::vector<EntityRecord> const& breakLines() const;
     void clearBreakTableView(int startRow, int endRow);
@@ -46,6 +47,7 @@ public:
     void set_break_fill_method(QString);
 
     QAbstractItemModel* breakline_model();
+    QModelIndexList selected_indexes();
 
     template<typename T>
     void populateChoiceCombo(QComboBox* cbox, const T* cf)
@@ -61,9 +63,12 @@ private slots:
     void timeIntervalChanged(int);
     void break_fill_method_changed(int);
     void test_model();
-
+    void insert_row();
+    void delete_row();
 
 private:
+    std::tuple<int, int> row_identity();
+
     Ui::BreakLayoutForm *ui;
     BreakLayout* mBreakLayout;
     std::unique_ptr<EntityDataModel> mEDMBreakLine;
@@ -73,6 +78,8 @@ private:
     int tempToHr;
     int startPos;
     int endPos;
+
+    int m_line_no;
 };
 
 #endif // BREAKLAYOUTFORM_H

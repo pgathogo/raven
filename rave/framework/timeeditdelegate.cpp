@@ -30,7 +30,7 @@ void TimeEditDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, 
     QTimeEdit* time_edit = static_cast<QTimeEdit*>(editor);
     time_edit->setDisplayFormat("HH:mm:ss");
     time_edit->interpretText();
-    QTime value = time_edit->time();
+    QString value = time_edit->time().toString("HH:mm:ss");
 
     model->setData(index, value, Qt::EditRole);
 }

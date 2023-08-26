@@ -25,6 +25,9 @@ struct SelectedBreak{
     QDate break_date;
     QTime break_time;
     int break_hour;
+    int booked_spots;
+    int max_spots;
+    std::string break_fill_method;
 };
 
 class BookingWizard : public QWizard
@@ -61,6 +64,7 @@ public:
     std::vector<int> selected_hours(const std::string&);
 
     void test_booking();
+    int find_break_slot(int, int);
 
 
     int to_int(std::string s){
@@ -107,6 +111,8 @@ private:
     QAction* m_spot_ctx_action;
 
     std::map<int, SelectedBreak> m_selected_breaks;
+
+    void print_selected_breaks();
 
     void populate_spots_table(int);
     void populate_grid(TimeBand*);

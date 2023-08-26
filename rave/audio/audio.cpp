@@ -96,7 +96,6 @@ namespace AUDIO {
         :m_title{}
          ,m_short_desc{}
          ,m_artist{}
-         ,m_add_dtime{}
          ,m_audio_lib_path{}
          ,m_is_deleted{}
          ,m_play_count{}
@@ -125,7 +124,6 @@ namespace AUDIO {
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
 
-        m_add_dtime = createField<DateTimeField>("add_dtime", "Add Date Time");
 
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
         m_audio_lib_path->setFormOnly(true);
@@ -139,7 +137,6 @@ namespace AUDIO {
         m_intro_marker= createField<DecimalField>("intro_marker", "Intro Marker");
         m_extro_marker = createField<DecimalField>("extro_marker", "Extro Marker");
         m_fade_out_marker = createField<DecimalField>("fade_out_marker", "Fade Out Marker");
-        m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
         m_end_marker = createField<DecimalField>("end_marker", "End Marker");
 
         m_file_path = createField<StringField>("filepath", "File Path");
@@ -167,7 +164,6 @@ namespace AUDIO {
         setTableName("rave_audio");
 
         m_play_count->setValue(0);
-        m_add_dtime->setValue(QDateTime::currentDateTime());
 
         m_file_extension = createField<StringField>("file_extension", "File Extension");
         m_file_extension->setValue("");
@@ -185,7 +181,6 @@ namespace AUDIO {
         :m_title{}
          ,m_short_desc{}
          ,m_artist{}
-         ,m_add_dtime{}
          ,m_audio_lib_path{}
          ,m_is_deleted{}
          ,m_play_count{}
@@ -214,7 +209,6 @@ namespace AUDIO {
 
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
-        m_add_dtime = createField<DateTimeField>("add_dtime", "Add Date Time");
 
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
         m_audio_lib_path->setFormOnly(true);
@@ -255,7 +249,6 @@ namespace AUDIO {
         setTableName("rave_audio");
 
         m_play_count->setValue(0);
-        m_add_dtime->setValue(QDateTime::currentDateTime());
 
         m_creation_date->setValue(QDate::currentDate());
         auto dt = QDate(QDate::currentDate());
@@ -278,8 +271,6 @@ namespace AUDIO {
         m_short_desc->setValue(other.short_desc()->value());
         m_duration->setValue(other.duration()->value());
         m_artist->setValue(other.m_artist->value());
-
-        m_add_dtime->setValue(other.add_dtime()->value());
 
         m_audio_lib_path->setValue(other.audio_lib_path()->value());
 
@@ -330,10 +321,6 @@ namespace AUDIO {
         return m_artist;
     }
 
-    DateTimeField *Audio::add_dtime() const
-    {
-        return m_add_dtime;
-    }
 
     StringField *Audio::audio_lib_path() const
     {
@@ -457,10 +444,6 @@ namespace AUDIO {
         m_artist->setValue(artist_id);
     }
 
-    void Audio::set_add_dtime(QDateTime add_dtime)
-    {
-        m_add_dtime->setValue(add_dtime);
-    }
 
     void Audio::set_audio_lib_path(const std::string lib_path)
     {

@@ -16,12 +16,13 @@
 #include "breaklayoutline.h"
 
 BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
-                                 QDialog* parent) :
-    BaseEntityDetailDlg(parent),
-    ui(new Ui::BreakLayoutForm),
-    mBreakLayout{ bl },
-    tempFromHr{0},
-    tempToHr{0}
+                                 QDialog* parent)
+    :BaseEntityDetailDlg(parent)
+    ,ui(new Ui::BreakLayoutForm)
+    ,mBreakLayout{ bl }
+    ,tempFromHr{0}
+    ,tempToHr{0}
+    ,m_line_no{0}
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
@@ -63,14 +64,31 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl,
     connect(ui->btnCopy, &QPushButton::clicked, this, &BreakLayoutForm::copyHourClicked);
     connect(ui->btnUndo, &QPushButton::clicked, this, &BreakLayoutForm::undoCopyClicked);
 
+
+    connect(ui->tbInsert, &QToolButton::clicked, this, &BreakLayoutForm::insert_row);
+    connect(ui->tbDelete, &QToolButton::clicked, this, &BreakLayoutForm::delete_row);
+
     hideSaveNewBtn();
 
     set_defaults();
+
+    setup_ui();
 }
 
 BreakLayoutForm::~BreakLayoutForm()
 {
     delete ui;
+}
+
+void BreakLayoutForm::setup_ui()
+{
+    QPixmap ins_row(":/images/media/icons/insert_row.png");
+    QIcon ins_icon(ins_row);
+    ui->tbInsert->setIcon(ins_icon);
+
+    QPixmap del_row(":/images/media/icons/remove_row.png");
+    QIcon del_icon(del_row);
+    ui->tbDelete->setIcon(del_icon);
 }
 
 ActionResult BreakLayoutForm::saveRecord()
@@ -191,6 +209,7 @@ void BreakLayoutForm::addBreakLines(int hour, int timeInterval)
         breakLine->setMaxSpots(max_spots);
         breakLine->setWeekDay(1);
         breakLine->set_break_fill_method(fill_method);
+        breakLine->setRowId(++m_line_no);
 
         breakLine->setDBAction(DBAction::dbaCREATE);
         mEDMBreakLine->cacheEntity(std::move(breakLine));
@@ -244,8 +263,6 @@ void BreakLayoutForm::clearBreakTableView(int startRow, int endRow)
 
     QModelIndexList indexes = ui->tvBreakLayoutLine->selectionModel()->selectedRows();
     int countRows = indexes.count();
-
-    qDebug() << "Selected Rows: " << countRows;
 
     for (int i=countRows; i>0; i--)
         mEDMBreakLine->removeRow(indexes.at(i-1).row(), QModelIndex());
@@ -361,12 +378,101 @@ QAbstractItemModel* BreakLayoutForm::breakline_model()
     return ui->tvBreakLayoutLine->model();
 }
 
+
+std::tuple<int, int> BreakLayoutForm::row_identity()
+{
+    int unique_id = -1;
+    int row_id = -1;
+    QModelIndexList indexes = ui->tvBreakLayoutLine->selectionModel()->selectedIndexes();
+
+    for (int i=0; i<indexes.size(); ++i){
+        QVariant data = indexes[i].data(Qt::EditRole);
+        switch (i)
+        {
+        case 4:
+            unique_id = data.toInt();
+            break;
+        case 5:
+            row_id = data.toInt();
+            break;
+        }
+    }
+
+    return std::make_tuple(unique_id, row_id);
+
+}
+
+void BreakLayoutForm::insert_row()
+{
+
+    auto entities = mEDMBreakLine->modelEntities();
+
+    auto [unique_id, row_id] = row_identity();
+
+    std::shared_ptr<BreakLayoutLine> tmp_bll = std::make_shared<BreakLayoutLine>();
+
+    auto init_bll = [&](BreakLayoutLine* bll){
+        tmp_bll->setBreakHour(bll->breakHour()->value());
+        tmp_bll->setDuration(bll->duration()->value());
+        tmp_bll->setBreakTime(bll->breakTime()->value());
+        tmp_bll->setMaxSpots(bll->maxSpots()->value());
+        tmp_bll->set_break_fill_method(bll->break_fill_method()->value());
+        tmp_bll->setDBAction(DBAction::dbaCREATE);
+    };
+
+    for (auto& [entity_name, entity]: entities)
+    {
+        BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
+
+        if (unique_id > -1){
+            if (bll->id() == unique_id){
+                tmp_bll->setId(unique_id);
+                init_bll(bll);
+                break;
+            }
+        }else{
+            if (bll->rowId()->value() == row_id) {
+                tmp_bll->setRowId(++m_line_no);
+                init_bll(bll);
+                break;
+            }
+        }
+    }
+
+    mEDMBreakLine->cacheEntity(std::move(tmp_bll));
+}
+
+void BreakLayoutForm::delete_row()
+{
+    QModelIndexList indexes = ui->tvBreakLayoutLine->selectionModel()->selectedRows();
+    if (indexes.count() == 0)
+        return;
+
+    auto [unique_id, line_no] = row_identity();
+
+    if (unique_id > -1 ){
+        EntityDataModel edm(std::make_shared<BreakLayoutLine>());
+        edm.deleteEntityByValue({"id", unique_id});
+    }
+
+    int row = indexes[0].row();
+
+    ui->tvBreakLayoutLine->model()->removeRow(row);
+
+}
+
 void BreakLayoutForm::test_model()
 {
     auto& break_lines = breakLines();
 
     for(auto& break_line : break_lines){
         BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(std::get<1>(break_line).get());
-        qDebug() << "MAX Spot: "<< bll->maxSpots()->value();
     }
+}
+
+
+QModelIndexList BreakLayoutForm::selected_indexes()
+{
+    QModelIndexList indexes = ui->tvBreakLayoutLine->selectionModel()->selectedRows();
+    return indexes;
 }
