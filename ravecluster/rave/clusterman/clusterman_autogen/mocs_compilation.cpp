@@ -20,3 +20,4 @@
 #include "EWIEGA46WW/moc_serverform.cpp"
 #include "EWIEGA46WW/moc_stationform.cpp"
 #include "EWIEGA46WW/moc_storagediskform.cpp"
+#include "EWIEGA46WW/moc_useraccessform.cpp"

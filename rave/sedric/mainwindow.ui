@@ -18,23 +18,41 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QPushButton" name="btnNew">
+       <widget class="QToolButton" name="btnNew">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
+        </property>
         <property name="text">
          <string>New</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSave">
+       <widget class="QToolButton" name="btnSave">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
+        </property>
         <property name="text">
          <string>Save</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSaveAs">
+       <widget class="QToolButton" name="btnSaveAs">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Save As...</string>
+         <string>Save As</string>
         </property>
        </widget>
       </item>
@@ -55,14 +73,32 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnPrint">
+       <widget class="QToolButton" name="btnPrint">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Print</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnRemove">
+       <widget class="QToolButton" name="btnRemove">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
+        </property>
         <property name="text">
          <string>Remove</string>
         </property>
@@ -85,15 +121,15 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnDateTimeSelector">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
+       <widget class="QToolButton" name="btnDateTimeSelector">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
         </property>
         <property name="text">
-         <string>Select Date &amp;&amp; Time ...</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -119,12 +155,14 @@
         <property name="font">
          <font>
           <pointsize>12</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
         <property name="text">
          <string>TextLabel</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -288,7 +326,7 @@
      <x>0</x>
      <y>0</y>
      <width>944</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

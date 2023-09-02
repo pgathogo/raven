@@ -163,6 +163,7 @@ public slots:
     void delete_audio();
     void filter_audio_by_letter(int);
 
+    void track_toolbar_icons();
     void folder_context_menu(const QPoint&);
     void track_context_menu(const QPoint&);
     void create_new_folder();

@@ -3,7 +3,10 @@ cmake_minimum_required(VERSION 3.15)
 #set(CMAKE_CXX_COMPLIER "C:/mingw64/bin/g++.exe")
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe")
+
+set(MSVS_BUILD_NUM "14.37.32822")
+set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
+
 
 project(clusterman VERSION 0.1 LANGUAGES CXX)
 
@@ -72,6 +75,11 @@ set(PROJECT_SOURCES
         audiofolderform.cpp
         audiofolderform.ui
         clusterman.qrc
+        useraccessform.h
+        useraccessform.cpp
+        useraccessform.ui
+        useraccess.h
+        useraccess.cpp
         ../../../rave/security/authentication.h
         ../../../rave/security/authentication.cpp
         ../../../rave/security/baserole.h

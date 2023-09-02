@@ -53,6 +53,10 @@ public slots:
     void cue_edit();
     void update_audio_duration(int);
 
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private slots:
     void brandsComboChanged(int);
     void on_import_audio();

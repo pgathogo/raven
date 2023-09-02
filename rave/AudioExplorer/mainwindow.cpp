@@ -91,6 +91,8 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
     connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
     connect(ui->btnDelete, &QPushButton::clicked, this, &MainWindow::delete_audio);
 
+    track_toolbar_icons();
+
     m_audio_edm = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
 
@@ -203,6 +205,7 @@ void MainWindow::create_track_view_headers()
     m_tracks_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
     m_tracks_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
     m_tracks_model->setHorizontalHeaderItem(5, new QStandardItem("Folder"));
+    m_tracks_model->setHorizontalHeaderItem(6, new QStandardItem("File Extension"));
 }
 
 void MainWindow::create_artist_view_headers()
@@ -234,12 +237,14 @@ void MainWindow::set_track_view()
 
 void MainWindow::set_track_view_column_width()
 {
-    enum Column{Title, Artist, Duration, AudioType, AudioFile};
+    enum Column{Title, Artist, Duration, AudioType, AudioFile, Folder, FileExt};
     ui->tvTracks->setColumnWidth(Column::Title, 300);
     ui->tvTracks->setColumnWidth(Column::Artist, 250);
     ui->tvTracks->setColumnWidth(Column::Duration, 100);
     ui->tvTracks->setColumnWidth(Column::AudioType, 150);
     ui->tvTracks->setColumnWidth(Column::AudioFile, 250);
+    ui->tvTracks->setColumnWidth(Column::Folder, 250);
+    ui->tvTracks->setColumnWidth(Column::FileExt, 150);
 }
 
 void MainWindow::folder_clicked(const QModelIndex& index)
@@ -249,6 +254,50 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
     //fetch_folder_audio(folder_filter);
     fetch_filtered_audio(folder_filter);
+}
+
+void MainWindow::track_toolbar_icons()
+{
+    QSize btn_icon_size(50, 50);
+
+    ui->btnImport->setIconSize(btn_icon_size);
+    ui->btnImport->setIcon(QIcon(":/images/media/icons/import_audio_sm.png"));
+    ui->btnImport->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnAudioProp->setIconSize(btn_icon_size);
+    ui->btnAudioProp->setIcon(QIcon(":/images/media/icons/audio_prop_sm.png"));
+    ui->btnAudioProp->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnPlay->setIconSize(btn_icon_size);
+    ui->btnPlay->setIcon(QIcon(":/images/media/icons/listen_sm.png"));
+    ui->btnPlay->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnCueEdit->setIconSize(btn_icon_size);
+    ui->btnCueEdit->setIcon(QIcon(":/images/media/icons/cue_edit_sm.png"));
+    ui->btnCueEdit->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnEditor->setIconSize(btn_icon_size);
+    ui->btnEditor->setIcon(QIcon(":/images/media/icons/audacity_sm.png"));
+    ui->btnEditor->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnCut->setIconSize(btn_icon_size);
+    ui->btnCut->setIcon(QIcon(":/images/media/icons/cut_document_sm.png"));
+    ui->btnCut->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnPaste->setIconSize(btn_icon_size);
+    ui->btnPaste->setIcon(QIcon(":/images/media/icons/paste_sm.png"));
+    ui->btnPaste->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnDelete->setIconSize(btn_icon_size);
+    ui->btnDelete->setIcon(QIcon(":/images/media/icons/delete_sm.png"));
+    ui->btnDelete->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnSearchAudio->setIconSize(QSize(30,30));
+    ui->btnSearchAudio->setIcon(QIcon(":/images/media/icons/search_audio.bmp"));
+    ui->btnSearchAudio->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+
+
 }
 
 void MainWindow::track_context_menu(const QPoint& pos)
@@ -328,19 +377,30 @@ void MainWindow::folder_context_menu(const QPoint& pos)
 void MainWindow::connect_toolbutton_signals()
 {
     connect(ui->tbNew, &QToolButton::clicked, this, &MainWindow::create_new_folder);
-    ui->tbNew->setIcon(QIcon(":/images/media/icons/add.png"));
+    ui->tbNew->setIconSize(QSize(40,40));
+    ui->tbNew->setIcon(QIcon(":/images/media/icons/new_folder2_sm.bmp"));
+    ui->tbNew->setToolTip("New Folder");
+
 
     connect(ui->tbRename, &QToolButton::clicked, this, &MainWindow::rename_folder);
-    ui->tbRename->setIcon(QIcon(":/images/media/icons/edit.png"));
+    ui->tbRename->setIconSize(QSize(40,40));
+    ui->tbRename->setIcon(QIcon(":/images/media/icons/edit_folder2_sm.bmp"));
+    ui->tbRename->setToolTip("Rename Selected Folder");
 
     connect(ui->tbCut, &QToolButton::clicked, this, &MainWindow::cut_folder);
+    ui->tbCut->setIconSize(QSize(40,40));
     ui->tbCut->setIcon(QIcon(":/images/media/icons/cut.png"));
+    ui->tbCut->setToolTip("Cut Selected Folder");
 
     connect(ui->tbPaste, &QToolButton::clicked, this, &MainWindow::paste_folder);
-    ui->tbPaste->setIcon(QIcon(":/images/media/icons/paste.png"));
+    ui->tbPaste->setIconSize(QSize(40,40));
+    ui->tbPaste->setIcon(QIcon(":/images/media/icons/paste_folder_sm.bmp"));
+    ui->tbPaste->setToolTip("Paste Cut Folder");
 
     connect(ui->tbDelete, &QToolButton::clicked, this, &MainWindow::delete_folder);
-    ui->tbDelete->setIcon(QIcon(":/images/media/icons/delete.png"));
+    ui->tbDelete->setIconSize(QSize(40,40));
+    ui->tbDelete->setIcon(QIcon(":/images/media/icons/delete_folder_sm.bmp"));
+    ui->tbDelete->setToolTip("Delete Selected Folder");
 }
 
 
@@ -518,6 +578,9 @@ bool MainWindow::is_folder_empty(int folder_id)
     std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(std::move(audio));
     auto audio_filter = std::make_tuple(column_name, " = ", folder_id);
     auto filter = edm->prepareFilter(audio_filter);
+
+    qDebug() << stoq(filter);
+
     edm->search(filter);
 
     return (edm->count() == 0) ? true : false;

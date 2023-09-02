@@ -5,5 +5,7 @@
         <file>images/icons/master_users.png</file>
         <file>images/icons/radio_tower.png</file>
         <file>images/icons/mic.png</file>
+        <file>images/icons/left_arrow.png</file>
+        <file>images/icons/right_arrow.png</file>
     </qresource>
 </RCC>

@@ -63,10 +63,12 @@ public:
     AUDIO::Audio* audio_from_selection();
     std::string get_audio_file(AUDIO::Audio*);
 
+public slots:
+     void stop_play();
+
 private slots:
      void import_audio();
      void play_back();
-     void stop_play();
      void cue_edit();
 
 signals:

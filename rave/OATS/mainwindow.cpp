@@ -176,8 +176,20 @@ MainWindow::MainWindow(QWidget *parent)
     auto two_seconds = 2s;
     m_updatedb_timer->start(two_seconds);
 
-    //setStyleSheet("background-color: #222222;");
-    //QMainWindow::showFullScreen();
+    /*
+    QLabel* home_image = new QLabel(this);
+    home_image->setAlignment(Qt::AlignCenter);
+    QPixmap pm;
+    QString filename = "home.png";
+    if (pm.load(filename))
+    {
+        pm.scaled(home_image->size(), Qt::KeepAspectRatio);
+        home_image->setPixmap(pm);
+    }
+    ui->hlTitle->addWidget(home_image);
+    setStyleSheet("background-color: #222222;");
+    QMainWindow::showFullScreen();
+   */
 }
 
 

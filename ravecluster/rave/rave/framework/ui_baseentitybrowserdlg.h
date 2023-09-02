@@ -107,6 +107,7 @@ public:
         vlGrid->setObjectName(QString::fromUtf8("vlGrid"));
         tvEntity = new QTableView(BaseEntityBrowserDlg);
         tvEntity->setObjectName(QString::fromUtf8("tvEntity"));
+        tvEntity->setEditTriggers(QAbstractItemView::NoEditTriggers);
         tvEntity->setSelectionMode(QAbstractItemView::SingleSelection);
         tvEntity->setSelectionBehavior(QAbstractItemView::SelectRows);
 

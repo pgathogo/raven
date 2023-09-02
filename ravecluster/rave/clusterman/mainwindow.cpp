@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
         showMessage(de.errorMessage());
     }
 
+
 }
 
 MainWindow::~MainWindow()

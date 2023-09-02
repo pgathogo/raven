@@ -261,6 +261,7 @@ public slots:
     void new_role(RoleNode*);
     void new_user(UserNode*);
     void edit_user(UserNode*);
+    void attach_user_to_station(UserNode*);
     void edit_role(RoleNode*);
     void delete_role(RoleNode*);
 
@@ -334,6 +335,7 @@ private:
     std::unique_ptr<QAction> m_act_delete_role;
     std::unique_ptr<QAction> m_act_user_group;
     std::unique_ptr<QAction> m_act_user;
+    std::unique_ptr<QAction> m_act_attach_station;
 
     std::unique_ptr<QAction> m_act_app;
 

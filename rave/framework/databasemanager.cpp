@@ -166,9 +166,6 @@ void PostgresDatabaseManager::updateEntity(const BaseEntity& entity)
 {
     std::string sqlQuery;
     sqlQuery = makeUpdateString(entity);
-
-    qDebug() << "Update: " << stoq(sqlQuery);
-
     provider()->executeQuery(sqlQuery);
 }
 

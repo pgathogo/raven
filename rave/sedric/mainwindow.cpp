@@ -122,6 +122,8 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     connect(ui->btnDateTimeSelector, &QPushButton::clicked, this, &MainWindow::select_date_time);
 
+    set_toolbutton_icons();
+
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::highlighted), this, &MainWindow::combo_highlight);
 //    connect(ui->cbHours, QOverload<int>::of(&QComboBox::currentIndexChanged),
 //            this, &MainWindow::hour_changed);
@@ -161,6 +163,34 @@ void MainWindow::test_ranges()
         qDebug() << v << ",";
     }
     qDebug() << "\n";
+}
+
+void MainWindow::set_toolbutton_icons()
+{
+    ui->btnDateTimeSelector->setIconSize(QSize(50,50));
+    ui->btnDateTimeSelector->setIcon(QIcon(":/images/icons/datetime_picker_sm.bmp"));
+    ui->btnDateTimeSelector->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnNew->setIconSize(QSize(50,50));
+    ui->btnNew->setIcon(QIcon(":/images/icons/new_schedule_sm.bmp"));
+    ui->btnNew->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnSave->setIconSize(QSize(50,50));
+    ui->btnSave->setIcon(QIcon(":/images/icons/save_sched2_sm.bmp"));
+    ui->btnSave->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnPrint->setIconSize(QSize(50,50));
+    ui->btnPrint->setIcon(QIcon(":/images/icons/print_schedule_sm.bmp"));
+    ui->btnPrint->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnRemove->setIconSize(QSize(50,50));
+    ui->btnRemove->setIcon(QIcon(":/images/icons/remove_music_sm.bmp"));
+    ui->btnRemove->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->btnSaveAs->setIconSize(QSize(50,50));
+    ui->btnSaveAs->setIcon(QIcon(":/images/icons/schedule_save_as.bmp"));
+    ui->btnSaveAs->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
 }
 
 void MainWindow::set_ui_style()
@@ -1019,7 +1049,7 @@ void MainWindow::fetch_default_data()
 
 void MainWindow::show_selection(DateTimeSelection selection)
 {
-    ui->btnDateTimeSelector->setText(selection.sel_date.toString("dd/MM/yyyy")+" ...");
+    ui->btnDateTimeSelector->setText(selection.sel_date.toString("dd/MM/yyyy"));
     QString label = "[ ";
     QString h{""};
     std::sort(selection.sel_hours.begin(),selection.sel_hours.end());

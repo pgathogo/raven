@@ -312,7 +312,9 @@ namespace OATS
 
     void AudioLoadWidget::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
+        qDebug() << "Selected Audio: "<< audio->id();
         emit cart_add_audio(audio);
+
 
     }
 
@@ -393,6 +395,7 @@ namespace OATS
          cart_item->set_track_title(QString::fromStdString(audio->title()->value()));
          cart_item->set_track_path(QString::fromStdString(audio->audio_lib_path()->value()));
 
+
          cart_item->set_track_fullname(
                      cart_item->track_path()+
                      QString::fromStdString(at.make_audio_filename(cart_item->track_id())+".ogg"));
@@ -429,6 +432,7 @@ namespace OATS
 
      void AudioViewWidget::move_selected_item(MoveDirection dr)
      {
+
          auto indexes = m_table_view->selectionModel()->selectedRows(0);
          if (indexes.size() == 0)
              return;
@@ -446,6 +450,7 @@ namespace OATS
 
          auto title = new QStandardItem((*it)->track_title());
          title->setData((*it)->track_id(), Qt::UserRole);
+
 
          auto duration = new QStandardItem(at.format_time((*it)->track_duration()));
          columns.append(title);
@@ -612,6 +617,9 @@ namespace OATS
 
     void AudioViewWidget::read_cart_items(QJsonArray& data)
     {
+         m_model->clear();
+         create_table_view_headers();
+
         for (auto&& json_cart_item: data){
             std::unique_ptr<CartItem> cart_item = std::make_unique<CartItem>();
             QJsonObject obj = json_cart_item.toObject();
@@ -774,8 +782,6 @@ namespace OATS
 
      void CartPlayerWidget::end_of_play()
      {
-         qDebug() << "Index: " << m_item_index;
-         qDebug() << "Cart Items: " << m_cart_items.size();
 
          if (m_item_index < m_cart_items.size()){
              play_next();
@@ -799,7 +805,10 @@ namespace OATS
     {
         auto trigger_ticker = m_audio_tool.get_tick_count();
         long long elapsed = trigger_ticker - m_start_tick_time_stamp;
+
         long long remaining = m_selected_items_duration - elapsed;
+        if (remaining < 0 )
+             remaining = 0;
 
         int duration_seconds = (int)remaining / 1000;
         int ds_u1 = (int)duration_seconds /  60;

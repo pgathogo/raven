@@ -183,3 +183,8 @@ void SpotForm::update_audio_duration(int audio_duration)
     ui->edtRealDuration->setValue(audio_duration);
 }
 
+void SpotForm::closeEvent(QCloseEvent* event)
+{
+    m_spot_audio_browser->stop_play();
+}
+

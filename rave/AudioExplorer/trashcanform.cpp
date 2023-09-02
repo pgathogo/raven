@@ -44,13 +44,15 @@ void TrashCanForm::create_track_view_headers()
 {
     m_tracks_model->setHorizontalHeaderItem(0, new QStandardItem("Track Title"));
     m_tracks_model->setHorizontalHeaderItem(1, new QStandardItem("Folder"));
+    m_tracks_model->setHorizontalHeaderItem(2, new QStandardItem("File Ext."));
 }
 
 void TrashCanForm::set_track_view_column_width()
 {
-    enum Column{Title, Folder};
+    enum Column{Title, Folder, FileExt};
     ui->tvTracks->setColumnWidth(Column::Title, 300);
     ui->tvTracks->setColumnWidth(Column::Folder, 250);
+    ui->tvTracks->setColumnWidth(Column::FileExt, 150);
 }
 
 void TrashCanForm::fetch_deleted_audio(FRAMEWORK::RelationMapper* r_mapper)

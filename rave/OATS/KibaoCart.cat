@@ -1,0 +1,24 @@
+{
+    "cartA": [
+        {
+            "cart_id": 1,
+            "duration": 4000,
+            "title": "Kibao Nambari Moja XX",
+            "track_fullname": "D:/music/studio1/00000106.ogg",
+            "track_id": 106,
+            "track_path": "D:/music/studio1/"
+        }
+    ],
+    "cartB": [
+        {
+            "cart_id": 2,
+            "duration": 7000,
+            "title": "Hakuna Kupima",
+            "track_fullname": "D:/music/studio1/00000105.ogg",
+            "track_id": 105,
+            "track_path": "D:/music/studio1/"
+        }
+    ],
+    "cartC": [
+    ]
+}

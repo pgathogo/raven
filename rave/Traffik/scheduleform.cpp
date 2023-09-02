@@ -27,7 +27,7 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
 
     ui->dtSchedule->setDate(QDate::currentDate());
 
-    ui->btnDelete->setEnabled(false);
+    //ui->btnDelete->setEnabled(false);
 
     setWindowTitle("Schedule Management Form");
 }
@@ -82,7 +82,7 @@ void ScheduleForm::create_breaks()
 
 void ScheduleForm::delete_breaks()
 {
-    //FIXME Show ids userdata for child nodes
+    //FIXME: Show ids userdata for child nodes
     QModelIndex index = ui->tvSchedule->selectionModel()->currentIndex();
 
     if (!index.isValid())
@@ -134,6 +134,8 @@ void ScheduleForm::build_tree_view()
 
         comm_breaks[comm_break.schedule_hour].push_back(comm_break);
     }
+
+    qDebug() << "Comm Breaks Size: "<< comm_breaks.size();
 
     if (comm_breaks.size() > 0){
         ScheduleManTreeViewModel* sched_model = new ScheduleManTreeViewModel(comm_breaks);

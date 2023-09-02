@@ -22,5 +22,11 @@
         <file>images/icons/warning.png</file>
         <file>images/icons/history01.png</file>
         <file>images/icons/history02.png</file>
+        <file>images/icons/datetime_picker_sm.bmp</file>
+        <file>images/icons/new_schedule_sm.bmp</file>
+        <file>images/icons/print_schedule_sm.bmp</file>
+        <file>images/icons/remove_music_sm.bmp</file>
+        <file>images/icons/save_sched2_sm.bmp</file>
+        <file>images/icons/schedule_save_as.bmp</file>
     </qresource>
 </RCC>

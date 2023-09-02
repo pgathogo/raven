@@ -80,3 +80,7 @@ class Content(models.Model):
 
 class ContentAuth(ManyToMany):
     access_bit = models.CharField(max_length=8, default='00000000')
+
+class UserAccess(models.Model):
+    username = models.CharField(max_length=50)
+    station = models.ForeignKey(Station, models.DO_NOTHING)

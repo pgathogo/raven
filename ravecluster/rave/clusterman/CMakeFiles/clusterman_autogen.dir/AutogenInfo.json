@@ -547,6 +547,18 @@
 			"MU",
 			"EWIEGA46WW/moc_storagediskform.cpp",
 			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccess.h",
+			"MU",
+			"EWIEGA46WW/moc_useraccess.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccessform.h",
+			"MU",
+			"EWIEGA46WW/moc_useraccessform.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -793,6 +805,16 @@
 		],
 		[
 			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/storagediskform.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccess.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccessform.cpp",
 			"MU",
 			null
 		]

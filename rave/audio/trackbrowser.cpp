@@ -97,7 +97,9 @@ namespace AUDIO
 
     void TrackBrowser::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
+        qDebug() << "TrackBrowser::selected_audio: "<< audio->id();
         m_current_selected_audio = audio;
+        qDebug() << "ZZZZZ";
     }
 
     std::shared_ptr<AUDIO::Audio> TrackBrowser::current_selected_audio()
@@ -313,7 +315,6 @@ namespace AUDIO
 
    void AudioTrackWidget::track_selected(int track_id)
    {
-       qInfo() << "AudioTrackWidget:: "<< track_id;
        emit selected_track(track_id);
    }
 
@@ -330,9 +331,12 @@ namespace AUDIO
 
    void AudioDataModel::track_selected(int track_id)
    {
-        qInfo() << "AudioDataModel:: "<< track_id;
-        std::shared_ptr<AUDIO::Audio> audio(m_lib_item->find_audio_by_id(track_id));
-        emit selected_audio(audio);
+
+        auto audio_ptr = m_lib_item->find_audio_by_id(track_id);
+        std::shared_ptr<AUDIO::Audio> audio_sh = std::make_shared<AUDIO::Audio>();
+        *audio_sh = *audio_ptr;
+
+        emit selected_audio(audio_sh);
    }
 
    std::shared_ptr<AUDIO::Audio> AudioDataModel::find_audio_by_id(int audio_id)

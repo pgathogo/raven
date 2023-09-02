@@ -30,6 +30,8 @@
 #include "serverform.h"
 #include "storagediskform.h"
 #include "audiofolderform.h"
+#include "useraccessform.h"
+#include "useraccess.h"
 
 int ClusterConfiguration::temp_id{100};
 
@@ -345,7 +347,45 @@ void ClusterManagerDlg::new_application(AppGroupNode* app_group_node)
 void ClusterManagerDlg::edit_user(UserNode* user_node)
 {
 
-    edit_node<UserNode, UserForm, SECURITY::User>(user_node, &SECURITY::User::role_name);
+   edit_node<UserNode, UserForm, SECURITY::User>(user_node, &SECURITY::User::role_name);
+
+}
+
+void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
+{
+   SECURITY::User* node_entity = user_node->node_entity();
+
+
+   std::unique_ptr<UserAccessForm> uaf = std::make_unique<UserAccessForm>(node_entity, this);
+
+   if (uaf->exec() == 1)
+   {
+        EntityDataModel edm;
+        auto user_access = uaf->user_access();
+        for (auto& [id, sa]: user_access){
+            auto usera = std::make_unique<ClusterManager::UserAccess>();
+            switch(sa.status)
+            {
+            case AccessAction::New:
+            {
+                //auto usera = std::make_unique<ClusterManager::UserAccess>();
+                usera->set_username(node_entity->role_name()->value());
+                usera->set_station(sa.station_id);
+                edm.createEntityDB(*usera);
+                break;
+            }
+            case AccessAction::Delete:
+                //auto del_user = std::make_unique<ClusterManager::UserAccess>();
+                qDebug() << "Delete Access: "<< sa.id;
+                usera->setId(sa.id);
+                usera->set_station(sa.station_id);
+                edm.deleteEntity(*usera);
+                break;
+            }
+
+
+        }
+   }
 
 }
 
@@ -884,6 +924,7 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
     m_act_user = nullptr;
 
     m_act_user = std::make_unique<QAction>("Edit User...");
+    m_act_attach_station = std::make_unique<QAction>("Attach User to Station...");
 
     auto user_node = get_cluster_node<UserNode>(node_uuid);
 
@@ -891,7 +932,11 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
         return;
 
     connect(m_act_user.get(), &QAction::triggered, this, [this, user_node](){edit_user(user_node);});
+    connect(m_act_attach_station.get(), &QAction::triggered, this, [this, user_node](){attach_user_to_station(user_node);});
+
     m_user_context_menu->addAction(m_act_user.get());
+    m_user_context_menu->addSeparator();
+    m_user_context_menu->addAction(m_act_attach_station.get());
     m_user_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 }
 

@@ -124,6 +124,19 @@
         <file>media/icons/warning.png</file>
         <file>media/icons/warning_large.png</file>
         <file>media/icons/web.png</file>
+        <file>media/icons/import_audio_sm.png</file>
+        <file>media/icons/audio_prop_sm.png</file>
+        <file>media/icons/cue_edit_sm.png</file>
+        <file>media/icons/listen_sm.png</file>
+        <file>media/icons/audacity_sm.png</file>
+        <file>media/icons/cut_document_sm.png</file>
+        <file>media/icons/paste_sm.png</file>
+        <file>media/icons/delete_sm.png</file>
+        <file>media/icons/search_audio.bmp</file>
+        <file>media/icons/delete_folder_sm.bmp</file>
+        <file>media/icons/edit_folder2_sm.bmp</file>
+        <file>media/icons/new_folder2_sm.bmp</file>
+        <file>media/icons/paste_folder_sm.bmp</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

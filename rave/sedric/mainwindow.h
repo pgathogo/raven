@@ -200,14 +200,15 @@ private:
     std::unique_ptr<AudioHistoryForm> m_audio_history;
     QDate m_schedule_date;
 
+    std::unique_ptr<QMenu> m_schedule_context_menu;
+    std::unique_ptr<QAction> m_view_comm;
+    std::unique_ptr<BookedCommercialDlg> m_booked_comm_dlg;
+
     void create_model_headers();
     std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);
     void fetch_schedule_from_db(QDate, std::vector<int>);
     void set_column_width();
+    void set_toolbutton_icons();
 
-    std::unique_ptr<QMenu> m_schedule_context_menu;
-    std::unique_ptr<QAction> m_view_comm;
-
-    std::unique_ptr<BookedCommercialDlg> m_booked_comm_dlg;
 };
 
