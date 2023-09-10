@@ -32,6 +32,25 @@ PostgresConnector* PostgresConnector::instance(const std::string conninfo)
     return mInstance;
 }
 
+void PostgresConnector::test_connection(const std::string conninfo)
+{
+    //openConnection(conninfo);
+    //qDebug() << "Testing db connection ...";
+
+    auto connection = PQconnectdb(conninfo.c_str());
+    if (PQstatus(connection) != CONNECTION_OK){
+        std::string errMsg =  "Connection to database failed! - ";
+        errMsg += PQerrorMessage(connection);
+        PQfinish(connection);
+        throw PostgresException("CONNECT", errMsg);
+    }
+}
+
+void PostgresConnector::nullify_instance()
+{
+    mInstance = nullptr;
+}
+
 PostgresConnector::~PostgresConnector()
 {
     PQfinish(mConnection);

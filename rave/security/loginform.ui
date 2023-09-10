@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>426</width>
-    <height>136</height>
+    <width>479</width>
+    <height>207</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,10 @@
     <layout class="QVBoxLayout" name="vlNotice"/>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gridLayout" rowminimumheight="0,0,0,5">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="edtUsername"/>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -26,8 +29,12 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="edtUsername"/>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="edtPassword">
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
@@ -36,10 +43,15 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="edtPassword">
-       <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="btnSelect">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Select Station ...</string>
        </property>
       </widget>
      </item>
@@ -61,9 +73,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="btnSignIn">
+      <widget class="QPushButton" name="btnLogin">
        <property name="text">
-        <string>Sign In</string>
+        <string>Login</string>
        </property>
       </widget>
      </item>
@@ -76,21 +88,14 @@
      </item>
     </layout>
    </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>edtUsername</tabstop>
+  <tabstop>edtPassword</tabstop>
+  <tabstop>btnLogin</tabstop>
+  <tabstop>btnCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

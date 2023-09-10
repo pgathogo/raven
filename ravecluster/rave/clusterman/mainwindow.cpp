@@ -58,7 +58,7 @@ void MainWindow::connect_rave_db()
 void MainWindow::connect_cluster_db()
 {
     auto auth = std::make_unique<Authentication>();
-    auth->connect_cluster("postgres", "abc123");
+    auth->connect_to_cluster_server("postgres", "abc123");
 }
 
 void MainWindow::setup_menu()

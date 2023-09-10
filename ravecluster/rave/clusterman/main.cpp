@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     auto auth = std::make_unique<Authentication>();
 
     try{
-        auth->connect_cluster("postgres", "abc123");
+        auth->connect_to_cluster_server("postgres", "abc123");
     } catch(DatabaseException& de) {
         showMessage(de.errorMessage());
     }

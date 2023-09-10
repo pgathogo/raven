@@ -28,6 +28,9 @@ class Server(models.Model):
     server_name = models.CharField(max_length=200)
     server_type = models.CharField(max_length=3, choices=SERVER_TYPE)
     server_ip = models.CharField(max_length=24, blank=True, null=True)
+    port_no = models.IntegerField(default=5432)
+    db_admin = models.CharField(max_length=50, blank=True, null=True)
+    db_admin_password = models.CharField(max_length=255, blank=True, null=True) 
     cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
     notes = models.TextField(blank=True, null=True)
 
@@ -39,6 +42,7 @@ class Database(models.Model):
 
 class Station(models.Model):
     station_name = models.CharField(max_length=200)
+    db_name = models.CharField(max_length=30, blank=True, null=True)
     cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
 
 
@@ -84,3 +88,7 @@ class ContentAuth(ManyToMany):
 class UserAccess(models.Model):
     username = models.CharField(max_length=50)
     station = models.ForeignKey(Station, models.DO_NOTHING)
+
+class ClusterAccess(models.Model):
+    username = models.CharField(max_length=50)
+    cluster = models.ForeignKey(Cluster, models.DO_NOTHING)

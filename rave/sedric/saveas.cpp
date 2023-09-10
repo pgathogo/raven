@@ -61,7 +61,6 @@ void SaveAs::setup_selection_table()
 
     int row=0;
     for (int hour : m_selected_hours){
-        qDebug() << "Hour: "<< hour;
         QTableWidgetItem* tw_item = new QTableWidgetItem(QString::number(hour));
         tw_item->setCheckState(Qt::Checked);
         tw_item->setData(Qt::UserRole, hour);

@@ -4,6 +4,7 @@
 #include "manytomany.h"
 #include "../utils/tools.h"
 #include "../framework/ravenexception.h"
+#include "../security/authentication.h"
 
 EntityModel::EntityModel()
     :mEntity{nullptr}
@@ -279,6 +280,14 @@ EntityDataModel::EntityDataModel()
      ,m_relation_mapper{nullptr}
 {
     dbManager = std::make_unique<PostgresDatabaseManager>();
+    m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
+}
+
+EntityDataModel::EntityDataModel(Authentication& auth)
+    : EntityModel()
+    ,m_relation_mapper{nullptr}
+{
+    dbManager = auth.connect_to_server();
     m_relation_mapper = std::make_unique<FRAMEWORK::RelationMapper>(this);
 }
 

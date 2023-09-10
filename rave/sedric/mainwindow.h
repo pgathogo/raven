@@ -8,6 +8,7 @@
 #include <QComboBox>
 
 #include "../framework/datetimeselector.h"
+#include "../security/structs.h"
 
 class QStandardItemModel;
 class QStandardItem;
@@ -82,7 +83,7 @@ public:
 
     enum class SearchBy{folder_id, audio_title, audio_artist};
 
-    MainWindow(QApplication* app, QWidget *parent = nullptr);
+    MainWindow(QApplication* app, const StationInfo&, const ConnInfo&, QWidget *parent = nullptr);
     ~MainWindow();
 
     void populate_hour_combobox();

@@ -66,7 +66,7 @@ class PostgresDatabaseManager : public BaseDatabaseManager
 {
 public:
     PostgresDatabaseManager();
-    PostgresDatabaseManager(const std::string conninfo);
+    PostgresDatabaseManager(const std::string conninfo, bool fresh_conn=false);
      ~PostgresDatabaseManager() override;
     virtual void populateFields(BaseEntity* /*entity*/){}
     virtual void populateObject(const BaseEntity& /*entity*/){}
@@ -94,6 +94,8 @@ public:
     BaseDataProvider* provider() override;
     std::string make_insert_stmt(const BaseEntity& entity) override;
     PostgresDataProvider* pgProvider();
+
+    static void test_connection(std::string);
 
    std::string manager_type() override;
 

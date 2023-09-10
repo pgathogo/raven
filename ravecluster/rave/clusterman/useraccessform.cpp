@@ -5,6 +5,10 @@
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravenexception.h"
 #include "station.h"
+#include "server.h"
+#include "clusterconfigmanager.h"
+#include "../security/authentication.h"
+#include "../security/user.h"
 
 UserAccessForm::UserAccessForm(SECURITY::User* user, QWidget *parent)
     :QDialog(parent)
@@ -25,6 +29,8 @@ UserAccessForm::UserAccessForm(SECURITY::User* user, QWidget *parent)
     connect(ui->tbAdd, &QToolButton::clicked, this, &UserAccessForm::add_station);
     connect(ui->tbDelete, &QToolButton::clicked, this, &UserAccessForm::remove_station);
 
+    m_ccm = std::make_unique<ClusterManager::ClusterConfigurationManager>();
+
     setup_gui();
 }
 
@@ -41,6 +47,7 @@ std::map<int, StationAccess> UserAccessForm::user_access()
 void UserAccessForm::setup_gui()
 {
     setWindowTitle("Station Attachment");
+
     ui->tbAdd->setIconSize(QSize(30,30));
     ui->tbAdd->setIcon(QIcon(":/images/icons/right_arrow.png"));
 
@@ -96,23 +103,46 @@ void UserAccessForm::load_stations()
         auto itb = provider->cache()->currentElement()->begin();
         auto ite = provider->cache()->currentElement()->end();
 
+        int station_id;
+        int cluster_id;
+        QString station_name;
+        QString db_name;
+
         for(; itb != ite; ++itb)
         {
             std::string field = (*itb).first;
             std::string value = (*itb).second;
 
-            int station_id;
+
             if (field == "id"){
                 station_id = std::stoi(value);
             }
 
             if(field == "station_name"){
-                QListWidgetItem* lwi = new QListWidgetItem(QString::fromStdString(value));
+                station_name = QString::fromStdString(value);
+                QListWidgetItem* lwi = new QListWidgetItem(station_name);
                 lwi->setData(Qt::UserRole, station_id);
                 ui->lwStations->addItem(lwi);
             }
 
+            if (field == "db_name"){
+                db_name = QString::fromStdString(value);
+            }
+
+            if(field == "cluster_id"){
+                cluster_id = std::stoi(value);
+            }
+
         }
+
+        StationData sd;
+        sd.station_id = station_id;
+        sd.cluster_id = cluster_id;
+        sd.station_name = station_name;
+        sd.db_name = db_name;
+
+        m_station_data[station_id] = sd;
+
 
         provider->cache()->next();
 
@@ -126,9 +156,11 @@ void UserAccessForm::load_user_stations(std::string username)
 
     std::string filter = std::format(" and rave_useraccess.username = '{}'", username);
 
-    sql << "Select rave_useraccess.id, rave_useraccess.station_id, rave_station.station_name "
-        << " from rave_useraccess, rave_station "
+    sql << "Select rave_useraccess.id, rave_useraccess.station_id, "
+        << "rave_cluster.cluster_name, rave_station.station_name "
+        << " from rave_useraccess, rave_station, rave_cluster "
         << " Where rave_useraccess.station_id = rave_station.id "
+        << "  and rave_cluster.id = rave_station.cluster_id "
         << filter;
 
     qDebug() << QString::fromStdString(sql.str());
@@ -154,6 +186,7 @@ void UserAccessForm::load_user_stations(std::string username)
         int id = -1;
         int station_id = -1;
         QString name;
+        QString cluster_name;
 
         for (; itb != ite; ++itb)
         {
@@ -163,16 +196,21 @@ void UserAccessForm::load_user_stations(std::string username)
 
             if (field == "id"){
                 id = std::stoi(value);
-                qDebug() << "Access ID: "<< id;
             }
 
             if(field == "station_id"){
                 station_id = std::stoi(value);
             }
 
+            if (field == "cluster_name"){
+                cluster_name = QString::fromStdString(value);
+            }
+
             if (field == "station_name"){
                 name =QString::fromStdString(value);
-                QListWidgetItem* lwi = new QListWidgetItem(QString::fromStdString(value));
+
+                QString title = name + " ("+cluster_name+")";
+                QListWidgetItem* lwi = new QListWidgetItem(title);
                 lwi->setData(Qt::UserRole, station_id);
                 ui->lwAccess->addItem(lwi);
             }
@@ -205,7 +243,43 @@ void UserAccessForm::add_station()
     auto item = selected_items[0];
 
     int station_id = item->data(Qt::UserRole).toInt();
-    QString name = item->text();
+
+    StationData sd = m_station_data[station_id];
+
+    QString error_title = "Error: Station Attachment";
+    // Check if the station has DB name set.
+    if (sd.db_name.isEmpty()){
+        QMessageBox::critical(this,error_title,"Failed to attach station to user! Station database is not configured.");
+        return;
+    }
+
+    // Check if db name is a valid database
+
+    ConnInfo ci = find_db_server(sd.db_name, sd.cluster_id);
+    if (ci.db_name.empty()){
+        QMessageBox::critical(this, error_title,"Failed to attach station to user! Station database NOT valid.");
+        return;
+    }
+
+    // Create user in the selected server
+    std::unique_ptr<SECURITY::User> user = std::make_unique<SECURITY::User>();
+
+        Authentication auth(ci);
+        EntityDataModel edm(auth);
+
+        std::string sql = "Select id, genre from rave_genre";
+        int rec_count=0;
+        try{
+            rec_count = edm.readRaw(sql);
+        }catch(DatabaseException& de) {
+            qDebug() << "Exception thrown";
+        }
+
+
+    return;
+
+
+    QString name = sd.station_name; //item->text();
 
     if (m_user_access.contains(station_id))
         return;
@@ -215,17 +289,18 @@ void UserAccessForm::add_station()
 
     ui->lwAccess->addItem(s_item);
 
-    add_access(station_id, name);
+    add_access(station_id, sd.cluster_id, name);
 
 }
 
-void UserAccessForm::add_access(int station_id, QString name)
+void UserAccessForm::add_access(int station_id, int cluster_id, QString name)
 {
     if (m_user_access.contains(station_id))
         return;
 
     StationAccess sa;
     sa.station_id = station_id;
+    sa.cluster_id = cluster_id;
     sa.name = name;
     sa.status = AccessAction::New;
     m_user_access[station_id] = sa;
@@ -263,5 +338,53 @@ void UserAccessForm::remove_station()
 
     auto del_item = ui->lwAccess->takeItem(ui->lwAccess->row(item));
     delete del_item;
+
+}
+
+ConnInfo UserAccessForm::find_db_server(QString db_name, int cluster_id)
+{
+    auto servers = m_ccm->servers(cluster_id, "DBS");
+
+    ConnInfo ci;
+
+    for (auto& server : servers){
+        ci.db_name = db_name.toStdString();
+        ci.host = server->server_ip()->value();
+        ci.port = server->port_no()->value();
+        ci.username = server->db_admin()->value();
+        ci.password = decrypt_str(server->db_admin_password()->value());
+
+        std::cout << "DB Name: "<< ci.db_name << '\n';
+        std::cout << "Host: "<< ci.host << '\n';
+        std::cout << "Port: "<< ci.port << '\n';
+        std::cout << "Username: "<< ci.username << '\n';
+        std::cout << "Password: "<< ci.password << '\n';
+
+
+        if (ci.host.empty())
+            continue;
+
+        if (ci.port == -1)
+            continue;
+
+        if (ci.username.empty())
+            continue;
+
+        if (ci.password.empty())
+            continue;
+
+
+        try{
+            Authentication::test_connection(ci);
+            std::cout << "DB server found." << '\n';
+            break;
+        }catch(PostgresException& pe) {
+            ConnInfo other;
+            ci = other;
+        }
+
+    }
+
+    return ci;
 
 }

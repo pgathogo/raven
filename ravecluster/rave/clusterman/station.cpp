@@ -8,6 +8,8 @@ namespace ClusterManager
         m_station_name = createField<StringField>("station_name", "Station Name");
         m_station_name->setMandatory(true);
 
+        m_db_name = createField<StringField>("db_name", "Database Name");
+
         m_cluster = createField<ForeignKeyField>("cluster_id", "Cluster",
                                                  std::make_unique<Cluster>(), "cluster_name");
 
@@ -16,7 +18,19 @@ namespace ClusterManager
 
 
         setTableName("rave_station");
-    };
+    }
+
+    Station& Station::operator=(const Station& other)
+    {
+        if (this == &other) return *this;
+
+        this->setId(other.id());
+        m_station_name->setValue(other.station_name()->value());
+        m_db_name->setValue(other.db_name()->value());
+        m_cluster->setValue(other.cluster()->value());
+        setTableName(other.tableName());
+        return *this;
+    }
 
     Station::~Station()
     {
@@ -27,6 +41,11 @@ namespace ClusterManager
         return m_station_name;
     }
 
+    StringField* Station::db_name() const
+    {
+        return m_db_name;
+    }
+
     ForeignKeyField* Station::cluster() const
     {
         return m_cluster;
@@ -35,6 +54,11 @@ namespace ClusterManager
     void Station::set_station_name(const std::string name)
     {
         m_station_name->setValue(name);
+    }
+
+    void Station::set_db_name(const std::string name)
+    {
+        m_db_name->setValue(name);
     }
 
     void Station::set_cluster(int cluster_id)
@@ -80,8 +104,10 @@ namespace ClusterManager
     {
     }
 
-    void Station::afterMapping(BaseEntity&)
+    void Station::afterMapping(BaseEntity& entity)
     {
+        Station& st = dynamic_cast<Station&>(entity);
+        m_station_name->setValue(st.station_name()->value());
     }
 
     void Station::setTableName(const std::string table)

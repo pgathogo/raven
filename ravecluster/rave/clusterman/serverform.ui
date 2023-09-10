@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>181</height>
+    <height>202</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,15 +16,21 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Server Name:</string>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="edtIPAddress"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="cbServerType"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="edtAdmin"/>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="edtPassword">
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
        </property>
       </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="edtServerName"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
@@ -33,18 +39,60 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="edtIPAddress"/>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="sbPort">
+       <property name="minimum">
+        <number>1000</number>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+      </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Server Type:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="cbServerType"/>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>DB Admin:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Admin Password:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Server Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Port No.:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="edtServerName"/>
+     </item>
+     <item row="6" column="1">
+      <widget class="QPushButton" name="btnTestConn">
+       <property name="text">
+        <string>Test connection</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

@@ -51,7 +51,7 @@
 
 namespace rv = std::ranges::views;
 
-MainWindow::MainWindow(QApplication* app, QWidget *parent)
+MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo& ci, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_qapp{app}
@@ -59,6 +59,7 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     , m_tree_model{nullptr}
     , m_save_as{nullptr}
 {
+
     ui->setupUi(this);
 
     m_schedule_item_builder = new ItemBuilder();
@@ -130,10 +131,6 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
 
-//    ui->dtSchedule->setDate(QDate::currentDate());
-
-    setWindowTitle("Raven - SeDRic");
-
     //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();
@@ -145,8 +142,23 @@ MainWindow::MainWindow(QApplication* app, QWidget *parent)
     connect(ui->tvSchedule, &QTableView::customContextMenuRequested, this, &MainWindow::contextMenuRequested);
 
     //test_ranges();
-
     fetch_default_data();
+
+
+    std::string uname = std::format("Username: {}      ",ci.username);
+    std::string station = std::format("Station: {}      ", si.station_name.toStdString());
+    std::string db_ip = std::format("Database Host: {}      ",si.ip_address.toStdString());
+
+    QStatusBar* sb = new QStatusBar(this);
+    sb->addWidget(new QLabel(QString::fromStdString(uname)));
+    sb->addWidget(new QLabel(QString::fromStdString(station)));
+    sb->addWidget(new QLabel(QString::fromStdString(db_ip)));
+
+    setStatusBar(sb);
+
+    QString title = QString("Raven-Sedric: %1").arg(si.station_name);
+
+    setWindowTitle(title);
 }
 
 MainWindow::~MainWindow()

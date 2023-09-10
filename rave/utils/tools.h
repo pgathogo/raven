@@ -115,6 +115,25 @@ inline std::tuple<int, int, int> ymd(const std::string date_str)
                                std::atoi(day));
 }
 
+inline std::string encrypt_str(std::string str)
+{
+        for (int i=0; (i < 100 && str[i] != '\0'); ++i)
+        {
+            str[i] = str[i] + 2;
+        }
+
+        return str;
+}
+
+inline std::string decrypt_str(std::string str)
+{
+        for(int i=0; ( i < 100 && str[i] != '\0'); ++i){
+            str[i] = str[i] - 2;
+        }
+        return str;
+}
+
+
 #if defined(__GNUC__) || defined(__GNUG__)
 inline std::string demangle(const char* name){
     int status = 4; // some abitrary value to eliminate the compiler warning

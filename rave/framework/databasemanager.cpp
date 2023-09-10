@@ -133,13 +133,20 @@ std::string BaseDatabaseManager::makeUpdateString(const BaseEntity& entity)
 PostgresDatabaseManager::PostgresDatabaseManager()
 {
     dataProvider =  new PostgresDataProvider;
+
+    std::cout << " PDM :" << mConninfo;
+
     dataProvider->openConnection(mConninfo);
 }
 
-PostgresDatabaseManager::PostgresDatabaseManager(const std::string conninfo)
+PostgresDatabaseManager::PostgresDatabaseManager(const std::string conninfo, bool fresh_conn )
 {
 
     dataProvider =  new PostgresDataProvider;
+
+    if (fresh_conn)
+        dataProvider->nullify_connector();
+
     dataProvider->openConnection(conninfo);
     mConninfo = conninfo;
 }
@@ -149,13 +156,18 @@ PostgresDatabaseManager::~PostgresDatabaseManager()
     //delete dataProvider;
 }
 
+void PostgresDatabaseManager::test_connection(std::string conn_str)
+{
+
+    PostgresDataProvider::test_connection(conn_str);
+
+}
+
 int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 {
     std::string sqlQuery;
 
     sqlQuery = make_insert_returning_string(entity);
-
-    //qDebug() << stoq(sqlQuery);
 
     int last_id = provider()->insert_returning_id(sqlQuery);
     return last_id;

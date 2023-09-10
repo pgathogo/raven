@@ -1,5 +1,6 @@
-#include <QDebug>
 #include <map>
+#include <iostream>
+#include <QDebug>
 #include "dataprovider.h"
 #include "queryset.h"
 #include "databaseconnector.h"
@@ -52,6 +53,11 @@ PostgresDataProvider::~PostgresDataProvider()
     //PQfinish(conn);
 }
 
+void PostgresDataProvider::test_connection(const std::string conninfo)
+{
+    PostgresConnector::test_connection(conninfo);
+}
+
 /*
 PostgresDataProvider* PostgresDataProvider::instance()
 {
@@ -81,9 +87,22 @@ void PostgresDataProvider::openConnection(const std::string conninfo)
     conn = mPGConnector->connection();
 }
 
+/*
+void PostgresDataProvider::test_connection(const std::string conninfo)
+{
+    mPGConnector = PostgresConnector::instance(conninfo);
+    conn = mPGConnector->connection();
+}
+*/
+
 void PostgresDataProvider::closeConnection()
 {
     PQfinish(conn);
+}
+
+void PostgresDataProvider::nullify_connector()
+{
+    mPGConnector->nullify_instance();
 }
 
 bool PostgresDataProvider::executeQuery(const std::string query)
@@ -242,8 +261,10 @@ int PostgresDataProvider::read(const std::string query)
         StringMapped* record = new StringMapped;
 
         for(int j=0; j<nFields; ++j){
+
             record->insert(std::make_pair(PQfname(res, j),
                           PQgetvalue(res, i, j)));
+
         }
 
         // cache results

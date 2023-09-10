@@ -15,6 +15,10 @@
 #include "dataprovider.h"
 #include "relationmapper.h"
 
+
+class DatabaseManager;
+class Authentication;
+
 using EntityName = std::string;
 using Entity = std::shared_ptr<BaseEntity>;
 using EntityRecord = std::tuple<EntityName, Entity>;
@@ -80,6 +84,7 @@ class EntityDataModel : public EntityModel
 {
 public:
     EntityDataModel();
+    EntityDataModel(Authentication&);
     EntityDataModel(std::shared_ptr<BaseEntity> baseEntity);
     ~EntityDataModel();
 
@@ -166,7 +171,7 @@ public:
                 filter += "'%"+str_value+"%'";
             }else{
                 filter += op;
-                filter += value;
+                filter += "'"+value+"'";
             }
 
         }else if constexpr(std::is_same_v<decltype(value), QDate>){

@@ -39,9 +39,11 @@ std::string StationForm::windowTitle()
 void StationForm::populateEntityFields()
 {
     m_station->station_name()->setValue(ui->edtStation->text().toStdString());
+    m_station->db_name()->setValue(ui->edtDBName->text().toStdString());
 }
 
 void StationForm::populateFormWidgets()
 {
     ui->edtStation->setText(stoq(m_station->station_name()->value()));
+    ui->edtDBName->setText(stoq(m_station->db_name()->value()));
 }

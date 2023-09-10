@@ -4,18 +4,26 @@
 #include "authentication.h"
 #include "user.h"
 #include "../framework/databasemanager.h"
+#include "../framework/entitydatamodel.h"
 
 AccessMap Authentication::mAccessMap;
 
 Authentication::Authentication()
-    :mEdm{nullptr}
-    ,mUser{}
+    :mUser{}
+    ,mDBManager{nullptr}
+{
+}
+
+Authentication::Authentication(ConnInfo ci)
+    :m_conn_info{ci}
+    ,mDBManager{nullptr}
 {
 }
 
 Authentication::~Authentication()
 {
-    delete mDBManager;
+    if (mDBManager != nullptr)
+       delete mDBManager;
 }
 
 void Authentication::connect(const std::string uname, const std::string pword)
@@ -35,11 +43,36 @@ void Authentication::connect(const std::string uname, const std::string pword)
         port = registry.value("port").toInt();
 
     std::string conninfo = "user="+uname+" password="+pword+" dbname="+dbname.toStdString()+" port="+std::to_string(port);
-    mDBManager = new PostgresDatabaseManager(conninfo);
+
+    if (mDBManager != nullptr){
+        //delete mDBManager;
+       mDBManager = new PostgresDatabaseManager(conninfo, true);
+
+    } else {
+        mDBManager = new PostgresDatabaseManager(conninfo);
+    }
 
 }
 
-void Authentication::connect_cluster(const std::string uname, const std::string pword)
+
+std::unique_ptr<PostgresDatabaseManager> Authentication::connect_to_server()
+{
+    std::string conninfo = format("host={} user={} password={} dbname={} port={}", m_conn_info.host, m_conn_info.username,
+                                  m_conn_info.password, m_conn_info.db_name, std::to_string(m_conn_info.port));
+    auto pdm = std::make_unique<PostgresDatabaseManager>(conninfo, true);
+
+    return(std::move(pdm));
+}
+
+void Authentication::test_connection(ConnInfo& ci)
+{
+    std::string conninfo = format("host={} user={} password={} dbname={} port={}", ci.host, ci.username,
+                                  ci.password, ci.db_name, std::to_string(ci.port));
+
+   PostgresDatabaseManager::test_connection(conninfo);
+}
+
+void Authentication::connect_to_cluster_server(const std::string uname, const std::string pword)
 {
     QString dbname{};
     QString server{};
@@ -63,7 +96,7 @@ void Authentication::access_controller(const std::string uname)
 {
     auto[uid, validity] = get_user_details(uname);
 
-    // ** check password validity
+    // TODO: check password validity
 
     std::stringstream ss;
     ss << "select rave_content.name, access_bit "
@@ -111,6 +144,7 @@ std::tuple<std::string, std::string> Authentication::get_user_details(const std:
     EntityDataModel edm(std::move(user));
 
     std::string filter = edm.prepareFilter(filter_username);
+
     edm.search(filter);
 
     if (edm.count() == 0)

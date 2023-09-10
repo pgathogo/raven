@@ -55,6 +55,8 @@ class PostgresDataProvider: public BaseDataProvider
         void closeConnection();
         char* make_error_message(char*, char*);
         std::string provider_type() override;
+        void nullify_connector();
+        static void test_connection(const std::string conninfo);
     private:
         PostgresConnector* mPGConnector;
         PGconn* conn;

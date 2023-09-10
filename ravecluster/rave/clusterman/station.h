@@ -10,12 +10,16 @@ namespace ClusterManager
     {
     public:
         Station();
+        Station& operator=(const Station&);
+
         ~Station();
 
         StringField* station_name() const;
+        StringField* db_name() const;
         ForeignKeyField* cluster() const;
 
         void set_station_name(const std::string);
+        void set_db_name(const std::string);
         void set_cluster(int);
 
         std::string tableName() const override;
@@ -32,6 +36,7 @@ namespace ClusterManager
 
     private:
         StringField* m_station_name;
+        StringField* m_db_name;
         ForeignKeyField* m_cluster;
 
         QStringList m_header;

@@ -20,6 +20,8 @@ class PostgresConnector : public DatabaseConnector
         void openConnection(const std::string conninfo) override;
         PGconn* connection();
         void connRollback();
+        void nullify_instance();
+        static void test_connection(const std::string conninfo);
     protected:
         PostgresConnector(const std::string conninfo);
     private:

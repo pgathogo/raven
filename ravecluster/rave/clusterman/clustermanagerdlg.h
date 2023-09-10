@@ -21,12 +21,14 @@ namespace SECURITY{
     class User;
 }
 
+
 namespace ClusterManager{
     class Cluster;
-    class Station;
     class Server;
+    class Station;
     class StorageDisk;
     class AudioFolder;
+    class Database;
 }
 
 class QMdiArea;
@@ -37,6 +39,7 @@ using StationNode = ClusterManager::ConfigNode<ClusterManager::Station>;
 using ServerNode = ClusterManager::ConfigNode<ClusterManager::Server>;
 using DiskNode = ClusterManager::ConfigNode<ClusterManager::StorageDisk>;
 using AudioFolderNode = ClusterManager::ConfigNode<ClusterManager::AudioFolder>;
+using DatabaseNode = ClusterManager::ConfigNode<ClusterManager::Database>;
 
 using ClusterGroupNode = ClusterManager::ConfigNode<ClusterManager::ClusterGroupConfig>;
 
@@ -104,10 +107,9 @@ public:
     void add_members_to_role(std::shared_ptr<SECURITY::Role>, std::vector<EntityRecord> const&);
 
     template<typename T1, typename T2, typename T3>
-    T2* make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item){
-
+    T2* make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item)
+    {
         auto node = new T2(config_item);
-
 
         auto uuid = QUuid().createUuid();
         QString uuid_str =  uuid.toString(QUuid::WithoutBraces).left(8);
@@ -172,7 +174,6 @@ public:
             try{
                 auto node_type = std::get<T1*>(value);
                 auto cluster_node = dynamic_cast<T1*>(node_type);
-//                qDebug() << "FindNodeById=" << m_id << ":" << ClusterManager::node_type_to_string(T3);
                 return (cluster_node->id() == m_id && cluster_node->node_type() == T3);
             }catch(std::bad_variant_access) {
                 return false; }
@@ -307,6 +308,7 @@ private:
     ServerNode* m_current_audio_server_node;
     DiskNode* m_current_disk_node;
     AudioFolderNode* m_current_folder_node;
+    DatabaseNode* m_current_database_node;
 
     RoleNode* m_current_role_group_node;
     UserNode* m_current_user_node;

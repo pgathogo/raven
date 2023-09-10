@@ -477,6 +477,12 @@
 			null
 		],
 		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterconfigmanager.h",
+			"MU",
+			"EWIEGA46WW/moc_clusterconfigmanager.cpp",
+			null
+		],
+		[
 			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterform.h",
 			"MU",
 			"EWIEGA46WW/moc_clusterform.cpp",
@@ -745,6 +751,11 @@
 		],
 		[
 			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterbrowser.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterconfigmanager.cpp",
 			"MU",
 			null
 		],

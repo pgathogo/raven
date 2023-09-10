@@ -39,7 +39,8 @@ public:
     }
 
 public slots:
-    void order_type_changed(int);
+    void server_type_changed(int);
+    void test_connection();
 
 private:
     Ui::ServerForm *ui;
