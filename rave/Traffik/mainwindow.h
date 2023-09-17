@@ -8,6 +8,7 @@
 
 #include "../framework/baseentitybrowserdlg.h"
 #include "../security/authentication.h"
+#include "../security/structs.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,7 +26,8 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QApplication* app,
-               std::unique_ptr<Authentication> auth,
+               const StationInfo&,
+               const ConnInfo&,
                QWidget* parent = nullptr);
     ~MainWindow();
 
@@ -101,7 +103,6 @@ private:
 
     PostgresDatabaseManager* mPGManager;
     void createActions();
-    std::unique_ptr<Authentication> mAuth;
     static AccessMap access_map;
 
     //LimeReport::ReportEngine* m_report;

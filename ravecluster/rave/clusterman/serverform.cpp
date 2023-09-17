@@ -31,6 +31,8 @@ ServerForm::ServerForm(ClusterManager::Server* server, QDialog* parent)
     ui->btnTestConn->setDisabled(true);
     server_type_changed(ui->cbServerType->currentIndex());
 
+    setTitle(server->server_name()->value());
+
 }
 
 ServerForm::~ServerForm()

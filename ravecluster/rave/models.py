@@ -89,6 +89,6 @@ class UserAccess(models.Model):
     username = models.CharField(max_length=50)
     station = models.ForeignKey(Station, models.DO_NOTHING)
 
-class ClusterAccess(models.Model):
+class UserConfig(models.Model):
     username = models.CharField(max_length=50)
-    cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
+    reset_password = models.IntegerField(default=0)

@@ -337,10 +337,10 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
 
     Schedule schedule;
     QString DATE_FORMAT = "yyyy-MM-dd";
-    QString date_range = "'"+start_date.toString(DATE_FORMAT)+"' and '"+end_date.toString(DATE_FORMAT)+"'";
+    QString date_range = "'"+start_date.toString(DATE_FORMAT)+"' and '"+end_date.toString(DATE_FORMAT)+"')";
 
     auto date_range_filter = std::make_tuple(
-                schedule.schedule_date()->dbColumnName(),
+                "("+schedule.schedule_date()->dbColumnName(),
                 " between ",
                 date_range.toStdString()
                 );
@@ -363,6 +363,11 @@ std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::s
                 hr_str);
 
     try{
+        std::string str  = m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter);
+
+
+        std::cout << str << '\n';
+
         m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter));
     } catch(DatabaseException& de){
         showMessage(de.errorMessage());

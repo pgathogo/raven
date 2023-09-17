@@ -19,6 +19,9 @@ StorageDiskForm::StorageDiskForm(std::string server_name,
 
     ui->edtDiskName->setFocusPolicy(Qt::StrongFocus);
     ui->edtDiskName->setFocus();
+
+    setWindowTitle("Disk Form");
+    setTitle(storage_disk->disk_name()->value());
 }
 
 StorageDiskForm::StorageDiskForm(ClusterManager::StorageDisk* storage_disk,

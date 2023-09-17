@@ -30,13 +30,19 @@ private slots:
     void fetch_stations();
     void login();
     void cancel();
+    void reset_password();
+    void cancel_password_reset();
 
 private:
     bool populate_station_info(QString);
+    int get_station_id();
+    bool validate_password_reset();
+    void login_to_station(int);
 
     Ui::LoginForm* ui;
     Authentication* m_app_auth;
     NotificationBar* mNoticeBar;
+    NotificationBar* m_reset_notice_bar;
     bool mOkClose;
 
     std::map<int, StationInfo> m_stations_info;

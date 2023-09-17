@@ -1,24 +1,21 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef USERCONFIG_H
+#define USERCONFIG_H
 
 #include "../../../framework/baseentity.h"
 
-namespace ClusterManager
+namespace SECURITY
 {
-
-    class Database : public BaseEntity
+    class UserConfig : public BaseEntity
     {
     public:
-        Database();
-        ~Database() override;
+        UserConfig();
+        ~UserConfig();
 
-        StringField* db_name() const;
-        ForeignKeyField* server() const;
-        IntegerField* db_port() const;
+        StringField* username() const;
+        IntegerField* reset_password();
 
-        void set_db_name(const std::string);
-        void set_server(int);
-        void set_db_port(int);
+        void set_username(std::string);
+        void set_reset_password(int);
 
         std::string tableName() const override;
         std::unique_ptr<BaseEntity> mapFields(StringMap*) override;
@@ -31,14 +28,14 @@ namespace ClusterManager
         void populateEntity() override;
         void afterMapping(BaseEntity&) override;
         void setTableName(const std::string) override;
+
     private:
-        StringField* m_db_name;
-        IntegerField* m_db_port;
-        ForeignKeyField* m_server;
+        StringField* m_username;
+        IntegerField* m_reset_password;
 
         QStringList m_header;
         std::string m_table_name;
     };
 
 }
-#endif // DATABASE_H
+#endif // USERCONFIG_H

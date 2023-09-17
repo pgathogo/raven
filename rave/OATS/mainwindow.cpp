@@ -2528,15 +2528,24 @@ void MainWindow::queue_for_caching(std::shared_ptr<AUDIO::Audio> audio)
 
 void MainWindow::show_commercial(int schedule_ref)
 {
+    // Show next commercial break from the current playing item.
+
     int index = index_of(schedule_ref);
-    auto schedule = schedule_item(index);
 
-    m_comm_viewer->clear();
-    m_comm_viewer->create_view_headers();
+    for(int i=index; i<m_schedule_items.size(); ++i){
+        if (m_schedule_items[i]->schedule_type() == OATS::ScheduleType::COMM){
 
-    fetch_commercial_from_db(schedule->id());
+            auto schedule = schedule_item(index);
+            m_comm_viewer->clear();
+            m_comm_viewer->create_view_headers();
+            fetch_commercial_from_db(schedule->id());
+            m_comm_viewer->set_title("Commercial Break: "+schedule->schedule_time().toString("HH:mm"));
 
-    m_comm_viewer->set_title("Commercial Break: "+schedule->schedule_time().toString("HH:mm"));
+            break;
+
+        }
+    }
+
 
 }
 

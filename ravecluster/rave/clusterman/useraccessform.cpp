@@ -46,7 +46,7 @@ std::map<int, StationAccess> UserAccessForm::user_access()
 
 void UserAccessForm::setup_gui()
 {
-    setWindowTitle("Station Attachment");
+    setWindowTitle("User Station Attachment");
 
     ui->tbAdd->setIconSize(QSize(30,30));
     ui->tbAdd->setIcon(QIcon(":/images/icons/right_arrow.png"));
@@ -237,12 +237,21 @@ void UserAccessForm::station_selected(QListWidgetItem* selected_item)
 
 void UserAccessForm::add_station()
 {
+    qDebug() << "AAA";
+
     auto selected_items = ui->lwStations->selectedItems();
     if (selected_items.size() == 0)
         return;
-    auto item = selected_items[0];
 
+    qDebug() << "BBB";
+
+    auto item = selected_items[0];
     int station_id = item->data(Qt::UserRole).toInt();
+
+    if (m_user_access.contains(station_id))
+        return;
+
+    qDebug() << "CCC";
 
     StationData sd = m_station_data[station_id];
 
@@ -253,36 +262,17 @@ void UserAccessForm::add_station()
         return;
     }
 
-    // Check if db name is a valid database
+    qDebug() << "DDD";
 
+    // Check if db name is a valid database
     ConnInfo ci = find_db_server(sd.db_name, sd.cluster_id);
     if (ci.db_name.empty()){
         QMessageBox::critical(this, error_title,"Failed to attach station to user! Station database NOT valid.");
         return;
     }
 
-    // Create user in the selected server
-    std::unique_ptr<SECURITY::User> user = std::make_unique<SECURITY::User>();
-
-        Authentication auth(ci);
-        EntityDataModel edm(auth);
-
-        std::string sql = "Select id, genre from rave_genre";
-        int rec_count=0;
-        try{
-            rec_count = edm.readRaw(sql);
-        }catch(DatabaseException& de) {
-            qDebug() << "Exception thrown";
-        }
-
-
-    return;
-
-
-    QString name = sd.station_name; //item->text();
-
-    if (m_user_access.contains(station_id))
-        return;
+    qDebug() << "EEE";
+    QString name = sd.station_name;
 
     QListWidgetItem* s_item = new QListWidgetItem(name);
     s_item->setData(Qt::UserRole, station_id);
@@ -291,6 +281,7 @@ void UserAccessForm::add_station()
 
     add_access(station_id, sd.cluster_id, name);
 
+    qDebug() << "FFF";
 }
 
 void UserAccessForm::add_access(int station_id, int cluster_id, QString name)
@@ -347,7 +338,8 @@ ConnInfo UserAccessForm::find_db_server(QString db_name, int cluster_id)
 
     ConnInfo ci;
 
-    for (auto& server : servers){
+    for (auto& server : servers)
+    {
         ci.db_name = db_name.toStdString();
         ci.host = server->server_ip()->value();
         ci.port = server->port_no()->value();
@@ -359,7 +351,6 @@ ConnInfo UserAccessForm::find_db_server(QString db_name, int cluster_id)
         std::cout << "Port: "<< ci.port << '\n';
         std::cout << "Username: "<< ci.username << '\n';
         std::cout << "Password: "<< ci.password << '\n';
-
 
         if (ci.host.empty())
             continue;

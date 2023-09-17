@@ -60,17 +60,24 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     , m_save_as{nullptr}
 {
 
+    qDebug() << "MainWindow:: AAAA";
     ui->setupUi(this);
 
     m_schedule_item_builder = new ItemBuilder();
+    qDebug() << "BBB";
 
     m_track_item_builder = new TrackItemBuilder();
+    qDebug() << "CCC";
 
     AudioLibrary audio_lib;
+    qDebug() << "DDD";
     //auto node_data = audio_lib.read_data_from_file("tree.txt");
     auto node_data = audio_lib.read_data_from_db();
+    qDebug() << "EEE";
+
     m_tree_model = new TreeViewModel(node_data, this);
     ui->tvFolders->setModel(m_tree_model);
+
     audio_folder_setup();
     connect(ui->tvFolders, &QTreeView::clicked, this, &MainWindow::folder_clicked);
 
@@ -147,11 +154,16 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
 
     std::string uname = std::format("Username: {}      ",ci.username);
     std::string station = std::format("Station: {}      ", si.station_name.toStdString());
-    std::string db_ip = std::format("Database Host: {}      ",si.ip_address.toStdString());
+    std::string db_ip = std::format("Host: {}      ",si.ip_address.toStdString());
+
+    QLabel* station_label = new QLabel( QString::fromStdString(station));
+    station_label->setStyleSheet("font-weight: bold; color: red");
 
     QStatusBar* sb = new QStatusBar(this);
     sb->addWidget(new QLabel(QString::fromStdString(uname)));
-    sb->addWidget(new QLabel(QString::fromStdString(station)));
+
+    sb->addWidget(station_label);
+
     sb->addWidget(new QLabel(QString::fromStdString(db_ip)));
 
     setStatusBar(sb);

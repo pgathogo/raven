@@ -214,7 +214,18 @@ namespace SECURITY
 
         }
 
-        return s1+role_validity()+role_rights()+s2+s3+s4;
+        qDebug() <<"s1: "<< stoq(s1);
+        qDebug() <<"role_validity(): "<< stoq(role_validity());
+        qDebug() <<"role_rights: "<< stoq(role_rights());
+        qDebug() <<"s2: "<< stoq(s2);
+        qDebug() <<"s3: "<< stoq(s3);
+        qDebug() << "s4: "<<stoq(s4);
+
+        std::string stmt =  s1+role_validity()+role_rights()+s2+s3+s4;
+
+        qDebug() << stoq(stmt);
+
+        return stmt;
     }
 
     std::string BaseRole::role_rights()
@@ -344,6 +355,7 @@ namespace SECURITY
 
     std::string BaseRole::make_create_stmt()
     {
+        qDebug() << "BaseRole::make_create_stmt ";
         return make_create_role_stmt();
     }
 

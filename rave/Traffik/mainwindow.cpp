@@ -24,7 +24,8 @@
 AccessMap MainWindow::access_map;
 
 MainWindow::MainWindow(QApplication* app,
-                       std::unique_ptr<Authentication> auth,
+                       const StationInfo& si,
+                       const ConnInfo& ci,
                        QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -47,7 +48,6 @@ MainWindow::MainWindow(QApplication* app,
     ,clientRptAction{}
     ,plainFormAction{}
     ,mPGManager{}
-    ,mAuth{std::move(auth)}
 {
     ui->setupUi(this);
 
@@ -57,8 +57,21 @@ MainWindow::MainWindow(QApplication* app,
 
     createActions();
 
-    std::string str = std::format("My Name is {0}", "NEO");
-    qDebug() << QString::fromStdString(str);
+    std::string uname = std::format("Username: {}    ", ci.username);
+    std::string station = std::format("Station: {}   ", si.station_name.toStdString());
+    std::string host = std::format("Host: {}    ", si.ip_address.toStdString());
+
+    QLabel* station_label = new QLabel(QString::fromStdString(station));
+    station_label->setStyleSheet("font-weight: bold; color: red");
+
+    QStatusBar* sb = new QStatusBar(this);
+    sb->addWidget(new QLabel(QString::fromStdString(uname)));
+
+    sb->addWidget(station_label);
+
+    sb->addWidget(new QLabel(QString::fromStdString(host)));
+
+    setStatusBar(sb);
 
 //    m_report = new LimeReport::ReportEngine(this);
 

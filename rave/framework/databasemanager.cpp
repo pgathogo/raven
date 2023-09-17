@@ -134,9 +134,8 @@ PostgresDatabaseManager::PostgresDatabaseManager()
 {
     dataProvider =  new PostgresDataProvider;
 
-    std::cout << " PDM :" << mConninfo;
-
     dataProvider->openConnection(mConninfo);
+
 }
 
 PostgresDatabaseManager::PostgresDatabaseManager(const std::string conninfo, bool fresh_conn )
@@ -217,8 +216,9 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
-
     return provider()->read(sql);
+
+    std::cout << "** AFTER SEARCH ** " << '\n';
 }
 
 int PostgresDatabaseManager::search_with_filter(const BaseEntity& entity, const std::string filter)

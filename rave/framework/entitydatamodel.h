@@ -169,7 +169,12 @@ public:
 //                    std::tolower(s);
                 str_value = str_tolower(str_value);
                 filter += "'%"+str_value+"%'";
-            }else{
+            }else if(str_tolower(op) == "between"){
+                qDebug() << "Between >> " << stoq(value);
+                filter += op;
+                filter += value;
+            } else {
+                qDebug() << "OTHER >> " << stoq(value);
                 filter += op;
                 filter += "'"+value+"'";
             }

@@ -54,6 +54,16 @@ void Authentication::connect(const std::string uname, const std::string pword)
 
 }
 
+void Authentication::connect_to_station(ConnInfo ci)
+{
+    std::string conninfo = format("host={} user={} password={} dbname={} port={}",
+                                  ci.host, ci.username,
+                                  ci.password, ci.db_name,
+                                  std::to_string(ci.port));
+
+    mDBManager = new PostgresDatabaseManager(conninfo, false);
+}
+
 
 std::unique_ptr<PostgresDatabaseManager> Authentication::connect_to_server()
 {

@@ -5,6 +5,7 @@
 #include <QUuid>
 #include <QAction>
 #include <QMenu>
+#include <QMessageBox>
 
 #include "clustermanagerdlg.h"
 #include "ui_clustermanagerdlg.h"
@@ -35,6 +36,7 @@
 #include "audiofolderform.h"
 #include "useraccessform.h"
 #include "useraccess.h"
+#include "clusterconfigmanager.h"
 
 int ClusterConfiguration::temp_id{100};
 
@@ -68,6 +70,7 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     //connect(ui->btnNewStation, &QPushButton::clicked, this, &ClusterManagerDlg::new_station);
 //    connect(ui->btnNewAudioServer, &QPushButton::clicked, this, &ClusterManagerDlg::new_server);
     connect(ui->btnSave, &QPushButton::clicked, this, &ClusterManagerDlg::save_data);
+    connect(ui->btnClose, &QPushButton::clicked, this, &ClusterManagerDlg::close_window);
 
     toggle_new_station_button(false);
 
@@ -85,11 +88,9 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
 
     connect(ui->btnClear, &QPushButton::clicked, this, &ClusterManagerDlg::clear_configuration);
 
-    std::string name = encrypt_str("abc123");
-    std::cout << "Name: "<< name << '\n';
+    connect(ui->btnGrant, &QPushButton::clicked, this, &ClusterManagerDlg::grant_access);
 
-    std::string dec_str = decrypt_str(name);
-    std::cout << "DEC: "<< dec_str << '\n';
+    m_ccm = std::make_unique<ClusterManager::ClusterConfigurationManager>();
 }
 
 QMap<QString, QVariant> ClusterManagerDlg::make_node_data(ConfigItemType node_type)
@@ -319,12 +320,17 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
 {
     std::shared_ptr<SECURITY::User> user = std::make_shared<SECURITY::User>();
     std::unique_ptr<UserForm> uform = std::make_unique<UserForm>(user.get());
+
     if (uform->exec() > 0)
     {
-        std::string create_stmt = user->make_create_stmt();
+
+//        std::string create_stmt = user->make_create_stmt();
+
         try {
-            EntityDataModel edm;
-            edm.executeRawSQL(create_stmt);
+//            EntityDataModel edm;
+//            edm.executeRawSQL(create_stmt);
+
+           m_ccm->create_user(user.get());
 
             auto user_context = node_context<ConfigItemType::User, NodeType::Leaf>(
                         stoq(user->role_name()->value()));
@@ -333,6 +339,7 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
                         std::move(user), user_group_node, user_context);
 
            } catch (DatabaseException& de) {
+            std::cout << de.errorMessage() << '\n';
                showMessage(de.errorMessage());
         }
     }
@@ -355,9 +362,23 @@ void ClusterManagerDlg::new_application(AppGroupNode* app_group_node)
 void ClusterManagerDlg::edit_user(UserNode* user_node)
 {
 
-   edit_node<UserNode, UserForm, SECURITY::User>(user_node, &SECURITY::User::role_name);
+//   edit_node<UserNode, UserForm, SECURITY::User>(user_node, &SECURITY::User::role_name);
+    auto user = user_node->node_entity();
+    std::unique_ptr<UserForm> uform =
+        std::make_unique<UserForm>(user);
+    if (uform->exec())
+    {
+        if (user->reset_password()){
+               m_ccm->flag_password_for_reset(user->role_name()->value());
+        }
+
+        m_ccm->alter_cluster_user(user->role_name()->value(), user->rol_password()->value());
+
+        user_node->setText(0, stoq(user->role_name()->value()));
+    }
 
 }
+
 
 void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
 {
@@ -369,6 +390,8 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
    {
         EntityDataModel edm;
         auto user_access = uaf->user_access();
+
+
         for (auto& [id, sa]: user_access)
         {
             auto usera = std::make_unique<ClusterManager::UserAccess>();
@@ -381,7 +404,7 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
                 usera->set_station(sa.station_id);
                 edm.createEntityDB(*usera);
 
-                //grant_access_station_db(sa);
+                m_ccm->grant_user_station_access(usera->username()->value(), sa.station_id);
 
                 break;
             }
@@ -399,12 +422,6 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
 
 }
 
-/*
-bool ClusterManagerDlg::grant_access_station_db(int station_id, int cluster_id)
-{
-
-}
-*/
 
 void ClusterManagerDlg::edit_role(RoleNode* role_node)
 {
@@ -564,6 +581,7 @@ void ClusterManagerDlg::edit_cluster()
             std::make_unique<ClusterForm>(selected_cluster);
     if (cform->exec() > 0){
         EntityDataModel edm;
+
         // TODO: Add try catch for database action
         edm.updateEntity(*selected_cluster);
         m_current_cluster_node->update_node_text(stoq(selected_cluster->cluster_name()->value()));
@@ -592,7 +610,9 @@ void ClusterManagerDlg::edit_station(StationNode* station_node)
 
 void ClusterManagerDlg::delete_cluster()
 {
-    delete_node<ClusterNode, RootNode>(m_current_cluster_node, m_root_node.get());
+    if (ask_question("Delete Cluster", "Delete selected cluster?"))
+        delete_node<ClusterNode, RootNode>(m_current_cluster_node, m_root_node.get());
+
     m_act_delete_cluster = nullptr;
     m_cluster_context_menu = nullptr;
 }
@@ -600,7 +620,9 @@ void ClusterManagerDlg::delete_cluster()
 
 void ClusterManagerDlg::delete_server()
 {
-    delete_node<ServerNode, ClusterNode>(m_current_audio_server_node, m_current_cluster_node);
+    if (ask_question("Delete Server", "Delete selected server?"))
+        delete_node<ServerNode, ClusterNode>(m_current_audio_server_node, m_current_cluster_node);
+
 
     m_act_delete_server = nullptr;
     m_cluster_context_menu = nullptr;
@@ -608,7 +630,9 @@ void ClusterManagerDlg::delete_server()
 
 void ClusterManagerDlg::delete_disk()
 {
-    delete_node<DiskNode, ServerNode>(m_current_disk_node, m_current_audio_server_node);
+    if (ask_question("Delete Disk", "Delete selected disk?"))
+        delete_node<DiskNode, ServerNode>(m_current_disk_node, m_current_audio_server_node);
+
     m_act_delete_disk = nullptr;
     m_audio_server_context_menu = nullptr;
 
@@ -616,7 +640,8 @@ void ClusterManagerDlg::delete_disk()
 
 void ClusterManagerDlg::delete_folder()
 {
-    delete_node<AudioFolderNode, DiskNode>(m_current_folder_node, m_current_disk_node);
+    if (ask_question("Delete Folder", "Delete selected folder?"))
+        delete_node<AudioFolderNode, DiskNode>(m_current_folder_node, m_current_disk_node);
 
     m_act_delete_folder = nullptr;
     m_folder_context_menu = nullptr;
@@ -1240,6 +1265,11 @@ void ClusterManagerDlg::save_data()
     showMessage("Data Saved.");
 }
 
+void ClusterManagerDlg::close_window()
+{
+    done(1);
+}
+
 void ClusterManagerDlg::save_tree(std::map<QString, std::tuple<ConfigItemType, std::any>> nodes, int parent_id)
 {
     EntityDataModel edm;
@@ -1330,7 +1360,6 @@ void ClusterManagerDlg::load_data()
     load_roles_data();
     load_users_data();
     load_content_data();
-
 }
 
 void ClusterManagerDlg::load_content_data()
@@ -1624,6 +1653,7 @@ void ClusterManagerDlg::load_users_data()
 {
     std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(
                 std::make_shared<SECURITY::User>());
+
     edm->all();
 
     for(auto const&[name, entity] : edm->modelEntities()){
@@ -1677,6 +1707,22 @@ void ClusterManagerDlg::load_roles_data()
         auto role_node = make_node<std::shared_ptr<SECURITY::Role>, RoleNode, RoleNode>(
                     role, m_current_role_group_node, item);
 
+    }
+}
+
+void ClusterManagerDlg::grant_access()
+{
+    m_ccm->user_table_privileges("jboss");
+}
+
+bool ClusterManagerDlg::ask_question(QString title, QString query)
+{
+    auto reply = QMessageBox::question(this, title, query, QMessageBox::Yes| QMessageBox::No);
+
+    if (reply == QMessageBox::Yes){
+        return true;
+    }else {
+        return false;
     }
 }
 

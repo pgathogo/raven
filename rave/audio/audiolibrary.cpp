@@ -5,6 +5,7 @@
 #include "audiolibrary.h"
 #include "../framework/tree.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/ravenexception.h".h"
 #include "audiofolder.h"
 
 std::vector<NodeData*> AudioLibrary::read_data_from_file(const std::string data_file)
@@ -56,8 +57,15 @@ std::vector<NodeData*> AudioLibrary::read_data_from_db()
 {
     std::vector<NodeData*> data;
 
-    EntityDataModel edm = EntityDataModel(std::make_unique<AudioFolder>());
-    edm.all();
+    EntityDataModel edm(std::make_shared<AudioFolder>());
+    qDebug() << "5555";
+    try{
+
+    qDebug() << "7777";
+        edm.all();
+    } catch(DatabaseException& de) {
+        std::cout << de.errorMessage() << '\n';
+    }
 
     for(auto& [name, entity] : edm.modelEntities()){
        AudioFolder* audio_folder = dynamic_cast<AudioFolder*>(entity.get());

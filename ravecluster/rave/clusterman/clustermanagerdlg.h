@@ -21,7 +21,6 @@ namespace SECURITY{
     class User;
 }
 
-
 namespace ClusterManager{
     class Cluster;
     class Server;
@@ -29,6 +28,7 @@ namespace ClusterManager{
     class StorageDisk;
     class AudioFolder;
     class Database;
+    class ClusterConfigurationManager;
 }
 
 class QMdiArea;
@@ -105,6 +105,9 @@ public:
     void make_cluster_node(std::shared_ptr<ClusterManager::Cluster>);
     void clear_configuration();
     void add_members_to_role(std::shared_ptr<SECURITY::Role>, std::vector<EntityRecord> const&);
+
+    bool ask_question(QString, QString);
+
 
     template<typename T1, typename T2, typename T3>
     T2* make_node(T1 node_entity, T3* parent_node, ClusterManager::ConfigItem config_item)
@@ -233,7 +236,8 @@ public:
     {
         T3* node_entity = current_node->node_entity();
         auto edit_form = std::make_unique<T2>(node_entity);
-        if (edit_form->exec() > 0){
+        if (edit_form->exec() > 0)
+        {
             EntityDataModel edm;
             edm.updateEntity(*node_entity);
             current_node->update_node_text(stoq((node_entity->*mp)()->value()));
@@ -279,12 +283,15 @@ public slots:
     void print_tree();
 
     void save_data();
+    void close_window();
     void load_data();
     void load_cluster_data();
     void load_cluster_data_new();
     void load_users_data();
     void load_roles_data();
     void load_content_data();
+
+    void grant_access();
 
 private:
     Ui::ClusterManagerDlg* ui;
@@ -357,6 +364,8 @@ private:
     std::unique_ptr<QAction> m_act_audio_server;
     std::unique_ptr<QAction> m_act_edit_audio_server;
     std::unique_ptr<QAction> m_act_edit_disk;
+
+    std::unique_ptr<ClusterManager::ClusterConfigurationManager> m_ccm;
 
 
 };

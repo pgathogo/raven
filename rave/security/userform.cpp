@@ -16,9 +16,11 @@ UserForm::UserForm(SECURITY::User* user, QDialog *parent) :
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
 
-    connect(ui->cbExpiry, &QCheckBox::stateChanged, this, &UserForm::updateValidity);
+    connect(ui->cbResetPassword, &QCheckBox::stateChanged, this, &UserForm::updateValidity);
 
     populateFormWidgets();
+
+    ui->edtExpireDate->setEnabled(false);
 
 }
 
@@ -36,11 +38,15 @@ void UserForm::populateEntityFields()
 {
     mUser->set_role_name(ui->edtUserName->text().toStdString());
     mUser->set_rol_password(ui->edtPassword->text().toStdString());
-    bool canExpire = [&](){ return (ui->cbExpiry->checkState()==Qt::Unchecked) ? true : false ; }();
-    if (canExpire)
-        mUser->set_valid_until(ui->edtExpireDate->date().toString("yyyy-MM-dd").toStdString());
-    else
-        mUser->set_valid_until("infinity");
+
+    bool reset_password = [&](){ return (ui->cbResetPassword->checkState()==Qt::Checked) ? true : false ; }();
+
+    mUser->set_reset_password(reset_password);
+
+//    if (reset_password)
+//        mUser->set_valid_until(QDate::currentDate().addDays(-5).toString("yyyy-MM-dd").toStdString());
+//    else
+    mUser->set_valid_until("infinity");
 }
 
 void UserForm::populateFormWidgets()
@@ -61,7 +67,7 @@ void UserForm::populateFormWidgets()
 
     if (mUser->valid_until()->value() == "infinity" ||
             mUser->valid_until()->value().empty()){
-        ui->cbExpiry->setCheckState(Qt::Checked);
+        //ui->cbResetPassword->setCheckState(Qt::Checked);
         //ui->edtExpireDate->setDate(QDate(QDate::currentDate().addYears(5)));
     }
 }
@@ -102,7 +108,8 @@ ActionResult UserForm::saveRecord()
             EntityDataModel edm = EntityDataModel(std::make_unique<SECURITY::User>());
             auto user_filter = std::make_tuple("lower("+mUser->role_name()->dbColumnName()+")",
                                "=",
-                               mUser->role_name()->dbValueFormatter());
+                               mUser->role_name()->value());
+                               //mUser->role_name()->dbValueFormatter());
             std::string filter = edm.prepareFilter(user_filter);
             edm.search(filter);
 
@@ -112,6 +119,7 @@ ActionResult UserForm::saveRecord()
                 return ar;
             }
         } catch(DatabaseException& de) {
+            std::cout << de.errorMessage() << '\n';
             showMessage(de.errorMessage());
         }
 
@@ -123,8 +131,10 @@ ActionResult UserForm::saveRecord()
 
 void UserForm::updateValidity(int state)
 {
+    /*
     if (state == Qt::Checked)
         ui->edtExpireDate->setEnabled(false);
     else
         ui->edtExpireDate->setEnabled(true);
+   */
 }

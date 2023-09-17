@@ -48,15 +48,17 @@ namespace SECURITY
 
         std::string role_validity() override;
 
+        BooleanField* reset_password();
+        void set_reset_password(bool);
 
-        std::string make_create_role_stmt() override;
+        std::string make_create_user_stmt();
         std::string make_grant_member_stmt(std::vector<std::string>&) override;
-        std::string role_rights() override;
+        //std::string role_rights() override;
         std::string make_alter_role_stmt(const std::string username) override;
         std::string make_drop_role_stmt(const std::string username) override;
         void table_sequences(std::vector<std::string>& tseq) override;
 
-        std::string make_create_stmt() override;
+        //std::string make_create_stmt() override;
         std::string make_alter_stmt(const std::string name) override;
         std::string make_drop_stmt(const std::string name) override;
 
@@ -89,6 +91,8 @@ namespace SECURITY
         BooleanField* m_rol_replication;
         StringField* m_rol_password;
         StringField* m_valid_until;
+
+        BooleanField* m_reset_password;
 
         QStringList mHeader;
         std::string mTableName;

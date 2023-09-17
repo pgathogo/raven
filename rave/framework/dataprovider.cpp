@@ -43,7 +43,7 @@ DataQuerySet<StringMapped>* BaseDataProvider::cache()
 
 PostgresDataProvider::PostgresDataProvider()
     : BaseDataProvider()
-    ,mPGConnector{nullptr}
+    //,mPGConnector{nullptr}
 {
 }
 

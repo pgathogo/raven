@@ -1,4 +1,6 @@
-#include "mainwindow.h"
+//#include "mainwindow.h"
+#include "clustermanagerdlg.h"
+
 
 #include <QApplication>
 
@@ -19,7 +21,9 @@ int main(int argc, char *argv[])
         showMessage(de.errorMessage());
     }
 
-    MainWindow w;
-    w.show();
+//    MainWindow w;
+//    w.show();
+    ClusterManagerDlg cmd;
+    cmd.show();
     return a.exec();
 }

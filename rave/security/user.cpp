@@ -10,7 +10,6 @@ namespace SECURITY
         m_id = createField<IntegerField>("oid", "Unique Id");
         m_id->setReadOnly(true);
 
-
         m_OId = createField<IntegerField>("oid", "Role ID");
         m_OId->setReadOnly(true);
 
@@ -25,6 +24,9 @@ namespace SECURITY
         m_rol_replication = createField<BooleanField>("rolreplication","Role can Replicate");
         m_rol_password = createField<StringField>("rolpassword","Role Password");
         m_valid_until = createField<StringField>("rolvaliduntil", "Role Valid Until");
+
+        m_reset_password = createField<BooleanField>("reset_password", "Reset Password");
+        m_reset_password->setFormOnly(true);
 
         mHeader << QString::fromStdString(m_role_name->fieldLabel());
         setTableName("pg_authid");
@@ -184,11 +186,27 @@ namespace SECURITY
         m_valid_until->setValue( validity );
     }
 
+    BooleanField* User::reset_password()
+    {
+        return m_reset_password;
+    }
+
+    void User::set_reset_password(bool set)
+    {
+        m_reset_password->setValue(set);
+
+    }
+
+
     std::string User::role_validity()
     {
         std::string validity{};
 
-        validity = " VALID UNTIL '"+valid_until()->value()+"'";
+        if (!valid_until()->value().empty()){
+            validity = " VALID UNTIL '"+valid_until()->value()+"'";
+        } else {
+            validity = " VALID UNTIL 'infinity' ";
+        }
 
     //    if (!roleExpire()->value())
     //        validity = " VALID UNTIL '"+validUntil()->value()+"'";
@@ -197,6 +215,9 @@ namespace SECURITY
 
         return validity;
     }
+
+
+
 
     std::string User::filter()
     {
@@ -246,12 +267,13 @@ namespace SECURITY
         return{role_name()->valueToString()};
     }
 
-
-
+    /*
     std::string User::make_create_stmt()
     {
-        //return BaseRole::make_create_role_stmt();
+        return BaseRole::make_create_role_stmt();
     }
+    */
+
 
     std::string User::make_alter_stmt(const std::string name)
     {
@@ -265,11 +287,13 @@ namespace SECURITY
 
 
 
+    /*
     std::string User::role_rights()
     {
         //return " NOSUPERUSER INHERIT NOCREATEDB CREATEROLE NOREPLICATION;";
         //return BaseRole::role_rights();
     }
+   */
 
     std::string User::make_alter_role_stmt(const std::string username)
     {
@@ -329,28 +353,15 @@ namespace SECURITY
     }
 
 
-    std::string User::make_create_role_stmt()
+    std::string User::make_create_user_stmt()
     {
-        /*
-        std::string s1 = std::format("CREATE USER {} WITH PASSWORD '{}' ",role_name()->value(), rol_password()->value() ) ;
+        std::string s1 = std::format("CREATE USER {} WITH PASSWORD '{}' ",
+                                     role_name()->value(), rol_password()->value() ) ;
 
-        std::string s2{};
-
-        std::string s3 = std::format("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {};",role_name()->value());
-
-        std::vector<std::string> seqs;
-        table_sequences(seqs);
-
-        std::string s4{};
-        for(auto& seq : seqs){
-            auto grant = std::format("GRANT ALL ON SEQUENCE public.{} TO GROUP {} WITH GRANT OPTION;",seq, role_name()->value());
-            s4 += grant;
-        }
-
-        return s1+role_validity()+role_rights()+s2+s3+s4;
+        std::string stmt = s1+role_validity()+role_rights();
+        std::cout << stmt << '\n';
+        return stmt;
     }
-    */
-        //BaseRole::make_create_role_stmt();
-    }
+
 
 }

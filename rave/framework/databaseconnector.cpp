@@ -25,8 +25,10 @@ PostgresConnector::PostgresConnector(std::string conninfo)
 
 PostgresConnector* PostgresConnector::instance(const std::string conninfo)
 {
+    qDebug() << " Getting instance >>>>>>> ";
 
     if (mInstance == nullptr){
+        qDebug() << "PostgresConnector::instances = nullptr *";
         mInstance = new PostgresConnector(conninfo);
     }
     return mInstance;
