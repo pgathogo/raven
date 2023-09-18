@@ -29,7 +29,7 @@ UserAccessForm::UserAccessForm(SECURITY::User* user, QWidget *parent)
     connect(ui->tbAdd, &QToolButton::clicked, this, &UserAccessForm::add_station);
     connect(ui->tbDelete, &QToolButton::clicked, this, &UserAccessForm::remove_station);
 
-    m_ccm = std::make_unique<ClusterManager::ClusterConfigurationManager>();
+    m_cluster_controller = std::make_unique<ClusterManager::ClusterController>();
 
     setup_gui();
 }
@@ -334,7 +334,7 @@ void UserAccessForm::remove_station()
 
 ConnInfo UserAccessForm::find_db_server(QString db_name, int cluster_id)
 {
-    auto servers = m_ccm->servers(cluster_id, "DBS");
+    auto servers = m_cluster_controller->servers(cluster_id, "DBS");
 
     ConnInfo ci;
 

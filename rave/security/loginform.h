@@ -35,7 +35,7 @@ private slots:
 
 private:
     bool populate_station_info(QString);
-    int get_station_id();
+    int get_selected_station_id();
     bool validate_password_reset();
     void login_to_station(int);
 

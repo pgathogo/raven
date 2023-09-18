@@ -23,3 +23,7 @@
 #include "XNILL3DMLC/moc_commercialviewer.cpp"
 #include "DX5S3JBGB7/moc_letterfilterwidget.cpp"
 #include "DX5S3JBGB7/moc_treeviewmodel.cpp"
+#include "QCNHDQ7SKX/moc_loginform.cpp"
+#include "QCNHDQ7SKX/moc_selectstationform.cpp"
+#include "DLICU2EZZF/moc_notificationbar.cpp"
+#include "DLICU2EZZF/moc_notificationitem.cpp"

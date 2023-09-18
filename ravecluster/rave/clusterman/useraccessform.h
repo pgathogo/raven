@@ -33,7 +33,7 @@ class UserAccessForm;
 }
 
 namespace ClusterManager{
-class ClusterConfigurationManager;
+class ClusterController;
 }
 
 class UserAccessForm : public QDialog
@@ -69,7 +69,7 @@ private:
     std::map<int, StationAccess> m_user_access;
     std::map<int, StationData> m_station_data;
 
-    std::unique_ptr<ClusterManager::ClusterConfigurationManager> m_ccm;
+    std::unique_ptr<ClusterManager::ClusterController> m_cluster_controller;
 
 
 };

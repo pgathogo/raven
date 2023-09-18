@@ -8,6 +8,7 @@
 #include "../framework/ravenexception.h"
 #include "../framework/entitydatamodel.h"
 #include "../security/userconfig.h"
+#include "../../ravecluster/rave/clusterman/clustercontroller.h"
 
 #include "user.h"
 #include "authentication.h"
@@ -85,25 +86,26 @@ void LoginForm::fetch_stations()
 
     SECURITY::UserConfig uc;
     EntityDataModel edm(std::make_unique<SECURITY::UserConfig>());
-    auto user_filter = std::make_tuple(uc.username()->dbColumnName(),"=", ui->edtUsername->text().toStdString());
+    auto user_filter = std::make_tuple(uc.username()->dbColumnName(),"=", "'"+ui->edtUsername->text().toStdString()+"'");
     std::string filter = edm.prepareFilter(user_filter);
 
     edm.search(filter);
 
-    if (edm.modelEntities().size() > 0){
-
+    if (edm.modelEntities().size() > 0)
+    {
         auto const& [name, entity] = edm.modelEntities()[0];
         auto ucptr = dynamic_cast<SECURITY::UserConfig*>(entity.get());
 
         int can_reset_password = ucptr->reset_password()->value();
-        if (can_reset_password == 1){
+        if (can_reset_password == 1)
+        {
             ui->lblUsername->setText(ui->edtUsername->text());
             ui->swMain->setCurrentIndex(can_reset_password);
             return;
         }
     }
 
-    m_selected_station_id = get_station_id();
+    m_selected_station_id = get_selected_station_id();
     if (m_selected_station_id > 0)
     {
         auto si = m_stations_info[m_selected_station_id];
@@ -112,7 +114,7 @@ void LoginForm::fetch_stations()
     }
 }
 
-int LoginForm::get_station_id()
+int LoginForm::get_selected_station_id()
 {
     bool populated = populate_station_info(ui->edtUsername->text());
     if (!populated)
@@ -199,10 +201,30 @@ void LoginForm::reset_password()
 {
     if (validate_password_reset())
     {
-        // TODO: Reset user password
+        ClusterManager::ClusterController cluster_controller;
+        std::string username = ui->edtUsername->text().toStdString();
+        std::string password = ui->edtNewPassword->text().toStdString();
 
-        m_selected_station_id = get_station_id();
-        if (m_selected_station_id > 0){
+         cluster_controller.alter_password(username, password);
+
+        // Switch back to cluster server
+        Authentication auth;
+        ConnInfo ci = auth.cluster_server_conninfo();
+        ci.username = username;
+        ci.password = password;
+
+        try{
+            Authentication auth2(ci);
+            auth2.connect_to_server();
+             cluster_controller.remove_password_reset_flag(username);
+            m_selected_station_id = get_selected_station_id();
+
+        }catch(DatabaseException& de){
+            std::cout << de.errorMessage();
+        }
+
+        if (m_selected_station_id > 0)
+        {
             login_to_station(m_selected_station_id);
             mOkClose = true;
             done(1);
@@ -257,7 +279,6 @@ bool LoginForm::populate_station_info(QString username)
     EntityDataModel edm;
 
     edm.readRaw(sql.str());
-
 
     auto provider = edm.getDBManager()->provider();
 

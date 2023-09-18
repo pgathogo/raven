@@ -28,7 +28,7 @@ namespace ClusterManager{
     class StorageDisk;
     class AudioFolder;
     class Database;
-    class ClusterConfigurationManager;
+    class ClusterController;
 }
 
 class QMdiArea;
@@ -267,6 +267,7 @@ public slots:
     void new_user(UserNode*);
     void edit_user(UserNode*);
     void attach_user_to_station(UserNode*);
+    void grant_table_access(UserNode*);
     void edit_role(RoleNode*);
     void delete_role(RoleNode*);
 
@@ -345,6 +346,7 @@ private:
     std::unique_ptr<QAction> m_act_user_group;
     std::unique_ptr<QAction> m_act_user;
     std::unique_ptr<QAction> m_act_attach_station;
+    std::unique_ptr<QAction> m_act_grant_rights;
 
     std::unique_ptr<QAction> m_act_app;
 
@@ -365,7 +367,7 @@ private:
     std::unique_ptr<QAction> m_act_edit_audio_server;
     std::unique_ptr<QAction> m_act_edit_disk;
 
-    std::unique_ptr<ClusterManager::ClusterConfigurationManager> m_ccm;
+    std::unique_ptr<ClusterManager::ClusterController> m_cluster_controller;
 
 
 };

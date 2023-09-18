@@ -22,13 +22,16 @@ using ClusterServers = std::vector<std::shared_ptr<ClusterManager::Server>>;
 class Station;
 class Server;
 
-    class ClusterConfigurationManager
+    class ClusterController
     {
     public:
-        ClusterConfigurationManager();
+        ClusterController();
 
         // Return list of stations for a given cluster
         std::vector<std::shared_ptr<ClusterManager::Station>> stations(ClusterId);
+        bool grant_access(std::string);
+        bool alter_password(std::string, std::string);
+        void remove_password_reset_flag(std::string);
 
         std::vector<std::shared_ptr<ClusterManager::Server>> servers(ClusterId, std::string server_type="");
 
@@ -42,6 +45,8 @@ class Server;
         void alter_cluster_user(std::string, std::string);
     private:
         void fetch_table_sequences(EntityDataModel&, std::vector<std::string>&);
+        void alter_user_password(const ClusterManager::Server*, const std::string,
+                                 const std::string);
 
     };
 

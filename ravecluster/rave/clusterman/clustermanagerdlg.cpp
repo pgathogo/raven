@@ -36,7 +36,7 @@
 #include "audiofolderform.h"
 #include "useraccessform.h"
 #include "useraccess.h"
-#include "clusterconfigmanager.h"
+#include "clustercontroller.h"
 
 int ClusterConfiguration::temp_id{100};
 
@@ -90,7 +90,7 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
 
     connect(ui->btnGrant, &QPushButton::clicked, this, &ClusterManagerDlg::grant_access);
 
-    m_ccm = std::make_unique<ClusterManager::ClusterConfigurationManager>();
+    m_cluster_controller = std::make_unique<ClusterManager::ClusterController>();
 }
 
 QMap<QString, QVariant> ClusterManagerDlg::make_node_data(ConfigItemType node_type)
@@ -330,7 +330,7 @@ void ClusterManagerDlg::new_user(UserNode* user_group_node)
 //            EntityDataModel edm;
 //            edm.executeRawSQL(create_stmt);
 
-           m_ccm->create_user(user.get());
+           m_cluster_controller->create_user(user.get());
 
             auto user_context = node_context<ConfigItemType::User, NodeType::Leaf>(
                         stoq(user->role_name()->value()));
@@ -369,10 +369,10 @@ void ClusterManagerDlg::edit_user(UserNode* user_node)
     if (uform->exec())
     {
         if (user->reset_password()){
-               m_ccm->flag_password_for_reset(user->role_name()->value());
+               m_cluster_controller->flag_password_for_reset(user->role_name()->value());
         }
 
-        m_ccm->alter_cluster_user(user->role_name()->value(), user->rol_password()->value());
+        m_cluster_controller->alter_cluster_user(user->role_name()->value(), user->rol_password()->value());
 
         user_node->setText(0, stoq(user->role_name()->value()));
     }
@@ -404,7 +404,7 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
                 usera->set_station(sa.station_id);
                 edm.createEntityDB(*usera);
 
-                m_ccm->grant_user_station_access(usera->username()->value(), sa.station_id);
+                m_cluster_controller->grant_user_station_access(usera->username()->value(), sa.station_id);
 
                 break;
             }
@@ -419,6 +419,14 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
 
         }
    }
+
+}
+
+void ClusterManagerDlg::grant_table_access(UserNode* user_node)
+{
+   //SECURITY::User* node_entity = user_node->node_entity();
+
+   std::cout << "TODO:: Grant access!" << '\n';
 
 }
 
@@ -966,6 +974,8 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
 
     m_act_user = std::make_unique<QAction>("Edit User...");
     m_act_attach_station = std::make_unique<QAction>("Attach User to Station...");
+    m_act_grant_rights = std::make_unique<QAction>("Grant table rights");
+
 
     auto user_node = get_cluster_node<UserNode>(node_uuid);
 
@@ -974,6 +984,7 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
 
     connect(m_act_user.get(), &QAction::triggered, this, [this, user_node](){edit_user(user_node);});
     connect(m_act_attach_station.get(), &QAction::triggered, this, [this, user_node](){attach_user_to_station(user_node);});
+    connect(m_act_grant_rights.get(), &QAction::triggered, this, [this, user_node](){grant_table_access(user_node);});
 
     m_user_context_menu->addAction(m_act_user.get());
     m_user_context_menu->addSeparator();
@@ -1712,7 +1723,7 @@ void ClusterManagerDlg::load_roles_data()
 
 void ClusterManagerDlg::grant_access()
 {
-    m_ccm->user_table_privileges("jboss");
+    m_cluster_controller->user_table_privileges("jboss");
 }
 
 bool ClusterManagerDlg::ask_question(QString title, QString query)

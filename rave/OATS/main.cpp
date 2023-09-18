@@ -10,6 +10,7 @@
 #include "../security/authentication.h"
 
 #include "../framework/Logger.h"
+#include "../security/loginform.h"
 
 //#define LOG_TO_FILE
 
@@ -33,22 +34,29 @@ int main(int argc, char *argv[])
 
 #endif
 
-
     QFile qss("stylesheet.qss");
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
 
-    auto auth = std::make_unique<Authentication>();
-    auth->connect("postgres", "abc123");
 
-    MainWindow w;
-    w.show();
-    bool state = a.exec();
+    LoginForm lf;
+    if (lf.exec() > 0 )
+    {
+//	    auto auth = std::make_unique<Authentication>();
+//	    auth->connect("postgres", "abc123");
 
-#ifdef LOG_TO_FILE
-    Logger::clean();
-#endif
+//        auto station_info = lf.get_station_info();
+//        auto conn_info = lf.get_connection_info();
 
+        MainWindow w;
+        w.show();
+        bool state = a.exec();
+
+    #ifdef LOG_TO_FILE
+        Logger::clean();
+    #endif
     return state;
+
+    }
 
 }

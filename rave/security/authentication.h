@@ -23,6 +23,7 @@ public:
     AccessMap accessMap();
     std::unique_ptr<PostgresDatabaseManager> connect_to_server();
     void connect_to_station(ConnInfo);
+    ConnInfo cluster_server_conninfo();
 
     static void test_connection(ConnInfo&);
 

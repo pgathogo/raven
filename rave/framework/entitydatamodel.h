@@ -176,7 +176,7 @@ public:
             } else {
                 qDebug() << "OTHER >> " << stoq(value);
                 filter += op;
-                filter += "'"+value+"'";
+                filter += value;
             }
 
         }else if constexpr(std::is_same_v<decltype(value), QDate>){

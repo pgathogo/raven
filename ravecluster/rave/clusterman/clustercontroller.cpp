@@ -1,7 +1,8 @@
 #include <tuple>
-#include "clusterconfigmanager.h"
+#include "clustercontroller.h"
 #include "station.h"
 #include "server.h"
+
 #include "../framework/choicefield.h"
 #include "../framework/ravenexception.h"
 
@@ -9,15 +10,17 @@
 #include "../security/structs.h"
 #include "../security/user.h"
 
+#include "../../rave/utils/tools.h"
+
 namespace ClusterManager
 {
 
-    ClusterConfigurationManager::ClusterConfigurationManager()
+    ClusterController::ClusterController()
     {
 
     }
 
-    std::vector<std::shared_ptr<ClusterManager::Station>> ClusterConfigurationManager::stations(int cluster_id)
+    std::vector<std::shared_ptr<ClusterManager::Station>> ClusterController::stations(int cluster_id)
     {
         std::vector<std::shared_ptr<ClusterManager::Station>> stns;
 
@@ -39,7 +42,7 @@ namespace ClusterManager
         return std::move(stns);
     }
 
-    std::vector<std::shared_ptr<ClusterManager::Server>> ClusterConfigurationManager::servers(ClusterId cluster_id, std::string server_type)
+    std::vector<std::shared_ptr<ClusterManager::Server>> ClusterController::servers(ClusterId cluster_id, std::string server_type)
     {
         std::vector<std::shared_ptr<ClusterManager::Server>> svrs;
 
@@ -70,7 +73,135 @@ namespace ClusterManager
         return std::move(svrs);
     }
 
-    bool ClusterConfigurationManager::grant_user_station_access(std::string username, int station_id)
+    bool ClusterController::grant_access(std::string username)
+    {
+        std::string sql = std::format("Select id, username, station_id from rave_useraccess where username = '{}'", username);
+
+        EntityDataModel edm;
+        edm.readRaw(sql);
+
+        auto provider = edm.getDBManager()->provider();
+        if (provider->cacheSize() == 0)
+            return false;
+
+        provider->cache()->first();
+
+        do{
+            auto itb = provider->cache()->currentElement()->begin();
+            auto ite = provider->cache()->currentElement()->end();
+
+            for(; itb != ite; ++itb){
+                std::string field = (*itb).first;
+                std::string value = (*itb).second;
+
+                if (field == "station_id")
+                {
+                    int s_id = std::stoi(value);
+                    grant_user_station_access(username, s_id);
+                }
+            }
+
+            provider->cache()->next();
+        }while(!provider->cache()->isLast());
+
+        return true;
+
+    }
+
+
+    bool ClusterController::alter_password(std::string username, std::string password)
+    {
+        std::stringstream sql;
+
+        std::string filter = std::format(" and rave_useraccess.username = '{}'", username);
+
+        sql << "select svr.id, svr.server_name, svr.server_type, svr.server_ip,"
+            << " svr.port_no, svr.db_admin, svr.db_admin_password "
+            << " from rave_server svr, rave_station, rave_cluster, rave_useraccess "
+            << " where svr.cluster_id = rave_cluster.id "
+            <<  " and rave_cluster.id = rave_station.cluster_id "
+            << " and rave_station.id = rave_useraccess.station_id "
+            << " and svr.server_type = 'DBS' "
+            << filter;
+
+        EntityDataModel edm;
+        edm.readRaw(sql.str());
+
+        auto provider = edm.getDBManager()->provider();
+        if (provider->cacheSize() == 0)
+            return false;
+
+        provider->cache()->first();
+        do{
+            auto itb = provider->cache()->currentElement()->begin();
+            auto ite = provider->cache()->currentElement()->end();
+
+            std::unique_ptr<ClusterManager::Server> server = std::make_unique<ClusterManager::Server>();
+
+            for (; itb != ite; ++itb)
+            {
+                std::string field = (*itb).first;
+                std::string value = (*itb).second;
+
+                if (value.empty())
+                    break;
+
+                if (field == "server_ip"){
+                    server->set_server_ip(value);
+                }
+
+                if (field == "port_no" && (!value.empty() )){
+                   server->set_port_no(std::stoi(value));
+                }
+
+                if (field == "db_admin"){
+                   server->set_db_admin(value);
+                }
+                if (field == "db_admin_password"){
+                   server->set_db_admin_password(value);
+                }
+            }
+
+            alter_user_password(server.get(), username, password);
+
+            provider->cache()->next();
+        }while(!provider->cache()->isLast());
+
+        return true;
+
+    }
+
+    void ClusterController::remove_password_reset_flag(std::string username)
+    {
+        std::string sql = std::format("Update rave_userconfig set reset_password = 0 where username = '{}'", username);
+        EntityDataModel edm;
+        edm.executeRawSQL(sql);
+    }
+
+    void ClusterController::alter_user_password(const ClusterManager::Server* server,
+                                                          const std::string username, const std::string password)
+    {
+        std::string sql = std::format("Alter user {} password '{}' valid until 'infinity'",
+                                      username, password);
+
+        ConnInfo ci;
+        ci.username = server->db_admin()->value();
+        ci.password = decrypt_str(server->db_admin_password()->value());
+        ci.host = server->server_ip()->value();
+        ci.port = server->port_no()->value();
+        ci.db_name = "postgres";
+
+        Authentication auth(ci);
+        EntityDataModel edm(auth);
+
+        edm.executeRawSQL(sql);
+    }
+
+
+
+
+
+    bool ClusterController::grant_user_station_access(std::string username, int station_id)
     {
         auto stn = station(station_id);
 
@@ -155,7 +286,7 @@ namespace ClusterManager
     }
 
 
-    ClusterServers ClusterConfigurationManager::active_servers_by_db(ClusterServers servers, std::string db_name)
+    ClusterServers ClusterController::active_servers_by_db(ClusterServers servers, std::string db_name)
     {
         ClusterServers active_svrs;
 
@@ -180,7 +311,7 @@ namespace ClusterManager
         return std::move(active_svrs);
     }
 
-    std::unique_ptr<ClusterManager::Station> ClusterConfigurationManager::station(int station_id)
+    std::unique_ptr<ClusterManager::Station> ClusterController::station(int station_id)
     {
         EntityDataModel edm(std::make_unique<ClusterManager::Station>());
         ClusterManager::Station st;
@@ -204,7 +335,7 @@ namespace ClusterManager
 
     }
 
-    void ClusterConfigurationManager::fetch_table_sequences(EntityDataModel& edm,
+    void ClusterController::fetch_table_sequences(EntityDataModel& edm,
                                                             std::vector<std::string>& tseq)
     {
        std::stringstream sql;
@@ -227,14 +358,14 @@ namespace ClusterManager
 
     }
 
-    bool ClusterConfigurationManager::create_user(SECURITY::User* user)
+    bool ClusterController::create_user(SECURITY::User* user)
     {
        EntityDataModel edm;
        std::string create_stmt = user->make_create_user_stmt();
        edm.executeRawSQL(create_stmt);
     }
 
-    std::string ClusterConfigurationManager::user_table_privileges(std::string username)
+    std::string ClusterController::user_table_privileges(std::string username)
     {
        std::stringstream sql;
 
@@ -254,7 +385,7 @@ namespace ClusterManager
 
     }
 
-    std::string ClusterConfigurationManager::user_sequence_privileges(std::string username)
+    std::string ClusterController::user_sequence_privileges(std::string username)
     {
        std::stringstream sql;
 
@@ -274,7 +405,7 @@ namespace ClusterManager
 
     }
 
-    void ClusterConfigurationManager::flag_password_for_reset(std::string username)
+    void ClusterController::flag_password_for_reset(std::string username)
     {
        std::string sql = std::format("Select * from rave_userconfig where username = '{}'", username);
        EntityDataModel sel_edm;
@@ -291,7 +422,7 @@ namespace ClusterManager
        }
     }
 
-    void ClusterConfigurationManager::alter_cluster_user(std::string username, std::string password)
+    void ClusterController::alter_cluster_user(std::string username, std::string password)
     {
         std::string alter_stmt = std::format("Alter user {} with password '{}' valid until '{}'",
                                              username,
