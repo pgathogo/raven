@@ -1,10 +1,12 @@
 #include <sstream>
+
 #include <QSettings>
 
 #include "authentication.h"
 #include "user.h"
 #include "../framework/databasemanager.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/ravenexception.h"
 
 AccessMap Authentication::mAccessMap;
 
@@ -69,9 +71,15 @@ std::unique_ptr<PostgresDatabaseManager> Authentication::connect_to_server()
 {
     std::string conninfo = format("host={} user={} password={} dbname={} port={}", m_conn_info.host, m_conn_info.username,
                                   m_conn_info.password, m_conn_info.db_name, std::to_string(m_conn_info.port));
-    auto pdm = std::make_unique<PostgresDatabaseManager>(conninfo, true);
 
-    return(std::move(pdm));
+    try{
+        Authentication::test_connection(m_conn_info);
+        auto pdm = std::make_unique<PostgresDatabaseManager>(conninfo, true);
+        return(std::move(pdm));
+    }catch (DatabaseException& de){
+        throw;
+    }
+
 }
 
 void Authentication::test_connection(ConnInfo& ci)
@@ -79,15 +87,19 @@ void Authentication::test_connection(ConnInfo& ci)
     std::string conninfo = format("host={} user={} password={} dbname={} port={}", ci.host, ci.username,
                                   ci.password, ci.db_name, std::to_string(ci.port));
 
-   PostgresDatabaseManager::test_connection(conninfo);
+    try{
+       PostgresDatabaseManager::test_connection(conninfo);
+    }catch(DatabaseException& de){
+       throw;
+    }
 }
 
 ConnInfo Authentication::cluster_server_conninfo()
 {
     QString dbname{};
     QString server{};
+    QString password{};
     int port=-1;
-
 
     QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\PMSL\Raven\Database)", QSettings::NativeFormat);
     if (registry.childKeys().contains("clusterdb", Qt::CaseInsensitive))
@@ -96,6 +108,9 @@ ConnInfo Authentication::cluster_server_conninfo()
     if (registry.childKeys().contains("clusterserver", Qt::CaseInsensitive))
         server = registry.value("clusterserver").toString();
 
+    if (registry.childKeys().contains("password", Qt::CaseInsensitive))
+        password = registry.value("password").toString();
+
     if (registry.childKeys().contains("clusterport", Qt::CaseInsensitive))
         port = registry.value("clusterport").toInt();
 
@@ -103,6 +118,7 @@ ConnInfo Authentication::cluster_server_conninfo()
     ci.db_name = dbname.toStdString();
     ci.host = server.toStdString();
     ci.port = port;
+    ci.password = decrypt_str(password.toStdString());
 
     return ci;
 }
@@ -124,6 +140,24 @@ void Authentication::connect_to_cluster_server(const std::string uname, const st
         port = registry.value("clusterport").toInt();
 
     std::string conninfo = "user="+uname+" password="+pword+" dbname="+dbname.toStdString()+" port="+std::to_string(port);
+
+    ConnInfo ci;
+    ci.host = server.toStdString();
+    ci.port = port;
+    ci.username = uname;
+    ci.password = pword;
+    ci.db_name = dbname.toStdString();
+
+    qDebug() << "**** Testing connection ****";
+
+    try{
+        Authentication::test_connection(ci);
+    }catch (DatabaseException& de){
+        throw;
+    }
+
+    qDebug() << "**** Good connection... proceed";
+
     mDBManager = new PostgresDatabaseManager(conninfo);
 }
 

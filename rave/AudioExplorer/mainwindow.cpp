@@ -47,7 +47,8 @@
 namespace fs = std::filesystem;
 
 
-MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
+MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
+                       const ConnInfo& ci, QWidget *parent)
     :QMainWindow(parent)
     ,ui(new Ui::MainWindow)
     ,m_qapp{qapp}
@@ -139,8 +140,26 @@ MainWindow::MainWindow(QApplication* qapp, QWidget *parent)
 
     m_editor_process = std::make_unique<QProcess>(this);
 
+    // set taskbar
+
+    std::string uname = std::format("Username: {}       ", ci.username);
+    std::string station = std::format("Station: {}      ", si.station_name.toStdString());
+    std::string db_ip = std::format("Host: {}      ", si.ip_address.toStdString());
+
+    QLabel* station_label = new QLabel( QString::fromStdString(station));
+    station_label->setStyleSheet("font-weight: bold; color: red");
+
+    QStatusBar* sb = new QStatusBar(this);
+    sb->addWidget(new QLabel(QString::fromStdString(uname)));
+
+    sb->addWidget(station_label);
+    sb->addWidget(new QLabel(QString::fromStdString(db_ip)));
+    setStatusBar(sb);
+
+    QString title = QString("Raven- Audio Explorer: %1").arg(si.station_name);
+
     ui->tabWidget->setCurrentIndex(0);
-    setWindowTitle("Raven - Audio Explorer");
+    setWindowTitle(title);
 
 }
 

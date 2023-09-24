@@ -19,5 +19,7 @@
 #include "DX5S3JBGB7/moc_picklistbrowser.cpp"
 #include "DX5S3JBGB7/moc_selectclosewidget.cpp"
 #include "DX5S3JBGB7/moc_treeviewmodel.cpp"
+#include "QCNHDQ7SKX/moc_loginform.cpp"
+#include "QCNHDQ7SKX/moc_selectstationform.cpp"
 #include "DLICU2EZZF/moc_notificationbar.cpp"
 #include "DLICU2EZZF/moc_notificationitem.cpp"

@@ -7,6 +7,7 @@
 
 #include <QDebug>
 #include "../utils/tools.h"
+#include "../framework/ravenexception.h"
 
 void BaseDatabaseManager::setObjectID(BaseEntity& entity, int id)
 {
@@ -158,7 +159,11 @@ PostgresDatabaseManager::~PostgresDatabaseManager()
 void PostgresDatabaseManager::test_connection(std::string conn_str)
 {
 
-    PostgresDataProvider::test_connection(conn_str);
+    try{
+       PostgresDataProvider::test_connection(conn_str);
+    }catch(DatabaseException& de){
+       throw;
+    }
 
 }
 

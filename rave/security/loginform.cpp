@@ -1,3 +1,4 @@
+#include <chrono>
 #include <sstream>
 
 #include <QCloseEvent>
@@ -25,7 +26,7 @@ LoginForm::LoginForm(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::fetch_stations);
+    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::show_stations);
     connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::login);
     connect(ui->btnCancel, &QPushButton::clicked, this, &LoginForm::cancel);
 
@@ -39,6 +40,65 @@ LoginForm::LoginForm(QWidget *parent)
     ui->edtUsername->setFocus();
 
     //ui->btnLogin->setEnabled(false);
+
+    QPixmap pix;
+    pix.load(":/rave_images/media/icons/password_sm.bmp");
+//    pix = pix.scaled(ui->lblImage->size(), Qt::KeepAspectRatioByExpanding);
+    ui->lblImage->setPixmap(pix);
+
+
+    QPixmap pix_reset;
+    pix_reset.load(":/rave_images/media/icons/reset_password_sm.bmp");
+//    pix_reset = pix_reset.scaled(ui->lblImageReset->size(), Qt::KeepAspectRatioByExpanding);
+    ui->lblImageReset->setPixmap(pix_reset) ;
+
+
+    ui->swMain->setCurrentIndex(0);
+
+    setWindowTitle("Login Form");
+
+}
+
+LoginForm::LoginForm(const QString username, const QString password, int station_id,
+                    QWidget *parent)
+    :QDialog(parent)
+    ,ui(new Ui::LoginForm)
+    ,m_app_auth{nullptr}
+    ,mNoticeBar{}
+    ,mOkClose{true}
+    ,m_selected_station_id{station_id}
+{
+    ui->setupUi(this);
+
+    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::show_stations);
+    connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::login);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &LoginForm::cancel);
+
+    connect(ui->btnReset, &QPushButton::clicked, this, &LoginForm::reset_password);
+    connect(ui->btnCancelReset, &QPushButton::clicked, this, &LoginForm::cancel_password_reset);
+
+    mNoticeBar = new NotificationBar(ui->vlNotice);
+    m_reset_notice_bar = new NotificationBar(ui->vlReset);
+
+    ui->edtUsername->setText(username);
+    ui->edtPassword->setText(password);
+
+    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
+    ui->edtUsername->setFocus();
+
+    //ui->btnLogin->setEnabled(false);
+
+    QPixmap pix;
+    pix.load(":/rave_images/media/icons/password_sm.bmp");
+//    pix = pix.scaled(ui->lblImage->size(), Qt::KeepAspectRatioByExpanding);
+    ui->lblImage->setPixmap(pix);
+
+
+    QPixmap pix_reset;
+    pix_reset.load(":/rave_images/media/icons/reset_password_sm.bmp");
+//    pix_reset = pix_reset.scaled(ui->lblImageReset->size(), Qt::KeepAspectRatioByExpanding);
+    ui->lblImageReset->setPixmap(pix_reset) ;
+
 
     ui->swMain->setCurrentIndex(0);
 
@@ -72,6 +132,21 @@ bool LoginForm::validNamePass()
     return true;
 }
 
+void LoginForm::show_stations()
+{
+    fetch_stations();
+
+    m_selected_station_id = get_selected_station_id();
+
+    if (m_selected_station_id > 0)
+    {
+        auto si = m_stations_info[m_selected_station_id];
+        ui->btnSelect->setText(si.station_name);
+        ui->btnLogin->setEnabled(true);
+    }
+
+}
+
 void LoginForm::fetch_stations()
 {
     auto app_auth = std::make_unique<Authentication>();
@@ -82,6 +157,8 @@ void LoginForm::fetch_stations()
             ui->edtPassword->text().toStdString());
     }catch(DatabaseException& de){
         std::cout << de.errorMessage();
+         //mNoticeBar->errorNotification(de.errorMessage());
+        return;
     }
 
     SECURITY::UserConfig uc;
@@ -101,22 +178,17 @@ void LoginForm::fetch_stations()
         {
             ui->lblUsername->setText(ui->edtUsername->text());
             ui->swMain->setCurrentIndex(can_reset_password);
-            return;
         }
     }
 
-    m_selected_station_id = get_selected_station_id();
-    if (m_selected_station_id > 0)
-    {
-        auto si = m_stations_info[m_selected_station_id];
-        ui->btnSelect->setText(si.station_name);
-        ui->btnLogin->setEnabled(true);
-    }
 }
 
 int LoginForm::get_selected_station_id()
 {
+    qDebug() << "Get Selected: " << ui->edtUsername->text();
+
     bool populated = populate_station_info(ui->edtUsername->text());
+
     if (!populated)
         return 0;
 
@@ -129,6 +201,42 @@ int LoginForm::get_selected_station_id()
     }
 }
 
+void LoginForm::express_login()
+{
+    if (!validNamePass())
+    {
+        mNoticeBar->errorNotification("Wrong username or password!");
+        mOkClose = false;
+        return;
+    }
+
+    if (m_selected_station_id < 0 ){
+        mNoticeBar->errorNotification("Please select a station!");
+        return;
+    }
+
+    express_fetch();
+
+    login_to_station(m_selected_station_id);
+
+
+
+}
+
+void LoginForm::express_fetch()
+{
+    fetch_stations();
+
+    m_selected_station_id = get_selected_station_id();
+
+    auto si = m_stations_info[m_selected_station_id];
+    qDebug() << " --- Express ----";
+    qDebug() << "Name: " << si.station_name;
+    qDebug() << " --- Express ----";
+
+    ui->btnSelect->setText(si.station_name);
+    ui->btnLogin->setEnabled(true);
+}
 
 void LoginForm::login()
 {
@@ -152,7 +260,7 @@ void LoginForm::login_to_station(int station_id)
 {
     try
     {
-        m_current_station_info = m_stations_info[m_selected_station_id];
+        m_current_station_info = m_stations_info[station_id];
 
         //ConnInfo ci;
         m_current_conn_info.username = ui->edtUsername->text().toStdString();
@@ -169,13 +277,14 @@ void LoginForm::login_to_station(int station_id)
 
         m_app_auth = new Authentication(m_current_conn_info);
         m_app_auth->connect_to_server();
+
 //        m_app_auth->connect_to_station(m_current_conn_info);
 //        m_app_auth->connect("herman", "abc123");
 
         mOkClose = true;
         done(1);
-    }catch(PostgresException& pe){
-        mNoticeBar->errorNotification(pe.errorMessage());
+    }catch(DatabaseException& de){
+        mNoticeBar->errorNotification(de.errorMessage());
         mOkClose = false;
     }
 
@@ -205,7 +314,11 @@ void LoginForm::reset_password()
         std::string username = ui->edtUsername->text().toStdString();
         std::string password = ui->edtNewPassword->text().toStdString();
 
-         cluster_controller.alter_password(username, password);
+        // DB servers
+        cluster_controller.alter_password(username, password);
+
+        // Cluster DB Server
+        cluster_controller.alter_password_cluster_server(username, password);
 
         // Switch back to cluster server
         Authentication auth;

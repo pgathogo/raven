@@ -13,6 +13,7 @@
 #include "../framework/relationmapper.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/tree.h"
+#include "../security/structs.h"
 
 class QStandardItemModel;
 class QTableView;
@@ -61,7 +62,8 @@ public:
         std::vector<std::string> temp_files;
     };
 
-    MainWindow(QApplication* qapp, QWidget *parent = nullptr);
+    MainWindow(QApplication* qapp, const StationInfo&, const ConnInfo&,
+               QWidget *parent = nullptr);
     ~MainWindow();
 
     void fetch_audio(const std::string);

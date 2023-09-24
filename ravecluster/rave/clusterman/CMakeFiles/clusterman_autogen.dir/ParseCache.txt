@@ -4136,3 +4136,5 @@ D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustermanager.h
 D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustermanager.cpp
 D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterconfigmanager.h
 D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterconfigmanager.cpp
+D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustercontroller.h
+D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustercontroller.cpp

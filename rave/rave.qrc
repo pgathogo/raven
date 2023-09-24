@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/rave_images">
+        <file>media/icons/lock_sm.bmp</file>
+        <file>media/icons/password_sm.bmp</file>
+        <file>media/icons/reset_password_sm.bmp</file>
+    </qresource>
+</RCC>

@@ -18,6 +18,7 @@ class LoginForm : public QDialog
 
 public:
     explicit LoginForm(QWidget* parent = nullptr);
+    explicit LoginForm(const QString, const QString, int, QWidget *parent = nullptr);
     ~LoginForm();
 
     void closeEvent(QCloseEvent* event);
@@ -25,8 +26,11 @@ public:
 
     StationInfo get_station_info();
     ConnInfo get_connection_info();
+    void express_login();
+    void express_fetch();
 
 private slots:
+    void show_stations();
     void fetch_stations();
     void login();
     void cancel();

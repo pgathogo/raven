@@ -372,7 +372,7 @@ void ClusterManagerDlg::edit_user(UserNode* user_node)
                m_cluster_controller->flag_password_for_reset(user->role_name()->value());
         }
 
-        m_cluster_controller->alter_cluster_user(user->role_name()->value(), user->rol_password()->value());
+        m_cluster_controller->alter_password_cluster_server(user->role_name()->value(), user->rol_password()->value());
 
         user_node->setText(0, stoq(user->role_name()->value()));
     }
@@ -424,9 +424,13 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
 
 void ClusterManagerDlg::grant_table_access(UserNode* user_node)
 {
-   //SECURITY::User* node_entity = user_node->node_entity();
+   SECURITY::User* user = user_node->node_entity();
 
-   std::cout << "TODO:: Grant access!" << '\n';
+   qDebug() << "AAA";
+
+   m_cluster_controller->grant_user_table_access(user->role_name()->value());
+
+   std::cout << "Access granted.\n";
 
 }
 
@@ -989,6 +993,8 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
     m_user_context_menu->addAction(m_act_user.get());
     m_user_context_menu->addSeparator();
     m_user_context_menu->addAction(m_act_attach_station.get());
+    m_user_context_menu->addSeparator();
+    m_user_context_menu->addAction(m_act_grant_rights.get());
     m_user_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 }
 
@@ -1723,7 +1729,7 @@ void ClusterManagerDlg::load_roles_data()
 
 void ClusterManagerDlg::grant_access()
 {
-    m_cluster_controller->user_table_privileges("jboss");
+    m_cluster_controller->grant_table_privileges_stmt("jboss");
 }
 
 bool ClusterManagerDlg::ask_question(QString title, QString query)

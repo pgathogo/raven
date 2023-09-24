@@ -38,16 +38,10 @@ int main(int argc, char *argv[])
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
 
+    LoginForm lf("nbohr", "abc123", 6);
+    lf.express_login();
 
-    LoginForm lf;
-    if (lf.exec() > 0 )
     {
-//	    auto auth = std::make_unique<Authentication>();
-//	    auth->connect("postgres", "abc123");
-
-//        auto station_info = lf.get_station_info();
-//        auto conn_info = lf.get_connection_info();
-
         MainWindow w;
         w.show();
         bool state = a.exec();

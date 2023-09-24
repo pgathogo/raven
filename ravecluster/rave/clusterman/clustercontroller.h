@@ -36,13 +36,17 @@ class Server;
         std::vector<std::shared_ptr<ClusterManager::Server>> servers(ClusterId, std::string server_type="");
 
         bool grant_user_station_access(std::string, int);
+        bool grant_user_table_access(std::string);
+        bool table_access(std::string, int);
+
         std::unique_ptr<ClusterManager::Station> station(int);
         ClusterServers active_servers_by_db(ClusterServers, std::string);
         bool create_user(SECURITY::User*);
-        std::string user_table_privileges(std::string);
-        std::string user_sequence_privileges(std::string);
+        std::string grant_table_privileges_stmt(std::string);
+        std::string grant_sequence_privileges_stmt(std::string);
         void flag_password_for_reset(std::string);
         void alter_cluster_user(std::string, std::string);
+        void alter_password_cluster_server(std::string, std::string);
     private:
         void fetch_table_sequences(EntityDataModel&, std::vector<std::string>&);
         void alter_user_password(const ClusterManager::Server*, const std::string,

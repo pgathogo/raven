@@ -59,21 +59,15 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     , m_tree_model{nullptr}
     , m_save_as{nullptr}
 {
-
-    qDebug() << "MainWindow:: AAAA";
     ui->setupUi(this);
 
     m_schedule_item_builder = new ItemBuilder();
-    qDebug() << "BBB";
 
     m_track_item_builder = new TrackItemBuilder();
-    qDebug() << "CCC";
 
     AudioLibrary audio_lib;
-    qDebug() << "DDD";
     //auto node_data = audio_lib.read_data_from_file("tree.txt");
     auto node_data = audio_lib.read_data_from_db();
-    qDebug() << "EEE";
 
     m_tree_model = new TreeViewModel(node_data, this);
     ui->tvFolders->setModel(m_tree_model);

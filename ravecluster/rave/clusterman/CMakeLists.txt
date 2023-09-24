@@ -80,8 +80,8 @@ set(PROJECT_SOURCES
         useraccessform.ui
         useraccess.h
         useraccess.cpp
-        clusterconfigmanager.h
-        clusterconfigmanager.cpp
+        clustercontroller.h
+        clustercontroller.cpp
         ../../../rave/security/authentication.h
         ../../../rave/security/authentication.cpp
         ../../../rave/security/baserole.h

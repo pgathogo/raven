@@ -44,6 +44,8 @@ namespace ClusterManager
 
     std::vector<std::shared_ptr<ClusterManager::Server>> ClusterController::servers(ClusterId cluster_id, std::string server_type)
     {
+        qDebug() << "6666";
+
         std::vector<std::shared_ptr<ClusterManager::Server>> svrs;
 
         ClusterManager::Server svr;
@@ -51,14 +53,21 @@ namespace ClusterManager
         EntityDataModel edm(std::make_unique<ClusterManager::Server>());
         auto cluster_filter = std::make_tuple(svr.cluster()->dbColumnName(), "=", cluster_id);
 
+        qDebug() << "7777";
+
         std::tuple<std::string, std::string, std::string> server_filter = std::make_tuple("1", "=","1");
         if (!server_type.empty()){
-            server_filter = std::make_tuple(svr.server_type()->dbColumnName(), "=", server_type);
+            server_filter = std::make_tuple(svr.server_type()->dbColumnName(), "=", "'"+server_type+"'");
         }
+
+        qDebug() << "8888";
 
         std::string filter = edm.prepareFilter(cluster_filter, server_filter);
 
         edm.search(filter);
+
+        std::cout << filter << '\n';
+
 
         for (auto const& [name, entity]: edm.modelEntities())
         {
@@ -158,7 +167,7 @@ namespace ClusterManager
                    server->set_db_admin(value);
                 }
                 if (field == "db_admin_password"){
-                   server->set_db_admin_password(value);
+                   server->set_db_admin_password(decrypt_str(value));
                 }
             }
 
@@ -170,6 +179,23 @@ namespace ClusterManager
         return true;
 
     }
+
+    void ClusterController::alter_password_cluster_server(std::string username, std::string password)
+    {
+        Authentication auth;
+        ConnInfo ci = auth.cluster_server_conninfo();
+
+        auto server = std::make_unique<ClusterManager::Server>();
+
+        server->set_db_admin("postgres");
+        server->set_db_admin_password(ci.password);
+        server->set_server_ip(ci.host);
+        server->set_port_no(ci.port);
+
+        alter_user_password(server.get(), username, password);
+
+    }
+
 
     void ClusterController::remove_password_reset_flag(std::string username)
     {
@@ -186,17 +212,139 @@ namespace ClusterManager
 
         ConnInfo ci;
         ci.username = server->db_admin()->value();
-        ci.password = decrypt_str(server->db_admin_password()->value());
+        ci.password = server->db_admin_password()->value();
         ci.host = server->server_ip()->value();
         ci.port = server->port_no()->value();
         ci.db_name = "postgres";
 
-        Authentication auth(ci);
-        EntityDataModel edm(auth);
+        try{
+            // TODO: Wrap connection test with authentication procedure
+            Authentication::test_connection(ci);
+            Authentication auth(ci);
+            EntityDataModel edm(auth);
+            edm.executeRawSQL(sql);
+        }catch(DatabaseException& de){
+            std::cout << de.errorMessage() << '\n';
+        }
 
-        edm.executeRawSQL(sql);
+
     }
 
+    bool ClusterController::grant_user_table_access(std::string username)
+    {
+        std::string sql = std::format("Select id, username, station_id from rave_useraccess where username = '{}'", username);
+
+        EntityDataModel edm;
+        edm.readRaw(sql);
+
+        auto provider = edm.getDBManager()->provider();
+        if (provider->cacheSize() == 0)
+            return false;
+
+        provider->cache()->first();
+
+        do{
+            auto itb = provider->cache()->currentElement()->begin();
+            auto ite = provider->cache()->currentElement()->end();
+
+            for(; itb != ite; ++itb){
+                std::string field = (*itb).first;
+                std::string value = (*itb).second;
+
+                if (field == "station_id")
+                {
+                   int s_id = std::stoi(value);
+
+                   qDebug() << "BBBB";
+
+                   table_access(username, s_id);
+
+                   qDebug() << "FFFF";
+                }
+            }
+
+            provider->cache()->next();
+        }while(!provider->cache()->isLast());
+
+        return true;
+
+    }
+
+    bool ClusterController::table_access(std::string username, int station_id)
+    {
+        qDebug() << "1111";
+
+        qDebug() << "Station ID: "<< station_id;
+
+        auto stn = station(station_id);
+
+        qDebug() << "2222";
+
+        std::string db_name = stn->db_name()->value();
+
+        qDebug() << "3333";
+        qDebug() << "Cluster ID: "<< stn->cluster()->value();
+
+        auto db_servers = servers(stn->cluster()->value(), "DBS");
+
+        qDebug() << "4444";
+
+        auto act_svrs = active_servers_by_db(std::move(db_servers), db_name);
+
+
+        if (act_svrs.size() == 0)
+            return false;
+
+        for (auto& server : act_svrs)
+        {
+            ConnInfo ci;
+            ci.db_name = db_name;
+            ci.host = server->server_ip()->value();
+            ci.port = server->port_no()->value();
+            ci.username = server->db_admin()->value();
+            ci.password = decrypt_str(server->db_admin_password()->value());
+
+            // TODO:: Add logging
+            std::cout << "DB Name: "<< ci.db_name << '\n';
+            std::cout << "Host: "<< ci.host << '\n';
+            std::cout << "Port: "<< ci.port << '\n';
+            std::cout << "Username: "<< ci.username << '\n';
+            std::cout << "Password: "<< ci.password << '\n';
+
+
+            Authentication auth(ci);
+            EntityDataModel grant_edm(auth);
+
+       qDebug() << "CCCC";
+
+            std::string grant_table_stmt = grant_table_privileges_stmt(username);
+            try{
+                grant_edm.executeRawSQL(grant_table_stmt);
+                std::string msg = std::format("Table privileges granted on host `{}`", ci.host);
+                std::cout<< msg << '\n';
+            } catch(DatabaseException& de){
+                qDebug() << "Error creating user: \n"
+                         << stoq(de.errorMessage());
+            }
+
+       qDebug() << "DDDD";
+
+            std::string grant_seq_stmt = grant_sequence_privileges_stmt(username);
+            try{
+                grant_edm.executeRawSQL(grant_seq_stmt);
+                std::string msg = std::format("Sequence privileges granted on host `{}`", ci.host);
+                std::cout<< msg << '\n';
+            } catch(DatabaseException& de){
+                qDebug() << "Error creating user: \n"
+                         << stoq(de.errorMessage());
+            }
+
+       qDebug() << "EEEE";
+
+
+        }
+
+    }
 
 
 
@@ -258,7 +406,7 @@ namespace ClusterManager
               //  -- Sequence privileges ---
 
             EntityDataModel seq_edm(auth);
-            std::string seq_priv = user_sequence_privileges(username);
+            std::string seq_priv = grant_sequence_privileges_stmt(username);
             try{
                 seq_edm.executeRawSQL(seq_priv);
                 std::string seq_msg = std::format("Sequence privileges granted to user `{}`", username);
@@ -270,7 +418,7 @@ namespace ClusterManager
 
               // Grant table privileges
             EntityDataModel tab_edm(auth);
-            std::string user_priv = user_table_privileges(username);
+            std::string user_priv = grant_table_privileges_stmt(username);
             try{
                 tab_edm.executeRawSQL(user_priv);
                 std::string priv_msg = std::format("Table privileges granted to user `{}`", username);
@@ -365,7 +513,7 @@ namespace ClusterManager
        edm.executeRawSQL(create_stmt);
     }
 
-    std::string ClusterController::user_table_privileges(std::string username)
+    std::string ClusterController::grant_table_privileges_stmt(std::string username)
     {
        std::stringstream sql;
 
@@ -385,7 +533,7 @@ namespace ClusterManager
 
     }
 
-    std::string ClusterController::user_sequence_privileges(std::string username)
+    std::string ClusterController::grant_sequence_privileges_stmt(std::string username)
     {
        std::stringstream sql;
 

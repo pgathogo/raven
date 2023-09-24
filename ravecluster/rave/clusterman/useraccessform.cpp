@@ -6,7 +6,7 @@
 #include "../framework/ravenexception.h"
 #include "station.h"
 #include "server.h"
-#include "clusterconfigmanager.h"
+#include "clustercontroller.h"
 #include "../security/authentication.h"
 #include "../security/user.h"
 

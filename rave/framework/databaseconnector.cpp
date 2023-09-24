@@ -38,7 +38,6 @@ void PostgresConnector::test_connection(const std::string conninfo)
 {
     //openConnection(conninfo);
     //qDebug() << "Testing db connection ...";
-
     auto connection = PQconnectdb(conninfo.c_str());
     if (PQstatus(connection) != CONNECTION_OK){
         std::string errMsg =  "Connection to database failed! - ";

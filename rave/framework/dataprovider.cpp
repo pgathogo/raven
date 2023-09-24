@@ -55,7 +55,19 @@ PostgresDataProvider::~PostgresDataProvider()
 
 void PostgresDataProvider::test_connection(const std::string conninfo)
 {
-    PostgresConnector::test_connection(conninfo);
+    try{
+         PostgresConnector::test_connection(conninfo);
+    }catch (DatabaseException& de){
+        throw;
+    }
+
+    /*
+    try{
+        return true;
+    }catch(DatabaseException& de){
+        return false;
+    }
+   */
 }
 
 /*
