@@ -43,9 +43,11 @@ void TreeViewModel::build_tree(std::vector<Node *> &nodes)
 {
     for (auto node : nodes){
         if (node->parentID() == 0){
+            node->setIcon(QIcon(":/rave_images/media/icons/main_folder_sm.bmp"));
             rootItem->appendRow(node);
             tree[node->nodeID()] = node;
         }else {
+            node->setIcon(QIcon(":/rave_images/media/icons/audiofolder_sm.bmp"));
             insert_node(tree, node);
         }
     }

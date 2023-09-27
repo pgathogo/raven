@@ -138,6 +138,7 @@ public:
 
         node->set_node_entity(std::move(node_entity));
         node->set_parent_id(parent_node->id());
+        node->set_parent(parent_node);
         node->set_uuid(uuid_str);
 
         parent_node->add_child(uuid_str, config_item.config_item_type, node) ;
@@ -156,11 +157,7 @@ public:
                 it != std::end(m_cluster_config->cluster_nodes)){
 
             const auto&[key, value] {*it};
-
             auto node = dynamic_cast<T*>(std::get<T*>(value));
-
-            qDebug() << "GET CLUSTER UID: "<< uid << "NODE ID: "<< node->uuid();
-
             if (node->uuid() == uid)
                 return node;
         }
@@ -219,16 +216,29 @@ public:
             //showMessage("Delete Failed! Node is NOT empty.");
            return;
         }
+
+        auto entity = node->node_entity();
+        EntityDataModel edm;
+        edm.deleteEntity(*entity);
+
         for(auto&[key, tuple]: parent_node->child_nodes()){
+
             auto&[type, node_any] = tuple;
+
+            if (!node_any.has_value())
+                continue;
+
             auto cluster_node = std::any_cast<T1*>(node_any);
-            if (cluster_node->uuid() == node->uuid()){
+
+            if (cluster_node->uuid() == node->uuid())
+            {
                delete cluster_node;
                parent_node->child_nodes_by_ref().erase(node->uuid());
             }
         }
 
         node = nullptr;
+
     }
 
     template<typename T1, typename T2, typename T3>
@@ -259,6 +269,7 @@ public slots:
     void new_audio_folder(ClusterManager::StorageDisk*);
     void edit_cluster();
     void edit_station(StationNode*);
+    void delete_station(StationNode*);
     void delete_cluster();
     void delete_server();
     void delete_disk();
@@ -311,6 +322,7 @@ private:
     std::unique_ptr<EntityDataModel> m_content_edm;
 
     ClusterNode* m_current_cluster_node;
+    StationNode* m_current_station_group_node;
     StationNode* m_current_station_node;
     ServerNode* m_current_server_group_node;
     ServerNode* m_current_audio_server_node;
@@ -352,6 +364,7 @@ private:
 
     std::unique_ptr<QAction> m_context_action;
     std::unique_ptr<QAction> m_act_station;
+    std::unique_ptr<QAction> m_act_delete_station;
     std::unique_ptr<QAction> m_act_group_station;
     std::unique_ptr<QAction> m_act_server;
     std::unique_ptr<QAction> m_act_edit_cluster;

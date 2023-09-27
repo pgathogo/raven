@@ -3,5 +3,9 @@
         <file>media/icons/lock_sm.bmp</file>
         <file>media/icons/password_sm.bmp</file>
         <file>media/icons/reset_password_sm.bmp</file>
+        <file>media/icons/mainlib_sm.bmp</file>
+        <file>media/icons/main_folder_sm.bmp</file>
+        <file>media/icons/audiofolder_sm.bmp</file>
+        <file>media/icons/mainlib02_sm.bmp</file>
     </qresource>
 </RCC>

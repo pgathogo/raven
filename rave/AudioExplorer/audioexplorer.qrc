@@ -137,6 +137,13 @@
         <file>media/icons/edit_folder2_sm.bmp</file>
         <file>media/icons/new_folder2_sm.bmp</file>
         <file>media/icons/paste_folder_sm.bmp</file>
+        <file>media/icons/import_audio_02.bmp</file>
+        <file>media/icons/listen02_sm.bmp</file>
+        <file>media/icons/cue_edit_02.bmp</file>
+        <file>media/icons/audacity02.bmp</file>
+        <file>media/icons/cut_document02.bmp</file>
+        <file>media/icons/paste02.bmp</file>
+        <file>media/icons/delete02.bmp</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

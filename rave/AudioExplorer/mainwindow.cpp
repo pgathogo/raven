@@ -192,6 +192,7 @@ void MainWindow::setup_audio_folders()
         auto tree_data = audio_lib.read_data_from_db();
         m_folder_model = new TreeViewModel(tree_data, this);
         ui->tvFolders->setModel(m_folder_model);
+        ui->tvFolders->setIconSize(QSize(25, 25));
         m_folders = tree_data;
 
         m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
@@ -280,7 +281,7 @@ void MainWindow::track_toolbar_icons()
     QSize btn_icon_size(50, 50);
 
     ui->btnImport->setIconSize(btn_icon_size);
-    ui->btnImport->setIcon(QIcon(":/images/media/icons/import_audio_sm.png"));
+    ui->btnImport->setIcon(QIcon(":/images/media/icons/import_audio_02.bmp"));
     ui->btnImport->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnAudioProp->setIconSize(btn_icon_size);
@@ -288,27 +289,27 @@ void MainWindow::track_toolbar_icons()
     ui->btnAudioProp->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnPlay->setIconSize(btn_icon_size);
-    ui->btnPlay->setIcon(QIcon(":/images/media/icons/listen_sm.png"));
+    ui->btnPlay->setIcon(QIcon(":/images/media/icons/listen02_sm.bmp"));
     ui->btnPlay->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnCueEdit->setIconSize(btn_icon_size);
-    ui->btnCueEdit->setIcon(QIcon(":/images/media/icons/cue_edit_sm.png"));
+    ui->btnCueEdit->setIcon(QIcon(":/images/media/icons/cue_edit_02.bmp"));
     ui->btnCueEdit->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnEditor->setIconSize(btn_icon_size);
-    ui->btnEditor->setIcon(QIcon(":/images/media/icons/audacity_sm.png"));
+    ui->btnEditor->setIcon(QIcon(":/images/media/icons/audacity02.bmp"));
     ui->btnEditor->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnCut->setIconSize(btn_icon_size);
-    ui->btnCut->setIcon(QIcon(":/images/media/icons/cut_document_sm.png"));
+    ui->btnCut->setIcon(QIcon(":/images/media/icons/cut_document02.bmp"));
     ui->btnCut->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnPaste->setIconSize(btn_icon_size);
-    ui->btnPaste->setIcon(QIcon(":/images/media/icons/paste_sm.png"));
+    ui->btnPaste->setIcon(QIcon(":/images/media/icons/paste02.bmp"));
     ui->btnPaste->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnDelete->setIconSize(btn_icon_size);
-    ui->btnDelete->setIcon(QIcon(":/images/media/icons/delete_sm.png"));
+    ui->btnDelete->setIcon(QIcon(":/images/media/icons/delete02.bmp"));
     ui->btnDelete->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnSearchAudio->setIconSize(QSize(30,30));

@@ -7,5 +7,20 @@
         <file>images/icons/mic.png</file>
         <file>images/icons/left_arrow.png</file>
         <file>images/icons/right_arrow.png</file>
+        <file>images/icons/stations03_sm.bmp</file>
+        <file>images/icons/station04_sm.bmp</file>
+        <file>images/icons/clusters01_sm.bmp</file>
+        <file>images/icons/cluster_sm.bmp</file>
+        <file>images/icons/station05_sm.bmp</file>
+        <file>images/icons/stations04_sm.bmp</file>
+        <file>images/icons/dbserver_sm.bmp</file>
+        <file>images/icons/servers01_sm.bmp</file>
+        <file>images/icons/audio_server01_sm.bmp</file>
+        <file>images/icons/clusterman01_sm.bmp</file>
+        <file>images/icons/role_sm.bmp</file>
+        <file>images/icons/roles01_sm.bmp</file>
+        <file>images/icons/user_sm.bmp</file>
+        <file>images/icons/users02_sm.bmp</file>
+        <file>images/icons/cluster01_sm.bmp</file>
     </qresource>
 </RCC>

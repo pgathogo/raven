@@ -71,6 +71,7 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
 
     m_tree_model = new TreeViewModel(node_data, this);
     ui->tvFolders->setModel(m_tree_model);
+    ui->tvFolders->setIconSize(QSize(25, 25));
 
     audio_folder_setup();
     connect(ui->tvFolders, &QTreeView::clicked, this, &MainWindow::folder_clicked);
@@ -838,7 +839,9 @@ std::vector<int> MainWindow::vector_str_to_int(std::vector<std::string>& vs)
 
 void MainWindow::audio_folder_setup()
 {
-    m_tree_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
+    auto root_item = new QStandardItem("Audio Library");
+    root_item->setIcon(QIcon(":/rave_images/media/icons/mainlib02_sm.bmp"));
+    m_tree_model->setHorizontalHeaderItem(0, root_item);
 }
 
 std::map<int, int> MainWindow::fetch_schedule_from_cache(QDate date, const std::vector<int>& hours)

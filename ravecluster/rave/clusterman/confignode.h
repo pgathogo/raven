@@ -150,6 +150,8 @@ namespace ClusterManager
         void set_node_type(NodeType);
         T* node_entity();  // FIXME: Replace this with node_entity_shared
         std::shared_ptr<T> node_entity_shared();
+        void set_parent(QTreeWidgetItem*);
+        QTreeWidgetItem* parent_node();
         void set_parent_id(int parent_id);
         void setText(int column, const QString& aText);
         void addChild(QTreeWidgetItem* child);
@@ -168,6 +170,7 @@ namespace ClusterManager
         int m_temp_id {-1}; // t_+max(temp_id)+1
         int m_parent_id{-1};
         QString m_uuid;
+        QTreeWidgetItem* m_parent_node;
         ConfigItemType m_config_item_type;
         std::shared_ptr<T> m_node_entity;
         NodeType m_node_type;
@@ -257,6 +260,18 @@ namespace ClusterManager
         void ConfigNode<T>::setText(int column, const QString& aText)
         {
             QTreeWidgetItem::setText(column, aText);
+        }
+
+        template<typename T>
+        void ConfigNode<T>::set_parent(QTreeWidgetItem* p_node)
+        {
+            m_parent_node = p_node;
+        }
+
+        template<typename T>
+        QTreeWidgetItem* ConfigNode<T>::parent_node()
+        {
+            return m_parent_node;
         }
 
         template<typename T>
