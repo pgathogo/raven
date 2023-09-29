@@ -187,7 +187,6 @@ void MainWindow::attach_folder_model()
 void MainWindow::setup_audio_folders()
 {
     try{
-
         AudioLibrary audio_lib;
         auto tree_data = audio_lib.read_data_from_db();
         m_folder_model = new TreeViewModel(tree_data, this);
@@ -456,9 +455,9 @@ void MainWindow::create_new_folder()
         std::string folder_name = folder_name_form->folder_name().toStdString();
 
         int id;
-        int folder_id = selected_folder_id();
+        int parent_id = selected_folder_id();
         try{
-            id = create_folder_to_db(folder_name, folder_id);
+            id = create_folder_to_db(folder_name, parent_id);
         }catch(DatabaseException& de){
             qDebug() << QString::fromStdString(de.errorMessage());
         }
@@ -467,7 +466,7 @@ void MainWindow::create_new_folder()
 
         NodeData* nd = new NodeData();
         nd->id = id;
-        nd->parent_id = folder_id;
+        nd->parent_id = parent_id;
         nd->name = folder_name;
         m_folders.push_back(nd);
 

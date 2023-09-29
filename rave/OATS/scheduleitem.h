@@ -18,6 +18,7 @@ namespace OATS{
     public:
         ScheduleItem();
         ScheduleItem(const ScheduleItem& other);
+        ScheduleItem& operator=(const ScheduleItem& other);
 
         int schedule_ref();
         int id() const;

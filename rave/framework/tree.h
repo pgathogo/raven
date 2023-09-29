@@ -31,6 +31,8 @@ public:
     int parentID() const { return parent_id; }
     TreeNode children(){ return mChildren; }
 
+    void add_child(Node*);
+
 private:
     std::string node_name;
     int node_id;

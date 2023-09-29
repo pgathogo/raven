@@ -1,3 +1,4 @@
+#include <iostream>
 #include "scheduleitem.h"
 
 
@@ -18,6 +19,10 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
     qd << "ID: " << si.id();
     qd << "OutCH: " << QString::fromStdString(si.play_channel());
     qd << "Audio: " << si.audio()->title()->to_qstring();
+
+    std::string ttype = si.transition_type_text();
+    qd << "TTYP: " << stoq(ttype);
+
     return qd;
 }
 
@@ -32,6 +37,42 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         ,m_audio{nullptr}
     {
     }
+
+    ScheduleItem& ScheduleItem::operator=(const ScheduleItem& other)
+    {
+        if (this == &other) return *this;
+
+        m_id = other.m_id;
+        m_schedule_ref = other.m_schedule_ref;
+        m_index = other.m_index;
+        m_item_status = other.m_item_status;
+
+        std::cout << "Other CH: "<< other.m_play_channel << '\n';
+
+        m_play_channel = other.m_play_channel;
+
+        m_schedule_type = other.m_schedule_type;
+        m_transition_type = other.m_transition_type;
+        m_hour = other.m_hour;
+        m_booked_spots = other.m_booked_spots;
+
+        // **
+        m_schedule_date = other.m_schedule_date;
+        m_play_date = other.m_play_date;
+        m_play_time = other.m_play_time;
+        m_comment = other.m_comment;
+
+        // **
+        m_schedule_time = other.m_schedule_time;
+        m_play_start_time = other.m_play_start_time;
+        m_current_time = other.m_current_time;
+        //Audio m_audio;
+        m_audio = other.m_audio;
+
+        return *this;
+
+    }
+
 
     int ScheduleItem::id() const
     {

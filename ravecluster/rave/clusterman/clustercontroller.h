@@ -36,6 +36,7 @@ class Server;
         std::vector<std::shared_ptr<ClusterManager::Server>> servers(ClusterId, std::string server_type="");
 
         bool grant_user_station_access(std::string, int);
+
         bool grant_user_table_access(std::string);
         bool table_access(std::string, int);
 

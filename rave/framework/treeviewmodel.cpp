@@ -1,3 +1,4 @@
+#include <iostream>
 #include <fstream>
 
 #include <QStandardItem>
@@ -54,6 +55,22 @@ void TreeViewModel::build_tree(std::vector<Node *> &nodes)
 
 }
 
+void TreeViewModel::insert_node(TreeNode tree_node, Node* node)
+{
+    bool found=false;
+    for(auto& [id, parent] : tree_node){
+        if (found) return;
+        if (id == node->parentID()){
+            parent->add_child(node);
+            parent->appendRow(node);
+            parent->setIcon(QIcon(":/rave_images/media/icons/main_folder_sm.bmp"));
+            found = true;
+        }else{
+            insert_node(parent->children(), node);
+        }
+    }
+}
+
 std::vector<NodeData*> TreeViewModel::nodes_data()
 {
     return m_node_data;
@@ -74,23 +91,6 @@ void TreeViewModel::treeClicked(QModelIndex mindex)
 {
     qDebug() << "C++ " << mindex.data(Qt::UserRole).toInt();
 
-}
-
-
-
-void TreeViewModel::insert_node(TreeNode tree_node, Node* node)
-{
-    bool found=false;
-    for(auto& [id, parent] : tree_node){
-        if (found) return;
-        if (id == node->parentID()){
-            parent->children()[node->nodeID()] = node;
-            parent->appendRow(node);
-            found = true;
-        }else{
-            insert_node(parent->children(), node);
-        }
-    }
 }
 
 void TreeViewModel::print_tree(TreeNode tree_node, int level)

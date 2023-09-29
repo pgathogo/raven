@@ -66,7 +66,7 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     m_track_item_builder = new TrackItemBuilder();
 
     AudioLibrary audio_lib;
-    //auto node_data = audio_lib.read_data_from_file("tree.txt");
+//    auto node_data = audio_lib.read_data_from_file("tree.txt");
     auto node_data = audio_lib.read_data_from_db();
 
     m_tree_model = new TreeViewModel(node_data, this);

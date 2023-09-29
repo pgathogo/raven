@@ -30,6 +30,11 @@ Node::Node(std::string name, int n_id, int p_id)
 
 Node::~Node(){}
 
+void Node::add_child(Node* child)
+{
+    mChildren[child->nodeID()] = child;
+}
+
 Tree::Tree()
 {
 }
