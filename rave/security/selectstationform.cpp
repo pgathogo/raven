@@ -10,6 +10,7 @@ SelectStationForm::SelectStationForm(std::map<int, StationInfo>& si, QWidget *pa
     ui->setupUi(this);
     connect(ui->btnSelect, &QPushButton::clicked, this, &SelectStationForm::select_station);
     connect(ui->btnCancel, &QPushButton::clicked, this, &SelectStationForm::cancel);
+    connect(ui->twStations, &QTableWidget::cellDoubleClicked, this, &SelectStationForm::select_station);
     populate_table(si);
 
     setWindowTitle("Station Selection");

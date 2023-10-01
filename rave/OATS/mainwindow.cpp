@@ -2032,13 +2032,14 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 {
     std::string temp_play_channel;
 
-    qDebug() << "1. CH= "<< stoq(op->schedule_item()->play_channel());
-    qDebug() << "2. CH= "<< stoq(m_current_playing_item.item->play_channel());
-
-    temp_play_channel = op->schedule_item()->play_channel();
 
     if (op->panel_status() == OATS::PanelStatus::CUED)
     {
+        qDebug() << "1. CH= "<< stoq(op->schedule_item()->play_channel());
+        qDebug() << "2. CH= "<< stoq(m_current_playing_item.item->play_channel());
+        temp_play_channel = op->schedule_item()->play_channel();
+
+
         op->set_panel_status(OATS::PanelStatus::PLAYING);
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);
         op->schedule_item()->set_play_start_time(QTime::currentTime());
@@ -2304,8 +2305,6 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
     if (si->item_status() == OATS::ItemStatus::ERROR_01)
         return;
 
-
-
     if ( grid_pos < m_current_playing_item.grid_index)
     {
          if (m_current_playing_item.item->item_status()==OATS::ItemStatus::PLAYING) {
@@ -2356,6 +2355,7 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
         if (schedule->audio()->title()->value() == "")
             continue;
         schedule->set_item_status(OATS::ItemStatus::WAITING);
+        schedule->set_transition_type(OATS::TransitionType::MIX);
         m_schedule_grid[index]->set_subject(schedule);
         ++next_grid_pos;
         //schedule->notify();
