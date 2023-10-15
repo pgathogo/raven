@@ -105,12 +105,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     //load_schedule_bydate(QDate::currentDate());
 
+    qInfo() << "Loading schedule...";
+
     load_schedule(QDate::currentDate(), 0);
+
+    qInfo() << "Set playout widgets.";
 
     set_playout_widgets();
 
+    qInfo() << "Compute schedule time.";
+
     compute_schedule_time();
 
+    qInfo() << "Setup timers...";
     setup_timers();
 
     ui->swMain->setCurrentIndex(0);
@@ -124,7 +131,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_jingle_grid.get(), &OATS::JingleGrid::stop_all_jingles, this, &MainWindow::stop_all_jingles);
 
     connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
-    connect(ui->btnComm, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(1); m_control_page = ControlPage::Commercial; });
+
+    connect(ui->btnComm, &QPushButton::clicked, this,
+            [&](){
+                ui->swMain->setCurrentIndex(1);
+                m_control_page = ControlPage::Commercial;
+                show_next_break_commercial();
+               });
+
 //    connect(ui->btnSegue, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(2); m_control_page = ControlPage::Segue; });
     connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3); m_control_page = ControlPage::Cart; });
     connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4); m_control_page = ControlPage::Jingle; });
@@ -153,6 +167,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_cart_panel = std::make_unique<OATS::CartPanel>();
     ui->vlCart->addWidget(m_cart_panel.get());
 
+    qInfo() << "Start timers...";
     start_timers();
 
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>();
@@ -165,8 +180,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_current_jingle_item = std::make_unique<OATS::ScheduleItem>();
     //test_concept();
 
+    qInfo() << "style page controls..";
     style_page_controls();
 
+    qInfo() << "Calculate time statistics...";
     calculate_time_stats();
 
     m_updatedb_mutex = std::make_shared<QMutex>();
@@ -354,7 +371,14 @@ void MainWindow::compute_schedule_time()
     if (m_current_playing_item.item == nullptr)
         return;
 
+    if (m_current_playing_item.item->audio() == nullptr)
+        return;
+
+    qInfo() << "Compute schedule time...";
+
     int time_counter = m_current_playing_item.item->audio()->duration()->value();
+
+    qInfo() << "Item counter: " << time_counter;
 
     m_current_playing_item.item->set_current_time(time_counter);
     m_current_playing_item.item->notify();
@@ -386,6 +410,8 @@ void MainWindow::load_schedule_bydate(QDate date)
 
 void MainWindow::build_hour_headers(QDate date, int hr)
 {
+    qInfo() << "Building schedule headers...";
+
     for (int hour=hr; hour < HOURS_IN_A_DAY; ++hour)
     {
         auto header = std::make_unique<OATS::ScheduleItem>();
@@ -480,7 +506,12 @@ void MainWindow::load_schedule(QDate date, int hr)
 #ifdef TEMP_SCHEDULE
     fetch_temp_data(hr);
 #endif
+
+    qInfo() << "Going to make playlist...";
+
     make_playlist_grid();
+
+    qInfo() << "Playlist done.";
 
     set_current_play_item();
 
@@ -500,6 +531,10 @@ void MainWindow::fill_schedule_headers(QDate date)
 
 void MainWindow::fetch_data_from_db(QDate date, int hr)
 {
+    qInfo() << QString("Featching data from db - Date `%1`, Hour: %2")
+                   .arg(date.toString("dd/mm/yyyy"))
+                   .arg(QString::number(hr));
+
     build_hour_headers(QDate::currentDate(), hr);
 
     fetch_commercials_bydate(date);
@@ -515,9 +550,9 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
         << " left outer join rave_audio b on a.audio_id = b.id "
         << " left outer join rave_artist c on b.artist_id = c.id ";
 
-    std::string where_filter = " WHERE a.schedule_date = '"+date.toString("yyyy/MM/dd").toStdString()+"'";
-    std::string time_filter = " AND a.schedule_hour >= "+ std::to_string(hr);
-    std::string order_by     = " ORDER BY a.schedule_hour, a.schedule_time, a.id ";
+    std::string where_filter = std::format(" WHERE a.schedule_date = '{}'", date.toString("yyyy/MM/dd").toStdString());
+    std::string time_filter = std::format(" AND a.schedule_hour >= {} ", std::to_string(hr));
+    std::string order_by = " ORDER BY a.schedule_date, a.schedule_hour, a.schedule_time, a.id ";
 
     sql << where_filter << time_filter << order_by;
 
@@ -526,17 +561,39 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
 
     auto provider = edm.getDBManager()->provider();
 
+    qInfo() << QString("Schedule records: %1").arg(QString::number(provider->cacheSize()));
+
     if (provider->cacheSize() == 0)
         return;
 
     int item_duration = 0;
     int total_duration = 0;
 
+    bool hour_top_item_picked = false;
+    int current_hour = QTime::currentTime().hour();
+
     provider->cache()->first();
     do{
         auto sched_item = std::make_unique<OATS::ScheduleItem>();
 
         set_schedule_fields(provider, sched_item.get());
+
+        if (sched_item->hour()== current_hour &&
+            !hour_top_item_picked)
+        {
+           // Initialize the current playing item with the first item
+           // in the current hour.
+            qInfo() << "Current hour ..";
+
+            m_current_playing_item.item = sched_item.get();
+            m_current_playing_item.schedule_index = sched_item->index();
+            m_current_playing_item.grid_index = 0;
+            hour_top_item_picked = true;
+
+            qInfo() << "Current playing item...set.";
+
+        }
+
 
         if (sched_item->schedule_type() == OATS::ScheduleType::COMM)
         {
@@ -575,11 +632,9 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
 
     } while (!provider->cache()->isLast());
 
-
     std::stable_sort(m_schedule_items.begin(), m_schedule_items.end(),
                      [](std::unique_ptr<OATS::ScheduleItem> const& lhs, std::unique_ptr<OATS::ScheduleItem> const& rhs){
         return lhs->hour() < rhs->hour(); });
-
 }
 
 
@@ -597,6 +652,8 @@ int MainWindow::get_comm_duration(int schedule_id)
 
 void MainWindow::fetch_commercials_bydate(QDate date)
 {
+    qInfo() << "Fetch commercial by date...";
+
     std::stringstream sql;
 
     sql << " select a.id, a.schedule_id, a.spot_id,  a.booking_status, "
@@ -618,6 +675,9 @@ void MainWindow::fetch_commercials_bydate(QDate date)
     edm.readRaw(sql.str());
 
     auto provider = edm.getDBManager()->provider();
+
+    qInfo() << QString("Commercial count found: %1").arg(QString::number(provider->cacheSize()));
+
     if (provider->cacheSize() == 0)
         return;
 
@@ -650,9 +710,6 @@ void MainWindow::fetch_commercials_bydate(QDate date)
                 if (cb.audio_id > -1)
                 {
                     auto cached_audio_path = m_audio_cache_manager->get_cached_audio_path(cb.audio_id);
-
-                    qDebug() << "CACHE: "<< stoq(cached_audio_path);
-
                     cb.filepath = (!cached_audio_path.empty()) ? stoq(cached_audio_path) : stoq(field_value);
                 }
             }
@@ -722,8 +779,10 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
         if (field_name == "schedule_hour")
             schedule->set_hour(str_to_int(field_value));
 
-        if (field_name == "schedule_time")
+        if (field_name == "schedule_time"){
             schedule->set_schedule_time(QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"));
+            schedule->set_break_time(QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"));
+        }
 
         if (field_name == "schedule_date"){
             schedule->set_schedule_date(QDate::fromString(QString::fromStdString(field_value), "yyyy-MM-dd"));
@@ -1152,21 +1211,31 @@ void MainWindow::move_top_current_hour()
 
 void MainWindow::set_current_play_item()
 {
-    if (m_schedule_items.size() > 0)
-    {
-        auto s_item = schedule_item(0);
+    //if (m_schedule_items.size() > 0)
+    //{
 
-        if (s_item == nullptr)
-            return;
+     m_current_playing_item.item = nullptr;
+     m_current_playing_item.schedule_index = -1;
+     m_current_playing_item.grid_index = -1;
+
+     for (auto& s_item: m_schedule_items)
+     {
+
+        //auto s_item = schedule_item(0);
+
+        //if (s_item == nullptr)
+         //   return;
 
         if (s_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER)
-            return;
+            continue;
 
-        m_current_playing_item.item = s_item;
+        m_current_playing_item.item = s_item.get();
         m_current_playing_item.schedule_index = s_item->index();
         m_current_playing_item.grid_index = 0;
 
         make_item_current(s_item->schedule_ref(), m_current_playing_item.grid_index);
+
+        break;
     }
 }
 
@@ -2111,11 +2180,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
     }
 
-    qDebug() << "TEMP CH: "<< stoq(temp_play_channel);
-
     m_current_playing_item.item->set_play_channel(temp_play_channel);
-
-    qDebug() << "CUR ITEM CH: "<< stoq(m_current_playing_item.item->play_channel());
 
 }
 
@@ -2384,7 +2449,8 @@ void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
       case ControlPage::Home:
         break;
       case ControlPage::Commercial:
-        qDebug() << schedule_ref;
+
+        qDebug() << "** Commercial Page ** " << schedule_ref;
         show_commercial(schedule_ref);
         break;
       case ControlPage::Segue:
@@ -2601,17 +2667,47 @@ void MainWindow::queue_for_caching(std::shared_ptr<AUDIO::Audio> audio)
 
 }
 
+void MainWindow::show_next_break_commercial()
+{
+    // Show next commercial break from the current item.
+
+    //int index = index_of(schedule_ref);
+    auto current_time = QTime::currentTime();
+
+    qDebug() << "Current Time: "<< current_time.toString("HH:mm");
+
+    for(int i=0; i<m_schedule_items.size()-1; ++i){
+
+        if (m_schedule_items[i]->schedule_type() == OATS::ScheduleType::COMM)
+        {
+            auto schedule = schedule_item(i);
+
+            qDebug() << "Break Time: "<< schedule->break_time().toString("HH:mm");
+
+            if (schedule->break_time() >= current_time)
+            {
+                m_comm_viewer->clear();
+                m_comm_viewer->create_view_headers();
+                fetch_commercial_from_db(schedule->id());
+                m_comm_viewer->set_title("Commercial Break: "+schedule->break_time().toString("HH:mm"));
+                break;
+            }
+
+        }
+    }
+}
+
 
 void MainWindow::show_commercial(int schedule_ref)
 {
-    // Show next commercial break from the current playing item.
+    // Show next commercial break from the current item.
 
     int index = index_of(schedule_ref);
 
     for(int i=index; i<m_schedule_items.size(); ++i){
         if (m_schedule_items[i]->schedule_type() == OATS::ScheduleType::COMM){
 
-            auto schedule = schedule_item(index);
+            auto schedule = schedule_item(i);
             m_comm_viewer->clear();
             m_comm_viewer->create_view_headers();
             fetch_commercial_from_db(schedule->id());
@@ -2645,10 +2741,10 @@ void MainWindow::show_track_info(int schedule_ref)
 
 History MainWindow::make_history(int audio_id)
 {
-    History hist;
+    History history;
 
     if (audio_id < 0)
-        return hist;
+        return history;
 
     Schedule schedule;
     auto edm = std::make_unique<EntityDataModel>(std::make_shared<Schedule>());
@@ -2674,10 +2770,10 @@ History MainWindow::make_history(int audio_id)
 
     for (auto& [name, entity] : edm->modelEntities()){
         Schedule* sched = dynamic_cast<Schedule*>(entity.get());
-        hist[sched->schedule_date()->value().dayOfWeek()].push_back(sched->schedule_hour()->value());
+        history[sched->schedule_date()->value().dayOfWeek()].push_back(sched->schedule_hour()->value());
     }
 
-    return hist;
+    return history;
 
 }
 
@@ -2709,6 +2805,8 @@ QString MainWindow::output_string(OATS::ScheduleItem* si)
 
 void MainWindow::transition_stop(int item_ref, int grid_index)
 {
+    qDebug() << "** AAA ** ";
+
     int index = index_of(item_ref);
 
     auto si = schedule_item(index);
@@ -2779,9 +2877,11 @@ void MainWindow::fetch_commercial_from_db(int schedule_id)
         <<" left outer join rave_spotaudio d on c.id = d.spot_id "
         <<" left outer join rave_client e on c.client_id = e.id ";
 
-   std::string where_filter = " where a.id = "+ std::to_string(schedule_id);
+    std::string where_filter = std::format(" where a.id = {}", std::to_string(schedule_id));
+    std::string order_by = " Order by b.book_seq ";
 
-   sql << where_filter;
+
+    sql << where_filter << order_by;
 
    EntityDataModel edm;
    edm.readRaw(sql.str());

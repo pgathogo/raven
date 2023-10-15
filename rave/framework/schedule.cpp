@@ -16,6 +16,8 @@ Schedule::Schedule()
 
     m_schedule_date = createField<DateField>("schedule_date", "Schedule Date:");
     m_schedule_time = createField<TimeField>("schedule_time", "Schedule Time:");
+
+
     m_schedule_hour = createField<IntegerField>("schedule_hour", "Schedule Hour");
 
     m_audio = createField<ForeignKeyField>("audio_id", "Audio",

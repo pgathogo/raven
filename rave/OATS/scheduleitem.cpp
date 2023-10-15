@@ -150,6 +150,11 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         return m_schedule_time;
     }
 
+    QTime ScheduleItem::break_time()
+    {
+        return m_break_time;
+    }
+
     QTime ScheduleItem::play_start_time()
     {
         return m_play_start_time;
@@ -310,6 +315,11 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
     void ScheduleItem::set_schedule_time(QTime time)
     {
         m_schedule_time = time;
+    }
+
+    void ScheduleItem::set_break_time(QTime time)
+    {
+        m_break_time = time;
     }
 
     void ScheduleItem::set_play_start_time(QTime time)

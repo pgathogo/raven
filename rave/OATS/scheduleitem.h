@@ -38,6 +38,7 @@ namespace OATS{
         std::string comment();
 
         QTime schedule_time();
+        QTime break_time();
         QTime play_start_time();
         int current_time();
         std::shared_ptr<AUDIO::Audio> audio();
@@ -57,6 +58,7 @@ namespace OATS{
         void set_comment(std::string);
 
         void set_schedule_time(QTime);
+        void set_break_time(QTime);
         void set_play_start_time(QTime);
         void set_current_time(int);
         void set_audio(std::shared_ptr<AUDIO::Audio>);
@@ -93,6 +95,7 @@ namespace OATS{
 
         // **
         QTime m_schedule_time;    // Time from the scheduler - Sedric
+        QTime m_break_time;       // Break time from traffik
         QTime m_play_start_time;  // Actual time the item was played
         int m_current_time;  // Computed time in millisecs
         //Audio m_audio;

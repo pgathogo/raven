@@ -40,8 +40,9 @@ int main(int argc, char *argv[])
 
     LoginForm lf("nbohr", "abc123", 6);
     lf.express_login();
-
     {
+        qInfo() << "Starting MainWindow...";
+
         MainWindow w;
         w.show();
         bool state = a.exec();

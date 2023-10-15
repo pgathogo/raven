@@ -102,3 +102,14 @@
 301	4666	7174295317718074	CMakeFiles/clusterman.dir/useraccessform.cpp.obj	9c9197a506b24b3e
 291	5484	7174295325773770	CMakeFiles/clusterman.dir/clustermanagerdlg.cpp.obj	629a8f157f5ed549
 5484	6179	7174295332832524	clusterman.exe	80d164722d1f8e10
+65	363	7188851875704039	clusterman_autogen/timestamp	59b339533018f224
+65	363	7188851875704039	clusterman_autogen/mocs_compilation.cpp	59b339533018f224
+65	363	7188851875704039	D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/timestamp	59b339533018f224
+65	363	7188851875704039	D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman_autogen/mocs_compilation.cpp	59b339533018f224
+377	4652	7188851918295141	CMakeFiles/clusterman.dir/clusterbrowser.cpp.obj	3dd4155a6165de9d
+370	4709	7188851918517568	CMakeFiles/clusterman.dir/mainwindow.cpp.obj	41cddb8bcc3974a0
+400	4730	7188851919097625	CMakeFiles/clusterman.dir/audiofolderform.cpp.obj	5a5886310fc25f92
+412	4774	7188851919758782	CMakeFiles/clusterman.dir/clustercontroller.cpp.obj	b22c3f0dccf2f480
+406	4778	7188851919778786	CMakeFiles/clusterman.dir/useraccessform.cpp.obj	9c9197a506b24b3e
+386	5681	7188851928824533	CMakeFiles/clusterman.dir/clustermanagerdlg.cpp.obj	629a8f157f5ed549
+5681	6389	7188851935912048	clusterman.exe	80d164722d1f8e10

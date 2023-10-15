@@ -23,13 +23,13 @@ public:
     void set_display_row_id(int);
 
     DateField* schedule_date() const;
-    DateField* set_schedule_date(const QDate val);
+    DateField* set_schedule_date(const QDate);
 
     TimeField* schedule_time() const;
-    TimeField* set_schedule_time(const QTime val);
+    TimeField* set_schedule_time(const QTime);
 
     IntegerField* schedule_hour() const;
-    IntegerField* set_schedule_hour(int val);
+    IntegerField* set_schedule_hour(int);
 
     ForeignKeyField* audio() const;
     void set_audio(int val);

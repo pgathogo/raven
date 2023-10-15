@@ -225,6 +225,7 @@ public:
 
     void load_item(int, int);
     void show_commercial(int);
+    void show_next_break_commercial();
     void fetch_commercial_from_db(int);
     void show_track_info(int);
     History make_history(int);

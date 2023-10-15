@@ -50,6 +50,7 @@ namespace AUDIO
         std::shared_ptr<AUDIO::Audio> find_audio_by_id(int);
 
     signals:
+
     private slots:
         void folder_clicked(int);
         void selected_audio(std::shared_ptr<AUDIO::Audio>);
