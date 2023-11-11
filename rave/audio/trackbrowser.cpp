@@ -97,9 +97,7 @@ namespace AUDIO
 
     void TrackBrowser::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
-        qDebug() << "TrackBrowser::selected_audio: "<< audio->id();
         m_current_selected_audio = audio;
-        qDebug() << "ZZZZZ";
     }
 
     std::shared_ptr<AUDIO::Audio> TrackBrowser::current_selected_audio()
@@ -333,6 +331,7 @@ namespace AUDIO
    {
 
         auto audio_ptr = m_lib_item->find_audio_by_id(track_id);
+
         std::shared_ptr<AUDIO::Audio> audio_sh = std::make_shared<AUDIO::Audio>();
         *audio_sh = *audio_ptr;
 

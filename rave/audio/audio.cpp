@@ -262,6 +262,128 @@ namespace AUDIO {
         m_audio_filename->setValue(audio_file);
     }
 
+    Audio::Audio(const Audio& other)
+        :m_title{}
+         ,m_short_desc{}
+         ,m_artist{}
+         ,m_audio_lib_path{}
+         ,m_is_deleted{}
+         ,m_play_count{}
+         ,m_duration{}
+         ,m_start_marker{}
+         ,m_fade_in_marker{}
+         ,m_fade_delay_marker{}
+         ,m_intro_marker{}
+         ,m_extro_marker{}
+         ,m_fade_out_marker{}
+         ,m_end_marker{}
+         ,m_file_path{}
+         ,m_folder{}
+         ,m_genre{}
+         ,m_mood{}
+         ,m_creation_date{}
+         ,m_audio_type{}
+         ,m_audio_filename{}
+    {
+        qDebug() << " **** AUDIO::COPY CTOR ****";
+
+        m_title = createField<StringField>("title", "Title");
+        m_short_desc = createField<StringField>("short_desc", "Short Desc");
+        m_artist = createField<ForeignKeyField>("artist_id", "Artist",
+                                                std::make_unique<Artist>(), "fullname");
+        m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
+        m_audio_lib_path->setFormOnly(true);
+        m_is_deleted = createField<BooleanField>("deleted", "Is Deleted?");
+        m_play_count= createField<IntegerField>("play_count", "Play Count");
+        m_duration = createField<DecimalField>("duration","Duration");
+        m_start_marker = createField<DecimalField>("start_marker", "Start Marker");
+        m_fade_in_marker = createField<DecimalField>("fade_in_marker", "Fade in Marker");
+        m_intro_marker= createField<DecimalField>("intro_marker", "Intro Marker");
+        m_extro_marker = createField<DecimalField>("extro_marker", "Extro Marker");
+        m_fade_out_marker = createField<DecimalField>("fade_out_marker", "Fade Out Marker");
+        m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
+        m_end_marker = createField<DecimalField>("end_marker", "End Marker");
+        m_file_path = createField<StringField>("filepath", "File Path");
+        m_folder = createField<ForeignKeyField>("folder_id", "Folder",
+                                                std::make_unique<Folder>(), "folder_name");
+        m_genre = createField<ForeignKeyField>("genre_id", "Genre",
+                                               std::make_unique<Genre>(), "genre");
+        m_mood = createField<ForeignKeyField>("mood_id", "Mood",
+                                              std::make_unique<Mood>(), "mood");
+        m_creation_date = createField<DateField>("creation_date", "Creation Date");
+
+        m_audio_type = createField<ChoiceField<std::string>>("audio_type", "Audio Type");
+        m_audio_type->addChoice({"SONG", "Song"});
+        m_audio_type->addChoice({"COMM-AUDIO", "Commercial"});
+        m_audio_type->addChoice({"JINGLE", "Jingle"});
+        m_audio_type->addChoice({"DROP", "Drop"});
+        m_audio_type->addChoice({"NBITE", "News Bite"});
+
+        m_audio_year = createField<IntegerField>("audio_year", "Audio Year");
+        m_notes = createField<TextField>("notes", "Notes");
+
+        m_header << QString::fromStdString(m_title->fieldLabel());
+        setTableName("rave_audio");
+
+        m_play_count->setValue(0);
+
+        m_creation_date->setValue(QDate::currentDate());
+        auto dt = QDate(QDate::currentDate());
+        m_audio_year->setValue(dt.year());
+
+        m_file_extension = createField<StringField>("file_extension", "File Extension");
+        m_audio_filename = createField<StringField>("audio_filename", "Audio Filename");
+        m_audio_filename->setFormOnly(true);
+        //if (this == &other) return *this;
+
+        this->setId(other.id());
+        m_title->setValue(other.title()->value());
+        this->set_title(other.title()->value());
+
+        m_short_desc->setValue(other.short_desc()->value());
+
+
+        m_duration->setValue(other.duration()->value());
+        m_artist->setValue(other.m_artist->value());
+
+        m_audio_lib_path->setValue(other.audio_lib_path()->value());
+
+        m_is_deleted->setValue(other.is_deleted()->value());
+        m_play_count->setValue(other.play_count()->value());
+        m_duration->setValue(other.duration()->value());
+        m_start_marker->setValue(other.start_marker()->value());
+        m_fade_in_marker->setValue(other.fade_in_marker()->value());
+        m_intro_marker->setValue(other.intro_marker()->value());
+        m_extro_marker->setValue(other.extro_marker()->value());
+        m_fade_out_marker->setValue(other.fade_out_marker()->value());
+        m_fade_delay_marker->setValue(other.fade_delay_marker()->value());
+        m_end_marker->setValue(other.end_marker()->value());
+
+        m_file_path->setValue(other.file_path()->value());
+
+        m_folder->setValue(other.folder()->value());
+        m_genre->setValue(other.genre()->value());
+        m_mood->setValue(other.mood()->value());
+        m_creation_date->setValue(other.creation_date()->value());
+        m_audio_type->setValue(other.audio_type()->value());
+        m_audio_year->setValue(other.audio_year()->value());
+        m_notes->setValue(other.notes()->value());
+        m_header = other.m_header;
+
+
+        m_audio_filename->setValue(other.audio_filename()->value());
+        m_file_extension->setValue(other.file_extension()->value());
+
+        m_file_info = other.m_file_info;
+
+
+        setTableName("rave_audio");
+
+
+        //return *this;
+
+    }
+
     Audio &Audio::operator=(const Audio &other)
     {
         if (this == &other) return *this;

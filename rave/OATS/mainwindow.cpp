@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     m_current_cued_item.item = nullptr;
+    m_current_playing_item.item = nullptr;
 
     // First load any cached audio data
     m_audio_cache_manager = std::make_shared<AUDIO::AudioCacheManager<SQLiteDatabaseManager>>(CACHE_DB_SQLITE, AUDIO_CACHE_LOCATION);
@@ -513,7 +514,9 @@ void MainWindow::load_schedule(QDate date, int hr)
 
     qInfo() << "Playlist done.";
 
-    set_current_play_item();
+    // TODO: Fix this method
+    // set_current_play_item();
+
 
     //move_top_current_hour();
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
@@ -1134,6 +1137,7 @@ QTime MainWindow::schedule_time_at(int index)
 
 void MainWindow::scroll_changed(int new_pos)
 {
+
     if (new_pos > m_scrollbar_current_value){
         scroll_down();
     }else{
@@ -1214,15 +1218,13 @@ void MainWindow::set_current_play_item()
     //if (m_schedule_items.size() > 0)
     //{
 
-     m_current_playing_item.item = nullptr;
+     m_current_playing_item.item = new OATS::ScheduleItem();
      m_current_playing_item.schedule_index = -1;
      m_current_playing_item.grid_index = -1;
 
      for (auto& s_item: m_schedule_items)
      {
-
         //auto s_item = schedule_item(0);
-
         //if (s_item == nullptr)
          //   return;
 
@@ -2412,33 +2414,7 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
         m_outputB->set_cue_time_string(cue_string);
     }
 
-    // downwards
-    int next_grid_pos = grid_pos+1;
-    for(int index=next_grid_pos; index<= MAX_GRID_ITEMS-1; ++index)
-    {
-        auto schedule = schedule_item(next_grid_pos);
-        if (schedule->audio()->title()->value() == "")
-            continue;
-        schedule->set_item_status(OATS::ItemStatus::WAITING);
-        schedule->set_transition_type(OATS::TransitionType::MIX);
-        m_schedule_grid[index]->set_subject(schedule);
-        ++next_grid_pos;
-        //schedule->notify();
-    }
-
-    //upwards
-    int prev_grid_pos = grid_pos-1;
-    for(int index=prev_grid_pos; index >= 0; --index)
-    {
-        qDebug() << "PREV: "<<prev_grid_pos;
-
-        auto schedule = schedule_item(prev_grid_pos);
-        qDebug() << stoq(schedule->item_status_text());
-            schedule->set_item_status(OATS::ItemStatus::WAITING);
-            schedule->notify();
-            m_schedule_grid[index]->set_subject(schedule);
-        --prev_grid_pos;
-    }
+    display_schedule();
 
 }
 
@@ -2537,26 +2513,25 @@ void MainWindow::reload_schedule(int schedule_ref, int grid_pos)
 
 void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
+    //std::shared_ptr<AUDIO::Audio> audio = std::make_shared<AUDIO::Audio>(*m_track_browser->current_selected_audio());
     std::shared_ptr<AUDIO::Audio> audio = m_track_browser->current_selected_audio();
 
     if (audio == nullptr)
         return;
 
-    qDebug() << ">>> Audio: " << audio->title()->to_qstring();
-
-    //int index = index_of(schedule_ref);
-    //auto item_at_cursor = schedule_item(grid_pos);
     auto item_at_cursor = m_schedule_grid[grid_pos]->schedule_item();
 
     auto new_item = std::make_unique<OATS::ScheduleItem>();
 
+    new_item->set_audio(audio);
+
     new_item->set_hour(item_at_cursor->hour());
     new_item->set_schedule_date(item_at_cursor->schedule_date());
-
     new_item->set_schedule_type(audio->audio_type()->value());
     new_item->set_transition_type(OATS::TransitionType::MIX);
     new_item->set_id(-1);
     new_item->set_schedule_ref(s_sched_ref++);
+    new_item->set_comment("MANUAL-LOAD");
 
     QTime new_time;
     if (item_at_cursor->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
@@ -2567,21 +2542,20 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     new_item->set_schedule_time(new_time);
 
-    new_item->set_comment("MANUAL-INSERT");
-
-    new_item->set_audio(audio);
-
     // check if audio exist
     QString filename = audio->full_audio_filename();
-
     if (!m_audio_tool.audio_exist(filename)){
         new_item->set_item_status(OATS::ItemStatus::ERROR_01);
         new_item->set_transition_type(OATS::TransitionType::SKIP);
     }
 
+   if (new_item->transition_type() != OATS::TransitionType::SKIP){
+     //  queue_for_caching(schedule_audio);
+     //  queue_for_caching(audio);
+   }
+
     auto play_channel = [&](){
         //return ChannelA;
-
         auto prev_si = schedule_item(grid_pos);
         if (prev_si == nullptr)
             return ChannelA;
@@ -2590,11 +2564,12 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
         return ChannelA;
     };
-
     new_item->set_play_channel(play_channel());
 
-    if (m_current_playing_item.item == nullptr)
-        m_current_playing_item.item = new_item.get();
+    if (m_current_playing_item.item == nullptr){
+        m_current_playing_item.item = new OATS::ScheduleItem();
+        *m_current_playing_item.item =  *new_item.get();
+    }
 
     auto insert_schedule_item = [&](OATS::ScheduleType s_type){
         int insert_pos = -1;
@@ -2604,17 +2579,11 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
             insert_pos = index_of(schedule_ref);
         }
 
-
         auto it = m_schedule_items.begin()+insert_pos;
         m_schedule_items.insert(it,  std::move(new_item));
 
         ui->gridScroll->setSliderPosition(ui->gridScroll->value()+1);
     };
-
-   if (new_item->transition_type() != OATS::TransitionType::SKIP){
-     //  queue_for_caching(schedule_audio);
-     //  queue_for_caching(audio);
-   }
 
     insert_schedule_item(item_at_cursor->schedule_type());
 

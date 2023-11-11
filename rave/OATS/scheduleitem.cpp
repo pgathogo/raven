@@ -38,6 +38,11 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
     {
     }
 
+    ScheduleItem::~ScheduleItem()
+    {
+        m_audio.reset();
+    }
+
     ScheduleItem& ScheduleItem::operator=(const ScheduleItem& other)
     {
         if (this == &other) return *this;

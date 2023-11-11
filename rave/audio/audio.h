@@ -125,6 +125,7 @@ namespace AUDIO {
     public:
         Audio();
         Audio(const std::string audio_file);
+        Audio(const Audio& other);
         Audio& operator=(const Audio& other);
 
         StringField* title() const;

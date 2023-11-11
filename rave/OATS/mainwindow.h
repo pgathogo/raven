@@ -303,6 +303,9 @@ private:
     std::vector<std::unique_ptr<OATS::ScheduleItem>> m_schedule_items;
     std::vector<std::unique_ptr<OATS::ScheduleGridItem>> m_schedule_grid;
 
+
+    std::unique_ptr<OATS::ScheduleItem> m_temp_schedule_item;
+
     std::map<Hour, std::vector<std::shared_ptr<OATS::ScheduleItem>>> m_day_schedule_items;
     std::vector<std::shared_ptr<OATS::ScheduleItem>> m_master_schedule;
 
