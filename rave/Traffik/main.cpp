@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     //LoginForm lf(auth.get());
     //if (lf.exec() > 0){
 
-    LoginForm lf;
+    LoginForm lf("nbohr", "abc123", 4);
     if (lf.exec() > 0)
     {
         auto station_info = lf.get_station_info();

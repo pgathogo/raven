@@ -22,6 +22,7 @@
 #include "../audio/audiowaveformgenerator.h"
 #include "../audio/mp3oggconverter.h"
 #include "../audio/oggtooggconverter.h"
+#include "../audio/mtstomp3converter.h"
 #include "../audio/audiofileinfo.h"
 
 #include "spotaudio.h"
@@ -172,7 +173,7 @@ void SpotAudioBrowser::import_audio()
 
     auto audio_filename = QFileDialog::getOpenFileName(this,
                                                    tr("Import Audio"), QDir::currentPath(),
-                                                   tr("OGG Files (*.ogg);; MP3 Files (*.mp3);; Wave Files (*.wav)"));
+                                                   tr("OGG Files (*.ogg);; MP3 Files (*.mp3);; MTS Files (*.mts);; Wave Files (*.wav)"));
     if (audio_filename.isEmpty())
         return;
 
@@ -184,7 +185,8 @@ void SpotAudioBrowser::import_audio()
 
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
-    if (fs::exists(audio->audio_file().adf_file()) ){
+    if (fs::exists(audio->audio_file().adf_file()) )
+    {
         AUDIO::ADFRepository adf_repo;
         CueMarker cue_marker =  adf_repo.read_markers(audio->audio_file().adf_file());
         audio->audio_file().set_marker(cue_marker);
@@ -220,6 +222,15 @@ void SpotAudioBrowser::import_audio()
                 } catch (AudioImportException& aie) {
                     showMessage(aie.errorMessage());
                 }
+            }
+
+            if (file_format == "mts")
+            {
+                auto audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio_shared);
+                audio_converter->convert();
+                auto mts_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(audio_converter.get());
+                spot_audio->audio()->set_audio_filename(mts_file->dest_mp3_filename().toStdString());
+                spot_audio->audio()->set_file_extension("OGG");
             }
 
         }

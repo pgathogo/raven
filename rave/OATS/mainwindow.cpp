@@ -2425,8 +2425,6 @@ void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
       case ControlPage::Home:
         break;
       case ControlPage::Commercial:
-
-        qDebug() << "** Commercial Page ** " << schedule_ref;
         show_commercial(schedule_ref);
         break;
       case ControlPage::Segue:
@@ -2643,15 +2641,11 @@ void MainWindow::show_next_break_commercial()
     //int index = index_of(schedule_ref);
     auto current_time = QTime::currentTime();
 
-    qDebug() << "Current Time: "<< current_time.toString("HH:mm");
-
     for(int i=0; i<m_schedule_items.size()-1; ++i){
 
         if (m_schedule_items[i]->schedule_type() == OATS::ScheduleType::COMM)
         {
             auto schedule = schedule_item(i);
-
-            qDebug() << "Break Time: "<< schedule->break_time().toString("HH:mm");
 
             if (schedule->break_time() >= current_time)
             {
@@ -2681,12 +2675,9 @@ void MainWindow::show_commercial(int schedule_ref)
             m_comm_viewer->create_view_headers();
             fetch_commercial_from_db(schedule->id());
             m_comm_viewer->set_title("Commercial Break: "+schedule->schedule_time().toString("HH:mm"));
-
             break;
-
         }
     }
-
 
 }
 

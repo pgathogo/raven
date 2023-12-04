@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <random>
+#include <QFile>
+#include <QDir>
 
 #include "bookingwizard.h"
 #include "ui_bookingwizard.h"
@@ -19,6 +21,8 @@
 #include "../framework/schedule.h"
 #include "../utils/qchecklist.h"
 #include "../utils/daypartgrid.h"
+#include "../utils/togglebutton.h"
+#include "../utils/cachehandler.h"
 
 #define DEBUG_MODE
 
@@ -80,6 +84,9 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
     connect(ui->btnBreakSelect, &QPushButton::clicked, this, [&](){ this->toggle_selection(true);} );
     connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [&](){ this->toggle_selection(false);} );
 
+    set_toggle_buttons();
+    read_break_rules_cache();
+
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
 }
@@ -87,6 +94,87 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
 BookingWizard::~BookingWizard()
 {
     delete ui;
+}
+
+void BookingWizard::set_toggle_buttons()
+{
+    ui->lblBreakDuration->setEnabled(false);
+    ui->lblTypeEx->setEnabled(false);
+    ui->lblVoiceEx->setEnabled(false);
+    ui->lblDaypart->setEnabled(false);
+    ui->lblVoiceDaypartRule->setEnabled(false);
+    ui->lblSpotDaypartRule->setEnabled(false);
+    ui->lblSameClient->setEnabled(false);
+    ui->lblOverride->setEnabled(false);
+
+    m_toggle_all = new ToggleButton(10,12);
+    ui->hlAll->addWidget(m_toggle_all);
+
+    m_toggle_break_duration = new ToggleButton(10, 12);
+    m_toggle_type_ex = new ToggleButton(10, 12);
+    m_toggle_voice_ex = new ToggleButton(10, 12);
+    m_toggle_type_daypart = new ToggleButton(10, 12);
+    m_toggle_voice_daypart = new ToggleButton(10, 12);
+    m_toggle_spot_daypart = new ToggleButton(10, 12);
+    m_toggle_same_client = new ToggleButton(10, 12);
+    m_toggle_override = new ToggleButton(10, 12);
+
+    m_toggle_buttons.push_back(m_toggle_break_duration);
+    m_toggle_buttons.push_back(m_toggle_type_ex);
+    m_toggle_buttons.push_back(m_toggle_voice_ex);
+    m_toggle_buttons.push_back(m_toggle_type_daypart);
+    m_toggle_buttons.push_back(m_toggle_voice_daypart);
+    m_toggle_buttons.push_back(m_toggle_spot_daypart);
+    m_toggle_buttons.push_back(m_toggle_same_client);
+    m_toggle_buttons.push_back(m_toggle_override);
+
+    connect(m_toggle_all, &ToggleButton::toggled, this, [&](bool togged){
+        for (auto tb: m_toggle_buttons){
+            tb->setChecked(togged);
+        }
+    });
+
+    connect(m_toggle_break_duration, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblBreakDuration->setEnabled(togged);
+    });
+
+    connect(m_toggle_type_ex, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblTypeEx->setEnabled(togged);
+    });
+
+    connect(m_toggle_voice_ex, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblVoiceEx->setEnabled(togged);
+    });
+
+    connect(m_toggle_type_daypart, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblDaypart->setEnabled(togged);
+    });
+
+    connect(m_toggle_voice_daypart, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblVoiceDaypartRule->setEnabled(togged);
+    });
+
+    connect(m_toggle_spot_daypart, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblSpotDaypartRule->setEnabled(togged);
+    });
+
+    connect(m_toggle_same_client, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblSameClient->setEnabled(togged);
+    });
+
+    connect(m_toggle_override, &ToggleButton::toggled, this, [&](bool togged){
+        ui->lblOverride->setEnabled(togged);
+    });
+
+
+    ui->hlDuration->addWidget(m_toggle_break_duration);
+    ui->hlTypeEx->addWidget(m_toggle_type_ex);
+    ui->hlVoiceEx->addWidget(m_toggle_voice_ex);
+    ui->hlDaypart->addWidget(m_toggle_type_daypart);
+    ui->hlVoiceDayEx->addWidget(m_toggle_voice_daypart);
+    ui->hlSpotEx->addWidget(m_toggle_spot_daypart);
+    ui->hlSameClient->addWidget(m_toggle_same_client);
+    ui->hlOverride->addWidget(m_toggle_override);
 }
 
 void BookingWizard::populate_spots_table(int client_id)
@@ -399,6 +487,8 @@ void BookingWizard::build_breaks()
 //    test_booking();
 //    return;
 
+    reset_values();
+
     try{
         init_rules_state();
 
@@ -440,9 +530,22 @@ void BookingWizard::build_breaks()
 
 }
 
+void BookingWizard::reset_values()
+{
+    ui->imgFullBreaks->clear();
+    ui->imgTypeDaypart->clear();
+    color_label(ui->lblTotalBreaks, Qt::black);
+    color_label(ui->lblFullBreaks, Qt::black);
+    color_label(ui->lblTypeExclusion, Qt::black);
+    color_label(ui->lblVoiceExclusion, Qt::black);
+    color_label(ui->lblTypeDaypart, Qt::black);
+    color_label(ui->lblVoiceDaypart, Qt::black);
+    color_label(ui->lblSpotDaypart, Qt::black);
+    color_label(ui->lblNoSameClient, Qt::black);
+}
+
 void BookingWizard::apply_selection()
 {
-
     m_dow_selection.clear();
 
     auto sel_days = ui->twDOW->selectedItems();
@@ -818,6 +921,14 @@ bool BookingWizard::validateCurrentPage()
                 return false;
             }
             break;
+
+        case BookingWizard::Page_Rules:
+        {
+            auto cache = m_cache_handler->get_cache();
+            ui->cbRemember->setChecked(cache["remember"].toBool());
+            break;
+        }
+
         case BookingWizard::Page_Build_Breaks:
         {
             add_days_of_week();
@@ -963,13 +1074,13 @@ void BookingWizard::fetch_spot_exclusions(const std::string query,
 
 void BookingWizard::init_rules_state()
 {
-    TRAFFIK::FullBreakRule::enable_or_disable(ui->cbBreakDuration->checkState());
-    TRAFFIK::TypeExclusionRule::enable_or_disable(ui->cbEnforceTypeExRule->checkState());
-    TRAFFIK::VoiceExclusionRule::enable_or_disable(ui->cbVoiceExclusion->checkState());
-    TRAFFIK::TypeDaypartRule::enable_or_disable(ui->cbTypeDaypart->checkState());
-    TRAFFIK::VoiceDaypartRule::enable_or_disable(ui->cbVoiceDaypart->checkState());
-    TRAFFIK::SpotDaypartRule::enable_or_disable(ui->cbSpotDaypart->checkState());
-    TRAFFIK::SameClientRule::enable_or_disable(ui->cbNoSameClient->checkState());
+    TRAFFIK::FullBreakRule::enable_or_disable(m_toggle_break_duration->isChecked());
+    TRAFFIK::TypeExclusionRule::enable_or_disable(m_toggle_type_ex->isChecked());
+    TRAFFIK::VoiceExclusionRule::enable_or_disable(m_toggle_voice_ex->isChecked());
+    TRAFFIK::TypeDaypartRule::enable_or_disable(m_toggle_type_daypart->isChecked());
+    TRAFFIK::VoiceDaypartRule::enable_or_disable(m_toggle_voice_daypart->isChecked());
+    TRAFFIK::SpotDaypartRule::enable_or_disable(m_toggle_spot_daypart->isChecked());
+    TRAFFIK::SameClientRule::enable_or_disable(m_toggle_same_client->isChecked());
 
     QString zero{"0"};
     ui->lblFullBreaks->setText(zero);
@@ -983,55 +1094,82 @@ void BookingWizard::init_rules_state()
 
 void BookingWizard::show_available_breaks()
 {
-    QPixmap pm_breaks(":/images/icons/images/icons/error_mark.png");
+    QPixmap pm_breaks(":/images/media/icons/error_mark.png");
 
     ui->lblBreaksChecked->setText(
                 stoq(std::to_string(m_engine_data.break_count)));
 
-    if (TRAFFIK::FullBreakRule::failed_break_count() > 0){
+    if (TRAFFIK::FullBreakRule::failed_break_count() > 0)
+    {
         ui->lblFullBreaks->setText(
                     stoq(std::to_string(TRAFFIK::FullBreakRule::failed_break_count())));
         ui->imgFullBreaks->setPixmap(pm_breaks);
+        color_label(ui->lblFullBreaks, Qt::red);
     }
 
-    if (TRAFFIK::TypeExclusionRule::failed_break_count() > 0){
+    if (TRAFFIK::TypeExclusionRule::failed_break_count() > 0)
+    {
         ui->lblTypeExclusion->setText(
                     stoq(std::to_string(TRAFFIK::TypeExclusionRule::failed_break_count())));
-        ui->imgTypeExcl->setPixmap(pm_breaks);
+        ui->imgTypeEx->setPixmap(pm_breaks);
+        color_label(ui->lblTypeExclusion, Qt::red);
     }
 
-    if (TRAFFIK::VoiceExclusionRule::failed_break_count() > 0){
+    if (TRAFFIK::VoiceExclusionRule::failed_break_count() > 0)
+    {
         ui->lblVoiceExclusion->setText(
                     stoq(std::to_string(TRAFFIK::VoiceExclusionRule::failed_break_count())));
-        ui->imgVoiceExcl->setPixmap(pm_breaks);
+        ui->imgVoiceEx->setPixmap(pm_breaks);
+        color_label(ui->lblVoiceExclusion, Qt::red);
     }
 
-    if (TRAFFIK::TypeDaypartRule::failed_break_count() > 0){
+    if (TRAFFIK::TypeDaypartRule::failed_break_count() > 0)
+    {
         ui->lblTypeDaypart->setText(
                     stoq(std::to_string(TRAFFIK::TypeDaypartRule::failed_break_count())));
         ui->imgTypeDaypart->setPixmap(pm_breaks);
+        color_label(ui->lblTypeDaypart, Qt::red);
     }
 
-    if (TRAFFIK::VoiceDaypartRule::failed_break_count() > 0){
+    if (TRAFFIK::VoiceDaypartRule::failed_break_count() > 0)
+    {
         ui->lblVoiceDaypart->setText(
                     stoq(std::to_string(TRAFFIK::VoiceDaypartRule::failed_break_count())));
         ui->imgVoiceDaypart->setPixmap(pm_breaks);
+        color_label(ui->lblVoiceDaypart, Qt::red);
     }
 
-    if (TRAFFIK::SpotDaypartRule::failed_break_count() > 0){
+    if (TRAFFIK::SpotDaypartRule::failed_break_count() > 0)
+    {
         ui->lblSpotDaypart->setText(
                     stoq(std::to_string(TRAFFIK::SpotDaypartRule::failed_break_count())));
         ui->imgSpotDaypart->setPixmap(pm_breaks);
+        color_label(ui->lblSpotDaypart, Qt::red);
     }
 
-    if (TRAFFIK::SameClientRule::failed_break_count() > 0){
+    if (TRAFFIK::SameClientRule::failed_break_count() > 0)
+    {
         ui->lblNoSameClient->setText(
                     stoq(std::to_string(TRAFFIK::SameClientRule::failed_break_count())));
-        ui->imgNoSameClient->setPixmap(pm_breaks);
+        ui->imgSameClient->setPixmap(pm_breaks);
+        color_label(ui->lblNoSameClient, Qt::red);
+    }
+
+    if (m_engine_data.available_breaks > 0)
+    {
+        color_label(ui->lblTotalBreaks, Qt::darkGreen);
     }
 
     ui->lblTotalBreaks->setText(QString::number(m_engine_data.available_breaks));
     ui->lblAvilBreaks->setText(QString::number(m_engine_data.available_breaks));
+}
+
+void BookingWizard::color_label(QLabel* label, Qt::GlobalColor c)
+{
+    QColor color(c);
+    QPalette palette = label->palette();
+    palette.setColor(QPalette::WindowText, color);
+    label->setPalette(palette);
 }
 
 std::vector<int> BookingWizard::selected_hours(const std::string& dp_str)
@@ -1046,6 +1184,30 @@ std::vector<int> BookingWizard::selected_hours(const std::string& dp_str)
 
     return hrs;
 
+}
+
+void BookingWizard::read_break_rules_cache()
+{
+    QJsonObject data;
+    data.insert("remember", false);
+    QJsonObject rules;
+    rules.insert("break_duration", false);
+    rules.insert("type_ex", false);
+    rules.insert("voice_ex", false);
+    rules.insert("type_daypart", false);
+    rules.insert("voice_daypart", false);
+    rules.insert("spot_daypart", false);
+    rules.insert("same_client", false);
+    rules.insert("override", false);
+    data.insert("rules", rules);
+
+    QString file = QDir::currentPath()+"/"+rules_cache_file;
+    m_cache_handler = std::make_unique<JsonCacheHandler>(file, data);
+
+}
+
+void BookingWizard::write_break_rules_cache()
+{
 }
 
 

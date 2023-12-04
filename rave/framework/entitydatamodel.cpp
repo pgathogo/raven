@@ -394,8 +394,9 @@ void EntityDataModel::deleteMarkedEntities()
 
 void EntityDataModel::all()
 {
-    if (dbManager->fetchAll(*(getEntity())) > 0)
+    if (dbManager->fetchAll(*(getEntity())) > 0){
         populateEntities();
+    }
 
 }
 

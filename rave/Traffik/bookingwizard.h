@@ -20,6 +20,9 @@ class DayPartGrid;
 class Schedule;
 class WizardData;
 
+class ToggleButton;
+class JsonCacheHandler;
+
 struct SelectedBreak{
     int break_id;
     QDate break_date;
@@ -29,6 +32,8 @@ struct SelectedBreak{
     int max_spots;
     std::string break_fill_method;
 };
+
+const QString rules_cache_file = "rules_cache_file.json";
 
 class BookingWizard : public QWizard
 {
@@ -66,6 +71,13 @@ public:
     void test_booking();
     int find_break_slot(int, int);
 
+    void set_toggle_buttons();
+
+    void read_break_rules_cache();
+    void write_break_rules_cache();
+
+    void reset_values();
+    void color_label(QLabel*, Qt::GlobalColor);
 
     int to_int(std::string s){
         return (s.empty()) ? 0 : std::stoi(s);
@@ -105,6 +117,22 @@ private:
 
     std::map<int, std::vector<std::string>> m_dow_selection;
 
+    ToggleButton* m_toggle_all;
+
+    ToggleButton* m_toggle_break_duration;
+    ToggleButton* m_toggle_type_ex;
+    ToggleButton* m_toggle_voice_ex;
+    ToggleButton* m_toggle_type_daypart;
+    ToggleButton* m_toggle_voice_daypart;
+    ToggleButton* m_toggle_spot_daypart;
+    ToggleButton* m_toggle_same_client;
+    ToggleButton* m_toggle_override;
+
+    std::vector<ToggleButton*> m_toggle_buttons;
+
+    std::unique_ptr<JsonCacheHandler> m_cache_handler;
+
+    /* --------------- private methods -------------------- */
     std::set<int> selected_unique_hours();
 
     QMenu* m_spot_ctx_menu;

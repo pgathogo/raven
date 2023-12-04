@@ -28,6 +28,7 @@ SetupBrowser::SetupBrowser(QWidget *parent)
     m_client_group_tab = new TabWidget(new ClientGroupDlg(this));
     m_gender_tab = new TabWidget(new ValueListBrowser("gender"));
     m_type_exclusion_tab = new TabWidget(new TypeExclusionBrowser());
+    m_type_exclusion_tab = new TabWidget(new TypeExclusionBrowser());
     m_voice_over_tab = new TabWidget(new VoiceOverBrowser());
     m_sales_person_tab = new TabWidget(new SalesPersonBrowser());
     m_agents_tab = new TabWidget(new AgentBrowser());

@@ -26,7 +26,9 @@ ManyToManyBrowser::ManyToManyBrowser(
 
     if (mMtoM->parentId()->value() > 0){
         std::string columnName = mMtoM->parentId()->dbColumnName();
+
         qDebug() << "ColumnName: "<< QString::fromStdString(columnName);
+
         int value = mMtoM->parentId()->value();
         auto needle = std::make_tuple(columnName, "=", value);
 
@@ -54,6 +56,9 @@ void ManyToManyBrowser::addRecord()
 
     for(const auto& entity : plset.selectedEntities){
         BaseEntity* be = entity;
+
+        qDebug() << "* Item selected *";
+
         if (be->dbAction() == DBAction::dbaCREATE){
             auto m2m =  mMtoM->copy(mMtoM->parentEntity(), be);
             m2m->setParentId(mMtoM->parentId()->value());

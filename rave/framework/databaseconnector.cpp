@@ -20,13 +20,11 @@ PostgresConnector::PostgresConnector(std::string conninfo)
     ,mConnection{nullptr}
 {
     openConnection(conninfo);
-    qDebug() << "Connection to DB opened.";
+    qDebug() << "Connection to database...opened.";
 }
 
 PostgresConnector* PostgresConnector::instance(const std::string conninfo)
 {
-    qDebug() << " Getting instance >>>>>>> ";
-
     if (mInstance == nullptr){
         qDebug() << "PostgresConnector::instances = nullptr *";
         mInstance = new PostgresConnector(conninfo);
@@ -37,7 +35,6 @@ PostgresConnector* PostgresConnector::instance(const std::string conninfo)
 void PostgresConnector::test_connection(const std::string conninfo)
 {
     //openConnection(conninfo);
-    //qDebug() << "Testing db connection ...";
     auto connection = PQconnectdb(conninfo.c_str());
     if (PQstatus(connection) != CONNECTION_OK){
         std::string errMsg =  "Connection to database failed! - ";

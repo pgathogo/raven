@@ -96,7 +96,6 @@ namespace TRAFFIK {
     public:
         virtual ~BaseRule();
         virtual bool execute(EngineData& engine_data,
-                             [[maybe_unused]] const BookedRecord& booked_record,
                              const Break& target_break) = 0;
         virtual bool isEnabled() = 0;
         virtual FailedBreakCode fail_code() = 0;
@@ -109,12 +108,11 @@ namespace TRAFFIK {
         FullBreakRule();
         ~FullBreakRule() override;
         bool execute(EngineData& engine_data,
-                     [[maybe_unused]] const BookedRecord& booked_record,
                      const Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "FullBreakRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void test_invoke();
         void reset_break_count() override { m_failed_break_count = 0; }
@@ -128,12 +126,11 @@ namespace TRAFFIK {
         TypeExclusionRule();
         ~TypeExclusionRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                      const Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "TypeExclusionRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
@@ -146,12 +143,11 @@ namespace TRAFFIK {
         VoiceExclusionRule();
         ~VoiceExclusionRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                      const Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "VoiceExclusionRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
@@ -165,12 +161,11 @@ namespace TRAFFIK {
         TypeDaypartRule();
         ~TypeDaypartRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                     const  Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "TypeDaypartRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
@@ -185,12 +180,11 @@ namespace TRAFFIK {
         VoiceDaypartRule();
         ~VoiceDaypartRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                     const  Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "VoiceDaypartRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
@@ -205,12 +199,11 @@ namespace TRAFFIK {
         SpotDaypartRule();
         ~SpotDaypartRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                     const  Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "SpotDaypartRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
@@ -225,12 +218,11 @@ namespace TRAFFIK {
         SameClientRule();
         ~SameClientRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                      const Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "SameClientRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
@@ -244,12 +236,11 @@ namespace TRAFFIK {
         OverrideSameClientRule();
         ~OverrideSameClientRule() override;
         bool execute(EngineData& engine_data,
-                     const BookedRecord& booked_record,
                      const Break& target_break) override;
         bool isEnabled() override;
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "OverrideSameClientRule"; }
-        static void enable_or_disable(int state);
+        static void enable_or_disable(bool state);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:

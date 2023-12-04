@@ -86,7 +86,7 @@ LoginForm::LoginForm(const QString username, const QString password, int station
     ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
     ui->edtUsername->setFocus();
 
-    ui->btnSelect->setEnabled(false);
+    //ui->btnSelect->setEnabled(false);
 
     QPixmap pix;
     pix.load(":/rave_images/media/icons/password_sm.bmp");
