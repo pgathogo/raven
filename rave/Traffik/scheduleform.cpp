@@ -28,6 +28,11 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
     ui->dtSchedule->setDate(QDate::currentDate());
 
     //ui->btnDelete->setEnabled(false);
+    ui->btnCreate->setIcon(QIcon(":/images/media/icons/createbreak.bmp"));
+    ui->btnCreate->setIconSize(QSize(35,35));
+    ui->btnDelete->setIcon(QIcon(":/images/media/icons/deletebreak.bmp"));
+    ui->btnDelete->setIconSize(QSize(35,35));
+
 
     setWindowTitle("Schedule Management Form");
 }

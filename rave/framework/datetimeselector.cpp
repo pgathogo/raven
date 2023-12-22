@@ -8,6 +8,11 @@ DateTimeSelector::DateTimeSelector(QWidget *parent, DateTimeSelection dts)
     ,m_selection{dts}
 {
     ui->setupUi(this);
+
+    if (m_selection.sel_hours.size() == 0){
+        m_selection.sel_hours.push_back(QTime::currentTime().hour());
+    }
+
     build_time_buttons();
 
     connect(ui->btnOK, &QPushButton::clicked, this, &DateTimeSelector::pick_selection);

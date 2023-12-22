@@ -54,6 +54,12 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
 
     ui->btnPrint->setMenu(menu);
 
+    ui->btnNew->setIcon(QIcon(":/images/media/icons/booking.bmp"));
+    ui->btnNew->setIconSize(QSize(32,32));
+    ui->btnCancel->setIcon(QIcon(":/images/media/icons/cancelbooking.bmp"));
+    ui->btnCancel->setIconSize(QSize(32, 32));
+    ui->btnPrint->setIcon(QIcon(":/images/media/icons/printbooking.bmp"));
+    ui->btnPrint->setIconSize(QSize(32, 32));
 }
 
 BookingOrderBrowser::~BookingOrderBrowser()

@@ -169,7 +169,7 @@ namespace TRAFFIK {
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:
-        std::map<int, bool> cache_hour{};
+        std::map<int, bool> m_cache_hour{};
         static bool m_isEnabled;
         static int m_failed_break_count;
     };

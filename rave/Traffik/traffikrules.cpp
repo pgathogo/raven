@@ -35,16 +35,16 @@ namespace TRAFFIK{
         for (auto& rule : m_rules )
             rule->reset_break_count();
 
-        for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities()){
-
+        for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities())
+        {
             auto target_break = dynamic_cast<Break*>(entity.get());
-
             check_break_availability(target_break);
         }
 
         // Override same client rule for different
         OverrideSameClientRule osc_rule;
-        osc_rule.execute(m_engine_data, Break());
+        if (osc_rule.isEnabled())
+             osc_rule.execute(m_engine_data, Break());
 
         return  ( m_engine_data.break_count - m_engine_data.failed_breaks.size() );
     }
@@ -68,8 +68,6 @@ namespace TRAFFIK{
 
           */
 
-        qDebug() << "Prev Booked: "<< m_engine_data.prev_bookings.size();
-
         for (auto& rule : m_rules )
         {
             if (!rule->isEnabled())
@@ -81,31 +79,14 @@ namespace TRAFFIK{
                 return false;
             }
 
-            bool result = rule->execute(m_engine_data,*target_break);
+            bool result = rule->execute(m_engine_data, *target_break);
 
             if (!result)
             {
                 log_failure(target_break->id(), rule->fail_code());
                 target_break->set_break_availability(Schedule::BreakAvailability::Break_Not_Available);
-            }
 
-            /*
-            for (auto& booking : m_engine_data.prev_bookings)
-            {
-                bool result = rule->execute(m_engine_data,
-                                            booking,
-                                            *target_break);
-
-                if (!result){
-                    log_failure(target_break->id(), rule->fail_code());
-                    //m_engine_data.failed_breaks.push_back(std::make_tuple(target_break->id(),
-                    //                     rule->fail_code()));
-                    //target_break->setIsBad(true);
-                    target_break->set_break_availability(Schedule::BreakAvailability::Break_Not_Available);
-                    break;
-                }
             }
-            */
 
         }
 
@@ -312,30 +293,45 @@ namespace TRAFFIK{
 
         auto target_break_hour = target_break.schedule_hour()->value();
 
-        if (cache_hour.find(target_break_hour) != cache_hour.end()){
-            if (cache_hour[target_break_hour] == false){
+        if (m_cache_hour.find(target_break_hour) != m_cache_hour.end())
+        {
+            if (m_cache_hour[target_break_hour] == false)
+            {
                 ++m_failed_break_count;
                 return false;
             }
         }
 
-        cache_hour.clear();
+        m_cache_hour.clear();
 
         int dow = target_break.schedule_date()->value().dayOfWeek();
 
-        for (auto& type_excl : engine_data.spot_to_book.type_exclusions){
+        qDebug() << "Target Hour...: "<< target_break_hour;
+
+        for (auto& type_excl : engine_data.spot_to_book.type_exclusions)
+        {
             auto& [tid, daypart] = type_excl;
             auto& [dp_str, hours] = daypart[dow];
 
-            if ( std::find(hours.begin(), hours.end(), target_break_hour) == hours.end() ){
-                    ++m_failed_break_count;
-                    is_break_valid = false;
+
+            qDebug() << "------------------------------------";
+            std::string h_str;
+            for(auto& h:hours){
+                h_str = h_str + std::to_string(h)+", ";
+            }
+            qDebug() << stoq(h_str);
+            qDebug() << "------------------------------------";
+
+            if ( std::find(hours.begin(), hours.end(), target_break_hour) == hours.end() )
+            {
+                ++m_failed_break_count;
+                is_break_valid = false;
             } else {
                 is_break_valid = true;
             }
         }
 
-        cache_hour[target_break_hour] = is_break_valid;
+        m_cache_hour[target_break_hour] = is_break_valid;
 
         return is_break_valid;
 
@@ -589,12 +585,17 @@ namespace TRAFFIK{
                 if (it != engine_data.prev_bookings.end())
                 {
                     if ((*it).booked_spot.brand_id != engine_data.spot_to_book.brand_id){
+                        ++m_failed_break_count;
+                        qDebug() << "Break ID: "<< break_id;
                         temp_ids.push_back(break_id);
                     }
                 }
 
             }
         }
+
+
+        qDebug() << "Failed Breaks: "<< m_failed_break_count;
 
         // sweep
         for (auto& id : temp_ids){

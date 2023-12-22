@@ -28,18 +28,20 @@ public:
     ConnInfo get_connection_info();
     void express_login();
     void express_fetch();
+    void test_login();
 
 private slots:
-    void show_stations();
-    void fetch_stations();
+    void open_station_selector();
+    void check_forced_password_reset();
+    bool cluster_server_authentication(std::string, std::string);
     void login();
     void cancel();
     void reset_password();
     void cancel_password_reset();
 
 private:
-    bool populate_station_info(QString);
-    int get_selected_station_id();
+    bool fetch_user_stations(QString);
+    int select_station();
     bool validate_password_reset();
     void login_to_station(int);
 

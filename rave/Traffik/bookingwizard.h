@@ -4,6 +4,8 @@
 #include <set>
 #include <QWizard>
 #include <QMenu>
+#include <QJsonObject>
+
 #include "timeband.h"
 #include "../framework/schedule.h"
 #include "../framework/entitydatamodel.h"
@@ -55,6 +57,8 @@ public:
     std::size_t find_available_breaks();
 
     bool validateCurrentPage() override;
+    void initializePage(int) override;
+
     TRAFFIK::Spot* selected_spot();
 
     void fetch_type_exclusions(TRAFFIK::EngineData&);
@@ -74,7 +78,8 @@ public:
     void set_toggle_buttons();
 
     void read_break_rules_cache();
-    void write_break_rules_cache();
+    void cache_break_rules();
+    void toggle_rule_buttons(QJsonObject);
 
     void reset_values();
     void color_label(QLabel*, Qt::GlobalColor);
@@ -118,6 +123,7 @@ private:
     std::map<int, std::vector<std::string>> m_dow_selection;
 
     ToggleButton* m_toggle_all;
+    ToggleButton* m_remember_rules;
 
     ToggleButton* m_toggle_break_duration;
     ToggleButton* m_toggle_type_ex;
@@ -131,6 +137,7 @@ private:
     std::vector<ToggleButton*> m_toggle_buttons;
 
     std::unique_ptr<JsonCacheHandler> m_cache_handler;
+    QJsonObject m_rules_cache;
 
     /* --------------- private methods -------------------- */
     std::set<int> selected_unique_hours();

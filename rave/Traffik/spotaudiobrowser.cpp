@@ -180,11 +180,17 @@ void SpotAudioBrowser::import_audio()
     AUDIO::AudioFileInfo afi(audio_filename);
     QString file_format = afi.file_format();
 
+    qDebug() << "1.Audio Filename....: "<< audio_filename;
+
+    qDebug() << "2.File Format....: "<< file_format;
+
     auto audio = std::make_unique<AUDIO::Audio>(audio_filename.toStdString());
     auto audio_shared = std::make_shared<AUDIO::Audio>(audio_filename.toStdString());
 
+    qDebug() << "3.Audio Library Folder....: "<< m_setup->audio_folder()->to_qstring();
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
+    qDebug() << "4.Audio ADF File....: "<< QString::fromStdString(audio->audio_file().adf_file());
     if (fs::exists(audio->audio_file().adf_file()) )
     {
         AUDIO::ADFRepository adf_repo;
@@ -199,6 +205,7 @@ void SpotAudioBrowser::import_audio()
 
     if (spot_audio_form->exec() > 0){
 
+        qDebug() << "5.Audio Wave File....: "<< QString::fromStdString(spot_audio->audio()->audio_file().wave_file());
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) )
         {
             try{
@@ -207,6 +214,13 @@ void SpotAudioBrowser::import_audio()
                 audio->audio_file().set_wave_file(wave_gen->wave_filename().toStdString());
             } catch (AudioImportException& aie) {
                 showMessage(aie.errorMessage());
+            }
+
+            if (file_format == "ogg")
+            {
+                auto audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio_shared);
+                spot_audio->audio()->set_file_extension("OGG");
+                spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
             }
 
             if (file_format == "mp3")

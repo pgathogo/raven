@@ -2,6 +2,7 @@
 #include <random>
 #include <QFile>
 #include <QDir>
+#include <QJsonDocument>
 
 #include "bookingwizard.h"
 #include "ui_bookingwizard.h"
@@ -59,6 +60,9 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
     connect(ui->rbTimeband, &QRadioButton::toggled, this, &BookingWizard::toggleTimeBand);
     connect(ui->btnBuildBreaks, &QPushButton::clicked, this, &BookingWizard::build_breaks);
 
+    ui->btnBuildBreaks->setIcon(QIcon(":/images/media/icons/build01.bmp"));
+    ui->btnBuildBreaks->setIconSize(QSize(32, 32));
+
     connect(ui->twBreakSelect, &QTableWidget::itemSelectionChanged, this, [this](){
         this->ui->edtSelBreaks->setText(QString::number(this->ui->twBreakSelect->selectedRanges().size()));
         this->ui->lblTotalBookings->setText(QString::number(this->ui->twBreakSelect->selectedRanges().size()));
@@ -107,8 +111,11 @@ void BookingWizard::set_toggle_buttons()
     ui->lblSameClient->setEnabled(false);
     ui->lblOverride->setEnabled(false);
 
+    auto lblSelectAll = new QLabel("Select All Rules", this);
     m_toggle_all = new ToggleButton(10,12);
+    ui->hlAll->addWidget(lblSelectAll);
     ui->hlAll->addWidget(m_toggle_all);
+    ui->hlAll->addStretch();
 
     m_toggle_break_duration = new ToggleButton(10, 12);
     m_toggle_type_ex = new ToggleButton(10, 12);
@@ -127,6 +134,13 @@ void BookingWizard::set_toggle_buttons()
     m_toggle_buttons.push_back(m_toggle_spot_daypart);
     m_toggle_buttons.push_back(m_toggle_same_client);
     m_toggle_buttons.push_back(m_toggle_override);
+
+    auto lblRemember = new QLabel("Remember selected break rules");
+    m_remember_rules = new ToggleButton(10, 12);
+
+    ui->hlBottom->addWidget(lblRemember);
+    ui->hlBottom->addWidget(m_remember_rules);
+    ui->hlBottom->addStretch();
 
     connect(m_toggle_all, &ToggleButton::toggled, this, [&](bool togged){
         for (auto tb: m_toggle_buttons){
@@ -227,7 +241,8 @@ void BookingWizard::setup_break_select_grid()
 
     int row = 0;
 
-    for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities()){
+    for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities())
+    {
         Schedule* comm_break = dynamic_cast<Schedule*>(entity.get());
         if (comm_break->break_availability() == Schedule::BreakAvailability::Break_Available){
 
@@ -510,7 +525,8 @@ void BookingWizard::build_breaks()
 
         m_engine_data.break_count = fetch_breaks(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
 
-        if (m_engine_data.break_count == 0){
+        if (m_engine_data.break_count == 0)
+        {
             showMessage("No Breaks for the selected data range!");
             this->button(QWizard::NextButton)->setDisabled(true);
             return;
@@ -898,10 +914,25 @@ std::size_t BookingWizard::find_available_breaks()
     return m_rule_engine->find_breaks();
 }
 
+void BookingWizard::initializePage(int currentId)
+{
+
+    if (currentId == 3){
+        qDebug() << "Page Number: "<< currentId;
+        QAbstractButton* next_btn = button(QWizard::NextButton);
+        if (next_btn){
+            qDebug() << "Next button found";
+            next_btn->setEnabled(false);
+        }
+    }
+
+}
+
 bool BookingWizard::validateCurrentPage()
 {
-    switch (currentId()){
-        case 0:
+    switch (currentId())
+    {
+        case BookingWizard::Page_Spots:
            {
             TRAFFIK::Spot* sel_spot = selected_spot();
             bool has_audio = spot_has_audio(sel_spot);
@@ -924,8 +955,8 @@ bool BookingWizard::validateCurrentPage()
 
         case BookingWizard::Page_Rules:
         {
-            auto cache = m_cache_handler->get_cache();
-            ui->cbRemember->setChecked(cache["remember"].toBool());
+            cache_break_rules();
+            qDebug() << "Page_Rules...";
             break;
         }
 
@@ -1006,6 +1037,8 @@ void BookingWizard::fetch_type_exclusions(TRAFFIK::EngineData& engine_data)
        << " WHERE rave_spottypeexclusion.detail_id = rave_typeexclusion.id "
        << " AND rave_spottypeexclusion.parent_id = "+std::to_string(engine_data.spot_to_book.spot_id);
 
+    std::cout << sql.str() << '\n';
+
     fetch_spot_exclusions(sql.str(),
                         m_engine_data.spot_to_book.type_exclusions,
                         m_engine_data.spot_to_book.type_ex_keys);
@@ -1081,6 +1114,7 @@ void BookingWizard::init_rules_state()
     TRAFFIK::VoiceDaypartRule::enable_or_disable(m_toggle_voice_daypart->isChecked());
     TRAFFIK::SpotDaypartRule::enable_or_disable(m_toggle_spot_daypart->isChecked());
     TRAFFIK::SameClientRule::enable_or_disable(m_toggle_same_client->isChecked());
+    TRAFFIK::OverrideSameClientRule::enable_or_disable(m_toggle_override->isChecked());
 
     QString zero{"0"};
     ui->lblFullBreaks->setText(zero);
@@ -1155,6 +1189,14 @@ void BookingWizard::show_available_breaks()
         color_label(ui->lblNoSameClient, Qt::red);
     }
 
+    if(TRAFFIK::OverrideSameClientRule::failed_break_count() > 0)
+    {
+        ui->lblSameClientDiffBrands->setText(
+            stoq(std::to_string(TRAFFIK::OverrideSameClientRule::failed_break_count()))+"+" );
+            ui->imgDiffBrand->setPixmap(pm_breaks);
+            color_label(ui->lblSameClientDiffBrands, Qt::red);
+    }
+
     if (m_engine_data.available_breaks > 0)
     {
         color_label(ui->lblTotalBreaks, Qt::darkGreen);
@@ -1189,6 +1231,7 @@ std::vector<int> BookingWizard::selected_hours(const std::string& dp_str)
 void BookingWizard::read_break_rules_cache()
 {
     QJsonObject data;
+    data.insert("all", false);
     data.insert("remember", false);
     QJsonObject rules;
     rules.insert("break_duration", false);
@@ -1204,10 +1247,54 @@ void BookingWizard::read_break_rules_cache()
     QString file = QDir::currentPath()+"/"+rules_cache_file;
     m_cache_handler = std::make_unique<JsonCacheHandler>(file, data);
 
+    m_rules_cache = m_cache_handler->get_cache();
+
+    toggle_rule_buttons(m_rules_cache);
 }
 
-void BookingWizard::write_break_rules_cache()
+void BookingWizard::toggle_rule_buttons(QJsonObject rule_cache)
 {
+    bool remember_rules = rule_cache["remember"].toBool();
+    m_remember_rules->setChecked(remember_rules);
+    if (remember_rules)
+    {
+        m_toggle_all->setChecked(rule_cache["all"].toBool());
+        auto rules = rule_cache["rules"].toObject();
+        m_toggle_break_duration->setChecked(rules["break_duration"].toBool());
+        m_toggle_type_ex->setChecked(rules["type_ex"].toBool());
+        m_toggle_voice_ex->setChecked(rules["voice_ex"].toBool());
+        m_toggle_type_daypart->setChecked(rules["type_daypart"].toBool());
+        m_toggle_voice_daypart->setChecked(rules["voice_daypart"].toBool());
+        m_toggle_spot_daypart->setChecked(rules["spot_daypart"].toBool());
+        m_toggle_same_client->setChecked(rules["same_client"].toBool());
+        m_toggle_override->setChecked(rules["override"].toBool());
+    }
+
+}
+
+void BookingWizard::cache_break_rules()
+{
+
+    m_rules_cache["remember"] = m_remember_rules->isChecked();
+    m_rules_cache["all"] = m_toggle_all->isChecked();
+    QJsonObject data = m_rules_cache["rules"].toObject();
+
+    data["break_duration"] = m_toggle_break_duration->isChecked();
+    data["type_ex"] = m_toggle_type_ex->isChecked();
+    data["voice_ex"] = m_toggle_voice_ex->isChecked();
+    data["type_daypart"] =  m_toggle_type_daypart->isChecked();
+    data["voice_daypart"] = m_toggle_voice_daypart->isChecked();
+    data["spot_daypart"] = m_toggle_spot_daypart->isChecked();
+    data["same_client"] = m_toggle_same_client->isChecked();
+    data["override"] = m_toggle_override->isChecked();
+
+    m_rules_cache["rules"] = data;
+
+    // QJsonDocument jdoc(m_rules_cache);
+    // QString jstring =  jdoc.toJson(QJsonDocument::Compact);
+
+    m_cache_handler->write_cache(m_rules_cache);
+
 }
 
 

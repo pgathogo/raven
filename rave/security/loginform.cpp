@@ -26,7 +26,7 @@ LoginForm::LoginForm(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::show_stations);
+    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::open_station_selector);
     connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::login);
     connect(ui->btnCancel, &QPushButton::clicked, this, &LoginForm::cancel);
 
@@ -70,7 +70,7 @@ LoginForm::LoginForm(const QString username, const QString password, int station
 {
     ui->setupUi(this);
 
-    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::show_stations);
+    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::open_station_selector);
     connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::login);
     connect(ui->btnCancel, &QPushButton::clicked, this, &LoginForm::cancel);
 
@@ -132,11 +132,19 @@ bool LoginForm::validNamePass()
     return true;
 }
 
-void LoginForm::show_stations()
+void LoginForm::open_station_selector()
 {
-    fetch_stations();
+    bool authenticated = cluster_server_authentication(
+        ui->edtUsername->text().toStdString(),
+        ui->edtPassword->text().toStdString()
+     );
 
-    m_selected_station_id = get_selected_station_id();
+    if (!authenticated)
+        return;
+
+    fetch_user_stations(ui->edtUsername->text());
+
+    m_selected_station_id = select_station();
 
     if (m_selected_station_id > 0)
     {
@@ -147,19 +155,25 @@ void LoginForm::show_stations()
 
 }
 
-void LoginForm::fetch_stations()
+bool LoginForm::cluster_server_authentication(std::string username, std::string password)
 {
     auto app_auth = std::make_unique<Authentication>();
-
     try{
-        app_auth->connect_to_cluster_server(
-            ui->edtUsername->text().toStdString(),
-            ui->edtPassword->text().toStdString());
+        app_auth->connect_to_cluster_server(username,password );
+        return true;
     }catch(DatabaseException& de){
         std::cout << de.errorMessage();
          //mNoticeBar->errorNotification(de.errorMessage());
-        return;
+        return false;
     }
+
+}
+
+
+void LoginForm::check_forced_password_reset()
+{
+    // This check for forced password reset happens in the cluster server.
+
 
     SECURITY::UserConfig uc;
     EntityDataModel edm(std::make_unique<SECURITY::UserConfig>());
@@ -183,14 +197,13 @@ void LoginForm::fetch_stations()
 
 }
 
-int LoginForm::get_selected_station_id()
+int LoginForm::select_station()
 {
     qDebug() << "Get Selected: " << ui->edtUsername->text();
 
-    bool populated = populate_station_info(ui->edtUsername->text());
-
-    if (!populated)
-        return 0;
+    // bool populated = populate_station_info(ui->edtUsername->text());
+    // if (!populated)
+    //     return 0;
 
     auto ssform = std::make_unique<SelectStationForm>(m_stations_info);
     if (ssform->exec() > 0)
@@ -199,6 +212,20 @@ int LoginForm::get_selected_station_id()
     }else{
         return 0;
     }
+}
+
+void LoginForm::test_login()
+{
+    bool authenticated = cluster_server_authentication(
+        ui->edtUsername->text().toStdString(),
+        ui->edtPassword->text().toStdString()
+     );
+
+    if (!authenticated)
+        return;
+
+    fetch_user_stations(ui->edtUsername->text());
+
 }
 
 void LoginForm::express_login()
@@ -225,9 +252,10 @@ void LoginForm::express_login()
 
 void LoginForm::express_fetch()
 {
-    fetch_stations();
+    check_forced_password_reset();
 
-    m_selected_station_id = get_selected_station_id();
+    fetch_user_stations(ui->edtUsername->text());
+    m_selected_station_id = select_station();
 
     auto si = m_stations_info[m_selected_station_id];
     qDebug() << " --- Express ----";
@@ -258,8 +286,13 @@ void LoginForm::login()
 
 void LoginForm::login_to_station(int station_id)
 {
+    test_login();
+
     try
     {
+        // if user has been forced to change password, show the password reset page
+        check_forced_password_reset();
+
         m_current_station_info = m_stations_info[station_id];
 
         //ConnInfo ci;
@@ -329,8 +362,10 @@ void LoginForm::reset_password()
         try{
             Authentication auth2(ci);
             auth2.connect_to_server();
-             cluster_controller.remove_password_reset_flag(username);
-            m_selected_station_id = get_selected_station_id();
+            cluster_controller.remove_password_reset_flag(username);
+
+            fetch_user_stations(ui->edtUsername->text());
+            m_selected_station_id = select_station();
 
         }catch(DatabaseException& de){
             std::cout << de.errorMessage();
@@ -373,8 +408,11 @@ bool LoginForm::validate_password_reset()
     return true;
 }
 
-bool LoginForm::populate_station_info(QString username)
+bool LoginForm::fetch_user_stations(QString username)
 {
+    // TODO: Once we populate the station info, we need to memorize
+    // this info to avoid DB refetching for the same user
+
     std::stringstream sql;
 
     std::string user_filter = std::format(" and ua.username = '{}'", username.toStdString());

@@ -27,6 +27,8 @@ SpotBrowser::SpotBrowser(Client* client, QWidget* parent)
     ,ui{new Ui::SpotBrowser}
     ,m_client{client}
 {
+    qDebug() << "SpotBrowerser::Client = "<< client->id();
+
     ui->setupUi(this);
     setDialogTitle("Client Spots");
 
@@ -75,6 +77,16 @@ void SpotBrowser::updateRecord()
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
 
         TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be.get());
+
+        //FIXME: Refactor code - remove this and find a way to filter brands lookup
+        // based on the selected client.
+        //--------
+
+        std::tuple filter = std::make_tuple("client_id", "=", m_client->id());
+        spot->brand()->dataModel()->searchByInt(filter);
+
+        //----
+
         spot->client()->setValue(m_client->id());
 
         std::unique_ptr<SpotForm> spot_form =

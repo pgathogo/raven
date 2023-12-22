@@ -11,6 +11,7 @@
 #include "../framework/manytomany.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
+#include "../framework/choicefield.h"
 #include "../utils/tools.h"
 
 #include "spotform.h"
@@ -155,8 +156,11 @@ void SpotForm::populateFormWidgets()
     ui->edtSpotDuration->setValue(m_spot->spot_duration()->value());
     ui->edtRealDuration->setValue(m_spot->real_duration()->value());
 
+    qDebug() << "EDM Count: "<<  m_spot->brand()->dataModel()->count();
+
     ui->cbBrands->setModel(m_spot->brand()->dataModel());
-    EntityDataModel edm;
+    ui->cbBrands->setCurrentIndex(ui->cbBrands->findText(
+        stoq(m_spot->brand()->displayName())));
 
     ui->edtClient->setText(stoq(m_client->name()->value()));
 }

@@ -86,10 +86,17 @@ namespace TRAFFIK {
         auto filter = std::make_tuple("client_id", "=", client->id());
         std::string fstr = edm.prepareFilter(filter);
 
+
+        qDebug() << "** Spot::Client: "<< client->id();
+
+
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
-                                              std::make_unique<TRAFFIK::Brand>(),
-                                              "brand_name",
-                                              fstr);
+                                              std::make_unique<TRAFFIK::Brand>(client),
+                                              "brand_name");
+                                              // fstr);
+
+        qDebug() << "* Brand Count: " << m_brand->dataModel()->count();
+
 
         m_daypart1 = createField<StringField>("daypart1", "Daypart1");
         m_daypart1->setSearchable(false);

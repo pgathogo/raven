@@ -124,6 +124,12 @@
         <file>media/icons/web.png</file>
         <file>media/icons/insert_row.png</file>
         <file>media/icons/remove_row.png</file>
+        <file>media/icons/booking.bmp</file>
+        <file>media/icons/cancelbooking.bmp</file>
+        <file>media/icons/printbooking.bmp</file>
+        <file>media/icons/createbreak.bmp</file>
+        <file>media/icons/deletebreak.bmp</file>
+        <file>media/icons/build01.bmp</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

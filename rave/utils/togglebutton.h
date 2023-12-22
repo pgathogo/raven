@@ -15,13 +15,13 @@ class ToggleButton : public QAbstractButton
         ~ToggleButton();
 
         QSize sizeHint() const override;
+        void setChecked(bool checked);
 
     protected:
         void paintEvent(QPaintEvent *) override;
         void resizeEvent(QResizeEvent*) override;
         void mouseReleaseEvent(QMouseEvent  *) override;
         void enterEvent(QEnterEvent *event) override;
-        void setChecked(bool checked);
 
         int offset();
         void setOffset(int value);

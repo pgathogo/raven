@@ -1,9 +1,10 @@
 {
+    "all": false,
     "remember": true,
     "rules": {
         "break_duration": false,
-        "override": false,
-        "same_client": false,
+        "override": true,
+        "same_client": true,
         "spot_daypart": false,
         "type_daypart": false,
         "type_ex": false,
