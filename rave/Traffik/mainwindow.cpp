@@ -81,6 +81,7 @@ MainWindow::MainWindow(QApplication* app,
     this->setWindowTitle("Raven - Traffik");
 
     setFixedSize(1300, 700);
+    setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
     update();
 }
 

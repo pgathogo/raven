@@ -28,8 +28,11 @@ CommLogForm::CommLogForm(QWidget *parent) :
     set_default_dts();
 
     ui->btnDateTime->setText("Date: "+m_dts.sel_date.toString());
+
     std::string hours = comma_sep(m_dts.sel_hours);
     update_hours_label(hours);
+
+    setWindowTitle("Commercial Logs");
 }
 
 CommLogForm::~CommLogForm()
@@ -77,9 +80,12 @@ void CommLogForm::on_clicked_datetime()
     if (dts->exec() == 1)
     {
         m_dts = dts->selection();
+
         std::string hours = comma_sep(m_dts.sel_hours);
         update_hours_label(hours);
         fetch_bookings(m_dts);
+
+        ui->btnDateTime->setText("Date: "+m_dts.sel_date.toString());
     }
 
 }
@@ -231,7 +237,8 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
         } while(!provider->cache()->isLast());
     }
 
-    if (m_comm_logs.size() > 0){
+    if (m_comm_logs.size() > 0)
+    {
         CommLogTreeViewModel* comm_log_tvm = new CommLogTreeViewModel(m_comm_logs);
         ui->tvCommLog->setModel(comm_log_tvm);
 

@@ -130,6 +130,7 @@
         <file>media/icons/createbreak.bmp</file>
         <file>media/icons/deletebreak.bmp</file>
         <file>media/icons/build01.bmp</file>
+        <file>media/icons/raven.bmp</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>
