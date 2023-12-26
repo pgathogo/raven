@@ -50,8 +50,6 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     menu->addAction(actPlayed);
     menu->addAction(actCancelled);
 
-    set_autocompleter();
-
     ui->btnPrint->setMenu(menu);
 
     ui->btnNew->setIcon(QIcon(":/images/media/icons/booking.bmp"));
@@ -60,6 +58,13 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     ui->btnCancel->setIconSize(QSize(32, 32));
     ui->btnPrint->setIcon(QIcon(":/images/media/icons/printbooking.bmp"));
     ui->btnPrint->setIconSize(QSize(32, 32));
+
+    set_autocompleter();
+    fill_cbox_date_filter();
+
+    connect(ui->cbDateFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            &BookingOrderBrowser::date_filter_changed);
+
 }
 
 BookingOrderBrowser::~BookingOrderBrowser()
@@ -72,10 +77,39 @@ void BookingOrderBrowser::setMdiArea(QMdiArea *mdi)
     m_mdi_area = mdi;
 }
 
+void BookingOrderBrowser::fill_cbox_date_filter()
+{
+    ui->cbDateFilter->addItem("All");
+    ui->cbDateFilter->addItem("Current Month");
+    ui->cbDateFilter->addItem("Last Three Month");
+    ui->cbDateFilter->setCurrentIndex(1);
+}
+
+void BookingOrderBrowser::date_filter_changed(int index)
+{
+    qDebug() << "Client ID: "<< m_client->id();
+
+    if (index < 0) return;
+
+    search(m_client->id());
+
+    // std::string filter = make_order_date_filter();
+    // qDebug() << stoq(filter);
+}
+
+void BookingOrderBrowser::set_client(Client* client)
+{
+    m_client = client;
+}
+
 void BookingOrderBrowser::search_by_client(Client* client)
 {
-    if (client != nullptr)
+    if (client != nullptr){
+        set_client(client);
+
         search(client->id());
+
+    }
 }
 
 void BookingOrderBrowser::search_field_changed(int i)
@@ -88,6 +122,7 @@ void BookingOrderBrowser::search_field_changed(int i)
 
 void BookingOrderBrowser::search(int id)
 {
+
     ui->twOrders->clear();
 
     std::stringstream sql;
@@ -106,6 +141,10 @@ void BookingOrderBrowser::search(int id)
         << " where f.spots_booked < f.spots_ordered ";
 
         sql << make_filter(id);
+
+        std::string date_filter = make_order_date_filter();
+
+        sql << date_filter;
 
         sql << order_by(id);
 
@@ -177,7 +216,7 @@ void BookingOrderBrowser::search(int id)
 
     if (bookings.size() > 0){
         sort_bookings(bookings);
-        set_treewidget(bookings, id);
+        set_treewidget(bookings, id, date_filter);
     }
 }
 
@@ -450,6 +489,54 @@ std::string BookingOrderBrowser::make_filter(int id)
 
 }
 
+std::string BookingOrderBrowser::make_order_date_filter()
+{
+    enum DateFilter{All=0, Current_Month, Three_Months};
+
+    std::string filter{""};
+
+    switch (ui->cbDateFilter->currentIndex())
+    {
+        case DateFilter::All:
+        break;
+        case DateFilter::Current_Month:
+        {
+            int month = QDate::currentDate().month();
+            int last_day = QDate::currentDate().daysInMonth();
+            int year = QDate::currentDate().year();
+            QDate first_date = QDate(year, month, 1);
+            QDate second_date = QDate(year, month, last_day);
+
+            filter = std::format(" and f.order_date between '{}' and '{}' ",
+                                 first_date.toString("yyyy-MM-dd").toStdString(),
+                                 second_date.toString("yyyy-MM-dd").toStdString());
+
+            break;
+        }
+        case DateFilter::Three_Months:
+        {
+            QDate prev_date = QDate::currentDate().addMonths(-3);
+            int prev_month = prev_date.month();
+            int prev_year = prev_date.year();
+            int curr_month = QDate::currentDate().month();
+            int last_day = QDate::currentDate().daysInMonth();
+            int curr_year = QDate::currentDate().year();
+
+            QDate first_date = QDate(prev_year, prev_month, 1);
+            QDate second_date = QDate(curr_year, curr_month, last_day);
+
+            filter = std::format(" and f.order_date between '{}' and '{}' ",
+                                 first_date.toString("yyyy-MM-dd").toStdString(),
+                                 second_date.toString("yyyy-MM-dd").toStdString());
+            break;
+        }
+        default:
+            break;
+    }
+
+        return filter;
+}
+
 std::string BookingOrderBrowser::order_by(int id)
 {
     std::string order_by_str{};
@@ -461,7 +548,7 @@ std::string BookingOrderBrowser::order_by(int id)
     return order_by_str;
 }
 
-void BookingOrderBrowser::set_treewidget(Bookings& records, int client_id)
+void BookingOrderBrowser::set_treewidget(Bookings& records, int client_id, const std::string date_filter)
 {
     bool parent_is_created;
 
@@ -477,15 +564,18 @@ void BookingOrderBrowser::set_treewidget(Bookings& records, int client_id)
 
     std::stringstream sql;
 
-    sql << " select id, title, order_number, order_date, start_date,"
-        << " end_date, spots_ordered, spots_booked "
-        << " From rave_order ";
+    sql << " select f.id, f.title, f.order_number, f.order_date, f.start_date,"
+        << " end_date, f.spots_ordered, f.spots_booked "
+        << " From rave_order f ";
 
     std::string filter = std::format(" Where client_id = {}", client_id);
     sql << filter;
+    sql << date_filter;
 
     EntityDataModel edm;
     edm.readRaw(sql.str());
+
+    m_grid_tables.clear();
 
     auto provider = edm.getDBManager()->provider();
     if (provider->cacheSize() == 0)

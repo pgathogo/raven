@@ -85,7 +85,7 @@ public:
 
     void setMdiArea(QMdiArea* mdi);
 
-    void search_by_client(Client* client);
+    void search_by_client(Client*);
 
 private slots:
     void search_field_changed(int i);
@@ -97,6 +97,7 @@ private slots:
     void show_spot_details(const QPoint& pos);
     void spot_details(int);
     void find_orders(QString);
+    void date_filter_changed(int);
 
 private:
     Ui::BookingOrderBrowser *ui;
@@ -107,6 +108,7 @@ private:
     std::string m_label{};
 
     std::string make_filter(int);
+    std::string make_order_date_filter();
     std::string order_by(int);
 
     std::vector<QTableWidget*> m_grid_tables;
@@ -119,14 +121,17 @@ private:
     QMenu* m_spot_ctx_menu;
     QAction* m_spot_ctx_action;
 
-    void set_treewidget(Bookings&, int);
+    Client* m_client;
+
+    void set_treewidget(Bookings&, int, const std::string);
     void resizeColumnsToContents(QTreeWidget& tree_widget);
     void sort_bookings(Bookings& orders);
     void cancel_booking();
     void make_spot_menu();
     QTableWidget* get_selected_grid();
-
     void set_autocompleter();
+    void fill_cbox_date_filter();
+    void set_client(Client*);
 
     QCompleter* m_completer;
     std::unique_ptr<EntityDataModel> m_client_edm;

@@ -157,7 +157,7 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_break_duration_left(bll->duration()->value())
                     << sched.set_booked_spots(0)
                     << sched.set_schedule_item_type("COMM-BREAK")
-                   << sched.set_break_mode("MIXED")
+                    << sched.set_break_mode("MIXED")
                     << sched.set_break_fill_method(bll->break_fill_method()->value());
 
 
