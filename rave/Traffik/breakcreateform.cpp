@@ -1,3 +1,4 @@
+#include <sstream>
 #include <QAbstractItemModel>
 
 #include "breakcreateform.h"
@@ -136,15 +137,102 @@ void BreakCreateForm::create_breaks()
         close_form();
 }
 
+void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from, QDate to)
+{
+    std::stringstream sql;
+
+    sql << " Select schedule_date, schedule_hour, schedule_time "
+        << " From rave_schedule ";
+
+    std::string where_filter = std::format(" Where schedule_date between '{}' and '{}' ",
+                                           from.toString("yyyy-MM-dd").toStdString(),
+                                           to.toString("yyyy-MM-dd").toStdString());
+
+    std::string order_str = " Order by schedule_date, schedule_hour, schedule_time ";
+
+    sql << where_filter << order_str;
+
+    EntityDataModel edm;
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
+
+    provider->cache()->first();
+    do{
+        auto itB = provider->cache()->currentElement()->begin();
+        auto itE = provider->cache()->currentElement()->end();
+
+        // Get fields
+        QDate sched_date;
+        int sched_hr;
+        QTime sched_time;
+
+        for (; itB != itE; ++itB)
+        {
+            std::string field = (*itB).first;
+            std::string value = (*itB).second;
+
+            if (field == "schedule_date"){
+                sched_date = QDate::fromString(stoq(value),"yyyy-MM-dd");
+            }
+
+            if (field == "schedule_hour"){
+                sched_hr = std::stoi(value);
+            }
+
+            if (field == "schedule_time"){
+                std::cout << "Field->Schedule_time = " << value << '\n';
+                sched_time = QTime::fromString(stoq(value), "hh:mm:ss");
+            }
+        }
+
+
+        if ( s_recs.find(sched_date) == s_recs.end() ){
+            s_recs[sched_date].insert(std::pair(sched_hr, std::vector<QString>()));
+            s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
+        }
+
+        s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
+
+        provider->cache()->next();
+
+    }while(!provider->cache()->isLast());
+
+
+}
+
 std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
 {
     Schedule sched;
     std::string insert_stmts;
     Vectored<Field> fields;
 
-    QDate tmpDate = from;
-    while (tmpDate <= to){
+    ScheduleRecords s_recs;
+    get_existing_schedules(s_recs, from, to);
 
+
+    auto break_exists = [&](QDate sched_date, int sched_hr, QTime sched_time)
+    {
+        if (s_recs.find(sched_date) != s_recs.end() )
+        {
+            if (s_recs[sched_date].find(sched_hr) != s_recs[sched_date].end() )
+            {
+                for(auto& break_time: s_recs[sched_date][sched_hr])
+                {
+                    if (break_time == sched_time.toString("hh:mm")){
+                        return true;
+                    }
+                }
+            }
+        }
+    };
+
+    QDate tmpDate = from;
+
+    while (tmpDate <= to)
+    {
         for (auto& [name, entity] : m_edm_break_line->modelEntities())
         {
             BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
@@ -167,7 +255,9 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
             }else{
                 if (ui->cbSelectedHours->findText(QString::number(bll->breakHour()->value())) > -1 )
                 {
-                    insert_stmts += sched.make_insert_stmt(fields.vec);
+                    if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
+                        insert_stmts += sched.make_insert_stmt(fields.vec);
+
                 }
             }
 
@@ -178,7 +268,6 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
     }
 
     return insert_stmts;
-
 }
 
 

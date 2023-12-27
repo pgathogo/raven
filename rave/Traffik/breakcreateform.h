@@ -14,6 +14,12 @@ class BreakLayout;
 class BreakLayoutForm;
 class Schedule;
 
+using ScheduleDate = QDate;
+using ScheduleHour = int;
+using ScheduleTime = std::vector<QString>;
+using ScheduleRecords =  std::map<ScheduleDate, std::map<ScheduleHour, ScheduleTime>>;
+
+
 class BreakCreateForm : public QDialog
 {
     Q_OBJECT
@@ -62,6 +68,8 @@ private:
     bool m_breaks_created{false};
     bool write_breaks_to_db(const std::string sql);
     std::string make_break_sql(QDate from, QDate to);
+    void get_existing_schedules(ScheduleRecords&, QDate, QDate);
+
 
     void set_defaults();
     void setup_ui();
