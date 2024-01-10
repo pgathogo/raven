@@ -795,9 +795,6 @@ namespace AUDIO {
         QString name = QString::fromStdString(this->audio_lib_path()->value()+
                 audio_tool.make_audio_filename(this->id())+"."+this->file_extension()->value_tolower());
 
-        qDebug() << "Path: " << stoq(this->audio_lib_path()->value());
-        qDebug() << "Ext: " << stoq(this->file_extension()->value());
-
         return name;
     }
 

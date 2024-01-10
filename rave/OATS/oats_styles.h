@@ -35,6 +35,8 @@ namespace OATSTYLE {
          "background: white;"
     };
 
+    QString panel_style ="background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );";
+
 }
 
 #endif

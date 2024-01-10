@@ -1,9 +1,11 @@
 #pragma once
 
 #include <memory>
+#include <QFileInfo>
+#include "qstandarditemmodel.h"
+
 #include "../audio/audio.h"
 #include "../framework/choicefield.h"
-#include "qstandarditemmodel.h"
 
 
 class QStandardItemModel;
@@ -54,7 +56,6 @@ namespace AUDIO{
 
             auto title = new T(item->title());
 
-
             title->setData(audio->id(), Qt::UserRole);
 
             auto artist = new T(item->artist());
@@ -63,6 +64,38 @@ namespace AUDIO{
             auto file_path = new T(item->file_path());
             auto folder = new T(item->folder());
             auto file_extension = new T(item->file_extension());
+
+
+            QFileInfo fi(item->file_path());
+            if (!fi.exists()){
+                QFont item_font = artist->font();
+                item_font.setStrikeOut(true);
+                item_font.setStyle(QFont::StyleItalic);
+
+                title->setForeground(QBrush(QColor(Qt::red)));
+                title->setFont(item_font);
+
+                artist->setForeground(QBrush(QColor(Qt::red)));
+                artist->setFont(item_font);
+
+                duration->setForeground(QBrush(QColor(Qt::red)));
+                duration->setFont(item_font);
+
+                audio_type->setForeground(QBrush(QColor(Qt::red)));
+                audio_type->setFont(item_font);
+
+                file_path->setForeground(QBrush(QColor(Qt::red)));
+                file_path->setFont(item_font);
+
+                folder->setForeground(QBrush(QColor(Qt::red)));
+                folder->setFont(item_font);
+
+                file_extension->setForeground(QBrush(QColor(Qt::red)));
+                file_extension->setFont(item_font);
+
+
+            }
+
 
             if (audio->title()->visible())
                 columns.append(title);

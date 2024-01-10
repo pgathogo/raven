@@ -242,7 +242,7 @@ void LoginForm::express_login()
         return;
     }
 
-    express_fetch();
+    //express_fetch();
 
     login_to_station(m_selected_station_id);
 

@@ -16,6 +16,9 @@
 
 int main(int argc, char *argv[])
 {
+
+qInfo() << "OATS started...";
+
     QApplication a(argc, argv);
 
 #ifdef LOG_TO_FILE
@@ -34,11 +37,17 @@ int main(int argc, char *argv[])
 
 #endif
 
+
     QFile qss("stylesheet.qss");
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
 
-    LoginForm lf("nbohr", "abc123", 6);
+    qInfo() << "Opening login form...";
+
+    LoginForm lf("nbohr", "abc123", 4);
+
+    qInfo() << "User logged in...";
+
     lf.express_login();
     {
         qInfo() << "Starting MainWindow...";

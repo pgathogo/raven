@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1096</width>
+    <width>1108</width>
     <height>600</height>
    </rect>
   </property>
@@ -282,6 +282,9 @@
             <property name="text">
              <string>Audio Properties</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -299,7 +302,10 @@
              </size>
             </property>
             <property name="text">
-             <string>Listen</string>
+             <string>Play</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -427,7 +433,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1096</width>
+     <width>1108</width>
      <height>22</height>
     </rect>
    </property>
@@ -439,7 +445,7 @@
     <addaction name="actTrashCan"/>
     <addaction name="actSettings"/>
     <addaction name="separator"/>
-    <addaction name="actionE_xit"/>
+    <addaction name="actExit"/>
    </widget>
    <widget class="QMenu" name="menuReports">
     <property name="title">
@@ -476,7 +482,7 @@
     <string>Settings</string>
    </property>
   </action>
-  <action name="actionE_xit">
+  <action name="actExit">
    <property name="text">
     <string>E&amp;xit</string>
    </property>

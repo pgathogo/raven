@@ -88,6 +88,7 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
 
     ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ClusterManagerDlg::context_menu_requested);
+    connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this, &ClusterManagerDlg::item_double_clicked);
 
     connect(ui->btnTest, &QPushButton::clicked, this, &ClusterManagerDlg::load_data);
 
@@ -796,8 +797,47 @@ void ClusterManagerDlg::on_item_clicked(QTreeWidgetItem* item, int col)
    }
 
   }
+
 }
 
+void ClusterManagerDlg::item_double_clicked(QTreeWidgetItem* item, int col)
+{
+    auto data = item->data(0, Qt::UserRole).toMap();
+    int node_type = data["type"].toInt();
+    QString uuid = data["uuid"].toString();
+
+
+    switch(node_type)
+    {
+        case static_cast<int>(ConfigItemType::AudioServer):
+        {
+           auto server_node = get_cluster_node<ServerNode>(uuid);
+           edit_server(server_node);
+            break;
+        }
+
+        case static_cast<int>(ConfigItemType::DBServer):
+        {
+           auto server_node = get_cluster_node<ServerNode>(uuid);
+            edit_server(server_node);
+            break;
+        }
+
+        case static_cast<int>(ConfigItemType::Role):
+        {
+           auto role_node = get_cluster_node<RoleNode>(uuid);
+            edit_role(role_node);
+            break;
+        }
+
+        case static_cast<int>(ConfigItemType::User):
+        {
+           auto user_node = get_cluster_node<UserNode>(uuid);
+            edit_user(user_node);
+            break;
+        }
+    }
+}
 
 void ClusterManagerDlg::context_menu_requested(QPoint pos)
 {

@@ -55,7 +55,7 @@ Result SaveAs::save_result()
 
 void SaveAs::setup_selection_table()
 {
-    QStringList	header;
+    QStringList	header = {"From", "To" };
     ui->twHours->setHorizontalHeaderLabels(header);
     ui->twHours->setRowCount(m_selected_hours.size());
 

@@ -18,6 +18,15 @@ namespace OATS{
     {
         setFrameShape(QFrame::Panel);
         setFrameShadow(QFrame::Raised);
+        setStyleSheet(OATSTYLE::panel_style);
+        // setStyleSheet("{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );}");
+
+        /*
+            border-radius: 20px;
+            border-style: outset;
+            border-bottom-width: 1px;
+            border-radius: 3px;
+        */
 
         m_play_button = std::make_unique<QPushButton>("PLAY "+name);
         m_play_button->setObjectName("PlayButton");
@@ -72,7 +81,7 @@ namespace OATS{
         //m_progress_bar->setStyleSheet("background-color:#40D58A; border: 1px solid grey; border-radius: 5px;"
 //        m_progress_bar->setStyleSheet("background-color:#40D58A; border: 0px solid grey; border-radius: 0px;"
 //                                      "text-align: center;font: 75 italic 14pt 'DigifaceWide'; ");
-        m_progress_bar->setStyleSheet("background-color:#212121;border: 0px solid; border-radius: 1px;"
+        m_progress_bar->setStyleSheet("background-color:transparent;border: 0px solid; border-radius: 1px;"
                                       "text-align: center;font: 75 italic 14pt 'DigifaceWide';color:#FF0000;");
         m_progress_bar->setMinimum(0);
         m_progress_bar->setMaximum(100);
@@ -90,9 +99,6 @@ namespace OATS{
         m_main_panel->addLayout(m_layout_time);
 
         setLayout(m_main_panel.get());
-
-//        setStyleSheet("background-color:#36454F;" );
-
     }
 
     OutputPanel::~OutputPanel()
@@ -197,10 +203,10 @@ namespace OATS{
 
     void OutputPanel::set_panel_style()
     {
-        setStyleSheet("");
+        //setStyleSheet("");
 
         if (m_status == OATS::PanelStatus::PLAYING){
-            setStyleSheet("border-color: rgb(78, 207, 42)");
+            //setStyleSheet("border-color: rgb(78, 207, 42)");
         }
     }
 

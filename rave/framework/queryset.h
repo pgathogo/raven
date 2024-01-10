@@ -157,7 +157,6 @@ void EntityModelQuerySet<T1, T2>::all()
     }while(entity != nullptr);
 }
 
-
 /* ----------- DataQuerySet<> ---------- */
 template<typename T1>
 DataQuerySet<T1>::DataQuerySet()

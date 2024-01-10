@@ -130,7 +130,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::stop_all_jingles, this, &MainWindow::stop_all_jingles);
-
     connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
 
     connect(ui->btnComm, &QPushButton::clicked, this,
@@ -147,6 +146,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7); m_control_page = ControlPage::Load; });
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close_window);
+
+    ui->btnExit->setStyleSheet(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: inset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "border-bottom-color:#374148;"
+        "color:#FFFFFF;"
+        "font-weight:bold;}"
+        "QPushButton:hover{background-color:#555D64;border:none; }"
+        "QPushButton:pressed{background-color:#555D64; border:none;}"
+        );
+
+        //"QPushButton:hover:!pressed{background-color:#808080;}"
 
     connect(ui->btnPrint1, &QPushButton::clicked, this, [&](){m_audio_cache_manager->print_queue();});
     connect(ui->btnPrint2, &QPushButton::clicked, this, [&](){m_audio_cache_manager->print_cache();});
@@ -205,9 +219,10 @@ MainWindow::MainWindow(QWidget *parent)
         home_image->setPixmap(pm);
     }
     ui->hlTitle->addWidget(home_image);
-    setStyleSheet("background-color: #222222;");
     QMainWindow::showFullScreen();
-   */
+    */
+    setStyleSheet("QMainWindow{background-color: #222222;}");
+
 }
 
 
@@ -218,20 +233,35 @@ MainWindow::~MainWindow()
 
 void MainWindow::style_page_controls()
 {
-    QString style(
-            "background-color:#00A36C;"
-            "color: #FFFFFF;"
-            "font:bold;"
-            "height:30;"
+   //"QPushButton[objectName^='btnHome']{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+
+    QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: outsi;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+       "QPushButton:hover{background-color:#555D64;border:none; }"
+       "QPushButton:pressed {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
         );
 
-    ui->btnHome->setStyleSheet(style);
-    ui->btnComm->setStyleSheet(style);
+    ui->btnHome->setStyleSheet(btn_style);
+    ui->btnComm->setStyleSheet(btn_style);
 //    ui->btnSegue->setStyleSheet(style);
-    ui->btnCarts->setStyleSheet(style);
-    ui->btnJingles->setStyleSheet(style);
-    ui->btnTrackInfo->setStyleSheet(style);
-    ui->btnLoad->setStyleSheet(style);
+    ui->btnCarts->setStyleSheet(btn_style);
+    ui->btnJingles->setStyleSheet(btn_style);
+    ui->btnTrackInfo->setStyleSheet(btn_style);
+    ui->btnLoad->setStyleSheet(btn_style);
 //    ui->btnPrintCache->setStyleSheet(style);
 }
 
@@ -295,11 +325,11 @@ void MainWindow::start_timers()
 void MainWindow::set_playout_widgets()
 {
     set_datetime_widget();
-    set_playlist_control_widget();
     set_time_analytics_widget();
+    //draw_horizontal_line();
 
-    make_output_panel();
     make_play_mode_panel();
+    make_output_panel();
     make_comm_viewer_widget();
     make_track_info_widget();
     make_jingle_grid_widget();
@@ -317,16 +347,15 @@ void MainWindow::set_datetime_widget()
 
     auto curr_time = QTime::currentTime();
     m_dtw->set_time(curr_time);
-    ui->hlDateTime->addWidget(m_dtw.get());
+    ui->test_frame_layout->addWidget(m_dtw.get());
 
+    /*
     m_onair_label = std::make_unique<QLabel>("On-Air");
     m_onair_label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
     QPixmap onair(":/images/icons/OnAir1.png");
     m_onair_label->setPixmap(onair);
-    ui->hlDateTime->addWidget(m_onair_label.get());
-
-    ui->hlDateTime->setStretch(1, 1);
+    ui->test_frame_layout->addWidget(m_onair_label.get());
+   */
 
     m_dtw->start_timer(100);
 }
@@ -349,6 +378,16 @@ void MainWindow::set_time_analytics_widget()
     ui->hlTimeAnalytics->addWidget(m_taw.get());
    */
 
+}
+
+void MainWindow::draw_horizontal_line()
+{
+    /*
+    QFrame* hline = new QFrame();
+    //hline->setGeometry(QRect(320, 150, 118, 3));
+    hline->setFrameShape(QFrame::HLine);
+    hline->setFrameShadow(QFrame::Sunken);
+   */
 }
 
 void MainWindow::set_playlist_control_widget()
@@ -952,6 +991,7 @@ void MainWindow::play_button(OATS::OutputPanel* op)
     print_output_status();
 
     op->set_fade_trigger_tick_stamp(1);
+
     play_audio(op);
 
 }
@@ -2101,15 +2141,14 @@ void MainWindow::calculate_time_stats()
 
 void MainWindow::play_audio(OATS::OutputPanel* op)
 {
-    std::string temp_play_channel;
-
 
     if (op->panel_status() == OATS::PanelStatus::CUED)
     {
-        qDebug() << "1. CH= "<< stoq(op->schedule_item()->play_channel());
-        qDebug() << "2. CH= "<< stoq(m_current_playing_item.item->play_channel());
-        temp_play_channel = op->schedule_item()->play_channel();
+        std::string temp_play_channel;
 
+        // qDebug() << "1. CH= "<< stoq(op->schedule_item()->play_channel());
+        // qDebug() << "2. CH= "<< stoq(m_current_playing_item.item->play_channel());
+        // temp_play_channel = op->schedule_item()->play_channel();
 
         op->set_panel_status(OATS::PanelStatus::PLAYING);
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);
@@ -2148,8 +2187,6 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
             m_audio_player->play_audio(op->panel_name(), audio_file);
         }
 
-        qDebug() << "3. CH= "<< stoq(op->schedule_item()->play_channel());
-
         int grid_index = index_of(op->schedule_item()->schedule_ref());
 
         m_current_playing_item.item = op->schedule_item();
@@ -2161,9 +2198,6 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         auto next_output_panel = find_output_panel(next_id);
         auto next_schedule_item = find_next_schedule_item(op->schedule_item());
-
-        qDebug() << "4. CH= "<< stoq(m_current_playing_item.item->play_channel());
-        qDebug() << "5. CH= "<< stoq(op->schedule_item()->play_channel());
 
         if (m_current_playing_item.item != next_schedule_item){
 
@@ -2180,9 +2214,10 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         display_schedule();
 
+        m_current_playing_item.item->set_play_channel(temp_play_channel);
+
     }
 
-    m_current_playing_item.item->set_play_channel(temp_play_channel);
 
 }
 

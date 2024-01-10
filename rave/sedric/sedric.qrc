@@ -28,5 +28,6 @@
         <file>images/icons/remove_music_sm.bmp</file>
         <file>images/icons/save_sched2_sm.bmp</file>
         <file>images/icons/schedule_save_as.bmp</file>
+        <file>images/icons/stop_play_02.png</file>
     </qresource>
 </RCC>

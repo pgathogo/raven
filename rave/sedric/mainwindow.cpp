@@ -210,6 +210,9 @@ void MainWindow::set_toolbutton_icons()
     ui->btnSaveAs->setIcon(QIcon(":/images/icons/schedule_save_as.bmp"));
     ui->btnSaveAs->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
+    ui->btnPlay->setIcon(QIcon(":/images/icons/play_start.png"));
+    ui->btnStop->setIcon(QIcon(":/images/icons/stop_play_02.png"));
+    ui->btnHistory->setIcon(QIcon(":/images/icons/history01.png"));
 }
 
 void MainWindow::set_ui_style()
@@ -421,6 +424,7 @@ void MainWindow::selected_comm_break()
 void MainWindow::save_as()
 {
     //m_save_as = new SaveAs(get_selected_hours_asInt(), this);
+
     if (m_datetime_selection.sel_hours.size() == 0){
         showMessage("Nothing selected for saving!", QMessageBox::Critical);
         return;
@@ -458,8 +462,6 @@ void MainWindow::folder_clicked(const QModelIndex& index)
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->dbColumnName(), " = ", folder_id);
     std::string filter_str = m_audio_entity_data_model->prepareFilter(folder_filter);
-
-    qDebug() << stoq(filter_str);
 
     fetch_audio(filter_str);
 }
@@ -692,6 +694,7 @@ void MainWindow::create_track_view_headers()
     m_tracks_model->setHorizontalHeaderItem(3, new QStandardItem("Audio Type"));
     m_tracks_model->setHorizontalHeaderItem(4, new QStandardItem("Audio File"));
     m_tracks_model->setHorizontalHeaderItem(5, new QStandardItem("Folder"));
+    m_tracks_model->setHorizontalHeaderItem(6, new QStandardItem("File Extension"));
 }
 
 void MainWindow::adjust_header_size()
@@ -703,7 +706,7 @@ void MainWindow::adjust_header_size()
 
 void MainWindow::set_track_view_column_width()
 {
-    enum Column{Title, Artist, Duration, AudioType, AudioFile, Folder};
+    enum Column{Title, Artist, Duration, AudioType, AudioFile, Folder, FileExtension};
 
     ui->tvTracks->setColumnWidth(Column::Title, 300);
     ui->tvTracks->setColumnWidth(Column::Artist,250);
@@ -711,6 +714,7 @@ void MainWindow::set_track_view_column_width()
     ui->tvTracks->setColumnWidth(Column::AudioType, 150);
     ui->tvTracks->setColumnWidth(Column::AudioFile, 250);
     ui->tvTracks->setColumnWidth(Column::Folder, 250);
+    ui->tvTracks->setColumnWidth(Column::FileExtension, 100);
 }
 
 void MainWindow::create_model_headers()
@@ -943,21 +947,24 @@ void MainWindow::play_audio()
         return;
 
     auto audio = this->get_selected_audio();
+
     if (audio == nullptr)
         return;
 
-    AUDIO::AudioTool audio_tool;
-    auto ogg_file = audio_tool.make_audio_filename(audio->id())+".ogg";
-    auto full_audio_name = audio->file_path()->value()+ogg_file;
+    // AUDIO::AudioTool audio_tool;
+    // auto ogg_file = audio_tool.make_audio_filename(audio->id())+".ogg";
+    // auto full_audio_name = audio->file_path()->value()+ogg_file;
 
-    if (!QFile::exists(QString::fromStdString(full_audio_name))){
-        showMessage("File does not exits! "+full_audio_name, QMessageBox::Critical);
+    if (!QFile::exists(audio->full_audio_filename())){
+        std::string msg = std::format("File `{}` does not exists!",
+                                      audio->full_audio_filename().toStdString());
+        showMessage(msg, QMessageBox::Critical);
         return;
     }
 
-    AudioFile af(full_audio_name);
+    AudioFile af(audio->full_audio_filename().toStdString());
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
-    m_audio_player->play_audio("C", QString::fromStdString(full_audio_name));
+    m_audio_player->play_audio("C", audio->full_audio_filename());
 
 }
 

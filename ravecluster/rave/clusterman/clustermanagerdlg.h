@@ -292,6 +292,7 @@ public slots:
     void toggle_new_station_button(boolean);
     void on_item_clicked(QTreeWidgetItem* item, int col);
     void context_menu_requested(QPoint);
+    void item_double_clicked(QTreeWidgetItem*, int);
     void print_tree();
 
     void save_data();

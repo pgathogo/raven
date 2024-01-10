@@ -190,6 +190,7 @@ public:
     void make_comm_viewer_widget();
     void make_track_info_widget();
     void make_jingle_grid_widget();
+    void draw_horizontal_line();
 
     int index_of(int);
     void play_audio(OATS::OutputPanel*);

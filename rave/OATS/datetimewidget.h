@@ -36,13 +36,14 @@ namespace OATS{
         void time_updated();
 
     private:
-        //std::unique_ptr<QLabel> m_time_digit;
-        std::unique_ptr<QLCDNumber> m_time_digit;
+        std::unique_ptr<QLabel> m_time_digit;
+        // std::unique_ptr<QLCDNumber> m_time_digit;
         std::unique_ptr<QLabel> m_time_text;
         std::unique_ptr<QLabel> m_date_text;
 
         QHBoxLayout* m_time_digit_layout;
         QVBoxLayout* m_time_date_layout;
+        QHBoxLayout* m_date_layout;
         std::unique_ptr<QHBoxLayout> m_datetime_layout;
 
         std::vector<QString> m_days_of_week;

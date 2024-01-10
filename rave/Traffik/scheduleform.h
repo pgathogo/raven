@@ -29,7 +29,7 @@ private slots:
     void create_breaks();
     void delete_breaks();
     void hour_clicked(QListWidgetItem* item);
-    void scheduleDateChanged(const QDate& date);
+    void schedule_date_changed(const QDate& date);
 
 private:
     Ui::ScheduleForm *ui;

@@ -18,5 +18,7 @@
         <file>images/icons/cart_remove.png</file>
         <file>images/icons/live_dot.png</file>
         <file>images/icons/off_dot.png</file>
+        <file>images/icons/down-arrow.png</file>
+        <file>images/icons/up-arrow.png</file>
     </qresource>
 </RCC>

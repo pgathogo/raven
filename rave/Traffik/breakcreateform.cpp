@@ -14,6 +14,13 @@
 
 #include "breaklayoutform.h"
 
+struct BreakLineColumn {
+    static constexpr int BreakTime=0;
+    static constexpr int Duration=1;
+    static constexpr int MaxSpots=2;
+    static constexpr int BreakFillMethod=3;
+    static constexpr int Id=4;
+};
 
 BreakCreateForm::BreakCreateForm(QWidget *parent) :
     QDialog(parent),
@@ -112,6 +119,11 @@ void BreakCreateForm::close_form()
 void BreakCreateForm::create_breaks()
 {
 
+    if (m_edm_break_line->count() == 0){
+        showMessage("Select a break layout");
+        return;
+    }
+
     auto reply = QMessageBox::question(this, "Create Breaks",
                                        "Continue with Break Creation?",
                                        QMessageBox::Yes|QMessageBox::No);
@@ -120,11 +132,6 @@ void BreakCreateForm::create_breaks()
 
     if (ui->dtTo->date() < ui->dtFrom->date()){
         showMessage("`To` date less than `From` date!");
-        return;
-    }
-
-    if (m_edm_break_line->count() == 0){
-        showMessage("Select a break layout");
         return;
     }
 
@@ -183,7 +190,6 @@ void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from
             }
 
             if (field == "schedule_time"){
-                std::cout << "Field->Schedule_time = " << value << '\n';
                 sched_time = QTime::fromString(stoq(value), "hh:mm:ss");
             }
         }
@@ -192,9 +198,10 @@ void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from
         if ( s_recs.find(sched_date) == s_recs.end() ){
             s_recs[sched_date].insert(std::pair(sched_hr, std::vector<QString>()));
             s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
+        }else{
+            s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
         }
 
-        s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
 
         provider->cache()->next();
 
@@ -212,21 +219,31 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
     ScheduleRecords s_recs;
     get_existing_schedules(s_recs, from, to);
 
+    /*
+    for (auto& [dt, hours]: s_recs){
+        qDebug() << "Date: "<< dt;
+        for(auto& [hr, breaktime]: hours){
+            qDebug() << "Hour: "<< hr;
+            for (auto& bt : breaktime)
+                qDebug() << bt;
+        }
+    }
+   */
 
     auto break_exists = [&](QDate sched_date, int sched_hr, QTime sched_time)
     {
-        if (s_recs.find(sched_date) != s_recs.end() )
-        {
-            if (s_recs[sched_date].find(sched_hr) != s_recs[sched_date].end() )
-            {
-                for(auto& break_time: s_recs[sched_date][sched_hr])
-                {
-                    if (break_time == sched_time.toString("hh:mm")){
-                        return true;
-                    }
-                }
-            }
+        if (s_recs.find(sched_date) == s_recs.end() )
+            return false;
+
+        if (s_recs[sched_date].find(sched_hr) == s_recs[sched_date].end() )
+            return false;
+
+        for(auto& break_time: s_recs[sched_date][sched_hr]){
+            if (break_time == sched_time.toString("hh:mm"))
+                return true;
         }
+
+        return false;
     };
 
     QDate tmpDate = from;
@@ -247,7 +264,6 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_schedule_item_type("COMM-BREAK")
                     << sched.set_break_mode("MIXED")
                     << sched.set_break_fill_method(bll->break_fill_method()->value());
-
 
             if (ui->cbSelectedHours->count() == 0)
             {
@@ -393,6 +409,7 @@ void BreakCreateForm::edit_layout()
     auto break_layout = dynamic_cast<BreakLayout*>(be.get());
     auto bl_form = std::make_shared<BreakLayoutForm>(break_layout);
 
+
     if (bl_form->exec() > 0){
 
         auto model = bl_form->breakline_model();
@@ -403,34 +420,38 @@ void BreakCreateForm::edit_layout()
         fill_method["Sequence"] = "S";
         fill_method["Random"] = "R";
 
+
         EntityDataModel edm(std::make_shared<BreakLayoutLine>());
 
         for(int row=0; row < row_count; ++row)
         {
             BreakLayoutLine bll;
-            for(int col=0; col < col_count; ++col)
+            for(int column=0; column < col_count; ++column)
             {
-                auto index = model->index(row, col);
+                auto index = model->index(row, column);
                 QVariant data = model->data(index);
-                switch(col)
+
+                switch(column)
                 {
-                case 0:
+                // case static_cast<int>(BreakLineColumn::BreakTime):
+                case BreakLineColumn::BreakTime:
                     bll.setBreakTime(data.toTime());
                     break;
-                case 1:
+                case BreakLineColumn::Duration:
                     bll.setDuration(data.toInt());
                     break;
-                case 2:
+                case BreakLineColumn::MaxSpots:
                     bll.setMaxSpots(data.toInt());
                     break;
-                case 3:
+                case BreakLineColumn::BreakFillMethod:
                     bll.set_break_fill_method(fill_method[data.toString()].toStdString());
                     break;
-                case 4:
+                case BreakLineColumn::Id:
                     bll.setId(data.toInt());
                     break;
                 }
             }
+
             bll.setBreakHour(bll.breakTime()->value().hour());
             bll.setWeekDay(1);
             bll.setBreakLayout(break_layout->id());

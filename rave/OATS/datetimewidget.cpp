@@ -6,6 +6,7 @@
 #include <QFont>
 #include <QFrame>
 #include <QDebug>
+#include <QPushButton>
 
 
 #include "datetimewidget.h"
@@ -18,30 +19,23 @@ namespace OATS{
         m_days_of_week = {"Monday", "Tuesday", "Wednesday",
                          "Thursday", "Friday", "Saturday", "Sunday"};
 
-        //m_time_digit = std::make_unique<QLabel>("00:00:00");
-        m_time_digit = std::make_unique<QLCDNumber>(8);
+        /*
+        date_time_frame->setStyleSheet(
+        "* {background-color: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0,"
+        " stop:0 rgba(61,67,73,1), stop:1 rgba(64,70,77,1));"
+        "background: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 #3d4349 ,"
+        " stop:1 #42484f);}"
+            );
+        */
 
-        //QFont td_font("DigifaceWide", 14, QFont::Bold);
-//        QFont td_font;
-//        td_font.setBold(true);
-//        td_font.setPointSize(16);
-//        m_time_digit->setFont(td_font);
-
-//        m_time_digit->setStyleSheet(
-//             "color:#00FF00;"
-//             "font: bold;"
-//             "height: 18;");
-
-        m_time_digit->setSegmentStyle(QLCDNumber::Flat);
-
-        auto palette = m_time_digit->palette();
-        palette.setColor(palette.WindowText, QColor(0, 255, 0));
-        m_time_digit->setPalette(palette);
-
-        m_time_digit->setMinimumHeight(14);
-
-
-        m_time_digit->setFrameStyle(QFrame::Panel | QFrame::Raised);
+        m_time_digit = std::make_unique<QLabel>("00:00:00");
+        m_time_digit->setStyleSheet(
+             {"font-weight: bold;"
+             "font-size: 30pt;"
+             "background-color:transparent;"
+             "color:#00ff00;"
+             "border:none;"
+        });
 
 
         m_time_digit_layout = new QHBoxLayout();
@@ -49,24 +43,46 @@ namespace OATS{
         m_time_digit_layout->setContentsMargins(0,0, 50,0);
 
         m_time_text = std::make_unique<QLabel>("Time Text");
-        QFont tt_font("JetBrains Mono", 14, QFont::Bold);
-        m_time_text->setFont(tt_font);
+        m_time_text->setStyleSheet({
+            "font-weight: bold;"
+            "font-size: 20pt;"
+            "background-color:transparent;"
+            "color:#BB86FC;"
+            "border:none;"
+        });
 
         m_date_text = std::make_unique<QLabel>("Current date");
-        QFont dt_font("JetBrains Mono", 8, QFont::Bold);
-        m_date_text->setFont(dt_font);
+        m_date_text->setStyleSheet({
+            "font-weight: bold;"
+            "font-size: 12pt;"
+            "background-color:transparent;"
+            "color:#018786;"
+        });
+
+
+        m_date_layout = new QHBoxLayout();
+        auto spacer = new QSpacerItem(50,0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        m_date_layout->addSpacerItem(spacer);
+        m_date_layout->addWidget(m_date_text.get());
+        m_date_layout->setContentsMargins(0,0,0,0);
 
         m_time_date_layout = new QVBoxLayout();
         m_time_date_layout->addWidget(m_time_text.get());
-        m_time_date_layout->addWidget(m_date_text.get());
 
         m_datetime_layout = std::make_unique<QHBoxLayout>();
+
         m_datetime_layout->addLayout(m_time_digit_layout);
         m_datetime_layout->addLayout(m_time_date_layout);
-        m_datetime_layout->setStretch(1, 2);
-        m_datetime_layout->setContentsMargins(0,0,0,10);
 
-        setLayout(m_datetime_layout.get());
+        m_datetime_layout->setStretch(1, 2);
+        m_datetime_layout->setContentsMargins(0,0,0,0);
+
+        QVBoxLayout* all_layout = new QVBoxLayout();
+        all_layout->addLayout(m_date_layout);
+        all_layout->addLayout(m_datetime_layout.get());
+        all_layout->setContentsMargins(0,0,0,0);
+
+        setLayout(all_layout);
 
         fill_hour_string();
 
@@ -85,8 +101,8 @@ namespace OATS{
 
     void DateTimeWidget::set_time(QTime time)
     {
-        //m_time_digit->setText(time.toString("HH:mm:ss"));
-        m_time_digit->display(time.toString("HH:mm:ss"));
+        m_time_digit->setText(time.toString("HH:mm:ss"));
+        //m_time_digit->display(time.toString("HH:mm:ss"));
 
         if (time.second() < 2)
             m_time_text->setText(time_to_timestr(time.hour(), time.minute()));

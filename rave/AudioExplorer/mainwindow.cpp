@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
+#include <QFileInfo>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -60,6 +61,7 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     // Menubar
     connect(ui->actTrashCan, &QAction::triggered, this, &MainWindow::open_trash_can);
     connect(ui->actSettings, &QAction::triggered, this, &MainWindow::open_settings);
+    connect(ui->actExit, &QAction::triggered, this, &MainWindow::close);
 
     m_artist_toolbar = new DataToolBar();
     ui->hlArtist->addWidget(m_artist_toolbar);
@@ -321,6 +323,9 @@ void MainWindow::track_toolbar_icons()
 
 void MainWindow::track_context_menu(const QPoint& pos)
 {
+    if (ui->tvTracks->selectionModel()->selectedRows().size() == 0)
+        return;
+
     QMenu context_menu("Context Menu", ui->tvTracks);
 
     QAction actPlay("Play audio", ui->tvTracks);
@@ -1276,59 +1281,50 @@ void MainWindow::audio_properties()
 
 void MainWindow::play_btn_clicked()
 {
-    if (selected_row_id(ui->tvTracks) < 0)
-        return;
+    // if (selected_row_id(ui->tvTracks) < 0)
+    //     return;
 
     if (!ui->btnPlay->isChecked()){
+        qDebug() << "** NOT-CHECKED **";
         stop_play();
         ui->btnPlay->setText("Play");
+        ui->btnPlay->setChecked(false);
     } else {
-        play_audio();
-        ui->btnPlay->setText("Stop");
+        if (play_audio()){
+        qDebug() << "** CHECKED **";
+            ui->btnPlay->setText("Stop");
+            ui->btnPlay->setChecked(true);
+        }
     }
 }
 
-void MainWindow::play_audio()
+bool MainWindow::play_audio()
 {
-    /*
-    QItemSelectionModel* select = ui->tvTracks->selectionModel();
-    if (select->selectedRows().size() == 0)
-        return;
-    */
-
-    qDebug() << "Play Audio";
-
     auto audio = get_selected_audio();
     if (audio == nullptr)
-        return;
+        return false;
 
-    qDebug() << "AAAA";
+    if (!audio_file_exists(audio->full_audio_filename()))
+        return false;
 
-    std::string audio_format = audio->file_extension()->value();
-    std::transform(audio_format.begin(), audio_format.end(), audio_format.begin(), [](unsigned char c){return std::tolower(c);});
-
-    qDebug() << "BBBB";
-
-    AUDIO::AudioTool at;
-    auto ogg_file = at.make_audio_filename(audio->id())+"."+audio_format;
-    auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
-
-    qDebug() << "CCCC";
-
-    if (!QFile::exists(QString::fromStdString(full_audio_name))){
-        showMessage("File does not exists! "+full_audio_name);
-        return;
-    }
-
-    qDebug() << "Full Audio Name: "<< stoq(full_audio_name);
-
-    AudioFile af(full_audio_name);
+    AudioFile af(audio->full_audio_filename().toStdString());
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
-    m_audio_player->play_audio("C", QString::fromStdString(full_audio_name));
+    m_audio_player->play_audio("C", audio->full_audio_filename());
 
-//    m_cue_editor = std::make_unique<CueEditor>(af, m_qapp);
-//    m_cue_editor->play_audio();
+    return true;
+
+}
+
+bool MainWindow::audio_file_exists(const QString& audio_file)
+{
+    if (QFile::exists(audio_file))
+        return true;
+
+    std::string msg = std::format("Audio file `{}` does not exists!",
+                                  audio_file.toStdString());
+    showMessage(msg);
+    return false;
 }
 
 void MainWindow::stop_play()
@@ -1375,37 +1371,35 @@ AUDIO::Audio* MainWindow::get_selected_audio()
 
 void MainWindow::cue_edit()
 {
-
     auto audio = get_selected_audio();
     if (audio == nullptr)
         return;
 
-    std::string extension = audio->file_extension()->value();
-    std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c){return std::tolower(c);});
+    if (!audio_file_exists(audio->full_audio_filename()))
+        return;
 
-    AUDIO::AudioTool at;
-    auto ogg_file = at.make_audio_filename(audio->id())+"."+extension;
-    auto full_audio_name = audio->audio_lib_path()->value()+ogg_file;
-    AudioFile aud_file(full_audio_name);
+    AudioFile aud_file(audio->full_audio_filename().toStdString());
 
     aud_file.set_audio_title(audio->title()->value());
     aud_file.set_short_desc("");
     aud_file.set_artist_name(audio->artist_fullname());
     aud_file.set_audio_path(audio->audio_lib_path()->value());
+
     //aud_file.set_audio_file(ogg_file);
     aud_file.set_audio_type(audio->audio_type()->displayName());
 
     aud_file.set_duration(audio->duration()->value());
 
     aud_file.set_id(audio->id());
-    aud_file.set_ogg_filename(full_audio_name);
-    aud_file.set_ogg_short_filename(ogg_file);
+
+    QFileInfo fi(audio->full_audio_filename());
+    aud_file.set_ogg_filename(fi.fileName().toStdString());
+    aud_file.set_ogg_short_filename(audio->full_audio_filename().toStdString());
     aud_file.set_audio_lib_path(audio->audio_lib_path()->value());
 
     audio->set_audio_file(aud_file);
 
     aud_file.set_marker(audio->cue_marker());
-
     if (!fs::exists(aud_file.wave_file())){
         auto wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(QString::fromStdString(aud_file.audio_file()));
         wave_gen->generate();
@@ -1436,10 +1430,8 @@ void MainWindow::audio_editor()
         return;
     }
 
-    if (!QFile::exists(audio->full_audio_filename())){
-        showMessage("Missing audio file! Editing aborted.");
+    if (!audio_file_exists(audio->full_audio_filename()))
         return;
-    }
 
     QStringList args;
     args << audio->full_audio_filename();

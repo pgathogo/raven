@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    LoginForm lf;
+    LoginForm lf("nbohr", "abc123", 4);
     if (lf.exec() > 0 )
     {
         auto station_info = lf.get_station_info();

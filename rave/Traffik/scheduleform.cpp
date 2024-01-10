@@ -18,7 +18,7 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &ScheduleForm::scheduleDateChanged);
+    connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &ScheduleForm::schedule_date_changed);
     connect(ui->btnCreate, &QPushButton::clicked, this, &ScheduleForm::create_breaks);
     connect(ui->btnDelete, &QPushButton::clicked, this, &ScheduleForm::delete_breaks);
 
@@ -33,6 +33,11 @@ ScheduleForm::ScheduleForm(QWidget *parent) :
     ui->btnDelete->setIcon(QIcon(":/images/media/icons/deletebreak.bmp"));
     ui->btnDelete->setIconSize(QSize(35,35));
 
+    Breaks comm_breaks;
+    ScheduleManTreeViewModel* sched_model = new ScheduleManTreeViewModel(comm_breaks);
+    ui->tvSchedule->setModel(sched_model);
+
+    load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
 
     setWindowTitle("Schedule Management Form");
 }
@@ -73,7 +78,7 @@ void ScheduleForm::load_schedule(const QDate &date)
 
 }
 
-void ScheduleForm::scheduleDateChanged(const QDate& date)
+void ScheduleForm::schedule_date_changed(const QDate& date)
 {
     load_schedule(QDate::fromString(date.toString()));
 }
@@ -87,6 +92,9 @@ void ScheduleForm::create_breaks()
 
 void ScheduleForm::delete_breaks()
 {
+    if (ui->tvSchedule->selectionModel()->selectedIndexes().size() == 0)
+        return;
+
     //FIXME: Show ids userdata for child nodes
     QModelIndex index = ui->tvSchedule->selectionModel()->currentIndex();
 
@@ -139,8 +147,6 @@ void ScheduleForm::build_tree_view()
 
         comm_breaks[comm_break.schedule_hour].push_back(comm_break);
     }
-
-    qDebug() << "Comm Breaks Size: "<< comm_breaks.size();
 
     if (comm_breaks.size() > 0){
         ScheduleManTreeViewModel* sched_model = new ScheduleManTreeViewModel(comm_breaks);

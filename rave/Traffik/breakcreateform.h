@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <QDialog>
+#include <type_traits>
 
 namespace Ui {
 class BreakCreateForm;
@@ -45,6 +46,18 @@ public:
         }
         std::vector<T*> vec;
     };
+
+    template<typename E>
+    constexpr auto to_underlying(E e) noexcept
+    {
+        return static_cast<std::underlying_type_t<E>>(e);
+    }
+
+    template<typename E>
+    constexpr typename std::underlying_type<E>::type to_under(E e) noexcept {
+        return static_cast<typename std::underlying_type<E>::type>(e);
+    }
+
 
 
 private slots:

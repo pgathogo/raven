@@ -96,7 +96,7 @@ public:
     std::string make_selection(EntityDataModel* edm, std::string, int);
     AUDIO::Audio* get_selected_audio();
 
-    void play_audio();
+    bool play_audio();
     void stop_play();
     void move_audio_to_current_folder();
     void show_letter_filter();
@@ -177,6 +177,8 @@ public slots:
 
     void end_of_play();
     void open_settings();
+
+    bool audio_file_exists(const QString&);
 
 private:
     Ui::MainWindow *ui;
