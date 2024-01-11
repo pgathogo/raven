@@ -21,6 +21,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QVariant>
+#include <QButtonGroup>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -130,20 +131,53 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
     connect(m_jingle_grid.get(), &OATS::JingleGrid::stop_all_jingles, this, &MainWindow::stop_all_jingles);
-    connect(ui->btnHome, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(0); m_control_page = ControlPage::Home; });
+
+    connect(ui->btnHome, &QPushButton::clicked, this,
+            [&](){ ui->swMain->setCurrentIndex(0);
+            m_control_page = ControlPage::Home;
+            uncheck_others(this->objectName());
+        });
 
     connect(ui->btnComm, &QPushButton::clicked, this,
             [&](){
                 ui->swMain->setCurrentIndex(1);
                 m_control_page = ControlPage::Commercial;
                 show_next_break_commercial();
+                uncheck_others(this->objectName());
                });
 
 //    connect(ui->btnSegue, &QPushButton::clicked, this, [&](){ ui->swMain->setCurrentIndex(2); m_control_page = ControlPage::Segue; });
-    connect(ui->btnCarts, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(3); m_control_page = ControlPage::Cart; });
-    connect(ui->btnJingles, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(4); m_control_page = ControlPage::Jingle; });
-    connect(ui->btnTrackInfo, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(5); m_control_page = ControlPage::TrackInfo; });
-    connect(ui->btnLoad, &QPushButton::clicked, this, [&](){ui->swMain->setCurrentIndex(7); m_control_page = ControlPage::Load; });
+    connect(ui->btnCarts, &QPushButton::clicked, this,
+            [&](){ui->swMain->setCurrentIndex(3);
+            m_control_page = ControlPage::Cart;
+            uncheck_others(this->objectName());
+            });
+
+    connect(ui->btnJingles, &QPushButton::clicked, this,
+             [&](){ui->swMain->setCurrentIndex(4); m_control_page = ControlPage::Jingle;
+        uncheck_others(this->objectName());
+             });
+
+    connect(ui->btnTrackInfo, &QPushButton::clicked, this,
+            [&](){ui->swMain->setCurrentIndex(5);
+            m_control_page = ControlPage::TrackInfo;
+        uncheck_others(this->objectName());
+         });
+
+    connect(ui->btnLoad, &QPushButton::clicked, this,
+            [&](){ui->swMain->setCurrentIndex(7);
+            m_control_page = ControlPage::Load;
+        uncheck_others(this->objectName());
+         });
+
+    m_control_buttons_group = std::make_unique<QButtonGroup>();
+
+    m_control_buttons_group->addButton(ui->btnHome);
+    m_control_buttons_group->addButton(ui->btnComm);
+    m_control_buttons_group->addButton(ui->btnCarts);
+    m_control_buttons_group->addButton(ui->btnJingles);
+    m_control_buttons_group->addButton(ui->btnTrackInfo);
+    m_control_buttons_group->addButton(ui->btnLoad);
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close_window);
 
@@ -197,6 +231,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     qInfo() << "style page controls..";
     style_page_controls();
+    style_footer_buttons();
 
     qInfo() << "Calculate time statistics...";
     calculate_time_stats();
@@ -231,6 +266,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::uncheck_others(QString object_name)
+{
+}
+
 void MainWindow::style_page_controls()
 {
    //"QPushButton[objectName^='btnHome']{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
@@ -245,8 +284,18 @@ void MainWindow::style_page_controls()
         "color:#FFFFFF;"
        "font-weight:bold;}"
        "QPushButton:hover{background-color:#555D64;border:none; }"
+
        "QPushButton:pressed {"
         "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+
+       "QPushButton:checked {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500 , stop:1 #777700 );"
         "border-radius: 20px;"
         "border-style: outset;"
         "border-bottom-width: 1px;"
@@ -257,12 +306,56 @@ void MainWindow::style_page_controls()
 
     ui->btnHome->setStyleSheet(btn_style);
     ui->btnComm->setStyleSheet(btn_style);
-//    ui->btnSegue->setStyleSheet(style);
     ui->btnCarts->setStyleSheet(btn_style);
     ui->btnJingles->setStyleSheet(btn_style);
     ui->btnTrackInfo->setStyleSheet(btn_style);
     ui->btnLoad->setStyleSheet(btn_style);
-//    ui->btnPrintCache->setStyleSheet(style);
+
+    ui->btnHome->setCheckable(true);
+    ui->btnComm->setCheckable(true);
+    ui->btnCarts->setCheckable(true);
+    ui->btnJingles->setCheckable(true);
+    ui->btnTrackInfo->setCheckable(true);
+    ui->btnLoad->setCheckable(true);
+}
+
+void MainWindow::style_footer_buttons()
+{
+    QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4F565D, stop:0.5 #353A3F stop:1 #181B1D );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "height: 35px;"
+        "color:#FFFFFF;"
+       "font-weight:normal;}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+       "QPushButton:pressed {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "border-color:#0479B0;"
+        "color:#FFFFFF;"
+       "font-weight:normal;}"
+
+        );
+
+    ui->btnPrint1->setStyleSheet(btn_style);
+    ui->btnPrint2->setStyleSheet(btn_style);
+    ui->btnPrint3->setStyleSheet(btn_style);
+    ui->btnClearQue->setStyleSheet(btn_style);
+    ui->btnClearCache->setStyleSheet(btn_style);
+    ui->btnBreaks->setStyleSheet(btn_style);
 }
 
 void MainWindow::wheelEvent(QWheelEvent* event)

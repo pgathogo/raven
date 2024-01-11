@@ -538,12 +538,21 @@ border-radius: 3px;
        </item>
        <item>
         <layout class="QHBoxLayout" name="hlExtraButtons">
+         <property name="spacing">
+          <number>2</number>
+         </property>
          <item>
           <widget class="QPushButton" name="btnPrint1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>100</width>
+             <height>60</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -556,6 +565,18 @@ border-radius: 3px;
          </item>
          <item>
           <widget class="QPushButton" name="btnPrint2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>60</height>
+            </size>
+           </property>
            <property name="text">
             <string>Print Cache</string>
            </property>
@@ -563,6 +584,18 @@ border-radius: 3px;
          </item>
          <item>
           <widget class="QPushButton" name="btnPrint3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>60</height>
+            </size>
+           </property>
            <property name="text">
             <string>Move to Cache</string>
            </property>
@@ -570,6 +603,18 @@ border-radius: 3px;
          </item>
          <item>
           <widget class="QPushButton" name="btnClearQue">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>60</height>
+            </size>
+           </property>
            <property name="text">
             <string>Clear Queue</string>
            </property>
@@ -577,6 +622,18 @@ border-radius: 3px;
          </item>
          <item>
           <widget class="QPushButton" name="btnClearCache">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>60</height>
+            </size>
+           </property>
            <property name="text">
             <string>Clear Cache</string>
            </property>
@@ -584,6 +641,18 @@ border-radius: 3px;
          </item>
          <item>
           <widget class="QPushButton" name="btnBreaks">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>60</height>
+            </size>
+           </property>
            <property name="text">
             <string>Print Breaks</string>
            </property>
@@ -615,7 +684,7 @@ border-radius: 3px;
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

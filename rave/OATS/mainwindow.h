@@ -32,6 +32,7 @@ QT_END_NAMESPACE
 class QPushButton;
 class QLabel;
 class QStandardItemModel;
+class QButtonGroup;
 
 class TreeViewModel;
 class BaseDataProvider;
@@ -243,6 +244,7 @@ public:
     void scroll_down();
     void scroll_up();
     void style_page_controls();
+    void style_footer_buttons();
     void refresh_data(int, int);
 
 protected:
@@ -369,6 +371,8 @@ private:
     int m_schedule_top_index;
     int m_scrollbar_current_value;
 
+    std::unique_ptr<QButtonGroup> m_control_buttons_group;
+
     void set_header_item(OATS::ScheduleItem*, int, QDate);
     void fill_schedule_headers(QDate);
     void setup_timers();
@@ -380,6 +384,8 @@ private:
     void print_comm_breaks();
 
     void test_concept();
+
+    void uncheck_others(QString);
 };
 
 struct FindByRef{

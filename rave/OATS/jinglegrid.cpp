@@ -282,6 +282,7 @@ namespace OATS
         make_toolbar(m_main_layout.get());
 
         m_file_path = std::make_unique<QLabel>("Jingle fiile... ");
+        m_file_path->setStyleSheet("color:#0479B0;");
         m_main_layout->addWidget(m_file_path.get());
 
         make_grid_buttons(m_main_layout.get());
@@ -345,6 +346,26 @@ namespace OATS
 
     void JingleGrid::make_grid_buttons(QVBoxLayout* main_layout)
     {
+        QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: inset;"
+        "border-bottom-width: 2px;"
+        "border-radius: 3px;"
+        "border-bottom-color:#374148;"
+        "color:#FFFFFF;"
+        "height:35;"
+        "font-weight:bold;}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+        "QPushButton:pressed{background-color:#555D64; border:none;}"
+            );
+
        m_grid_layout = new QGridLayout(this);
 
        int id=1;
@@ -355,19 +376,9 @@ namespace OATS
                auto btn = std::make_unique<GridButton>(id++);
 
                if (col < GRID_COLS/2) {
-                   btn->setStyleSheet(
-                       "background-color:#D27D2D;"
-                       "color: #FFFFFF;"
-                       "height:35;"
-                       "font:bold;"
-                   );
+                   btn->setStyleSheet(btn_style);
                }else {
-                   btn->setStyleSheet(
-                       "background-color:#FFA07A;"
-                       "color: #FFFFFF;"
-                       "height:35;"
-                       "font:bold;"
-                   );
+                   btn->setStyleSheet(btn_style);
 
                }
 
@@ -384,7 +395,7 @@ namespace OATS
            }
        }
 
-       m_grid_layout->setVerticalSpacing(0);
+       m_grid_layout->setVerticalSpacing(2);
 
         m_button_widget = std::make_unique<QWidget>(this);
         m_button_widget->setLayout(m_grid_layout);
@@ -586,24 +597,42 @@ namespace OATS
 
    void JingleGrid::make_toolbar(QVBoxLayout* main_layout)
    {
+        QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: inset;"
+        "border-bottom-width: 2px;"
+        "border-radius: 3px;"
+        "border-bottom-color:#374148;"
+        "color:#FFFFFF;"
+        "height:45;"
+        "width:75;"
+        "font-weight:bold;}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+        "QPushButton:pressed{"
+           "background-color: #555D64;"
+           "border:none;}"
+
+        "QPushButton:pressed{background-color:#555D64; border:none;}"
+            );
 
        m_toolbar_layout = new QHBoxLayout();
-
-       QString style(
-                "background-color:#FF7518;"
-                "color: #FFFFFF;"
-                "font:bold;"
-           );
 
        open_btn = std::make_unique<QPushButton>("Open...");
        save_btn = std::make_unique<QPushButton>("Save");
        save_as_btn = std::make_unique<QPushButton>("Save As...");
        clear_all_btn = std::make_unique<QPushButton>("Clear All");
 
-       open_btn->setStyleSheet(style);
-       save_btn->setStyleSheet(style);
-       save_as_btn->setStyleSheet(style);
-       clear_all_btn->setStyleSheet(style);
+       open_btn->setStyleSheet(btn_style);
+       save_btn->setStyleSheet(btn_style);
+       save_as_btn->setStyleSheet(btn_style);
+       clear_all_btn->setStyleSheet(btn_style);
 
        connect(open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
        connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
@@ -630,17 +659,37 @@ namespace OATS
 
     void JingleGrid::make_pager(QVBoxLayout* main_layout)
     {
+        QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-style: inset;"
+        "border-bottom-width: 2px;"
+        "border-bottom-color:#374148;"
+        "color:#FFFFFF;"
+        "height:20;"
+        "font-weight:bold;"
+            "}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+       "QPushButton:checked {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500 , stop:1 #777700 );"
+        "border-style: inset;"
+        "border-bottom-width: 1px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+            );
+
         m_pager_layout = std::make_unique<QHBoxLayout>();
         m_page_button_group = std::make_unique<QButtonGroup>();
 
         for(int i=1; i < PAGE_COUNT; ++i){
             auto page_button = std::make_unique<QPushButton>(QString::number(i));
             page_button->setCheckable(true);
-            page_button->setStyleSheet(
-                "background-color:#FF7518;"
-                "color: #FFFFFF;"
-                "font:bold;"
-                );
+            page_button->setStyleSheet(btn_style);
             connect(page_button.get(), &QPushButton::clicked, this,
                     [=](){attach_jingle_to_buttons(i); set_current_page(i);});
             m_page_button_group->addButton(page_button.get());
@@ -666,12 +715,12 @@ namespace OATS
 
    void JingleGrid::make_stop_button(QVBoxLayout* main_layout)
    {
-       m_stop_button = std::make_unique<QPushButton>("Stop All");
+       m_stop_button = std::make_unique<QPushButton>("STOP ALL");
        m_stop_button->setStyleSheet(
            "background-color:#DC143C;"
            "color: #FFFFFF;"
            "height:30;"
-           "font:bold;"
+           "font-weight:bold;"
            );
        connect(m_stop_button.get(), &QPushButton::clicked, this, &JingleGrid::stop_all);
 

@@ -47,9 +47,10 @@ namespace OATS{
             "font-weight: bold;"
             "font-size: 20pt;"
             "background-color:transparent;"
-            "color:#BB86FC;"
+            "color:#FFFFFF;"
             "border:none;"
         });
+            //"color:#BB86FC;"
 
         m_date_text = std::make_unique<QLabel>("Current date");
         m_date_text->setStyleSheet({
@@ -102,7 +103,6 @@ namespace OATS{
     void DateTimeWidget::set_time(QTime time)
     {
         m_time_digit->setText(time.toString("HH:mm:ss"));
-        //m_time_digit->display(time.toString("HH:mm:ss"));
 
         if (time.second() < 2)
             m_time_text->setText(time_to_timestr(time.hour(), time.minute()));
