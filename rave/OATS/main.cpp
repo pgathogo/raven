@@ -12,12 +12,13 @@
 #include "../framework/Logger.h"
 #include "../security/loginform.h"
 
-//#define LOG_TO_FILE
+// #define LOG_TO_FILE
+
+QString module = "Main";
 
 int main(int argc, char *argv[])
 {
 
-qInfo() << "OATS started...";
 
     QApplication a(argc, argv);
 
@@ -42,15 +43,26 @@ qInfo() << "OATS started...";
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
 
-    qInfo() << "Opening login form...";
+    /*
+    QString msg = "MsgHeader; MsgBody";
+    QStringList msg_list = msg.split(';');
+    QString module = msg_list[0];
+    QString msg_body = msg_list[1];
+
+    qDebug() << "Module: "<< module;
+    qDebug() << "Body:  "<< msg_body;
+    */
+
+
+    Logger::info(module, "Opening login form...");
 
     LoginForm lf("nbohr", "abc123", 4);
 
-    qInfo() << "User logged in...";
+    Logger::info(module, "User logged in...");
 
     lf.express_login();
     {
-        qInfo() << "Starting MainWindow...";
+        Logger::info(module, "Starting MainWindow...");
 
         MainWindow w;
         w.show();
@@ -59,6 +71,7 @@ qInfo() << "OATS started...";
     #ifdef LOG_TO_FILE
         Logger::clean();
     #endif
+
     return state;
 
     }

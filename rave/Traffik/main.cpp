@@ -1,15 +1,41 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QDate>
+#include <QDir>
 
 #include "../security/loginform.h"
 #include "../security/authentication.h"
 #include "../security/user.h"
 #include "../security/loginform.h"
 
+#include "../framework/logger.h"
+
+
+#define LOG_TO_FILE
+
+QString module = "Main";
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+#ifdef LOG_TO_FILE
+    QString log_path = QCoreApplication::applicationDirPath()+"/log";
+
+    qDebug() << "* PATH: "<< log_path;
+
+    QDir log_dir(log_path);
+    if (!log_dir.exists()){
+        log_dir.mkpath(log_path);
+    }
+
+    QString curr_dtime = QDateTime::currentDateTime().toString("ddMMyyyy");
+    QString log_filepath = log_path+"/traffik_log_"+curr_dtime+".log";
+
+    Logger::init(log_filepath);
+
+#endif
 
     //w.setWindowState(w.windowState() ^ Qt::WindowMaximized);
     //auto auth = std::make_unique<Authentication>();
@@ -22,6 +48,10 @@ int main(int argc, char *argv[])
     {
         auto station_info = lf.get_station_info();
         auto conn_info = lf.get_connection_info();
+
+        QString msg = QObject::tr("User connected to server `%1`").
+                      arg(station_info.server_name);
+        Logger::info(module, msg);
 
         MainWindow w(&a, station_info, conn_info);
         w.resize(1300, 700);

@@ -20,5 +20,7 @@
         <file>images/icons/off_dot.png</file>
         <file>images/icons/down-arrow.png</file>
         <file>images/icons/up-arrow.png</file>
+        <file>images/icons/treeview_closed_purple.png</file>
+        <file>images/icons/treeview_open_purple.png</file>
     </qresource>
 </RCC>

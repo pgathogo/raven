@@ -526,6 +526,7 @@ void ClusterManagerDlg::edit_disk(DiskNode* disk_node)
     m_act_folder = nullptr;
     m_act_edit_disk = nullptr;
     m_act_delete_disk = nullptr;
+    m_disk_context_menu = nullptr;
 
 }
 
@@ -676,6 +677,7 @@ void ClusterManagerDlg::delete_disk()
 
     m_act_delete_disk = nullptr;
     m_audio_server_context_menu = nullptr;
+    m_disk_context_menu = nullptr;
 
 }
 
@@ -1293,11 +1295,11 @@ void ClusterManagerDlg::show_folder_context_menu(QString node_id, QPoint pos)
 
 }
 
-
 void ClusterManagerDlg::print_tree()
 {
     tree_printer(m_root_node->child_nodes());
 }
+
 
 void ClusterManagerDlg::tree_printer(std::map<QString, std::tuple<ConfigItemType, std::any>> nodes)
 {

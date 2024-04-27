@@ -29,12 +29,25 @@ namespace DATA
 
         create_view_headers();
         setLayout(m_main_layout);
+
+        style_comm_view();
     }
 
     CommercialViewer::~CommercialViewer()
     {
     }
 
+    void CommercialViewer::style_comm_view()
+    {
+        m_comm_view->setStyleSheet("QTableView{background-color: #34424F;} "
+                                    "QTableView::item{background-color: #323A3F; color: #FFFFFF;}"
+                                    "QTableView::item:alternate{background-color:#3C4449;}"
+                                    "QTableView::item:selected{background-color: #800000;}"
+                                    "QHeaderView::section{background-color:#708090; color:#FFFFFF; "
+                                   "  font-weight: bold;}");
+
+        m_title->setStyleSheet("QLabel{color: #0479B0; font-weight: bold;}");
+    }
     void CommercialViewer::create_view_headers()
     {
         m_comm_model->setHorizontalHeaderItem(0, new QStandardItem("Spot Title"));

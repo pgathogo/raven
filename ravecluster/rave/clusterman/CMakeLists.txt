@@ -82,20 +82,21 @@ set(PROJECT_SOURCES
         useraccess.cpp
         clustercontroller.h
         clustercontroller.cpp
-        ../../../rave/security/authentication.h
-        ../../../rave/security/authentication.cpp
-        ../../../rave/security/baserole.h
-        ../../../rave/security/baserole.cpp
-        ../../../rave/security/rolemember.h
-        ../../../rave/security/rolemember.cpp
-        ../../../rave/security/roleuser.h
-        ../../../rave/security/roleuser.cpp
-        ../../../rave/security/role.h
-        ../../../rave/security/role.cpp
-        ../../../rave/security/user.h
-        ../../../rave/security/user.cpp
-        ../../../rave/security/userbrowser.h
-        ../../../rave/security/userbrowser.cpp
+
+        ${rave_security_INCLUDE_DIRS}/authentication.h
+        ${rave_security_INCLUDE_DIRS}/authentication.cpp
+        ${rave_security_INCLUDE_DIRS}/baserole.h
+        ${rave_security_INCLUDE_DIRS}/baserole.cpp
+        ${rave_security_INCLUDE_DIRS}/rolemember.h
+        ${rave_security_INCLUDE_DIRS}/rolemember.cpp
+        ${rave_security_INCLUDE_DIRS}/roleuser.h
+        ${rave_security_INCLUDE_DIRS}/roleuser.cpp
+        ${rave_security_INCLUDE_DIRS}/role.h
+        ${rave_security_INCLUDE_DIRS}/role.cpp
+        ${rave_security_INCLUDE_DIRS}/user.h
+        ${rave_security_INCLUDE_DIRS}/user.cpp
+        ${rave_security_INCLUDE_DIRS}/userbrowser.h
+        ${rave_security_INCLUDE_DIRS}/userbrowser.cpp
         ${rave_security_INCLUDE_DIRS}/roleform.h
         ${rave_security_INCLUDE_DIRS}/roleform.cpp
         ${rave_security_INCLUDE_DIRS}/userform.h
@@ -126,18 +127,21 @@ set(PROJECT_SOURCES
         ${rave_framework_INCLUDE_DIRS}/manytomany.cpp
         ${rave_framework_INCLUDE_DIRS}/typeexclusion.h
         ${rave_framework_INCLUDE_DIRS}/typeexclusion.cpp
-        ../../../rave/framework/entityfields.h
-        ../../../rave/framework/entityfields.cpp
-        ../../../rave/framework/dataprovider.h
-        ../../../rave/framework/dataprovider.cpp
-        ../../../rave/framework/databaseconnector.cpp
-        ../../../rave/framework/databasemanager.cpp
-        ../../../rave/framework/ravenexception.h
-        ../../../rave/framework/ravenexception.cpp
-        ../../../rave/framework/entitydatamodel.h
-        ../../../rave/framework/entitydatamodel.cpp
-        ../../../rave/framework/relationmapper.h
-        ../../../rave/framework/relationmapper.cpp
+        ${rave_framework_INCLUDE_DIRS}/entityfields.h
+        ${rave_framework_INCLUDE_DIRS}/entityfields.cpp
+        ${rave_framework_INCLUDE_DIRS}/dataprovider.h
+        ${rave_framework_INCLUDE_DIRS}/dataprovider.cpp
+        ${rave_framework_INCLUDE_DIRS}/databaseconnector.cpp
+        ${rave_framework_INCLUDE_DIRS}/databasemanager.cpp
+        ${rave_framework_INCLUDE_DIRS}/ravenexception.h
+        ${rave_framework_INCLUDE_DIRS}/ravenexception.cpp
+        ${rave_framework_INCLUDE_DIRS}/entitydatamodel.h
+        ${rave_framework_INCLUDE_DIRS}/entitydatamodel.cpp
+        ${rave_framework_INCLUDE_DIRS}/relationmapper.h
+        ${rave_framework_INCLUDE_DIRS}/relationmapper.cpp
+        ${rave_framework_INCLUDE_DIRS}/logger.h
+        ${rave_framework_INCLUDE_DIRS}/logger.cpp
+
         ${UTILS_DIR}/notificationbar.h
         ${UTILS_DIR}/notificationbar.cpp
         ${UTILS_DIR}/notificationitem.h

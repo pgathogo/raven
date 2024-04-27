@@ -1,6 +1,7 @@
 #include <QDebug>
 #include "databaseconnector.h"
 #include "ravenexception.h"
+#include "Logger.h"
 
 DatabaseConnector::DatabaseConnector()
 {
@@ -20,13 +21,13 @@ PostgresConnector::PostgresConnector(std::string conninfo)
     ,mConnection{nullptr}
 {
     openConnection(conninfo);
-    qDebug() << "Connection to database...opened.";
+
+    Logger::info("PostgresConnector", "Connection to database...opened.");
 }
 
 PostgresConnector* PostgresConnector::instance(const std::string conninfo)
 {
     if (mInstance == nullptr){
-        qDebug() << "PostgresConnector::instances = nullptr *";
         mInstance = new PostgresConnector(conninfo);
     }
     return mInstance;

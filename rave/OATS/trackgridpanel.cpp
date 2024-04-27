@@ -64,8 +64,34 @@ namespace OATS{
 
     void TrackGridPanel::contextMenuEvent(QContextMenuEvent* event)
     {
-        QMenu menu;
+                // "{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
+                //  "stop:0 #555D64 , stop:1 #374148 );"
+        // QString menu_style(
+        //     "QMenu::item{"
+        //         "background-color: #374148;"
+        //          "border-radius: 20px;"
+        //          "border-bottom-width: 1px;"
+        //          "border-bottom-color:#374148;"
+        //          "color:#FFFFFF;"
+        //          "font-weight:bold;}"
+        //          "QMenu::item:selected{"
+        //          "background-color: rgb(0, 85, 127);"
+        //          "color: rgb(255, 255, 255);"
+        //         "}"
+        //     );
 
+        // QString menu_style2(
+        //     "QMenu::item{"
+        //     "background-color: rgb(0, 170, 0);"
+        //     "color: rgb(255, 255, 255);"
+        //     "}"
+        //     "QMenu::item:selected{"
+        //     "background-color: rgb(0, 85, 127);"
+        //     "color: rgb(255, 255, 255);"
+        //     "}"
+        //     );
+
+        QMenu menu;
 
         m_act_move_up = std::make_unique<QAction>("Move Up");
         m_act_move_down = std::make_unique<QAction>("Move Down");
@@ -103,6 +129,7 @@ namespace OATS{
         menu.addAction(m_act_reload_schedule.get());
 
         menu.exec(event->globalPos());
+
 
     }
 

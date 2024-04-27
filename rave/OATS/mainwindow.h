@@ -276,6 +276,7 @@ private slots:
     void play_button(OATS::OutputPanel*);
     void stop_button(OATS::OutputPanel*);
     void go_current();
+    void go_current_hour();
     void keep_current(bool);
     void play_jingle(OATS::Jingle*);
     void stop_all_jingles();

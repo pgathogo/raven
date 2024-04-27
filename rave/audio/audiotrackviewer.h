@@ -47,6 +47,8 @@ namespace AUDIO
 
         std::unique_ptr<QSortFilterProxyModel> m_filter_model;
 
+        void set_viewer_style();
+
 
     };
 

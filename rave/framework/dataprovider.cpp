@@ -5,6 +5,7 @@
 #include "queryset.h"
 #include "databaseconnector.h"
 #include "ravenexception.h"
+#include "Logger.h"
 
 BaseDataProvider::BaseDataProvider()
 {
@@ -239,6 +240,7 @@ int PostgresDataProvider::read(const std::string query)
         errorMsg += PQerrorMessage(conn);
         PQexec(conn, "ROLLBACK");
         cleanFinish(conn, res);
+        Logger::error("PostgresDataProvider", "Function `read`..."+QString::fromStdString(errorMsg));
         throw PostgresException("READ-BEGIN", errorMsg);
     }
 
@@ -256,7 +258,7 @@ int PostgresDataProvider::read(const std::string query)
         cleanFinish(conn, res);
 
 
-        qDebug() << "PostgresDatabaseManager::fetchAll...Failed\n'" << QString::fromStdString(errorMsg);
+        Logger::error("PostgresDataProvider", "Function `read`..."+QString::fromStdString(errorMsg));
 
         return 0;
 

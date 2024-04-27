@@ -60,6 +60,22 @@ namespace AUDIO
         m_tab_widget->addTab(m_search_widget.get(), "Search Audio");
 
         splitter->addWidget(m_top_widget.get());
+        set_tab_widget_style();
+
+    }
+
+    void TrackBrowser::set_tab_widget_style()
+    {
+         m_tab_widget->setStyleSheet("QTabBar::tab{background: qlineargradient(x1:0 y1:0, x2:0 y2:1,"
+                                     " stop:0 #47617B, stop:0.5 #2C3C4B, stop:1 #10161C);"
+                                    "color:#FFFFFF; font-weight: bold;}"
+                                    "QTabBar::tab:selected{"
+                                       "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
+                                    "stop:0 #454500 , stop:1 #777700 );"
+                                    "color:#FFFFFF; font-weight: bold;}"
+                                    "QTabWidget::pane{background-color: #34424F; border: 1px solid lightgray;}"
+                                    "QTabBar::tab:hover{background-color:#555D64;} "
+                                     );
 
     }
 
@@ -89,6 +105,7 @@ namespace AUDIO
     void TrackBrowser::folder_clicked(int folder_id)
     {
         auto audio = std::make_unique<AUDIO::Audio>();
+
         auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),
                                              "=", folder_id);
 
@@ -139,6 +156,30 @@ namespace AUDIO
 
         setLayout(m_v_layout.get());
         set_model();
+
+        style_folder_view();
+    }
+
+    void AudioFolderWidget::style_folder_view()
+    {
+        QString tree_style (
+            "QTreeView{background-color: #374148;}"
+            "QTreeView::item{color: #FFFFFF;}"
+            "QTreeView::branch:has-children:!has-siblings:closed,"
+            "QTreeView::branch:closed:has-children:has-siblings {"
+            "  border-image: none;"
+            "  image: url(:/images/icons/treeview_closed_purple.png);"
+            "}"
+            "QTreeView::branch:open:has-children:!has-siblings,"
+            "QTreeView::branch:open:has-children:has-siblings  {"
+            "border-image: none;"
+            "image: url(:/images/icons/treeview_open_purple.png);}"
+            "QHeaderView::section{background-color:#708090; color:#FFFFFF;}"
+            );
+
+
+        m_folder_view->setStyleSheet(tree_style);
+
     }
 
     void AudioFolderWidget::layout_controls()
@@ -181,19 +222,29 @@ namespace AUDIO
         ,m_edt_title{nullptr}
     {
         layout_controls();
-        setLayout(m_grid_layout.get());
+        setLayout(m_base_layout.get());
     }
 
    void AudioSearchWidget::layout_controls()
    {
+       m_base_layout = std::make_unique<QVBoxLayout>();
+       m_button_layout = std::make_unique<QHBoxLayout>();
+
        m_grid_layout = std::make_unique<QGridLayout>();
        m_lbl_title = std::make_unique<QLabel>("Title: ", this);
        m_edt_title = std::make_unique<QLineEdit>(this);
 
+       m_lbl_title->setStyleSheet("QLabel{color: #FFFFFF; font-weight: bold;}");
+
        m_lbl_artist = std::make_unique<QLabel>("Artist: ", this);
        m_edt_artist = std::make_unique<QLineEdit>(this);
 
+       m_lbl_artist->setStyleSheet("QLabel{color: #FFFFFF; font-weight: bold;}");
+
        m_btn_search = std::make_unique<QPushButton>("Search", this);
+       m_btn_search->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+       style_search_button();
+
        connect(m_btn_search.get(), &QPushButton::clicked, this, &AudioSearchWidget::search_clicked);
 
        m_grid_layout->addWidget(m_lbl_title.get(), ROW0, COL0);
@@ -202,13 +253,50 @@ namespace AUDIO
        m_grid_layout->addWidget(m_lbl_artist.get(), ROW1, COL0);
        m_grid_layout->addWidget(m_edt_artist.get(), ROW1, COL1);
 
-//       auto l_spacer = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Expanding);
-//       m_grid_layout->addItem(l_spacer, ROW2, COL0, 1, 1);
+       // auto l_spacer = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Expanding);
+       // m_grid_layout->addItem(l_spacer, ROW2, COL0, 1, 1);
 
-       m_grid_layout->addWidget(m_btn_search.get(), ROW2, COL1, 1, 1);
+       m_button_layout->addWidget(m_btn_search.get());
+       m_base_layout->addLayout(m_grid_layout.get());
+       m_base_layout->addLayout(m_button_layout.get());
 
 //       auto r_spacer = new QSpacerItem(20,20,QSizePolicy::Expanding, QSizePolicy::Expanding);
 //       m_grid_layout->addItem(r_spacer, ROW2, COL2, 1, 1);
+
+   }
+
+   void AudioSearchWidget::style_search_button()
+   {
+    QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4F565D, stop:0.5 #353A3F stop:1 #181B1D );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "width: 100px;"
+        "height: 55px;"
+        "color:#FFFFFF;"
+       "font-weight:normal;}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+       "QPushButton:pressed {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "border-color:#0479B0;"
+        "color:#FFFFFF;"
+       "font-weight:normal;}"
+        );
+
+       m_btn_search->setStyleSheet(btn_style);
 
    }
 
@@ -271,6 +359,7 @@ namespace AUDIO
    {
         layout_controls();
         setLayout(m_h_layout.get());
+        style_buttons();
    }
 
    void AudioTrackWidgetToolbar::layout_controls()
@@ -285,6 +374,45 @@ namespace AUDIO
        m_h_layout->addWidget(m_btn_info.get());
        m_h_layout->addWidget(m_btn_history.get());
        m_h_layout->addSpacerItem(new QSpacerItem(0, 0 , QSizePolicy::Expanding, QSizePolicy::Ignored ));
+   }
+
+   void AudioTrackWidgetToolbar::style_buttons()
+   {
+
+    QString style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4F565D, stop:0.5 #353A3F stop:1 #181B1D );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "width: 80px;"
+        "height: 25px;"
+        "color:#FFFFFF;"
+       "font-weight:normal;}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+       "QPushButton:pressed {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "border-color:#0479B0;"
+        "color:#FFFFFF;"
+       "font-weight:normal;}"
+
+        );
+
+       m_btn_listen->setStyleSheet(style);
+       m_btn_info->setStyleSheet(style);
+       m_btn_history->setStyleSheet(style);
+
    }
 
    /* ----- AudioTrackWidget --------- */

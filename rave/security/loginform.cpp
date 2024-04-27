@@ -8,6 +8,8 @@
 #include "../utils/notificationbar.h"
 #include "../framework/ravenexception.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/logger.h"
+
 #include "../security/userconfig.h"
 #include "../../ravecluster/rave/clusterman/clustercontroller.h"
 
@@ -51,7 +53,6 @@ LoginForm::LoginForm(QWidget *parent)
     pix_reset.load(":/rave_images/media/icons/reset_password_sm.bmp");
 //    pix_reset = pix_reset.scaled(ui->lblImageReset->size(), Qt::KeepAspectRatioByExpanding);
     ui->lblImageReset->setPixmap(pix_reset) ;
-
 
     ui->swMain->setCurrentIndex(0);
 
@@ -99,10 +100,13 @@ LoginForm::LoginForm(const QString username, const QString password, int station
 //    pix_reset = pix_reset.scaled(ui->lblImageReset->size(), Qt::KeepAspectRatioByExpanding);
     ui->lblImageReset->setPixmap(pix_reset) ;
 
-
     ui->swMain->setCurrentIndex(0);
 
     setWindowTitle("Login Form");
+
+    Logger::info("Login", "Opened login form");
+
+    Logger::error("Login", "Test login form");
 
 }
 
@@ -134,13 +138,19 @@ bool LoginForm::validNamePass()
 
 void LoginForm::open_station_selector()
 {
+    Logger::info("LoginForm", "Open station selector");
+
     bool authenticated = cluster_server_authentication(
         ui->edtUsername->text().toStdString(),
         ui->edtPassword->text().toStdString()
      );
 
-    if (!authenticated)
+    if (!authenticated){
+        Logger::info("LoginForm", "Authentication failed");
         return;
+    }
+
+    Logger::info("LoginForm", "Authentication succeded.");
 
     fetch_user_stations(ui->edtUsername->text());
 
@@ -151,6 +161,12 @@ void LoginForm::open_station_selector()
         auto si = m_stations_info[m_selected_station_id];
         ui->btnSelect->setText(si.station_name);
         ui->btnLogin->setEnabled(true);
+
+        QString id = QString::number(m_selected_station_id);
+        QString station_msg = QObject::tr("Selected station ID: %1, Station Name: %2 ").
+                       arg(id).
+                       arg(si.station_name);
+        Logger::info("LoginForm", station_msg);
     }
 
 }
@@ -199,7 +215,6 @@ void LoginForm::check_forced_password_reset()
 
 int LoginForm::select_station()
 {
-    qDebug() << "Get Selected: " << ui->edtUsername->text();
 
     // bool populated = populate_station_info(ui->edtUsername->text());
     // if (!populated)
@@ -341,17 +356,25 @@ void LoginForm::cancel()
 
 void LoginForm::reset_password()
 {
+    Logger::info("Login", "Resetting password...");
+
     if (validate_password_reset())
     {
         ClusterManager::ClusterController cluster_controller;
         std::string username = ui->edtUsername->text().toStdString();
         std::string password = ui->edtNewPassword->text().toStdString();
 
+        Logger::info("LoginForm", "Updating credential details for target cluster... ");
         // DB servers
         cluster_controller.alter_password(username, password);
 
+        Logger::info("LoginForm", "Target updated.");
+
+        Logger::info("LoginForm", "Updating credential details on the cluster manager...");
         // Cluster DB Server
         cluster_controller.alter_password_cluster_server(username, password);
+
+        Logger::info("LoginForm", "Cluster manager updated.");
 
         // Switch back to cluster server
         Authentication auth;
@@ -361,8 +384,15 @@ void LoginForm::reset_password()
 
         try{
             Authentication auth2(ci);
+            QString msg = QObject::tr("Switching back to server: `%1`, IP Address: %2").
+                          arg(QString::fromStdString(ci.host)).
+                          arg(QString::fromStdString(ci.ip_address));
+            Logger::info("LoginForm", msg);
+
             auth2.connect_to_server();
             cluster_controller.remove_password_reset_flag(username);
+
+            Logger::info("LoginForm", "Password flag reset");
 
             fetch_user_stations(ui->edtUsername->text());
             m_selected_station_id = select_station();

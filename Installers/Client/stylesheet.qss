@@ -1,0 +1,43 @@
+QFrame#TimePanel,#TrackPanel,#StatusPanel, #TransitionMode
+{
+  /*border:1px solid #484848;*/
+  background-color: #313131;
+}
+/*rgb(187, 134, 246);*/
+
+QPushButton#btnKeepCurrent{
+   color: red;
+}
+
+QLabel#TimeLabel, #TrackTitleLabel, #TransitionModeLabel, #StatusTopLabel
+{
+  color:rgb(255, 255, 255);
+}
+
+QLabel#TitleLabel
+{
+  /*color: rgb(187, 134, 246);*/
+  color: #EF6C00;
+}
+
+QLabel#StatusBottomLabel
+{
+  color: rgb(187, 134, 246);
+}
+
+QLabel#ArtistLabel, #DurationLabel, #OutputArtistLabel
+{
+  color:#03DAC6;
+}
+
+QPushButton#PlayButton
+{
+    background-color: #8A9A5B;
+    height: 30;
+    width:100;
+    font-family: Roboto;
+    font-size:12px;
+    font:bold;
+    color:#FFFFFF;
+}
+

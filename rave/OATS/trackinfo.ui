@@ -17,10 +17,9 @@
    <item>
     <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
      <item row="0" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="txtTitle">
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -37,10 +36,9 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="txtArtist">
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -57,10 +55,9 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="txtDuration">
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -77,10 +74,9 @@
       </widget>
      </item>
      <item row="3" column="0">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="txtClass">
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -97,10 +93,9 @@
       </widget>
      </item>
      <item row="4" column="0">
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="txtYear">
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -117,10 +112,9 @@
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QLabel" name="label_7">
+      <widget class="QLabel" name="txtAudioFile">
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -145,7 +139,7 @@
      </property>
      <widget class="QWidget" name="tabHistory">
       <attribute name="title">
-       <string>Details</string>
+       <string>DETAILS</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,1">
        <item>
@@ -163,7 +157,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_2">
+             <widget class="QLabel" name="txtFadeIn">
               <property name="text">
                <string>Fade In</string>
               </property>
@@ -198,7 +192,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_8">
+             <widget class="QLabel" name="txtIntro">
               <property name="text">
                <string>Intro</string>
               </property>
@@ -233,7 +227,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_9">
+             <widget class="QLabel" name="txtExtro">
               <property name="text">
                <string>Extro</string>
               </property>
@@ -268,7 +262,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_10">
+             <widget class="QLabel" name="txtFadeOut">
               <property name="text">
                <string>Fade Out</string>
               </property>
@@ -303,7 +297,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_11">
+             <widget class="QLabel" name="txtEnd">
               <property name="text">
                <string>End</string>
               </property>

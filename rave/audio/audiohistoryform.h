@@ -24,6 +24,7 @@ public:
     void reset_history();
 
 private:
+    void style_form();
     Ui::AudioHistoryForm *ui;
 };
 

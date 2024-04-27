@@ -91,6 +91,7 @@ namespace OATS
 
         void switch_on();
         void switch_off();
+        void remove_indicator();
 
         void set_pixmap(const QPixmap&);
         virtual QSize sizeHint() const override;

@@ -6,7 +6,7 @@
         "override": false,
         "same_client": false,
         "spot_daypart": false,
-        "type_daypart": true,
+        "type_daypart": false,
         "type_ex": true,
         "voice_daypart": false,
         "voice_ex": false

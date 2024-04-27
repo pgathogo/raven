@@ -34,6 +34,8 @@ namespace DATA
 
         std::unique_ptr<QLabel> m_title;
 
+        void style_comm_view();
+
     //signals:
 
     };

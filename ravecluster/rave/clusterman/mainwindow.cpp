@@ -39,8 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
         showMessage(de.errorMessage());
     }
 
-
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -52,7 +52,6 @@ void MainWindow::connect_rave_db()
 {
     auto auth =  std::make_unique<Authentication>();
     auth->connect("postgres", "abc123");
-
 }
 
 void MainWindow::connect_cluster_db()

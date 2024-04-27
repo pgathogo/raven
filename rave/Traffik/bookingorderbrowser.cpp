@@ -250,6 +250,8 @@ void BookingOrderBrowser::clear_filter()
 
 void BookingOrderBrowser::cancel_query()
 {
+    qDebug() << "** Table Size: " << m_grid_tables.size();
+
     if (m_grid_tables.size() > 0){
 
         int ret = QMessageBox::warning(this, tr("Booking Order"),

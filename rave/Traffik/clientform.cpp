@@ -9,6 +9,7 @@
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/choicefield.h"
+#include "../framework/logger.h"
 
 ClientForm::ClientForm(Client* client,
                        QDialog *parent) :
@@ -50,6 +51,8 @@ ClientForm::ClientForm(Client* client,
 
     if (m_client->isNew())
         set_defaults();
+
+    Logger::info("ClientForm", "Client form... opened.");
 
 }
 

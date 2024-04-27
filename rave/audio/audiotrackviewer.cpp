@@ -20,6 +20,7 @@ namespace AUDIO
         m_track_view = std::make_unique<QTableView>(this);
         m_track_view->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_track_model = std::make_unique<QStandardItemModel>(this);
+        m_track_view->setAlternatingRowColors(true);
 
         m_filter_model = std::make_unique<QSortFilterProxyModel>(this);
         m_filter_model->setSourceModel(m_track_model.get());
@@ -42,6 +43,7 @@ namespace AUDIO
         m_main_layout->addWidget(m_letter_filter_widget.get());
 
         create_track_view_headers();
+        set_viewer_style();
 
         setLayout(m_main_layout);
     }
@@ -68,6 +70,16 @@ namespace AUDIO
         set_track_view_column_width();
     }
 
+    void AudioTrackViewer::set_viewer_style()
+    {
+        m_track_view->setStyleSheet("QTableView{background-color: #34424F;} "
+                                    "QTableView::item{background-color: #323A3F; color: #FFFFFF;}"
+                                    "QTableView::item:alternate{background-color:#3C4449;}"
+                                    "QTableView::item:selected{background-color: #800000;}"
+                                    "QHeaderView::section{background-color:#708090; color:#FFFFFF;}");
+
+    }
+
     QStandardItemModel* AudioTrackViewer::track_model()
     {
         return m_track_model.get();
@@ -90,15 +102,11 @@ namespace AUDIO
     {
         auto indexes = m_track_view->selectionModel()->selectedRows();
 
-        qInfo() << "Selected Indexes: "<< indexes.size();
-
         if (indexes.size() == 0)
             return;
 
         auto current_index = indexes[0];
         int id = current_index.data(Qt::UserRole).toInt();
-
-        qInfo() << "Selected Audio ID: "<< id;
 
         emit track_selected(id);
 

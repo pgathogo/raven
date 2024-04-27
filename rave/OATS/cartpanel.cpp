@@ -178,7 +178,32 @@ namespace OATS
         ,m_title_lbl{nullptr}
         ,m_cart_filename{""}
     {
-        setStyleSheet("background-color: red;");
+        QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: inset;"
+        "border-bottom-width: 2px;"
+        "border-radius: 3px;"
+        "border-bottom-color:#374148;"
+        "color:#FFFFFF;"
+        "height:45;"
+        "width:75;"
+        "font-weight:bold;}"
+
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+        "QPushButton:pressed{"
+           "background-color: #555D64;"
+           "border:none;}"
+
+        "QPushButton:pressed{background-color:#555D64; border:none;}"
+            );
+
+        //setStyleSheet("background-color: red;");
 
         m_open_btn = std::make_unique<QPushButton>("Open", this);
         connect(m_open_btn.get(), &QPushButton::clicked, this, &PanelTopToolbar::open_cart_file);
@@ -240,11 +265,32 @@ namespace OATS
         ,m_stop_all_btn{nullptr}
         ,m_clear_all_btn{nullptr}
     {
+        QString stop_all_style(
+           "background-color:#4682B4;"
+           "color: #FFFFFF;"
+           "height:30;"
+           "font-weight:bold;"
+            );
+
+            // "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
+            // "stop:0 #F1D926, stop:0.5 #F3CB15 stop:1 #F6B601 );"
+
+        QString cancel_all(
+            "QPushButton {background-color: #4682B4;"
+            "height: 30;"
+            "color:#FFFFFF;"
+            "font-weight:bold;"
+            "}"
+            );
+
         m_stop_all_btn = std::make_unique<QPushButton>("Stop All", this);
         connect(m_stop_all_btn.get(), &QPushButton::clicked, this, &PanelBottomToolbar::stop_all_clicked);
 
         m_clear_all_btn = std::make_unique<QPushButton>("Clear All", this);
         connect(m_clear_all_btn.get(), &QPushButton::clicked, this, &PanelBottomToolbar::clear_all_clicked);
+
+        m_stop_all_btn->setStyleSheet(stop_all_style);
+        m_clear_all_btn->setStyleSheet(cancel_all);
 
         m_h_layout = std::make_unique<QHBoxLayout>();
         m_h_layout->addWidget(m_stop_all_btn.get());
@@ -271,6 +317,7 @@ namespace OATS
         ,m_remove_btn{nullptr}
         ,m_down_btn{nullptr}
     {
+
         m_up_btn = std::make_unique<QToolButton>(this);
         m_up_btn->setToolTip("Move Audio Up");
         m_up_btn->setIcon(QIcon(":/images/icons/up_arrow.png"));
@@ -301,6 +348,46 @@ namespace OATS
         m_v_layout->addStretch();
 
         setLayout(m_v_layout.get());
+
+        style_load_widget_buttons();
+    }
+
+    void AudioLoadWidget::style_load_widget_buttons()
+    {
+    QString btn_style(
+        "QToolButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: outsi;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+       "QPushButton:hover{background-color:#555D64;border:none; }"
+
+       "QToolButton:pressed {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+
+       "QToolButton:checked {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500 , stop:1 #777700 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+        );
+
+        m_up_btn->setStyleSheet(btn_style);
+        m_add_btn->setStyleSheet(btn_style);
+        m_remove_btn->setStyleSheet(btn_style);
+        m_down_btn->setStyleSheet(btn_style);
     }
 
     void AudioLoadWidget::open_track_picker()
@@ -349,6 +436,20 @@ namespace OATS
          m_v_layout->addStretch();
 
         setLayout(m_v_layout.get());
+
+         style_audio_view();
+     }
+
+     void AudioViewWidget::style_audio_view()
+     {
+
+        QString style("QTableView{background-color: #34424F;} "
+                      "QTableView::item{background-color: #323A3F; color: #FFFFFF;}"
+                      "QTableView::item:alternate{background-color:#3C4449;}"
+                      "QTableView::item:selected{background-color: #800000;}"
+                      "QHeaderView::section{background-color:#708090; color:#FFFFFF; "
+                      "  font-weight: bold;}");
+         m_table_view->setStyleSheet(style);
      }
 
      void AudioViewWidget::table_view_clicked(const QModelIndex& index)
@@ -673,6 +774,47 @@ namespace OATS
 
         setLayout(m_v_layout.get());
 
+        style_load_widget_buttons();
+
+    }
+
+    void AudioViewControllerWidget::style_load_widget_buttons()
+    {
+    QString btn_style(
+        "QToolButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+        "border-radius: 20px;"
+        "border-style: outsi;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+       "QPushButton:hover{background-color:#555D64;border:none; }"
+
+       "QToolButton:pressed {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+
+       "QToolButton:checked {"
+        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500 , stop:1 #777700 );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;"
+        "color:#FFFFFF;"
+       "font-weight:bold;}"
+        );
+
+        m_preview_btn->setStyleSheet(btn_style);
+        m_clear_btn->setStyleSheet(btn_style);
+        m_group_btn->setStyleSheet(btn_style);
+        m_next_btn->setStyleSheet(btn_style);
+
     }
 
     void AudioViewControllerWidget::emit_clear_items()
@@ -694,6 +836,7 @@ namespace OATS
     }
 
     /* ---- AudioPlayWidget ---- */
+
      CartPlayerWidget::CartPlayerWidget()
          :m_v_layout{nullptr}
          ,m_timer_lbl{nullptr}
@@ -727,6 +870,53 @@ namespace OATS
        m_audio_player = std::make_unique<AUDIO::AudioPlayer>();
        connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &CartPlayerWidget::play_next);
        connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &CartPlayerWidget::end_of_play);
+
+       style_player_controls();
+     }
+
+     void CartPlayerWidget::style_player_controls()
+     {
+        QString btn_style(
+        "QToolButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4F565D, stop:0.5 #353A3F stop:1 #181B1D );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-bottom-color:#374148;"
+        "border-radius: 3px;"
+        "height: 35px;"
+        "width: 35px;"
+        "color:#FFFFFF;"
+        "font-weight:normal;}"
+
+        "QToolButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+        " }"
+
+        "QToolButton:pressed {"
+            "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
+            "border-radius: 20px;"
+            "border-style: outset;"
+            "border-bottom-width: 1px;"
+            "border-radius: 3px;"
+            "border-color:#0479B0;"
+            "color:#FFFFFF;"
+           "font-weight:normal;}"
+        );
+
+         QString label_style(
+            "QLabel {"
+              "color:#00ff00;"
+              "font-weight:bold;}"
+            );
+
+
+         m_play_btn->setStyleSheet(btn_style);
+         m_stop_btn->setStyleSheet(btn_style);
+
+         m_timer_lbl->setStyleSheet(label_style);
+
      }
 
      void CartPlayerWidget::play_button_clicked()

@@ -21,6 +21,9 @@ build.ninja
 *.cmake
 qt6vars.bat
 qt6vars.cmd
+#Executable
+*.exe
+*.dll
 #Ninja files
 rave/AudioExplorer/.ninja_deps
 rave/AudioExplorer/.ninja_log

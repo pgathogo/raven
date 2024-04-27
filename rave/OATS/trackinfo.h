@@ -32,5 +32,6 @@ private:
 
     std::unique_ptr<AudioHistoryForm> m_audio_history;
 
+    void style_text();
 };
 

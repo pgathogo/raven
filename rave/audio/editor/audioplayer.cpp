@@ -51,7 +51,7 @@ namespace AUDIO
         qDebug() << "Item added: Output=" << output << " Item="<< play_item;
     }
 
-    void AudioPlayer::play_audio(QString /*channel*/, QString audio_file)
+    void AudioPlayer::play_audio(QString channel, QString audio_file)
     {
 //        OPChannel op_ch = str_to_channel(channel);
         m_audio_thread->play(audio_file);

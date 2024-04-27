@@ -45,10 +45,11 @@ SetupBrowser::SetupBrowser(QWidget *parent)
     ui->tabMain->addTab(m_sales_person_tab, "Sales Persons");
     ui->tabMain->addTab(m_agents_tab, "Agents");
     ui->tabMain->addTab(m_timeband_tab, "Time Bands");
-    ui->tabMain->addTab(m_users_tab, "System Users");
-    ui->tabMain->addTab(m_role_tab, "System Roles");
-    ui->tabMain->addTab(m_content_tab,"Contents");
-    ui->tabMain->addTab(m_content_auth_tab, "Content Authorization");
+
+    // ui->tabMain->addTab(m_users_tab, "System Users");
+    // ui->tabMain->addTab(m_role_tab, "System Roles");
+    // ui->tabMain->addTab(m_content_tab,"Contents");
+    // ui->tabMain->addTab(m_content_auth_tab, "Content Authorization");
 
     ui->tabMain->setCurrentIndex(0);
 

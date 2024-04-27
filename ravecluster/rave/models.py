@@ -45,19 +45,16 @@ class Station(models.Model):
     db_name = models.CharField(max_length=30, blank=True, null=True)
     cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
 
-
 class AudioStore(models.Model):
     store_name = models.CharField(max_length=200)
     server = models.ForeignKey(Server, models.DO_NOTHING)
     station = models.ForeignKey(Station, models.DO_NOTHING)
     notes = models.TextField(blank=True, null=True)
 
-
 class StorageDisk(models.Model):
     disk_name = models.CharField(max_length=100)
     audio_server = models.ForeignKey(Server, models.DO_NOTHING)
     capacity = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-
 
 class AudioFolder(models.Model):
     folder_name = models.CharField(max_length = 200)

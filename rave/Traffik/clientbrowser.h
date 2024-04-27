@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "../framework/baseentitybrowserdlg.h"
+#include "../framework/Logger.h"
 
 class EntityDataModel;
 class Client;
@@ -35,7 +36,7 @@ public:
     void openBrowserWindow()
     {
         if (selectedRowId() < 0){
-            showMessage("Select a Client to view Bla Bla Bla");
+            Logger::error("ClientBrowser", "Invalid selection Id.");
         }else{
 
            std::shared_ptr<BaseEntity> be = findSelectedEntity();

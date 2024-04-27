@@ -14,6 +14,19 @@ AudioHistoryForm::AudioHistoryForm(QWidget *parent) :
 {
     ui->setupUi(this);
     prepare_grid();
+    style_form();
+}
+
+void AudioHistoryForm::style_form()
+{
+    QString title_label_style(
+        "QLabel{"
+        "color: #0479B0;"
+        "font-weight: bold;"
+        "}"
+        );
+
+    ui->lblTitle->setStyleSheet(title_label_style);
 }
 
 AudioHistoryForm::~AudioHistoryForm()

@@ -20,6 +20,8 @@ public:
 
     void tab_clicked(int);
 
+    void style_tab_widget();
+
 private:
     Ui::LetterFilterWidget *ui;
 

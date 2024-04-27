@@ -136,6 +136,7 @@ namespace OATS
     private slots:
         void open_track_picker();
         void selected_audio(std::shared_ptr<AUDIO::Audio>);
+        void style_load_widget_buttons();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QToolButton> m_up_btn;
@@ -176,7 +177,9 @@ namespace OATS
         void read_cart_items(QJsonArray&);
         void add_to_table_view(CartItem*);
     private slots:
-         void table_view_clicked(const QModelIndex&);
+        void table_view_clicked(const QModelIndex&);
+        void style_audio_view();
+
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QTableView> m_table_view;
@@ -207,6 +210,7 @@ namespace OATS
     private slots:
          void emit_clear_items();
          void emit_group_clicked();
+         void style_load_widget_buttons();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QToolButton> m_preview_btn;
@@ -235,6 +239,7 @@ namespace OATS
         void play_button_clicked();
         void play_next();
         void end_of_play();
+        void style_player_controls();
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
         std::unique_ptr<QLabel> m_timer_lbl;

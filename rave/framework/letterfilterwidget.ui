@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>692</width>
-    <height>43</height>
+    <height>45</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,6 +24,9 @@
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="topMargin">
@@ -44,7 +47,7 @@
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>11</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>

@@ -232,6 +232,7 @@ namespace OATS
     void GridButton::switch_on()
     {
         set_pixmap(QPixmap(":/images/icons/live_dot.png"));
+        update(rect());
     }
 
     void GridButton::switch_off()
@@ -239,6 +240,11 @@ namespace OATS
         set_pixmap(QPixmap(":/images/icons/off_dot.png"));
         update(rect());
         setChecked(false);
+    }
+
+    void GridButton::remove_indicator()
+    {
+        set_pixmap(QPixmap());
     }
 
     void GridButton::set_pixmap(const QPixmap& pixmap)
@@ -483,7 +489,9 @@ namespace OATS
        int row = m_current_grid_cell.row;
        int col = m_current_grid_cell.col;
 
-        if (m_grid_buttons[row][col]->jingle() == nullptr){
+       // No Jingle set for this button
+       if (m_grid_buttons[row][col]->jingle() == nullptr)
+       {
 
             auto jingle = std::make_unique<Jingle>(current_page(), row, col, title);
 
@@ -493,8 +501,10 @@ namespace OATS
             }
 
             jingle->set_audio(audio);
-
             m_grid_buttons[row][col]->set_jingle(jingle.get());
+            m_grid_buttons[row][col]->set_pixmap(QPixmap(":/images/icons/off_dot.png"));
+            m_grid_buttons[row][col]->update(rect());
+
             m_jingles.push_back(std::move(jingle));
 
             return;
@@ -507,15 +517,18 @@ namespace OATS
         auto it = std::find_if(m_jingles.begin(), m_jingles.end(),
                               FindJingle(jingle_id));
 
-       if(it != m_jingles.end()){
+       if(it != m_jingles.end())
+       {
+            if (!at.audio_exist(QString::fromStdString(audio_fullname)))
+            {
+                qDebug() << "Error file";
+                title += " - ERROR_01: File Not Found!";
+                (*it)->set_jingle_status(Jingle::JingleStatus::Error);
+            }
 
-        if (!at.audio_exist(QString::fromStdString(audio_fullname))){
-            qDebug() << "Error file";
-            title += " - ERROR_01: File Not Found!";
-            (*it)->set_jingle_status(Jingle::JingleStatus::Error);
-        }
             (*it)->set_audio(audio);
             m_grid_buttons[row][col]->set_jingle((*it).get());
+
        }
 
    }
@@ -559,16 +572,20 @@ namespace OATS
 
     void JingleGrid::attach_jingle_to_buttons(int page_id)
     {
-      clear_page(page_id);
       int row=0;
       int col=0;
+
+      clear_page(page_id);
+
       for(auto const& jingle: m_jingles)
       {
         if (row > GRID_ROWS)
             break;
 
-        if (jingle->page_id() == page_id){
+        if (jingle->page_id() == page_id)
+        {
             m_grid_buttons[row][col]->set_jingle(jingle.get());
+            m_grid_buttons[row][col]->switch_off();
             ++col;
             if (col >= GRID_COLS){
                 col = 0;
@@ -591,6 +608,7 @@ namespace OATS
        for (int row=0; row <= GRID_ROWS-1; ++row){
            for (int col=0; col <= GRID_COLS-1; ++col){
                m_grid_buttons[row][col]->set_jingle(nullptr);
+               m_grid_buttons[row][col]->remove_indicator();
            }
        }
    }
@@ -686,12 +704,15 @@ namespace OATS
         m_pager_layout = std::make_unique<QHBoxLayout>();
         m_page_button_group = std::make_unique<QButtonGroup>();
 
-        for(int i=1; i < PAGE_COUNT; ++i){
+        for(int i=1; i < PAGE_COUNT; ++i)
+        {
             auto page_button = std::make_unique<QPushButton>(QString::number(i));
             page_button->setCheckable(true);
             page_button->setStyleSheet(btn_style);
+
             connect(page_button.get(), &QPushButton::clicked, this,
                     [=](){attach_jingle_to_buttons(i); set_current_page(i);});
+
             m_page_button_group->addButton(page_button.get());
             m_pager_layout->addWidget(page_button.get());
             m_page_buttons[i] = std::move(page_button);

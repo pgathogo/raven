@@ -77,6 +77,8 @@ namespace AUDIO
        QSplitter* m_main_splitter;
 
        std::shared_ptr<AUDIO::Audio> m_current_selected_audio;
+
+       void set_tab_widget_style();
     };
 
 
@@ -99,6 +101,8 @@ namespace AUDIO
         std::unique_ptr<QTreeView> m_folder_view;
         std::unique_ptr<NodeData*> m_folders;
         std::unique_ptr<TreeViewModel> m_folder_model;
+
+        void style_folder_view();
     };
 
 
@@ -120,6 +124,8 @@ namespace AUDIO
     private slots:
         void search_clicked();
     private:
+        std::unique_ptr<QVBoxLayout> m_base_layout;
+        std::unique_ptr<QHBoxLayout> m_button_layout;
         std::unique_ptr<QGridLayout> m_grid_layout;
 
         std::unique_ptr<QLabel> m_lbl_title;
@@ -129,6 +135,8 @@ namespace AUDIO
         std::unique_ptr<QLineEdit>m_edt_artist;
 
         std::unique_ptr<QPushButton>m_btn_search;
+
+        void style_search_button();
     };
 
 
@@ -155,6 +163,8 @@ namespace AUDIO
         std::unique_ptr<QPushButton> m_btn_listen;
         std::unique_ptr<QPushButton> m_btn_info;
         std::unique_ptr<QPushButton> m_btn_history;
+
+        void style_buttons();
     };
 
     class AudioTrackWidget : public QWidget

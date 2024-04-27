@@ -267,6 +267,12 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/Home/Clients/PMS/Raven/rave/framework/Logger.h",
+			"MU",
+			"DX5S3JBGB7/moc_Logger.cpp",
+			null
+		],
+		[
 			"D:/Home/Clients/PMS/Raven/rave/framework/baseentity.h",
 			"MU",
 			"DX5S3JBGB7/moc_baseentity.cpp",
@@ -627,6 +633,7 @@
 	"SETTINGS_FILE" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/clusterman_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/Home/Clients/PMS/Raven/rave/framework/Logger.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp", "MU", null ],
 		[
 			"D:/Home/Clients/PMS/Raven/rave/framework/baseentitybrowserdlg.cpp",

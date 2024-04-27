@@ -20,6 +20,8 @@ namespace AUDIO
         m_h_layout->addWidget(m_cancel_btn.get());
 
         setLayout(m_h_layout.get());
+
+
     }
 
     void SelectionWidget::select_clicked()
@@ -54,6 +56,8 @@ namespace AUDIO
         setMinimumWidth(500);
 
         setLayout(m_v_layout.get());
+
+        setStyleSheet("QDialog{background: #555D64;}");
     }
 
     void TrackPickerDialog::audio_selected()

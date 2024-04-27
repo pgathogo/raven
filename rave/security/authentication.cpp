@@ -7,6 +7,7 @@
 #include "../framework/databasemanager.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravenexception.h"
+#include "../framework/Logger.h"
 
 AccessMap Authentication::mAccessMap;
 
@@ -148,15 +149,16 @@ void Authentication::connect_to_cluster_server(const std::string uname, const st
     ci.password = pword;
     ci.db_name = dbname.toStdString();
 
-    qDebug() << "**** Testing connection ****";
+    Logger::info("Authentication", "Testing connection");
 
     try{
         Authentication::test_connection(ci);
     }catch (DatabaseException& de){
+        Logger::error("Authentication", "Test connection... Failed.");
         throw;
     }
 
-    qDebug() << "**** Good connection... proceed";
+    Logger::info("Authentication", "Test connection... Pass.");
 
     mDBManager = new PostgresDatabaseManager(conninfo);
 }

@@ -26,6 +26,8 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
     connect(bui->tvEntity->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ClientBrowser::selection_changed);
 
     bui->edtFilter->setFocus();
+
+    Logger::info("ClientBrowser", "Client Browser... opened.");
 }
 
 ClientBrowser::~ClientBrowser()
@@ -59,6 +61,10 @@ void ClientBrowser::deleteRecord()
 
        if (edm.count() > 0){
             showMessage("Cannot delete client with existing orders!");
+
+           QString msg = QString("Client with ID: %1 has some existing orders! Delete aborted.").
+                          arg(QString::number(client->id()));
+            Logger::info("ClientBrower", msg);
        }
 
     }

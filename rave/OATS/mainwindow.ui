@@ -436,7 +436,8 @@ border-radius: 3px;
                 </size>
                </property>
                <property name="text">
-                <string>Track Info.</string>
+                <string>Track 
+ Information</string>
                </property>
               </widget>
              </item>
@@ -514,7 +515,8 @@ border-radius: 3px;
                 </size>
                </property>
                <property name="text">
-                <string>Load ...</string>
+                <string>Load 
+Audio</string>
                </property>
               </widget>
              </item>

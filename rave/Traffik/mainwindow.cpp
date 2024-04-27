@@ -8,6 +8,8 @@
 #include "../framework/entityregister.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
+#include "../framework/logger.h"
+
 //#include "../framework/applicationcontext.h"
 #include <format>
 
@@ -22,6 +24,7 @@
 #include "setupbrowser.h"
 
 AccessMap MainWindow::access_map;
+
 
 MainWindow::MainWindow(QApplication* app,
                        const StationInfo& si,
@@ -83,6 +86,8 @@ MainWindow::MainWindow(QApplication* app,
     setFixedSize(1300, 700);
     setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
     update();
+
+    Logger::info("MainWindow", "Opened MainWindow");
 }
 
 void MainWindow::createActions()

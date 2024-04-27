@@ -26,6 +26,12 @@ public:
 	/// @brief Cleans up the logger.
 	static void clean();
 
+
+    static void info(QString, QString);
+    static void debug(QString, QString);
+    static void error(QString, QString);
+
+
 	/// @brief The function which handles the logging of text.
 	static void messageOutput(QtMsgType type, const QMessageLogContext& context,
 		const QString& msg);
