@@ -57,6 +57,8 @@ namespace OATS{
         void make_current(int, int);
         void reload_schedule(int, int);
 
+        void play_audio(int, int);
+
         void transition_stop(int, int);
         void transition_mix(int, int);
         void transition_cut(int, int);

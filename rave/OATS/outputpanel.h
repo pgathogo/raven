@@ -101,7 +101,9 @@ namespace OATS{
 
         std::unique_ptr<QVBoxLayout> m_main_panel;
 
+        // TODO: This needs to be initialized !!
         OATS::ScheduleItem* m_schedule_item;
+
         PanelStatus m_status;
         QTime m_play_start_time;
         long m_time_remaining{0};

@@ -23,6 +23,7 @@ AudioThread::AudioThread(QObject* parent):
 
 void AudioThread::play(QString filename)
 {
+
     BASS_ChannelStop(m_channel);
 
     if (!(m_channel = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0,
@@ -31,6 +32,7 @@ void AudioThread::play(QString filename)
         | BASS_SAMPLE_LOOP, 1)))
             qDebug() << "Can't play file- ERROR Code: " << BASS_ErrorGetCode();
     else{
+
         endOfMusic = false;
         BASS_ChannelPlay(m_channel, true);
         timer->start(100);
@@ -38,6 +40,7 @@ void AudioThread::play(QString filename)
         playing = true;
     }
 
+    qDebug() << " ---------------------------------- ";
 }
 
 void AudioThread::play_from_position(QString filename, int position)

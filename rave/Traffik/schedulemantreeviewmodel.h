@@ -21,6 +21,7 @@ struct Break{
     int schedule_hour{-1};
     std::string schedule_time{};
     std::string break_mode{};
+    std::string break_fill_method{""};
     int max_spots{0};
     double break_duration{0};
     int booked_spots{0};

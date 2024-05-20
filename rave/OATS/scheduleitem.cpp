@@ -22,6 +22,7 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
 
     std::string ttype = si.transition_type_text();
     qd << "TTYP: " << stoq(ttype);
+    qd << "DBUpdate Status: " << si.db_update_status_toString();
 
     return qd;
 }
@@ -35,6 +36,7 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         ,m_current_time{0}
         ,m_transition_type{OATS::TransitionType::MIX}
         ,m_audio{nullptr}
+        ,m_db_update_status{OATS::DBUpdateStatus::None}
     {
     }
 
@@ -376,7 +378,7 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
 
     std::string ScheduleItem::transition_type_text()
     {
-    enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
+    //enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
         switch (transition_type())
         {
         case OATS::TransitionType::NONE:
@@ -397,6 +399,35 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         default:
             return "OTHERS";
         }
+    }
+
+    QString ScheduleItem::db_update_status_toString()
+    {
+        switch ( m_db_update_status )
+        {
+        case OATS::DBUpdateStatus::None:
+            return "NONE";
+            break;
+        case OATS::DBUpdateStatus::Ready:
+            return "READY";
+            break;
+        case OATS::DBUpdateStatus::Done:
+            return "DONE";
+            break;
+        default:
+            return "NOT-SET";
+        }
+    }
+
+
+    DBUpdateStatus ScheduleItem::db_update_status()
+    {
+        return m_db_update_status;
+    }
+
+    void ScheduleItem::set_db_update_status(DBUpdateStatus update_status)
+    {
+        m_db_update_status = update_status;
     }
 
 }

@@ -170,11 +170,13 @@ public:
                 str_value = str_tolower(str_value);
                 filter += "'%"+str_value+"%'";
             }else if(str_tolower(op) == "between"){
-                qDebug() << "Between >> " << stoq(value);
                 filter += op;
                 filter += value;
+            } else if(op == "IGNORE-CASE"){
+                filter += " ~* " ;
+                std::string str_value = value;
+                filter += "'"+str_value+"'";
             } else {
-                qDebug() << "OTHER >> " << stoq(value);
                 filter += op;
                 filter += value;
             }

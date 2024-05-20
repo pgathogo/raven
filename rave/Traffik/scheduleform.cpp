@@ -60,6 +60,8 @@ void ScheduleForm::clear_schedule()
 
 void ScheduleForm::load_schedule(const QDate &date)
 {
+    const std::string ignore_case = "IGNORE-CASE";
+
     clear_schedule();
 
     m_edm_schedule->clearEntities();
@@ -70,7 +72,15 @@ void ScheduleForm::load_schedule(const QDate &date)
                 "=",
                 date);
 
-    std::string filter = m_edm_schedule->prepareFilter(date_filter);
+    auto breaks_only_filter = std::make_tuple(
+        sched.schedule_item_type()->dbColumnName(),
+        ignore_case,
+        "COMM-BREAK"
+        );
+
+    std::string filter = m_edm_schedule->prepareFilter(date_filter, breaks_only_filter);
+
+    qDebug() << stoq(filter);
 
     m_edm_schedule->search(filter);
 
@@ -129,6 +139,16 @@ void ScheduleForm::hour_clicked(QListWidgetItem *item)
 
 void ScheduleForm::build_tree_view()
 {
+    auto method_type  = [](std::string f_m) -> std::string {
+        if (f_m == "") return f_m;
+
+        std::map<std::string, std::string> method_map;
+        method_map["R"] = "Random";
+        method_map["S"] = "Sequence";
+
+        return method_map[f_m];
+    };
+
     Breaks comm_breaks;
 
     for (auto& [name, entity] : m_edm_schedule->modelEntities()){
@@ -140,6 +160,7 @@ void ScheduleForm::build_tree_view()
         comm_break.schedule_hour = schedule->schedule_hour()->value();
         comm_break.schedule_time = schedule->schedule_time()->value().toString("hh:mm").toStdString();
         comm_break.break_mode = schedule->break_mode()->displayName();
+        comm_break.break_fill_method = method_type(schedule->break_fill_method()->value());
         comm_break.max_spots = schedule->break_max_spots()->value();
         comm_break.break_duration = schedule->break_duration()->value();
         comm_break.booked_spots = schedule->booked_spots()->value();
@@ -148,7 +169,7 @@ void ScheduleForm::build_tree_view()
         comm_breaks[comm_break.schedule_hour].push_back(comm_break);
     }
 
-    if (comm_breaks.size() > 0){
+    if (comm_breaks.size() > 0) {
         ScheduleManTreeViewModel* sched_model = new ScheduleManTreeViewModel(comm_breaks);
         ui->tvSchedule->setModel(sched_model);
 

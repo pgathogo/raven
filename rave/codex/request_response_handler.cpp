@@ -7,17 +7,17 @@
 
 // RequestResponseManager
 
-DiskListRequest::DiskListRequest()
+DiskListRequestHandler::DiskListRequestHandler()
 {
 
 }
 
-QString DiskListRequest::handler_type()
+QString DiskListRequestHandler::handler_type()
 {
     return "DISK-LIST";
 }
 
-Response DiskListRequest::handle_request(Request request)
+Response DiskListRequestHandler::handle_request(Request request)
 {
     QJsonObject all_volumes;
 
@@ -35,6 +35,7 @@ Response DiskListRequest::handle_request(Request request)
             all_volumes[drive_path] = volume_data;
         }
 
+        // shift right to the next letter
         drive_mask >>= 1;
     }
 
@@ -43,7 +44,7 @@ Response DiskListRequest::handle_request(Request request)
 
 }
 
-DiskInfo DiskListRequest::disk_info(const QString& drive)
+DiskInfo DiskListRequestHandler::disk_info(const QString& drive)
 {
     ULARGE_INTEGER total, free;
 
@@ -63,22 +64,6 @@ DiskInfo DiskListRequest::disk_info(const QString& drive)
 }
 
 
-    /*
-    QList<QStorageInfo> volumes = QStorageInfo().mountedVolumes();
-    for(auto volume : volumes) {
-        QJsonObject volume_data;
-        qint64 total = volume.bytesTotal();
-        float total_f = total / (1000 * 1000 * 1000);
-        QString total_s = " "+QString::number(total_f,'f', 3);
-
-        volume_data["total"] = total_s; ///volume.bytesTotal()/1000/1000;
-        volume_data["free"] = volume.bytesAvailable()/1000/1000;
-        all_volumes[volume.displayName()] = volume_data;
-    }
-
-    QJsonDocument json_doc(all_volumes);
-    return json_doc;
-   */
 
 
 

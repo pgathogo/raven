@@ -302,7 +302,7 @@ void SpotAudioBrowser::play_back()
     AudioFile af(audio_file);
 
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
-    m_audio_player->play_audio("C", QString::fromStdString(audio_file));
+    m_audio_player->play_audio(QString::fromStdString(audio_file));
 
 }
 
@@ -333,4 +333,10 @@ void SpotAudioBrowser::cue_edit()
     auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(af);
     if (wave_form->exec() == 1){
     }
+}
+
+void SpotAudioBrowser::closeEvent(QCloseEvent*)
+{
+    if (m_audio_player != nullptr)
+        m_audio_player->stop_play();
 }

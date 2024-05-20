@@ -63,6 +63,9 @@ public:
     AUDIO::Audio* audio_from_selection();
     std::string get_audio_file(AUDIO::Audio*);
 
+protected:
+    void closeEvent(QCloseEvent*) override;
+
 public slots:
      void stop_play();
 

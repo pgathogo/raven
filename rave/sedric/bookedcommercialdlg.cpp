@@ -31,7 +31,7 @@ void BookedCommercialDlg::close_dialog()
     done(1);
 }
 
-void BookedCommercialDlg::show_booked_commercial(int break_id)
+int BookedCommercialDlg::show_booked_commercial(int break_id)
 {
     m_comm_viewer->clear();
     m_comm_viewer->create_view_headers();
@@ -59,7 +59,7 @@ void BookedCommercialDlg::show_booked_commercial(int break_id)
       auto provider = edm.getDBManager()->provider();
 
       if (provider->cacheSize() == 0)
-          return;
+          return 0;
 
       QList<QStandardItem*> columns;
 
@@ -115,4 +115,6 @@ void BookedCommercialDlg::show_booked_commercial(int break_id)
 
       QFont font("Arial", 12, QFont::Bold);
       m_comm_viewer->set_title_font(font);
+
+      return provider->cacheSize();
 }

@@ -1,0 +1,115 @@
+[
+    {
+        "break_time": "14:15",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "14:15",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            },
+            {
+                "book_status": "READY",
+                "client_name": "CAPITAL ONE",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "14:15",
+                "spot_duration": 20,
+                "spot_id": 33,
+                "spot_name": "Run Beyond - SPOT (Mobile Services)"
+            }
+        ]
+    },
+    {
+        "break_time": "14:30",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Safaricom Test",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "14:30",
+                "spot_duration": 43,
+                "spot_id": 2,
+                "spot_name": "Fibre At Home (Mobile Services)"
+            }
+        ]
+    },
+    {
+        "break_time": "14:45",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "CAPITAL ONE",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "14:45",
+                "spot_duration": 20,
+                "spot_id": 33,
+                "spot_name": "Run Beyond - SPOT (Mobile Services)"
+            },
+            {
+                "book_status": "READY",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "14:45",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            }
+        ]
+    },
+    {
+        "break_time": "15:00",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Safaricom Test",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "15:00",
+                "spot_duration": 43,
+                "spot_id": 2,
+                "spot_name": "Fibre At Home (Mobile Services)"
+            }
+        ]
+    },
+    {
+        "break_time": "15:15",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "15:15",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            },
+            {
+                "book_status": "READY",
+                "client_name": "CAPITAL ONE",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "",
+                "schedule_time": "15:15",
+                "spot_duration": 20,
+                "spot_id": 33,
+                "spot_name": "Run Beyond - SPOT (Mobile Services)"
+            }
+        ]
+    }
+]

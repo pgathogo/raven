@@ -58,6 +58,7 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     , m_schedule_model{nullptr}
     , m_tree_model{nullptr}
     , m_save_as{nullptr}
+    , m_schedule_context_menu{nullptr}
 {
     ui->setupUi(this);
 
@@ -111,6 +112,7 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     connect(ui->btnRemove, &QPushButton::clicked, this, &MainWindow::remove_current_schedule_item);
     connect(ui->btnPrint, &QPushButton::clicked, this, &MainWindow::print_schedule);
     connect(ui->tvSchedule, &QTableView::clicked, this, &MainWindow::print_details);
+
     connect(ui->tvSchedule, &QTableView::doubleClicked, this, &MainWindow::insert_item);
     connect(ui->tvTracks, &QTableView::clicked, this, &MainWindow::track_selected);
 //    connect(ui->dtSchedule, &QDateEdit::dateChanged, this, &MainWindow::date_changed);
@@ -133,6 +135,7 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
 
+    // TODO: Open the dialog if
     //set_ui_style();
 
     m_datetime_selection.sel_date = QDate::currentDate();
@@ -145,7 +148,6 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
 
     //test_ranges();
     fetch_default_data();
-
 
     std::string uname = std::format("Username: {}      ",ci.username);
     std::string station = std::format("Station: {}      ", si.station_name.toStdString());
@@ -382,24 +384,23 @@ void MainWindow::set_ui_style()
 void MainWindow::contextMenuRequested(QPoint pos)
 {
     QModelIndex index = ui->tvSchedule->indexAt(pos);
-    m_schedule_context_menu = std::make_unique<QMenu>();
 
+    //auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
+    SelectedScheduleItem ssi = get_sched_item_hour_time(index);
 
-    auto selected_index = ui->tvSchedule->selectionModel()->currentIndex(); // selectedRows();
+    if (ssi.schedule_type != "COMM-BREAK")
+        return;
 
-    SelectedScheduleItem ssi = get_sched_item_hour_time(selected_index);
+    if (m_schedule_context_menu == nullptr) {
+        m_view_comm = std::make_unique<QAction>("View Commercial(s)...");
 
-
-    m_view_comm = std::make_unique<QAction>("View Commercial(s)...");
-
-    connect(m_view_comm.get(), &QAction::triggered, this, [schedule_id = ssi.schedule_id, this](){
+        // TODO: Disable the menu if there are no booked commercial in the selected break
+        connect(m_view_comm.get(), &QAction::triggered, this, [schedule_id = ssi.schedule_id, this](){
         view_commercial(schedule_id);});
+        m_schedule_context_menu = std::make_unique<QMenu>();
+        m_schedule_context_menu->addAction(m_view_comm.get());
+    }
 
-
-    if (ssi.schedule_id <= 0)
-        m_view_comm->setDisabled(true);
-
-    m_schedule_context_menu->addAction(m_view_comm.get());
     m_schedule_context_menu->popup(ui->tvSchedule->mapToGlobal(pos));
 
 }
@@ -410,7 +411,7 @@ void MainWindow::view_commercial(int schedule_id)
     if (m_booked_comm_dlg == nullptr)
         m_booked_comm_dlg = std::make_unique<BookedCommercialDlg>(this);
 
-    m_booked_comm_dlg->show_booked_commercial(schedule_id);
+    int booked_commercials = m_booked_comm_dlg->show_booked_commercial(schedule_id);
     m_booked_comm_dlg->exec();
 
 }
@@ -513,6 +514,8 @@ void MainWindow::track_selected(const QModelIndex& index)
 
 void MainWindow::insert_item(const QModelIndex& index)
 {
+    // TODO: We should insert if the doubleclick is emmitted by the
+    // left mouse only!
     auto audio = this->get_selected_audio();
     if (audio == nullptr)
         return;
@@ -530,11 +533,14 @@ void MainWindow::insert_item(const QModelIndex& index)
     schedule->set_schedule_date(m_datetime_selection.sel_date);
     schedule->set_schedule_time(ssi.time_stamp);
     schedule->set_schedule_hour(ssi.schedule_hour);
+    schedule->set_comment("AUTO-LOAD");
 
     schedule->set_auto_transition(SEDRIC::SedricScheduleItem::AudioTransition::Mix);
     schedule->set_schedule_item_type(audio->audio_type()->value());
 
     schedule->set_break_duration(audio->duration()->value());
+    schedule->set_schedule_item_type(audio->audio_type()->value());
+
     schedule->audio()->setValue(audio->id());
 
     if (audio->audio_type()->value() == "SONG")
@@ -964,7 +970,7 @@ void MainWindow::play_audio()
 
     AudioFile af(audio->full_audio_filename().toStdString());
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
-    m_audio_player->play_audio("C", audio->full_audio_filename());
+    m_audio_player->play_audio(audio->full_audio_filename());
 
 }
 

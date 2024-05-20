@@ -27,7 +27,7 @@ namespace AUDIO
         ~AudioPlayer();
 
         void play_audio();
-        void play_audio(QString, QString);
+        void play_audio(QString);
         void stop_play();
 
         void update_output_channel(QString, QString);
@@ -37,6 +37,7 @@ namespace AUDIO
     signals:
         void play_next();
         void end_of_play();
+        void audio_played(QString);
     private slots:
         void end_of_playback();
     private:
@@ -46,7 +47,7 @@ namespace AUDIO
         std::vector<PlayList> m_playlist;
         static OutputChannel current_output_channel;
         static int play_list_index;
-
+        QString m_played_audio;
     };
 }
 

@@ -93,17 +93,17 @@ void Logger::clean() {
 	}
 }
 
-void Logger::info(QString module, QString msg)
+void Logger::info(const QString module, QString msg)
 {
     qInfo().noquote() << module << ";" << msg;
 }
 
-void Logger::debug(QString module, QString msg)
+void Logger::debug(const QString module, QString msg)
 {
     qDebug().noquote() << module << ";" << msg;
 }
 
-void Logger::error(QString module, QString msg)
+void Logger::error(const QString module, QString msg)
 {
     qDebug().noquote() << module << ";" << msg;
 }

@@ -8,8 +8,8 @@
 ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent)
     :QStandardItemModel{ parent }
 {
-    setColumnCount(6);
-    QStringList col_titles {"Schedule Time", "Break Mode", "Max Spots", "Duration", "Booked Spots", "Time Left"};
+    setColumnCount(7);
+    QStringList col_titles {"Schedule Time", "Break Mode", "Max Spots", "Duration", "Booked Spots", "Time Left", "Fill Method"};
     setHorizontalHeaderLabels(col_titles);
 
     m_root_item = invisibleRootItem();
@@ -35,6 +35,7 @@ int ScheduleManTreeViewModel::read_tree_data(const Breaks& items)
             QStandardItem* duration = new QStandardItem(QString::number(comm_break.break_duration));
             QStandardItem* booked_spots = new QStandardItem(QString::number(comm_break.booked_spots));
             QStandardItem* time_left = new QStandardItem(QString::number(comm_break.time_left));
+            QStandardItem* fill_method = new QStandardItem(stoq(comm_break.break_fill_method));
 
             child_node->add_column(schedule_time);
             child_node->add_column(break_mode);
@@ -42,6 +43,7 @@ int ScheduleManTreeViewModel::read_tree_data(const Breaks& items)
             child_node->add_column(duration);
             child_node->add_column(booked_spots);
             child_node->add_column(time_left);
+            child_node->add_column(fill_method);
 
             m_nodes.push_back(child_node);
         }

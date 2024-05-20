@@ -34,8 +34,13 @@ int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
             QStandardItem* spot_name = new QStandardItem(stoq(booking.spot_name));
             QStandardItem* spot_duration = new QStandardItem(QString::number(booking.spot_duration));
             QStandardItem* booking_status = new QStandardItem(stoq(booking.booking_status));
-            QStandardItem* play_date = new QStandardItem(stoq(booking.play_date));
-            QStandardItem* play_time = new QStandardItem(stoq(booking.play_time));
+
+            qDebug() << booking.play_date;
+            qDebug() << "PLAY DATE: " << booking.play_date.toString("dd-MM-yyyy");
+
+            QStandardItem* play_date = new QStandardItem(booking.play_date.toString("dd-MM-yyyy"));
+
+            QStandardItem* play_time = new QStandardItem(booking.play_time.toString("HH:mm"));
 
             child_node->add_column(client_name);
             child_node->add_column(spot_id);

@@ -86,6 +86,11 @@ struct CurrentDateTime{
     int current_hour();
 };
 
+struct PlayedScheduleItem {
+    int schedule_id{-1};
+    bool db_persisted{false};
+};
+
 struct CommBreak{
     int booking_id{-1};
     int schedule_id{-1};
@@ -97,9 +102,12 @@ struct CommBreak{
     QString booking_status{""};
     QString filepath{""};
     QString file_extension{""};
+    QString base_filename{""};
     QTime book_time;
     bool break_played{false};
     bool db_persisted{false};
+    QDate play_date;
+    QTime play_time;
 };
 
 template<typename T>
@@ -289,12 +297,34 @@ private slots:
     void persist_cache();
     void end_of_play();
     void play_next();
+    void audio_played(QString);
     void jingle_end_of_play();
+
+    void play_cued_audio();
 
     void close_window();
 
 
 private:
+    void set_header_item(OATS::ScheduleItem*, int, QDate);
+    void fill_schedule_headers(QDate);
+    void setup_timers();
+    void to_lower(std::string&);
+
+    void mark_comm_as_played(int, const QString);
+    void db_update_comm_break_play_status();
+    void update_item_status();
+    void create_schedule_item(const std::unique_ptr<OATS::ScheduleItem>&);
+    void update_item(const std::unique_ptr<OATS::ScheduleItem>&);
+
+    void print_comm_breaks();
+
+    void test_concept();
+    void uncheck_others(QString);
+
+    void log_info(const QString);
+    void log_error(const QString);
+
     Ui::MainWindow *ui;
 
    // std::unique_ptr<TimeAnalyzerWidget> m_taw;
@@ -327,6 +357,7 @@ private:
     std::unique_ptr<QTimer> m_countdown_timer;
     std::unique_ptr<QTimer> m_main_player_timer;
     std::unique_ptr<QTimer> m_time_stats_timer;
+    std::unique_ptr<QTimer> m_update_db;
 
     std::unique_ptr<TreeViewModel> m_folder_model;
     std::vector<NodeData*> m_folders;
@@ -374,19 +405,6 @@ private:
 
     std::unique_ptr<QButtonGroup> m_control_buttons_group;
 
-    void set_header_item(OATS::ScheduleItem*, int, QDate);
-    void fill_schedule_headers(QDate);
-    void setup_timers();
-    void to_lower(std::string&);
-
-    void mark_comm_as_played(int);
-    void db_update_comm_break_play_status();
-
-    void print_comm_breaks();
-
-    void test_concept();
-
-    void uncheck_others(QString);
 };
 
 struct FindByRef{

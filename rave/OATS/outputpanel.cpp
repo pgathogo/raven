@@ -103,12 +103,10 @@ namespace OATS{
 
     OutputPanel::~OutputPanel()
     {
-
         delete m_layout_buttons;
         delete m_layout_title;
         delete m_layout_artist;
         delete m_layout_time;
-
     }
 
     QLabel* OutputPanel::title()

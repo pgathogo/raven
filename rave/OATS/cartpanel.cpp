@@ -946,7 +946,7 @@ namespace OATS
 
        set_timer_label(m_audio_tool.format_time(get_items_duration()));
 
-       m_audio_player->play_audio("A", m_cart_items[m_item_index++]->track_fullname());
+       m_audio_player->play_audio( m_cart_items[m_item_index++]->track_fullname());
 
        m_countdown_timer->start(COUNT_DOWN_INTERVAL);
 
@@ -966,7 +966,7 @@ namespace OATS
      void CartPlayerWidget::play_next()
      {
          m_audio_player->stop_play();
-         m_audio_player->play_audio("A", m_cart_items[m_item_index++]->track_fullname());
+         m_audio_player->play_audio(m_cart_items[m_item_index++]->track_fullname());
          qDebug() << "Play next item ...";
      }
 

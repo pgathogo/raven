@@ -12,14 +12,16 @@ namespace AUDIO
 
     AudioPlayer::AudioPlayer()
         :m_audio_thread{nullptr}
+        ,m_played_audio{""}
     {
         m_audio_thread = std::make_unique<AudioThread>(this);
         connect(m_audio_thread.get(), &AudioThread::end_of_playback, this, &AudioPlayer::end_of_playback);
     }
 
     AudioPlayer::AudioPlayer(AudioFile& audio_file)
-          :m_audio_thread{nullptr}
-           ,m_audio_file{audio_file}
+        :m_audio_thread{nullptr}
+        ,m_audio_file{audio_file}
+        ,m_played_audio{""}
     {
         m_audio_thread = std::make_unique<AudioThread>(this);
         connect(m_audio_thread.get(), &AudioThread::end_of_playback, this, &AudioPlayer::end_of_playback);
@@ -48,24 +50,19 @@ namespace AUDIO
 
         m_output_channel[op_ch] = play_item;
 
-        qDebug() << "Item added: Output=" << output << " Item="<< play_item;
     }
 
-    void AudioPlayer::play_audio(QString channel, QString audio_file)
+    void AudioPlayer::play_audio(QString audio_file)
     {
-//        OPChannel op_ch = str_to_channel(channel);
+        m_played_audio = audio_file;
         m_audio_thread->play(audio_file);
-        //m_audio_thread->play(m_output_channel[op_ch]);
     }
 
     void AudioPlayer::play_audio()
     {
-        qDebug() << "Playlist Index: " << AudioPlayer::play_list_index;
-        qDebug() << "Playlist Size: " << m_playlist.size();
-
-        if (m_playlist.size() > 0){
-            qDebug() << "AD::play: "<< m_playlist[0].audio_filename;
-            m_audio_thread->play(m_playlist[0].audio_filename);
+        if (m_playlist.size() > 0) {
+            //m_audio_thread->play(m_playlist[0].audio_filename);
+            play_audio(m_playlist[0].audio_filename);
             m_playlist.erase(m_playlist.begin());
             --AudioPlayer::play_list_index;
         }
@@ -91,7 +88,7 @@ namespace AUDIO
     {
         m_audio_thread->stop();
 
-        //emit end_of_play();
+        emit audio_played(m_played_audio);
 
         if (AudioPlayer::play_list_index > 0){
             play_audio();

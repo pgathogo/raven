@@ -3,6 +3,7 @@
 
 #include <QStandardItemModel>
 #include <QTableWidgetItem>
+#include <QDateTime>
 
 namespace TRAFFIK{
     class Node;
@@ -22,10 +23,10 @@ struct CommercialLog{
     std::string spot_name{};
     double spot_duration{0};
     std::string booking_status{};
-    std::string play_date{};
-    std::string play_time{};
-    std::string schedule_date{};
-    std::string schedule_time{};
+    QDate play_date{};
+    QTime play_time{};
+    QDate schedule_date{};
+    QTime schedule_time{};
 };
 
 using CommercialLogs = std::map<std::string, std::vector<CommercialLog>>;

@@ -27,9 +27,9 @@ public:
 	static void clean();
 
 
-    static void info(QString, QString);
-    static void debug(QString, QString);
-    static void error(QString, QString);
+    static void info(const QString, QString);
+    static void debug(const QString, QString);
+    static void error(const QString, QString);
 
 
 	/// @brief The function which handles the logging of text.

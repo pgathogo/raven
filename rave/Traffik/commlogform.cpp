@@ -1,4 +1,9 @@
 #include <sstream>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QFile>
+
 #include "commlogform.h"
 #include "ui_commlogform.h"
 #include "../utils/qchecklist.h"
@@ -22,6 +27,8 @@ CommLogForm::CommLogForm(QWidget *parent) :
 
     connect(ui->cbExpand, &QCheckBox::stateChanged, this, &CommLogForm::change_view_mode);
     connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
+
+    connect(ui->btnPrintSum, &QPushButton::clicked, this, &CommLogForm::print_log);
 
 //    setWindowState(this->windowState() | Qt::WindowFullScreen);
 
@@ -197,6 +204,8 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 
     auto provider =  edm.getDBManager()->provider();
 
+    m_comm_logs.clear();
+
     if (provider->cacheSize() > 0 ) {
         provider->cache()->first();
         do {
@@ -219,21 +228,27 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
                     comm_log.spot_duration = stod(value);
                 if (field == "booking_status")
                     comm_log.booking_status = value;
+
                 if (field == "play_date")
-                    comm_log.play_date = value;
+                    comm_log.play_date = QDate::fromString(stoq(value), "yyyy-MM-dd");
+
                 if (field == "play_time")
-                    comm_log.play_time = value;
+                    comm_log.play_time = QTime::fromString(stoq(value));
+
                 if (field == "booking_id")
                     comm_log.id = std::stoi(value);
+
                 if (field == "schedule_date")
-                    comm_log.schedule_date = value;
+                    comm_log.schedule_date = QDate::fromString(stoq(value), "yyyy-MM-dd");
+
                 if (field == "schedule_time")
-                    comm_log.schedule_time = value;
+                    comm_log.schedule_time = QTime::fromString(stoq(value));
             }
 
-            m_comm_logs[comm_log.schedule_time].push_back(comm_log);
-
+            std::string log_key = comm_log.schedule_time.toString("HH:mm").toStdString();
+            m_comm_logs[log_key].push_back(comm_log);
             provider->cache()->next();
+
         } while(!provider->cache()->isLast());
     }
 
@@ -246,4 +261,57 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
         ui->cbExpand->setChecked(true);
     }
 
+}
+
+void CommLogForm::print_log()
+{
+    QJsonArray breaks;
+
+    for (auto& [time, commlogs]: m_comm_logs) {
+        QJsonArray logs;
+
+        for (auto& commlog: commlogs) {
+            QJsonObject log;
+
+            log["client_name"] = QString::fromStdString(commlog.client_name);
+            log["spot_id"] = commlog.spot_id;
+            log["spot_name"] = QString::fromStdString(commlog.spot_name);
+            log["spot_duration"] = commlog.spot_duration;
+            log["book_status"] = QString::fromStdString(commlog.booking_status);
+            log["play_date"] =  commlog.play_date.toString("dd-MM-yyyy");
+            log["play_time"] = commlog.play_time.toString("HH:mm");
+            log["schedule_date"] = commlog.schedule_date.toString("dd-MM-yyyy");
+            log["schedule_time"] = commlog.schedule_time.toString("HH:mm");
+
+            logs.append(log);
+
+        }
+
+        QJsonObject comm_break;
+        comm_break["break_time"] = QString::fromStdString(time);
+        comm_break["comms"] = logs;
+
+
+       breaks.append(comm_break);
+    }
+
+
+    if (breaks.size() > 0) {
+        write_json_data(breaks);
+    }
+}
+
+void CommLogForm::write_json_data(QJsonArray& data)
+{
+    QFile file("report_data.json");
+    if (!file.open(QIODevice::ReadWrite)) {
+        qDebug() << "File open error";
+    }
+
+    QJsonDocument doc;
+    doc.setArray(data);
+
+    file.resize(0);
+    file.write(doc.toJson());
+    file.close();
 }

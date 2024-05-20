@@ -12,6 +12,7 @@ namespace OATS{
     enum class ScheduleType{SONG, COMM, JINGLE, DROP, COMM_AUDIO, HOUR_HEADER, NEWS_BITE};
     enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, ERROR_01};
     enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
+    enum class DBUpdateStatus{None, Ready, Done};
 
     class ScheduleItem : public Subject
     {
@@ -44,6 +45,8 @@ namespace OATS{
         int current_time();
         std::shared_ptr<AUDIO::Audio> audio();
 
+        DBUpdateStatus db_update_status();
+
         void set_id(int);
         void set_schedule_ref(int);
         void set_item_status(ItemStatus);
@@ -64,8 +67,11 @@ namespace OATS{
         void set_current_time(int);
         void set_audio(std::shared_ptr<AUDIO::Audio>);
 
+        void set_db_update_status(DBUpdateStatus);
+
         std::string item_status_text();
         std::string transition_type_text();
+        QString db_update_status_toString();
 
         ScheduleType str_to_schedule_type(std::string);
         OATS::ItemStatus str_to_status(std::string);
@@ -98,9 +104,11 @@ namespace OATS{
         QTime m_schedule_time;    // Time from the scheduler - Sedric
         QTime m_break_time;       // Break time from traffik
         QTime m_play_start_time;  // Actual time the item was played
-        int m_current_time;  // Computed time in millisecs
-        //Audio m_audio;
+        int m_current_time;       // Computed time in millisecs
         std::shared_ptr<AUDIO::Audio> m_audio;
+
+        // **
+        DBUpdateStatus m_db_update_status;
     };
 
 }

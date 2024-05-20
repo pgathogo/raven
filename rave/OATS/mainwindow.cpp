@@ -22,6 +22,8 @@
 #include <QMessageBox>
 #include <QVariant>
 #include <QButtonGroup>
+#include <QString>
+#include <QFileInfo>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -33,6 +35,7 @@
 #include "../framework/treeviewmodel.h"
 #include "../framework/schedule.h"
 #include "../framework/databasemanager.h"
+#include "../framework/Logger.h"
 
 #include "../audio/audiolibrary.h"
 #include "../audio/audiotrackviewer.h"
@@ -66,6 +69,8 @@
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
 
+const QString class_name = "MainWindow";
+
 using namespace std::chrono_literals;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -77,8 +82,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_current_cued_item.item = nullptr;
-    m_current_playing_item.item = nullptr;
+    // m_current_cued_item.item = nullptr;
+    // m_current_playing_item.item = nullptr;
+
+    m_current_cued_item = CurrentCuedItem();
+    m_current_playing_item = CurrentPlayItem();
+
 
     // First load any cached audio data
     m_audio_cache_manager = std::make_shared<AUDIO::AudioCacheManager<SQLiteDatabaseManager>>(CACHE_DB_SQLITE, AUDIO_CACHE_LOCATION);
@@ -103,24 +112,26 @@ MainWindow::MainWindow(QWidget *parent)
     auto five_seconds = 5000ms;
 
     // **** m_cache_updater_timer->start(five_seconds);
-
     // Load data from DB
-
     //load_schedule_bydate(QDate::currentDate());
 
-    qInfo() << "Loading schedule...";
+    log_info("Loading schedule...");
 
     load_schedule(QDate::currentDate(), 0);
 
-    qInfo() << "Set playout widgets.";
+    log_info("Set playout widgets.");
 
     set_playout_widgets();
 
-    qInfo() << "Going to compute schedule time.";
+    log_info("Going to compute schedule time.");
 
-    compute_schedule_time();
+    if (m_current_playing_item.item == nullptr){
+        log_info(" ** NULL WHY **");
+        compute_schedule_time();
+    }
 
-    qInfo() << "Setup timers...";
+    log_info("Setup timers...");
+
     setup_timers();
 
     ui->swMain->setCurrentIndex(0);
@@ -217,6 +228,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>();
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &MainWindow::play_next);
+    connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_played, this, &MainWindow::audio_played);
 
     m_jingle_player = std::make_unique<AUDIO::AudioPlayer>();
     connect(m_jingle_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::jingle_end_of_play);
@@ -224,14 +236,16 @@ MainWindow::MainWindow(QWidget *parent)
     m_current_jingle_item = std::make_unique<OATS::ScheduleItem>();
     //test_concept();
 
-    qInfo() << "style page controls..";
+    log_info("style page controls...");
+
     style_page_controls();
     style_footer_buttons();
 
-    qInfo() << "Calculate time statistics...";
+    log_info("Calculate time statistics...");
+
     calculate_time_stats();
 
-    qDebug() << "Time stats done.";
+    log_info("Time stats done.");
 
     m_updatedb_mutex = std::make_shared<QMutex>();
 
@@ -239,6 +253,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_updatedb_timer.get(), &QTimer::timeout, this, &MainWindow::db_update_comm_break_play_status);
     auto two_seconds = 2s;
     m_updatedb_timer->start(two_seconds);
+
+    m_update_db = std::make_unique<QTimer>(this);
+    connect(m_update_db.get(), &QTimer::timeout, this, &MainWindow::update_item_status);
+    auto six_seconds = 6s;
+    m_update_db->start(six_seconds);
+
+
 
     /*
     QLabel* home_image = new QLabel(this);
@@ -254,6 +275,8 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow::showFullScreen();
     */
     setStyleSheet("QMainWindow{background-color: #222222;}");
+
+    log_info("App load-up. Done.");
 
 }
 
@@ -504,10 +527,10 @@ void MainWindow::compute_schedule_time()
     if (m_current_playing_item.item->audio() == nullptr)
         return;
 
-    qInfo() << "Computing schedule time...";
+    log_info("Computing schedule time...");
 
-    qDebug() << "Title: " << m_current_playing_item.item->audio()->title()->to_qstring();
-    qDebug() << "Duration: " << m_current_playing_item.item->audio()->duration()->value();
+    //qDebug() << "Title: " << m_current_playing_item.item->audio()->title()->to_qstring();
+    //qDebug() << "Duration: " << m_current_playing_item.item->audio()->duration()->value();
 
     int time_counter = m_current_playing_item.item->audio()->duration()->value();
 
@@ -647,7 +670,7 @@ void MainWindow::load_schedule(QDate date, int hr)
     qInfo() << "Playlist done.";
 
     // TODO: Fix this method
-    // set_current_play_item();
+    set_current_play_item();
 
 
     //move_top_current_hour();
@@ -668,9 +691,10 @@ void MainWindow::fill_schedule_headers(QDate date)
 
 void MainWindow::fetch_data_from_db(QDate date, int hr)
 {
-    qInfo() << QString("Featching data from db - Date `%1`, Hour: %2")
+    QString fetch_data = QString("Featching data from db - Date `%1`, Hour: %2")
                    .arg(date.toString("dd/mm/yyyy"))
                    .arg(QString::number(hr));
+    log_info(fetch_data);
 
     build_hour_headers(QDate::currentDate(), hr);
 
@@ -689,7 +713,7 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
 
     std::string where_filter = std::format(" WHERE a.schedule_date = '{}'", date.toString("yyyy/MM/dd").toStdString());
     std::string time_filter = std::format(" AND a.schedule_hour >= {} ", std::to_string(hr));
-    std::string order_by = " ORDER BY a.schedule_date, a.schedule_hour, a.schedule_time, a.id ";
+    std::string order_by = " ORDER BY a.schedule_date, a.schedule_time, a.id ";
 
     sql << where_filter << time_filter << order_by;
 
@@ -698,7 +722,8 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
 
     auto provider = edm.getDBManager()->provider();
 
-    qInfo() << QString("Schedule records: %1").arg(QString::number(provider->cacheSize()));
+    QString sched_str = QString("Schedule records: %1").arg(QString::number(provider->cacheSize()));
+    log_info(sched_str);
 
     if (provider->cacheSize() == 0)
         return;
@@ -720,17 +745,12 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
         {
            // Initialize the current playing item with the first item
            // in the current hour.
-            qInfo() << "Current hour ..";
 
             m_current_playing_item.item = sched_item.get();
             m_current_playing_item.schedule_index = sched_item->index();
             m_current_playing_item.grid_index = 0;
             hour_top_item_picked = true;
-
-            qInfo() << "Current playing item...set.";
-
         }
-
 
         if (sched_item->schedule_type() == OATS::ScheduleType::COMM)
         {
@@ -831,16 +851,16 @@ void MainWindow::fetch_commercials_bydate(QDate date)
             std::string field_name = (*it_begin).first;
             std::string field_value = (*it_begin).second;
 
-            if (field_name == "id"){ cb.booking_id = str_to_int(field_value); }
-            if (field_name == "schedule_id"){ cb.schedule_id = str_to_int(field_value); }
-            if (field_name == "spot_id"){ cb.spot_id = str_to_int(field_value); }
+            if (field_name == "id") { cb.booking_id = str_to_int(field_value); }
+            if (field_name == "schedule_id") { cb.schedule_id = str_to_int(field_value); }
+            if (field_name == "spot_id") { cb.spot_id = str_to_int(field_value); }
             if (field_name == "booking_status") {cb.booking_status = QString::fromStdString(field_value); }
-            if (field_name == "book_hour"){cb.book_hour = str_to_int(field_value);}
+            if (field_name == "book_hour") {cb.book_hour = str_to_int(field_value);}
             if (field_name == "book_time") {cb.book_time = QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"); }
             if (field_name == "audio_id") {cb.audio_id = str_to_int(field_value); }
             if (field_name == "title") {cb.comm_title = QString::fromStdString(field_value);}
-            if (field_name == "duration"){ cb.duration = str_to_int(field_value); }
-            if (field_name == "file_extension"){ cb.file_extension = QString::fromStdString(field_value); }
+            if (field_name == "duration") { cb.duration = str_to_int(field_value); }
+            if (field_name == "file_extension") { cb.file_extension = QString::fromStdString(field_value); }
 
             if (field_name == "filepath")
             {
@@ -850,9 +870,13 @@ void MainWindow::fetch_commercials_bydate(QDate date)
                     cb.filepath = (!cached_audio_path.empty()) ? stoq(cached_audio_path) : stoq(field_value);
                 }
             }
-        }
 
-        if (m_comm_breaks.contains(cb.schedule_id)){
+        }
+        cb.db_persisted = false;
+        cb.break_played = false;
+        cb.base_filename = QString::fromStdString(m_audio_tool.make_audio_filename(cb.audio_id));
+
+        if (m_comm_breaks.contains(cb.schedule_id)) {
            m_comm_breaks[cb.schedule_id].push_back(cb) ;
         } else {
             std::vector<CommBreak> comm_breaks;
@@ -1009,6 +1033,8 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
         connect(grid_item.get(), &OATS::ScheduleGridItem::reload_schedule, this, &MainWindow::reload_schedule);
 
+        connect(grid_item.get(), &OATS::ScheduleGridItem::play_audio, this, &MainWindow::play_cued_audio);
+
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_stop, this, &MainWindow::transition_stop);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_mix, this, &MainWindow::transition_mix);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_cut, this, &MainWindow::transition_cut);
@@ -1096,14 +1122,21 @@ void MainWindow::stop_button(OATS::OutputPanel* op)
     if (op->panel_status() == OATS::PanelStatus::PLAYING){
         op->schedule_item()->set_transition_type(OATS::TransitionType::STOP);
         stop_audio(op);
+        m_audio_player->stop_play();
 
         for(auto const& op : m_output_panels){
             op->set_start_trigger_tick_stamp(-1);
             op->set_fade_trigger_tick_stamp(-1);
         }
+
         QString audio_name = op->schedule_item()->audio()->title()->to_qstring();
         QString filename = op->schedule_item()->audio()->full_audio_filename();
-        qInfo() << "Manual Stop: OP: "<< op->panel_name() << ": Audio: "<< audio_name << "-"<< filename;
+
+         QString msg = QString("Manual Stop: OP: %1  : Audio: %2 - %3 ")
+                                    .arg(op->panel_name())
+                                    .arg(audio_name)
+                                    .arg(filename);
+        log_info(msg);
 
         calculate_trigger_times();
     }
@@ -1361,6 +1394,7 @@ void MainWindow::set_current_play_item()
      m_current_playing_item.schedule_index = -1;
      m_current_playing_item.grid_index = -1;
 
+     /*
      for (auto& s_item: m_schedule_items)
      {
         //auto s_item = schedule_item(0);
@@ -1378,6 +1412,8 @@ void MainWindow::set_current_play_item()
 
         break;
     }
+    */
+
 }
 
 
@@ -2149,19 +2185,22 @@ void MainWindow::calculate_trigger_times()
 
 void MainWindow::calculate_time_stats()
 {
-    qDebug() << "Starting calculate time stats ...";
-
     int min = QTime::currentTime().minute();
     int sec = QTime::currentTime().second();
     int msec = QTime::currentTime().msec();
 
+    // long msec_in_an_hour = 3600000;
+    // long msec_in_a_minute = 60000;
+    // long msec_in_a_second = 1000
+
     long hour_remaining = 3600000 - ((min * 60000) + (sec * 1000) + msec);
 
-    long time_counter;
+    long time_counter = 0.0;
 
     if (m_current_playing_item.item == nullptr)
         return;
 
+    // FIXME: Check why application crashes in the following line
     if (m_current_playing_item.item->play_channel() == ChannelA)
     {
         if (m_outputA->panel_status() == OATS::PanelStatus::PLAYING)
@@ -2188,7 +2227,12 @@ void MainWindow::calculate_time_stats()
 
     if (m_current_playing_item.item->schedule_type() != OATS::ScheduleType::HOUR_HEADER) {
         if (m_current_playing_item.item->transition_type() == OATS::TransitionType::MIX){
-            time_counter -= m_current_playing_item.item->audio()->fade_delay_marker()->value();
+
+            //TODO: Initialize audio in m_current_playing_item.item
+            if ( m_current_playing_item.item->audio() != nullptr) {
+                time_counter -= m_current_playing_item.item->audio()->fade_delay_marker()->value();
+            }
+
         }
     }
 
@@ -2204,6 +2248,7 @@ void MainWindow::calculate_time_stats()
         }
 
     }
+
 
     long music_remaining = time_counter;
     long talk_remaining = hour_remaining - music_remaining;
@@ -2237,12 +2282,10 @@ void MainWindow::calculate_time_stats()
     auto time_stats = std::make_tuple(music_remain_txt, hour_remain_txt, talk_remain_txt);
     m_tta_widget->update_stats(time_stats);
 
-
 }
 
 void MainWindow::play_audio(OATS::OutputPanel* op)
 {
-
     if (op->panel_status() == OATS::PanelStatus::CUED)
     {
         std::string temp_play_channel;
@@ -2266,12 +2309,13 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
             for(auto& item : break_items)
             {
-                auto audio_file = item.filepath+
-                                  QString::fromStdString(m_audio_tool.make_audio_filename(item.audio_id))+
-                                  "."+
-                                  item.file_extension;
+                QString base_filename = QString::fromStdString(m_audio_tool.make_audio_filename(item.audio_id));
+                auto audio_file = item.filepath+ base_filename+ "."+ item.file_extension;
 
-                qInfo() << "Play Comm: OP: "<< op->panel_name() << " :Audio: "<< audio_file;
+                item.base_filename = base_filename;
+
+                QString msg = QString("Play Comm: OP: %1  :Audio: %2").arg(op->panel_name()).arg(audio_file);
+                log_info(msg);
 
                 m_audio_player->append_playlist(op->panel_name(), audio_file);
             }
@@ -2285,7 +2329,10 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
             std::string audio_filename = audio->full_audio_filename().toStdString();
             QString audio_file = QString::fromStdString(audio_filename);
 
-            m_audio_player->play_audio(op->panel_name(), audio_file);
+            QString msg = QString("Play: %1").arg(audio_file);
+            log_info(msg);
+
+            m_audio_player->play_audio(audio_file);
         }
 
         int grid_index = index_of(op->schedule_item()->schedule_ref());
@@ -2330,16 +2377,25 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
         op->set_start_trigger_tick_stamp(-1);
         op->set_fade_trigger_tick_stamp(-1);
 
+        op->schedule_item()->set_play_date(QDate::currentDate());
+        op->schedule_item()->set_play_time(QTime::currentTime());
+
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYED);
         op->schedule_item()->notify();
 
+        QString sched_id = QString("Schedule ID: %1").arg(QString::number(op->schedule_item()->id()));
+        log_info(sched_id);
+
         set_cache_last_play_dtime(op->schedule_item());
 
-        if (op->schedule_item()->schedule_type() == OATS::ScheduleType::COMM)
-            mark_comm_as_played(op->schedule_item()->id());
+        if (op->schedule_item()->schedule_type() == OATS::ScheduleType::COMM) {
+           // mark_comm_as_played(op->schedule_item()->id());
+        } else {
+            op->schedule_item()->set_db_update_status(OATS::DBUpdateStatus::Ready);
+        }
     }
 
-    m_audio_player->stop_play();
+    //m_audio_player->stop_play();
 
     //display_schedule(ui->gridScroll->value()+1);
     display_schedule();
@@ -2350,64 +2406,160 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
     op->update_progress_bar(100);
 }
 
-void MainWindow::mark_comm_as_played(int schedule_id)
+void MainWindow::mark_comm_as_played(int schedule_id, const QString base_filename )
 {
     m_updatedb_mutex->try_lock();
 
-    for (auto& comm_break : m_comm_breaks[schedule_id]){
-        comm_break.break_played = true;
+    log_info("* mark comm break item *");
+
+    for (auto& comm_break : m_comm_breaks[schedule_id]) {
+
+        log_info("Comm: "+comm_break.base_filename);
+
+        if (comm_break.base_filename == base_filename) {
+            log_info("Mark: "+base_filename);
+            comm_break.break_played = true;
+            comm_break.db_persisted = false;
+            comm_break.play_date = QDate::currentDate();
+            comm_break.play_time = QTime::currentTime();
+            break;
+        }
     }
 
     m_updatedb_mutex->unlock();
 
 }
 
+void MainWindow::update_item_status()
+{
+    for (const auto& item : m_schedule_items ) {
+        // Check for new items
+
+        if (item->id() == -1 &&
+            item->item_status() == OATS::ItemStatus::PLAYED &&
+            item->db_update_status() == OATS::DBUpdateStatus::Ready)
+        {
+            item->set_db_update_status(OATS::DBUpdateStatus::Done);
+            create_schedule_item(item);
+            continue;
+        }
+
+        if (item->db_update_status() == OATS::DBUpdateStatus::Ready) {
+            update_item(item);
+        }
+    }
+}
+
+
+void MainWindow::create_schedule_item(const std::unique_ptr<OATS::ScheduleItem>& si)
+{
+    QString item_str = QString("Creating item...: %1").arg(si->audio()->title()->to_qstring());
+    log_info(item_str);
+
+    auto schedule = std::make_unique<Schedule>();
+
+    schedule->set_audio(si->audio()->id());
+    schedule->set_schedule_hour(si->hour());
+    schedule->set_schedule_date(si->schedule_date());
+    schedule->set_schedule_time(si->schedule_time());
+    schedule->set_schedule_item_type(si->schedule_type_to_str().toStdString());
+    schedule->set_auto_transition(static_cast<int>(si->transition_type()));
+    schedule->set_play_date(si->play_date());
+    schedule->set_play_time(si->play_time());
+    schedule->set_play_status(si->item_status_text());
+    schedule->set_comment(si->comment());
+
+    auto sched_model = std::make_unique<EntityDataModel>(
+        std::make_shared<Schedule>()
+        );
+    sched_model->createEntity(std::move(schedule));
+
+}
+
+void MainWindow::update_item(const std::unique_ptr<OATS::ScheduleItem>& si)
+{
+    Schedule schedule;
+
+    schedule.setId(si->id());
+    schedule.set_audio(si->audio()->id());
+    schedule.set_schedule_date(si->schedule_date());
+    schedule.set_schedule_hour(si->hour());
+    schedule.set_schedule_time(si->schedule_time());
+    schedule.set_auto_transition(static_cast<int>(si->transition_type()));
+    schedule.set_play_date(si->play_date());
+    schedule.set_play_time(si->play_time());
+    schedule.set_play_status(si->item_status_text());
+    schedule.set_schedule_item_type(si->schedule_type_to_str().toStdString());
+    schedule.set_comment(si->comment());
+
+    auto sched_model = std::make_unique<EntityDataModel>(
+        std::make_shared<Schedule>()
+        );
+
+    sched_model->updateEntity(schedule);
+}
+
+
 void MainWindow::db_update_comm_break_play_status()
 {
-    //print_comm_breaks();
-
     m_updatedb_mutex->try_lock();
 
+    m_updatedb_timer->stop();
+
     std::vector<int> break_ids;
-    for(auto& [break_id, commercials]: m_comm_breaks){
-        for(auto& comm: commercials){
-            if (comm.break_played && !comm.db_persisted){
+
+    std::string update_statement{""};
+
+    for(auto& [break_id, commercials]: m_comm_breaks) {
+
+        for(auto& comm: commercials) {
+
+            if (comm.break_played && !comm.db_persisted) {
+
+                std::string booking_status =" booking_status = 'PLAYED', ";
+                std::string play_date = std::format(" play_date = '{}', ",
+                                        comm.play_date.toString("yyyy-MM-dd").toStdString());
+                std::string play_time = std::format(" play_time = '{}' ",
+                                        comm.play_time.toString("HH:mm").toStdString());
+                std::string where_filter = std::format(" Where id = {}", comm.booking_id);
+                std::ostringstream sql;
+
+                sql << " Update rave_orderbooking set "
+                    << booking_status
+                    << play_date
+                    << play_time
+                    << where_filter
+                    << ";";
+
+                update_statement += sql.str();
+
+                comm.db_persisted = true;
                 break_ids.push_back(comm.booking_id);
+
             }
         }
     }
 
-    if (break_ids.size() == 0)
-        return;
+    if (break_ids.size() > 0) {
 
-    std::string ids = join(break_ids, ",");
-    std::string where_filter = std::format(" Where id in ({})", ids);
-    std::string booking_status =" booking_status = 'PLAYED', ";
-    std::string play_date = std::format(" play_date = '{}', ",
-                                        QDate::currentDate().toString("yyyy-MM-dd").toStdString());
-    std::string play_time = std::format(" play_time = '{}' ",
-                                        QTime::currentTime().toString("HH:mm").toStdString());
+        EntityDataModel edm;
+        qDebug() << stoq(update_statement);
+        edm.executeRawSQL(update_statement);
 
-    std::ostringstream sql;
-
-    sql << " Update rave_orderbooking set "
-        << booking_status
-        << play_date
-        << play_time
-        << where_filter;
-
-    EntityDataModel edm;
-    edm.executeRawSQL(sql.str());
-
-    for (auto& b_id: break_ids){
-        for(auto& comm : m_comm_breaks[b_id]){
-            comm.db_persisted = true;
+        /*
+        for (auto& b_id: break_ids){
+            for(auto& comm : m_comm_breaks[b_id]){
+                comm.db_persisted = true;
+              }
         }
+        */
+
     }
 
-    m_updatedb_mutex->unlock();
+    auto two_seconds = 2s;
+    m_updatedb_timer->start(two_seconds);
 
-    //print_comm_breaks();
+    m_updatedb_mutex->unlock();
 
 }
 
@@ -2445,7 +2597,6 @@ void MainWindow::play_outputC(OATS::OutputPanel* op)
     op->set_start_tick_stamp(m_audio_tool.get_tick_count());
 
 //    op->schedule_item()->notify();
-
 
     std::string filepath = op->schedule_item()->audio()->audio_lib_path()->value();
     auto filename = m_audio_tool.make_audio_filename(op->schedule_item()->audio()->id());
@@ -2649,6 +2800,16 @@ void MainWindow::reload_schedule(int schedule_ref, int grid_pos)
 
 }
 
+void MainWindow::play_cued_audio()
+{
+    for(auto const& op : m_output_panels) {
+        if (op->panel_status() == OATS::PanelStatus::CUED) {
+            play_audio(op.get());
+            break;
+        }
+   }
+}
+
 
 void MainWindow::load_item(int schedule_ref, int grid_pos)
 {
@@ -2663,12 +2824,11 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     auto new_item = std::make_unique<OATS::ScheduleItem>();
 
     new_item->set_audio(audio);
-
+    new_item->set_id(-1);
     new_item->set_hour(item_at_cursor->hour());
     new_item->set_schedule_date(item_at_cursor->schedule_date());
     new_item->set_schedule_type(audio->audio_type()->value());
     new_item->set_transition_type(OATS::TransitionType::MIX);
-    new_item->set_id(-1);
     new_item->set_schedule_ref(s_sched_ref++);
     new_item->set_comment("MANUAL-LOAD");
 
@@ -2680,6 +2840,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     }
 
     new_item->set_schedule_time(new_time);
+    new_item->set_hour(new_time.hour());
 
     // check if audio exist
     QString filename = audio->full_audio_filename();
@@ -2913,12 +3074,6 @@ void MainWindow::transition_stop(int item_ref, int grid_index)
     auto si = schedule_item(index);
     si->set_transition_type(OATS::TransitionType::STOP);
 
-    qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-    qDebug() << "SI REF: "<< si->schedule_ref();
-    qDebug() <<  "PLAY ITEM: "<< m_current_playing_item.item->schedule_ref();
-    qDebug() <<  "PLAY CH: "<< stoq(m_current_playing_item.item->play_channel());
-    qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
-
     if (si->schedule_ref() == m_current_playing_item.item->schedule_ref())
         m_current_playing_item.item->set_transition_type(OATS::TransitionType::STOP);
 
@@ -2948,8 +3103,8 @@ void MainWindow::transition_cut(int item_ref, int grid_index)
 
 void MainWindow::print_schedule_items()
 {
-    for (const auto& item : m_schedule_items){
-        qDebug() << stoq(item->audio()->title()->value());
+    for (const auto& item : m_schedule_items) {
+        qDebug() << *item.get();
     }
 }
 
@@ -3048,6 +3203,22 @@ void MainWindow::play_next()
     qDebug() << "Playing next audio...";
 }
 
+void MainWindow::audio_played(QString played_audio)
+{
+    log_info("SLOT: Audio-Played");
+    log_info(m_current_playing_item.item->schedule_type_to_str());
+
+    if (m_current_playing_item.item->schedule_type() == OATS::ScheduleType::COMM) {
+
+        QFileInfo fi(played_audio);
+        mark_comm_as_played(m_current_playing_item.item->id(), fi.baseName() );
+
+        log_info("Played Audio: "+played_audio);
+
+    }
+
+}
+
 void MainWindow::jingle_end_of_play()
 {
     m_jingle_player->stop_play();
@@ -3088,6 +3259,18 @@ void MainWindow::print_output_status()
     for (auto const& panel: m_output_panels){
         qDebug() << "PANEL STATUS: "<< panel->panel_name() << ": "<< panel->panel_status_text();
     }
+
+}
+
+void MainWindow::log_info(const QString info)
+{
+    Logger::info(class_name, info);
+
+}
+
+void MainWindow::log_error(const QString error)
+{
+    Logger::error(class_name, error);
 
 }
 

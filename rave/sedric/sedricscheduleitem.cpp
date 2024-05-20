@@ -105,6 +105,8 @@ namespace SEDRIC{
     }
     QString SedricScheduleItem::play_time()
     {
+        qDebug() << "Play Time: "<< schedule()->play_time()->value().toString("hhh:mm:ss");
+
         return schedule()->play_time()->value().toString("hh:mm:ss");
     }
     QString SedricScheduleItem::track_path()
@@ -140,13 +142,15 @@ namespace SEDRIC{
 
     void SedricScheduleItem::update_time(int hour, int from_row, int duration)
     {
-        for (int i=from_row; i < m_model->rowCount(); ++i){
+        for (int i=from_row; i < m_model->rowCount(); ++i) {
             auto index = m_model->index(i, 0);  // first column
             auto data = index.data(Qt::UserRole).toMap();
 
             int row_id = data["row_id"].toInt();
             int schedule_hour = data["hour"].toInt();
             QTime time_stamp = data["time"].toTime();
+            QString schedule_type = data["schedule_type"].toString();
+            int schedule_id = data["schedule_id"].toInt();
 
             if (schedule_hour > hour)
                 break;
@@ -157,6 +161,8 @@ namespace SEDRIC{
             item_data["row_id"] = row_id;
             item_data["hour"] = schedule_hour;
             item_data["time"] = new_time;
+            item_data["schedule_id"] = schedule_id;
+            item_data["schedule_type"] = schedule_type;
 
             m_model->setData(index, item_data, Qt::UserRole);
             m_model->setData(index, new_time.toString("hh:mm:ss"), Qt::DisplayRole);
@@ -292,6 +298,8 @@ namespace SEDRIC{
 
         sql << where_filter << and_filter << order_by;
 
+        qDebug() << stoq(sql.str());
+
         EntityDataModel edm;
         edm.readRaw(sql.str());
 
@@ -372,8 +380,10 @@ namespace SEDRIC{
             if (field_name == "play_date")
                 schedule->set_play_date(QDate::fromString(QString::fromStdString(field_value), "yyyy/MM/dd"));
 
-            if (field_name == "play_time")
+            if (field_name == "play_time") {
+                qDebug() << stoq(field_value);
                 schedule->set_play_time(QTime::fromString(QString::fromStdString(field_value), "hh:mm:ss"));
+            }
 
             if (field_name == "comment")
                 schedule->set_comment(field_value);
@@ -538,7 +548,8 @@ namespace SEDRIC{
                        << schedule->schedule_hour()
                        << schedule->auto_transition()
                        << schedule->audio()
-                       << schedule->schedule_item_type();
+                       << schedule->schedule_item_type()
+                       << schedule->comment();
 
                 insert_stmts += schedule->make_insert_stmt(fields.vec);
                 fields.clear();

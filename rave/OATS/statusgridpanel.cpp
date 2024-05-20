@@ -1,14 +1,18 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QFont>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 #include "statusgridpanel.h"
+#include "schedulegriditem.h"
 #include "scheduleitem.h"
 
 namespace OATS{
 
     StatusGridPanel::StatusGridPanel(QWidget* parent)
         :GridPanel(parent)
+         ,m_schedule_item{nullptr}
     {
         setStyleSheet("QFrame{background-color: #313131;}");
         setFixedWidth(70);
@@ -45,6 +49,8 @@ namespace OATS{
 
     void StatusGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
+        m_schedule_item = schedule_item;
+
         if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
             //setStyleSheet("background-color: #222222;");
             setStyleSheet("background-color: rgb(40, 133, 220)");
@@ -81,5 +87,24 @@ namespace OATS{
         }
     }
 
+    void StatusGridPanel::contextMenuEvent(QContextMenuEvent* event)
+    {
+        QMenu menu;
+
+        m_act_play = new QAction("Play");
+        connect(m_act_play, &QAction::triggered, this, &StatusGridPanel::play_audio);
+
+        if (m_schedule_item->item_status() != OATS::ItemStatus::CUED)
+            m_act_play->setEnabled(false);
+
+        menu.addAction(m_act_play);
+        menu.exec(event->globalPos());
+    }
+
+    void StatusGridPanel::play_audio()
+    {
+        emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->play_audio(parent_ref(), index());
+
+    }
 
 }

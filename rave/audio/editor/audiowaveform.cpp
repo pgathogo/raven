@@ -511,4 +511,13 @@ namespace AUDIO {
 
     }
 
+    void AudioWaveForm::closeEvent(QCloseEvent*)
+    {
+        if (m_audio_thread != nullptr){
+            m_audio_thread->stop();
+            m_player_timer->stop();
+        }
+
+    }
+
 }

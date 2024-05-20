@@ -18,11 +18,11 @@ struct DiskInfo {
     double free{0.0};
 };
 
-class DiskListRequest : public BaseRequestResponseHandler
+class DiskListRequestHandler : public BaseRequestResponseHandler
 {
 public:
 
-    DiskListRequest();
+    DiskListRequestHandler();
     QString handler_type() override;
     Response handle_request(Request) override;
 

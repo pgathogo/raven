@@ -1310,7 +1310,7 @@ bool MainWindow::play_audio()
     AudioFile af(audio->full_audio_filename().toStdString());
     m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
-    m_audio_player->play_audio("C", audio->full_audio_filename());
+    m_audio_player->play_audio(audio->full_audio_filename());
 
     return true;
 

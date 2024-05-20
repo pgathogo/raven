@@ -12,7 +12,7 @@
 #include "../framework/logger.h"
 
 
-#define LOG_TO_FILE
+//#define LOG_TO_FILE
 
 QString module = "Main";
 

@@ -18,7 +18,7 @@ class BookedCommercialDlg : public QDialog
 public:
     explicit BookedCommercialDlg(QWidget* parent = nullptr);
     ~BookedCommercialDlg();
-    void show_booked_commercial(int);
+    int show_booked_commercial(int);
 
 public slots:
     void close_dialog();

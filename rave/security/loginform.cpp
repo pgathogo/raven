@@ -146,7 +146,7 @@ void LoginForm::open_station_selector()
      );
 
     if (!authenticated){
-        Logger::info("LoginForm", "Authentication failed");
+        Logger::error("LoginForm", "Authentication failed");
         return;
     }
 
