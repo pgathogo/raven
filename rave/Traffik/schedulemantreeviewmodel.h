@@ -5,12 +5,12 @@
 #include <QTableWidgetItem>
 
 namespace TRAFFIK{
-    class Node;
+    class TraffikNode;
 }
 
 using NodeId = int;
 
-using TreeNode = std::map<NodeId, TRAFFIK::Node*>;
+using TreeNode = std::map<NodeId, TRAFFIK::TraffikNode*>;
 using TreeData = std::tuple<std::string, std::string, std::string>;
 
 using SelectedItems = QList<QTableWidgetItem*>;
@@ -38,15 +38,15 @@ public:
 
     ScheduleManTreeViewModel(Breaks items, QObject* parent = nullptr);
     int read_tree_data(const Breaks& items);
-    void insert_node(TreeNode tree_node, TRAFFIK::Node* node);
+    void insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node);
     void print_tree(TreeNode tree_node, int level=0);
     TreeData tokenize(std::string line);
-    void build_tree(std::vector<TRAFFIK::Node *> &nodes);
+    void build_tree(std::vector<TRAFFIK::TraffikNode *> &nodes);
 
     Q_INVOKABLE void treeClicked(QModelIndex);
 
 private:
-    std::vector<TRAFFIK::Node*> m_nodes;
+    std::vector<TRAFFIK::TraffikNode*> m_nodes;
     QStandardItem* m_root_item;
     TreeNode m_tree;
 

@@ -13,8 +13,10 @@
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
 #include "../audio/audio.h"
+
 //#include "../audiolib/headers/cueeditor.h"
 //#include "../audiolib/headers/audioplayer.h"
+
 
 #include "../audio/editor/audiowaveform.h"
 #include "../audio/editor/audioplayer.h"
@@ -24,6 +26,7 @@
 #include "../audio/oggtooggconverter.h"
 #include "../audio/mtstomp3converter.h"
 #include "../audio/audiofileinfo.h"
+
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
@@ -43,8 +46,12 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     hideDeleteButton();
 
     create_button("btnImport", "Import", &SpotAudioBrowser::import_audio);
+    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio);
+    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties);
+    create_separator();
     create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
+    create_separator();
     create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit);
 
     show_delete_button(bui->hlExtra);
@@ -68,11 +75,18 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
         }
     }
 
+    this->setMinimumWidth(800);
+
 }
 
 SpotAudioBrowser::~SpotAudioBrowser()
 {
     delete ui;
+}
+
+void SpotAudioBrowser::resize_window()
+{
+    resize(900, 600);
 }
 
 void SpotAudioBrowser::addRecord()
@@ -88,11 +102,9 @@ void SpotAudioBrowser::updateRecord()
 void SpotAudioBrowser::deleteRecord()
 {
     std::shared_ptr<BaseEntity> entity = findSelectedEntity();
-
     // Check if it is okay  to delete the selected entity
 
     BaseEntityBrowserDlg::deleteRecord();
-
 }
 
 bool SpotAudioBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
@@ -107,7 +119,14 @@ void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption
     btn->setObjectName(btn_name);
     connect(btn, &QPushButton::clicked, this, slot);
     bui->hlExtra->addWidget(btn);
+}
 
+void SpotAudioBrowser::create_separator()
+{
+    QFrame* vline = new QFrame(this);
+    vline->setFrameShape(QFrame::VLine);
+    vline->setFrameShadow(QFrame::Sunken);
+    bui->hlExtra->addWidget(vline);
 }
 
 AUDIO::Audio* SpotAudioBrowser::audio_from_selection()
@@ -180,17 +199,11 @@ void SpotAudioBrowser::import_audio()
     AUDIO::AudioFileInfo afi(audio_filename);
     QString file_format = afi.file_format();
 
-    qDebug() << "1.Audio Filename....: "<< audio_filename;
-
-    qDebug() << "2.File Format....: "<< file_format;
-
     auto audio = std::make_unique<AUDIO::Audio>(audio_filename.toStdString());
     auto audio_shared = std::make_shared<AUDIO::Audio>(audio_filename.toStdString());
 
-    qDebug() << "3.Audio Library Folder....: "<< m_setup->audio_folder()->to_qstring();
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
-    qDebug() << "4.Audio ADF File....: "<< QString::fromStdString(audio->audio_file().adf_file());
     if (fs::exists(audio->audio_file().adf_file()) )
     {
         AUDIO::ADFRepository adf_repo;
@@ -205,7 +218,6 @@ void SpotAudioBrowser::import_audio()
 
     if (spot_audio_form->exec() > 0){
 
-        qDebug() << "5.Audio Wave File....: "<< QString::fromStdString(spot_audio->audio()->audio_file().wave_file());
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) )
         {
             try{
@@ -282,6 +294,17 @@ void SpotAudioBrowser::import_audio()
         }
 
     }
+}
+
+void SpotAudioBrowser::attach_audio()
+{
+    //m_track_picker_dlg = std::make_unique<AUDIO::TrackPickerDialog>();
+    // m_track_picker_dlg->exec();
+}
+
+void SpotAudioBrowser::audio_properties()
+{
+
 }
 
 void SpotAudioBrowser::play_back()

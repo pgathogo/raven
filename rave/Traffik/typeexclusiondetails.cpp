@@ -6,6 +6,8 @@
 #include "../utils/daypartgrid.h"
 #include "../utils/tools.h"
 
+//#include "../audio/trackpickerdialog.h"
+
 TypeExclusionDetails::TypeExclusionDetails(
         TRAFFIK::TypeExclusion* tex, QDialog *parent) :
     BaseEntityDetailDlg(parent),
@@ -20,6 +22,8 @@ TypeExclusionDetails::TypeExclusionDetails(
 
     populateFormWidgets();
     populateGrid();
+
+    //auto track_dialog = new AUDIO::TrackPickerDialog();
 }
 
 TypeExclusionDetails::~TypeExclusionDetails()

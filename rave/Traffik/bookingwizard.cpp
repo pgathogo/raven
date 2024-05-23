@@ -15,11 +15,13 @@
 #include "spotvoiceover.h"
 #include "spotform.h"
 #include "spottypeexclusion.h"
-#include "treeviewmodel.h"
+
+#include "traffiktreeviewmodel.h"
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravenexception.h"
 #include "../framework/schedule.h"
+
 #include "../utils/qchecklist.h"
 #include "../utils/daypartgrid.h"
 #include "../utils/togglebutton.h"
@@ -433,7 +435,7 @@ void BookingWizard::show_order_details(Order* order)
                                      order->spotsOrdered()->value() - order->spotsBooked()->value()));
 }
 
-std::size_t BookingWizard::fetch_breaks(QDate start_date, QDate end_date, std::set<int> uniq_hours)
+std::size_t BookingWizard::fetch_breaks_from_db(QDate start_date, QDate end_date, std::set<int> uniq_hours)
 {
 //    m_schedule_EDM = std::make_unique<EntityDataModel>(
 //                std::make_unique<Schedule>());
@@ -516,6 +518,7 @@ void BookingWizard::build_breaks()
         m_engine_data.spot_to_book.spot_duration = spot->spot_duration()->value();
         m_engine_data.spot_to_book.real_duration = spot->real_duration()->value();
         m_engine_data.spot_to_book.spot_daypart = fetch_spot_daypart(*spot);
+        m_engine_data.spot_to_book.audio_id = get_spot_audio(spot->id());
 
         fetch_type_exclusions(m_engine_data);
 
@@ -523,7 +526,7 @@ void BookingWizard::build_breaks()
 
         auto unique_hours = selected_unique_hours();
 
-        m_engine_data.break_count = fetch_breaks(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+        m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
 
         if (m_engine_data.break_count == 0)
         {
@@ -566,7 +569,7 @@ void BookingWizard::apply_selection()
 
     auto sel_days = ui->twDOW->selectedItems();
 
-    for (int j=0; j < sel_days.count(); ++j){
+    for (int j=0; j < sel_days.count(); ++j) {
 
         auto day_of_week = sel_days.at(j);
 
@@ -574,7 +577,7 @@ void BookingWizard::apply_selection()
 
         auto sel_items = ui->lwSelBreaks->selectedItems();
 
-        for (int i=0; i < sel_items.size(); ++i){
+        for (int i=0; i < sel_items.size(); ++i) {
             auto time_str = sel_items[i]->text();
             if (combo->findText(time_str) == -1){
                 combo->addItem(time_str);
@@ -690,7 +693,7 @@ void BookingWizard::test_booking()
 
     auto uniq_hours = selected_unique_hours();
 
-    m_engine_data.break_count = fetch_breaks(QDate(2020,9,9), QDate(2020,9,30), uniq_hours);
+    m_engine_data.break_count = fetch_breaks_from_db(QDate(2020,9,9), QDate(2020,9,30), uniq_hours);
 
     if (m_engine_data.break_count == 0){
         showMessage("No Breaks for the selected data range!");
@@ -812,13 +815,15 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
         << " e.daypart4 AS typeDP4, e.daypart5 AS typeDP5, e.daypart6 AS typeDP6,e.daypart7 AS typeDP7, "
         << " f.daypart1 AS voDP1, f.daypart2 AS voDP2, f.daypart3 AS voDP3, "
         << " f.daypart4 AS voDP4, f.daypart5 AS voDP5, f.daypart6 AS voDP6, f.daypart7 AS voDP7, "
-        << " c.detail_id AS spot_excl, d.detail_id AS spot_vo "
+        << " c.detail_id AS spot_excl, d.detail_id AS spot_vo, "
+        << " g.audio_id AS audio_id "
         << " FROM rave_orderbooking a "
         << " left join rave_spot b on a.spot_id = b.id "
         << " left join rave_spottypeexclusion c on a.spot_id = c.parent_id "
         << " left join rave_spotvoiceover d on a.spot_id = d.parent_id "
         << " left join rave_typeexclusion e on c.detail_id = e.id "
         << " left join rave_voiceover f on d.detail_id = f.id "
+        << " left join rave_spotaudio g on b.id = g.spot_id "
         << "WHERE a.schedule_id in " + schedule_ids+" ORDER BY a.id " ;
 
     EntityDataModel edm;
@@ -835,8 +840,8 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
             TRAFFIK::BookingRecord br;
             Daypart typeDaypart;
             Daypart voDaypart;
-            int sd = 1; // spot daypart postfix
-            int td = 1; // type excl daypart postfix
+            int sd = 1;  // spot daypart postfix
+            int td = 1;  // type excl daypart postfix
             int vdp = 1; // type excl daypart postfix
 
             int type_excl_id = -1;
@@ -863,6 +868,9 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
                     type_excl_id = to_int(value);
                 if (field == "spot_vo")
                     vo_excl_id = to_int(value);
+
+                if (field == "audio_id")
+                    br.booked_spot.audio_id = to_int(value);
 
                 if (field == "spot_id")
                     br.booked_spot.spot_id = to_int(value);
@@ -973,7 +981,7 @@ bool BookingWizard::validateCurrentPage()
         }
         case BookingWizard::Page_Select_By_Date:
         {
-            TRAFFIK::TreeViewModel* tvm  = new TRAFFIK::TreeViewModel(ui->twBreakSelect->selectedItems());
+            TRAFFIK::TraffikTreeViewModel* tvm  = new TRAFFIK::TraffikTreeViewModel(ui->twBreakSelect->selectedItems());
             ui->tvSummary->setModel(tvm);
             break;
         }
@@ -1055,6 +1063,48 @@ void BookingWizard::fetch_voice_exclusions(TRAFFIK::EngineData& engine_data)
     fetch_spot_exclusions(sql.str(),
                         m_engine_data.spot_to_book.voice_exclusions,
                         m_engine_data.spot_to_book.voice_ex_keys);
+}
+
+int BookingWizard::get_spot_audio(int spot_id)
+{
+    std::stringstream sql;
+    sql << "SELECT audio_id "
+        << " FROM rave_spotaudio "
+        << " WHERE rave_spotaudio.spot_id = "+std::to_string(spot_id);
+
+    EntityDataModel edm;
+    edm.readRaw(sql.str());
+
+    int audio_id {-1};
+
+    auto provider = edm.getDBManager()->provider();
+    if (provider->cacheSize() > 0) {
+        provider->cache()->first();
+
+        std::string value;
+        bool audio_found = false;
+
+        do {
+            auto itB = provider->cache()->currentElement()->begin();
+            auto itE = provider->cache()->currentElement()->end();
+
+            for (; itB != itE; ++itB) {
+                if ((*itB).first == "audio_id") {
+                    audio_id = std::stoi((*itB).second);
+                    audio_found = true;
+                    break;
+                }
+
+                if (audio_found)
+                    break;
+            }
+
+            provider->cache()->next();
+        } while (!provider->cache()->isLast());
+    }
+
+    return audio_id;
+
 }
 
 void BookingWizard::fetch_spot_exclusions(const std::string query,

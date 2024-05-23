@@ -3,16 +3,14 @@
 
 #include <QDialog>
 #include <QVBoxLayout>
-#include "audiotrackviewer.h"
-#include "treeviewmodel.h"
 
 class QPushButton;
 
+
 namespace AUDIO
 {
-
-    class TrackBrowser;
     class Audio;
+    class TrackBrowser;
 
     class SelectionWidget: public QWidget
     {
@@ -43,7 +41,7 @@ namespace AUDIO
         void selected_audio(std::shared_ptr<AUDIO::Audio>);
     private:
         std::unique_ptr<QVBoxLayout> m_v_layout;
-        std::unique_ptr<TrackBrowser> m_track_browser;
+        std::unique_ptr<AUDIO::TrackBrowser> m_track_browser;
         std::unique_ptr<SelectionWidget> m_selection_widget;
     };
 }

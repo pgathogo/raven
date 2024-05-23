@@ -6,6 +6,9 @@
 
 #include "../framework/manytomanybrowser.h"
 
+// #include "../audio/trackbrowser.h"
+// #include "../audio/trackpickerdialog.h"
+
 namespace Ui {
     class SpotAudioBrowser;
 }
@@ -15,6 +18,7 @@ namespace TRAFFIK{
 }
 
 namespace AUDIO{
+ //class TrackPickerDialog;
  class Audio;
  class AudioWaveForm;
  class AudioPlayer;
@@ -26,7 +30,7 @@ namespace FRAMEWORK{
 
 class ManyToMany;
 class RavenSetup;
-//class CueEditor;
+
 
 class SpotAudioBrowser : public BaseEntityBrowserDlg
 {
@@ -60,19 +64,24 @@ public:
 
     void create_button(const QString, QString, Slot);
 
+    void create_separator();
+
     AUDIO::Audio* audio_from_selection();
     std::string get_audio_file(AUDIO::Audio*);
 
 protected:
     void closeEvent(QCloseEvent*) override;
+    void resize_window() override;
 
 public slots:
      void stop_play();
 
 private slots:
-     void import_audio();
-     void play_back();
-     void cue_edit();
+    void import_audio();
+    void attach_audio();
+    void audio_properties();
+    void play_back();
+    void cue_edit();
 
 signals:
      void audio_duration(int);
@@ -88,6 +97,8 @@ private:
 //    std::unique_ptr<CueEditor> m_cue_editor;
     std::unique_ptr<AUDIO::AudioWaveForm> m_audio_wave_form;
     std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+
+    // std::unique_ptr<AUDIO::TrackPickerDialog> m_track_picker_dlg;
 };
 
 #endif // SPOTAUDIOBROWSER_H

@@ -24,6 +24,7 @@ namespace TRAFFIK{
         register_rule<VoiceDaypartRule>();
         register_rule<SpotDaypartRule>();
         register_rule<SameClientRule>();
+        register_rule<BlockDiffSpotSameAudioRule>();
     }
 
     int RuleEngine::find_breaks()
@@ -641,6 +642,59 @@ namespace TRAFFIK{
     }
 
     int OverrideSameClientRule::failed_break_count()
+    {
+        return m_failed_break_count;
+    }
+
+    /* Block Different Spots Same Audio */
+
+    bool BlockDiffSpotSameAudioRule::m_isEnabled = false;
+    int BlockDiffSpotSameAudioRule::m_failed_break_count = 0;
+
+    BlockDiffSpotSameAudioRule::BlockDiffSpotSameAudioRule()
+    {
+    }
+
+    BlockDiffSpotSameAudioRule::~BlockDiffSpotSameAudioRule()
+    {
+    }
+
+    bool BlockDiffSpotSameAudioRule::execute(EngineData& engine_data,
+                                    [[maybe_unused]] const Break& target_break)
+    {
+        for (auto& booked_record: engine_data.prev_bookings) {
+
+            if (booked_record.schedule_id != target_break.id())
+                continue;
+
+            if (booked_record.booked_spot.audio_id == engine_data.spot_to_book.audio_id) {
+                ++m_failed_break_count;
+                qDebug() << " === BlockDiffSpotSameAudio === ";
+                qDebug() << "Booked Spot: " << booked_record.booked_spot.spot_id;
+                qDebug() << "Booked Audio: "<< booked_record.booked_spot.audio_id;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool BlockDiffSpotSameAudioRule::isEnabled()
+    {
+        return m_isEnabled;
+    }
+
+    FailedBreakCode BlockDiffSpotSameAudioRule::fail_code()
+    {
+        return FailedBreakCode::DiffSpotSameAudio;
+    }
+
+    void BlockDiffSpotSameAudioRule::enable_or_disable(bool state)
+    {
+        m_isEnabled = state;
+    }
+
+    int BlockDiffSpotSameAudioRule::failed_break_count()
     {
         return m_failed_break_count;
     }

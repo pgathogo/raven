@@ -53,7 +53,9 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
 
 void BaseEntityBrowserDlg::resize_window()
 {
-    resize(800, 600);
+    int win_width = 800;
+    int win_height = 600;
+    resize(win_width, win_height);
 }
 
 void BaseEntityBrowserDlg::set_button_icons()

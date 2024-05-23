@@ -22,7 +22,7 @@ using Exclusion = std::tuple<ExclusionID, Daypart>;
 namespace TRAFFIK {
 
     enum FailedBreakCode {BreakFull=1, TypeExcl, VoiceExcl,
-                        TypeDaypart, VoiceDaypart, SpotDaypart, SameClient};
+                        TypeDaypart, VoiceDaypart, SpotDaypart, SameClient, DiffSpotSameAudio};
 
     enum RuleState {Disabled=0, Enabled=2};
 
@@ -37,6 +37,7 @@ namespace TRAFFIK {
         std::string spot_name;
         double spot_duration;
         double real_duration;
+        int audio_id{-1};
         Daypart spot_daypart;
         std::list<int> type_ex_keys;
         std::list<int> voice_ex_keys;
@@ -241,6 +242,24 @@ namespace TRAFFIK {
         FailedBreakCode fail_code() override;
         std::string rule_name() override { return "OverrideSameClientRule"; }
         static void enable_or_disable(bool state);
+        static int failed_break_count();
+        void reset_break_count() override { m_failed_break_count = 0; }
+    private:
+        static bool m_isEnabled;
+        static int m_failed_break_count;
+    };
+
+
+    /* Block Different Spots Same Audio */
+    class BlockDiffSpotSameAudioRule : public BaseRule {
+    public:
+        BlockDiffSpotSameAudioRule();
+        ~BlockDiffSpotSameAudioRule() override;
+        bool execute(EngineData &engine_data, const Break &target_break) override;
+        bool isEnabled() override;
+        FailedBreakCode fail_code() override;
+        std::string rule_name() override { return "BlockDiffSpotSameAudioRule"; }
+        static void enable_or_disable(bool);
         static int failed_break_count();
         void reset_break_count() override { m_failed_break_count = 0; }
     private:

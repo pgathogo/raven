@@ -35,11 +35,13 @@ std::tuple<T1, T2, T3> searchItem(T1 col, T2 op, T3 val)
     return std::make_tuple(col, op, val);
 }
 
+
 class BaseEntityBrowserDlg : public QDialog
 {
     Q_OBJECT
 
 public:
+
     explicit BaseEntityBrowserDlg(QWidget *parent = nullptr);
     BaseEntityBrowserDlg(QWidget* parent,
                          std::shared_ptr<BaseEntity> entity);
@@ -278,6 +280,7 @@ protected:
     void hideDeleteButton();
     void show_delete_button(QBoxLayout* layout=nullptr);
     Ui::BaseEntityBrowserDlg* bui;
+    virtual void resize_window();
 
 public slots:
     void addBtnClicked();
@@ -291,7 +294,6 @@ private:
     std::unique_ptr<EntityDataModel> mEntityDataModel;
     std::unique_ptr<LetterFilterWidget> m_letter_filter_widget;
     void populateFilterCombo();
-    void resize_window();
 
     BaseEntity* m_entity;
 };

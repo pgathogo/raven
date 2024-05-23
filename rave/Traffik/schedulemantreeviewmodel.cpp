@@ -2,7 +2,7 @@
 #include <QDebug>
 
 #include "schedulemantreeviewmodel.h"
-#include "tree.h"
+#include "traffiktree.h"
 #include "../utils/tools.h"
 
 ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent)
@@ -21,12 +21,12 @@ int ScheduleManTreeViewModel::read_tree_data(const Breaks& items)
 {
     int parent_id = 0;
     for (auto& [hour, breaks] : items){
-        TRAFFIK::Node* parent_node = new TRAFFIK::Node("Hour: "+std::to_string(hour),
+        TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode("Hour: "+std::to_string(hour),
                                      std::to_string(hour), ++parent_id, -1, hour);
         m_nodes.push_back(parent_node);
         int child_id = 0;
         for(auto& comm_break : breaks){
-            TRAFFIK::Node* child_node = new TRAFFIK::Node(comm_break.schedule_time, "",
+            TRAFFIK::TraffikNode* child_node = new TRAFFIK::TraffikNode(comm_break.schedule_time, "",
                                         ++child_id, parent_id, comm_break.id);
 
             QStandardItem* schedule_time = new QStandardItem(stoq(comm_break.schedule_time));
@@ -53,7 +53,7 @@ int ScheduleManTreeViewModel::read_tree_data(const Breaks& items)
 
 }
 
-void ScheduleManTreeViewModel::build_tree(std::vector<TRAFFIK::Node *> &nodes)
+void ScheduleManTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode *> &nodes)
 {
     for (auto node : nodes){
         if (node->parent_id() == -1){
@@ -72,7 +72,7 @@ void ScheduleManTreeViewModel::build_tree(std::vector<TRAFFIK::Node *> &nodes)
 //}
 
 
-void ScheduleManTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::Node* node)
+void ScheduleManTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node)
 {
     bool found=false;
     for(auto& [id, parent] : tree_node){

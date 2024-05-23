@@ -2546,6 +2546,8 @@ void MainWindow::db_update_comm_break_play_status()
         qDebug() << stoq(update_statement);
         edm.executeRawSQL(update_statement);
 
+        update_statement = "";
+
         /*
         for (auto& b_id: break_ids){
             for(auto& comm : m_comm_breaks[b_id]){

@@ -27,7 +27,6 @@ QT_END_NAMESPACE
 
 class PostgresDatabaseManager;
 class BaseDataProvider;
-class NodeData;
 class Schedule;
 class EntityDataModel;
 class CueEditor;

@@ -4,7 +4,6 @@
 #include "../framework/manytomany.h"
 
 
-
 class SpotTypeExclusion : public ManyToMany
 {
 public:

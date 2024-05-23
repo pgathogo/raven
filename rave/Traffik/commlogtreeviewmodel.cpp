@@ -2,7 +2,7 @@
 #include <QDebug>
 
 #include "commlogtreeviewmodel.h"
-#include "tree.h"
+#include "traffiktree.h"
 #include "../utils/tools.h"
 
 CommLogTreeViewModel::CommLogTreeViewModel(CommercialLogs items, QObject *parent)
@@ -22,11 +22,11 @@ int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
 {
     int parent_id = 0;
     for (auto& [key, bookings] : items){
-        TRAFFIK::Node* parent_node = new TRAFFIK::Node(key, key, ++parent_id, -1, -1);
+        TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode(key, key, ++parent_id, -1, -1);
         m_nodes.push_back(parent_node);
         int child_id = 0;
         for(auto& booking : bookings){
-            TRAFFIK::Node* child_node = new TRAFFIK::Node(booking.client_name, booking.spot_name,
+            TRAFFIK::TraffikNode* child_node = new TRAFFIK::TraffikNode(booking.client_name, booking.spot_name,
                                         ++child_id, parent_id, booking.id);
 
             QStandardItem* client_name = new QStandardItem(stoq(booking.client_name));
@@ -58,7 +58,7 @@ int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
 
 }
 
-void CommLogTreeViewModel::build_tree(std::vector<TRAFFIK::Node *> &nodes)
+void CommLogTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode *> &nodes)
 {
     for (auto node : nodes){
         if (node->parent_id() == -1){
@@ -78,7 +78,7 @@ void CommLogTreeViewModel::build_tree(std::vector<TRAFFIK::Node *> &nodes)
 //}
 
 
-void CommLogTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::Node* node)
+void CommLogTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node)
 {
     bool found=false;
     for(auto& [id, parent] : tree_node){

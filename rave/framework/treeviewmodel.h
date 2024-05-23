@@ -5,8 +5,8 @@
 #include <string>
 #include <QStandardItemModel>
 
-#include "tree.h"
 class Node;
+struct NodeData;
 
 using NodeId = int;
 

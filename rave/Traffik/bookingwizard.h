@@ -52,7 +52,7 @@ public:
     explicit BookingWizard(Order* order, QWidget* parent = nullptr);
     ~BookingWizard() override;
 
-    std::size_t fetch_breaks(QDate, QDate, std::set<int>);
+    std::size_t fetch_breaks_from_db(QDate, QDate, std::set<int>);
     void find_existing_bookings(TRAFFIK::EngineData&);
     std::size_t find_available_breaks();
 
@@ -66,6 +66,7 @@ public:
     void fetch_spot_exclusions(const std::string,
                              std::vector<Exclusion>&,
                              std::list<int>& keys);
+    int get_spot_audio(int);
     Daypart fetch_spot_daypart(TRAFFIK::Spot&);
 
     void init_rules_state();
