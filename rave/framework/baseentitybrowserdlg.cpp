@@ -55,7 +55,7 @@ void BaseEntityBrowserDlg::resize_window()
 {
     int win_width = 800;
     int win_height = 600;
-    resize(win_width, win_height);
+    //resize(win_width, win_height);
 }
 
 void BaseEntityBrowserDlg::set_button_icons()

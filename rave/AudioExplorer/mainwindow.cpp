@@ -191,7 +191,7 @@ void MainWindow::setup_audio_folders()
     try{
         AudioLibrary audio_lib;
         auto tree_data = audio_lib.read_data_from_db();
-        m_folder_model = new TreeViewModel(tree_data, this);
+        m_folder_model = new FRAMEWORK::TreeViewModel(tree_data, this);
         ui->tvFolders->setModel(m_folder_model);
         ui->tvFolders->setIconSize(QSize(25, 25));
         m_folders = tree_data;
@@ -469,14 +469,14 @@ void MainWindow::create_new_folder()
 
         ui->tvFolders->setModel(nullptr);
 
-        NodeData* nd = new NodeData();
+        FRAMEWORK::NodeData* nd = new FRAMEWORK::NodeData();
         nd->id = id;
         nd->parent_id = parent_id;
         nd->name = folder_name;
         m_folders.push_back(nd);
 
         delete m_folder_model;
-        m_folder_model = new TreeViewModel(m_folders, this);
+        m_folder_model = new FRAMEWORK::TreeViewModel(m_folders, this);
         ui->tvFolders->setModel(m_folder_model);
         m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
 

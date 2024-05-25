@@ -16,6 +16,7 @@ namespace fs = std::filesystem;
 
 AudioForm::AudioForm(AUDIO::Audio* audio,
                       RavenSetup* setup,
+                     FormMode form_mode,
                      QDialog* parent)
     :BaseEntityDetailDlg(parent)
     ,ui(new Ui::AudioForm)
@@ -23,6 +24,7 @@ AudioForm::AudioForm(AUDIO::Audio* audio,
     ,m_setup{setup}
     ,m_artist_picker{nullptr}
     ,m_audio_tool{nullptr}
+    ,m_form_mode{form_mode}
 {
     m_audio_tool = std::make_unique<AUDIO::AudioTool>();
 
@@ -41,6 +43,33 @@ AudioForm::AudioForm(AUDIO::Audio* audio,
     register_input_widget(ui->edtArtist);
     register_input_widget(ui->edtFolder);
     register_input_widget(ui->edtNotes);
+
+    setup_ui();
+
+}
+
+void AudioForm::setup_ui()
+{
+    if (m_form_mode == FormMode::ReadOnly) {
+        ui->btnPickArtist->setEnabled(false);
+        ui->cbClass->setEnabled(false);
+        ui->cbGenre->setEnabled(false);
+        ui->edtTitle->setReadOnly(true);
+        ui->edtArtist->setReadOnly(true);
+        ui->edtFolder->setReadOnly(true);
+        ui->edtFilename->setReadOnly(true);
+        ui->edtDuration->setReadOnly(true);
+        ui->edtStart->setReadOnly(true);
+        ui->edtFadeIn->setReadOnly(true);
+        ui->edtIntro->setReadOnly(true);
+        ui->edtExtro->setReadOnly(true);
+        ui->edtFadeOut->setReadOnly(true);
+        ui->edtEnd->setReadOnly(true);
+        ui->edtNotes->setReadOnly(true);
+        ui->dtCreation->setReadOnly(true);
+
+        disableSaveBtn();
+    }
 }
 
 AudioForm::~AudioForm()

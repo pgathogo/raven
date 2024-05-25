@@ -6,14 +6,12 @@
 #include <QStandardItem>
 
 namespace TRAFFIK{
+
     class TraffikNode;
-}
 
-using NodeID = int;
-using TreeNode = std::map<NodeID, TRAFFIK::TraffikNode*>;
-using TreeData = std::tuple<std::string, std::string, std::string>;
-
-namespace TRAFFIK{
+    using NodeID = int;
+    using TreeNode = std::map<NodeID, TRAFFIK::TraffikNode*>;
+    using TreeData = std::tuple<std::string, std::string, std::string>;
 
     class TraffikNode : public QStandardItem{
     public:

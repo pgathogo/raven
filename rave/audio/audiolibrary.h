@@ -4,15 +4,17 @@
 #include <vector>
 #include <string>
 
-struct NodeData;
+namespace FRAMEWORK {
+    struct NodeData;
+}
 
 using LineTokens = std::tuple<std::string, std::string, std::string>;
 
 class AudioLibrary
 {
 public:
-    std::vector<NodeData*> read_data_from_file(const std::string);
-    std::vector<NodeData*> read_data_from_db();
+    std::vector<FRAMEWORK::NodeData*> read_data_from_file(const std::string);
+    std::vector<FRAMEWORK::NodeData*> read_data_from_db();
 private:
     LineTokens line_tokenizer(std::string line);
 };

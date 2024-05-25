@@ -19,8 +19,11 @@
 #include <QPalette>
 
 #include "jinglegrid.h"
+
 #include "../audio/trackbrowser.h"
 #include "../audio/trackpickerdialog.h"
+#include "../audio/audio.h"
+
 
 using namespace std::chrono_literals;
 

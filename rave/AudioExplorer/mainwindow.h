@@ -15,14 +15,16 @@
 #include "../framework/tree.h"
 #include "../security/structs.h"
 
+namespace FRAMEWORK {
+    class TreeViewModel;
+}
+
 class QStandardItemModel;
 class QTableView;
 class QProcess;
 
 class BaseEntity;
 class DataToolBar;
-class TreeViewModel;
-//class EntityDataModel;
 class LetterFilterWidget;
 
 namespace AUDIO{
@@ -189,7 +191,7 @@ private:
     QStandardItemModel* m_tracks_model;
     QStandardItemModel* m_artist_model;
     QStandardItemModel* m_genre_model;
-    TreeViewModel* m_folder_model;
+    FRAMEWORK::TreeViewModel* m_folder_model;
 
     std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
     //std::unique_ptr<EntityDataModel> m_artist_entity_data_model;
@@ -211,7 +213,7 @@ private:
 
     AUDIOEXP::ArtistManager m_artist_manager;
 
-    std::vector<NodeData*> m_folders;
+    std::vector<FRAMEWORK::NodeData*> m_folders;
 
     std::unique_ptr<AUDIO::AudioConverter> m_audio_converter;
     std::unique_ptr<AUDIO::AudioWaveFormGenerator> m_wave_gen;

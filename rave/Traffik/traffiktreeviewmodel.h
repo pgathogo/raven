@@ -5,16 +5,13 @@
 #include <QTableWidgetItem>
 
 namespace TRAFFIK{
+
     class TraffikNode;
-}
 
-using NodeId = int;
-using TreeNode = std::map<NodeId, TRAFFIK::TraffikNode*>;
-using TreeData = std::tuple<std::string, std::string, std::string>;
-using SelectedItems = QList<QTableWidgetItem*>;
-
-namespace TRAFFIK{
-
+    using NodeId = int;
+    using TreeNode = std::map<NodeId, TRAFFIK::TraffikNode*>;
+    using TreeData = std::tuple<std::string, std::string, std::string>;
+    using SelectedItems = QList<QTableWidgetItem*>;
 
     class TraffikTreeViewModel : public QStandardItemModel
     {

@@ -70,7 +70,7 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
 //    auto node_data = audio_lib.read_data_from_file("tree.txt");
     auto node_data = audio_lib.read_data_from_db();
 
-    m_tree_model = new TreeViewModel(node_data, this);
+    m_tree_model = new FRAMEWORK::TreeViewModel(node_data, this);
     ui->tvFolders->setModel(m_tree_model);
     ui->tvFolders->setIconSize(QSize(25, 25));
 

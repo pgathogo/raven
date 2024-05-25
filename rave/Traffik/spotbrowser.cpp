@@ -6,6 +6,7 @@
 #include "spotbrowser.h"
 #include "ui_spotbrowser.h"
 #include "../framework/ui_baseentitybrowserdlg.h"
+#include "../framework/Logger.h"
 
 #include "client.h"
 #include "spot.h"
@@ -13,6 +14,7 @@
 #include "orderbooking.h"
 #include "spotaudio.h"
 #include "spotaudiobrowser.h"
+
 #include "../audio/audio.h"
 #include "../audio/audiotool.h"
 #include "../framework/manytomany.h"
@@ -52,7 +54,7 @@ void SpotBrowser::addRecord()
     if (spot_form->exec() > 0){
         try{
 
-            entityDataModel().createEntity(std::move(spot));
+            int id = entityDataModel().createEntity(std::move(spot));
 
             save_voice_overs(*spot_form);
 
@@ -155,7 +157,7 @@ void SpotBrowser::save_voice_overs(const SpotForm& sf)
     for(auto& vo : vos){
         ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(vo).get());
 
-        if (mtom->dbAction() == DBAction::dbaCREATE){
+        if (mtom->dbAction() == DBAction::dbaCREATE) {
             mtom->setParentId(sf.parentId());
             edm->createEntityDB(*mtom);
         }
@@ -174,11 +176,7 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
     for(auto& type : types){
         ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(type).get());
 
-        qDebug() << "saving type exlusions...";
-
         if (mtom->dbAction() == DBAction::dbaCREATE){
-
-            qDebug() << " AAA ";
 
             mtom->setParentId(sf.parentId());
             edm->createEntityDB(*mtom);
@@ -195,51 +193,75 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
     auto& spot_audios = sf.spot_audios();
 
-    for(auto& sa : spot_audios){
+    auto audio_creation_mode = sf.get_audio_creation_mode();
+
+    for(auto& sa : spot_audios) {
+
         TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());
 
-        if (s_audio->dbAction() == DBAction::dbaCREATE){
+        if (s_audio->dbAction() == DBAction::dbaCREATE)
+        {
+            switch(audio_creation_mode) {
 
-            AUDIO::AudioTool at;
+            case AudioCreationMode::Attach:
+            {
+                Logger::info("SpotBrowser", "AudioCreationMode -> Attach");
 
-            auto& audio = s_audio->get_paudio();
-            int id = edm->createEntityDB(audio);
+                auto audio = s_audio->audio();
+                s_audio->setDetailId(audio->id());
+                s_audio->setParentId(sf.parentId());
 
-            s_audio->setDetailId(id);
-            s_audio->setParentId(sf.parentId());
-            edm->createEntityDB(*s_audio);
+                qDebug() << "Detail ID:" << audio->id();
+                qDebug() << "Parent ID: "<< sf.parentId();
 
-            const std::string OGG_EXT = ".ogg";
-            const std::string ADF_EXT = ".adf";
-            const std::string WAVE_EXT = ".png";
+                edm->createEntityDB(*s_audio);
+            } // 'Attach' case
 
-            // Format audio name from Id
-            std::string ogg_file = at.make_audio_filename(id);
-            std::string lib_path = audio.audio_lib_path()->value();
+            case AudioCreationMode::Import:
+            {
+                Logger::info("SpotBrowser", "AudioCreationMode -> Import");
 
-            //std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
-            std::string old_filename = audio.audio_file().ogg_filename();
-            std::string new_filename = lib_path+ogg_file+OGG_EXT;
+                AUDIO::AudioTool at;
 
-            fs::path old_f{old_filename};
-            fs::path new_f{new_filename};
+                auto& audio = s_audio->get_paudio();
+                int id = edm->createEntityDB(audio);
 
-            try{
+                s_audio->setDetailId(id);
+                s_audio->setParentId(sf.parentId());
+                edm->createEntityDB(*s_audio);
+
+                const std::string OGG_EXT = ".ogg";
+                const std::string ADF_EXT = ".adf";
+                const std::string WAVE_EXT = ".png";
+
+                // Format audio name from Id
+                std::string ogg_file = at.make_audio_filename(id);
+                std::string lib_path = audio.audio_lib_path()->value();
+
+                //std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
+                std::string old_filename = audio.audio_file().ogg_filename();
+                std::string new_filename = lib_path+ogg_file+OGG_EXT;
+
+                fs::path old_f{old_filename};
+                fs::path new_f{new_filename};
+
+                try{
                 fs::copy(old_f, new_f);
-            } catch (fs::filesystem_error& fe) {
+                } catch (fs::filesystem_error& fe) {
                 qDebug() << "Unable to copy audio file: "+stoq(fe.what());
                 return;
-            }
+                }
 
-            // Write ADF file
-            AUDIO::ADFRepository adf_repo;
-            auto audio_file = audio.audio_file();
-            audio_file.set_adf_file(lib_path+ogg_file+ADF_EXT);
-            audio_file.set_ogg_filename(ogg_file);
-            adf_repo.write(audio_file);
+                // Write ADF file
+                AUDIO::ADFRepository adf_repo;
+                auto audio_file = audio.audio_file();
+                audio_file.set_adf_file(lib_path+ogg_file+ADF_EXT);
+                audio_file.set_ogg_filename(ogg_file);
+                adf_repo.write(audio_file);
 
-            // Copy Wave File to AudioLib directory
-            if (fs::exists(audio.audio_file().wave_file()) ){
+                // Copy Wave File to AudioLib directory
+                if (fs::exists(audio.audio_file().wave_file()) )
+                {
 
                 fs::path old_wave_file{audio.audio_file().wave_file()};
                 auto wave_file = old_wave_file.filename();
@@ -247,9 +269,18 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
                 fs::copy(old_wave_file, new_wave_file);
                 fs::remove(old_wave_file);
+                }
 
-            }
-        }
+            } // 'Import' case
+
+
+        } // switch
+
+
+    } // if create.
+
+
+
     }
 
 }

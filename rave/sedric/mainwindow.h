@@ -15,7 +15,6 @@ class QStandardItem;
 class ItemBuilder;
 class TrackItemBuilder;
 class ScheduleData;
-class TreeViewModel;
 class TableViewModel;
 class SaveAs;
 class QCloseEvent;
@@ -31,6 +30,10 @@ class Schedule;
 class EntityDataModel;
 class CueEditor;
 class AudioHistoryForm;
+
+namespace FRAMEWORK {
+    class TreeViewModel;
+}
 
 namespace AUDIO{
     class Audio;
@@ -177,7 +180,7 @@ private:
     Ui::MainWindow *ui;
     QApplication* m_qapp;
     QStandardItemModel* m_schedule_model;
-    TreeViewModel* m_tree_model;
+    FRAMEWORK::TreeViewModel* m_tree_model;
     QStandardItemModel* m_tracks_model;
     ItemBuilder* m_schedule_item_builder;
     TrackItemBuilder* m_track_item_builder;

@@ -7,6 +7,7 @@
 #include "../framework/baseentitydetaildlg.h"
 
 #include "spot.h"
+#include "spotaudiobrowser.h"
 
 
 namespace Ui {
@@ -48,11 +49,11 @@ public:
     int parentId() const;
 
     std::unique_ptr<SpotAudioBrowser> const& spot_browser() const;
+    AudioCreationMode const get_audio_creation_mode() const;
 
 public slots:
     void cue_edit();
     void update_audio_duration(int);
-
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -72,6 +73,7 @@ private:
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
     RavenSetup* m_setup;
+
 };
 
 #endif // SPOTFORM_H

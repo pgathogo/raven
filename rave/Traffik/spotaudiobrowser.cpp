@@ -9,6 +9,7 @@
 #include "../framework/ravensetup.h"
 #include "../framework/ravenexception.h"
 #include "../framework/applicationcontext.h"
+#include "../framework/Logger.h"
 
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
@@ -27,6 +28,9 @@
 #include "../audio/mtstomp3converter.h"
 #include "../audio/audiofileinfo.h"
 
+#include "../audio/trackpickerdialog.h"
+
+#include "../AudioExplorer/audioform.h"
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
@@ -39,15 +43,16 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
         ,ui(new Ui::SpotAudioBrowser)
         ,m_mtom{mtom}
         ,m_audio_wave_form{nullptr}
+        ,m_audio_creation_mode{AudioCreationMode::None}
 {
     ui->setupUi(this);
     hideAddButton();
     hideEditButton();
     hideDeleteButton();
 
-    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio);
-    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio);
-    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties);
+    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio, QSize(130, 20));
+    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(130, 20));
+    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties, QSize(130, 20));
     create_separator();
     create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
@@ -75,7 +80,7 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
         }
     }
 
-    this->setMinimumWidth(800);
+    resize_window();
 
 }
 
@@ -86,7 +91,8 @@ SpotAudioBrowser::~SpotAudioBrowser()
 
 void SpotAudioBrowser::resize_window()
 {
-    resize(900, 600);
+    qDebug() << "Spot Audio Browesr::Resize:: " ;
+    this->setMinimumWidth(1100);
 }
 
 void SpotAudioBrowser::addRecord()
@@ -113,11 +119,15 @@ bool SpotAudioBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
     return true;
 }
 
-void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption, Slot slot)
+void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption, Slot slot, QSize size)
 {
     QPushButton* btn = new QPushButton(btn_caption);
     btn->setObjectName(btn_name);
     connect(btn, &QPushButton::clicked, this, slot);
+
+    if (!size.isNull())
+        btn->setMinimumSize(size);
+
     bui->hlExtra->addWidget(btn);
 }
 
@@ -261,7 +271,6 @@ void SpotAudioBrowser::import_audio()
 
         }
 
-
         spot_audio->set_audio_lib_path(m_setup->comm_audio_folder()->value());
 
         spot_audio->set_title(spot_audio->title()->value());
@@ -291,19 +300,62 @@ void SpotAudioBrowser::import_audio()
             emit audio_duration(af.duration());
 
             entityDataModel().cacheEntity(std::move(spot_audio));
-        }
+        };
+
+        m_audio_creation_mode = AudioCreationMode::Import;
 
     }
 }
 
 void SpotAudioBrowser::attach_audio()
 {
-    //m_track_picker_dlg = std::make_unique<AUDIO::TrackPickerDialog>();
-    // m_track_picker_dlg->exec();
+    //TODO: Disallow attaching audio with no actual audio file
+    m_track_picker_dlg = std::make_unique<AUDIO::TrackPickerDialog>();
+    connect(m_track_picker_dlg.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &SpotAudioBrowser::selected_audio);
+    m_track_picker_dlg->exec();
 }
+
+void SpotAudioBrowser::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
+{
+
+    auto spot_audio = std::make_unique<TRAFFIK::SpotAudio>(m_mtom->parentEntity(), audio.get());
+
+    // spot_audio->setId(audio->id());
+    spot_audio->setDBAction(DBAction::dbaCREATE);
+
+    auto msg_title = QString("Title: %1").arg(audio->title()->to_qstring());
+    auto msg_weight = QString("Weight: %1").arg(QString::number(spot_audio->weight()->value()));
+    auto msg_seq = QString("Seq: %1").arg(QString::number(spot_audio->seqNo()->value()));
+    auto msg_spotid = QString("Spot ID: %1").arg(QString::number(spot_audio->parentId()->value()));
+    auto msg_audioid = QString("Audio ID: %1").arg(QString::number( spot_audio->audio()->id() ));
+
+    Logger::info("SpotAudioBrowser", msg_title);
+    Logger::info("SpotAudioBrowser", msg_weight);
+    Logger::info("SpotAudioBrowser", msg_seq);
+    Logger::info("SpotAudioBrowser", msg_spotid);
+    Logger::info("SpotAudioBrowser", msg_audioid);
+
+    entityDataModel().cacheEntity(std::move(spot_audio));
+
+    m_audio_creation_mode = AudioCreationMode::Attach;
+
+}
+
+AudioCreationMode SpotAudioBrowser::audio_creation_mode()
+{
+    return m_audio_creation_mode;
+}
+
 
 void SpotAudioBrowser::audio_properties()
 {
+    if (selectedRowId() < 0 )
+        return;
+
+    AUDIO::Audio* audio = audio_from_selection();
+    audio->set_file_path(audio->audio_lib_path()->value());
+    auto audio_form = std::make_unique<AudioForm>(audio, m_setup, FormMode::ReadOnly);
+    audio_form->exec();
 
 }
 
@@ -337,8 +389,12 @@ void SpotAudioBrowser::stop_play()
 
 void SpotAudioBrowser::cue_edit()
 {
+    if (selectedRowId() < 0 )
+        return;
+
     AUDIO::Audio* audio = audio_from_selection();
     std::string audio_file = get_audio_file(audio);
+
     if (audio_file.empty()){
         qDebug() << "No audio file to edit!";
         return;

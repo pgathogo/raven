@@ -18,19 +18,20 @@ namespace TRAFFIK{
 }
 
 namespace AUDIO{
- //class TrackPickerDialog;
+ class TrackPickerDialog;
  class Audio;
  class AudioWaveForm;
  class AudioPlayer;
 }
 
-namespace FRAMEWORK{
-    class ApplicationContext;
-}
+// namespace FRAMEWORK{
+//     class ApplicationContext;
+// }
 
 class ManyToMany;
 class RavenSetup;
 
+enum class AudioCreationMode {None, Import, Attach};
 
 class SpotAudioBrowser : public BaseEntityBrowserDlg
 {
@@ -62,19 +63,22 @@ public:
 
     TRAFFIK::SpotAudio& get_spot_audio() const;
 
-    void create_button(const QString, QString, Slot);
+    void create_button(const QString, QString, Slot, QSize size=QSize(0,0));
 
     void create_separator();
 
     AUDIO::Audio* audio_from_selection();
     std::string get_audio_file(AUDIO::Audio*);
 
+    AudioCreationMode audio_creation_mode();
+
 protected:
     void closeEvent(QCloseEvent*) override;
     void resize_window() override;
 
 public slots:
-     void stop_play();
+    void stop_play();
+    void selected_audio(std::shared_ptr<AUDIO::Audio>);
 
 private slots:
     void import_audio();
@@ -98,7 +102,11 @@ private:
     std::unique_ptr<AUDIO::AudioWaveForm> m_audio_wave_form;
     std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
 
-    // std::unique_ptr<AUDIO::TrackPickerDialog> m_track_picker_dlg;
+    std::unique_ptr<AUDIO::TrackPickerDialog> m_track_picker_dlg;
+
+    AudioCreationMode m_audio_creation_mode;
+
+
 };
 
 #endif // SPOTAUDIOBROWSER_H

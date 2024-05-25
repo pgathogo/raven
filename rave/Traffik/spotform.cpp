@@ -4,28 +4,27 @@
 
 #include <QFileDialog>
 
-#include "../framework/ui_baseentitydetaildlg.h"
 #include "../utils/daypartgrid.h"
+#include "../utils/tools.h"
+
+#include "../framework/ui_baseentitydetaildlg.h"
 #include "../framework/baseentitydetaildlg.h"
 #include "../framework/manytomanybrowser.h"
 #include "../framework/manytomany.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
 #include "../framework/choicefield.h"
-#include "../utils/tools.h"
-
-#include "spotform.h"
-#include "ui_spotform.h"
-#include "client.h"
-#include "spotvoiceover.h"
-#include "spottypeexclusion.h"
 
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
 #include "../audio/audio.h"
 #include "../audiolib/headers/cueeditor.h"
 
-#include "spotaudiobrowser.h"
+#include "spotform.h"
+#include "ui_spotform.h"
+#include "client.h"
+#include "spotvoiceover.h"
+#include "spottypeexclusion.h"
 #include "spotaudio.h"
 #include "spotaudioform.h"
 
@@ -99,6 +98,12 @@ const std::vector<EntityRecord> &SpotForm::spot_audios() const
 {
     return  m_spot_audio_browser->entityDataModel().modelEntities();
 }
+
+const AudioCreationMode SpotForm::get_audio_creation_mode() const
+{
+    return m_spot_audio_browser->audio_creation_mode();
+}
+
 
 int SpotForm::parentId() const
 {

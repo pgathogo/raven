@@ -25,6 +25,8 @@ class ChoiceField;
 
 class RavenSetup;
 
+enum class FormMode{ReadWrite, ReadOnly, WriteOnly};
+
 class AudioForm : public BaseEntityDetailDlg
 {
     Q_OBJECT
@@ -32,8 +34,10 @@ class AudioForm : public BaseEntityDetailDlg
 public:
     enum ArtistColumn{FirstName=0, LastName, FullName, ArtistType, Notes};
 
+
     explicit AudioForm(AUDIO::Audio*,
                        RavenSetup* setup,
+                       FormMode form_mode = FormMode::ReadWrite,
                        QDialog* parent = nullptr);
     ~AudioForm();
 
@@ -65,5 +69,9 @@ private:
     RavenSetup* m_setup;
     std::unique_ptr<PickListBrowser> m_artist_picker;
     std::unique_ptr<AUDIO::AudioTool> m_audio_tool;
+
+    FormMode m_form_mode;
+
+    void setup_ui();
 };
 

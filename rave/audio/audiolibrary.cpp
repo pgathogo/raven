@@ -8,9 +8,9 @@
 #include "../framework/ravenexception.h".h"
 #include "audiofolder.h"
 
-std::vector<NodeData*> AudioLibrary::read_data_from_file(const std::string data_file)
+std::vector<FRAMEWORK::NodeData*> AudioLibrary::read_data_from_file(const std::string data_file)
 {
-    std::vector<NodeData*> data;
+    std::vector<FRAMEWORK::NodeData*> data;
 
     std::string line;
     std::ifstream tree_file(data_file);
@@ -21,7 +21,7 @@ std::vector<NodeData*> AudioLibrary::read_data_from_file(const std::string data_
         {
            auto[id, name, parent_id] = line_tokenizer(line);
 
-           auto node_data = new NodeData();
+            auto node_data = new FRAMEWORK::NodeData();
            node_data->id = std::stoi(id);
            node_data->parent_id = std::stoi(parent_id);
            node_data->name = name;
@@ -48,14 +48,14 @@ LineTokens AudioLibrary::line_tokenizer(std::string line)
          line.erase(0, pos + delimeter.length());
      }
 
-     TreeData tok_tuple = std::make_tuple(tokens.at(0), tokens.at(1), tokens.at(2));
+     FRAMEWORK::TreeData tok_tuple = std::make_tuple(tokens.at(0), tokens.at(1), tokens.at(2));
 
      return tok_tuple;
 }
 
-std::vector<NodeData*> AudioLibrary::read_data_from_db()
+std::vector<FRAMEWORK::NodeData*> AudioLibrary::read_data_from_db()
 {
-    std::vector<NodeData*> data;
+    std::vector<FRAMEWORK::NodeData*> data;
 
     EntityDataModel edm(std::make_shared<AudioFolder>());
     qDebug() << "5555";
@@ -69,7 +69,7 @@ std::vector<NodeData*> AudioLibrary::read_data_from_db()
 
     for(auto& [name, entity] : edm.modelEntities()){
        AudioFolder* audio_folder = dynamic_cast<AudioFolder*>(entity.get());
-       auto node_data = new NodeData();
+        auto node_data = new FRAMEWORK::NodeData();
        node_data->id = audio_folder->id();
        node_data->parent_id = audio_folder->parent_id()->value();
        node_data->name = audio_folder->folder_name()->value();

@@ -6,7 +6,6 @@
 
 class QPushButton;
 
-
 namespace AUDIO
 {
     class Audio;

@@ -13,6 +13,7 @@
 #include "../audio/trackpickerdialog.h"
 #include "../audio/audiotool.h"
 #include "../audio/audiofile.h"
+#include "../audio/audio.h"
 
 using namespace std::chrono_literals;
 
@@ -399,9 +400,7 @@ namespace OATS
 
     void AudioLoadWidget::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
     {
-        qDebug() << "Selected Audio: "<< audio->id();
         emit cart_add_audio(audio);
-
 
     }
 

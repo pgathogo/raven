@@ -29,12 +29,16 @@ QT_END_NAMESPACE
 #define DB_SCHEDULE
 #define ENABLE_CACHE
 
+// namespace FRAMEWORK {
+//     class TreeViewModel;
+// }
+
 class QPushButton;
 class QLabel;
 class QStandardItemModel;
 class QButtonGroup;
 
-class TreeViewModel;
+
 class BaseDataProvider;
 class ScheduleItem;
 //class TimeAnalyzerWidget;
@@ -59,8 +63,8 @@ namespace DATA{
 }
 
 namespace AUDIO{
-   class AudioTrackViewer;
-   class AudioLibItem;
+   //class AudioTrackViewer;
+   //class AudioLibItem;
    class TrackBrowser;
    class AudioPlayer;
 
@@ -359,8 +363,8 @@ private:
     std::unique_ptr<QTimer> m_time_stats_timer;
     std::unique_ptr<QTimer> m_update_db;
 
-    std::unique_ptr<TreeViewModel> m_folder_model;
-    std::vector<NodeData*> m_folders;
+    // std::unique_ptr<FRAMEWORK::TreeViewModel> m_folder_model;
+    // std::vector<NodeData*> m_folders;
 
     std::unique_ptr<EntityDataModel> m_audio_edm;
 

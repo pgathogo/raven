@@ -1,21 +1,31 @@
 #include <QWidget>
-#include <QPushButton>
 #include <QDebug>
-#include <QFileSystemModel>
-#include <QDir>
+
+
+//#include <QPushButton>
+// #include <QFileSystemModel>
+// #include <QDir>
+
 #include <QGridLayout>
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QSpacerItem>
 
-#include "trackbrowser.h"
-
 #include "../framework/ravenexception.h"
-#include "../framework/tree.h"
-#include "../framework/treeviewmodel.h"
 
-#include "../audio/audiotrackviewer.h"
-#include "../audio/audiolibrary.h"
+#include "trackbrowser.h"
+#include "audiofolderwidget.h"
+#include "audiosearchwidget.h"
+#include "audiotrackwidget.h"
+#include "audiodatamodel.h"
+#include "audio.h"
+
+//#include "artist.h"
+
+#include "audiotrackviewer.h"
+//#include "audiotrackwidgettoolbar.h"
+//#include "../framework/tree.h"
+//include "../framework/treeviewmodel.h"
 
 namespace AUDIO
 {
@@ -93,6 +103,7 @@ namespace AUDIO
         v_layout->addWidget(m_audio_track_widget.get());
 
         m_audio_data_model = std::make_unique<AudioDataModel>(m_audio_track_widget->track_viewer());
+
         connect(m_audio_data_model.get(), &AudioDataModel::selected_audio, this, &TrackBrowser::selected_audio);
 
         splitter->addWidget(m_bottom_widget.get());
@@ -106,27 +117,29 @@ namespace AUDIO
     {
         auto audio = std::make_unique<AUDIO::Audio>();
 
-        auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),
+        auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<Audio>(),
                                              "=", folder_id);
 
         m_audio_data_model->fetch_filtered_audio(folder_filter);
     }
 
-    void TrackBrowser::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
+    void TrackBrowser::selected_audio(std::shared_ptr<Audio> audio)
     {
         m_current_selected_audio = audio;
     }
 
-    std::shared_ptr<AUDIO::Audio> TrackBrowser::current_selected_audio()
+    std::shared_ptr<Audio> TrackBrowser::current_selected_audio()
     {
-        if (m_audio_track_widget->track_viewer()->get_selected_audio_id() < 0 )
+        //if (m_audio_track_widget->track_viewer()->get_selected_audio_id() < 0 )
+
+        if (m_audio_track_widget->selected_audio_id() < 0 )
             return nullptr;
 
        return m_current_selected_audio;
 
     }
 
-    std::shared_ptr<AUDIO::Audio> TrackBrowser::find_audio_by_id(int audio_id)
+    std::shared_ptr<Audio> TrackBrowser::find_audio_by_id(int audio_id)
     {
        auto audio = m_audio_data_model->find_audio_by_id(audio_id);
         return audio;
@@ -137,424 +150,6 @@ namespace AUDIO
     {
         m_audio_data_model->fetch_filtered_audio(filter);
     }
-
-    /* ------ AudioFolderWidget ------ */
-
-    AudioFolderWidget::AudioFolderWidget()
-        :m_v_layout{nullptr}
-        ,m_folder_view{nullptr}
-    {
-        m_v_layout = std::make_unique<QVBoxLayout>();
-
-        //layout_controls();
-
-        m_folder_view = std::make_unique<QTreeView>();
-        m_folder_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        connect(m_folder_view.get(), &QTreeView::clicked, this, &AudioFolderWidget::folder_clicked);
-
-        m_v_layout->addWidget(m_folder_view.get());
-
-        setLayout(m_v_layout.get());
-        set_model();
-
-        style_folder_view();
-    }
-
-    void AudioFolderWidget::style_folder_view()
-    {
-        QString tree_style (
-            "QTreeView{background-color: #374148;}"
-            "QTreeView::item{color: #FFFFFF;}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {"
-            "  border-image: none;"
-            "  image: url(:/images/icons/treeview_closed_purple.png);"
-            "}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings  {"
-            "border-image: none;"
-            "image: url(:/images/icons/treeview_open_purple.png);}"
-            "QHeaderView::section{background-color:#708090; color:#FFFFFF;}"
-            );
-
-
-        m_folder_view->setStyleSheet(tree_style);
-
-    }
-
-    void AudioFolderWidget::layout_controls()
-    {
-        m_folder_view = std::make_unique<QTreeView>();
-        m_folder_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        connect(m_folder_view.get(), &QTreeView::clicked, this, &AudioFolderWidget::folder_clicked);
-
-        m_v_layout->addWidget(m_folder_view.get());
-    }
-
-    void AudioFolderWidget::set_model()
-    {
-//        QFileSystemModel* model = new QFileSystemModel;
-//        model->setRootPath(QDir::currentPath());
-
-        try{
-            AudioLibrary audio_lib;
-            auto m_folders = audio_lib.read_data_from_db();
-            m_folder_model = std::make_unique<TreeViewModel>(m_folders, this);
-            m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
-
-            m_folder_view->setModel(m_folder_model.get());
-
-        } catch (DatabaseException& de) {
-            qDebug() << QString::fromStdString(de.errorMessage());
-        }
-
-    }
-
-    void AudioFolderWidget::folder_clicked(const QModelIndex& index)
-    {
-        int folder_id = index.data(Qt::UserRole).toInt();
-        emit folder_clicked_signal(folder_id);
-    }
-
-    AudioSearchWidget::AudioSearchWidget()
-        :m_grid_layout{nullptr}
-        ,m_lbl_title{nullptr}
-        ,m_edt_title{nullptr}
-    {
-        layout_controls();
-        setLayout(m_base_layout.get());
-    }
-
-   void AudioSearchWidget::layout_controls()
-   {
-       m_base_layout = std::make_unique<QVBoxLayout>();
-       m_button_layout = std::make_unique<QHBoxLayout>();
-
-       m_grid_layout = std::make_unique<QGridLayout>();
-       m_lbl_title = std::make_unique<QLabel>("Title: ", this);
-       m_edt_title = std::make_unique<QLineEdit>(this);
-
-       m_lbl_title->setStyleSheet("QLabel{color: #FFFFFF; font-weight: bold;}");
-
-       m_lbl_artist = std::make_unique<QLabel>("Artist: ", this);
-       m_edt_artist = std::make_unique<QLineEdit>(this);
-
-       m_lbl_artist->setStyleSheet("QLabel{color: #FFFFFF; font-weight: bold;}");
-
-       m_btn_search = std::make_unique<QPushButton>("Search", this);
-       m_btn_search->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-       style_search_button();
-
-       connect(m_btn_search.get(), &QPushButton::clicked, this, &AudioSearchWidget::search_clicked);
-
-       m_grid_layout->addWidget(m_lbl_title.get(), ROW0, COL0);
-       m_grid_layout->addWidget(m_edt_title.get(), ROW0, COL1);
-
-       m_grid_layout->addWidget(m_lbl_artist.get(), ROW1, COL0);
-       m_grid_layout->addWidget(m_edt_artist.get(), ROW1, COL1);
-
-       // auto l_spacer = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Expanding);
-       // m_grid_layout->addItem(l_spacer, ROW2, COL0, 1, 1);
-
-       m_button_layout->addWidget(m_btn_search.get());
-       m_base_layout->addLayout(m_grid_layout.get());
-       m_base_layout->addLayout(m_button_layout.get());
-
-//       auto r_spacer = new QSpacerItem(20,20,QSizePolicy::Expanding, QSizePolicy::Expanding);
-//       m_grid_layout->addItem(r_spacer, ROW2, COL2, 1, 1);
-
-   }
-
-   void AudioSearchWidget::style_search_button()
-   {
-    QString btn_style(
-        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4F565D, stop:0.5 #353A3F stop:1 #181B1D );"
-        "border-radius: 20px;"
-        "border-style: outset;"
-        "border-bottom-width: 1px;"
-        "border-bottom-color:#374148;"
-        "border-radius: 3px;"
-        "width: 100px;"
-        "height: 55px;"
-        "color:#FFFFFF;"
-       "font-weight:normal;}"
-
-        "QPushButton:hover{"
-            "background-color:#555D64; "
-            "border-width:1px;"
-            "border-color:#0479B0;"
-            " }"
-
-       "QPushButton:pressed {"
-        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
-        "border-radius: 20px;"
-        "border-style: outset;"
-        "border-bottom-width: 1px;"
-        "border-radius: 3px;"
-        "border-color:#0479B0;"
-        "color:#FFFFFF;"
-       "font-weight:normal;}"
-        );
-
-       m_btn_search->setStyleSheet(btn_style);
-
-   }
-
-   void AudioSearchWidget::search_clicked()
-   {
-       if (!m_edt_title->text().isEmpty()){
-           auto audio = std::make_unique<AUDIO::Audio>();
-           auto title_filter = std::make_tuple(
-                       audio->title()->qualified_column_name<AUDIO::Audio>(),
-                      "like",
-                       m_edt_title->text().toStdString());
-
-           emit search_filter(title_filter);
-
-       }
-
-       if (!m_edt_artist->text().isEmpty()) {
-           auto artist = std::make_unique<AUDIO::Artist>();
-           auto artist_filter = std::make_tuple(
-                       artist->fullName()->qualified_column_name<AUDIO::Artist>(),
-                       "like",
-                       m_edt_artist->text().toStdString());
-
-           emit search_filter(artist_filter);
-       }
-
-   }
-
-   AudioLibWidget::AudioLibWidget()
-       :m_h_layout{nullptr}
-       ,m_audio_folder_widget{nullptr}
-       ,m_audio_search_widget{nullptr}
-   {
-       m_h_layout = std::make_unique<QVBoxLayout>();
-
-       setStyleSheet("background-color: red;");
-
-//       m_tab_widget = std::make_unique<QTabWidget>(this);
-
-//       m_audio_folder_widget = std::make_unique<AudioFolderWidget>();
-//       m_tab_widget->addTab(m_audio_folder_widget.get(), "Browser Audio Folders");
-
-//       m_audio_search_widget  = std::make_unique<AudioSearchWidget>();
-//       m_tab_widget->addTab(m_audio_search_widget.get(), "Search Audio");
-
-//       m_h_layout->addWidget(m_tab_widget.get());
-
-       //auto v_layout = std::make_unique<QHBoxLayout>();
-       setLayout(m_h_layout.get());
-
-   }
-
-   /* --- AudioTrackWidget ----- */
-
-   AudioTrackWidgetToolbar::AudioTrackWidgetToolbar()
-       :m_h_layout{nullptr}
-       ,m_btn_listen{nullptr}
-       ,m_btn_info{nullptr}
-       ,m_btn_history{nullptr}
-   {
-        layout_controls();
-        setLayout(m_h_layout.get());
-        style_buttons();
-   }
-
-   void AudioTrackWidgetToolbar::layout_controls()
-   {
-       m_btn_listen =  std::make_unique<QPushButton>("listen", this);
-       m_btn_info = std::make_unique<QPushButton>("Audio Info", this);
-       m_btn_history = std::make_unique<QPushButton>("Audio History", this);
-
-       m_h_layout = std::make_unique<QHBoxLayout>();
-       m_h_layout->setContentsMargins(0,0,0,0);
-       m_h_layout->addWidget(m_btn_listen.get());
-       m_h_layout->addWidget(m_btn_info.get());
-       m_h_layout->addWidget(m_btn_history.get());
-       m_h_layout->addSpacerItem(new QSpacerItem(0, 0 , QSizePolicy::Expanding, QSizePolicy::Ignored ));
-   }
-
-   void AudioTrackWidgetToolbar::style_buttons()
-   {
-
-    QString style(
-        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4F565D, stop:0.5 #353A3F stop:1 #181B1D );"
-        "border-radius: 20px;"
-        "border-style: outset;"
-        "border-bottom-width: 1px;"
-        "border-bottom-color:#374148;"
-        "border-radius: 3px;"
-        "width: 80px;"
-        "height: 25px;"
-        "color:#FFFFFF;"
-       "font-weight:normal;}"
-
-        "QPushButton:hover{"
-            "background-color:#555D64; "
-            "border-width:1px;"
-            "border-color:#0479B0;"
-            " }"
-
-       "QPushButton:pressed {"
-        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
-        "border-radius: 20px;"
-        "border-style: outset;"
-        "border-bottom-width: 1px;"
-        "border-radius: 3px;"
-        "border-color:#0479B0;"
-        "color:#FFFFFF;"
-       "font-weight:normal;}"
-
-        );
-
-       m_btn_listen->setStyleSheet(style);
-       m_btn_info->setStyleSheet(style);
-       m_btn_history->setStyleSheet(style);
-
-   }
-
-   /* ----- AudioTrackWidget --------- */
-
-   AudioTrackWidget::AudioTrackWidget()
-       :m_toolbar{nullptr}
-       ,m_track_viewer{nullptr}
-       ,m_v_layout{nullptr}
-   {
-        m_v_layout = std::make_unique<QVBoxLayout>();
-        m_v_layout->setContentsMargins(0,0,0,0);
-
-        m_toolbar = std::make_unique<AudioTrackWidgetToolbar>();
-        m_track_viewer = std::make_unique<AUDIO::AudioTrackViewer>();
-
-        m_v_layout->addWidget(m_toolbar.get());
-        m_v_layout->addWidget(m_track_viewer.get());
-
-        setLayout(m_v_layout.get());
-   }
-
-   AUDIO::AudioTrackViewer* AudioTrackWidget::track_viewer()
-   {
-       return m_track_viewer.get();
-   }
-
-   void AudioTrackWidget::track_selected(int track_id)
-   {
-       emit selected_track(track_id);
-   }
-
-  /* -----  AudioDataModel ------ */
-
-  AudioDataModel::AudioDataModel(AUDIO::AudioTrackViewer* viewer)
-       :m_viewer{viewer}
-   {
-        m_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_viewer->model());
-        m_audio_edm = std::make_unique<EntityDataModel>(std::make_unique<AUDIO::Audio>());
-
-        connect(m_viewer, &AUDIO::AudioTrackViewer::track_selected, this, &AudioDataModel::track_selected);
-   }
-
-   void AudioDataModel::track_selected(int track_id)
-   {
-
-        auto audio_ptr = m_lib_item->find_audio_by_id(track_id);
-
-        std::shared_ptr<AUDIO::Audio> audio_sh = std::make_shared<AUDIO::Audio>();
-        *audio_sh = *audio_ptr;
-
-        emit selected_audio(audio_sh);
-   }
-
-   std::shared_ptr<AUDIO::Audio> AudioDataModel::find_audio_by_id(int audio_id)
-   {
-        std::shared_ptr<AUDIO::Audio> shared_ptr(m_lib_item->find_audio_by_id(audio_id));
-        return shared_ptr;
-   }
-
-
-  void AudioDataModel::fetch_audio_data(FRAMEWORK::RelationMapper* r_mapper)
-  {
-    m_audio_edm->clearEntities();
-
-    auto const& audio = dynamic_cast<AUDIO::Audio*>(m_audio_edm->get_entity().get());
-
-    try{
-        m_audio_edm->readRaw(r_mapper->query());
-    } catch (DatabaseException& de) {
-        showMessage(de.errorMessage());
-    }
-
-    r_mapper->map_data();
-
-    for (auto const& [record_id, record] : r_mapper->mapped_entities())
-    {
-        auto audio_Uptr = std::make_unique<AUDIO::Audio>();
-        bool audio_is_constructed = false;
-
-        for(auto const& [table_name, entities] : record)
-        {
-            for (auto const& entity : entities)
-            {
-                if (audio_Uptr->tableName() == entity->tableName() &&
-                    !audio_is_constructed)
-                {
-                    if (entity->id() > -1){
-                    auto audio_ptr = dynamic_cast<AUDIO::Audio*>(entity.get());
-                    *audio_Uptr.get() = *audio_ptr;
-                    audio_is_constructed = true;
-                    break;
-                    }
-                }
-
-                auto const& artist = audio_Uptr->artist()->data_model_entity();
-
-                if (artist == nullptr){
-                    continue;
-                }
-
-                if (artist->tableName() == entity->tableName())
-                {
-                    auto artist_ptr = dynamic_cast<AUDIO::Artist*>(entity.get());
-                    auto artist_uptr = std::make_unique<AUDIO::Artist>();
-                    *artist_uptr.get() = *artist_ptr;
-                    audio->artist()->set_fk_entity(std::move(artist_uptr));
-                }
-              }
-        }
-
-        if (audio_Uptr->audio_type()->value() != ""){
-            m_audio_edm->add_entity(std::move(audio_Uptr));
-        }
-    }
-
-    show_data();
-
-  }
-
-
-   void AudioDataModel::show_data()
-   {
-    m_viewer->clear();
-    m_lib_item->clear();
-    m_viewer->create_track_view_headers();
-
-    for(auto&[name, entity] : m_audio_edm->modelEntities())
-    {
-        AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
-
-        if (audio->audio_type()->displayName() == "Song")
-            m_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
-
-        if (audio->audio_type()->displayName() == "Jingle")
-            m_lib_item->create_row_item<AUDIO::JingleAudioLibItem>(audio);
-
-        if (audio->audio_type()->displayName() == "Commercial")
-            m_lib_item->create_row_item<AUDIO::CommercialAudioLibItem>(audio);
-
-    }
-
-   }
 
 
 }

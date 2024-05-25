@@ -1,5 +1,7 @@
 //#include "../framework/treeviewmodel.h"
 
+#include <QPushButton>
+
 #include "trackbrowser.h"
 #include "trackpickerdialog.h"
 
