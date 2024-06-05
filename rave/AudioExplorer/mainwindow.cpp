@@ -47,7 +47,6 @@
 
 namespace fs = std::filesystem;
 
-
 MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
                        const ConnInfo& ci, QWidget *parent)
     :QMainWindow(parent)

@@ -205,22 +205,15 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
             case AudioCreationMode::Attach:
             {
-                Logger::info("SpotBrowser", "AudioCreationMode -> Attach");
-
                 auto audio = s_audio->audio();
                 s_audio->setDetailId(audio->id());
                 s_audio->setParentId(sf.parentId());
-
-                qDebug() << "Detail ID:" << audio->id();
-                qDebug() << "Parent ID: "<< sf.parentId();
-
                 edm->createEntityDB(*s_audio);
+                break;
             } // 'Attach' case
 
             case AudioCreationMode::Import:
             {
-                Logger::info("SpotBrowser", "AudioCreationMode -> Import");
-
                 AUDIO::AudioTool at;
 
                 auto& audio = s_audio->get_paudio();
@@ -271,14 +264,18 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
                 fs::remove(old_wave_file);
                 }
 
+                break;
+
             } // 'Import' case
 
+            default:
+                Logger::info("SpotBrowser", "Unknown Type");
+                break;
 
         } // switch
 
 
     } // if create.
-
 
 
     }

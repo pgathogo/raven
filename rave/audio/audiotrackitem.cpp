@@ -81,6 +81,7 @@ SongTrackItem::SongTrackItem()
 SongTrackItem::SongTrackItem(const QString text)
     :TrackItem(text)
 {
+    setForeground(QBrush(QColor(6,144,2)));
 }
 
 TrackItemData* SongTrackItem::make_track_item_data(TrackData* const track_data) const

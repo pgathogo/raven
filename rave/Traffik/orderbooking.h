@@ -45,6 +45,9 @@ public:
     ForeignKeyField* audio() const;
     void set_audio(int val);
 
+    IntegerField* played_audio();
+    void set_played_audio(int);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -66,6 +69,7 @@ private:
     DateTimeField* m_play_time;
     ForeignKeyField* m_spot;
     ForeignKeyField* m_spot_audio;
+    IntegerField* m_played_audio;
     DateField* m_book_date;
     TimeField* m_book_time;
     IntegerField* m_book_hour;

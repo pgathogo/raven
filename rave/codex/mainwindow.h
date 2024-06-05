@@ -6,7 +6,11 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <QDialog>
-#include "client.h"
+
+#include "../Network/clientsocket.h"
+#include "../Network/serversocket.h"
+#include "../Network/message.h"
+
 
 QT_BEGIN_NAMESPACE
 
@@ -34,6 +38,7 @@ public:
 private slots:
     void setIcon();
     void log_message(const QString);
+    void recv_processed_message(NETWORK::Message);
 //     void iconActivated(QSystemTrayIcon::ActivationReason);
 //     void show_message();
 //     void message_clicked();
@@ -62,8 +67,8 @@ private:
     QSystemTrayIcon* m_tray_icon;
     QMenu* m_tray_icon_menu;
 
-    std::unique_ptr<Client> m_client;
-
+    std::unique_ptr<NETWORK::ClientSocket> m_client_socket;
+    std::unique_ptr<NETWORK::ServerSocket> m_server_socket;
 
 };
 

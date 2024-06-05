@@ -26,14 +26,28 @@ MainWindow::MainWindow()
     main_layout->addWidget(m_logger_groupbox);
     setLayout(main_layout);
 
-    m_client = std::make_unique<Client>(this);
-    connect(m_client.get(), &Client::log_message, this, &MainWindow::log_message);
+    m_client_socket = std::make_unique<NETWORK::ClientSocket>(this);
+    connect(m_client_socket.get(), &NETWORK::ClientSocket::log_message, this, &MainWindow::log_message);
 
-    //TODO::We need a thread to initiate a connectiont the server
+    QString listening_ip = "127.0.0.1";
+    int listening_port = 5544;
+
+    m_server_socket = std::make_unique<NETWORK::ServerSocket>(listening_ip, listening_port, this);
+    connect(m_server_socket.get(), &NETWORK::ServerSocket::log_server_message, this, &MainWindow::log_message);
+    connect(m_server_socket.get(), &NETWORK::ServerSocket::processed_message, this, &MainWindow::recv_processed_message);
+
+    //TODO::We need a thread to initiate a connection to the server
 
     setIcon();
     m_tray_icon->show();
 
+    log_message("Codex started.");
+
+}
+
+void MainWindow::recv_processed_message(NETWORK::Message message)
+{
+    qDebug() << message.message_response();
 }
 
 void MainWindow::create_logger_groupbox()
@@ -49,7 +63,6 @@ void MainWindow::create_logger_groupbox()
     m_btn_cmd = new QPushButton(tr("Test"));
     m_btn_hide = new QPushButton(tr("Hide"));
     m_btn_close = new QPushButton(tr("Close"));
-
 
     connect(m_btn_hide, &QPushButton::clicked, this, &MainWindow::soc_connect);
     connect(m_btn_close, &QPushButton::clicked, this, &MainWindow::soc_disconnect);
@@ -120,18 +133,19 @@ void MainWindow::log_message(const QString msg)
 
 void MainWindow::soc_connect()
 {
-    m_client->soc_connect();
+    m_client_socket->soc_connect();
 }
 
 void MainWindow::soc_disconnect()
 {
-    m_client->soc_disconnect();
+    m_client_socket->soc_disconnect();
 }
 
 void MainWindow::send_request()
 {
     m_edt_logger->append("Sending request");
-    m_client->request("DISK-LIST");
+    //m_client_socket->request("DISK-LIST");
+    //void ClientSocket::send_message(QJsonDocument message, SenderIpAddress ipaddress, SenderPort port)
 }
 
 

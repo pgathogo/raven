@@ -132,8 +132,8 @@ namespace AUDIO{
         :AudioLibItem()
     {
         setText(text);
-        //setForeground(QBrush(QColor(6,144,2)));
-        setForeground(QBrush(QColor(255,255,255)));
+        setForeground(QBrush(QColor(6,144,2)));
+        //setForeground(QBrush(QColor(255,255,255)));
     }
 
     JingleAudioLibItem::~JingleAudioLibItem()
@@ -151,8 +151,8 @@ namespace AUDIO{
         :AudioLibItem()
     {
         setText(text);
-        //setForeground(QBrush(QColor(144,2,9)));
-        setForeground(QBrush(QColor(255,255,255)));
+        setForeground(QBrush(QColor(144,2,9)));
+        //setForeground(QBrush(QColor(255,255,255)));
     }
 
     CommercialAudioLibItem::~CommercialAudioLibItem()

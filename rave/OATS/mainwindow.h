@@ -102,6 +102,7 @@ struct CommBreak{
     int book_hour{-1};
     int duration;
     int audio_id{-1};
+    int played_audio_id{-1};
     QString comm_title;
     QString booking_status{""};
     QString filepath{""};
@@ -329,6 +330,7 @@ private:
     void log_info(const QString);
     void log_error(const QString);
 
+
     Ui::MainWindow *ui;
 
    // std::unique_ptr<TimeAnalyzerWidget> m_taw;
@@ -361,7 +363,7 @@ private:
     std::unique_ptr<QTimer> m_countdown_timer;
     std::unique_ptr<QTimer> m_main_player_timer;
     std::unique_ptr<QTimer> m_time_stats_timer;
-    std::unique_ptr<QTimer> m_update_db;
+    std::unique_ptr<QTimer> m_audio_playtime_db_update;
 
     // std::unique_ptr<FRAMEWORK::TreeViewModel> m_folder_model;
     // std::vector<NodeData*> m_folders;
@@ -402,7 +404,7 @@ private:
     std::unique_ptr<OATS::ScheduleItem> m_current_jingle_item;
 
     std::shared_ptr<QMutex> m_updatedb_mutex;
-    std::unique_ptr<QTimer> m_updatedb_timer;
+    std::unique_ptr<QTimer> m_comm_playtime_db_update;
 
     int m_schedule_top_index;
     int m_scrollbar_current_value;

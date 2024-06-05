@@ -55,6 +55,9 @@ class StorageDisk(models.Model):
     disk_name = models.CharField(max_length=100)
     audio_server = models.ForeignKey(Server, models.DO_NOTHING)
     capacity = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    free_space = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    raw_disk_name = models.CharField(max_length=5, blank=True, null=True)
+    last_refresh = models.DateTimeField(default=now(), blank=True, null=True)
 
 class AudioFolder(models.Model):
     folder_name = models.CharField(max_length = 200)

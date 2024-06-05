@@ -80,13 +80,20 @@ namespace AUDIO
 
     void AudioPlayer::stop_play()
     {
+        qDebug() << ">>> Audio Player::stop_play >>>";
+
+        emit audio_played(m_played_audio);
+
         if (m_audio_thread != nullptr)
             m_audio_thread->stop();
     }
 
     void AudioPlayer::end_of_playback()
     {
-        m_audio_thread->stop();
+        //m_audio_thread->stop();
+        qDebug() << "Audio Player::end_of_playback";
+
+        stop_play();
 
         emit audio_played(m_played_audio);
 

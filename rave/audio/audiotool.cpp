@@ -11,6 +11,7 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QTime>
+#include <QRegularExpression>
 
 #include "audiotool.h"
 #include "audio.h"
@@ -163,6 +164,19 @@ namespace AUDIO
         ss << std::setw(FILENAME_LEN) << std::setfill('0') << audio_file_id;
         return ss.str();
     }
+
+    int AudioTool::filename_to_id(QString filename)
+    {
+        int index = filename.indexOf(QRegularExpression("[1-9]"));
+        QString audio_id_str{""};
+
+        for(auto ib=filename.begin()+index; ib < filename.end(); ++ib) {
+            audio_id_str += *ib;
+        }
+
+        return audio_id_str.toInt();
+    }
+
 
     bool AudioTool::copy_ogg_to_audiolib(std::string src_ogg, std::string dest_ogg)
     {

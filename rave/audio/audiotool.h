@@ -28,6 +28,7 @@ namespace AUDIO
         bool generate_wave_file(const std::string src_audio_file, const std::string dest_wave_file);
         std::string mp3_to_ogg(AudioFile&);
         std::string make_audio_filename(int);
+        int filename_to_id(QString);
         bool copy_ogg_to_audiolib(std::string, std::string);
         bool copy_wave_to_audiolib(std::string, std::string);
         QString format_time(double);

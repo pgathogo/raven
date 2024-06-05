@@ -1,30 +1,27 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef CLIENTSOCKET_H
+#define CLIENTSOCKET_H
 
-#include <memory>
-
-#include <QObject>
 #include <QTcpSocket>
-#include "requestresponsemanager.h"
+#include <QObject>
 
-class QTcpSocket;
-//class RequestResponseManager;
+#include "../../rave/codex/requestresponsemanager.h"
 
-class Client : public QObject
+
+
+class ClientSocket : public QObject
 {
     Q_OBJECT
 public:
-    explicit Client(QObject* parent = nullptr);
+    explicit ClientSocket(QObject *parent = nullptr);
     void soc_connect();
     void soc_disconnect();
-    void request(QString);
+    void send_request(const QString);
 
 signals:
     void log_message(const QString);
 
 private slots:
     void read_socket();
-    void show_man_message(const QString);
 
 private:
     void make_client_socket();
@@ -32,6 +29,7 @@ private:
 
     std::unique_ptr<QTcpSocket> m_socket;
     std::unique_ptr<RequestResponseManager> m_req_resp_manager;
+
 };
 
-#endif // CLIENT_H
+#endif // CLIENTSOCKET_H

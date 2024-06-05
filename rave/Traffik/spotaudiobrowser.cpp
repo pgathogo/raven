@@ -317,28 +317,12 @@ void SpotAudioBrowser::attach_audio()
 
 void SpotAudioBrowser::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
 {
-
     auto spot_audio = std::make_unique<TRAFFIK::SpotAudio>(m_mtom->parentEntity(), audio.get());
 
     // spot_audio->setId(audio->id());
     spot_audio->setDBAction(DBAction::dbaCREATE);
-
-    auto msg_title = QString("Title: %1").arg(audio->title()->to_qstring());
-    auto msg_weight = QString("Weight: %1").arg(QString::number(spot_audio->weight()->value()));
-    auto msg_seq = QString("Seq: %1").arg(QString::number(spot_audio->seqNo()->value()));
-    auto msg_spotid = QString("Spot ID: %1").arg(QString::number(spot_audio->parentId()->value()));
-    auto msg_audioid = QString("Audio ID: %1").arg(QString::number( spot_audio->audio()->id() ));
-
-    Logger::info("SpotAudioBrowser", msg_title);
-    Logger::info("SpotAudioBrowser", msg_weight);
-    Logger::info("SpotAudioBrowser", msg_seq);
-    Logger::info("SpotAudioBrowser", msg_spotid);
-    Logger::info("SpotAudioBrowser", msg_audioid);
-
     entityDataModel().cacheEntity(std::move(spot_audio));
-
     m_audio_creation_mode = AudioCreationMode::Attach;
-
 }
 
 AudioCreationMode SpotAudioBrowser::audio_creation_mode()
@@ -416,6 +400,5 @@ void SpotAudioBrowser::cue_edit()
 
 void SpotAudioBrowser::closeEvent(QCloseEvent*)
 {
-    if (m_audio_player != nullptr)
-        m_audio_player->stop_play();
+    stop_play();
 }

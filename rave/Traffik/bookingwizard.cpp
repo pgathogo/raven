@@ -358,14 +358,15 @@ void BookingWizard::commit_booking()
                 order_booking.set_book_time(selected_break.break_time);
                 order_booking.set_book_hour(selected_break.break_hour);
 
+                order_booking.set_audio(m_engine_data.spot_to_book.audio_id);
+
                 // Sequential slotting
-                if (selected_break.break_fill_method == "S"){
+                if (selected_break.break_fill_method == "S") {
                     order_booking.set_book_seq(++selected_break.booked_spots);
                 }
 
-
                 // Random slotting
-                if (selected_break.break_fill_method == "R"){
+                if (selected_break.break_fill_method == "R") {
                     int break_slot = find_break_slot(break_id, selected_break.max_spots);
                     order_booking.set_book_seq(break_slot);
                 }
@@ -926,10 +927,8 @@ void BookingWizard::initializePage(int currentId)
 {
 
     if (currentId == 3){
-        qDebug() << "Page Number: "<< currentId;
         QAbstractButton* next_btn = button(QWizard::NextButton);
         if (next_btn){
-            qDebug() << "Next button found";
             next_btn->setEnabled(false);
         }
     }

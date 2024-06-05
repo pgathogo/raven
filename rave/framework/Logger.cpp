@@ -95,7 +95,11 @@ void Logger::clean() {
 
 void Logger::info(const QString module, QString msg)
 {
-    qInfo().noquote() << module << ";" << msg;
+    qInfo().noquote()
+        << QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm:ss")
+        << module
+        << ";"
+        << msg;
 }
 
 void Logger::debug(const QString module, QString msg)

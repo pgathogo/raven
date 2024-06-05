@@ -1,91 +1,5 @@
 [
     {
-        "break_time": "14:15",
-        "comms": [
-            {
-                "book_status": "READY",
-                "client_name": "Proxima Media Systems Ltd.",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "14:15",
-                "spot_duration": 20,
-                "spot_id": 26,
-                "spot_name": "Launching of Traffik Three"
-            },
-            {
-                "book_status": "READY",
-                "client_name": "CAPITAL ONE",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "14:15",
-                "spot_duration": 20,
-                "spot_id": 33,
-                "spot_name": "Run Beyond - SPOT (Mobile Services)"
-            }
-        ]
-    },
-    {
-        "break_time": "14:30",
-        "comms": [
-            {
-                "book_status": "READY",
-                "client_name": "Safaricom Test",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "14:30",
-                "spot_duration": 43,
-                "spot_id": 2,
-                "spot_name": "Fibre At Home (Mobile Services)"
-            }
-        ]
-    },
-    {
-        "break_time": "14:45",
-        "comms": [
-            {
-                "book_status": "READY",
-                "client_name": "CAPITAL ONE",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "14:45",
-                "spot_duration": 20,
-                "spot_id": 33,
-                "spot_name": "Run Beyond - SPOT (Mobile Services)"
-            },
-            {
-                "book_status": "READY",
-                "client_name": "Proxima Media Systems Ltd.",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "14:45",
-                "spot_duration": 20,
-                "spot_id": 26,
-                "spot_name": "Launching of Traffik Three"
-            }
-        ]
-    },
-    {
-        "break_time": "15:00",
-        "comms": [
-            {
-                "book_status": "READY",
-                "client_name": "Safaricom Test",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "15:00",
-                "spot_duration": 43,
-                "spot_id": 2,
-                "spot_name": "Fibre At Home (Mobile Services)"
-            }
-        ]
-    },
-    {
         "break_time": "15:15",
         "comms": [
             {
@@ -93,22 +7,87 @@
                 "client_name": "Proxima Media Systems Ltd.",
                 "play_date": "",
                 "play_time": "",
-                "schedule_date": "",
+                "schedule_date": "30-05-2024",
                 "schedule_time": "15:15",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            }
+        ]
+    },
+    {
+        "break_time": "15:30",
+        "comms": [
+            {
+                "book_status": "PLAYED",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "30-05-2024",
+                "play_time": "15:46",
+                "schedule_date": "30-05-2024",
+                "schedule_time": "15:30",
                 "spot_duration": 20,
                 "spot_id": 26,
                 "spot_name": "Launching of Traffik Three"
             },
             {
-                "book_status": "READY",
+                "book_status": "PLAYED",
+                "client_name": "Sunhill Ventures",
+                "play_date": "30-05-2024",
+                "play_time": "15:47",
+                "schedule_date": "30-05-2024",
+                "schedule_time": "15:30",
+                "spot_duration": 25,
+                "spot_id": 3,
+                "spot_name": "Promoting Pork Chops"
+            },
+            {
+                "book_status": "PLAYED",
                 "client_name": "CAPITAL ONE",
-                "play_date": "",
-                "play_time": "",
-                "schedule_date": "",
-                "schedule_time": "15:15",
+                "play_date": "30-05-2024",
+                "play_time": "15:47",
+                "schedule_date": "30-05-2024",
+                "schedule_time": "15:30",
+                "spot_duration": 30,
+                "spot_id": 32,
+                "spot_name": "Raven Banner Spot (Voice - Bite Force)"
+            }
+        ]
+    },
+    {
+        "break_time": "15:45",
+        "comms": [
+            {
+                "book_status": "PLAYED",
+                "client_name": "CAPITAL ONE",
+                "play_date": "30-05-2024",
+                "play_time": "15:50",
+                "schedule_date": "30-05-2024",
+                "schedule_time": "15:45",
+                "spot_duration": 30,
+                "spot_id": 32,
+                "spot_name": "Raven Banner Spot (Voice - Bite Force)"
+            },
+            {
+                "book_status": "PLAYED",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "30-05-2024",
+                "play_time": "15:49",
+                "schedule_date": "30-05-2024",
+                "schedule_time": "15:45",
                 "spot_duration": 20,
-                "spot_id": 33,
-                "spot_name": "Run Beyond - SPOT (Mobile Services)"
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            },
+            {
+                "book_status": "PLAYED",
+                "client_name": "Sunhill Ventures",
+                "play_date": "30-05-2024",
+                "play_time": "15:48",
+                "schedule_date": "30-05-2024",
+                "schedule_time": "15:45",
+                "spot_duration": 25,
+                "spot_id": 3,
+                "spot_name": "Promoting Pork Chops"
             }
         ]
     }

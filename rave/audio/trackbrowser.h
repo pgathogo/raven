@@ -9,20 +9,6 @@
 #include <QHBoxLayout>
 #include <QTabWidget>
 
-//#include <QPushButton>
-//#include <QTreeView>
-// #include <QLabel>
-// #include <QLineEdit>
-// #include <QModelIndex>
-
-//#include "../framework/baseentity.h"
-//#include "../framework/entitydatamodel.h"
-//#include "../framework/relationmapper.h"
-
-// #include "../audio/audio.h"
-// #include "../audio/artist.h"
-// #include "../audio/audiolibitem.h"
-
 namespace AUDIO
 {
     class AudioFolderWidget;
@@ -30,12 +16,6 @@ namespace AUDIO
     class AudioTrackWidget;
     class AudioDataModel;
     class Audio;
-
-    //class Artist;
-    //class AudioTrackViewer;
-    //class AudioLibWidget;
-    //class AudioLibItem;
-    //class AudioTrackWidgetToolbar;
 
     using Filter = std::tuple<std::string, std::string, std::string>;
 

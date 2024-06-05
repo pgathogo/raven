@@ -5,25 +5,26 @@
 #include <Windows.h>
 #include <cmath>
 
-// RequestResponseManager
-
-DiskListRequestHandler::DiskListRequestHandler()
+namespace NETWORK
 {
 
-}
+    DiskListRequestHandler::DiskListRequestHandler()
+    {
 
-QString DiskListRequestHandler::handler_type()
-{
-    return "DISK-LIST";
-}
+    }
 
-Response DiskListRequestHandler::handle_request(Request request)
-{
-    QJsonObject all_volumes;
+    QString DiskListRequestHandler::handler_type()
+    {
+        return "DISK-LIST";
+    }
 
-    DWORD drive_mask = GetLogicalDrives();
+    Response DiskListRequestHandler::handle_request(Request request)
+    {
+        QJsonObject all_volumes;
 
-    for (char drive_letter = 'A'; drive_letter <= 'Z'; ++drive_letter) {
+        DWORD drive_mask = GetLogicalDrives();
+
+        for (char drive_letter = 'A'; drive_letter <= 'Z'; ++drive_letter) {
 
         if (drive_mask & 1) {
             QString drive_path = QString("%1:\\").arg(drive_letter);
@@ -37,20 +38,20 @@ Response DiskListRequestHandler::handle_request(Request request)
 
         // shift right to the next letter
         drive_mask >>= 1;
+        }
+
+        QJsonDocument json_doc(all_volumes);
+        return json_doc;
+
     }
 
-    QJsonDocument json_doc(all_volumes);
-    return json_doc;
+    DiskInfo DiskListRequestHandler::disk_info(const QString& drive)
+    {
+        ULARGE_INTEGER total, free;
 
-}
+        DiskInfo di;
 
-DiskInfo DiskListRequestHandler::disk_info(const QString& drive)
-{
-    ULARGE_INTEGER total, free;
-
-    DiskInfo di;
-
-    if (GetDiskFreeSpaceExW(drive.toStdWString().c_str(), &free, &total, NULL)) {
+        if (GetDiskFreeSpaceExW(drive.toStdWString().c_str(), &free, &total, NULL)) {
         double totalgb = round(total.QuadPart / (1024.0 * 1024.0 * 1024.0) * 10) /10;
         double freegb = round(free.QuadPart / (1024.0 * 1024.0 * 1024.0) * 10) /10;
 
@@ -58,12 +59,12 @@ DiskInfo DiskListRequestHandler::disk_info(const QString& drive)
         di.total = totalgb;
 
         return di;
+        }
+
+        return di;
     }
 
-    return di;
 }
-
-
 
 
 

@@ -25,7 +25,6 @@
 
 AccessMap MainWindow::access_map;
 
-
 MainWindow::MainWindow(QApplication* app,
                        const StationInfo& si,
                        const ConnInfo& ci,
@@ -54,9 +53,6 @@ MainWindow::MainWindow(QApplication* app,
 {
     ui->setupUi(this);
 
-    mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    setCentralWidget(mdiArea);
 
     createActions();
 
@@ -85,9 +81,13 @@ MainWindow::MainWindow(QApplication* app,
 
     setFixedSize(1300, 700);
     setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
-    update();
+    //update();
 
     Logger::info("MainWindow", "Opened MainWindow");
+
+    mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setCentralWidget(mdiArea);
 }
 
 void MainWindow::createActions()

@@ -12,6 +12,10 @@ namespace ClusterManager
         m_audio_server = createField<ForeignKeyField>("audio_server_id", "Audio Server",
                                                      std::make_unique<Server>(), "server_name");
 
+        m_free_space = createField<DecimalField>("free_space", "Free Disk Space");
+        m_raw_disk_name = createField<StringField>("raw_disk_name", "Raw Disk Name");
+        m_last_refresh = createField<DateTimeField>("last_refresh", "Last Refresh Date");
+
         m_header << QString::fromStdString(m_disk_name->fieldName())
                  << QString::fromStdString(m_audio_server->fieldName());
 
@@ -39,6 +43,21 @@ namespace ClusterManager
         return m_capacity;
     }
 
+    DecimalField* StorageDisk::free_space()
+    {
+        return m_free_space;
+    }
+
+    StringField* StorageDisk::raw_disk_name()
+    {
+        return m_raw_disk_name;
+    }
+
+    DateTimeField* StorageDisk::last_refresh()
+    {
+        return m_last_refresh;
+    }
+
     void StorageDisk::set_disk_name(const std::string name)
     {
        m_disk_name->setValue(name);
@@ -51,6 +70,22 @@ namespace ClusterManager
     void StorageDisk::set_capacity(double cap)
     {
         m_capacity->setValue(cap);
+    }
+
+    void StorageDisk::set_free_space(double fspace)
+    {
+        m_free_space->setValue(fspace);
+
+    }
+
+    void StorageDisk::set_raw_disk_name(const std::string dname)
+    {
+        m_raw_disk_name->setValue(dname);
+    }
+
+    void StorageDisk::set_last_refresh(QDateTime refdate)
+    {
+        m_last_refresh->setValue(refdate);
     }
 
     std::string StorageDisk::tableName() const

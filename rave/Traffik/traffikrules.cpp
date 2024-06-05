@@ -29,7 +29,6 @@ namespace TRAFFIK{
 
     int RuleEngine::find_breaks()
     {
-
         m_engine_data.failed_breaks.clear();
 
         // Initialize break failed counts for all the rules
@@ -73,7 +72,6 @@ namespace TRAFFIK{
         {
             if (!rule->isEnabled())
                 continue;
-
 
             // If target break is logged as failed, skip the break
             if (find_failed_break(m_engine_data.failed_breaks, target_break->id())){
@@ -648,7 +646,7 @@ namespace TRAFFIK{
 
     /* Block Different Spots Same Audio */
 
-    bool BlockDiffSpotSameAudioRule::m_isEnabled = false;
+    bool BlockDiffSpotSameAudioRule::m_isEnabled = true;
     int BlockDiffSpotSameAudioRule::m_failed_break_count = 0;
 
     BlockDiffSpotSameAudioRule::BlockDiffSpotSameAudioRule()
@@ -666,6 +664,8 @@ namespace TRAFFIK{
 
             if (booked_record.schedule_id != target_break.id())
                 continue;
+
+            qDebug() << "Booked Spot Audio ID: "<< booked_record.booked_spot.audio_id  << "Spot to Book Audio ID: "<< engine_data.spot_to_book.audio_id;
 
             if (booked_record.booked_spot.audio_id == engine_data.spot_to_book.audio_id) {
                 ++m_failed_break_count;

@@ -696,10 +696,11 @@ void ClusterManagerDlg::new_disk(ClusterManager::Server* server)
 {
     auto storage_disk = std::make_shared<ClusterManager::StorageDisk>();
 
-    auto server_name = server->server_name()->value();
+    //auto server_name = server->server_name()->value();
 
     std::unique_ptr<StorageDiskForm> sform =
-            std::make_unique<StorageDiskForm>(server_name, storage_disk.get(), this);
+            std::make_unique<StorageDiskForm>(server, storage_disk.get(), this);
+
     if (sform->exec() > 0)
     {
         ClusterManager::ConfigItem disk_item;
@@ -728,7 +729,6 @@ void ClusterManagerDlg::new_disk(ClusterManager::Server* server)
 
 void ClusterManagerDlg::new_audio_folder(ClusterManager::StorageDisk* storage_disk)
 {
-
     auto audio_folder = std::make_shared<ClusterManager::AudioFolder>();
 
     auto disk_name = storage_disk->disk_name()->value();

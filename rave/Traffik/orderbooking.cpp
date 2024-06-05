@@ -1,7 +1,8 @@
 #include "../framework/choicefield.h"
+#include "../framework/schedule.h"
+#include "../audio/audio.h"
 #include "orderbooking.h"
 #include "bookingsegment.h"
-#include "../framework/schedule.h"
 #include "spotaudio.h"
 #include "spot.h"
 
@@ -31,8 +32,10 @@ OrderBooking::OrderBooking()
     m_spot = createField<ForeignKeyField>("spot_id", "Spot",
                                           std::make_unique<TRAFFIK::Spot>(), "name");
 
-    m_spot_audio = createField<ForeignKeyField>("audio_id", "Audio",
-                                          std::make_unique<TRAFFIK::SpotAudio>(), "spot_id");
+    m_spot_audio = createField<ForeignKeyField>("booked_audio_id", "Audio",
+                                          std::make_unique<AUDIO::Audio>(), "id");
+
+    m_played_audio = createField<IntegerField>("played_audio", "Played Audio ID");
 
     m_book_date = createField<DateField>("book_date", "Book Date");
     m_book_time = createField<TimeField>("book_time", "Book Time");
@@ -159,6 +162,16 @@ ForeignKeyField *OrderBooking::audio() const
 void OrderBooking::set_audio(int val)
 {
     m_spot_audio->setValue(val);
+}
+
+IntegerField* OrderBooking::played_audio()
+{
+    return  m_played_audio;
+}
+
+void OrderBooking::set_played_audio(int audio_id)
+{
+    m_played_audio->setValue(audio_id);
 }
 
 std::string OrderBooking::tableName() const

@@ -475,5 +475,6 @@ class OrderBooking(models.Model):
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
     spot = models.ForeignKey(Spot, models.DO_NOTHING, default=-1)
-    audio = models.ForeignKey(SpotAudio, models.DO_NOTHING, null=True)
+    booked_audio = models.ForeignKey(Audio, models.DO_NOTHING, null=True)
+    played_audio = models.IntegerField(default=-1, null=True, blank=True)
     book_seq = models.IntegerField(default=1, null=True)

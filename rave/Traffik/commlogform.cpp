@@ -39,6 +39,10 @@ CommLogForm::CommLogForm(QWidget *parent) :
     std::string hours = comma_sep(m_dts.sel_hours);
     update_hours_label(hours);
 
+    fetch_bookings(m_dts);
+
+    this->setMinimumSize(QSize(950, 500));
+
     setWindowTitle("Commercial Logs");
 }
 
@@ -173,14 +177,8 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
     if (dts.sel_hours.size() == 0)
         return;
 
-    //std::string selected_hours = "("+m_hours->currentText().toStdString()+")";
-
-
     std::string selected_hours = comma_sep(dts.sel_hours);
     selected_hours = "("+selected_hours+")";
-
-    qDebug() << "Selected Hours: "<< QString::fromStdString(selected_hours);
-
 
     std::stringstream sql;
 
@@ -257,7 +255,7 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
         CommLogTreeViewModel* comm_log_tvm = new CommLogTreeViewModel(m_comm_logs);
         ui->tvCommLog->setModel(comm_log_tvm);
 
-        ui->tvCommLog->header()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->tvCommLog->header()->setSectionResizeMode(QHeaderView::Interactive);
         ui->cbExpand->setChecked(true);
     }
 

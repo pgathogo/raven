@@ -4,9 +4,8 @@ cmake_minimum_required(VERSION 3.15)
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(MSVS_BUILD_NUM "14.37.32822")
+set(MSVS_BUILD_NUM "14.39.33519")
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
-
 
 project(clusterman VERSION 0.1 LANGUAGES CXX)
 
@@ -28,10 +27,12 @@ find_package(PostgreSQL REQUIRED)
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
 set(UTILS_DIR "../../../rave/utils")
+set(CODEX_DIR "../../../rave/codex")
+set(NETWORK_DIR "../../../rave/Network")
 
 
 set(PROJECT_SOURCES
@@ -82,6 +83,17 @@ set(PROJECT_SOURCES
         useraccess.cpp
         clustercontroller.h
         clustercontroller.cpp
+
+        ${NETWORK_DIR}/clientsocket.h
+        ${NETWORK_DIR}/clientsocket.cpp
+        ${NETWORK_DIR}/serversocket.cpp
+        ${NETWORK_DIR}/serversocket.cpp
+        ${NETWORK_DIR}/requestresponsemanager.h
+        ${NETWORK_DIR}/requestresponsemanager.cpp
+        ${NETWORK_DIR}/request_response_handler.h
+        ${NETWORK_DIR}/request_response_handler.cpp
+        ${NETWORK_DIR}/message.h
+        ${NETWORK_DIR}/message.cpp
 
         ${rave_security_INCLUDE_DIRS}/authentication.h
         ${rave_security_INCLUDE_DIRS}/authentication.cpp
@@ -198,6 +210,8 @@ target_compile_options(clusterman PRIVATE /MT)
 target_link_options(clusterman PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
 target_link_libraries(clusterman PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(clusterman PRIVATE Qt${QT_VERSION_MAJOR}::Network)
+
 target_link_libraries(clusterman PRIVATE ${PostgreSQL_LIBRARIES})
 
 target_include_directories(clusterman PRIVATE ${postgreSQL_INCLUDE_DIRS})

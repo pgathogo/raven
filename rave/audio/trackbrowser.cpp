@@ -23,9 +23,6 @@
 //#include "artist.h"
 
 #include "audiotrackviewer.h"
-//#include "audiotrackwidgettoolbar.h"
-//#include "../framework/tree.h"
-//include "../framework/treeviewmodel.h"
 
 namespace AUDIO
 {

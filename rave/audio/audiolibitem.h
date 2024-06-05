@@ -51,11 +51,9 @@ namespace AUDIO{
 
             Columns columns;
 
-
             auto item = std::make_unique<T>(audio);
 
             auto title = new T(item->title());
-
             title->setData(audio->id(), Qt::UserRole);
 
             auto artist = new T(item->artist());
@@ -65,9 +63,8 @@ namespace AUDIO{
             auto folder = new T(item->folder());
             auto file_extension = new T(item->file_extension());
 
-
             QFileInfo fi(item->file_path());
-            if (!fi.exists()){
+            if (!fi.exists()) {
                 QFont item_font = artist->font();
                 item_font.setStrikeOut(true);
                 item_font.setStyle(QFont::StyleItalic);
@@ -92,10 +89,7 @@ namespace AUDIO{
 
                 file_extension->setForeground(QBrush(QColor(Qt::red)));
                 file_extension->setFont(item_font);
-
-
             }
-
 
             if (audio->title()->visible())
                 columns.append(title);
@@ -111,7 +105,6 @@ namespace AUDIO{
                 columns.append(folder);
             if (audio->file_extension()->visible())
                 columns.append(file_extension);
-
 
             m_model->appendRow(columns);
 

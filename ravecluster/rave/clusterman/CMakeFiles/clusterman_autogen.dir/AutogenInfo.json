@@ -259,6 +259,40 @@
 		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessTargets.cmake",
 		"C:/QT632/lib/cmake/Qt6Widgets/Qt6WidgetsMacros.cmake",
 		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeParseArguments.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkDependencies.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Config.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Targets.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeature.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXCompilerFlag.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"C:/QT632/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/QT632/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake",
+		"C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkTargets-release.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkAdditionalTargetInfo.cmake",
+		"C:/QT632/lib/cmake/Qt6Network/Qt6NetworkVersionlessTargets.cmake",
 		"D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clusterman.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman",
@@ -266,6 +300,36 @@
 	"DEP_FILE_RULE_NAME" : "clusterman_autogen/timestamp",
 	"HEADERS" : 
 	[
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/clientsocket.h",
+			"MU",
+			"4ZB4DAHUYU/moc_clientsocket.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/message.h",
+			"MU",
+			"4ZB4DAHUYU/moc_message.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/request_response_handler.h",
+			"MU",
+			"4ZB4DAHUYU/moc_request_response_handler.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/requestresponsemanager.h",
+			"MU",
+			"4ZB4DAHUYU/moc_requestresponsemanager.cpp",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/serversocket.h",
+			"MU",
+			"4ZB4DAHUYU/moc_serversocket.cpp",
+			null
+		],
 		[
 			"D:/Home/Clients/PMS/Raven/rave/framework/Logger.h",
 			"MU",
@@ -580,6 +644,7 @@
 	[
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
+		"QT_NETWORK_LIB",
 		"QT_NO_DEBUG",
 		"QT_WIDGETS_LIB",
 		"UNICODE",
@@ -607,7 +672,8 @@
 		"C:/QT632/include",
 		"C:/QT632/mkspecs/win32-msvc",
 		"C:/QT632/include/QtWidgets",
-		"C:/QT632/include/QtGui"
+		"C:/QT632/include/QtGui",
+		"C:/QT632/include/QtNetwork"
 	],
 	"MOC_MACRO_NAMES" : 
 	[
@@ -633,6 +699,19 @@
 	"SETTINGS_FILE" : "D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/CMakeFiles/clusterman_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/Home/Clients/PMS/Raven/rave/Network/clientsocket.cpp", "MU", null ],
+		[ "D:/Home/Clients/PMS/Raven/rave/Network/message.cpp", "MU", null ],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/request_response_handler.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Home/Clients/PMS/Raven/rave/Network/requestresponsemanager.cpp",
+			"MU",
+			null
+		],
+		[ "D:/Home/Clients/PMS/Raven/rave/Network/serversocket.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/framework/Logger.cpp", "MU", null ],
 		[ "D:/Home/Clients/PMS/Raven/rave/framework/baseentity.cpp", "MU", null ],
 		[

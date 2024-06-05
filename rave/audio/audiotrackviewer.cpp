@@ -20,16 +20,15 @@ namespace AUDIO
         m_track_view = std::make_unique<QTableView>(this);
         m_track_view->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_track_model = std::make_unique<QStandardItemModel>(this);
-        m_track_view->setAlternatingRowColors(true);
-
-        m_filter_model = std::make_unique<QSortFilterProxyModel>(this);
-        m_filter_model->setSourceModel(m_track_model.get());
-
-        m_track_view->setModel(m_filter_model.get());
+        //m_track_view->setAlternatingRowColors(true);
 
         m_track_view->horizontalHeader()->setStretchLastSection(true);
         m_track_view->verticalHeader()->setVisible(false);
         m_track_view->setSortingEnabled(true);
+
+        m_filter_model = std::make_unique<QSortFilterProxyModel>(this);
+        m_filter_model->setSourceModel(m_track_model.get());
+        m_track_view->setModel(m_filter_model.get());
 
         connect(m_track_view.get(), &QTableView::clicked, this, &AudioTrackViewer::tv_clicked);
 
