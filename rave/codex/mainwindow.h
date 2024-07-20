@@ -52,23 +52,23 @@ private:
     void soc_disconnect();
     void send_request();
 
-    QGroupBox* m_logger_groupbox;
-    QTextEdit* m_edt_logger;
+    QGroupBox* m_logger_groupbox { nullptr};
+    QTextEdit* m_edt_logger { nullptr };
 
-    QPushButton* m_btn_hide;
-    QPushButton* m_btn_close;
-    QPushButton* m_btn_cmd;
+    QPushButton* m_btn_hide { nullptr };
+    QPushButton* m_btn_close { nullptr };
+    QPushButton* m_btn_cmd { nullptr };
 
-    QAction* m_act_min;
-    QAction* m_act_max;
-    QAction* m_act_restore;
-    QAction* m_act_quit;
+    QAction* m_act_min { nullptr };
+    QAction* m_act_max { nullptr };
+    QAction* m_act_restore { nullptr };
+    QAction* m_act_quit { nullptr };
 
-    QSystemTrayIcon* m_tray_icon;
-    QMenu* m_tray_icon_menu;
+    QSystemTrayIcon* m_tray_icon { nullptr };
+    QMenu* m_tray_icon_menu { nullptr };
 
-    std::unique_ptr<NETWORK::ClientSocket> m_client_socket;
-    std::unique_ptr<NETWORK::ServerSocket> m_server_socket;
+    std::unique_ptr<NETWORK::ClientSocket> m_client_socket { nullptr };
+    std::unique_ptr<NETWORK::ServerSocket> m_server_socket { nullptr };
 
 };
 

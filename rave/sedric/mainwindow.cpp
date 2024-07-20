@@ -37,6 +37,8 @@
 #include "../audio/audiotool.h"
 #include "../audio/audiolibitem.h"
 #include "../audio/audiohistoryform.h"
+#include "../audio/audio.h"
+#include "../audio/audiometer.h"
 
 #include "../utils/tools.h"
 
@@ -134,6 +136,11 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
 //            this, &MainWindow::hour_changed);
 
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
+
+    m_audio_player = std::make_shared<AUDIO::AudioPlayer>();
+    m_audio_meter  = std::make_shared<AUDIO::AudioMeter>(m_audio_player, this);
+
+    ui->hlAudioMeter->addWidget(m_audio_meter.get());
 
     // TODO: Open the dialog if
     //set_ui_style();
@@ -968,16 +975,19 @@ void MainWindow::play_audio()
         return;
     }
 
+    m_audio_meter->start_meter();
     AudioFile af(audio->full_audio_filename().toStdString());
-    m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
+    m_audio_player->set_audio_file(af);
     m_audio_player->play_audio(audio->full_audio_filename());
 
 }
 
 void MainWindow::stop_play()
 {
-    if (m_audio_player != nullptr)
+    if (m_audio_player != nullptr) {
+        m_audio_meter->stop_meter();
         m_audio_player->stop_play();
+    }
 }
 
 History MainWindow::make_history(int id)

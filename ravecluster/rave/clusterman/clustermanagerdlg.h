@@ -31,6 +31,11 @@ namespace ClusterManager{
     class ClusterController;
 }
 
+namespace NETWORK {
+   class ClientSocket;
+   class ServerSocket;
+}
+
 class QMdiArea;
 
 using RootNode = ClusterManager::ConfigNode<ClusterManager::RootConfigNode>;
@@ -261,6 +266,14 @@ public:
         qDebug() << QString::fromStdString(msg);
     }
 
+    inline void print_log_message(const QString msg)
+    {
+        qDebug() << "* --------------------- *";
+        qDebug() << msg;
+        qDebug() << "* --------------------- *";
+    }
+
+
 public slots:
     void new_cluster();
     void new_station(int, int);
@@ -305,6 +318,7 @@ public slots:
     void load_content_data();
 
     void grant_access();
+    void send_message();
 
 private:
     Ui::ClusterManagerDlg* ui;
@@ -382,6 +396,11 @@ private:
     std::unique_ptr<QAction> m_act_edit_disk;
 
     std::unique_ptr<ClusterManager::ClusterController> m_cluster_controller;
+
+
+    std::unique_ptr<NETWORK::ClientSocket> m_client_socket;
+    std::unique_ptr<NETWORK::ServerSocket> m_server_socket;
+
 
 
 };

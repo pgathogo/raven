@@ -13,16 +13,19 @@ namespace NETWORK
     }
 
 
-    Response RequestResponseManager::process_message(Request request)
+    Response RequestResponseManager::process_message(QString request)
     {
         for (auto& [handler_type, handler] : m_handlers) {
 
         emit log_man_message("Handler Type: "+handler_type);
 
-        if (request["type"] == handler_type){
+        emit log_man_message("Request Type : "+ request);
+
+        if (request == handler_type) {
+            emit log_man_message("Handling request...");
             Response response = std::get<0>(handler).handle_request(request);
             return response;
-        }
+          }
 
         }
 

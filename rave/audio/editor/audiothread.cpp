@@ -170,18 +170,84 @@ void AudioThread::signal_update()
 {
     float fft[1024];
 
-    if (endOfMusic == false){
+    if (endOfMusic == false)
+    {
+
         emit current_position(BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetPosition(m_channel,
             BASS_POS_BYTE)),
                         BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetLength(m_channel,
             BASS_POS_BYTE)));
 
         BASS_ChannelGetData(m_channel, fft, BASS_DATA_FFT2048);
+
         emit current_peak(fft);
     }else{
         playing = false;
         emit end_of_playback();
     }
+}
+
+float* AudioThread::get_channel_data()
+{
+    float* fft = new float[2048];
+
+    if (endOfMusic == false)
+    {
+
+        emit current_position(BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetPosition(m_channel,
+            BASS_POS_BYTE)),
+                        BASS_ChannelBytes2Seconds(m_channel, BASS_ChannelGetLength(m_channel,
+            BASS_POS_BYTE)));
+
+        BASS_ChannelGetData(m_channel, fft, BASS_DATA_FFT2048);
+
+    }
+
+    return fft;
+
+    // }else{
+    //     playing = false;
+    //     emit end_of_playback();
+    // }
+
+}
+
+std::tuple<float, float> AudioThread::channel_levels()
+{
+    auto levels = std::make_tuple<float, float>(0.0, 0.0);
+
+    if (playing)
+    {
+        BASS_CHANNELINFO info;
+
+        BASS_ChannelGetInfo(m_channel, &info);
+
+        float ch_levels[2];
+        BASS_ChannelGetLevelEx(m_channel, ch_levels, 0.02, BASS_LEVEL_STEREO);
+
+        std::get<0>(levels) =  ch_levels[0];
+        std::get<1>(levels) =  ch_levels[1];
+    }
+
+    return levels;
+
+}
+
+std::tuple<float, float> AudioThread::get_channel_levels()
+{
+    auto levels = std::make_tuple<float, float>(0.0, 0.0);
+
+    if (playing)
+    {
+        float left_level = BASS_ChannelGetLevel(m_channel) & 0xFFFF;
+        float right_level = BASS_ChannelGetLevel(m_channel) >> 16;
+
+        std::get<0>(levels) = left_level;
+        std::get<1>(levels) = right_level;
+    }
+
+    return levels;
+
 }
 
 

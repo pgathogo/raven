@@ -22,22 +22,27 @@ namespace AUDIO
         enum class OutputChannel {ChannelA=1, ChannelB=2};
 
         AudioPlayer();
-        AudioPlayer(AudioFile& audio_file);
+        explicit AudioPlayer(AudioFile& audio_file);
 //        AudioPlayer(std::vector<QString> play_list);
         ~AudioPlayer();
 
         void play_audio();
         void play_audio(QString);
         void stop_play();
+        float* audio_current_peak();
 
         void update_output_channel(QString, QString);
         OutputChannel str_to_channel(QString);
 
         void append_playlist(QString, QString);
+        std::tuple<float, float> audio_levels();
+
+        void set_audio_file(const AudioFile);
     signals:
         void play_next();
         void end_of_play();
         void audio_played(QString);
+        void current_peak(float fft[1024]);
     private slots:
         void end_of_playback();
     private:

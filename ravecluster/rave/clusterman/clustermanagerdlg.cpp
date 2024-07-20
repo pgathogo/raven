@@ -7,6 +7,8 @@
 #include <QMenu>
 #include <QMessageBox>
 
+#include <QJsonObject>
+
 #include "clustermanagerdlg.h"
 #include "ui_clustermanagerdlg.h"
 
@@ -20,6 +22,10 @@
 #include "../../../rave/security/contentform.h"
 
 #include "../../../rave/security/rolemember.h"
+
+#include "../../../rave/Network/clientsocket.h"
+#include "../../../rave/Network/serversocket.h"
+#include "../../../rave/Network/message.h"
 
 
 #include "cluster.h"
@@ -95,6 +101,8 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     connect(ui->btnClear, &QPushButton::clicked, this, &ClusterManagerDlg::clear_configuration);
 
     connect(ui->btnGrant, &QPushButton::clicked, this, &ClusterManagerDlg::grant_access);
+
+    connect(ui->btnSend, &QPushButton::clicked, this, &ClusterManagerDlg::send_message);
 
     m_cluster_controller = std::make_unique<ClusterManager::ClusterController>();
 
@@ -1830,6 +1838,32 @@ void ClusterManagerDlg::load_roles_data()
 void ClusterManagerDlg::grant_access()
 {
     m_cluster_controller->grant_table_privileges_stmt("jboss");
+}
+
+void ClusterManagerDlg::send_message()
+{
+
+    QString this_ip = "127.0.0.1";
+    int this_port = 90010;
+
+    m_client_socket = std::make_unique<NETWORK::ClientSocket>(this);
+    m_server_socket = std::make_unique<NETWORK::ServerSocket>(this_ip, this_port, this);
+
+    connect(m_client_socket.get(), &NETWORK::ClientSocket::log_message, this, &ClusterManagerDlg::print_log_message);
+    connect(m_server_socket.get(), &NETWORK::ServerSocket::log_server_message, this, &ClusterManagerDlg::print_log_message);
+
+    QJsonObject msg_content;
+    msg_content["type"] = "DISK-LIST";
+    msg_content["require_response"] = 0;
+
+    NETWORK::Message message(this_ip, this_port, msg_content);
+    connect(&message, &NETWORK::Message::log_message, this, &ClusterManagerDlg::print_log_message);
+
+    QString dest_ipaddress = "127.0.0.1";
+    int dest_port = 90020;
+
+    m_client_socket->send_message(message, dest_ipaddress, dest_port);
+
 }
 
 bool ClusterManagerDlg::ask_question(QString title, QString query)

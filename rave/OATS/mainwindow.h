@@ -67,6 +67,7 @@ namespace AUDIO{
    //class AudioLibItem;
    class TrackBrowser;
    class AudioPlayer;
+   class AudioMeter;
 
    template<typename T>
    class AudioCacheManager;
@@ -76,6 +77,7 @@ namespace AUDIO{
 
    template<typename T>
    class CacheUpdaterThread;
+
 }
 
 struct CurrentPlayItem{
@@ -398,7 +400,7 @@ private:
 
     std::shared_ptr<QMutex> m_queue_mutex;
 
-    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+    std::shared_ptr<AUDIO::AudioPlayer> m_audio_player;
 
     std::unique_ptr<AUDIO::AudioPlayer> m_jingle_player;
     std::unique_ptr<OATS::ScheduleItem> m_current_jingle_item;
@@ -410,6 +412,8 @@ private:
     int m_scrollbar_current_value;
 
     std::unique_ptr<QButtonGroup> m_control_buttons_group;
+
+    std::shared_ptr<AUDIO::AudioMeter> m_audio_meter;
 
 };
 

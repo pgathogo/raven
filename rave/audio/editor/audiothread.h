@@ -17,6 +17,8 @@ class AudioThread : public QThread
         void run();
         float audio_sample_rate(QString);
         float audio_bitrate(QString audio_file);
+        std::tuple<float, float> channel_levels();
+        std::tuple<float, float> get_channel_levels();
 
     private:
         unsigned long m_channel;
@@ -34,6 +36,7 @@ class AudioThread : public QThread
         void signal_update();
         void change_position(int position);
         void read_FFT(QString filename);
+        float* get_channel_data();
 
         DWORD audio_len(QString audio);
 

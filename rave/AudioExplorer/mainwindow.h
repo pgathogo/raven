@@ -38,6 +38,7 @@ namespace AUDIO{
   class AudioConverter;
   class AudioWaveForm;
   class AudioPlayer;
+  class AudioMeter;
 }
 
 //class CueEditor;
@@ -102,6 +103,8 @@ public:
     void stop_play();
     void move_audio_to_current_folder();
     void show_letter_filter();
+    void show_audio_meter();
+
     int create_folder_to_db(const std::string&, int);
     void delete_folder_db(int);
     bool is_folder_empty(int);
@@ -203,7 +206,8 @@ private:
     std::unique_ptr<AUDIO::ArtistTypeItem> m_artist_type_item;
     std::unique_ptr<AUDIO::GenreTypeItem> m_genre_type_item;
 
-    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+    std::shared_ptr<AUDIO::AudioPlayer> m_audio_player;
+    std::unique_ptr<AUDIO::AudioMeter> m_audio_meter;
 
 //    std::unique_ptr<CueEditor> m_cue_editor;
     std::vector<int> m_cut_audios;

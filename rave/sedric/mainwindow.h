@@ -40,6 +40,7 @@ namespace AUDIO{
     class Artist;
     class AudioLibItem;
     class AudioPlayer;
+    class AudioMeter;
 }
 
 namespace SEDRIC{
@@ -175,7 +176,6 @@ public slots:
     void test_ranges();
 
 
-
 private:
     Ui::MainWindow *ui;
     QApplication* m_qapp;
@@ -191,12 +191,12 @@ private:
     ScheduleHour* m_cb_hour;
 
     SaveAs* m_save_as;
-//    std::unique_ptr<CueEditor> m_cue_editor;
 
     std::unique_ptr<SEDRIC::SedricScheduleItem> m_scheduler;
     std::unique_ptr<AUDIO::AudioLibItem> m_audio_lib_item;
     std::unique_ptr<EntityDataModel> m_audio_entity_data_model;
-    std::unique_ptr<AUDIO::AudioPlayer> m_audio_player;
+    std::shared_ptr<AUDIO::AudioPlayer> m_audio_player;
+    std::shared_ptr<AUDIO::AudioMeter> m_audio_meter;
 
     DateTimeSelection m_datetime_selection;
 

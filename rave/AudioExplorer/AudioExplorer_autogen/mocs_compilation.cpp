@@ -7,6 +7,7 @@
 #include "EWIEGA46WW/moc_mainwindow.cpp"
 #include "EWIEGA46WW/moc_setupform.cpp"
 #include "EWIEGA46WW/moc_trashcanform.cpp"
+#include "YFL3MR5MWG/moc_audiometer.cpp"
 #include "YFL3MR5MWG/moc_audiotool.cpp"
 #include "42K3SBLUTX/moc_audioplayer.cpp"
 #include "42K3SBLUTX/moc_audiothread.cpp"

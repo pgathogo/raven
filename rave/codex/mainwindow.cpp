@@ -30,7 +30,7 @@ MainWindow::MainWindow()
     connect(m_client_socket.get(), &NETWORK::ClientSocket::log_message, this, &MainWindow::log_message);
 
     QString listening_ip = "127.0.0.1";
-    int listening_port = 5544;
+    int listening_port = 90020;
 
     m_server_socket = std::make_unique<NETWORK::ServerSocket>(listening_ip, listening_port, this);
     connect(m_server_socket.get(), &NETWORK::ServerSocket::log_server_message, this, &MainWindow::log_message);
@@ -47,7 +47,9 @@ MainWindow::MainWindow()
 
 void MainWindow::recv_processed_message(NETWORK::Message message)
 {
-    qDebug() << message.message_response();
+    log_message(" >>>> ");
+    log_message(message.message_response_tostring());
+    log_message(" >>>> ");
 }
 
 void MainWindow::create_logger_groupbox()

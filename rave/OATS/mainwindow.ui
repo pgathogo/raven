@@ -204,9 +204,22 @@ border-radius: 3px;
                <widget class="QWidget" name="pgHome">
                 <layout class="QVBoxLayout" name="verticalLayout_12">
                  <item>
-                  <layout class="QVBoxLayout" name="vlHome" stretch="1,0,0">
+                  <layout class="QVBoxLayout" name="vlHome" stretch="1,0,0,0">
                    <item>
                     <layout class="QHBoxLayout" name="hlTitle"/>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                    <item>
                     <layout class="QVBoxLayout" name="vlLicense">
@@ -661,6 +674,16 @@ Audio</string>
           </widget>
          </item>
          <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="hlAudioMeter"/>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -686,7 +709,7 @@ Audio</string>
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

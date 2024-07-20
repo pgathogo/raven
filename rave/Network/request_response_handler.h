@@ -7,7 +7,7 @@
 #include <QJsonDocument>
 
 using Response = QJsonDocument;
-using Request = QJsonDocument;
+using Request = QString;
 
 namespace NETWORK
 {

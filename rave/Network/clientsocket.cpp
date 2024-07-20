@@ -88,7 +88,7 @@ namespace NETWORK
         if (m_socket->isOpen())
         {
             QDataStream socket_stream(m_socket.get());
-            socket_stream.setVersion(QDataStream::Qt_5_15);
+            socket_stream.setVersion(QDataStream::Qt_6_3);
 
             /*
             QByteArray header;

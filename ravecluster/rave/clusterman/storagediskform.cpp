@@ -9,7 +9,6 @@
 
 #include "../../../rave/Network/clientsocket.h"
 #include "../../../rave/Network/serversocket.h"
-#include "../../../rave/Network/message.h"
 
 #include "storagediskform.h"
 #include "server.h"
@@ -189,6 +188,7 @@ void StorageDiskForm::get_disk_list()
 
     connect(m_client_socket.get(), &NETWORK::ClientSocket::log_message, this, &StorageDiskForm::socket_message);
     connect(m_server_socket.get(), &NETWORK::ServerSocket::log_server_message, this, &StorageDiskForm::socket_message);
+    connect(m_server_socket.get(), &NETWORK::ServerSocket::processed_message, this, &StorageDiskForm::receive_message);
 
     QJsonObject msg_content;
     msg_content["type"] = "DISK-LIST";
@@ -197,12 +197,26 @@ void StorageDiskForm::get_disk_list()
     int dest_port = m_server->port_no()->value();
 
     NETWORK::Message message(sender_ip, sender_port, msg_content);
-    m_client_socket->send_message(message, dest_ipaddress, dest_port);
+    connect(&message, &NETWORK::Message::log_message, this, &StorageDiskForm::socket_message);
+
+    message.test_emit("This is a test");
+
+    //m_client_socket->send_message(message, dest_ipaddress, dest_port);
 
 }
 
 void StorageDiskForm::socket_message(QString msg)
 {
     qDebug() << msg ;
+}
+
+void StorageDiskForm::receive_message(NETWORK::Message message)
+{
+    qDebug() << " * ----------------------------------- *";
+
+    socket_message(message.message_response_tostring());
+
+    qDebug() << " * ----------------------------------- *";
+
 }
 

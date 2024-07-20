@@ -15,17 +15,6 @@ namespace NETWORK
 
 class RequestResponseManager;
 
-   /*
-    struct Message {
-        QString message_type;
-        QString sender_ipaddress{""};
-        int sender_port{-1};
-        QByteArray message;
-        QJsonDocument response;
-        bool response_required{false};
-    };
-   */
-
     class ServerSocket : public QTcpServer
     {
         Q_OBJECT

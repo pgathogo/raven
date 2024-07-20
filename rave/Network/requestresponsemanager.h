@@ -8,7 +8,7 @@
 #include "request_response_handler.h"
 
 using Response = QJsonDocument;
-using Request = QJsonDocument;
+//using Request = QString;
 
 namespace NETWORK
 {
@@ -19,7 +19,7 @@ namespace NETWORK
 
     public:
         RequestResponseManager();
-        Response process_message(Request);
+        Response process_message(QString);
 
         int size();
 

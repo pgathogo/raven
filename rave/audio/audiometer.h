@@ -1,0 +1,43 @@
+#ifndef AUDIOMETER_H
+#define AUDIOMETER_H
+
+#include <QWidget>
+
+class QTimer;
+class QPainter;
+
+namespace AUDIO
+{
+    class AudioPlayer;
+
+    class AudioMeter : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *parent = nullptr);
+        void start_meter();
+        void stop_meter();
+
+    signals:
+
+    private slots:
+        void update_levels();
+        void update_levels_fft();
+
+    protected:
+        void paintEvent(QPaintEvent* event) override;
+
+    private:
+        void draw_tick_marks(QPainter*, int, int);
+        void draw_channel(QPainter*, int, int, int, int, float);
+        void draw_segments(QPainter*, int, int, int, int, int, int, const QColor&);
+        float convert_to_db(float);
+
+        std::shared_ptr<AudioPlayer> m_audio_player;
+        QTimer* m_timer;
+        float m_left_level = 0.0f;
+        float m_right_level = 0.0f;
+    };
+}
+
+#endif // AUDIOMETER_H

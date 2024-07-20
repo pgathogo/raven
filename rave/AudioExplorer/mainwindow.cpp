@@ -36,6 +36,7 @@
 
 #include "../audio/editor/audiowaveform.h"
 #include "../audio/editor/audioplayer.h"
+#include "../audio/audiometer.h"
 
 #include "../framework/baseentity.h"
 #include "../framework/treeviewmodel.h"
@@ -56,6 +57,9 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     ,m_cut_folder_id{-1}
 {
     ui->setupUi(this);
+
+    m_audio_player = std::make_shared<AUDIO::AudioPlayer>();
+    m_audio_meter = std::make_unique<AUDIO::AudioMeter>(m_audio_player);
 
     // Menubar
     connect(ui->actTrashCan, &QAction::triggered, this, &MainWindow::open_trash_can);
@@ -134,6 +138,8 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     fetch_genre();
 
     show_letter_filter();
+
+    show_audio_meter();
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_setup_edm->all();
@@ -1284,13 +1290,13 @@ void MainWindow::play_btn_clicked()
     //     return;
 
     if (!ui->btnPlay->isChecked()){
-        qDebug() << "** NOT-CHECKED **";
         stop_play();
         ui->btnPlay->setText("Play");
         ui->btnPlay->setChecked(false);
+        m_audio_meter->stop_meter();
     } else {
         if (play_audio()){
-        qDebug() << "** CHECKED **";
+            m_audio_meter->start_meter();
             ui->btnPlay->setText("Stop");
             ui->btnPlay->setChecked(true);
         }
@@ -1307,9 +1313,13 @@ bool MainWindow::play_audio()
         return false;
 
     AudioFile af(audio->full_audio_filename().toStdString());
-    m_audio_player = std::make_unique<AUDIO::AudioPlayer>(af);
+
+    m_audio_player->set_audio_file(af);
+
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
     m_audio_player->play_audio(audio->full_audio_filename());
+
+
 
     return true;
 
@@ -1578,6 +1588,11 @@ void MainWindow::show_letter_filter()
     m_letter_filter_widget = std::make_unique<LetterFilterWidget>(this);
     ui->hlayLetterFilter->addWidget(m_letter_filter_widget.get());
     connect(m_letter_filter_widget->get_tabwidget(), &QTabWidget::currentChanged, this, &MainWindow::filter_audio_by_letter);
+}
+
+void MainWindow::show_audio_meter()
+{
+    ui->hlayLetterFilter->addWidget(m_audio_meter.get());
 }
 
 void MainWindow::filter_audio_by_letter(int index)

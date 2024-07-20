@@ -5,6 +5,7 @@
 #include "../../../framework/baseentitydetaildlg.h"
 
 #include "../../../rave/utils/types.h"
+#include "../../../rave/Network/message.h"
 
 
 namespace Ui {
@@ -53,6 +54,8 @@ public:
 private slots:
     void get_disk_list();
     void socket_message(QString);
+    void receive_message(NETWORK::Message);
+
 
 private:
     Ui::StorageDiskForm *ui;

@@ -51,6 +51,7 @@
 #include "../audio/audiocache.h"
 #include "../audio/editor/audioplayer.h"
 #include "../audio/audiofile.h"
+#include "../audio/audiometer.h"
 
 #include "../data/commercialviewer.h"
 
@@ -225,7 +226,7 @@ MainWindow::MainWindow(QWidget *parent)
     qInfo() << "Start timers...";
     start_timers();
 
-    m_audio_player = std::make_unique<AUDIO::AudioPlayer>();
+    m_audio_player = std::make_shared<AUDIO::AudioPlayer>();
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &MainWindow::play_next);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_played, this, &MainWindow::audio_played);
@@ -249,6 +250,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_updatedb_mutex = std::make_shared<QMutex>();
 
+    m_audio_meter = std::make_shared<AUDIO::AudioMeter>(m_audio_player);
+
+    ui->hlAudioMeter->addWidget(m_audio_meter.get());
+
+
     /*
     QLabel* home_image = new QLabel(this);
     home_image->setAlignment(Qt::AlignCenter);
@@ -262,7 +268,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->hlTitle->addWidget(home_image);
     QMainWindow::showFullScreen();
     */
-    setStyleSheet("QMainWindow{background-color: #222222;}");
+
+    //setStyleSheet("QMainWindow{background-color: #222222;}");
 
     log_info("App load-up. Done.");
 

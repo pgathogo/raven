@@ -25,7 +25,7 @@ namespace AUDIO
     {
         m_audio_thread = std::make_unique<AudioThread>(this);
         connect(m_audio_thread.get(), &AudioThread::end_of_playback, this, &AudioPlayer::end_of_playback);
-
+        // connect(m_audio_thread.get(), &AudioThread::current_peak, this, &AudioPlayer::audio_current_peak);
         //update_output_channel(QString::fromStdString(m_audio_file.audio_file()));
     }
 
@@ -42,6 +42,12 @@ namespace AUDIO
 
     AudioPlayer::~AudioPlayer()
     {
+    }
+
+    std::tuple<float, float> AudioPlayer::audio_levels()
+    {
+        //m_audio_thread->channel_levels();
+        return m_audio_thread->get_channel_levels();
     }
 
     void AudioPlayer::update_output_channel(QString output, QString play_item)
@@ -105,8 +111,23 @@ namespace AUDIO
 
     }
 
+    float* AudioPlayer::audio_current_peak()
+    {
+        float* fft = m_audio_thread->get_channel_data();
+        return fft;
+
+        // qDebug() << "AP: "<< fft;
+        // emit current_peak(fft);
+    }
+
     OPChannel AudioPlayer::str_to_channel(QString channel)
     {
         return (channel == "A" ? OPChannel::ChannelA : OPChannel::ChannelB);
+    }
+
+    void AudioPlayer::set_audio_file(const AudioFile af)
+    {
+        m_audio_file = af;
+
     }
 }
