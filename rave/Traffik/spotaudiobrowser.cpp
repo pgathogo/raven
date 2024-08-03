@@ -50,9 +50,9 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     hideEditButton();
     hideDeleteButton();
 
-    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio, QSize(130, 20));
-    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(130, 20));
-    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties, QSize(130, 20));
+    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio, QSize(80, 20));
+    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(80, 20));
+    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties, QSize(80, 20));
     create_separator();
     create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
@@ -60,6 +60,9 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit);
 
     show_delete_button(bui->hlExtra);
+
+    QSpacerItem* si = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    bui->hlExtra->addSpacerItem(si);
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
     m_setup_edm->all();

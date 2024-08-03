@@ -3,6 +3,10 @@
 
 #include <QDebug>
 #include <QDir>
+
+#include "../audio/audiometer.h"
+#include "audioplayer.h"
+
 #include "audiowaveform.h"
 #include "ui_audiowaveform.h"
 
@@ -21,17 +25,21 @@ namespace AUDIO {
         ,m_seconds_per_pixel{0.0}
         ,m_audio_wave{nullptr}
         ,m_scene{nullptr}
-        ,m_audio_thread{nullptr}
-        ,m_player_timer{nullptr}
-        ,m_indicator_timer{nullptr}
+        //,m_audio_thread{nullptr}
+        //,m_player_timer{nullptr}
+        //,m_indicator_timer{nullptr}
         ,m_new_pos{5.5}
 
     {
-
         ui->setupUi(this);
 
-        m_audio_thread = new AudioThread(this);
-        double audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())); // Seconds
+        m_audio_player = std::make_shared<AUDIO::AudioPlayer>(m_audio_file);
+        m_audio_meter = std::make_unique<AUDIO::AudioMeter>(m_audio_player);
+        ui->hlVumeter->addWidget(m_audio_meter.get());
+
+        //m_audio_thread = new AudioThread(this);
+        double audio_duration_secs = m_audio_player->audio_duration();
+        //double audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())); // Seconds
 
         m_audio_file.set_duration(audio_duration_secs*1000); //msec
         m_scene = new AudioWaveScene(ui->lblCurrTime, audio_duration_secs);
@@ -40,16 +48,16 @@ namespace AUDIO {
         ui->gvWave->setMaximumWidth(800);
         ui->gvWave->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 
-        connect(m_audio_thread, SIGNAL(current_position(double, double)), this, SLOT(audio_current_position(double, double)));
-        connect(m_audio_thread, SIGNAL(current_peak(float[1024])), this, SLOT(audio_current_peak(float[1024])));
+        connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_current_position, this, &AudioWaveForm::audio_current_position);
+        // connect(m_audio_thread, SIGNAL(current_peak(float[1024])), this, SLOT(audio_current_peak(float[1024])));
 
-        m_player_timer = new QTimer(this);
-        connect(m_player_timer, &QTimer::timeout, this, &AudioWaveForm::update_vumeter);
+        //m_player_timer = new QTimer(this);
+        //connect(m_player_timer, &QTimer::timeout, this, &AudioWaveForm::update_vumeter);
 
         const int audio_sample_msec = 100;
-        m_indicator_timer = new QTimer(this);
-        m_indicator_timer->setInterval(audio_sample_msec);
-        connect(m_indicator_timer, &QTimer::timeout, this, &AudioWaveForm::update_indicator);
+        //m_indicator_timer = new QTimer(this);
+        //m_indicator_timer->setInterval(audio_sample_msec);
+        //connect(m_indicator_timer, &QTimer::timeout, this, &AudioWaveForm::update_indicator);
 
         connect(ui->btnPlay, &QPushButton::clicked, this, &AudioWaveForm::start_play);
         connect(ui->btnStop, &QPushButton::clicked, this, &AudioWaveForm::stop_play);
@@ -80,9 +88,9 @@ namespace AUDIO {
     {
         delete ui;
 
-        delete m_audio_thread;
-        delete m_player_timer;
-        delete m_indicator_timer;
+        //delete m_audio_thread;
+        //delete m_player_timer;
+        //delete m_indicator_timer;
 
         delete m_start_indicator;
         delete m_start_display_unit;
@@ -119,22 +127,25 @@ namespace AUDIO {
 
     unsigned int AudioWaveForm::audio_len(QString audio_file)
     {
-        return m_audio_thread->audio_len(audio_file);
+        return m_audio_player->audio_length();
+        //return m_audio_thread->audio_len(audio_file);
     }
 
     float AudioWaveForm::audio_bitrate(QString audio_file)
     {
-        return m_audio_thread->audio_bitrate(audio_file);
+        return m_audio_player->audio_bitrate();
+        //return m_audio_thread->audio_bitrate(audio_file);
     }
 
-    AudioThread *AudioWaveForm::audio_thread() const
-    {
-        return m_audio_thread;
-    }
+    // AudioThread *AudioWaveForm::audio_thread() const
+    // {
+    //     return m_audio_thread;
+    // }
 
     float AudioWaveForm::audio_sample_rate(QString audio_file)
     {
-        auto sr = m_audio_thread->audio_sample_rate(audio_file);
+        //auto sr = m_audio_thread->audio_sample_rate(audio_file);
+        auto sr = m_audio_player->audio_sample_rate();
         if (sr > 0)
             sr = sr / 1000;
         return sr;
@@ -154,17 +165,23 @@ namespace AUDIO {
 
     void AudioWaveForm::start_play()
     {
-        m_audio_thread->play(QString::fromStdString(m_audio_file.audio_file()));
+        //m_audio_thread->play(QString::fromStdString(m_audio_file.audio_file()));
+        m_audio_player->play();
+        //m_audio_meter->start_meter();
     }
 
     void AudioWaveForm::stop_play()
     {
+        m_audio_player->stop_play();
+        ////m_audio_meter->stop_meter();
 
+        /*
         if (m_audio_thread != nullptr){
             m_audio_thread->stop();
             //stop_indicator_move();
             m_player_timer->stop();
         }
+        */
 
     }
 
@@ -173,19 +190,10 @@ namespace AUDIO {
         m_scene->display_marker_position_sec();
     }
 
-    void AudioWaveForm::update_vumeter()
-    {
-
-    }
-
-    void AudioWaveForm::update_indicator()
-    {
-
-    }
 
     void AudioWaveForm::audio_current_position(double position, double total)
     {
-        int value = 100 - round(((total-position)/total)*100);
+        //int value = 100 - round(((total-position)/total)*100);
         // move progressbar
         // ui->pbAudio->setValue(value);
         move_indicator_line(position);
@@ -406,9 +414,14 @@ namespace AUDIO {
     void AudioWaveForm::play_mark(QPointF mark_position)
     {
         m_scene->change_indicator_position(mark_position);
-        m_audio_thread->change_position(mark_position.x());
-        m_audio_thread->play_from_position(QString::fromStdString(m_audio_file.audio_file()),
-                                           mark_position.x());
+
+        int new_position = mark_position.x();
+        m_audio_player->change_position(new_position);
+        m_audio_player->play_from_position(new_position);
+
+        //m_audio_thread->change_position(mark_position.x());
+        //m_audio_thread->play_from_position(QString::fromStdString(m_audio_file.audio_file()),
+         //                                  mark_position.x());
     }
 
     void AudioWaveForm::showEvent(QShowEvent *event)
@@ -455,8 +468,8 @@ namespace AUDIO {
         m_fade_in_display_unit = new MarkerDisplayUnit(m_fade_in_indicator);
         m_fade_in_display_unit->set_display_unit(ui->lblFadeInMarkTime);
 
-        m_vumeter = std::make_unique<VuMeter>(VuMeter::meter_dir::DIR_HORIZONTAL, this);
-        ui->hlVumeter->addWidget(m_vumeter.get());
+        // m_vumeter = std::make_unique<VuMeter>(VuMeter::meter_dir::DIR_HORIZONTAL, this);
+        // ui->hlVumeter->addWidget(m_vumeter.get());
 
         set_button_icons();
 
@@ -475,7 +488,6 @@ namespace AUDIO {
 
         QPixmap mark_start_pixmap(":/editor/media/editor/mark_start.png");
         QIcon mark_start_icon(mark_start_pixmap);
-
 
         ui->btnPlay->setIcon(play_icon);
         ui->btnPause->setIcon(pause_icon);
@@ -513,10 +525,14 @@ namespace AUDIO {
 
     void AudioWaveForm::closeEvent(QCloseEvent*)
     {
+        m_audio_player->stop_play();
+
+        /*
         if (m_audio_thread != nullptr){
             m_audio_thread->stop();
             m_player_timer->stop();
         }
+        */
 
     }
 

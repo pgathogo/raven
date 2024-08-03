@@ -45,7 +45,6 @@ AudioFile::AudioFile(const std::string a_file)
     m_ogg_short_filename = m_short_filename+".ogg";
 
     m_ogg_filename = m_audio_path+m_ogg_short_filename;
-
 }
 
 std::string AudioFile::audio_title() const

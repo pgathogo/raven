@@ -1293,10 +1293,10 @@ void MainWindow::play_btn_clicked()
         stop_play();
         ui->btnPlay->setText("Play");
         ui->btnPlay->setChecked(false);
-        m_audio_meter->stop_meter();
+        //m_audio_meter->stop_meter();
     } else {
         if (play_audio()){
-            m_audio_meter->start_meter();
+            //m_audio_meter->start_meter();
             ui->btnPlay->setText("Stop");
             ui->btnPlay->setChecked(true);
         }
@@ -1318,7 +1318,6 @@ bool MainWindow::play_audio()
 
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
     m_audio_player->play_audio(audio->full_audio_filename());
-
 
 
     return true;

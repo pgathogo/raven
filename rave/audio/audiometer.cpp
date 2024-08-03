@@ -20,6 +20,9 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
 
         m_timer = new QTimer(this);
         connect(m_timer, &QTimer::timeout, this, &AudioMeter::update_levels_fft);
+
+        connect(audio_player.get(), &AudioPlayer::sig_start_play, this, &AudioMeter::start_meter);
+        connect(audio_player.get(), &AudioPlayer::sig_stop_play, this, &AudioMeter::stop_meter);
         //m_timer->start(50);
 
         //connect(m_audio_player.get(), &AudioPlayer::current_peak, this, &AudioMeter::update_levels_fft);

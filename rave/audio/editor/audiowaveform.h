@@ -19,6 +19,8 @@ namespace AUDIO {
     }
 
     class VuMeter;
+    class AudioPlayer;
+    class AudioMeter;
 
     class AudioWaveForm : public QDialog
     {
@@ -35,7 +37,7 @@ namespace AUDIO {
         float audio_sample_rate(QString);
         float audio_bitrate(QString audio_file);
 
-        AudioThread* audio_thread() const;
+        // AudioThread* audio_thread() const;
         void set_button_icons();
 
     public slots:
@@ -45,9 +47,6 @@ namespace AUDIO {
         void start_play();
         void stop_play();
         void pause_play();
-
-        void update_vumeter();
-        void update_indicator();
 
         void audio_current_position(double, double);
         void audio_current_peak(float fft[1024]);
@@ -94,9 +93,9 @@ namespace AUDIO {
         double m_seconds_per_pixel;
         AudioWave* m_audio_wave;
         AudioWaveScene* m_scene;
-        AudioThread* m_audio_thread;
-        QTimer* m_player_timer;
-        QTimer* m_indicator_timer;
+        // AudioThread* m_audio_thread;
+        //QTimer* m_player_timer;
+        //QTimer* m_indicator_timer;
 
         std::unique_ptr<VuMeter> m_vumeter;
 
@@ -114,6 +113,9 @@ namespace AUDIO {
         AUDIO::MarkerDisplayUnit* m_fade_in_display_unit;
 
         std::map<AUDIO::MarkerType, AUDIO::MarkerDisplayUnit*> m_display_units;
+
+        std::shared_ptr<AUDIO::AudioPlayer> m_audio_player;
+        std::unique_ptr<AUDIO::AudioMeter> m_audio_meter;
 
         double m_new_pos;
 

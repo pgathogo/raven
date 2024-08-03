@@ -26,8 +26,11 @@ namespace AUDIO
 //        AudioPlayer(std::vector<QString> play_list);
         ~AudioPlayer();
 
+        // TODO:: Harmonize the "play" functions!!!!!
         void play_audio();
         void play_audio(QString);
+        void play();
+
         void stop_play();
         float* audio_current_peak();
 
@@ -38,13 +41,26 @@ namespace AUDIO
         std::tuple<float, float> audio_levels();
 
         void set_audio_file(const AudioFile);
+        double audio_duration();
+        AudioFile audio_file();
+        unsigned int audio_length();
+        float audio_bitrate();
+        float audio_sample_rate();
+        void change_position(int);
+        void play_from_position(int);
     signals:
         void play_next();
         void end_of_play();
         void audio_played(QString);
         void current_peak(float fft[1024]);
+        void audio_current_position(double, double);
+        void sig_start_play();
+        void sig_stop_play();
+
     private slots:
         void end_of_playback();
+        void audio_position(double, double);
+
     private:
         std::unique_ptr<AudioThread> m_audio_thread;
         AudioFile m_audio_file;
