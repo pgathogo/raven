@@ -78,9 +78,10 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     m_content_edm = std::make_unique<EntityDataModel>(std::make_shared<Content>());
 
     connect(ui->btnNewCluster, &QPushButton::clicked, this, &ClusterManagerDlg::new_cluster);
-    //connect(ui->btnNewStation, &QPushButton::clicked, this, &ClusterManagerDlg::new_station);
-//    connect(ui->btnNewAudioServer, &QPushButton::clicked, this, &ClusterManagerDlg::new_server);
-    connect(ui->btnSave, &QPushButton::clicked, this, &ClusterManagerDlg::save_data);
+
+    // connect(ui->btnNewStation, &QPushButton::clicked, this, &ClusterManagerDlg::new_station);
+    // connect(ui->btnNewAudioServer, &QPushButton::clicked, this, &ClusterManagerDlg::new_server);
+
     connect(ui->btnClose, &QPushButton::clicked, this, &ClusterManagerDlg::close_window);
 
     toggle_new_station_button(false);
@@ -107,6 +108,8 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     m_cluster_controller = std::make_unique<ClusterManager::ClusterController>();
 
     ui->treeWidget->setIconSize(QSize(25,25));
+
+    load_data();
 }
 
 QMap<QString, QVariant> ClusterManagerDlg::make_node_data(ConfigItemType node_type)
@@ -1366,11 +1369,6 @@ void ClusterManagerDlg::tree_printer(std::map<QString, std::tuple<ConfigItemType
 
 }
 
-void ClusterManagerDlg::save_data()
-{
-    save_tree(m_root_node->child_nodes(), 0);
-    showMessage("Data Saved.");
-}
 
 void ClusterManagerDlg::close_window()
 {
@@ -1381,7 +1379,8 @@ void ClusterManagerDlg::save_tree(std::map<QString, std::tuple<ConfigItemType, s
 {
     EntityDataModel edm;
 
-    for(auto&[key, value]: nodes){
+    for(auto&[key, value]: nodes)
+    {
         auto&[node_type, node_any] = value;
 
        switch(node_type){

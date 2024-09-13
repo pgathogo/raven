@@ -62,7 +62,7 @@ OrderForm::OrderForm(Client* client, Order* order,
     mSetup = dynamic_cast<RavenSetup*>(dmSetup->firstEntity().get());
 
     if (mOrder->isNew()){
-        prepareNewOrder();
+        prepare_new_order();
     } else {
         prepare_for_edit(mOrder);
     }
@@ -186,7 +186,7 @@ void OrderForm::populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::stri
     //cbox->setCurrentIndex( cbox->findData(QVariant(stoq(cf->value()))) );
 }
 
-void OrderForm::prepareNewOrder()
+void OrderForm::prepare_new_order()
 {
     mSetup->orderNumberSequence()->setValue(
                 mSetup->orderNumberSequence()->value()+1);
@@ -200,9 +200,21 @@ void OrderForm::prepareNewOrder()
 void OrderForm::prepare_for_edit(Order* order)
 {
     // If spots have been played from this order, don't edit.
-    if (order->spotsPlayed()->value() > 0){
+    if (order->spotsPlayed()->value() > 0) {
+        qDebug() << "* disable controls *";
         disableSaveBtn();
     }
+
+}
+
+void OrderForm::disable_controls()
+{
+    auto widgets = this->findChildren<QWidget*>();
+    for(auto w: widgets) {
+        w->setEnabled(false);
+    }
+
+    //ui->sbSOrdered->setEnabled(false);
 
 }
 

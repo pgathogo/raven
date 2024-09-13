@@ -57,8 +57,32 @@ void DateTimeSelector::set_selected_buttons()
 }
 
 
-void DateTimeSelector::time_buttons(const QString time_symbol, int& long_hour)
+void DateTimeSelector::time_buttons(const QString time_symbol, int long_hour)
 {
+    QString btn_style(
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #C1F5C7, stop:1 #D0F6B9, stop:2 #E4F9AA, stop:3 #EFFCA2 );"
+        "border-radius: 20px;"
+        "border-style: inset;"
+        "border-bottom-width: 2px;"
+        "border-radius: 3px;"
+        "border-bottom-color:#F2FCA3;"
+        "color:#FFFFFF;"
+        "height:35;"
+        "font-weight:bold;}" );
+
+    /*
+        "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+        "QPushButton:pressed{background-color:#555D64; border:none;}"
+            );
+
+    */
+
+
     std::vector<QString> time_text_am{"12", "1", "2", "3", "4", "5",
                                       "6", "7", "8", "9", "10", "11"};
     const int ROWS = 5;
@@ -82,9 +106,7 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int& long_hour)
         if (time_symbol == "AM"){
             ui->gridTimeAM->addWidget(btn, row, col);
             if (hr == current_hour && am_pm == "AM"){
-                btn->setStyleSheet(
-                "background-color: #7FFF00"
-                );
+                btn->setStyleSheet( "background-color: #7FFF00");
             }
         }else{
             if (current_hour > 12)

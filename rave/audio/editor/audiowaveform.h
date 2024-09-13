@@ -18,7 +18,7 @@ namespace AUDIO {
         class AudioWaveForm;
     }
 
-    class VuMeter;
+    //class VuMeter;
     class AudioPlayer;
     class AudioMeter;
 
@@ -97,7 +97,7 @@ namespace AUDIO {
         //QTimer* m_player_timer;
         //QTimer* m_indicator_timer;
 
-        std::unique_ptr<VuMeter> m_vumeter;
+        //std::unique_ptr<VuMeter> m_vumeter;
 
         void init_widgets();
 

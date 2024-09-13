@@ -12,7 +12,8 @@
 
 #include "audiothread.h"
 #include "../audiotool.h"
-#include "vumeter.h"
+//#include "vumeter.h"
+#include "../audiometer.h"
 
 namespace fs = std::filesystem;
 
@@ -208,7 +209,7 @@ namespace AUDIO {
         for (; i < 201; ++i){
             x = 20*log10(sqrt(fft[i+1])*3*201);
             if (x>201) x=201;
-            m_vumeter->setPeak(x*6);
+            //m_vumeter->setPeak(x*6);
         }
     }
 

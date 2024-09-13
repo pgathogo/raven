@@ -20,9 +20,11 @@ ClientForm::ClientForm(Client* client,
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
     ui->twClient->setCurrentIndex(0);
+
     populateFormWidgets();
-    //connect(ui->cbSalute, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-    //        [=](int i){saluteComboChanged(i);});
+
+    connect(ui->cbSalute, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+           [=](int i){saluteComboChanged(i);});
 
     connect(ui->cbSalute, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &ClientForm::saluteComboChanged);
@@ -54,6 +56,8 @@ ClientForm::ClientForm(Client* client,
 
     Logger::info("ClientForm", "Client form... opened.");
 
+    ui->edtName->setFocusPolicy(Qt::StrongFocus);
+    ui->edtName->setFocus();
 }
 
 ClientForm::~ClientForm()

@@ -26,15 +26,34 @@ namespace NETWORK
         template<typename T>
         void register_handler()
         {
-        auto t = T();
-        m_handlers[t.handler_type()] = t;
+            if constexpr(std::is_base_of<BaseRequestResponseHandler, T>::value) {
+                T t = T();
+                m_handlers[t.handler_type()] = t;
+            }
         }
+
+        template<typename T>
+        QJsonDocument pm(T t, QString req)
+        {
+            if constexpr(std::is_base_of<BaseRequestResponseHandler, T>::value) {
+                return t.handle_request(req);
+            }
+
+        }
+
+
+
+
+    private slots:
+        void log_handler_message(const QString);
 
     signals:
         void log_man_message(const QString);
 
     private:
         std::map<QString, std::variant<DiskListRequestHandler>> m_handlers;
+
+        void connect_handler_logging();
 
     };
 

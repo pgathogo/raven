@@ -71,10 +71,10 @@ public:
     void set_view_column_width();
 
     template<typename T1, typename T2, typename T3 >
-    bool add_related_record(T3* parent)
+    bool add_related_record(T3* parent_entity)
     {
-        std::shared_ptr<T1> entity = std::make_shared<T1>(parent);
-        std::unique_ptr<T2> form = std::make_unique<T2>(parent, entity.get());
+        std::shared_ptr<T1> entity = std::make_shared<T1>(parent_entity);
+        std::unique_ptr<T2> form = std::make_unique<T2>(parent_entity, entity.get(), this);
 
         bool created = false;
 

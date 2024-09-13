@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>478</height>
+    <height>477</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -240,7 +240,7 @@
          <x>20</x>
          <y>20</y>
          <width>561</width>
-         <height>221</height>
+         <height>259</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,1,0">
@@ -327,7 +327,7 @@
         <item row="0" column="2">
          <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>

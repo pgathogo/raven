@@ -71,6 +71,11 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
 
 
     ui->edtRealDuration->setMaximum(999999);
+
+    int w = 720;
+    int h = 530;
+
+    setMinimumSize(w, h);
 }
 
 SpotForm::~SpotForm()

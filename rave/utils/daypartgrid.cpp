@@ -34,6 +34,10 @@ DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets, QWidget *parent) :
 
     m_context_menu = std::make_unique<QMenu>(tr("Grid menu"), this);
 
+    int w = 550;
+    int h = 200;
+    setFixedSize(w, h);
+
 }
 
 DayPartGrid::~DayPartGrid()
@@ -69,6 +73,7 @@ void DayPartGrid::prepare_grid()
 
     //ui->twDaypart->viewport()->setMouseTracking(true);
     ui->twDaypart->viewport()->installEventFilter(this);
+
 }
 
 void DayPartGrid::cell_entered(int row, int col)

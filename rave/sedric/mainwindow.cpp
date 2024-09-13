@@ -975,7 +975,7 @@ void MainWindow::play_audio()
         return;
     }
 
-    m_audio_meter->start_meter();
+   // m_audio_meter->start_meter();
     AudioFile af(audio->full_audio_filename().toStdString());
     m_audio_player->set_audio_file(af);
     m_audio_player->play_audio(audio->full_audio_filename());
@@ -985,7 +985,7 @@ void MainWindow::play_audio()
 void MainWindow::stop_play()
 {
     if (m_audio_player != nullptr) {
-        m_audio_meter->stop_meter();
+        //m_audio_meter->stop_meter();
         m_audio_player->stop_play();
     }
 }

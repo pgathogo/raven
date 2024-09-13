@@ -4,6 +4,8 @@
 #include <QDialog>
 #include "commlogtreeviewmodel.h"
 #include "../framework/datetimeselector.h"
+#include <QProcess>
+
 
 namespace Ui {
 class CommLogForm;
@@ -30,6 +32,8 @@ private slots:
     void select_all_hours(int state);
     void hours_popup_hidden();
     void print_log();
+    void proc_started();
+    void error_occured(QProcess::ProcessError);
 
 private:
     void set_hour_combobox();
@@ -37,6 +41,8 @@ private:
     std::string comma_sep(const std::vector<int>&);
     void update_hours_label(std::string);
     void write_json_data(QJsonArray&);
+    void execute_report();
+    void write_report_launcher(QString, QString&);
 
     Ui::CommLogForm *ui;
     QMdiArea* m_mdi_area;
@@ -44,6 +50,8 @@ private:
     std::vector<QStandardItem*> m_check_items;
     CommercialLogs m_comm_logs;
     DateTimeSelection m_dts;
+
+    std::unique_ptr<QProcess> m_process;
 };
 
 #endif // COMMLOGFORM_H

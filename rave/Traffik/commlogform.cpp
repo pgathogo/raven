@@ -3,6 +3,10 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QFile>
+#include <QTextStream>
+
+#include <iostream>
+#include <fstream>
 
 #include "commlogform.h"
 #include "ui_commlogform.h"
@@ -27,10 +31,14 @@ CommLogForm::CommLogForm(QWidget *parent) :
 
     connect(ui->cbExpand, &QCheckBox::stateChanged, this, &CommLogForm::change_view_mode);
     connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
-
     connect(ui->btnPrintSum, &QPushButton::clicked, this, &CommLogForm::print_log);
 
+
 //    setWindowState(this->windowState() | Qt::WindowFullScreen);
+
+    m_process = std::make_unique<QProcess>(this);
+    connect(m_process.get(), &QProcess::started, this, &CommLogForm::proc_started);
+    connect(m_process.get(), &QProcess::errorOccurred, this, &CommLogForm::error_occured);
 
     set_default_dts();
 
@@ -200,6 +208,8 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
     EntityDataModel edm;
     edm.readRaw(sql.str());
 
+    std::cout << sql.str() << '\n';
+
     auto provider =  edm.getDBManager()->provider();
 
     m_comm_logs.clear();
@@ -263,6 +273,9 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 
 void CommLogForm::print_log()
 {
+    //execute_report();
+    //return;
+
     QJsonArray breaks;
 
     for (auto& [time, commlogs]: m_comm_logs) {
@@ -295,7 +308,9 @@ void CommLogForm::print_log()
 
 
     if (breaks.size() > 0) {
-        write_json_data(breaks);
+        //write_json_data(breaks);
+        // Call report renderer
+        //execute_report();
     }
 }
 
@@ -313,3 +328,101 @@ void CommLogForm::write_json_data(QJsonArray& data)
     file.write(doc.toJson());
     file.close();
 }
+
+void CommLogForm::execute_report()
+{
+    //std::wstring exe = "electron";
+    QStringList args;
+    args << " d:\\home\\lab\\Javascript\\electjson\\main.js";
+
+    QString path = "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe";
+
+    QString report_launcher = "report.bat";
+
+    QString target = QString("%1 %2").arg(path).arg(args.join(""));
+
+    qDebug() << "Creating report launcher...";
+
+    write_report_launcher(target, report_launcher);
+
+    qDebug() << "Running report...";
+
+    m_process->start(report_launcher);
+
+}
+
+
+void CommLogForm::write_report_launcher(QString data, QString& launcher)
+{
+    std::ofstream batch_file;
+    batch_file.open(launcher.toStdString());
+    if (batch_file.is_open()) {
+        batch_file << data.toStdString() << '\n';
+        batch_file.close();
+    }
+
+}
+
+
+void CommLogForm::proc_started()
+{
+    qDebug() << "Process started... thank you.";
+
+}
+
+void CommLogForm::error_occured(QProcess::ProcessError error)
+{
+    switch(error)
+    {
+    case QProcess::FailedToStart:
+        qDebug() << "Process *FAILED* to start!";
+        break;
+    case QProcess::Crashed:
+        qDebug() << "Process *CRASHED*";
+        break;
+    case QProcess::Timedout:
+        qDebug() << "Process *TIMEDOUT* ";
+        break;
+    default:
+        qDebug() << "Unkown ERROR !!";
+        break;
+    }
+
+}
+
+/*
+void CommLogForm::create_process()
+{
+    // STARTUPINFO si;
+    // PROCESS_INFORMATION pi;
+
+    // ZeroMemory(&si, sizeof(si));
+    // si.cb = sizeof(si);
+    // ZeroMemory(&pi, sizeof(pi));
+
+    //const TCHAR* target = TEXT("C:\\Windows\\System32\\calc.exe");
+
+    /*
+    const TCHAR* target = TEXT("C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe");
+
+    if (!CreateProcess(
+        target,           // No module name (use command line)
+        NULL,      // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory
+        &si,            // Pointer to STARTUPINFO structure
+        &pi)            // Pointer to PROCESS_INFORMATION structure
+        ) {
+
+        qDebug() << "CreateProcess failed! (" << GetLastError() <<") ";
+        }else {
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
+        }
+
+}
+*/

@@ -97,7 +97,6 @@ void SpotBrowser::updateRecord()
         if (spot_form->exec() > 0){
             try{
 
-
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);

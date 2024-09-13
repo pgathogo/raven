@@ -269,7 +269,7 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow::showFullScreen();
     */
 
-    //setStyleSheet("QMainWindow{background-color: #222222;}");
+    setStyleSheet("QMainWindow{background-color: #222222;}");
 
     log_info("App load-up. Done.");
 

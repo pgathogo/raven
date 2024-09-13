@@ -29,7 +29,7 @@ public:
     ~DateTimeSelector();
 
     void build_time_buttons();
-    void time_buttons(const QString, int&);
+    void time_buttons(const QString, int);
     DateTimeSelection selection();
     void set_selected_buttons();
 

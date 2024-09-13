@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>267</height>
+    <width>760</width>
+    <height>210</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>760</width>
+    <height>210</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -17,10 +23,10 @@
    <item>
     <widget class="QTableWidget" name="twDaypart">
      <property name="sizeAdjustPolicy">
-      <enum>QAbstractScrollArea::AdjustIgnored</enum>
+      <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
      </property>
      <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
      </property>
      <property name="rowCount">
       <number>7</number>

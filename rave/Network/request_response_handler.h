@@ -12,11 +12,13 @@ using Request = QString;
 namespace NETWORK
 {
 
-    class BaseRequestResponseHandler
+    class BaseRequestResponseHandler: public QObject
     {
     public:
         virtual QString handler_type() = 0;
         virtual Response handle_request(Request) = 0;
+    // signals:
+    //     void log_handler_message(const QString);
     };
 
     struct DiskInfo {
@@ -33,7 +35,6 @@ namespace NETWORK
         Response handle_request(Request) override;
 
         DiskInfo disk_info(const QString&);
-
 
     };
 

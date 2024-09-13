@@ -20,6 +20,8 @@ namespace NETWORK
 
     Response DiskListRequestHandler::handle_request(Request request)
     {
+        // emit log_handler_message("<*> DiskListRequestHandler <*>");
+
         QJsonObject all_volumes;
 
         DWORD drive_mask = GetLogicalDrives();

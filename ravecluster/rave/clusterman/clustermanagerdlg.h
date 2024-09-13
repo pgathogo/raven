@@ -308,7 +308,6 @@ public slots:
     void item_double_clicked(QTreeWidgetItem*, int);
     void print_tree();
 
-    void save_data();
     void close_window();
     void load_data();
     void load_cluster_data();

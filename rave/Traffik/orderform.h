@@ -32,7 +32,6 @@ public:
     void clear_widgets() override;
 
     void populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf);
-    void prepareNewOrder();
     void prepare_for_edit(Order*);
     void setDefaults();
     void setChoiceFieldDefault(QComboBox* cbox, const std::string val);
@@ -67,6 +66,9 @@ private slots:
     void tradeCreditTypeCBChanged(int i);
 
 private:
+    void prepare_new_order();
+    void disable_controls();
+
     Ui::OrderForm *ui;
     Client* mClient;
     Order* mOrder;
