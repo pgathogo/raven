@@ -12,6 +12,7 @@ using IsSelected = bool;
 struct DateTimeSelection{
     QDate sel_date;
     std::vector<int> sel_hours{};
+    void clear(){ sel_hours.clear(); }
 };
 
 struct HourButtonData{
@@ -29,7 +30,7 @@ public:
     ~DateTimeSelector();
 
     void build_time_buttons();
-    void time_buttons(const QString, int);
+    void time_buttons(const QString, std::vector<QString>&);
     DateTimeSelection selection();
     void set_selected_buttons();
 

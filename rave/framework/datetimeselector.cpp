@@ -37,9 +37,14 @@ DateTimeSelector::~DateTimeSelector()
 
 void DateTimeSelector::build_time_buttons()
 {
-    int hour = 0;
-    time_buttons("AM", hour);
-    time_buttons("PM", hour);
+    //int hour = 0;
+    std::vector<QString> time_text_am{"12", "1", "2", "3", "4", "5",
+                                      "6", "7", "8", "9", "10", "11"};
+
+    std::vector<QString> time_text_pm{"12", "13", "14", "15", "16", "17",
+                                      "18", "19", "20", "21", "22", "23"};
+    time_buttons("AM", time_text_am);
+    time_buttons("PM", time_text_pm);
 
     ui->calWidget->setSelectedDate(m_selection.sel_date);
     set_selected_buttons();
@@ -57,8 +62,9 @@ void DateTimeSelector::set_selected_buttons()
 }
 
 
-void DateTimeSelector::time_buttons(const QString time_symbol, int long_hour)
+void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QString>& time_text)
 {
+
     QString btn_style(
         "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #C1F5C7, stop:1 #D0F6B9, stop:2 #E4F9AA, stop:3 #EFFCA2 );"
         "border-radius: 20px;"
@@ -82,9 +88,10 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int long_hour)
 
     */
 
+    // std::vector<QString> time_text_am{"12", "1", "2", "3", "4", "5",
+    //                                   "6", "7", "8", "9", "10", "11"};
 
-    std::vector<QString> time_text_am{"12", "1", "2", "3", "4", "5",
-                                      "6", "7", "8", "9", "10", "11"};
+    int long_hour = 0;
     const int ROWS = 5;
 
     int row = 0;
@@ -93,8 +100,8 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int long_hour)
     int current_hour = QTime::currentTime().hour();
     QString am_pm = QTime::currentTime().toString("AP");
 
-    for (int hr=0; hr < time_text_am.size(); ++hr){
-        QString btn_text = time_text_am[hr]+" "+time_symbol;
+    for (int hr=0; hr < time_text.size(); ++hr){
+        QString btn_text = time_text[hr]+" "+time_symbol;
 
         QPushButton* btn = new QPushButton(btn_text, this);
 
@@ -109,14 +116,16 @@ void DateTimeSelector::time_buttons(const QString time_symbol, int long_hour)
                 btn->setStyleSheet( "background-color: #7FFF00");
             }
         }else{
-            if (current_hour > 12)
-                current_hour = current_hour - 12;
+
+            // if (current_hour > 12)
+            //     current_hour = current_hour - 12;
 
             if (hr == current_hour && am_pm == "PM"){
                 btn->setStyleSheet(
                 "background-color: #7FFF00"
                 );
             }
+
             ui->gridTimePM->addWidget(btn, row, col);
         }
 
