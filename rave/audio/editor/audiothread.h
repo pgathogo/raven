@@ -8,6 +8,13 @@
 
 void __stdcall syncFunc(HSYNC handle, DWORD channel, DWORD data, void* user);
 
+struct AudioInfo {
+    int sample_rate{0};
+    int num_channels{0};
+    int num_samples{0};
+    QWORD length_bytes{0};
+};
+
 class AudioThread : public QThread
 {
     Q_OBJECT
@@ -40,6 +47,10 @@ class AudioThread : public QThread
 
         DWORD audio_len(QString audio);
 
+        void fetch_audio_energy(const std::string&, std::vector<float>&);
+        DWORD get_audio_data(HSTREAM&, std::vector<float>&, QVector<float>&);
+
+        AudioInfo get_audio_info(std::string&);
 
 };
 

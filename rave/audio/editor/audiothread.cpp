@@ -21,6 +21,26 @@ AudioThread::AudioThread(QObject* parent):
     endOfMusic = true;
 }
 
+AudioInfo AudioThread::get_audio_info(std::string& audio_file)
+{
+    AudioInfo audio_info;
+
+    HSTREAM stream_handle = BASS_StreamCreateFile(false, audio_file.c_str(), 0L, 0L, BASS_STREAM_DECODE);
+    if (!stream_handle) {
+        // TODO: Inform user that reading the audio file was nto successufull
+        return audio_info;
+    }
+
+    BASS_CHANNELINFO info;
+    BASS_ChannelGetInfo(stream_handle, &info);
+    audio_info.sample_rate = info.freq;
+    audio_info.num_channels = info.chans;
+
+    audio_info.length_bytes = BASS_ChannelGetLength(stream_handle, BASS_POS_BYTE);
+    audio_info.num_samples = BASS_ChannelBytes2Seconds(stream_handle, audio_info.length_bytes) * audio_info.sample_rate * audio_info.num_channels;
+    return audio_info;
+}
+
 void AudioThread::play(QString filename)
 {
 
@@ -205,10 +225,102 @@ float* AudioThread::get_channel_data()
 
     return fft;
 
-    // }else{
-    //     playing = false;
-    //     emit end_of_playback();
-    // }
+}
+
+DWORD AudioThread::get_audio_data(HSTREAM& stream_handle,
+                                        std::vector<float>& buffer, QVector<float>& energy_data)
+{
+
+    int buffer_size = 1024;
+
+    DWORD byte_read = 0;
+
+    if (endOfMusic)
+        return byte_read;
+
+    byte_read = BASS_ChannelGetData(stream_handle, buffer.data(), buffer_size * sizeof(float) );
+
+    return byte_read;
+
+}
+
+void AudioThread::fetch_audio_energy(const std::string& audio_file, std::vector<float>& energy_data)
+{
+    HSTREAM stream_handle = BASS_StreamCreateFile(false, audio_file.c_str(), 0L, 0L,  BASS_STREAM_DECODE | BASS_SAMPLE_LOOP);
+    if (!stream_handle) {
+        // TODO: Inform the user that reading the audio file was not successfull
+        return;
+    }
+
+    qDebug() << "** AudioThread::fetch_audio_energy **";
+
+    int BUFFER_SIZE = 1024;
+    std::vector<double> buffer(BUFFER_SIZE);
+
+    while(true) {
+        DWORD bytes_read = BASS_ChannelGetData(stream_handle, buffer.data(), BUFFER_SIZE * sizeof(float));
+
+        //qDebug() << "BE: "<< bytes_read;
+
+        if (bytes_read == (DWORD)-1){
+            int error_code = BASS_ErrorGetCode();
+            qDebug() << "BASS_ChannelGetData failed with error code:  "<< error_code;
+            break;
+        }
+
+        if (bytes_read ==0){
+            qDebug() << "Reached end of stream";
+            break;
+        }
+
+        int sample_count = bytes_read / sizeof(float);
+
+        if (sample_count == 0) {
+            qDebug() << "Sample count is zero, skiping chunk";
+            continue;
+        }
+
+
+        double energy = 0.0f;
+        double b = 0.0f;
+        bool flag = false;
+        int temp = 0;
+        for(size_t i=0; i < bytes_read / sizeof(float); i++) {
+            b = buffer[i];
+            energy += b * b;  // sum of squares
+            //energy += buffer[i] * buffer[i];  // sum of squares
+            if (std::isnan(b)) {
+                continue;
+            }
+
+            if (std::isnan(energy)) {
+                continue;
+            }
+
+            // if (b != 0) {
+            //     temp = i;
+            //     flag = true;
+            //     break;
+            // }
+        }
+
+        // if (flag) {
+        //     qDebug() << "buffer: " << b;
+        //     qDebug() << "Energy:    " << energy ;
+        //     break;
+        // }
+
+        if (std::isnan(energy)){
+            //qDebug() << "Energy value is NaN, skipping this chunk";
+            continue;
+        }
+
+        qDebug() << "E: "<< energy;
+
+        energy = std::sqrt(energy / BUFFER_SIZE);
+
+        energy_data.push_back(energy);
+    }
 
 }
 

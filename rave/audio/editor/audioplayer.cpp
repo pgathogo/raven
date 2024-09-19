@@ -1,5 +1,4 @@
 #include "audioplayer.h"
-#include "audiothread.h"
 
 
 namespace AUDIO
@@ -51,6 +50,16 @@ namespace AUDIO
     {
         //m_audio_thread->channel_levels();
         return m_audio_thread->get_channel_levels();
+    }
+
+    AudioInfo AudioPlayer::get_audio_info(std::string& audio_file)
+    {
+        return m_audio_thread->get_audio_info(audio_file);
+    }
+
+    void AudioPlayer::fetch_audio_energy(const std::string& audio_file, std::vector<float>& energy_data)
+    {
+        m_audio_thread->fetch_audio_energy(audio_file, energy_data);
     }
 
     void AudioPlayer::update_output_channel(QString output, QString play_item)

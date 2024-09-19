@@ -3,9 +3,9 @@
 
 #include <QObject>
 #include "../../audio/audiofile.h"
+#include "audiothread.h"
 
-class AudioThread;
-
+//class AudioThread;
 
 namespace AUDIO
 {
@@ -48,6 +48,8 @@ namespace AUDIO
         float audio_sample_rate();
         void change_position(int);
         void play_from_position(int);
+        AudioInfo get_audio_info(std::string&);
+        void fetch_audio_energy(const std::string&, std::vector<float>&);
     signals:
         void play_next();
         void end_of_play();
