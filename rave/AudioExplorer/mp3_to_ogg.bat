@@ -1,1 +1,1 @@
-D:/home/pms/Raven/rave/AudioExplorer/ffmpeg.exe -y -i D:\home\PMS\Raven\audio\TestAudio\murder.mp3 -c:a libvorbis -q:a 4 -vsync 2 
+D:/Home/Clients/PMS/Raven/rave/AudioExplorer/ffmpeg.exe -y -i D:\Music\Slipknot- Snuff.mp3 -c:a libvorbis -q:a 4 -vsync 2 D:\Music\Slipknot- Snuff.ogg

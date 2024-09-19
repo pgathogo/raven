@@ -13,6 +13,7 @@
 #include "42K3SBLUTX/moc_audiothread.cpp"
 #include "42K3SBLUTX/moc_audiowaveform.cpp"
 #include "42K3SBLUTX/moc_vumeter.cpp"
+#include "42K3SBLUTX/moc_waveformwidget.cpp"
 #include "YFL3MR5MWG/moc_genreform.cpp"
 #include "DX5S3JBGB7/moc_baseentitybrowserdlg.cpp"
 #include "DX5S3JBGB7/moc_baseentitydetaildlg.cpp"
