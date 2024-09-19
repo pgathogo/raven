@@ -94,6 +94,7 @@ void CommLogForm::set_default_dts()
 
 void CommLogForm::on_clicked_datetime()
 {
+    //m_dts.clear();
     std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this, m_dts);
 
     if (dts->exec() == 1)

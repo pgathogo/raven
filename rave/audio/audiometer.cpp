@@ -2,7 +2,8 @@
 #include <QTimer>
 #include <QPainter>
 #include <QPaintEvent>
-#include <cmath>
+//#include <cmath>
+#include <algorithm>
 
 #include "audiometer.h"
 #include "editor/audioplayer.h"
@@ -68,7 +69,7 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
     {
         float db = 20 * log10( level / 32768.0f);
 
-        return std::max(0.0f, std::min(1.0f, (db + 50) / 50));
+        return max(0.0f, min(1.0f, (db + 50) / 50) );
 
     }
 
@@ -129,7 +130,7 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
         int gap_width = 1;     // Width of gap between segments
 
         // Green section
-        draw_segments(painter, x, y, std::min(level_width, green_width), height, segment_width, gap_width, Qt::green);
+        draw_segments(painter, x, y, min(level_width, green_width), height, segment_width, gap_width, Qt::green);
 
         //painter->fillRect(x, y, std::min(level_width, green_width), height, Qt::green);
 
@@ -137,7 +138,7 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
         if (level_width > green_width) {
 
             draw_segments(painter, x + green_width, y,
-                         std::min(level_width - green_width, yellow_width), height, segment_width, gap_width, Qt::yellow );
+                         min(level_width - green_width, yellow_width), height, segment_width, gap_width, Qt::yellow );
 
             /* smooth bar */
             // painter->fillRect(x + green_width, y,
@@ -146,7 +147,7 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
 
         if (level_width > green_width + yellow_width) {
             draw_segments(painter, x + green_width + yellow_width, y,
-                          std::min(level_width - green_width - yellow_width, red_width), height, segment_width, gap_width, Qt::red);
+                          min(level_width - green_width - yellow_width, red_width), height, segment_width, gap_width, Qt::red);
 
             /* smooth bar */
             // painter->fillRect(x + green_width + yellow_width, y,

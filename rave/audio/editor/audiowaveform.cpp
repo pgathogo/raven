@@ -9,6 +9,7 @@
 
 #include "audiowaveform.h"
 #include "ui_audiowaveform.h"
+#include "waveformwidget.h"
 
 #include "audiothread.h"
 #include "../audiotool.h"
@@ -38,6 +39,9 @@ namespace AUDIO {
         m_audio_meter = std::make_unique<AUDIO::AudioMeter>(m_audio_player);
         ui->hlVumeter->addWidget(m_audio_meter.get());
 
+        // m_wave_form_widget = std::make_unique<AUDIO::WaveFormWidget>(m_audio_player);
+        // ui->vlWave->addWidget(m_wave_form_widget.get());
+
         //m_audio_thread = new AudioThread(this);
         double audio_duration_secs = m_audio_player->audio_duration();
         //double audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())); // Seconds
@@ -46,7 +50,9 @@ namespace AUDIO {
         m_scene = new AudioWaveScene(ui->lblCurrTime, audio_duration_secs);
 
         ui->gvWave->setScene(m_scene);
-        ui->gvWave->setMaximumWidth(800);
+        //ui->gvWave->setMaximumWidth(1000);
+        ui->gvWave->setMinimumWidth(650);
+        ui->gvWave->setMinimumHeight(200);
         ui->gvWave->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 
         connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_current_position, this, &AudioWaveForm::audio_current_position);

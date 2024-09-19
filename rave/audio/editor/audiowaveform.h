@@ -21,6 +21,7 @@ namespace AUDIO {
     //class VuMeter;
     class AudioPlayer;
     class AudioMeter;
+    class WaveFormWidget;
 
     class AudioWaveForm : public QDialog
     {
@@ -116,6 +117,8 @@ namespace AUDIO {
 
         std::shared_ptr<AUDIO::AudioPlayer> m_audio_player;
         std::unique_ptr<AUDIO::AudioMeter> m_audio_meter;
+
+        // std::unique_ptr<AUDIO::WaveFormWidget> m_wave_form_widget;
 
         double m_new_pos;
 
