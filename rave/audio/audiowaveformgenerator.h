@@ -2,9 +2,10 @@
 
 #include <memory>
 #include <QObject>
+#include <QProcess>
 
 class QProgressDialog;
-class QProcess;
+//class QProcess;
 
 namespace AUDIO{
 
@@ -18,7 +19,7 @@ namespace AUDIO{
 
         AudioWaveFormGenerator(const QString);
         ~AudioWaveFormGenerator();
-        void generate();
+        bool generate();
         QString audio_filename();
         void set_audio_filename(QString);
         QString wave_filename();

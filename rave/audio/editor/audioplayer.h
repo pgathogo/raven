@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "../../audio/audiofile.h"
+
 #include "audiothread.h"
 
 //class AudioThread;
@@ -41,7 +42,9 @@ namespace AUDIO
         std::tuple<float, float> audio_levels();
 
         void set_audio_file(const AudioFile);
-        double audio_duration();
+        double audio_duration_sec(QString audio_file="");
+        double audio_duration_msec(QString);
+
         AudioFile audio_file();
         unsigned int audio_length();
         float audio_bitrate();

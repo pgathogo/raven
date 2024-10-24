@@ -116,12 +116,12 @@ public:
     void delete_audio_from_db(const std::string);
 
     int write_audio_to_db(std::unique_ptr<AUDIO::Audio>);
-    FileOperationResult copy_new_audio_to_library(int);
-    FileOperationResult copy_wave_file_to_library(int);
+    FileOperationResult copy_new_audio_to_library(int, const QString);
+    FileOperationResult copy_wave_file_to_library(int, const QString);
     FileOperationResult create_adf_file(int, AudioFile);
 
     void rollback_import_process(ImportResult& import_result);
-    bool convert_audio(std::shared_ptr<AUDIO::Audio>);
+    //bool convert_audio(std::shared_ptr<AUDIO::Audio>);
 
     template<typename T>
     void fetch_filtered_audio(T arg)

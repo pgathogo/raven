@@ -265,7 +265,6 @@ int PostgresDataProvider::read(const std::string query)
         // throw PostgresException("READ-DECLARE-CURSOR", errorMsg);
     }
 
-
     PQclear(res);
 
     res = PQexec(conn, "FETCH ALL in mcursor");
@@ -279,7 +278,6 @@ int PostgresDataProvider::read(const std::string query)
     }
 
     nFields = PQnfields(res);
-
 
     for(i=0; i<PQntuples(res); ++i){
 

@@ -2651,6 +2651,7 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
     }
 
     std::iter_swap(m_schedule_items.begin()+index, m_schedule_items.begin()+(index-1));
+
     m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
     m_schedule_grid[grid_pos-1]->set_subject(schedule_item(index-1));
 

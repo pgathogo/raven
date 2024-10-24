@@ -145,7 +145,7 @@
         <file>media/icons/paste02.bmp</file>
         <file>media/icons/delete02.bmp</file>
     </qresource>
-    <qresource prefix="/editor">
+    <qresource prefix="/media/editor">
         <file>media/editor/mark_audio.png</file>
         <file>media/editor/mark_audio_2.png</file>
         <file>media/editor/mark_end.png</file>
@@ -163,5 +163,6 @@
         <file>media/editor/play_intro.png</file>
         <file>media/editor/play_start.png</file>
         <file>media/editor/stop_play.png</file>
+        <file>media/editor/play_mark_start.png</file>
     </qresource>
 </RCC>

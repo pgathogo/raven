@@ -1,32 +1,51 @@
 #include <filesystem>
 #include <math.h>
+#include <chrono>
+#include <thread>
 
 #include <QDebug>
 #include <QDir>
+#include <QProgressBar>
+#include <QTimeLine>
+#include <QProcess>
+#include <QFileInfo>
 
 #include "../audio/audiometer.h"
+#include "../audio/audiowaveformgenerator.h"
+#include "../audio/audio.h"
+#include "../audio/audiofile.h"
+#include "../audio/audioconverter.h"
+#include "../audio/mp3oggconverter.h"
+#include "../audio/mtstomp3converter.h"
+#include "../audio/oggtooggconverter.h"
+
 #include "audioplayer.h"
 
 #include "audiowaveform.h"
 #include "ui_audiowaveform.h"
-#include "waveformwidget.h"
 
 #include "audiothread.h"
 #include "../audiotool.h"
 //#include "vumeter.h"
 #include "../audiometer.h"
 
+
 namespace fs = std::filesystem;
+using namespace std::literals;
 
 namespace AUDIO {
 
-    AudioWaveForm::AudioWaveForm(AudioFile& audio_file, QDialog *parent)
+    AudioWaveForm::AudioWaveForm(AudioFile& audio_file,
+                             FormMode form_mode,
+                             QDialog *parent)
         :QDialog(parent)
         ,ui(new Ui::AudioWaveForm)
         ,m_audio_file{audio_file}
+        ,m_audio_filename{QString::fromStdString(audio_file.audio_file())}
         ,m_seconds_per_pixel{0.0}
         ,m_audio_wave{nullptr}
         ,m_scene{nullptr}
+        ,m_form_mode{form_mode}
         //,m_audio_thread{nullptr}
         //,m_player_timer{nullptr}
         //,m_indicator_timer{nullptr}
@@ -35,40 +54,14 @@ namespace AUDIO {
     {
         ui->setupUi(this);
 
-        m_audio_player = std::make_shared<AUDIO::AudioPlayer>(m_audio_file);
-        m_audio_meter = std::make_unique<AUDIO::AudioMeter>(m_audio_player);
-        ui->hlVumeter->addWidget(m_audio_meter.get());
-
-        // m_wave_form_widget = std::make_unique<AUDIO::WaveFormWidget>(m_audio_player);
-        // ui->vlWave->addWidget(m_wave_form_widget.get());
-
-        //m_audio_thread = new AudioThread(this);
-        double audio_duration_secs = m_audio_player->audio_duration();
-        //double audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file())); // Seconds
-
-        m_audio_file.set_duration(audio_duration_secs*1000); //msec
-        m_scene = new AudioWaveScene(ui->lblCurrTime, audio_duration_secs);
-
-        ui->gvWave->setScene(m_scene);
-        //ui->gvWave->setMaximumWidth(1000);
-        ui->gvWave->setMinimumWidth(650);
-        ui->gvWave->setMinimumHeight(200);
-        ui->gvWave->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-
-        connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_current_position, this, &AudioWaveForm::audio_current_position);
-        // connect(m_audio_thread, SIGNAL(current_peak(float[1024])), this, SLOT(audio_current_peak(float[1024])));
-
-        //m_player_timer = new QTimer(this);
-        //connect(m_player_timer, &QTimer::timeout, this, &AudioWaveForm::update_vumeter);
-
-        const int audio_sample_msec = 100;
-        //m_indicator_timer = new QTimer(this);
-        //m_indicator_timer->setInterval(audio_sample_msec);
-        //connect(m_indicator_timer, &QTimer::timeout, this, &AudioWaveForm::update_indicator);
+        // double audio_duration_secs = m_audio_player->audio_duration();
+        //audio_file.set_duration(audio_duration_secs*1000); //msec
+        //audio_file.set_duration(m_audio_file.duration());
+        //m_audio_file.set_duration(m_audio_file.duration());
 
         connect(ui->btnPlay, &QPushButton::clicked, this, &AudioWaveForm::start_play);
         connect(ui->btnStop, &QPushButton::clicked, this, &AudioWaveForm::stop_play);
-        connect(ui->btnPause, &QPushButton::clicked, this, &AudioWaveForm::pause_play);
+        // connect(ui->btnPause, &QPushButton::clicked, this, &AudioWaveForm::pause_play);
 
         connect(ui->btnSave, &QPushButton::clicked, this, &AudioWaveForm::save);
         connect(ui->btnCancel, &QPushButton::clicked, this, &AudioWaveForm::on_cancel);
@@ -87,9 +80,39 @@ namespace AUDIO {
         connect(ui->btnPlayExtro, &QPushButton::clicked, this, &AudioWaveForm::play_extro);
         connect(ui->btnPlayEndMarker, &QPushButton::clicked, this, &AudioWaveForm::play_end_marker);
 
-        init_widgets();
+        QString audio_filename = QString::fromStdString(m_audio_file.audio_file());
 
+        ui->btnSave->setEnabled(false);
+
+        if (form_mode == FormMode::New) {
+            convert_audio_to_ogg(audio_filename);
+            create_audio_wave_file(audio_filename);
+        } else {
+            m_audio_import_status.audio_converted_to_ogg = true;
+            create_audio_wave_file(audio_filename);
+        }
+
+        m_audio_player = std::make_shared<AUDIO::AudioPlayer>(audio_file);
+        m_audio_meter = std::make_unique<AUDIO::AudioMeter>(m_audio_player);
+        connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_current_position, this, &AudioWaveForm::audio_current_position);
+        ui->hlVumeter->addWidget(m_audio_meter.get());
+
+        auto duration = m_audio_player->audio_duration_msec(audio_filename);
+
+        m_audio_file.set_duration(duration);
+
+        m_scene = new AudioWaveScene(ui->lblCurrTime, duration);
+
+        ui->gvWave->setScene(m_scene);
+        ui->gvWave->setMinimumWidth(650);
+        ui->gvWave->setMinimumHeight(200);
+        ui->gvWave->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+
+        setMaximumWidth(this->width());
+
+        init_widgets();
     }
+
 
     AudioWaveForm::~AudioWaveForm()
     {
@@ -108,20 +131,127 @@ namespace AUDIO {
 
     }
 
-    void AudioWaveForm::show_wave_file()
+    void AudioWaveForm::load_audio_wave_file(const QString audio_filename)
     {
-        // FIXME:
-        QPixmap pixmap(QString::fromStdString(m_audio_file.wave_file()));
+
+    }
+
+    void AudioWaveForm::remove_temp_wave_file()
+    {
+        if (QFileInfo::exists(m_wave_filename)){
+            QFile::remove(m_wave_filename);
+        }
+    }
+
+    void AudioWaveForm::remove_temp_ogg_file()
+    {
+        if (QFileInfo::exists(m_ogg_filename)) {
+            QFile::remove(m_ogg_filename);
+        }
+
+    }
+
+    void AudioWaveForm::start_progress_indicator(const QString audio_filename)
+    {
+        if (m_conversion_timer)
+            m_conversion_timer->stop();
+
+        if (m_conversion_pb)
+            m_conversion_pb->setValue(0);
+
+        const int KB = 1024;
+
+        QFileInfo fi(audio_filename);
+        int byte_size = fi.size();
+
+        if(byte_size >= KB) {
+            m_file_toconvert_size = (int)byte_size/KB;
+        }
+
+        if (m_file_toconvert_size == 0)
+            return;
+
+        std::chrono::milliseconds timer_interval = 70ms;
+
+        m_conversion_pb =  std::make_unique<QProgressBar>(this);
+        m_conversion_pb->setRange(0, 100);
+
+        m_conversion_timer = std::make_unique<QTimer>(this);
+        m_conversion_timer->setInterval(timer_interval);
+
+        ui->vlWave->addWidget(m_conversion_pb.get());
+
+        connect(m_conversion_timer.get(), &QTimer::timeout, this, &AudioWaveForm::update_conversion_pb);
+
+        m_conversion_timer->start();
+
+    }
+
+
+    void AudioWaveForm::update_conversion_pb()
+    {
+        int value =  100 - (((float)(m_file_toconvert_size - m_progress_counter)/ m_file_toconvert_size)*100);
+
+        m_conversion_pb->setValue(value);
+
+        m_progress_counter+=30;
+
+    }
+
+    bool AudioWaveForm::convert_audio_to_ogg(const QString audio_filename)
+    {
+        start_progress_indicator(audio_filename);
+
+        m_conversion_thread = new AudioConversionThread(audio_filename,
+                                                        ProcessOption::FormatConversion,
+                                                        this);
+
+        m_conversion_thread->setPriority(QThread::HighPriority);
+
+        connect(m_conversion_thread, &AudioConversionThread::resultReady, this, &AudioWaveForm::audio_conversion_done);
+        connect(m_conversion_thread, &AudioConversionThread::finished, m_conversion_thread, &QObject::deleteLater);
+
+        ui->lblStatus->setText("Audio conversion started (mp3 to ogg)...");
+        m_conversion_thread->start();
+
+    }
+
+    bool AudioWaveForm::create_audio_wave_file(const QString audio_filename)
+    {
+        start_progress_indicator(audio_filename);
+
+        m_ct_wave_generator = new AudioConversionThread(audio_filename,
+                                                        ProcessOption::GenerateWaveFile,
+                                                        this);
+
+        m_ct_wave_generator->setPriority(QThread::LowPriority);
+        connect(m_ct_wave_generator, &AudioConversionThread::resultReady, this, &AudioWaveForm::wave_file_generated);
+        connect(m_ct_wave_generator, &AudioConversionThread::finished, m_ct_wave_generator, &QObject::deleteLater);
+
+        ui->lblStatus->setText("Generating audio wave...");
+        m_ct_wave_generator->start();
+    }
+
+    void AudioWaveForm::show_wave_file(const QString wave_filename)
+    {
+        qDebug() << "-------------------";
+        qDebug() << wave_filename;
+        qDebug() << "-------------------";
+
+        QPixmap pixmap(wave_filename);
         m_scene->addPixmap(pixmap);
         QRectF scene_bounds = m_scene->itemsBoundingRect();
 
         scene_bounds.setWidth(scene_bounds.width()*0.9);
         scene_bounds.setHeight(scene_bounds.height()*0.9);
         ui->gvWave->setSceneRect(scene_bounds);
+
         ui->gvWave->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatioByExpanding);
 
         double scene_width = scene_bounds.width()+scene_bounds.width()*0.11;
         //ui->gvWave->setMaximumWidth(scene_width+20);
+
+        qDebug() << "show_wave_file::m_audio_file.duration::" << m_audio_file.duration();
 
         m_seconds_per_pixel = ((m_audio_file.duration()/1000) *100)/scene_width;
 
@@ -129,6 +259,13 @@ namespace AUDIO {
 
         ui->gvWave->centerOn(0, 0);
         ui->gvWave->show();
+
+        m_scene->draw_indicator_line();
+
+        m_audio_file.marker().dump_markers();
+
+        show_markers(m_audio_file.marker());
+        show_marker_value(m_audio_file.marker());
 
     }
 
@@ -151,10 +288,11 @@ namespace AUDIO {
 
     float AudioWaveForm::audio_sample_rate(QString audio_file)
     {
-        //auto sr = m_audio_thread->audio_sample_rate(audio_file);
         auto sr = m_audio_player->audio_sample_rate();
+
         if (sr > 0)
             sr = sr / 1000;
+
         return sr;
     }
 
@@ -172,38 +310,29 @@ namespace AUDIO {
 
     void AudioWaveForm::start_play()
     {
-        //m_audio_thread->play(QString::fromStdString(m_audio_file.audio_file()));
-        m_audio_player->play();
-        //m_audio_meter->start_meter();
+        play_mark(m_scene->indicator_position());
     }
 
     void AudioWaveForm::stop_play()
     {
         m_audio_player->stop_play();
-        ////m_audio_meter->stop_meter();
-
-        /*
-        if (m_audio_thread != nullptr){
-            m_audio_thread->stop();
-            //stop_indicator_move();
-            m_player_timer->stop();
-        }
-        */
 
     }
 
+    /*
     void AudioWaveForm::pause_play()
     {
         m_scene->display_marker_position_sec();
     }
+   */
 
 
     void AudioWaveForm::audio_current_position(double position, double total)
     {
-        //int value = 100 - round(((total-position)/total)*100);
         // move progressbar
         // ui->pbAudio->setValue(value);
         move_indicator_line(position);
+
     }
 
     void AudioWaveForm::audio_current_peak(float fft[])
@@ -212,11 +341,13 @@ namespace AUDIO {
         int i = 0;
         int x = 0;
         int max_peak = 0;
-        for (; i < 201; ++i){
+
+        for (; i < 201; ++i) {
             x = 20*log10(sqrt(fft[i+1])*3*201);
             if (x>201) x=201;
             //m_vumeter->setPeak(x*6);
         }
+
     }
 
     double AudioWaveForm::seconds_per_pixel()
@@ -262,53 +393,60 @@ namespace AUDIO {
         return m_cue_marker;
     }
 
-    void AudioWaveForm::create_marker_line(AUDIO::MarkerType marker_type)
+    AUDIO::MarkerIndicator* AudioWaveForm::create_marker(AUDIO::MarkerType marker_type)
     {
         auto line = *m_scene->indicator_line();
         auto marker = m_scene->find_marker(marker_type);
+
         if (marker != nullptr)
         {
             m_scene->update_marker(marker, line);
+            return marker;
 
         }else{
-            create_marker_line(marker_type, line);
+            auto m = create_marker_line(marker_type, line);
+            return m;
         }
     }
 
-    void AudioWaveForm::create_marker_line(AUDIO::MarkerType marker_type, QLineF line)
+    AUDIO::MarkerIndicator* AudioWaveForm::create_marker_line(AUDIO::MarkerType marker_type, QLineF line)
     {
         auto marker = new AUDIO::MarkerIndicator(marker_type);
         create_marker_display_unit(marker, line);
         m_scene->add_marker_line(marker, line);
+        return marker;
     }
 
     void AudioWaveForm::create_marker_display_unit(MarkerIndicator* marker, QLineF line)
     {
         QWidget* display_widget;
+
         switch(marker->marker_type())
         {
-          case MarkerType::Start:
+          case MarkerType::StartMarker:
              display_widget = ui->lblStartMarkTime;
              break;
-          case MarkerType::FadeIn:
+          case MarkerType::FadeInMarker:
              display_widget = ui->lblFadeInMarkTime;
              break;
-          case MarkerType::Intro:
+          case MarkerType::IntroMarker:
              display_widget = ui->lblIntroMarkTime;
              break;
-          case MarkerType::FadeOut:
+          case MarkerType::FadeOutMarker:
              display_widget = ui->lblFadeOutMarkTime;
              break;
-          case MarkerType::Extro:
+          case MarkerType::ExtroMarker:
              display_widget = ui->lblExtroMarkTime;
              break;
-          case MarkerType::End:
+          case MarkerType::EndMarker:
              display_widget = ui->lblEndMarkTime;
              break;
         }
 
         auto mdu = find_display_unit(marker->marker_type());
-        if ( mdu == nullptr){
+
+        if ( mdu == nullptr)
+        {
             mdu = new MarkerDisplayUnit(marker);
             mdu->set_display_unit(display_widget);
             m_display_units[marker->marker_type()] = mdu;
@@ -324,13 +462,12 @@ namespace AUDIO {
 
     void AudioWaveForm::show_markers(CueMarker cue_markers)
     {
-
-        show_mark(m_scene->seconds_to_pixel(cue_markers.start_marker), MarkerType::Start);
-        show_mark(m_scene->seconds_to_pixel(cue_markers.fade_in), MarkerType::FadeIn);
-        show_mark(m_scene->seconds_to_pixel(cue_markers.intro), MarkerType::Intro);
-        show_mark(m_scene->seconds_to_pixel(cue_markers.fade_out), MarkerType::FadeOut);
-        show_mark(m_scene->seconds_to_pixel(cue_markers.extro), MarkerType::Extro);
-        show_mark(m_scene->seconds_to_pixel(cue_markers.end_marker), MarkerType::End);
+        show_mark(m_scene->msec_to_pixel(cue_markers.start_marker), MarkerType::StartMarker);
+        show_mark(m_scene->msec_to_pixel(cue_markers.fade_in), MarkerType::FadeInMarker);
+        show_mark(m_scene->msec_to_pixel(cue_markers.intro), MarkerType::IntroMarker);
+        show_mark(m_scene->msec_to_pixel(cue_markers.fade_out), MarkerType::FadeOutMarker);
+        show_mark(m_scene->msec_to_pixel(cue_markers.extro), MarkerType::ExtroMarker);
+        show_mark(m_scene->msec_to_pixel(cue_markers.end_marker), MarkerType::EndMarker);
     }
 
     void AudioWaveForm::show_mark(double mark, MarkerType marker_type)
@@ -340,15 +477,16 @@ namespace AUDIO {
         double x1, x2;
         x1 = x2 = mark;
         auto line = QLineF(x1, y1, x2, y2);
+
         create_marker_line(marker_type, line);
     }
 
     void AudioWaveForm::show_marker_value(CueMarker cue_marker)
     {
-        AUDIO::AudioTool at;
+
+       AUDIO::AudioTool at;
+
        ui->lblStartMarkTime->setText(at.format_time(cue_marker.start_marker));
-       //ui->lblStartMarkTime->setText(QString::fromStdString(std::to_string(marker.start_marker)));
-       //ui->lblFadeInMarkTime->setText(QString::fromStdString(std::to_string(marker.fade_in)));
        ui->lblFadeInMarkTime->setText(at.format_time(cue_marker.fade_in));
        ui->lblIntroMarkTime->setText(at.format_time(cue_marker.intro));
        ui->lblFadeOutMarkTime->setText(at.format_time(cue_marker.fade_out));
@@ -358,63 +496,71 @@ namespace AUDIO {
 
     void AudioWaveForm::mark_start()
     {
-        create_marker_line(MarkerType::Start);
+        create_marker(MarkerType::StartMarker);
     }
 
 
     void AudioWaveForm::mark_fade_in()
     {
-        create_marker_line(MarkerType::FadeIn);
+        create_marker(MarkerType::FadeInMarker);
     }
 
     void AudioWaveForm::mark_intro()
     {
-        create_marker_line(MarkerType::Intro);
+        create_marker(MarkerType::IntroMarker);
     }
 
     void AudioWaveForm::mark_fade_out()
     {
-        create_marker_line(MarkerType::FadeOut);
+        create_marker(MarkerType::FadeOutMarker);
     }
 
     void AudioWaveForm::mark_extro()
     {
-        create_marker_line(MarkerType::Extro);
+        create_marker(MarkerType::ExtroMarker);
     }
 
     void AudioWaveForm::mark_end()
     {
-        create_marker_line(MarkerType::End);
+        constexpr int MSEC = 1000;
+        auto marker = create_marker(MarkerType::EndMarker);
+
+        // Constraint EndMarker to the track duration
+         if (marker->current_position_msec() > m_audio_file.duration()) {
+            marker->set_current_position_msec(m_audio_file.duration());
+            marker->set_current_position_sec(m_audio_file.duration()/ 100);
+         }
+
     }
 
     void AudioWaveForm::play_start_mark()
     {
-        play_mark(m_scene->marker_position(MarkerType::Start));
+        play_mark(m_scene->marker_position(MarkerType::StartMarker));
     }
 
     void AudioWaveForm::play_fade_in()
     {
-        play_mark(m_scene->marker_position(MarkerType::FadeIn));
+        play_mark(m_scene->marker_position(MarkerType::FadeInMarker));
     }
 
     void AudioWaveForm::play_intro()
     {
-        play_mark(m_scene->marker_position(MarkerType::Intro));
+        play_mark(m_scene->marker_position(MarkerType::IntroMarker));
     }
 
     void AudioWaveForm::play_fade_out()
     {
-        play_mark(m_scene->marker_position(MarkerType::FadeOut));
+        play_mark(m_scene->marker_position(MarkerType::FadeOutMarker));
     }
 
     void AudioWaveForm::play_extro()
     {
-        play_mark(m_scene->marker_position(MarkerType::Extro));
+        play_mark(m_scene->marker_position(MarkerType::ExtroMarker));
     }
 
     void AudioWaveForm::play_end_marker()
     {
-        play_mark(m_scene->marker_position(MarkerType::End));
+        play_mark(m_scene->marker_position(MarkerType::EndMarker));
     }
 
 
@@ -428,15 +574,18 @@ namespace AUDIO {
 
         //m_audio_thread->change_position(mark_position.x());
         //m_audio_thread->play_from_position(QString::fromStdString(m_audio_file.audio_file()),
-         //                                  mark_position.x());
+        //                                  mark_position.x());
     }
 
     void AudioWaveForm::showEvent(QShowEvent *event)
     {
+        /*
         show_wave_file();
         m_scene->draw_indicator_line();
         show_markers(m_audio_file.marker());
         show_marker_value(m_audio_file.marker());
+       */
+
     }
 
     void AudioWaveForm::move_indicator_line(double new_position)
@@ -448,6 +597,7 @@ namespace AUDIO {
     {
         AUDIO::AudioTool at;
         setWindowTitle("Cue Editor: "+QString::fromStdString(base_filename(m_audio_file.audio_file())));
+
         ui->lblTitle->setText(QString::fromStdString(m_audio_file.audio_title()));
         ui->lblArtist->setText(QString::fromStdString(m_audio_file.artist_name()));
 
@@ -467,11 +617,11 @@ namespace AUDIO {
 
         ui->lblFileSize->setText(QString::number(m_audio_file.file_size()/1000)+" Kb");
 
-        m_start_indicator = new AUDIO::MarkerIndicator(MarkerType::Start);
+        m_start_indicator = new AUDIO::MarkerIndicator(MarkerType::StartMarker);
         m_start_display_unit = new MarkerDisplayUnit(m_start_indicator);
         m_start_display_unit->set_display_unit(ui->lblStartMarkTime);
 
-        m_fade_in_indicator = new AUDIO::MarkerIndicator(MarkerType::FadeIn);
+        m_fade_in_indicator = new AUDIO::MarkerIndicator(MarkerType::FadeInMarker);
         m_fade_in_display_unit = new MarkerDisplayUnit(m_fade_in_indicator);
         m_fade_in_display_unit->set_display_unit(ui->lblFadeInMarkTime);
 
@@ -484,22 +634,22 @@ namespace AUDIO {
 
     void AudioWaveForm::set_button_icons()
     {
-        QPixmap play_pixmap(":/editor/media/editor/play_green.png");
-        QIcon play_icon(play_pixmap);
+        ui->btnPlay->setIcon(QIcon(":/media/editor/media/editor/play_green.png"));
+        // ui->btnPause->setIcon(QIcon(":/media/editor/media/editor/pause_play.png"));
+        ui->btnStop->setIcon(QIcon(":/media/editor/media/editor/stop_play.png"));
+        ui->btnMarkStartMarker->setIcon(QIcon(":/media/editor/media/editor/mark_start.png"));
+        ui->btnPlayStartMarker->setIcon(QIcon(":/media/editor/media/editor/play_mark_start.png"));
+        ui->btnMarkFadeIn->setIcon(QIcon(":/media/editor/media/editor/mark_fade_in.png"));
+        ui->btnPlayFadeIn->setIcon(QIcon(":/media/editor/media/editor/play_fade_in.png"));
+        ui->btnMarkIntro->setIcon(QIcon(":/media/editor/media/editor/mark_intro.png"));
+        ui->btnPlayIntro->setIcon(QIcon(":/media/editor/media/editor/play_intro.png"));
+        ui->btnMarkFadeOut->setIcon(QIcon(":/media/editor/media/editor/mark_fade_out.png"));
+        ui->btnPlayFadeOut->setIcon(QIcon(":/media/editor/media/editor/play_fade_out.png"));
+        ui->btnMarkExtro->setIcon(QIcon(":/media/editor/media/editor/mark_extro.png"));
+        ui->btnPlayExtro->setIcon(QIcon(":/media/editor/media/editor/play_extro.png"));
+        ui->btnMarkEndMarker->setIcon(QIcon(":/media/editor/media/editor/mark_end.png"));
+        ui->btnPlayEndMarker->setIcon(QIcon(":/media/editor/media/editor/play_end.png"));
 
-        QPixmap pause_pixmap(":/editor/media/editor/pause_play.png");
-        QIcon pause_icon(pause_pixmap);
-
-        QPixmap stop_play_pixmap(":/editor/media/editor/stop_play.png");
-        QIcon stop_play_icon(stop_play_pixmap);
-
-        QPixmap mark_start_pixmap(":/editor/media/editor/mark_start.png");
-        QIcon mark_start_icon(mark_start_pixmap);
-
-        ui->btnPlay->setIcon(play_icon);
-        ui->btnPause->setIcon(pause_icon);
-        ui->btnStop->setIcon(stop_play_icon);
-        ui->btnMarkStartMarker->setIcon(mark_start_icon);
     }
 
     void AudioWaveForm::save_cue_markers()
@@ -507,23 +657,23 @@ namespace AUDIO {
 
         for (auto& [type, marker] : m_scene->markers()){
             switch (type){
-             case AUDIO::MarkerType::Start:
-                m_cue_marker.start_marker  = marker->current_position_sec();
+             case AUDIO::MarkerType::StartMarker:
+                m_cue_marker.start_marker  = marker->current_position_msec();
                 break;
-             case AUDIO::MarkerType::FadeIn:
-                m_cue_marker.fade_in  = marker->current_position_sec();
+             case AUDIO::MarkerType::FadeInMarker:
+                m_cue_marker.fade_in  = marker->current_position_msec();
                 break;
-             case AUDIO::MarkerType::Intro:
-                m_cue_marker.intro  = marker->current_position_sec();
+             case AUDIO::MarkerType::IntroMarker:
+                m_cue_marker.intro  = marker->current_position_msec();
                 break;
-             case AUDIO::MarkerType::Extro:
-                m_cue_marker.extro  = marker->current_position_sec();
+             case AUDIO::MarkerType::ExtroMarker:
+                m_cue_marker.extro  = marker->current_position_msec();
                 break;
-             case AUDIO::MarkerType::FadeOut:
-                m_cue_marker.fade_out  = marker->current_position_sec();
+             case AUDIO::MarkerType::FadeOutMarker:
+                m_cue_marker.fade_out  = marker->current_position_msec();
                 break;
-             case AUDIO::MarkerType::End:
-                m_cue_marker.end_marker  = marker->current_position_sec();
+             case AUDIO::MarkerType::EndMarker:
+                m_cue_marker.end_marker  = marker->current_position_msec();
                 break;
             }
         }
@@ -542,5 +692,183 @@ namespace AUDIO {
         */
 
     }
+
+    bool AudioWaveForm::convert_audio()
+    {
+
+        QString m_audio_filename = QString::fromStdString(m_audio_file.audio_file());
+
+        QFileInfo fi(m_audio_filename);
+        auto file_ext = fi.suffix(); //m_audio->file_extension()->value();
+
+        auto proc = std::make_shared<QProcess>(this);
+
+        if (file_ext == "mp3"){
+        // TODO: Do we really need to convert MP3 to OGG, yet we can play MP3 audio just fine?
+
+            auto ac = std::make_unique<AUDIO::Mp3ToOggConverter>(m_audio_filename, proc);
+            if (!ac->convert()){
+                //clean-up
+                return false;
+            }
+
+        }
+
+        if (file_ext == "ogg"){
+            auto ac = std::make_unique<AUDIO::OggToOggConverter>(m_audio_filename);
+            if (!ac->convert()){
+                // clean-up
+                return false;
+            }
+        }
+
+        if (file_ext == "mts"){
+            auto ac = std::make_unique<AUDIO::MtsToMp3Converter>(m_audio_filename);
+            ac->convert();
+            auto mp3_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(ac.get());
+            auto audio_file = mp3_file->dest_mp3_filename();
+
+            // TODO: Refactor this line since we no longer have Audio object
+            // m_audio->audio_file().set_audio_filename(audio_file.toStdString());
+        }
+
+        return true;
+
+    }
+
+    void AudioWaveForm::enable_save_button()
+    {
+        ui->btnSave->setEnabled(
+            (m_audio_import_status.audio_converted_to_ogg && m_audio_import_status.wavefile_is_generated)
+            );
+    }
+
+    void AudioWaveForm::audio_conversion_done(const QString& ogg_filename)
+    {
+        dbgln("audio_conversion_done:: >> "+ogg_filename);
+        m_ogg_filename = ogg_filename;
+
+        ui->lblStatus->setText("Audio conversion done.");
+        m_conversion_timer->stop();
+        m_conversion_pb->setValue(100);
+
+        m_audio_import_status.audio_converted_to_ogg = true;
+        enable_save_button();
+    }
+
+    void AudioWaveForm::wave_file_generated(const QString& wave_filename)
+    {
+        m_wave_filename = wave_filename;
+
+        ui->lblStatus->setText("Audio wave generated.");
+        m_conversion_timer->stop();
+        m_conversion_pb->setValue(100);
+
+        show_wave_file(wave_filename);
+
+        m_audio_import_status.wavefile_is_generated = true;
+        enable_save_button();
+
+    }
+
+    QString AudioWaveForm::wave_filename()
+    {
+        return m_wave_filename;
+    }
+
+
+    AudioConversionThread::AudioConversionThread(const QString audio_filename,
+                                                 ProcessOption process_option,
+                                         QObject* parent)
+        :QThread(parent)
+        ,m_audio_filename{audio_filename}
+        ,m_process_option{process_option}
+        ,m_parent(parent)
+    {}
+
+    QString AudioConversionThread::convert_audio(const QString audio_filename)
+    {
+        QString converted_audio = audio_filename;
+
+        QFileInfo fi(audio_filename);
+        auto file_ext = fi.suffix(); //m_audio->file_extension()->value();
+
+        // TODO: Find a parent for this process
+        auto proc = std::make_shared<QProcess>();
+
+        if (file_ext == "mp3"){
+        // TODO: Do we really need to convert MP3 to OGG, yet we can play MP3 audio just fine?
+
+            auto ac = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_filename, proc);
+
+            if (ac->convert()){
+                converted_audio =  ac->ogg_filename();
+            }
+
+        }
+
+        if (file_ext == "ogg"){
+            auto ac = std::make_unique<AUDIO::OggToOggConverter>(audio_filename);
+            if (ac->convert()){
+                converted_audio = ac->ogg_filename();
+            }
+        }
+
+        if (file_ext == "mts"){
+            auto ac = std::make_unique<AUDIO::MtsToMp3Converter>(audio_filename);
+            ac->convert();
+            auto mp3_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(ac.get());
+            auto audio_file = mp3_file->dest_mp3_filename();
+
+            converted_audio = ac->ogg_filename();
+
+            // TODO: Refactor this line since we no longer have Audio object
+            // m_audio->audio_file().set_audio_filename(audio_file.toStdString());
+        }
+
+
+        return converted_audio;
+
+    }
+
+    QString AudioConversionThread::generate_audio_wave_file(const QString audio_filename)
+    {
+        qDebug() << "generate_audio_wave_file...";
+
+        auto wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(audio_filename);
+        wave_gen->generate();
+
+        qDebug() << "* File Generated *";
+
+        return wave_gen->wave_filename();
+    }
+
+    // WorkerThread
+    void AudioConversionThread::run()
+    {
+        switch (m_process_option)
+        {
+        case ProcessOption::FormatConversion:
+        {
+           QString ogg_filename = convert_audio(m_audio_filename);
+            dbgln("THREAD --> 01");
+            emit resultReady(ogg_filename);
+           break;
+        }
+
+        case ProcessOption::GenerateWaveFile:
+        {
+            qDebug() << "GenerateWaveFile" ;
+           // Generate wave file
+            QString wave_filename = generate_audio_wave_file(m_audio_filename);
+            // std::this_thread::sleep_for(std::chrono::seconds(5));
+            dbgln("THREAD --> 02");
+            emit resultReady(wave_filename);
+            break;
+        }
+
+        }
+    }
+
 
 }

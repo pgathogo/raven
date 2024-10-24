@@ -118,6 +118,11 @@ namespace AUDIO{
         QGraphicsItem::mouseReleaseEvent(event);
     }
 
+    QPointF IndicatorLine::current_position_px() const
+    {
+        return m_line.p1();
+    }
+
     Timeline::Timeline(int time)
         : m_time{time},
           m_scene{nullptr}
@@ -333,6 +338,8 @@ namespace AUDIO{
     {
         m_pen = new QPen(Qt::red);
         m_pen->setWidth(5);
+
+        qDebug() << "AudioWaveScene::Ctor::m_audio_length "<< m_audio_length;
     }
 
     AudioWaveScene::~AudioWaveScene()
@@ -360,6 +367,7 @@ namespace AUDIO{
                                       (*m_scene_bound).x(), (*m_scene_bound).bottomLeft().ry());
 
         make_indicator_line(*m_scene_bound, *m_indicator_line_position);
+
 
         update();
 
@@ -501,6 +509,9 @@ namespace AUDIO{
     {
         m_markers[marker_type]->set_current_position_px(line.p1());
         m_markers[marker_type]->set_current_position_sec(line.x1(), m_seconds_per_pixel);
+        m_markers[marker_type]->set_current_position_msec(
+            m_markers[marker_type]->current_position_sec() * 1000
+            );
     }
 
     void AudioWaveScene::display_marker_position_sec()
@@ -520,6 +531,11 @@ namespace AUDIO{
         }
     }
 
+    QPointF AudioWaveScene::indicator_position()
+    {
+        return m_indicator_line_position->p1();
+    }
+
     double AudioWaveScene::pixel_to_seconds(double px)
     {
         return px * m_seconds_per_pixel/ 100;
@@ -535,7 +551,16 @@ namespace AUDIO{
         if (secs == 0)
             return 0;
 
-        return ((secs * 100) / ((m_audio_length * 100)/800));
+        return ((secs * 100) / ( ( (m_audio_length/1000) * 100)/800));
+    }
+
+    double AudioWaveScene::msec_to_pixel(double msecs)
+    {
+
+        if (msecs == 0)
+            return 0;
+
+        return seconds_to_pixel(msecs/1000);
     }
 
     Markers AudioWaveScene::markers() const
@@ -601,17 +626,17 @@ namespace AUDIO{
     {
         switch (marker_type)
         {
-          case MarkerType::Start:
+          case MarkerType::StartMarker:
             return QColor(0, 255, 0);
-          case MarkerType::FadeIn:
+          case MarkerType::FadeInMarker:
             return QColor(213, 213, 0);
-          case MarkerType::Intro:
+          case MarkerType::IntroMarker:
             return QColor(55, 55, 166);
-          case MarkerType::FadeOut:
+          case MarkerType::FadeOutMarker:
             return QColor(127, 127, 0);
-          case MarkerType::Extro:
+          case MarkerType::ExtroMarker:
             return QColor(88, 176, 130);
-          case MarkerType::End:
+          case MarkerType::EndMarker:
             return QColor(212, 0, 0);
           default:
             return QColor(Qt::green);
@@ -621,7 +646,19 @@ namespace AUDIO{
     void MarkerIndicator::set_current_position_sec(qreal x_pos, qreal secs_per_px)
     {
         m_current_position_in_seconds =  x_pos * secs_per_px / 100;
+
         m_current_position_in_msec = m_current_position_in_seconds * 1000;
+        this->notify(m_current_position_in_msec);
+    }
+
+    void MarkerIndicator::set_current_position_sec(qreal seconds)
+    {
+        m_current_position_in_seconds = seconds;
+    }
+
+    void MarkerIndicator::set_current_position_msec(qreal msec)
+    {
+        m_current_position_in_msec = msec;
         this->notify(m_current_position_in_msec);
     }
 
@@ -633,6 +670,11 @@ namespace AUDIO{
     double MarkerIndicator::current_position_sec() const
     {
         return m_current_position_in_seconds;
+    }
+
+    double MarkerIndicator::current_position_msec() const
+    {
+        return m_current_position_in_msec;
     }
 
     QPointF MarkerIndicator::current_position_px() const

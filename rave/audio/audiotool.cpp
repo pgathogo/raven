@@ -238,7 +238,8 @@ namespace AUDIO
 
     QString AudioTool::format_time(double time)
     {
-        auto fmt_str = QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
+        auto tm = QTime::fromMSecsSinceStartOfDay(time);
+        auto fmt_str = QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss:zzz");
         return fmt_str;
 
     }
@@ -367,6 +368,7 @@ namespace AUDIO
         object_to_json(audio_file, adf_data);
 
         QJsonDocument save_adf(adf_data);
+
         auto bytes = adf_file.write(save_adf.toJson());
 
         return (bytes > -1) ? true : false;

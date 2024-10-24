@@ -5,15 +5,10 @@
 #include <QDebug>
 #include <QTimer>
 #include "../../lib/BassLib/Include/bass.h"
+#include "../audiofile.h"
 
 void __stdcall syncFunc(HSYNC handle, DWORD channel, DWORD data, void* user);
 
-struct AudioInfo {
-    int sample_rate{0};
-    int num_channels{0};
-    int num_samples{0};
-    QWORD length_bytes{0};
-};
 
 class AudioThread : public QThread
 {

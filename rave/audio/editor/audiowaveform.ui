@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>680</width>
+    <width>776</width>
     <height>480</height>
    </rect>
   </property>
@@ -45,10 +45,10 @@
           </font>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Shape::Panel</enum>
+          <enum>QFrame::Panel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Shadow::Sunken</enum>
+          <enum>QFrame::Sunken</enum>
          </property>
          <property name="text">
           <string>TextLabel</string>
@@ -74,10 +74,10 @@
           </font>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Shape::Panel</enum>
+          <enum>QFrame::Panel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Shadow::Sunken</enum>
+          <enum>QFrame::Sunken</enum>
          </property>
          <property name="text">
           <string>lblArtist</string>
@@ -104,16 +104,16 @@
           </font>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Shape::Panel</enum>
+          <enum>QFrame::Panel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Shadow::Raised</enum>
+          <enum>QFrame::Raised</enum>
          </property>
          <property name="text">
           <string>00:00:00:00</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -140,16 +140,16 @@
           <string notr="true">color: rgb(255, 85, 0);</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Shape::Panel</enum>
+          <enum>QFrame::Panel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Shadow::Raised</enum>
+          <enum>QFrame::Raised</enum>
          </property>
          <property name="text">
           <string>00:00:00:00</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -160,7 +160,7 @@
    <item>
     <widget class="Line" name="line_3">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -168,25 +168,6 @@
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
       <widget class="QPushButton" name="btnPlay">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>40</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnPause">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -226,7 +207,7 @@
      <item>
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -241,7 +222,7 @@
    <item>
     <widget class="Line" name="line_2">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -250,6 +231,19 @@
      <property name="spacing">
       <number>8</number>
      </property>
+     <item>
+      <spacer name="hlLeftSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
@@ -260,7 +254,7 @@
             <string>Start Marker</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -277,16 +271,16 @@
 color: rgb(0, 0, 0);</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::Panel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
             <string>00:00:00:00</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -338,10 +332,10 @@ color: rgb(0, 0, 0);</string>
      <item>
       <spacer name="horizontalSpacer_4">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Policy::Fixed</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -361,7 +355,7 @@ color: rgb(0, 0, 0);</string>
             <string>Fade In</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -378,16 +372,16 @@ color: rgb(0, 0, 0);</string>
 color: rgb(0, 0, 0);</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::Panel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
             <string>00:00:00:00</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -439,10 +433,10 @@ color: rgb(0, 0, 0);</string>
      <item>
       <spacer name="horizontalSpacer_5">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Policy::Fixed</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -462,7 +456,7 @@ color: rgb(0, 0, 0);</string>
             <string>Intro</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -479,16 +473,16 @@ color: rgb(0, 0, 0);</string>
 color: rgb(255, 255, 255);</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::Panel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
             <string>00:00:00:00</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -540,10 +534,10 @@ color: rgb(255, 255, 255);</string>
      <item>
       <spacer name="horizontalSpacer_6">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Policy::Fixed</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -563,7 +557,7 @@ color: rgb(255, 255, 255);</string>
             <string>Fade Out</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -580,16 +574,16 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::Panel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
             <string>00:00:00:00</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -641,10 +635,10 @@ color: rgb(255, 255, 255);</string>
      <item>
       <spacer name="horizontalSpacer_7">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Policy::Fixed</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -664,7 +658,7 @@ color: rgb(255, 255, 255);</string>
             <string>Extro</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -681,16 +675,16 @@ color: rgb(255, 255, 255);</string>
 color: rgb(0,0,0);</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::Panel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
             <string>00:00:00:00</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -742,10 +736,10 @@ color: rgb(0,0,0);</string>
      <item>
       <spacer name="horizontalSpacer_8">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Policy::Fixed</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -765,7 +759,7 @@ color: rgb(0,0,0);</string>
             <string>End Marker</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -782,16 +776,16 @@ color: rgb(0,0,0);</string>
 color: rgb(255, 255, 255);</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::Panel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
             <string>00:00:00:00</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -843,7 +837,7 @@ color: rgb(255, 255, 255);</string>
      <item>
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -858,29 +852,41 @@ color: rgb(255, 255, 255);</string>
    <item>
     <widget class="Line" name="line">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="hlWave">
      <item>
-      <widget class="QGraphicsView" name="gvWave"/>
+      <widget class="QGraphicsView" name="gvWave">
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustToContents</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="vlWave"/>
+    <layout class="QVBoxLayout" name="vlWave">
+     <item>
+      <widget class="QLabel" name="lblStatus">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,0,0,0,0">
      <item>
       <widget class="QLabel" name="lblFilepath">
        <property name="frameShape">
-        <enum>QFrame::Shape::Panel</enum>
+        <enum>QFrame::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Shadow::Sunken</enum>
+        <enum>QFrame::Sunken</enum>
        </property>
        <property name="text">
         <string>path</string>
@@ -890,10 +896,10 @@ color: rgb(255, 255, 255);</string>
      <item>
       <widget class="QLabel" name="lblFileDuration">
        <property name="frameShape">
-        <enum>QFrame::Shape::Panel</enum>
+        <enum>QFrame::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Shadow::Sunken</enum>
+        <enum>QFrame::Sunken</enum>
        </property>
        <property name="text">
         <string>seconds</string>
@@ -903,10 +909,10 @@ color: rgb(255, 255, 255);</string>
      <item>
       <widget class="QLabel" name="lblBitRate">
        <property name="frameShape">
-        <enum>QFrame::Shape::Panel</enum>
+        <enum>QFrame::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Shadow::Sunken</enum>
+        <enum>QFrame::Sunken</enum>
        </property>
        <property name="text">
         <string>bitrate</string>
@@ -916,10 +922,10 @@ color: rgb(255, 255, 255);</string>
      <item>
       <widget class="QLabel" name="lblSampleRate">
        <property name="frameShape">
-        <enum>QFrame::Shape::Panel</enum>
+        <enum>QFrame::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Shadow::Sunken</enum>
+        <enum>QFrame::Sunken</enum>
        </property>
        <property name="text">
         <string>samplerate</string>
@@ -929,10 +935,10 @@ color: rgb(255, 255, 255);</string>
      <item>
       <widget class="QLabel" name="lblFileSize">
        <property name="frameShape">
-        <enum>QFrame::Shape::Panel</enum>
+        <enum>QFrame::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Shadow::Sunken</enum>
+        <enum>QFrame::Sunken</enum>
        </property>
        <property name="text">
         <string>filesize</string>
@@ -949,7 +955,7 @@ color: rgb(255, 255, 255);</string>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>

@@ -16,20 +16,26 @@
 
 namespace AUDIO
 {
-    Mp3ToOggConverter::Mp3ToOggConverter(std::shared_ptr<AUDIO::Audio> audio)
-        :AudioConverter(QString::fromStdString(audio->audio_filename()->valueToString()))
-        ,m_mp3_filename{QString::fromStdString(audio->audio_filename()->valueToString())}
+    Mp3ToOggConverter::Mp3ToOggConverter(const QString audio_filename,
+                                     std::shared_ptr<QProcess> process_runner)
+        :AudioConverter(audio_filename)
+        ,m_mp3_filename{audio_filename}
+        ,m_converter_process{process_runner.get()}
     {
-        m_converter_process = new QProcess(this);
-        //connect(m_converter_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Mp3ToOggConverter::conversion_finished);
-        connect(m_converter_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(conversion_finished(int, QProcess::ExitStatus)));
-        //connect(m_converter_process, &QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
-        connect(m_converter_process, SIGNAL(errorOccured(QProcess::ProcessError)),this, SLOT(conversion_error(QProcess::ProcessError)));
+        // m_converter_process = new QProcess(this);
+
+        if (m_converter_process != nullptr)
+        {
+            //connect(m_converter_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Mp3ToOggConverter::conversion_finished);
+            connect(m_converter_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(conversion_finished(int, QProcess::ExitStatus)));
+            //connect(m_converter_process, &QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
+            connect(m_converter_process, SIGNAL(errorOccured(QProcess::ProcessError)),this, SLOT(conversion_error(QProcess::ProcessError)));
+        }
     }
 
     Mp3ToOggConverter::~Mp3ToOggConverter()
     {
-        delete m_converter_process;
+        //delete m_converter_process;
     }
 
 
@@ -43,21 +49,29 @@ namespace AUDIO
         auto in_file = QDir::toNativeSeparators(m_mp3_filename);
         auto out_file = QDir::toNativeSeparators(ogg_filename());
 
-        qDebug() << "Input File... "<< in_file;
-        qDebug() << "Output File ... "<< out_file;
+        qDebug() << "In File: "<< in_file;
+        qDebug() << "Out File: "<< out_file;
 
+        /*
         m_progress_dialog = new QProgressDialog("Converting and saving MP3 to OGG...please wait.",
-                                                out_file, 0, 100);
+                            out_file, 0, 100);
         m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
         m_progress_dialog->setRange(0,0);
         m_progress_dialog->setCancelButton(nullptr);
+        */
 
-        QStringList args;
-        args << "-i " + in_file
-             + " -c:a libvorbis -q:a 4 -vsync 2 "
-             + out_file;
+        // QStringList args;
+        // args << "-i "
+        //      << QString::fromStdString(in_file_str)
+        //      << " -c:a libvorbis -q:a 4 -vsync 2 "
+        //      << QString::fromStdString(out_file_str);
+
+        // qDebug() << args;
 
         QString batch_file = QDir::currentPath()+"/"+TEMP_BATCH;
+
+        qDebug() << "Batch File: "<< batch_file;
+
         if (QFile::exists(batch_file)){
             if (!QFile::remove(batch_file)){
                 throw AudioImportException("MP3-to-OGG", "Error: Unable to remove batch file `"+batch_file.toStdString()+"`");
@@ -72,19 +86,20 @@ namespace AUDIO
         QTextStream out_stream(&temp_batch);
 
         out_stream << ffmpeg << " -y -i "
-                   << in_file
+                   << "\""+in_file+"\""
                    << " -c:a libvorbis -q:a 4 -vsync 2 "
-                   << out_file;
+                   << "\""+out_file+"\"";
 
         temp_batch.close();
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        //std::this_thread::sleep_for(std::chrono::seconds(2));
 
         m_converter_process->start("cmd.exe", QStringList() << "/c" << batch_file);
 
-        m_progress_dialog->exec();
+        //m_progress_dialog->exec();
 
-        m_converter_process->waitForReadyRead();
+        //m_converter_process->waitForReadyRead();
+        m_converter_process->waitForFinished();
 
         return true;
     }

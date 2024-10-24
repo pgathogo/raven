@@ -24,7 +24,7 @@ namespace AUDIO
         QString TEMP_BATCH = "mp3_to_ogg.bat";
 
         //Mp3ToOggConverter(const QString mp3_file);
-        Mp3ToOggConverter(std::shared_ptr<AUDIO::Audio>);
+        Mp3ToOggConverter(const QString, std::shared_ptr<QProcess> process_runner=nullptr);
         ~Mp3ToOggConverter() override;
 
         bool convert() override;

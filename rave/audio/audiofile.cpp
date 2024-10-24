@@ -206,6 +206,11 @@ void AudioFile::set_wave_file(const std::string wave_file)
     m_wave_file = wave_file;
 }
 
+void AudioFile::set_wave_filename(const std::string wf)
+{
+    m_wave_file = wf;
+}
+
 void AudioFile::set_duration(int duration)
 {
     m_duration = duration;

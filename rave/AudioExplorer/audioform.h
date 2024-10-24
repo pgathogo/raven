@@ -69,6 +69,7 @@ private:
     RavenSetup* m_setup;
     std::unique_ptr<PickListBrowser> m_artist_picker;
     std::unique_ptr<AUDIO::AudioTool> m_audio_tool;
+    std::string m_title_tag{""};
 
     FormMode m_form_mode;
 

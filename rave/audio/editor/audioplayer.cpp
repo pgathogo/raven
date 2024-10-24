@@ -171,12 +171,24 @@ namespace AUDIO
 
     }
 
-    double AudioPlayer::audio_duration()
+    double AudioPlayer::audio_duration_sec(QString audio_file)
     {
+        double audio_duration_secs = 0;
 
-        double audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file()));
+        if (audio_file.isEmpty()) {
+            audio_duration_secs = m_audio_thread->audio_len(QString::fromStdString(m_audio_file.audio_file()));
+        } else {
+            audio_duration_secs = m_audio_thread->audio_len(audio_file);
+        }
+
         return audio_duration_secs;
 
+    }
+
+    double AudioPlayer::audio_duration_msec(QString audio_file)
+    {
+        auto dur_sec = audio_duration_sec(audio_file);
+        return dur_sec * 1000;
     }
 
     float AudioPlayer::audio_sample_rate()
@@ -201,6 +213,7 @@ namespace AUDIO
     {
         m_audio_thread->play_from_position(QString::fromStdString(m_audio_file.audio_file()),
                                            position);
+        emit sig_start_play();
 
     }
 

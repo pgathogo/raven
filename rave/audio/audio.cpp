@@ -115,7 +115,7 @@ namespace AUDIO {
          ,m_audio_type{}
          ,m_notes{}
          ,m_audio_filename{}
-         ,m_file_info{}
+        ,m_file_info{}
     {
 
         m_title = createField<StringField>("title", "Title");
@@ -124,6 +124,8 @@ namespace AUDIO {
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
 
+
+        m_file_path = createField<StringField>("filepath", "File Path");
 
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
         m_audio_lib_path->setFormOnly(true);
@@ -139,7 +141,6 @@ namespace AUDIO {
         m_fade_out_marker = createField<DecimalField>("fade_out_marker", "Fade Out Marker");
         m_end_marker = createField<DecimalField>("end_marker", "End Marker");
 
-        m_file_path = createField<StringField>("filepath", "File Path");
 
         m_folder = createField<ForeignKeyField>("folder_id", "Folder",
                                                 std::make_unique<Folder>(), "folder_name");
@@ -210,6 +211,8 @@ namespace AUDIO {
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
 
+        m_file_path = createField<StringField>("filepath", "File Path");
+
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
         m_audio_lib_path->setFormOnly(true);
 
@@ -224,7 +227,6 @@ namespace AUDIO {
         m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
         m_end_marker = createField<DecimalField>("end_marker", "End Marker");
 
-        m_file_path = createField<StringField>("filepath", "File Path");
 
         m_folder = createField<ForeignKeyField>("folder_id", "Folder",
                                                 std::make_unique<Folder>(), "folder_name");
@@ -291,8 +293,12 @@ namespace AUDIO {
         m_short_desc = createField<StringField>("short_desc", "Short Desc");
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
+
+        m_file_path = createField<StringField>("filepath", "File Path");
+
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
         m_audio_lib_path->setFormOnly(true);
+
         m_is_deleted = createField<BooleanField>("deleted", "Is Deleted?");
         m_play_count= createField<IntegerField>("play_count", "Play Count");
         m_duration = createField<DecimalField>("duration","Duration");
@@ -303,7 +309,8 @@ namespace AUDIO {
         m_fade_out_marker = createField<DecimalField>("fade_out_marker", "Fade Out Marker");
         m_fade_delay_marker = createField<DecimalField>("fade_delay_marker", "Fade Delay Marker");
         m_end_marker = createField<DecimalField>("end_marker", "End Marker");
-        m_file_path = createField<StringField>("filepath", "File Path");
+
+
         m_folder = createField<ForeignKeyField>("folder_id", "Folder",
                                                 std::make_unique<Folder>(), "folder_name");
         m_genre = createField<ForeignKeyField>("genre_id", "Genre",
@@ -386,6 +393,7 @@ namespace AUDIO {
 
     Audio &Audio::operator=(const Audio &other)
     {
+
         if (this == &other) return *this;
 
         this->setId(other.id());
@@ -633,7 +641,6 @@ namespace AUDIO {
     void Audio::set_folder(int folder_id)
     {
         m_folder->setValue(folder_id);
-
     }
 
     void Audio::set_genre(int genre_id)
@@ -688,7 +695,6 @@ namespace AUDIO {
         m_file_info.set_marker(marker);
     }
 
-
     void Audio::set_audio_filename(const std::string audio_filename)
     {
         m_audio_filename->setValue(audio_filename);
@@ -696,15 +702,18 @@ namespace AUDIO {
 
     std::string Audio::artist_fullname() const
     {
-        std::string fullname{""};
+        // std::string fullname{""};
 
-        auto fk_artist = artist()->unique_fk_entity();
-        if (fk_artist != nullptr){
-            AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(fk_artist);
-            fullname = artist->fullName()->value();
-        }
+        qDebug() << "FK: "<< QString::fromStdString(artist()->displayName());
 
-        return fullname;
+        // auto fk_artist = artist()->unique_fk_entity();
+        // if (fk_artist != nullptr){
+        //     qDebug() << "FK - NOT NULL";
+        //     AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(fk_artist);
+        //     fullname = artist->fullName()->value();
+        // }
+
+        return artist()->displayName();
     }
 
     CueMarker Audio::cue_marker() const
@@ -764,7 +773,6 @@ namespace AUDIO {
 
     void Audio::populateEntity()
     {
-
     }
 
     std::shared_ptr<BaseEntity> Audio::cloneAsShared()
@@ -792,7 +800,7 @@ namespace AUDIO {
     QString Audio::full_audio_filename() const
     {
         AUDIO::AudioTool audio_tool;
-        QString name = QString::fromStdString(this->audio_lib_path()->value()+
+        QString name = QString::fromStdString(this->file_path()->value()+
                 audio_tool.make_audio_filename(this->id())+"."+this->file_extension()->value_tolower());
 
         return name;
@@ -882,7 +890,6 @@ namespace AUDIO {
 
     void Folder::populateEntity()
     {
-
     }
 
     std::shared_ptr<BaseEntity> Folder::cloneAsShared()
@@ -892,7 +899,6 @@ namespace AUDIO {
 
     void Folder::afterMapping(BaseEntity &entity)
     {
-
     }
 
     ActionResult Folder::validate()

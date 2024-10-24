@@ -41,6 +41,15 @@ struct CueMarker{
 
 };
 
+typedef uint64_t QWORD;
+
+struct AudioInfo {
+    int sample_rate{0};
+    int num_channels{0};
+    int num_samples{0};
+    QWORD length_bytes{0};
+};
+
 class  AudioFile
 {
 public:
@@ -53,7 +62,8 @@ public:
     void set_audio_path(const std::string audio_path);
     void set_audio_filename(const std::string audio_filename);
     void set_audio_type(const std::string audio_type);
-    void set_wave_file(const std::string wave_file);
+    void set_wave_file(const std::string);
+    void set_wave_filename(const std::string);
     void set_duration(int duration);
     void set_adf_file(const std::string adf_file);
     void set_audio_lib_path(const std::string lib_path);

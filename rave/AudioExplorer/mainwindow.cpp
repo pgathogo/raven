@@ -665,7 +665,9 @@ void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
     auto audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
 
     try{
+
         m_audio_entity_data_model->readRaw(r_mapper->query());
+
     } catch(DatabaseException& de) {
         showMessage(de.errorMessage()); // write to log file
     }
@@ -1027,6 +1029,7 @@ void MainWindow::import_audio()
 {
 
     int folder_id = selected_folder_id();
+
     if (folder_id == 0){
         showMessage("Please select folder for import");
         return;
@@ -1038,6 +1041,7 @@ void MainWindow::import_audio()
     if (audio_file.isEmpty())
         return;
 
+
     auto audio = std::make_unique<AUDIO::Audio>(audio_file.toStdString());
     
     audio->set_folder(folder_id);
@@ -1046,106 +1050,92 @@ void MainWindow::import_audio()
     auto audio_form = std::make_unique<AudioForm>(audio.get(), m_setup);
 
     // open the audio property window
-    if (audio_form->exec() > 0)
+    if (audio_form->exec() == 0)
+        return;
+
+    //auto shared_audio = std::make_shared<AUDIO::Audio>(audio_file.toStdString());
+
+    //convert_audio(shared_audio);
+
+    // QFileInfo afi(audio_file);
+    // QString file_format = afi.suffix().toLower();
+
+    // TODO: Check if we are allowed to use MP3 before converting it to OGG
+
+    //TODO: Resolve the file extension issue (Ogg, Mp3, or MTS)
+
+    //audio->set_file_extension(file_format.toUpper().toStdString());
+    audio->set_file_extension("OGG");
+
+    auto audio_file_info = audio->audio_file();
+
+     //audio_file_info.set_audio_filename(shared_audio->audio_filename()->value());
+    audio_file_info.set_audio_filename(audio_file.toStdString());
+
+    audio->audio_file().set_audio_filename(audio_file.toStdString());
+
+    auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(audio->audio_file(),
+                                 AUDIO::FormMode::New);
+
+    if (wave_form->exec() == 1)
     {
+        audio->audio_file().set_wave_file(wave_form->wave_filename().toStdString());
 
-        auto shared_audio = std::make_shared<AUDIO::Audio>(audio_file.toStdString());
-        convert_audio(shared_audio);
+        //audio->set_duration(audio_file_info.duration());
+        audio->set_duration(audio->audio_file().duration());
+        audio->set_cue_marker(wave_form->cue_marker());
+        audio->setDBAction(DBAction::dbaCREATE);
 
-        QFileInfo afi(audio_file);
-        QString file_format = afi.suffix().toLower();
+        //audio_file_info.set_marker(wave_form->cue_marker());
+        audio->audio_file().set_marker(wave_form->cue_marker());
 
-        // TODO: Check if we are allowed to use MP3 before converting it to OGG
+        ImportResult import_result;
 
-        if (file_format == "mp3"){
-            m_audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(shared_audio);
-            m_audio_converter->convert();
+        int audio_id = write_audio_to_db(std::move(audio));
+
+        import_result.audio_id = audio_id;
+
+        if (audio_id == -1){
+            rollback_import_process(import_result);
+            audio->setDBAction(DBAction::dbaNONE);
+            return;
         }
 
-        if (file_format == "ogg"){
-            m_audio_converter = std::make_unique<AUDIO::OggToOggConverter>(shared_audio);
-            m_audio_converter->convert();
+        auto [status, new_filename] = copy_new_audio_to_library(audio_id, wave_form->ogg_filename());
+
+        import_result.temp_files.push_back(new_filename);
+        if (!status) {
+            rollback_import_process(import_result);
+            audio->setDBAction(DBAction::dbaNONE);
+            return;
         }
 
-        if (file_format == "mts"){
-            m_audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(shared_audio);
-            m_audio_converter->convert();
-            auto mp3_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(m_audio_converter.get());
-            audio_file = mp3_file->dest_mp3_filename();
-            audio->audio_file().set_audio_filename(audio_file.toStdString());
+        auto [wave_file_is_created, wave_file] = copy_wave_file_to_library(audio_id, wave_form->wave_filename());
+
+        import_result.temp_files.push_back(wave_file);
+        if (!wave_file_is_created){
+            rollback_import_process(import_result);
+            audio->setDBAction(DBAction::dbaNONE);
+            return;
         }
 
-        //TODO: Resolve the file extension issue (Ogg, Mp3, or MTS)
+        auto [adf_file_is_created, adf_file] = create_adf_file(audio_id, wave_form->audio_file_info());
 
-        //audio->set_file_extension(file_format.toUpper().toStdString());
-        audio->set_file_extension("OGG");
-
-        //convert_audio(audio);
-       /*
-        auto wave_file = generate_audio_wave_file(audio);
-        bool updated = update_wave_file(wave_file);
-        if (updated){
-            commit_data()
+        import_result.temp_files.push_back(adf_file);
+        if (!adf_file_is_created){
+            rollback_import_process(import_result);
+            audio->setDBAction(DBAction::dbaNONE);
+            return;
         }
-        */
 
-        m_wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(audio_file);
-        m_wave_gen->generate();
-        audio->audio_file().set_wave_file(m_wave_gen->wave_filename().toStdString());
+        wave_form->remove_temp_ogg_file();
+        wave_form->remove_temp_wave_file();
 
-        auto audio_file_info = audio->audio_file();
-        auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(audio_file_info);
-        if (wave_form->exec() == 1)
-        {
-            audio->set_duration(audio_file_info.duration());
-            audio->set_cue_marker(wave_form->cue_marker());
-            audio->setDBAction(DBAction::dbaCREATE);
+    }
 
-            audio_file_info.set_marker(wave_form->cue_marker());
-
-            ImportResult import_result;
-
-            int audio_id = write_audio_to_db(std::move(audio));
-
-            import_result.audio_id = audio_id;
-
-            if (audio_id == -1){
-                rollback_import_process(import_result);
-                audio->setDBAction(DBAction::dbaNONE);
-                return;
-            }
-
-            auto [status, new_filename] = copy_new_audio_to_library(audio_id);
-            import_result.temp_files.push_back(new_filename);
-            if (!status) {
-                rollback_import_process(import_result);
-                audio->setDBAction(DBAction::dbaNONE);
-                return;
-            }
-
-            auto [wave_file_is_created, wave_file] = copy_wave_file_to_library(audio_id);
-            import_result.temp_files.push_back(wave_file);
-            if (!wave_file_is_created){
-                rollback_import_process(import_result);
-                audio->setDBAction(DBAction::dbaNONE);
-                return;
-            }
-
-            auto [adf_file_is_created, adf_file] = create_adf_file(audio_id, audio_file_info);
-            import_result.temp_files.push_back(adf_file);
-            if (!adf_file_is_created){
-                rollback_import_process(import_result);
-                audio->setDBAction(DBAction::dbaNONE);
-                return;
-            }
-
-            m_audio_converter->remove_ogg_file();
-            m_wave_gen->remove_wave_file();
-         }
-
-      }
 }
 
+/*
 bool MainWindow::convert_audio(std::shared_ptr<AUDIO::Audio> audio)
 {
     auto file_ext = audio->file_extension()->value();
@@ -1176,8 +1166,9 @@ bool MainWindow::convert_audio(std::shared_ptr<AUDIO::Audio> audio)
     }
 
     return true;
-
 }
+*/
+
 
 void MainWindow::rollback_import_process(ImportResult&  import_result)
 {
@@ -1195,6 +1186,7 @@ int MainWindow::write_audio_to_db(std::unique_ptr<AUDIO::Audio> audio)
     int id = -1;
 
     try{
+
         id = m_audio_edm->createEntity(std::move(audio));
     } catch (DatabaseException& de) {
         showMessage(de.errorMessage());
@@ -1204,13 +1196,20 @@ int MainWindow::write_audio_to_db(std::unique_ptr<AUDIO::Audio> audio)
     return id;
 }
 
-FileOperationResult MainWindow::copy_new_audio_to_library(int audio_id)
+FileOperationResult MainWindow::copy_new_audio_to_library(int audio_id, const QString ogg_filename)
 {
     AUDIO::AudioTool at;
     auto audio_filename = at.make_audio_filename(audio_id);
+
     auto new_audio_file = m_setup->audio_folder()->value()+audio_filename+".ogg";
-    auto src_audio_path = fs::path(m_audio_converter->ogg_filename().toStdString());
+
+    //auto src_audio_path = fs::path(m_audio_converter->ogg_filename().toStdString());
+    auto src_audio_path = fs::path(ogg_filename.toStdString());
+
     auto dst_audio_path = fs::path(new_audio_file);
+
+    std::cout << "SRC> "<< src_audio_path << '\n';
+    std::cout << "DST> "<< dst_audio_path << '\n';
 
     try{
         fs::copy(src_audio_path, dst_audio_path);
@@ -1222,13 +1221,14 @@ FileOperationResult MainWindow::copy_new_audio_to_library(int audio_id)
     return std::make_tuple(true, new_audio_file);
 }
 
-FileOperationResult MainWindow::copy_wave_file_to_library(int audio_id)
+FileOperationResult MainWindow::copy_wave_file_to_library(int audio_id, const QString wave_file)
 {
     AUDIO::AudioTool at;
     auto audio_filename = at.make_audio_filename(audio_id);
 
     auto new_audio_wave_file = m_setup->audio_folder()->value()+audio_filename+".png";
-    auto src_wave_path(m_wave_gen->wave_filename().toStdString());
+    //auto src_wave_path(m_wave_gen->wave_filename().toStdString());
+    auto src_wave_path(wave_file.toStdString());
     auto dst_wave_path(new_audio_wave_file);
 
     try{
@@ -1243,8 +1243,12 @@ FileOperationResult MainWindow::copy_wave_file_to_library(int audio_id)
 
 FileOperationResult MainWindow::create_adf_file(int audio_id, AudioFile af)
 {
+    dbgln("create_adf_file:: "+QString::number(audio_id));
+
     AUDIO::AudioTool at;
     auto audio_filename = at.make_audio_filename(audio_id);
+
+    dbgln("create_adf_file:: "+QString::fromStdString(audio_filename));
 
     auto adf_filename = m_setup->audio_folder()->value()+audio_filename+".adf";
     af.set_adf_file(adf_filename);
@@ -1293,10 +1297,8 @@ void MainWindow::play_btn_clicked()
         stop_play();
         ui->btnPlay->setText("Play");
         ui->btnPlay->setChecked(false);
-        //m_audio_meter->stop_meter();
     } else {
         if (play_audio()){
-            //m_audio_meter->start_meter();
             ui->btnPlay->setText("Stop");
             ui->btnPlay->setChecked(true);
         }
@@ -1368,11 +1370,8 @@ AUDIO::Audio* MainWindow::get_selected_audio()
         return nullptr;
     */
 
-    qDebug() << "Audio ID: "<< audio_id;
-
     audio = m_audio_lib_item->find_audio_by_id(audio_id);
 
-    qDebug() << "4444";
     return audio;
 }
 
@@ -1386,41 +1385,52 @@ void MainWindow::cue_edit()
     if (!audio_file_exists(audio->full_audio_filename()))
         return;
 
+    QFileInfo fi(audio->full_audio_filename());
+
     AudioFile aud_file(audio->full_audio_filename().toStdString());
 
+    aud_file.set_id(audio->id());
     aud_file.set_audio_title(audio->title()->value());
     aud_file.set_short_desc("");
     aud_file.set_artist_name(audio->artist_fullname());
-    aud_file.set_audio_path(audio->audio_lib_path()->value());
-
-    //aud_file.set_audio_file(ogg_file);
+    aud_file.set_audio_path(audio->file_path()->value());
     aud_file.set_audio_type(audio->audio_type()->displayName());
-
     aud_file.set_duration(audio->duration()->value());
-
-    aud_file.set_id(audio->id());
-
-    QFileInfo fi(audio->full_audio_filename());
     aud_file.set_ogg_filename(fi.fileName().toStdString());
     aud_file.set_ogg_short_filename(audio->full_audio_filename().toStdString());
     aud_file.set_audio_lib_path(audio->audio_lib_path()->value());
 
+    AUDIO::AudioTool at;
+    auto wf = at.make_audio_filename(aud_file.id())+".png";
+    auto wave_filename = QString::fromStdString(aud_file.audio_path()+wf);
+
+    aud_file.set_wave_filename(wave_filename.toStdString());
+
     audio->set_audio_file(aud_file);
 
     aud_file.set_marker(audio->cue_marker());
+
     if (!fs::exists(aud_file.wave_file())){
         auto wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(QString::fromStdString(aud_file.audio_file()));
         wave_gen->generate();
     }
 
-//    auto cue_editor = std::make_unique<CueEditor>(aud_file, m_qapp);
-    //CueEditor* cue_editor = new CueEditor(aud_file, m_qapp);
-//    if (cue_editor->editor() == 1){
+    auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(aud_file,
+                                 AUDIO::FormMode::Edit);
 
-    auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(aud_file);
+
     if (wave_form->exec()) {
+
         audio->set_audio_file(aud_file);
-        audio->set_duration(audio->audio_file().duration());
+
+        auto cm = wave_form->cue_marker();
+
+        audio->set_cue_marker(cm);
+
+        audio->cue_marker().dump_markers();
+
+        EntityDataModel edm;
+        edm.updateEntity(*audio);
     }
 
 }

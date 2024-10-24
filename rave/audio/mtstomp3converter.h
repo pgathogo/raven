@@ -12,7 +12,7 @@ namespace AUDIO
     {
     public:
         //MtsToMp3Converter(const QString);
-        MtsToMp3Converter(std::shared_ptr<Audio>);
+        MtsToMp3Converter(const QString);
         ~MtsToMp3Converter() override;
 
         bool convert() override;

@@ -1,8 +1,9 @@
+#include <thread>
+
 #include <QFileInfo>
 #include <QFile>
 
 #include <QDir>
-#include <QProcess>
 #include <QProgressDialog>
 
 #include <QDebug>
@@ -15,7 +16,7 @@ namespace AUDIO{
     AudioWaveFormGenerator::AudioWaveFormGenerator(const QString audio_file)
     {
         set_audio_filename(audio_file);
-        m_generator_process = new QProcess();
+        m_generator_process = new QProcess(this);
 
         connect(m_generator_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this, &AudioWaveFormGenerator::wave_generation_finished);
         connect(m_generator_process, &QProcess::errorOccurred, this, &AudioWaveFormGenerator::generator_error);
@@ -27,11 +28,9 @@ namespace AUDIO{
         delete m_generator_process;
     }
 
-    void AudioWaveFormGenerator::generate()
+    bool AudioWaveFormGenerator::generate()
     {
         auto gen_engine = QDir::currentPath()+"/"+AUDIO_WAVE_FILE_EXE;
-
-        qDebug() << "GEN ENGINE: " << gen_engine;
 
         QFileInfo fi(gen_engine);
         if (!fi.exists()){
@@ -39,10 +38,10 @@ namespace AUDIO{
                                         "Wave file generator engine does NOT exists!");
         }
 
-        m_progress_dialog = new QProgressDialog("Reading audio file...please wait.","", 0, 100);
-        m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
-        m_progress_dialog->setRange(0,0);
-        m_progress_dialog->setCancelButton(nullptr);
+        // m_progress_dialog = new QProgressDialog("Reading audio file...please wait.","", 0, 100);
+        // m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
+        // m_progress_dialog->setRange(0,0);
+        // m_progress_dialog->setCancelButton(nullptr);
 
         QString input_file  = m_audio_filename;
         QString output_file = m_wave_filename;
@@ -61,11 +60,12 @@ namespace AUDIO{
 
         qDebug() << "INPUT File: "<< input_file;
         qDebug() << "OUTPUT File: "<< output_file;
-        qDebug() << args;
 
         m_generator_process->start(gen_engine, args);
-        m_progress_dialog->exec();
+        // m_progress_dialog->exec();
         m_generator_process->waitForFinished();
+
+        return true;
     }
 
     QString AudioWaveFormGenerator::audio_filename()
@@ -84,9 +84,9 @@ namespace AUDIO{
         return m_wave_filename;
     }
 
-    void AudioWaveFormGenerator::set_wave_filename(QString mp3_file)
+    void AudioWaveFormGenerator::set_wave_filename(QString audio_file)
     {
-        QFileInfo fi(mp3_file);
+        QFileInfo fi(audio_file);
         auto abs_path = fi.absolutePath();
         auto base_name = fi.baseName();
 
@@ -95,7 +95,7 @@ namespace AUDIO{
 
     void AudioWaveFormGenerator::wave_generation_finished(int code, QProcess::ExitStatus status)
     {
-        m_progress_dialog->close();
+        // m_progress_dialog->close();
     }
 
     void AudioWaveFormGenerator::generator_error(QProcess::ProcessError error)

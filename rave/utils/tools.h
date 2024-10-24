@@ -24,6 +24,7 @@
 
 //extern char *__unDName(char*, const char*, int, void*, void*, int);
 
+
 inline void timer()
 {
     using std::chrono::high_resolution_clock;
@@ -82,6 +83,11 @@ inline bool confirmationMessage(const std::string msg)
     }
 
     return result;
+}
+
+inline void dbgln(const QString msg)
+{
+    qDebug() << msg;
 }
 
 

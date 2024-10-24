@@ -29,6 +29,10 @@ AudioForm::AudioForm(AUDIO::Audio* audio,
     m_audio_tool = std::make_unique<AUDIO::AudioTool>();
 
     ui->setupUi(bui->baseContainer);
+
+    std::string title_tag = "";
+    m_title_tag = (audio->id() == -1) ? "New" : "Edit";
+
     setTitle(windowTitle());
     setMaximumWidth(500);
     setMaximumHeight(455);
@@ -85,7 +89,7 @@ ActionResult AudioForm::saveRecord()
 
 std::string AudioForm::windowTitle()
 {
-    return "Audio Details";
+    return "Audio Details- "+m_title_tag+" Audio";
 }
 
 void AudioForm::populateEntityFields()
@@ -101,12 +105,14 @@ void AudioForm::populateEntityFields()
     m_audio->set_file_path(m_audio->audio_lib_path()->value());
 
     m_audio->audio_file().set_audio_filename(m_audio->audio_filename()->value());
+
     m_audio->audio_file().set_creation_date(m_audio->creation_date()->value().toString("dd/MM/yyyy").toStdString());
     m_audio->audio_file().set_audio_class(m_audio->audio_type()->displayName());
     m_audio->audio_file().set_genre(m_audio->genre()->displayName());
     m_audio->audio_file().set_year(m_audio->audio_year()->value());
     m_audio->audio_file().set_audio_title(m_audio->title()->value());
     m_audio->audio_file().set_artist_name(m_audio->artist_fullname());
+
 
 }
 
@@ -127,10 +133,13 @@ void AudioForm::populateFormWidgets()
     ui->edtYear->setValue(m_audio->audio_year()->value());
     ui->edtFolder->setText(stoq(m_audio->folder()->displayName()));
 
-    ui->edtFilename->setText(stoq(m_audio->audio_lib_path()->value() +
-                                   m_audio_tool->make_audio_filename(m_audio->id())+".ogg"));
+    // Id -1 means this is a new file you are creating
+    if (m_audio->id() != -1 )
+        ui->edtFilename->setText(stoq(m_audio->audio_lib_path()->value() +
+                       m_audio_tool->make_audio_filename(m_audio->id())+".ogg"));
 
     ui->edtDuration->setText(m_audio_tool->format_time(m_audio->duration()->value()));
+
 
     ui->edtStart->setText(m_audio_tool->format_time(m_audio->start_marker()->value()));
     ui->edtFadeIn->setText(m_audio_tool->format_time(m_audio->fade_in_marker()->value()));

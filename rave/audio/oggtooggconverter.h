@@ -12,7 +12,7 @@ namespace AUDIO
     {
     public:
         //OggToOggConverter(const QString src_ogg_file);
-        OggToOggConverter(std::shared_ptr<Audio>);
+        OggToOggConverter(const QString);
         ~OggToOggConverter() override;
 
         bool convert() override;

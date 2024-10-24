@@ -3,9 +3,9 @@
 
 namespace AUDIO
 {
-    OggToOggConverter::OggToOggConverter(std::shared_ptr<Audio> audio)
-        :AudioConverter(QString::fromStdString(audio->audio_filename()->valueToString()))
-         ,m_src_ogg_filename{QString::fromStdString(audio->audio_filename()->valueToString())}
+    OggToOggConverter::OggToOggConverter(const QString audio_filename)
+        :AudioConverter(audio_filename)
+         ,m_src_ogg_filename{audio_filename}
     {
 
     }

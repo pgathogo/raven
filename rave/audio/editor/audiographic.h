@@ -12,7 +12,7 @@ class QLabel;
 
 namespace AUDIO {
 
-    enum MarkerType{Start, FadeIn, Intro, Extro, FadeOut, End};
+    enum MarkerType{StartMarker, FadeInMarker, IntroMarker, ExtroMarker, FadeOutMarker, EndMarker};
 
     using Message = double;
 
@@ -51,8 +51,11 @@ namespace AUDIO {
              QLineF line() const;
              QColor marker_color(MarkerType marker_type);
              void set_current_position_sec(qreal, qreal);
+             void set_current_position_sec(qreal);
+             void set_current_position_msec(qreal);
              void set_current_position_px(QPointF);
              double current_position_sec() const;
+             double current_position_msec() const;
              QPointF current_position_px() const;
          private:
              QPen m_pen;
@@ -89,9 +92,11 @@ namespace AUDIO {
             void update_marker_line_position(MarkerType, QLineF);
             void display_marker_position_sec();
             QPointF marker_position(MarkerType);
+            QPointF indicator_position();
             double pixel_to_seconds(double px);
             double pixel_to_milli_seconds(double px);
-            double seconds_to_pixel(double secs);
+            double seconds_to_pixel(double);
+            double msec_to_pixel(double);
             Markers markers() const;
 
             int count();
@@ -135,6 +140,7 @@ namespace AUDIO {
             QRectF boundingRect() const override;
             void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
             QPainterPath shape() const override;
+            QPointF current_position_px() const;
         protected:
             void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
             void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;

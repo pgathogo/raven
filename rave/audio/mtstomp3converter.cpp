@@ -6,9 +6,9 @@
 
 namespace AUDIO
 {
-    MtsToMp3Converter::MtsToMp3Converter(std::shared_ptr<Audio> audio)
-        :AudioConverter(QString::fromStdString(audio->audio_filename()->valueToString()))
-         ,m_src_mts_filename{QString::fromStdString(audio->audio_filename()->valueToString())}
+    MtsToMp3Converter::MtsToMp3Converter(const QString audio_filename)
+        :AudioConverter(audio_filename)
+         ,m_src_mts_filename{audio_filename}
         ,m_dest_mp3_filename{}
     {
     }

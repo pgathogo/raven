@@ -54,4 +54,5 @@ private:
     std::string mAction;
 };
 
+
 #endif // RAVENEXCEPTION_H

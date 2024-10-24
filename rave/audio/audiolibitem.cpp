@@ -60,7 +60,7 @@ namespace AUDIO{
     QString AudioLibItem::file_path()
     {
         AUDIO::AudioTool audio_tool;
-        return QString::fromStdString(audio()->audio_lib_path()->value() +
+        return QString::fromStdString(audio()->file_path()->value() +
                                       audio_tool.make_audio_filename(audio()->id())+
                                       "."+audio()->file_extension()->value_tolower());
 

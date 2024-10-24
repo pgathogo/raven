@@ -99,8 +99,10 @@ namespace AUDIO{
                 columns.append(duration);
             if (audio->audio_type()->visible())
                 columns.append(audio_type);
+
             if (audio->file_path()->visible())
                 columns.append(file_path);
+
             if (audio->folder()->visible())
                 columns.append(folder);
             if (audio->file_extension()->visible())
