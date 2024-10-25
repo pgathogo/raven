@@ -54,7 +54,11 @@ void DateTimeSelector::set_selected_buttons()
 {
     for (int hr : m_selection.sel_hours){
         for (auto [text, btn_data] : m_hour_buttons){
-            if (btn_data.long_hour_fmt == hr){
+            if (btn_data.long_hour_fmt == hr) {
+
+                //qDebug() << "Button Long Hour Fmt: " << btn_data.long_hour_fmt;
+                //qDebug() << "Selected Hour: " << hr;
+
                 btn_data.button->setChecked(true);
             }
         }
@@ -100,7 +104,8 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
     int current_hour = QTime::currentTime().hour();
     QString am_pm = QTime::currentTime().toString("AP");
 
-    for (int hr=0; hr < time_text.size(); ++hr){
+    for (int hr=0; hr < time_text.size(); ++hr)
+    {
         QString btn_text = time_text[hr]+" "+time_symbol;
 
         QPushButton* btn = new QPushButton(btn_text, this);
@@ -138,7 +143,8 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
 
 
         HourButtonData btn_data;
-        btn_data.long_hour_fmt = long_hour++;
+
+        btn_data.long_hour_fmt = time_text[hr].toInt();
         btn_data.button = btn;
 
         m_hour_buttons[btn_text] = btn_data; //std::make_tuple(long_hour++, false);
@@ -151,9 +157,21 @@ void DateTimeSelector::pick_selection()
 {
     m_selection.sel_date = ui->calWidget->selectedDate();
 
+    for(auto& h : m_selection.sel_hours) {
+        qDebug() << h;
+    }
+
     for (auto [text, btn_data] : m_hour_buttons){
-        if (btn_data.is_selected)
-            m_selection.sel_hours.push_back(btn_data.long_hour_fmt);
+        if (btn_data.is_selected) {
+
+
+            if (std::find(m_selection.sel_hours.begin(),
+                      m_selection.sel_hours.end(),
+                       btn_data.long_hour_fmt) == m_selection.sel_hours.end()) {
+
+                    m_selection.sel_hours.push_back(btn_data.long_hour_fmt);
+            }
+        }
     }
 
 

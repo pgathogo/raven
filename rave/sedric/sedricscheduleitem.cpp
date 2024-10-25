@@ -245,10 +245,10 @@ namespace SEDRIC{
 
             processed[hour] = 0;
 
-            for (auto schedule : m_cached_schedule_items){
+            for (auto schedule : m_cached_schedule_items) {
 
                 if ((schedule->schedule_hour()->value() == hour) &&
-                    (schedule->schedule_date()->value() == date)){
+                    (schedule->schedule_date()->value() == date)) {
 
                     m_display_items.push_back(schedule);
 
@@ -297,8 +297,6 @@ namespace SEDRIC{
         std::string order_by     = " ORDER BY a.schedule_hour, a.schedule_time, a.id ";
 
         sql << where_filter << and_filter << order_by;
-
-        qDebug() << stoq(sql.str());
 
         EntityDataModel edm;
         edm.readRaw(sql.str());

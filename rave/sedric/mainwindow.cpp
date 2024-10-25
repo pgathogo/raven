@@ -153,7 +153,6 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     ui->tvSchedule->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tvSchedule, &QTableView::customContextMenuRequested, this, &MainWindow::contextMenuRequested);
 
-    //test_ranges();
     fetch_default_data();
 
     std::string uname = std::format("Username: {}      ",ci.username);
@@ -827,7 +826,7 @@ void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
                         [](int i){ return i == -1; }), uncached_hours.end());
 
     fetch_schedule_from_db(sel_date, uncached_hours);
-    m_scheduler->show_items(sel_date, sel_hours); //selected_hours);
+    m_scheduler->show_items(sel_date, sel_hours);
 
 }
 
@@ -1051,16 +1050,40 @@ void MainWindow::show_audio_history()
 
 void MainWindow::select_date_time()
 {
+    auto current_selection = m_datetime_selection.sel_hours;
+
     std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this, m_datetime_selection);
-    if (dts->exec() == 1){
+
+    if (dts->exec() == 1) {
+
+        auto selection = dts->selection().sel_hours;
+
+        std::sort(current_selection.begin(), current_selection.end());
+        std::sort(selection.begin(), selection.end());
+
+        std::vector<int> diff;
+
+        std::set_difference (
+            selection.begin(), selection.end(),
+            current_selection.begin(), current_selection.end(),
+            std::back_inserter(diff)
+        );
+
+
+        if (diff.size() > 0 )
+            fetch_data(m_datetime_selection.sel_date, diff);
+
         m_datetime_selection = dts->selection();
         std::sort(m_datetime_selection.sel_hours.begin(), m_datetime_selection.sel_hours.end());
 
-        fetch_data(m_datetime_selection.sel_date, m_datetime_selection.sel_hours);
+        //fetch_data(m_datetime_selection.sel_date, m_datetime_selection.sel_hours);
         show_selection(m_datetime_selection);
     }
 
 }
+
+
+
 
 void MainWindow::fetch_default_data()
 {

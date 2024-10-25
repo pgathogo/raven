@@ -751,7 +751,7 @@ build AudioExplorer_autogen\IZXHYK3YIO\qrc_rave.cpp | ${cmake_ninja_workdir}Audi
 #############################################
 # Phony custom command for CMakeFiles\AudioExplorer_autogen_timestamp_deps
 
-build CMakeFiles\AudioExplorer_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles\AudioExplorer_autogen_timestamp_deps: phony C$:\QT632\lib\Qt6Core.lib C$:\QT632\bin\moc.exe C$:\QT632\bin\uic.exe C$:\QT632\lib\Qt6Widgets.lib
+build CMakeFiles\AudioExplorer_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles\AudioExplorer_autogen_timestamp_deps: phony C$:\QT632\lib\Qt6Core.lib C$:\QT632\bin\uic.exe C$:\QT632\bin\moc.exe C$:\QT632\lib\Qt6Widgets.lib
 
 
 #############################################

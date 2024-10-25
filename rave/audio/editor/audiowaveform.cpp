@@ -234,10 +234,6 @@ namespace AUDIO {
 
     void AudioWaveForm::show_wave_file(const QString wave_filename)
     {
-        qDebug() << "-------------------";
-        qDebug() << wave_filename;
-        qDebug() << "-------------------";
-
         QPixmap pixmap(wave_filename);
         m_scene->addPixmap(pixmap);
         QRectF scene_bounds = m_scene->itemsBoundingRect();
@@ -249,9 +245,6 @@ namespace AUDIO {
         ui->gvWave->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatioByExpanding);
 
         double scene_width = scene_bounds.width()+scene_bounds.width()*0.11;
-        //ui->gvWave->setMaximumWidth(scene_width+20);
-
-        qDebug() << "show_wave_file::m_audio_file.duration::" << m_audio_file.duration();
 
         m_seconds_per_pixel = ((m_audio_file.duration()/1000) *100)/scene_width;
 
