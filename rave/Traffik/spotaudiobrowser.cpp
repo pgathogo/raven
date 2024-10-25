@@ -243,7 +243,7 @@ void SpotAudioBrowser::import_audio()
 
             if (file_format == "ogg")
             {
-                auto audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio_shared);
+                auto audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio_filename);
                 spot_audio->audio()->set_file_extension("OGG");
                 spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
             }
@@ -251,7 +251,7 @@ void SpotAudioBrowser::import_audio()
             if (file_format == "mp3")
             {
                 try{
-                    auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_shared);
+                    auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_filename);
                     audio_converter->convert();
 
                     // File has been converted to OGG, change the extension
@@ -265,7 +265,7 @@ void SpotAudioBrowser::import_audio()
 
             if (file_format == "mts")
             {
-                auto audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio_shared);
+                auto audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio_filename);
                 audio_converter->convert();
                 auto mts_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(audio_converter.get());
                 spot_audio->audio()->set_audio_filename(mts_file->dest_mp3_filename().toStdString());
