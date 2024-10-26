@@ -58,6 +58,7 @@ inline void showMessage(std::string msg, QMessageBox::Icon icon = QMessageBox::I
     msgBox.exec();
 }
 
+
 inline bool confirmationMessage(const std::string msg)
 {
     bool result = false;

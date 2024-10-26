@@ -4,6 +4,8 @@
 #include "../../../rave/framework/ui_baseentitydetaildlg.h"
 #include "../../../rave/framework/baseentitydetaildlg.h"
 #include "../../../rave/framework/choicefield.h"
+#include "../../../rave/framework/ravenexception.h"
+#include "../../../rave/utils/tools.h"
 
 #include "../security/authentication.h"
 #include "../security/structs.h"
@@ -122,9 +124,12 @@ void ServerForm::test_connection()
 
     try{
         Authentication::test_connection(ci);
-        qDebug() << "** Connection Successful **";
+        showMessage("Connection test successfull");
     }catch(PostgresException& pe){
-        qDebug() << "** ERROR: connecting to database ...";
+        QString err_msg = QString::fromStdString(pe.errorMessage());
+        QString msg = QString("Error connecting to database server! \n %1 ").arg(err_msg);
+        showMessage(msg.toStdString(), QMessageBox::Critical);
+
     }
 
 }

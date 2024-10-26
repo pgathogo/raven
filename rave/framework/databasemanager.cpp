@@ -161,7 +161,7 @@ void PostgresDatabaseManager::test_connection(std::string conn_str)
 
     try{
        PostgresDataProvider::test_connection(conn_str);
-    }catch(DatabaseException& de){
+    }catch(PostgresException& pe){
        throw;
     }
 

@@ -58,7 +58,7 @@ void PostgresDataProvider::test_connection(const std::string conninfo)
 {
     try{
          PostgresConnector::test_connection(conninfo);
-    }catch (DatabaseException& de){
+    }catch (PostgresException& pe){
         throw;
     }
 

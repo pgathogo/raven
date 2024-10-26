@@ -27,8 +27,8 @@ namespace NETWORK
         void register_handler()
         {
             if constexpr(std::is_base_of<BaseRequestResponseHandler, T>::value) {
-                T t = T();
-                m_handlers[t.handler_type()] = t;
+                std::shared_ptr<T> t = std::make_shared<T>();
+                m_handlers[t->handler_type()] = t;
             }
         }
 
@@ -41,9 +41,6 @@ namespace NETWORK
 
         }
 
-
-
-
     private slots:
         void log_handler_message(const QString);
 
@@ -51,7 +48,7 @@ namespace NETWORK
         void log_man_message(const QString);
 
     private:
-        std::map<QString, std::variant<DiskListRequestHandler>> m_handlers;
+        std::map<QString, std::variant<std::shared_ptr<DiskListRequestHandler>>> m_handlers;
 
         void connect_handler_logging();
 

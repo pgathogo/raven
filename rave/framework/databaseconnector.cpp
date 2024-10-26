@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QDebug>
 #include "databaseconnector.h"
 #include "ravenexception.h"

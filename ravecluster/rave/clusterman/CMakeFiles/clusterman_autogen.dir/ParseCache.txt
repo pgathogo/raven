@@ -207,7 +207,6 @@ D:/Home/Clients/PMS/Raven/rave/framework/baseentitybrowserdlg.h
  mdp:D:/Home/Clients/PMS/Raven/rave/utils/tools.h
  mdp:D:/Home/Clients/PMS/Raven/rave/utils/types.h
  uic:ui_baseentitybrowserdlg.h
-D:/Home/Clients/PMS/Raven/rave/framework/databasemanager.h
 D:/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.h
  mmc:Q_OBJECT
  mdp:D:/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.h
@@ -320,6 +319,8 @@ D:/Home/Clients/PMS/Raven/rave/framework/letterfilterwidget.h
  mdp:C:/QT632/include/QtWidgets/qtwidgetsexports.h
  mdp:C:/QT632/include/QtWidgets/qtwidgetsglobal.h
  mdp:C:/QT632/include/QtWidgets/qwidget.h
+D:/Home/Clients/PMS/Raven/rave/framework/databasemanager.h
+D:/Home/Clients/PMS/Raven/rave/framework/entityfields.h
 D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccessform.h
  mmc:Q_OBJECT
  mdp:D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccessform.h
@@ -434,7 +435,6 @@ D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccessform.h
  mdp:C:/QT632/include/QtWidgets/qtwidgetsglobal.h
  mdp:C:/QT632/include/QtWidgets/qwidget.h
  mdp:D:/Home/Clients/PMS/Raven/rave/security/structs.h
-D:/Home/Clients/PMS/Raven/rave/framework/entityfields.h
 D:/Home/Clients/PMS/Raven/rave/framework/entitydatamodel.h
 D:/Home/Clients/PMS/Raven/rave/framework/baseentitydetaildlg.h
  mmc:Q_OBJECT
