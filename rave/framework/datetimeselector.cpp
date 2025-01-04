@@ -38,7 +38,7 @@ DateTimeSelector::~DateTimeSelector()
 void DateTimeSelector::build_time_buttons()
 {
     //int hour = 0;
-    std::vector<QString> time_text_am{"12", "1", "2", "3", "4", "5",
+    std::vector<QString> time_text_am{"0", "1", "2", "3", "4", "5",
                                       "6", "7", "8", "9", "10", "11"};
 
     std::vector<QString> time_text_pm{"12", "13", "14", "15", "16", "17",
@@ -52,13 +52,17 @@ void DateTimeSelector::build_time_buttons()
 
 void DateTimeSelector::set_selected_buttons()
 {
+    QString am_pm = QTime::currentTime().toString("AP");
+
+    qDebug() << "set_selected_buttons: "<< am_pm;
+
     for (int hr : m_selection.sel_hours){
         for (auto [text, btn_data] : m_hour_buttons){
+
+            if (hr == 12 && am_pm == "AM")
+                hr = 0;
+
             if (btn_data.long_hour_fmt == hr) {
-
-                //qDebug() << "Button Long Hour Fmt: " << btn_data.long_hour_fmt;
-                //qDebug() << "Selected Hour: " << hr;
-
                 btn_data.button->setChecked(true);
             }
         }
@@ -92,10 +96,6 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
 
     */
 
-    // std::vector<QString> time_text_am{"12", "1", "2", "3", "4", "5",
-    //                                   "6", "7", "8", "9", "10", "11"};
-
-    int long_hour = 0;
     const int ROWS = 5;
 
     int row = 0;
@@ -107,6 +107,9 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
     for (int hr=0; hr < time_text.size(); ++hr)
     {
         QString btn_text = time_text[hr]+" "+time_symbol;
+
+        if (time_text[hr] == "0")
+            btn_text = "12 "+time_symbol;
 
         QPushButton* btn = new QPushButton(btn_text, this);
 
@@ -121,9 +124,6 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
                 btn->setStyleSheet( "background-color: #7FFF00");
             }
         }else{
-
-            // if (current_hour > 12)
-            //     current_hour = current_hour - 12;
 
             if (hr == current_hour && am_pm == "PM"){
                 btn->setStyleSheet(
@@ -147,9 +147,9 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
         btn_data.long_hour_fmt = time_text[hr].toInt();
         btn_data.button = btn;
 
-        m_hour_buttons[btn_text] = btn_data; //std::make_tuple(long_hour++, false);
+        m_hour_buttons[btn_text] = btn_data;
 
-    }
+    } // for loop
 
 }
 
@@ -157,13 +157,10 @@ void DateTimeSelector::pick_selection()
 {
     m_selection.sel_date = ui->calWidget->selectedDate();
 
-    for(auto& h : m_selection.sel_hours) {
-        qDebug() << h;
-    }
+    m_selection.sel_hours.clear();
 
     for (auto [text, btn_data] : m_hour_buttons){
         if (btn_data.is_selected) {
-
 
             if (std::find(m_selection.sel_hours.begin(),
                       m_selection.sel_hours.end(),

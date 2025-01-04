@@ -173,6 +173,8 @@ int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 
     sqlQuery = make_insert_returning_string(entity);
 
+    std::cout << sqlQuery << '\n';
+
     int last_id = provider()->insert_returning_id(sqlQuery);
     return last_id;
 

@@ -76,7 +76,6 @@ private slots:
     void open_cue_editor();
 
     void print_comm_log();
-    void run_test();
 
 private:
     //PlainForm* pf;

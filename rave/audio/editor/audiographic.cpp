@@ -457,7 +457,7 @@ namespace AUDIO{
         delete m_indicator_line_item;
     }
 
-    QLineF *AudioWaveScene::indicator_line() const
+    QLineF* AudioWaveScene::indicator_line() const
     {
         return m_indicator_line_position;
     }
@@ -581,8 +581,9 @@ namespace AUDIO{
     }
 
    MarkerIndicator::MarkerIndicator(MarkerType marker_type)
-          :m_marker_type{marker_type},
-          m_line_item{nullptr}
+          :m_marker_type{marker_type}
+          ,m_line_item{nullptr}
+          ,m_current_position_in_msec{0.0}
     {
         m_pen = marker_pen();
         m_pen.setWidth(5);

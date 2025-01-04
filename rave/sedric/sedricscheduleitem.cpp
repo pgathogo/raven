@@ -25,6 +25,9 @@ namespace SEDRIC{
 
     SedricScheduleItem::SedricScheduleItem(Schedule* schedule)
         :m_schedule{schedule}
+        ,m_audio{nullptr}
+        ,m_artist{nullptr}
+
     {
         if (schedule->audio()->entity() != nullptr)
         {
@@ -228,6 +231,8 @@ namespace SEDRIC{
 
     void SedricScheduleItem::clear_display_items()
     {
+        m_model->clear();
+
         if (m_display_items.size() == 0)
             return;
 
@@ -235,6 +240,7 @@ namespace SEDRIC{
         auto it_end = m_display_items.end();
 
         m_display_items.erase(it_start, it_end);
+
     }
 
     std::map<int, int> SedricScheduleItem::fetch_cached_items(QDate date, const std::vector<int>& hours)
@@ -421,6 +427,10 @@ namespace SEDRIC{
                         FindScheduleByDate(current_date));
 
         std::sort(results.begin(), results.end(), SortScheduleByHour());
+
+        // if (results.size() > 0) {
+        //     m_model->clear();
+        // }
 
         for (int const& hour : selected_hours){
 

@@ -37,7 +37,7 @@
         <property name="styleSheet">
          <string notr="true"/>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,1">
+        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,1">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -50,6 +50,9 @@
          <property name="bottomMargin">
           <number>11</number>
          </property>
+         <item>
+          <layout class="QHBoxLayout" name="hlTestLay"/>
+         </item>
          <item>
           <widget class="QFrame" name="date_time_frame">
            <property name="sizePolicy">
@@ -709,7 +712,7 @@ Audio</string>
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

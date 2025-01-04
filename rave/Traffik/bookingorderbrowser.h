@@ -47,7 +47,6 @@ private:
     int m_row_height;
 };
 
-
 struct Booking{
     std::string client_name{};
     std::string order_title{};
@@ -68,6 +67,21 @@ struct Booking{
     int schedule_id{-1};
     std::string schedule_date{};
     std::string schedule_time{};
+};
+
+// NOTE: We call this struct 'ClientOrder' to avoid confusing it with the 'Order' Entity
+struct ClientOrder {
+    int order_id{0};
+    std::string order_number{""};
+    std::string title{""};
+    QDate order_date;
+    QDate start_date;
+    QDate end_date;
+    int spots_ordered{0};
+    int spots_booked{0};
+    int client_id{0};
+    std::string client_name{""};
+    std::vector<Booking> order_bookings;
 };
 
 
@@ -99,6 +113,8 @@ private slots:
     void find_orders(QString);
     void date_filter_changed(int);
 
+    void print_all_bookings();
+
 private:
     Ui::BookingOrderBrowser *ui;
     QMdiArea* m_mdi_area;
@@ -123,18 +139,27 @@ private:
 
     Client* m_client;
 
+    int t_row{-1};
+    int t_col{-1};
+
     void set_treewidget(Bookings&, int, const std::string);
     void resizeColumnsToContents(QTreeWidget& tree_widget);
-    void sort_bookings(Bookings& orders);
+    void sort_bookings(std::vector<Booking>&);
     void cancel_booking();
     void make_spot_menu();
     QTableWidget* get_selected_grid();
     void set_autocompleter();
     void fill_cbox_date_filter();
     void set_client(Client*);
+    void build_client_orders(int, std::string, std::vector<ClientOrder>&);
+    void build_order_bookings(int, std::vector<Booking>&);
+    void build_order_booking_table(std::vector<ClientOrder>&);
+    void make_inner_table_headers(QTableWidget*, int);
 
     QCompleter* m_completer;
     std::unique_ptr<EntityDataModel> m_client_edm;
+
+    std::vector<ClientOrder> m_client_orders;
 
     template<typename T>
     class HasNameColumn

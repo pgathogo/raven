@@ -67,6 +67,7 @@
 #include "jinglegrid.h"
 #include "cartpanel.h"
 
+
 int MainWindow::s_sched_ref{0};
 std::string MainWindow::s_channel{"A"};
 
@@ -469,6 +470,7 @@ void MainWindow::set_datetime_widget()
 
     auto curr_time = QTime::currentTime();
     m_dtw->set_time(curr_time);
+
     ui->test_frame_layout->addWidget(m_dtw.get());
 
     /*
@@ -2298,12 +2300,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
     if (op->panel_status() == OATS::PanelStatus::CUED)
     {
-
         std::string temp_play_channel;
-
-        // qDebug() << "1. CH= "<< stoq(op->schedule_item()->play_channel());
-        // qDebug() << "2. CH= "<< stoq(m_current_playing_item.item->play_channel());
-        // temp_play_channel = op->schedule_item()->play_channel();
 
         op->set_panel_status(OATS::PanelStatus::PLAYING);
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);

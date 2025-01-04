@@ -1,1 +1,1 @@
-D:/Home/Clients/PMS/Raven/rave/AudioExplorer/ffmpeg.exe -y -i "D:\Music\Nickelback - If Today Was Your Last Day.mp3" -c:a libvorbis -q:a 4 -vsync 2 "D:\Music\Nickelback - If Today Was Your Last Day.ogg"
+D:/Home/Clients/PMS/Raven/rave/AudioExplorer/ffmpeg.exe -y -i "D:\Music\Celine\Ashes.mp3" -c:a libvorbis -q:a 4 -vsync 2 "D:\Music\Celine\Ashes.ogg"

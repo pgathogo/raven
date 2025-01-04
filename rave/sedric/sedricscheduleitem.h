@@ -95,6 +95,8 @@ namespace SEDRIC
 
         bool log_find(QDate, int);
 
+        QStandardItemModel* tracks_model();
+
         template<typename T>
         void create_row_item(Schedule* schedule, int row=-1)
         {
@@ -158,6 +160,7 @@ namespace SEDRIC
         AUDIO::Audio* m_audio;
         AUDIO::Artist* m_artist;
         std::map<QDate, std::vector<int>> m_activities;
+        // QStandardItemModel* m_tracks_model;
     };
 
     class SongItem :  public SedricScheduleItem, public QStandardItem
@@ -264,7 +267,8 @@ namespace SEDRIC
     struct SortScheduleByHour{
         bool operator()(const Schedule* s1, const Schedule* s2)
         {
-            return ( s1->schedule_date()->value() < s2->schedule_date()->value());
+            //return ( s1->schedule_date()->value() < s2->schedule_date()->value());
+            return ( s1->schedule_hour()->value() < s2->schedule_hour()->value());
         }
     };
 

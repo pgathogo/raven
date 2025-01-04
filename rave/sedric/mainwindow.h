@@ -207,11 +207,12 @@ private:
     std::unique_ptr<QAction> m_view_comm;
     std::unique_ptr<BookedCommercialDlg> m_booked_comm_dlg;
 
-    void create_model_headers();
+    void create_schedule_headers();
     std::map<int, int> fetch_schedule_from_cache(QDate, const std::vector<int>&);
     void fetch_schedule_from_db(QDate, std::vector<int>);
     void set_column_width();
     void set_toolbutton_icons();
+    void print_vector(std::vector<int>&, QString);
 
 };
 

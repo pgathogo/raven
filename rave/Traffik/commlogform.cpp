@@ -307,17 +307,20 @@ void CommLogForm::print_log()
        breaks.append(comm_break);
     }
 
+    //execute_report();
+
 
     if (breaks.size() > 0) {
-        //write_json_data(breaks);
+        write_json_data(breaks);
         // Call report renderer
-        //execute_report();
+        execute_report();
     }
 }
 
 void CommLogForm::write_json_data(QJsonArray& data)
 {
-    QFile file("report_data.json");
+    //QFile file("report_data.json");
+    QFile file("D:\\Home\\Lab\\Javascript\\electjson\\data\\report_data.json");
     if (!file.open(QIODevice::ReadWrite)) {
         qDebug() << "File open error";
     }
@@ -334,7 +337,7 @@ void CommLogForm::execute_report()
 {
     //std::wstring exe = "electron";
     QStringList args;
-    args << " d:\\home\\lab\\Javascript\\electjson\\main.js";
+    args << " d:\\home\\lab\\Javascript\\electjson\\main.js breaks";
 
     QString path = "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe";
 

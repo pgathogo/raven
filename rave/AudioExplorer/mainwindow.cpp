@@ -664,6 +664,7 @@ void MainWindow::fetch_folder_audio(FRAMEWORK::RelationMapper* r_mapper)
 
     auto audio = dynamic_cast<AUDIO::Audio*>(m_audio_entity_data_model->get_entity().get());
 
+
     try{
 
         m_audio_entity_data_model->readRaw(r_mapper->query());
@@ -740,6 +741,7 @@ void MainWindow::show_audio_data()
 
     for(auto& [name, entity] : m_audio_entity_data_model->modelEntities()){
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
+
 
         if (audio->audio_type()->displayName() == "Song")
             m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
@@ -1271,7 +1273,13 @@ void MainWindow::audio_properties()
 
     AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be.get());
 
-    audio->set_file_path(audio->audio_lib_path()->value());
+    if(!audio->audio_lib_path()->value().empty())
+        audio->set_file_path(audio->audio_lib_path()->value());
+
+    qDebug() << "::show_audio_data::";
+    qDebug() << "Filepath: " << audio->file_path()->to_qstring();
+    qDebug() << "Audio Lib Path: " << audio->audio_lib_path()->to_qstring();
+    qDebug() << "-----";
 
     std::unique_ptr<AudioForm> audio_form = std::make_unique<AudioForm>(audio, m_setup);
     if (audio_form->exec() > 0){
@@ -1379,6 +1387,7 @@ AUDIO::Audio* MainWindow::get_selected_audio()
 void MainWindow::cue_edit()
 {
     auto audio = get_selected_audio();
+
     if (audio == nullptr)
         return;
 
@@ -1395,7 +1404,10 @@ void MainWindow::cue_edit()
     aud_file.set_artist_name(audio->artist_fullname());
     aud_file.set_audio_path(audio->file_path()->value());
     aud_file.set_audio_type(audio->audio_type()->displayName());
+
+
     aud_file.set_duration(audio->duration()->value());
+
     aud_file.set_ogg_filename(fi.fileName().toStdString());
     aud_file.set_ogg_short_filename(audio->full_audio_filename().toStdString());
     aud_file.set_audio_lib_path(audio->audio_lib_path()->value());
@@ -1426,8 +1438,7 @@ void MainWindow::cue_edit()
         auto cm = wave_form->cue_marker();
 
         audio->set_cue_marker(cm);
-
-        audio->cue_marker().dump_markers();
+        audio->set_duration(aud_file.duration());
 
         EntityDataModel edm;
         edm.updateEntity(*audio);

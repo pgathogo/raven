@@ -100,6 +100,7 @@ namespace AUDIO {
         auto duration = m_audio_player->audio_duration_msec(audio_filename);
 
         m_audio_file.set_duration(duration);
+        audio_file.set_duration(duration);
 
         m_scene = new AudioWaveScene(ui->lblCurrTime, duration);
 
@@ -647,6 +648,7 @@ namespace AUDIO {
 
     void AudioWaveForm::save_cue_markers()
     {
+        qDebug() << "m_scene->markers(): "<< m_scene->markers().size();
 
         for (auto& [type, marker] : m_scene->markers()){
             switch (type){

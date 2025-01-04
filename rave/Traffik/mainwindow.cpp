@@ -151,9 +151,6 @@ void MainWindow::createActions()
     setupMenu->addAction(setup_browser_act);
     connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
-    QAction* test_button = new QAction("TEST");
-    connect(test_button, &QAction::triggered, this, &MainWindow::run_test);
-
     QAction* cue_editor_act = new QAction("Cue Editor");
     connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
 
@@ -163,7 +160,6 @@ void MainWindow::createActions()
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
-    mainToolBar->addAction(test_button);
 }
 
 
@@ -242,19 +238,6 @@ void MainWindow::print_comm_log()
 }
 
 
-void MainWindow::run_test()
-{
-    int w = this->width();
-    int h = this->height();
-
-    QString size = QString("Width: %1, Height: %2").arg(QString::number(w)).arg(QString::number(h));
-
-    QMessageBox msg_box;
-    msg_box.setText(size);
-    msg_box.exec();
-
-
-}
 
 MainWindow::~MainWindow()
 {

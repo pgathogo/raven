@@ -79,7 +79,13 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     audio_folder_setup();
     connect(ui->tvFolders, &QTreeView::clicked, this, &MainWindow::folder_clicked);
 
+    m_schedule_model = new QStandardItemModel(this);
+
+    m_scheduler = std::make_unique<SEDRIC::SedricScheduleItem>(m_schedule_model);
+
     m_tracks_model = new QStandardItemModel(this);
+    //auto tracks_model = m_scheduler->tracks_model();
+
     create_track_view_headers();
     adjust_header_size();
 
@@ -88,11 +94,8 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     ui->tvTracks->verticalHeader()->setVisible(false);
 
     m_audio_lib_item = std::make_unique<AUDIO::AudioLibItem>(m_tracks_model);
-//    ScheduleDelegate delegate;
-//    ui->tvSchedule->setItemDelegate(&delegate);
 
-    m_schedule_model = new QStandardItemModel(this);
-    create_model_headers();
+    create_schedule_headers();
     ui->tvSchedule->setModel(m_schedule_model);
 
     ui->tvSchedule->setDragDropOverwriteMode(false);
@@ -106,7 +109,6 @@ MainWindow::MainWindow(QApplication* app, const StationInfo& si, const ConnInfo&
     // the "setModel" method
     set_column_width();
 
-    m_scheduler = std::make_unique<SEDRIC::SedricScheduleItem>(m_schedule_model);
 
     connect(ui->btnNew, &QPushButton::clicked, this, &MainWindow::new_schedule);
     connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::save_schedule);
@@ -684,8 +686,10 @@ void MainWindow::clear_schedule_model()
 {
     m_scheduler->clear_display_items();
 
+    qDebug() << "MainWindow::clear_schedule_model::clearing...";
+
     m_schedule_model->clear();
-    create_model_headers();
+    create_schedule_headers();
     set_column_width();
 }
 
@@ -698,6 +702,7 @@ void MainWindow::combo_highlight(int)
 {
 }
 
+
 void MainWindow::create_track_view_headers()
 {
     m_tracks_model->setHorizontalHeaderItem(0, new QStandardItem("Track Title"));
@@ -708,6 +713,7 @@ void MainWindow::create_track_view_headers()
     m_tracks_model->setHorizontalHeaderItem(5, new QStandardItem("Folder"));
     m_tracks_model->setHorizontalHeaderItem(6, new QStandardItem("File Extension"));
 }
+
 
 void MainWindow::adjust_header_size()
 {
@@ -729,7 +735,7 @@ void MainWindow::set_track_view_column_width()
     ui->tvTracks->setColumnWidth(Column::FileExtension, 100);
 }
 
-void MainWindow::create_model_headers()
+void MainWindow::create_schedule_headers()
 {
 
     m_schedule_model->setHorizontalHeaderItem(0, new QStandardItem("Time"));
@@ -826,6 +832,9 @@ void MainWindow::fetch_data(QDate sel_date, const std::vector<int>& sel_hours)
                         [](int i){ return i == -1; }), uncached_hours.end());
 
     fetch_schedule_from_db(sel_date, uncached_hours);
+
+    m_schedule_model->clear();
+    create_schedule_headers();
     m_scheduler->show_items(sel_date, sel_hours);
 
 }
@@ -878,8 +887,10 @@ void MainWindow::fetch_schedule_from_db(QDate date, std::vector<int> hours)
 
 void MainWindow::set_track_view()
 {
-    m_tracks_model->clear();
+
+    //m_scheduler->clear_model();
     m_audio_lib_item->clear();
+    m_tracks_model->clear();
     create_track_view_headers();
     set_track_view_column_width();
 }
@@ -1052,6 +1063,9 @@ void MainWindow::select_date_time()
 {
     auto current_selection = m_datetime_selection.sel_hours;
 
+    print_vector(current_selection, "Current Selection");
+
+
     std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this, m_datetime_selection);
 
     if (dts->exec() == 1) {
@@ -1061,6 +1075,14 @@ void MainWindow::select_date_time()
         std::sort(current_selection.begin(), current_selection.end());
         std::sort(selection.begin(), selection.end());
 
+
+        print_vector(selection, "Hours After Selection");
+
+        clear_schedule_model();
+
+
+
+       /*
         std::vector<int> diff;
 
         std::set_difference (
@@ -1069,11 +1091,17 @@ void MainWindow::select_date_time()
             std::back_inserter(diff)
         );
 
+        print_vector(diff, "Diff");
 
-        if (diff.size() > 0 )
-            fetch_data(m_datetime_selection.sel_date, diff);
+        auto hours = (diff.size() > 0 ? diff : current_selection);
+        */
+
+        m_datetime_selection.sel_date = dts->selection().sel_date;
+
+        fetch_data(m_datetime_selection.sel_date, selection);
 
         m_datetime_selection = dts->selection();
+
         std::sort(m_datetime_selection.sel_hours.begin(), m_datetime_selection.sel_hours.end());
 
         //fetch_data(m_datetime_selection.sel_date, m_datetime_selection.sel_hours);
@@ -1083,6 +1111,15 @@ void MainWindow::select_date_time()
 }
 
 
+void MainWindow::print_vector(std::vector<int>& vec, QString title)
+{
+    qDebug() << " ----- "+ title +" ---- ";
+    for(auto v : vec) {
+        qDebug() << v;
+    }
+    qDebug() << " ------------------------ ";
+
+}
 
 
 void MainWindow::fetch_default_data()

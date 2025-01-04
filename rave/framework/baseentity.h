@@ -1,13 +1,15 @@
 #ifndef BASEENTITY_H
 #define BASEENTITY_H
 
+#include <QDebug>
+#include <QStringList>
+#include <QList>
+
 #include <memory>
 #include <utility>
 #include <tuple>
+#include <map>
 
-#include <QList>
-#include <QDebug>
-#include <QStringList>
 
 #include "entityfields.h"
 

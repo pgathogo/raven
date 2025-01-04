@@ -52,22 +52,6 @@ namespace AUDIO
         qDebug() << "In File: "<< in_file;
         qDebug() << "Out File: "<< out_file;
 
-        /*
-        m_progress_dialog = new QProgressDialog("Converting and saving MP3 to OGG...please wait.",
-                            out_file, 0, 100);
-        m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
-        m_progress_dialog->setRange(0,0);
-        m_progress_dialog->setCancelButton(nullptr);
-        */
-
-        // QStringList args;
-        // args << "-i "
-        //      << QString::fromStdString(in_file_str)
-        //      << " -c:a libvorbis -q:a 4 -vsync 2 "
-        //      << QString::fromStdString(out_file_str);
-
-        // qDebug() << args;
-
         QString batch_file = QDir::currentPath()+"/"+TEMP_BATCH;
 
         qDebug() << "Batch File: "<< batch_file;

@@ -21,6 +21,8 @@ build.ninja
 *.cmake
 qt6vars.bat
 qt6vars.cmd
+rave/qt6vars_cmd.cmd
+rave/Traffik/compile_commands.json
 #Executable
 *.exe
 *.dll
@@ -67,4 +69,9 @@ Release
 CMakeFiles/
 Testing/
 .qtc_clangd/
+rave/OATS/build/
+rave/Traffik/.vscode/
+rave/AudioExplorer/build/
+rave/sedric/XXXCMakeFiles/
+rave/sedric/build/
 *_autogen

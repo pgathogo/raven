@@ -102,7 +102,8 @@ void AudioForm::populateEntityFields()
 
     fs::path p(ui->edtFilename->text().toStdString());
 
-    m_audio->set_file_path(m_audio->audio_lib_path()->value());
+    if (!m_audio->audio_lib_path()->value().empty())
+        m_audio->set_file_path(m_audio->audio_lib_path()->value());
 
     m_audio->audio_file().set_audio_filename(m_audio->audio_filename()->value());
 
@@ -134,9 +135,13 @@ void AudioForm::populateFormWidgets()
     ui->edtFolder->setText(stoq(m_audio->folder()->displayName()));
 
     // Id -1 means this is a new file you are creating
+    qDebug() << "Filepath: " << m_audio->file_path()->to_qstring();
+    qDebug() << "Audio Lib Path: " << m_audio->audio_lib_path()->to_qstring();
+
     if (m_audio->id() != -1 )
-        ui->edtFilename->setText(stoq(m_audio->audio_lib_path()->value() +
-                       m_audio_tool->make_audio_filename(m_audio->id())+".ogg"));
+        ui->edtFilename->setText(stoq(m_audio->file_path()->value() +
+                       m_audio_tool->make_audio_filename(m_audio->id())+
+                                      "."+m_audio->file_extension()->value()));
 
     ui->edtDuration->setText(m_audio_tool->format_time(m_audio->duration()->value()));
 
