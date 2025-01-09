@@ -164,5 +164,6 @@
         <file>media/editor/play_start.png</file>
         <file>media/editor/stop_play.png</file>
         <file>media/editor/play_mark_start.png</file>
+        <file>media/editor/remove.png</file>
     </qresource>
 </RCC>

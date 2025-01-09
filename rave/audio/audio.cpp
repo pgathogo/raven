@@ -472,6 +472,12 @@ namespace AUDIO {
         return m_duration;
     }
 
+    double Audio::playable_duration() const
+    {
+        return (m_end_marker->value() > 0) ? m_end_marker->value() : m_duration->value();
+    }
+
+
     DecimalField *Audio::start_marker() const
     {
         return m_start_marker;
@@ -591,7 +597,7 @@ namespace AUDIO {
         m_play_count->setValue(play_count);
     }
 
-    void Audio::set_duration(int duration)
+    void Audio::set_duration(double duration)
     {
         m_duration->setValue(duration);
         m_file_info.set_duration(duration);
@@ -703,8 +709,6 @@ namespace AUDIO {
     std::string Audio::artist_fullname() const
     {
         // std::string fullname{""};
-
-        qDebug() << "FK: "<< QString::fromStdString(artist()->displayName());
 
         // auto fk_artist = artist()->unique_fk_entity();
         // if (fk_artist != nullptr){

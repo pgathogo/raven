@@ -174,7 +174,7 @@ namespace OATS{
         m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
 
         AUDIO::AudioTool at;
-        QTime t = at.msec_to_time(schedule_item->hour(), schedule_item->audio()->duration()->value());
+        QTime t = at.msec_to_time(schedule_item->hour(), schedule_item->audio()->playable_duration());
 
         m_duration_label->setText(t.toString("mm:ss"));
 

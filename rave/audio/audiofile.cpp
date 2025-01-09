@@ -270,7 +270,7 @@ bool AudioFile::is_valid() const
     return true;
 }
 
-CueMarker AudioFile::marker() const
+CueMarker& AudioFile::marker()
 {
     return m_cue_marker;
 }

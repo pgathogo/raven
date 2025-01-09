@@ -82,6 +82,7 @@ namespace AUDIO{
 
 struct CurrentPlayItem{
     CurrentPlayItem():item{nullptr}{}
+    // TODO: Check how this "item" is freed - potential leak!!
     OATS::ScheduleItem* item;
     int schedule_index{-1};
     int grid_index{-1};

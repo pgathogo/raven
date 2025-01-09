@@ -1405,7 +1405,6 @@ void MainWindow::cue_edit()
     aud_file.set_audio_path(audio->file_path()->value());
     aud_file.set_audio_type(audio->audio_type()->displayName());
 
-
     aud_file.set_duration(audio->duration()->value());
 
     aud_file.set_ogg_filename(fi.fileName().toStdString());
@@ -1427,9 +1426,13 @@ void MainWindow::cue_edit()
         wave_gen->generate();
     }
 
+
     auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(aud_file,
                                  AUDIO::FormMode::Edit);
 
+    qDebug() << " >>>>>>> " ;
+    wave_form->cue_marker().dump_markers();
+    qDebug() << " <<<<<  ";
 
     if (wave_form->exec()) {
 

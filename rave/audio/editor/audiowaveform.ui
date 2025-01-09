@@ -205,6 +205,26 @@
       </widget>
      </item>
      <item>
+      <widget class="Line" name="line_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnClearAllMarkers">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Clear All Markers</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -291,6 +311,19 @@ color: rgb(0, 0, 0);</string>
          <property name="spacing">
           <number>1</number>
          </property>
+         <item>
+          <widget class="QPushButton" name="btnClearStart">
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="btnMarkStartMarker">
            <property name="maximumSize">
@@ -393,6 +426,13 @@ color: rgb(0, 0, 0);</string>
           <number>1</number>
          </property>
          <item>
+          <widget class="QPushButton" name="btnClearFadeIn">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="btnMarkFadeIn">
            <property name="maximumSize">
             <size>
@@ -493,6 +533,19 @@ color: rgb(255, 255, 255);</string>
          <property name="spacing">
           <number>1</number>
          </property>
+         <item>
+          <widget class="QPushButton" name="btnClearIntro">
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="btnMarkIntro">
            <property name="maximumSize">
@@ -595,6 +648,13 @@ color: rgb(255, 255, 255);</string>
           <number>1</number>
          </property>
          <item>
+          <widget class="QPushButton" name="btnClearFadeOut">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="btnMarkFadeOut">
            <property name="maximumSize">
             <size>
@@ -696,6 +756,13 @@ color: rgb(0,0,0);</string>
           <number>1</number>
          </property>
          <item>
+          <widget class="QPushButton" name="btnClearExtro">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="btnMarkExtro">
            <property name="maximumSize">
             <size>
@@ -796,6 +863,13 @@ color: rgb(255, 255, 255);</string>
          <property name="spacing">
           <number>1</number>
          </property>
+         <item>
+          <widget class="QPushButton" name="btnClearEnd">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="btnMarkEndMarker">
            <property name="maximumSize">

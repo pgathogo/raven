@@ -409,7 +409,8 @@ namespace AUDIO
 
         QJsonObject marker;
 
-        auto m = audio_file.marker();
+        // Remove const from audio_file and assign marker to a varible m
+        CueMarker m = const_cast<AudioFile&>(audio_file).marker();
 
         marker["start"] = m.round_marker(m.start_marker);
         marker["fade_in"] = m.round_marker(m.fade_in);

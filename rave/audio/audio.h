@@ -134,7 +134,10 @@ namespace AUDIO {
         StringField* audio_lib_path() const;
         BooleanField* is_deleted() const;
         IntegerField* play_count() const;
+
         DecimalField* duration() const;
+        double playable_duration() const;
+
         DecimalField* start_marker() const;
         DecimalField* fade_in_marker() const;
         DecimalField* intro_marker() const;
@@ -142,6 +145,7 @@ namespace AUDIO {
         DecimalField* fade_out_marker() const;
         DecimalField* fade_delay_marker() const;
         DecimalField* end_marker() const;
+
         StringField* file_path() const;
         ForeignKeyField* folder() const;
         ForeignKeyField* genre() const;
@@ -163,7 +167,9 @@ namespace AUDIO {
         void set_audio_lib_path(const std::string);
         void set_is_deleted(bool);
         void set_play_count(int);
-        void set_duration(int);
+
+        void set_duration(double);
+
         void set_start_marker(double);
         void set_fade_in_marker(double);
         void set_intro_marker(double);
@@ -219,7 +225,9 @@ namespace AUDIO {
 
         BooleanField*  m_is_deleted;
         IntegerField* m_play_count;
+
         DecimalField* m_duration;
+
         DecimalField* m_start_marker;
         DecimalField* m_fade_in_marker;
         DecimalField* m_intro_marker;

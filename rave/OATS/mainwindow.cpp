@@ -540,22 +540,27 @@ void MainWindow::compute_schedule_time()
 
     log_info("Computing schedule time...");
 
-    //qDebug() << "Title: " << m_current_playing_item.item->audio()->title()->to_qstring();
-    //qDebug() << "Duration: " << m_current_playing_item.item->audio()->duration()->value();
+    // int time_counter = m_current_playing_item.item->audio()->duration()->value() -
+    //                    m_current_playing_item.item->audio()->end_marker()->value();
 
-    int time_counter = m_current_playing_item.item->audio()->duration()->value();
+    int time_counter = m_current_playing_item.item->audio()->playable_duration();
 
     qInfo() << "Item counter: " << time_counter;
 
     m_current_playing_item.item->set_current_time(time_counter);
     m_current_playing_item.item->notify();
 
-    time_counter = time_counter + m_current_playing_item.item->audio()->duration()->value();
+    // time_counter = time_counter +
+    //                (m_current_playing_item.item->audio()->duration()->value() -
+    //                 m_current_playing_item.item->audio()->end_marker()->value());;
 
     for (int i=m_current_playing_item.schedule_index+1; i < m_schedule_items.size()-1; ++i){
         auto si = schedule_item(i);
         si->set_current_time(time_counter);
-        time_counter = time_counter + si->audio()->duration()->value();
+        time_counter = time_counter + si->audio()->playable_duration();
+
+                       // ( si->audio()->duration()->value() -
+                       //   si->audio()->end_marker()->value());;
 
         //si->notify();
     }
@@ -598,7 +603,7 @@ void MainWindow::fetch_schedule_bydate(QDate date)
     sql << " SELECT a.id, a.schedule_date, a.schedule_hour, a.schedule_time, "
         << " a.auto_transition, a.play_date, a.play_time, "
         << " a.schedule_item_type, a.comment, a.booked_spots, "
-        << " a.audio_id, b.title, b.filepath, b.duration, b.file_extension,"
+        << " a.audio_id, b.title, b.filepath, b.duration, b.intro_marker, b.end_marker, b.file_extension,"
         << " b.audio_type, c.id AS artist_id, c.fullname "
         << " FROM rave_schedule a  "
         << " left outer join rave_audio b on a.audio_id = b.id "
@@ -683,7 +688,6 @@ void MainWindow::load_schedule(QDate date, int hr)
     // TODO: Fix this method
     set_current_play_item();
 
-
     //move_top_current_hour();
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
 
@@ -716,7 +720,7 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
     sql << " SELECT a.id, a.schedule_date, a.schedule_hour, a.schedule_time, "
         << " a.auto_transition, a.play_date, a.play_time, "
         << " a.schedule_item_type, a.comment, a.booked_spots, "
-        << " a.audio_id, b.title, b.filepath, b.duration, b.file_extension,"
+        << " a.audio_id, b.title, b.filepath, b.duration, b.intro_marker, b.end_marker, b.file_extension,"
         << " b.audio_type, c.id AS artist_id, c.fullname "
         << " FROM rave_schedule a  "
         << " left outer join rave_audio b on a.audio_id = b.id "
@@ -786,7 +790,11 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
                 m_schedule_items.push_back(std::move(sched_item));
             }
         }else{
-                item_duration = item_duration + sched_item->audio()->duration()->value();
+                item_duration = item_duration + sched_item->audio()->playable_duration();
+
+                               // (sched_item->audio()->duration()->value() -
+                               //  sched_item->audio()->end_marker()->value());
+
                 total_duration = (item_duration == 0) ?  0 : sched_item->current_time()+item_duration;
 
                 QTime item_time = sched_item->schedule_time().addMSecs(total_duration);
@@ -978,8 +986,16 @@ void MainWindow::set_schedule_fields(BaseDataProvider* provider,
             schedule->set_booked_spots(str_to_int(field_value));
 
         if (field_name == "duration"){
-            audio->set_duration(str_to_int(field_value));
+            audio->set_duration(str_to_double(field_value));
             //schedule->set_break_duration(str_to_int(field_value));
+        }
+
+        if (field_name == "intro_marker") {
+            audio->set_intro_marker(str_to_double(field_value));
+        }
+
+        if (field_name == "end_marker") {
+            audio->set_end_marker(str_to_double(field_value));
         }
 
         if (field_name == "audio_id"){
@@ -1198,7 +1214,6 @@ void MainWindow::display_schedule(int grid_pos, int from_item_index)
 
     for (int index=grid_pos; index <= MAX_GRID_ITEMS-1; ++index)
     {
-
         auto schedule = schedule_item(from_item_index);
 
         if (schedule->audio()->title()->value() == "")
@@ -1219,9 +1234,7 @@ void MainWindow::display_schedule(int grid_pos, int from_item_index)
             if (ch == prev_ch){
                 ch = (ch == ChannelA) ? ChannelB : ChannelA;
             }
-
             prev_ch = ch;
-
         }
 
         schedule->set_play_channel(ch);
@@ -1276,7 +1289,9 @@ void MainWindow::recompute_time(int from_pos)
 
 
             if (prev_schedule_item->schedule_type() != OATS::ScheduleType::HOUR_HEADER){
-                new_time = prev_schedule_time.addMSecs(prev_schedule_item->audio()->duration()->value());
+                new_time = prev_schedule_time.addMSecs( prev_schedule_item->audio()->playable_duration() );
+                                        // prev_schedule_item->audio()->duration()->value() -
+                                        // prev_schedule_item->audio()->end_marker()->value());
             }else{
                 new_time = current_schedule->schedule_time();
             }
@@ -1302,7 +1317,10 @@ QTime MainWindow::schedule_time_at(int index)
     auto prev_schedule_item = schedule_item(index-1);
 
     if (prev_schedule_item->schedule_type() != OATS::ScheduleType::HOUR_HEADER){
-        new_time = prev_schedule_item->schedule_time().addMSecs(prev_schedule_item->audio()->duration()->value());
+        new_time = prev_schedule_item->schedule_time().addMSecs( prev_schedule_item->audio()->playable_duration());
+            // prev_schedule_item->audio()->duration()->value() -
+            // prev_schedule_item->audio()->end_marker()->value()
+            // );
     }else{
         new_time = curr_schedule_item->schedule_time();
     }
@@ -1332,7 +1350,7 @@ void MainWindow::go_current()
 {
     if (m_current_playing_item.grid_index > 0)
     {
-       std::rotate(m_schedule_items.begin(), m_schedule_items.begin()+m_current_playing_item.grid_index, m_schedule_items.end());
+       std::rotate(m_schedule_items.begin(), m_schedule_items.begin() + m_current_playing_item.grid_index, m_schedule_items.end());
        display_schedule();
        m_current_playing_item.grid_index = 0;
     }
@@ -1512,6 +1530,7 @@ void MainWindow::fast_flash()
         m_outputA->start_trigger_tick_stamp() > 0 )
     {
         auto tick_count_diff_OPA = m_outputA->start_trigger_tick_stamp() - current_time;
+
         if ( (tick_count_diff_OPA < FIVE_SECONDS.count()) && (tick_count_diff_OPA > 0) )
         {
             m_outputA->fast_flash_play_button(OATS::ButtonFlashColor::GREEN);
@@ -1530,6 +1549,7 @@ void MainWindow::fast_flash()
         m_outputB->start_trigger_tick_stamp() > 0)
     {
         auto tick_count_diff_OPB = m_outputB->start_trigger_tick_stamp() - current_time;
+
         if ( (tick_count_diff_OPB < FIVE_SECONDS.count()) && (tick_count_diff_OPB > 0) ){
             m_outputB->fast_flash_play_button(OATS::ButtonFlashColor::GREEN);
         }
@@ -1543,8 +1563,10 @@ void MainWindow::fast_flash()
     }
 
     // Output C
-    if (m_outputC->panel_status() == OATS::PanelStatus::CUED){
+    if (m_outputC->panel_status() == OATS::PanelStatus::CUED)
+    {
         auto tick_count_diff_OPC = m_outputC->start_trigger_tick_stamp() - current_time;
+
         if ((tick_count_diff_OPC < FIVE_SECONDS.count()) &&
             (tick_count_diff_OPC > 0) ){
             m_outputC->fast_flash_play_button(OATS::ButtonFlashColor::GREEN);
@@ -1566,6 +1588,7 @@ void MainWindow::count_down()
 {
     auto trigger_ticker = m_audio_tool.get_tick_count();
 
+
     switch (m_outputA->panel_status())
     {
     case OATS::PanelStatus::WAITING:
@@ -1575,10 +1598,17 @@ void MainWindow::count_down()
 
     case OATS::PanelStatus::PLAYING: {
         long long elapsed = trigger_ticker - m_outputA->start_tick_stamp();
-        long long remaining = m_outputA->schedule_item()->audio()->duration()->value() - elapsed;
 
-        if ( elapsed < m_outputA->schedule_item()->audio()->intro_marker()->value() ){
-            // intro is still in progress
+        // double audio_duration = m_outputA->schedule_item()->audio()->duration()->value() -
+        //                         m_outputA->schedule_item()->audio()->end_marker()->value();
+
+        double audio_duration = m_outputA->schedule_item()->audio()->playable_duration();
+
+        long long remaining = audio_duration - elapsed;
+
+        if ( elapsed < m_outputA->schedule_item()->audio()->intro_marker()->value() )
+        {
+            // Intro is still in progress
             auto duration_seconds = (int)(m_outputA->schedule_item()->audio()->intro_marker()->value() - elapsed)/100;
             int ds_u1 = (int)duration_seconds/10;
             int ds_u2 = duration_seconds % 10;
@@ -1626,9 +1656,7 @@ void MainWindow::count_down()
             */
 
             m_outputA->update_progress_bar(100 - round(  ((float)m_outputA->time_remaining() /
-                                 (m_outputA->schedule_item()->audio()->duration()->value() -
-                                  m_outputA->schedule_item()->audio()->intro_marker()->value()) ) * 100 )
-                    );
+                                 (audio_duration - m_outputA->schedule_item()->audio()->intro_marker()->value()) ) * 100 ) );
         }
     }
     break;
@@ -1649,7 +1677,15 @@ void MainWindow::count_down()
      case OATS::PanelStatus::PLAYING:
       {
         long long elapsed = trigger_ticker - m_outputB->start_tick_stamp();
-        long long remaining = m_outputB->schedule_item()->audio()->duration()->value() - elapsed;
+
+        // double audio_duration = m_outputB->schedule_item()->audio()->duration()->value() -
+        //                     m_outputB->schedule_item()->audio()->end_marker()->value();
+
+        //long long remaining = m_outputB->schedule_item()->audio()->duration()->value() - elapsed;
+
+        double audio_duration = m_outputB->schedule_item()->audio()->playable_duration();
+
+        long long remaining = audio_duration - elapsed;
 
         if ( elapsed < m_outputB->schedule_item()->audio()->intro_marker()->value() ){
             // intro is still in progress
@@ -1701,9 +1737,8 @@ void MainWindow::count_down()
             */
 
             m_outputB->update_progress_bar(100 - round( ((float)m_outputB->time_remaining() /
-                                      (m_outputB->schedule_item()->audio()->duration()->value() -
-                                       m_outputB->schedule_item()->audio()->intro_marker()->value())
-                                      ) * 100 ) );
+                                      (audio_duration -
+                                       m_outputB->schedule_item()->audio()->intro_marker()->value()) ) * 100 ) );
 
         }
       }
@@ -1722,7 +1757,13 @@ void MainWindow::count_down()
         break;
     case OATS::PanelStatus::PLAYING: {
         long long elapsed = trigger_ticker - m_outputC->start_tick_stamp();
-        long long remaining = m_outputC->schedule_item()->audio()->duration()->value() - elapsed;
+
+        // double audio_duration = m_outputC->schedule_item()->audio()->duration()->value() -
+        //                     m_outputC->schedule_item()->audio()->end_marker()->value();
+
+        double audio_duration = m_outputC->schedule_item()->audio()->playable_duration();
+
+        long long remaining = audio_duration - elapsed;
 
         if (elapsed < m_outputC->schedule_item()->audio()->intro_marker()->value() ) {
             // intro is still in progress
@@ -1773,7 +1814,7 @@ void MainWindow::count_down()
             */
 
             m_outputC->update_progress_bar(100 - round(  ((float)m_outputC->time_remaining() /
-                                 (m_outputC->schedule_item()->audio()->duration()->value() -
+                                 (audio_duration -
                                   m_outputC->schedule_item()->audio()->intro_marker()->value()) ) * 100 )
                     );
         }
@@ -1822,7 +1863,11 @@ void MainWindow::status_timer()
 
             elapsed = trigger_ticker - m_outputA->start_tick_stamp();
 
-            remaining = m_outputA->schedule_item()->audio()->duration()->value() - elapsed;
+            // double audio_duration = m_outputA->schedule_item()->audio()->duration()->value() -
+            //                         m_outputA->schedule_item()->audio()->end_marker()->value();
+
+            remaining = m_outputA->schedule_item()->audio()->playable_duration() - elapsed;
+
             m_outputA->set_time_remaining(remaining);
 
             if ( (remaining <= 0) || (m_outputA->start_tick_stamp() < 0) ) {
@@ -1858,7 +1903,9 @@ void MainWindow::status_timer()
          if (m_outputB->start_tick_stamp() > 0)
          {
             elapsed = trigger_ticker - m_outputB->start_tick_stamp();
-            remaining = m_outputB->schedule_item()->audio()->duration()->value()-elapsed;
+
+            remaining = m_outputB->schedule_item()->audio()->playable_duration() - elapsed;
+
             m_outputB->set_time_remaining(remaining);
 
             if ((remaining <= 0) || (m_outputB->start_tick_stamp() < 0))
@@ -1884,7 +1931,9 @@ void MainWindow::status_timer()
        case OATS::PanelStatus::PLAYING:
         if (m_outputC->start_tick_stamp() > 0) {
             elapsed = trigger_ticker - m_outputC->start_tick_stamp();
-            remaining = m_outputC->schedule_item()->audio()->duration()->value() - elapsed;
+
+            remaining = m_outputC->schedule_item()->audio()->playable_duration() - elapsed;
+
             m_outputC->set_time_remaining(remaining);
 
             if ((remaining <= 0 ) || (m_outputC->start_tick_stamp() < 0)){
@@ -2014,7 +2063,8 @@ void MainWindow::cue_schedule_item(OATS::ScheduleItem* next_schedule_item, OATS:
 
     m_current_cued_item.item = next_schedule_item;
 
-    auto duration_seconds = (int)next_schedule_item->audio()->duration()->value()/1000;
+    auto duration_seconds = (int)(next_schedule_item->audio()->playable_duration()/1000);
+
     auto intro_seconds = (int)next_schedule_item->audio()->intro_marker()->value()/1000;
     auto fade_seconds = (int)next_schedule_item->audio()->fade_delay_marker()->value()/1000;
 
@@ -2098,6 +2148,8 @@ void MainWindow::calculate_trigger_times()
 
     if (m_current_playing_item.item->item_status() == OATS::ItemStatus::PLAYING)
     {
+        double audio_duration = m_current_playing_item.item->audio()->playable_duration();
+
         if (m_current_playing_item.item->play_channel() == "A" ) {
             current_play_start_time = m_outputA->start_tick_stamp();
         }else{
@@ -2111,15 +2163,13 @@ void MainWindow::calculate_trigger_times()
 
             if (time_yield > 500) {
                 m_current_playing_item.item->audio()->set_duration(
-                            (m_current_playing_item.item->audio()->duration()->value() - time_yield) +
+                            (audio_duration - time_yield) +
                             (YIELD_FADE_DELAY - m_current_playing_item.item->audio()->fade_delay_marker()->value())
                             );
                 m_current_playing_item.item->audio()->set_fade_delay_marker(YIELD_FADE_DELAY);
                 m_current_playing_item.item->audio()->set_fade_out_marker(YIELD_FADE_OUT);
             }else{
-                m_current_playing_item.item->audio()->set_duration(
-                            m_current_playing_item.item->audio()->duration()->value() - time_yield
-                            );
+                m_current_playing_item.item->audio()->set_duration( audio_duration - time_yield );
 
             }
 
@@ -2136,6 +2186,7 @@ void MainWindow::calculate_trigger_times()
 
         if (next_schedule_item != nullptr)
         {
+            double next_audio_duration = next_schedule_item->audio()->playable_duration();
 
             if (m_current_playing_item.item->transition_type() == OATS::TransitionType::STOP)
             {
@@ -2147,7 +2198,7 @@ void MainWindow::calculate_trigger_times()
                 segue_interval = m_current_playing_item.item->audio()->extro_marker()->value() -
                                                              next_schedule_item->audio()->intro_marker()->value();
 
-                track_start_mark = (current_play_start_time + m_current_playing_item.item->audio()->duration()->value());  // - 500;
+                track_start_mark = (current_play_start_time + audio_duration);  // - 500;
                 fade_start_mark = -1; // Don't fade
 
             } else if (m_current_playing_item.item->transition_type() == OATS::TransitionType::MIX){
@@ -2156,17 +2207,17 @@ void MainWindow::calculate_trigger_times()
                                   m_current_playing_item.item->audio()->fade_delay_marker()->value();
 
                 if (m_current_playing_item.item->audio()->fade_delay_marker()->value() >
-                                                       (next_schedule_item->audio()->duration()->value() -
+                                                       (next_audio_duration -
                                                         next_schedule_item->audio()->fade_delay_marker()->value() ) ){
 
-                        m_current_playing_item.item->audio()->set_fade_delay_marker((next_schedule_item->audio()->duration()->value() -
+                        m_current_playing_item.item->audio()->set_fade_delay_marker((next_audio_duration -
                                                                      next_schedule_item->audio()->fade_delay_marker()->value()) ); // - 500);
                 }
 
-                track_start_mark = (current_play_start_time + m_current_playing_item.item->audio()->duration()->value()) -
+                track_start_mark = (current_play_start_time + audio_duration) -
                                    m_current_playing_item.item->audio()->fade_delay_marker()->value();
 
-                fade_start_mark = (current_play_start_time + m_current_playing_item.item->audio()->duration()->value())-
+                fade_start_mark = (current_play_start_time + audio_duration)-
                                    m_current_playing_item.item->audio()->fade_out_marker()->value();
 
               }
@@ -2222,7 +2273,7 @@ void MainWindow::calculate_time_stats()
             time_counter = 0;
         } else{
 
-            time_counter = m_current_playing_item.item->audio()->duration()->value();
+            time_counter = m_current_playing_item.item->audio()->playable_duration();
         }
     }
 
@@ -2232,7 +2283,7 @@ void MainWindow::calculate_time_stats()
         }else if (m_outputB->panel_status() == OATS::PanelStatus::PLAYED) {
             time_counter = 0;
         } else {
-            time_counter = m_current_playing_item.item->audio()->duration()->value();
+            time_counter = m_current_playing_item.item->audio()->playable_duration();
         }
     }
 
@@ -2252,7 +2303,7 @@ void MainWindow::calculate_time_stats()
     {
         if (m_schedule_items[i]->schedule_type()== OATS::ScheduleType::HOUR_HEADER)
             break;
-        time_counter += m_schedule_items[i]->audio()->duration()->value();
+        time_counter += m_schedule_items[i]->audio()->playable_duration();
 
         if (m_schedule_items[i]->transition_type() == OATS::TransitionType::MIX){
         time_counter -= m_schedule_items[i]->audio()->fade_delay_marker()->value();
@@ -2310,7 +2361,6 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         op->schedule_item()->notify();
 
-
         if (op->schedule_item()->schedule_type() == OATS::ScheduleType::COMM)
         {
             auto break_items = m_comm_breaks[op->schedule_item()->id()];
@@ -2335,6 +2385,8 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         }else{
             auto audio = op->schedule_item()->audio();
 
+            qDebug() << "Audio End Marker: " << audio->end_marker()->value();
+
             //FIXME: full_audio_filename to read from cache
             std::string audio_filename = audio->full_audio_filename().toStdString();
             QString audio_file = QString::fromStdString(audio_filename);
@@ -2357,8 +2409,8 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         auto next_output_panel = find_output_panel(next_id);
         auto next_schedule_item = find_next_schedule_item(op->schedule_item());
 
-        if (m_current_playing_item.item != next_schedule_item){
-
+        if (m_current_playing_item.item != next_schedule_item)
+        {
             if (next_schedule_item != nullptr){
 
                 if (next_schedule_item->schedule_type() == OATS::ScheduleType::COMM){
@@ -2705,13 +2757,18 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
     m_current_cued_item.item = si;
 
     QTime curr_time = QTime::currentTime();
-    int item_duration = si->audio()->duration()->value();
+    //int item_duration = si->audio()->duration()->value();
+    int item_duration = si->audio()->playable_duration();
 
     si->set_item_status(OATS::ItemStatus::CUED);
     si->set_schedule_time(curr_time);
     si->set_schedule_time(curr_time.addMSecs(item_duration));
     si->notify();
     m_schedule_grid[grid_pos]->set_subject(si);
+
+    qDebug()<< "-------------------- ";
+    qDebug() << "si.audio.intro_marker: " << si->audio()->intro_marker()->value();
+    qDebug()<< "-------------------- ";
 
     QString cue_string = output_string(si);
 
@@ -2855,7 +2912,8 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     if (item_at_cursor->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
         new_time = QTime::fromString(QTime::currentTime().toString(), "hh:mm:ss");
     } else {
-        new_time = item_at_cursor->schedule_time().addMSecs(item_at_cursor->audio()->duration()->value());
+        new_time = item_at_cursor->schedule_time().addMSecs(
+                     item_at_cursor->audio()->playable_duration() );
     }
 
     new_item->set_schedule_time(new_time);
@@ -2883,6 +2941,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
         return ChannelA;
     };
+
     new_item->set_play_channel(play_channel());
 
     if (m_current_playing_item.item == nullptr){
@@ -3061,8 +3120,12 @@ History MainWindow::make_history(int audio_id)
 
 QString MainWindow::output_string(OATS::ScheduleItem* si)
 {
-    auto duration_seconds = (int)si->audio()->duration()->value()/1000;
+    auto audio_duration = si->audio()->playable_duration();
+
+    auto duration_seconds = (int)(audio_duration/1000);
+
     auto intro_seconds = (int)si->audio()->intro_marker()->value()/1000;
+
     auto fade_seconds = (int)si->audio()->fade_delay_marker()->value()/1000;
 
     int is_u1 = (int)intro_seconds/60;
@@ -3086,8 +3149,6 @@ QString MainWindow::output_string(OATS::ScheduleItem* si)
 
 void MainWindow::transition_stop(int item_ref, int grid_index)
 {
-    qDebug() << "** AAA ** ";
-
     int index = index_of(item_ref);
 
     auto si = schedule_item(index);

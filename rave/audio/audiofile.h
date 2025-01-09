@@ -7,6 +7,7 @@
 #include <qDebug>
 
 struct CueMarker{
+
     double start_marker{0.0};
     double fade_in{0.0};
     double intro{0.0};
@@ -21,6 +22,15 @@ struct CueMarker{
     void set_extro(double v){ extro = round_marker(v); }
     void set_fade_out(double v){ fade_out = round_marker(v); }
     void set_end_marker(double v){ end_marker = round_marker(v); }
+
+    void reset_markers() {
+        start_marker = 0.0;
+        fade_in = 0.0;
+        intro = 0.0;
+        extro = 0.0;
+        fade_out = 0.0;
+        end_marker = 0.0;
+    }
 
     void dump_markers(){
 
@@ -107,7 +117,7 @@ public:
     uintmax_t file_size() const;
 
     bool is_valid() const;
-    CueMarker marker() const;
+    CueMarker& marker();
 
     std::string get_audio_lib();
 

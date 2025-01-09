@@ -54,17 +54,19 @@ namespace AUDIO {
     {
         ui->setupUi(this);
 
-        // double audio_duration_secs = m_audio_player->audio_duration();
-        //audio_file.set_duration(audio_duration_secs*1000); //msec
-        //audio_file.set_duration(m_audio_file.duration());
-        //m_audio_file.set_duration(m_audio_file.duration());
-
         connect(ui->btnPlay, &QPushButton::clicked, this, &AudioWaveForm::start_play);
         connect(ui->btnStop, &QPushButton::clicked, this, &AudioWaveForm::stop_play);
-        // connect(ui->btnPause, &QPushButton::clicked, this, &AudioWaveForm::pause_play);
+        connect(ui->btnClearAllMarkers, &QPushButton::clicked, this, &AudioWaveForm::clear_all_markers);
 
         connect(ui->btnSave, &QPushButton::clicked, this, &AudioWaveForm::save);
         connect(ui->btnCancel, &QPushButton::clicked, this, &AudioWaveForm::on_cancel);
+
+        connect(ui->btnClearStart, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::StartMarker);});
+        connect(ui->btnClearFadeIn, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::FadeInMarker);});
+        connect(ui->btnClearIntro, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::IntroMarker);});
+        connect(ui->btnClearFadeOut, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::FadeOutMarker);});
+        connect(ui->btnClearExtro, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::ExtroMarker);});
+        connect(ui->btnClearEnd, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::EndMarker);});
 
         connect(ui->btnMarkStartMarker, &QPushButton::clicked, this, &AudioWaveForm::mark_start);
         connect(ui->btnMarkFadeIn, &QPushButton::clicked, this, &AudioWaveForm::mark_fade_in);
@@ -112,6 +114,7 @@ namespace AUDIO {
         setMaximumWidth(this->width());
 
         init_widgets();
+
     }
 
 
@@ -258,9 +261,14 @@ namespace AUDIO {
 
         m_audio_file.marker().dump_markers();
 
-        show_markers(m_audio_file.marker());
-        show_marker_value(m_audio_file.marker());
+        show_cue_markers();
 
+    }
+
+    void AudioWaveForm::show_cue_markers()
+    {
+        show_cue_marker_lines(m_audio_file.marker());
+        show_cue_marker_values(m_audio_file.marker());
     }
 
     unsigned int AudioWaveForm::audio_len(QString audio_file)
@@ -313,12 +321,15 @@ namespace AUDIO {
 
     }
 
-    /*
-    void AudioWaveForm::pause_play()
+    void AudioWaveForm::clear_all_markers()
     {
-        m_scene->display_marker_position_sec();
+        m_audio_file.marker().reset_markers();
+
+        for(MarkerType m = MarkerType::StartMarker; m <= MarkerType::EndMarker; m = MarkerType(m+1)) {
+            create_marker(m);
+        }
+
     }
-   */
 
 
     void AudioWaveForm::audio_current_position(double position, double total)
@@ -454,7 +465,7 @@ namespace AUDIO {
         return (it != m_display_units.end()) ? (*it).second : nullptr;
     }
 
-    void AudioWaveForm::show_markers(CueMarker cue_markers)
+    void AudioWaveForm::show_cue_marker_lines(CueMarker cue_markers)
     {
         show_mark(m_scene->msec_to_pixel(cue_markers.start_marker), MarkerType::StartMarker);
         show_mark(m_scene->msec_to_pixel(cue_markers.fade_in), MarkerType::FadeInMarker);
@@ -475,7 +486,7 @@ namespace AUDIO {
         create_marker_line(marker_type, line);
     }
 
-    void AudioWaveForm::show_marker_value(CueMarker cue_marker)
+    void AudioWaveForm::show_cue_marker_values(CueMarker cue_marker)
     {
 
        AUDIO::AudioTool at;
@@ -487,6 +498,39 @@ namespace AUDIO {
        ui->lblExtroMarkTime->setText(at.format_time(cue_marker.extro));
        ui->lblEndMarkTime->setText(at.format_time(cue_marker.end_marker));
     }
+
+    void AudioWaveForm::clear_marker(MarkerType mt)
+    {
+        switch(mt)
+        {
+            case MarkerType::StartMarker:
+                m_audio_file.marker().start_marker = 0;
+                break;
+            case MarkerType::FadeInMarker:
+                m_audio_file.marker().fade_in = 0;
+                break;
+            case MarkerType::IntroMarker:
+                m_audio_file.marker().intro = 0;
+                break;
+            case MarkerType::FadeOutMarker:
+                m_audio_file.marker().fade_out = 0;
+                break;
+            case MarkerType::ExtroMarker:
+                m_audio_file.marker().extro = 0;
+                break;
+            case MarkerType::EndMarker:
+                m_audio_file.marker().end_marker = 0;
+                break;
+            default:
+                m_audio_file.marker().reset_markers();
+                break;
+        }
+
+
+        create_marker(mt);
+
+    }
+
 
     void AudioWaveForm::mark_start()
     {
@@ -629,20 +673,33 @@ namespace AUDIO {
     void AudioWaveForm::set_button_icons()
     {
         ui->btnPlay->setIcon(QIcon(":/media/editor/media/editor/play_green.png"));
-        // ui->btnPause->setIcon(QIcon(":/media/editor/media/editor/pause_play.png"));
         ui->btnStop->setIcon(QIcon(":/media/editor/media/editor/stop_play.png"));
+        ui->btnClearAllMarkers->setIcon(QIcon("://media/editor/media/editor/remove.png"));
+
+        ui->btnClearStart->setIcon(QIcon(":/media/editor/media/editor/remove.png"));
         ui->btnMarkStartMarker->setIcon(QIcon(":/media/editor/media/editor/mark_start.png"));
         ui->btnPlayStartMarker->setIcon(QIcon(":/media/editor/media/editor/play_mark_start.png"));
+
+        ui->btnClearFadeIn->setIcon(QIcon(":/media/editor/media/editor/remove.png"));
         ui->btnMarkFadeIn->setIcon(QIcon(":/media/editor/media/editor/mark_fade_in.png"));
         ui->btnPlayFadeIn->setIcon(QIcon(":/media/editor/media/editor/play_fade_in.png"));
+
+        ui->btnClearIntro->setIcon(QIcon(":/media/editor/media/editor/remove.png"));
         ui->btnMarkIntro->setIcon(QIcon(":/media/editor/media/editor/mark_intro.png"));
         ui->btnPlayIntro->setIcon(QIcon(":/media/editor/media/editor/play_intro.png"));
+
+        ui->btnClearFadeOut->setIcon(QIcon(":/media/editor/media/editor/remove.png"));
         ui->btnMarkFadeOut->setIcon(QIcon(":/media/editor/media/editor/mark_fade_out.png"));
         ui->btnPlayFadeOut->setIcon(QIcon(":/media/editor/media/editor/play_fade_out.png"));
+
+        ui->btnClearExtro->setIcon(QIcon(":/media/editor/media/editor/remove.png"));
         ui->btnMarkExtro->setIcon(QIcon(":/media/editor/media/editor/mark_extro.png"));
         ui->btnPlayExtro->setIcon(QIcon(":/media/editor/media/editor/play_extro.png"));
+
+        ui->btnClearEnd->setIcon(QIcon(":/media/editor/media/editor/remove.png"));
         ui->btnMarkEndMarker->setIcon(QIcon(":/media/editor/media/editor/mark_end.png"));
         ui->btnPlayEndMarker->setIcon(QIcon(":/media/editor/media/editor/play_end.png"));
+
 
     }
 

@@ -121,6 +121,8 @@ namespace AUDIO {
         void play_extro();
         void play_end_marker();
 
+        void clear_marker(MarkerType);
+
         void audio_conversion_done(const QString&);
         void update_conversion_pb();
         void wave_file_generated(const QString&);
@@ -132,8 +134,11 @@ namespace AUDIO {
         void create_marker_display_unit(MarkerIndicator* marker, QLineF line);
         AUDIO::MarkerIndicator* create_marker(AUDIO::MarkerType marker_type);
         void create_marker_indicator(MarkerType, QLineF);
-        void show_markers(CueMarker);
-        void show_marker_value(CueMarker);
+
+        void show_cue_markers();
+        void show_cue_marker_lines(CueMarker);
+        void show_cue_marker_values(CueMarker);
+
         void show_mark(double mark, MarkerType marker_type);
 
         AUDIO::MarkerIndicator* create_marker_line(AUDIO::MarkerType marker_type, QLineF line);
@@ -173,6 +178,8 @@ namespace AUDIO {
         void start_progress_indicator(const QString);
         bool convert_audio_to_ogg(const QString);
         bool generate_audio_wave_file(const QString);
+
+        void clear_all_markers();
 
         AUDIO::MarkerIndicator*	m_start_indicator;
         AUDIO::MarkerDisplayUnit* m_start_display_unit;
