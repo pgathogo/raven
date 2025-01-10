@@ -106,21 +106,8 @@ namespace AUDIO {
 
         CueMarker cue_marker() const;
 
-        void mark_start();
-        void mark_fade_in();
-        void mark_intro();
-        void mark_fade_out();
-        void mark_extro();
-        void mark_end();
 
         void play_mark(QPointF);
-        void play_start_mark();
-        void play_fade_in();
-        void play_intro();
-        void play_fade_out();
-        void play_extro();
-        void play_end_marker();
-
         void clear_marker(MarkerType);
 
         void audio_conversion_done(const QString&);

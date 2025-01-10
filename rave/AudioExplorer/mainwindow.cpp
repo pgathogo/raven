@@ -1430,9 +1430,6 @@ void MainWindow::cue_edit()
     auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(aud_file,
                                  AUDIO::FormMode::Edit);
 
-    qDebug() << " >>>>>>> " ;
-    wave_form->cue_marker().dump_markers();
-    qDebug() << " <<<<<  ";
 
     if (wave_form->exec()) {
 

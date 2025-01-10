@@ -68,19 +68,19 @@ namespace AUDIO {
         connect(ui->btnClearExtro, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::ExtroMarker);});
         connect(ui->btnClearEnd, &QPushButton::clicked, this, [&](){clear_marker(MarkerType::EndMarker);});
 
-        connect(ui->btnMarkStartMarker, &QPushButton::clicked, this, &AudioWaveForm::mark_start);
-        connect(ui->btnMarkFadeIn, &QPushButton::clicked, this, &AudioWaveForm::mark_fade_in);
-        connect(ui->btnMarkIntro, &QPushButton::clicked, this, &AudioWaveForm::mark_intro);
-        connect(ui->btnMarkFadeOut, &QPushButton::clicked, this, &AudioWaveForm::mark_fade_out);
-        connect(ui->btnMarkExtro, &QPushButton::clicked, this, &AudioWaveForm::mark_extro);
-        connect(ui->btnMarkEndMarker, &QPushButton::clicked, this, &AudioWaveForm::mark_end);
+        connect(ui->btnMarkStartMarker, &QPushButton::clicked, this, [&](){create_marker(MarkerType::StartMarker);});
+        connect(ui->btnMarkFadeIn, &QPushButton::clicked, this, [&](){create_marker(MarkerType::FadeInMarker);});
+        connect(ui->btnMarkIntro, &QPushButton::clicked, this, [&](){create_marker(MarkerType::IntroMarker);});
+        connect(ui->btnMarkFadeOut, &QPushButton::clicked, this, [&](){create_marker(MarkerType::FadeOutMarker);});
+        connect(ui->btnMarkExtro, &QPushButton::clicked, this, [&](){create_marker(MarkerType::ExtroMarker);});
+        connect(ui->btnMarkEndMarker, &QPushButton::clicked, this, [&](){create_marker(MarkerType::EndMarker);});
 
-        connect(ui->btnPlayStartMarker, &QPushButton::clicked, this, &AudioWaveForm::play_start_mark);
-        connect(ui->btnPlayFadeIn, &QPushButton::clicked, this, &AudioWaveForm::play_fade_in);
-        connect(ui->btnPlayIntro, &QPushButton::clicked, this, &AudioWaveForm::play_intro);
-        connect(ui->btnPlayFadeOut, &QPushButton::clicked, this, &AudioWaveForm::play_fade_out);
-        connect(ui->btnPlayExtro, &QPushButton::clicked, this, &AudioWaveForm::play_extro);
-        connect(ui->btnPlayEndMarker, &QPushButton::clicked, this, &AudioWaveForm::play_end_marker);
+        connect(ui->btnPlayStartMarker, &QPushButton::clicked, this, [&](){play_mark(m_scene->marker_position(MarkerType::StartMarker));});
+        connect(ui->btnPlayFadeIn, &QPushButton::clicked, this, [&](){play_mark(m_scene->marker_position(MarkerType::FadeInMarker));});
+        connect(ui->btnPlayIntro, &QPushButton::clicked, this, [&](){play_mark(m_scene->marker_position(MarkerType::IntroMarker));});
+        connect(ui->btnPlayFadeOut, &QPushButton::clicked, this, [&](){play_mark(m_scene->marker_position(MarkerType::FadeOutMarker));});
+        connect(ui->btnPlayExtro, &QPushButton::clicked, this, [&](){play_mark(m_scene->marker_position(MarkerType::ExtroMarker));});
+        connect(ui->btnPlayEndMarker, &QPushButton::clicked, this, [&](){play_mark(m_scene->marker_position(MarkerType::EndMarker));});
 
         QString audio_filename = QString::fromStdString(m_audio_file.audio_file());
 
@@ -410,8 +410,15 @@ namespace AUDIO {
 
         }else{
             auto m = create_marker_line(marker_type, line);
+
+            if (m->current_position_msec() > m_audio_file.duration()) {
+                m->set_current_position_msec(m_audio_file.duration());
+                m->set_current_position_sec(m_audio_file.duration()/ 100);
+             }
+
             return m;
         }
+
     }
 
     AUDIO::MarkerIndicator* AudioWaveForm::create_marker_line(AUDIO::MarkerType marker_type, QLineF line)
@@ -528,77 +535,8 @@ namespace AUDIO {
 
 
         create_marker(mt);
+        show_cue_marker_values(m_audio_file.marker());
 
-    }
-
-
-    void AudioWaveForm::mark_start()
-    {
-        create_marker(MarkerType::StartMarker);
-    }
-
-
-    void AudioWaveForm::mark_fade_in()
-    {
-        create_marker(MarkerType::FadeInMarker);
-    }
-
-    void AudioWaveForm::mark_intro()
-    {
-        create_marker(MarkerType::IntroMarker);
-    }
-
-    void AudioWaveForm::mark_fade_out()
-    {
-        create_marker(MarkerType::FadeOutMarker);
-    }
-
-    void AudioWaveForm::mark_extro()
-    {
-        create_marker(MarkerType::ExtroMarker);
-    }
-
-    void AudioWaveForm::mark_end()
-    {
-        constexpr int MSEC = 1000;
-        auto marker = create_marker(MarkerType::EndMarker);
-
-        // Constraint EndMarker to the track duration
-         if (marker->current_position_msec() > m_audio_file.duration()) {
-            marker->set_current_position_msec(m_audio_file.duration());
-            marker->set_current_position_sec(m_audio_file.duration()/ 100);
-         }
-
-    }
-
-    void AudioWaveForm::play_start_mark()
-    {
-        play_mark(m_scene->marker_position(MarkerType::StartMarker));
-    }
-
-    void AudioWaveForm::play_fade_in()
-    {
-        play_mark(m_scene->marker_position(MarkerType::FadeInMarker));
-    }
-
-    void AudioWaveForm::play_intro()
-    {
-        play_mark(m_scene->marker_position(MarkerType::IntroMarker));
-    }
-
-    void AudioWaveForm::play_fade_out()
-    {
-        play_mark(m_scene->marker_position(MarkerType::FadeOutMarker));
-    }
-
-    void AudioWaveForm::play_extro()
-    {
-        play_mark(m_scene->marker_position(MarkerType::ExtroMarker));
-    }
-
-    void AudioWaveForm::play_end_marker()
-    {
-        play_mark(m_scene->marker_position(MarkerType::EndMarker));
     }
 
 
