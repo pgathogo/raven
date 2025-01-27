@@ -43,7 +43,6 @@ AudioInfo AudioThread::get_audio_info(std::string& audio_file)
 
 void AudioThread::play(QString filename)
 {
-
     BASS_ChannelStop(m_channel);
 
     if (!(m_channel = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0,
@@ -59,8 +58,6 @@ void AudioThread::play(QString filename)
         BASS_ChannelSetSync(m_channel, BASS_SYNC_END, 0, &syncFunc, nullptr);
         playing = true;
     }
-
-    qDebug() << " ---------------------------------- ";
 }
 
 void AudioThread::play_from_position(QString filename, int position)
@@ -178,6 +175,12 @@ void AudioThread::resume()
         playing = true;
     }
 }
+
+void AudioThread::fade_audio()
+{
+    BASS_ChannelSlideAttribute(m_channel, BASS_ATTRIB_VOL, 0.0f, 5000);
+}
+
 
 void AudioThread::stop()
 {

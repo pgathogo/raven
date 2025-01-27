@@ -27,7 +27,7 @@ namespace OATS
         QString text_style = "QLabel{"
                              "color:#FFFFFF; "
                              "background-color:transparent;"
-                             "font-size: 10pt;}";
+                             "font-size: 12pt;}";
 
         QLabel* music_remain_title = new QLabel("Music Remaining:");
         music_remain_title->setStyleSheet(text_style);

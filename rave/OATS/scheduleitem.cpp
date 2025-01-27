@@ -54,8 +54,6 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         m_index = other.m_index;
         m_item_status = other.m_item_status;
 
-        std::cout << "Other CH: "<< other.m_play_channel << '\n';
-
         m_play_channel = other.m_play_channel;
 
         m_schedule_type = other.m_schedule_type;

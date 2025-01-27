@@ -24,13 +24,18 @@ namespace OATS{
 
     private slots:
         void play_audio();
+        void stop_audio();
+        void fade_audio();
 
     private:
         QVBoxLayout* m_layout;
-        std::unique_ptr<QLabel> m_status1;
-        std::unique_ptr<QLabel> m_status2;
+        std::unique_ptr<QLabel> m_item_status;
+        std::unique_ptr<QLabel> m_output_name;
 
         QAction* m_act_play;
+        QAction* m_act_stop;
+        QAction* m_act_fade;
+
 
         OATS::ScheduleItem* m_schedule_item;
 

@@ -22,5 +22,8 @@
         <file>images/icons/up-arrow.png</file>
         <file>images/icons/treeview_closed_purple.png</file>
         <file>images/icons/treeview_open_purple.png</file>
+        <file>images/icons/stop_01.png</file>
+        <file>images/icons/play_02.png</file>
+        <file>images/icons/fade_01.png</file>
     </qresource>
 </RCC>

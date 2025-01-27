@@ -25,19 +25,25 @@ namespace OATS{
         //setFixedWidth(80);
 
         QFont f_statusTop("JetBrains Mono", 10, QFont::Bold);
-        m_status1 = std::make_unique<QLabel>("");
-        m_status1->setObjectName("StatusTopLabel");
-        m_status1->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        m_status1->setFont(f_statusTop);
+        m_item_status = std::make_unique<QLabel>("");
+        m_item_status->setObjectName("StatusTopLabel");
+        m_item_status->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        m_item_status->setFont(f_statusTop);
 
-        QFont f_statusBottom("JetBrains Mono", 12, QFont::Bold);
-        m_status2 = std::make_unique<QLabel>("");
-        m_status2->setObjectName("StatusBottomLabel");
-        m_status2->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        m_status2->setFont(f_statusBottom);
+        QString text_style = "QLabel{"
+                             "color:#FFFFFF; "
+                             "background-color:transparent;"
+                             "font-size: 12pt;  font-weight: bold; }";
 
-        m_layout->addWidget(m_status1.get());
-        m_layout->addWidget(m_status2.get());
+        //QFont f_statusBottom("JetBrains Mono", 12, QFont::Bold);
+        m_output_name = std::make_unique<QLabel>("");
+        m_output_name->setObjectName("StatusBottomLabel");
+        m_output_name->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        m_output_name->setStyleSheet(text_style);
+        // m_output_name->setFont(f_statusBottom);
+
+        m_layout->addWidget(m_item_status.get());
+        m_layout->addWidget(m_output_name.get());
         setLayout(m_layout);
 
     }
@@ -54,8 +60,8 @@ namespace OATS{
         if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
             //setStyleSheet("background-color: #222222;");
             setStyleSheet("background-color: rgb(40, 133, 220)");
-            m_status1->setText("");
-            m_status2->setText("");
+            m_item_status->setText("");
+            m_output_name->setText("");
             return;
         }
 
@@ -63,8 +69,9 @@ namespace OATS{
             setStyleSheet("background-color: #222222;");
         }
 
-        m_status1->setText(QString::fromStdString(schedule_item->item_status_text()));
-        m_status2->setText(QString::fromStdString(schedule_item->play_channel()));
+
+        m_item_status->setText(QString::fromStdString(schedule_item->item_status_text()));
+        m_output_name->setText(QString::fromStdString(schedule_item->play_channel()));
 
         //setStyleSheet("background-color: #222222;");
         setStyleSheet("background-color: rgb(40, 133, 220)");
@@ -83,7 +90,7 @@ namespace OATS{
 
         if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
             setStyleSheet("background-color: #fb1d04");
-            m_status2->setText("");
+            m_output_name->setText("");
         }
     }
 
@@ -97,7 +104,22 @@ namespace OATS{
         if (m_schedule_item->item_status() != OATS::ItemStatus::CUED)
             m_act_play->setEnabled(false);
 
+        // Stop action
+       m_act_stop = new QAction("Stop");
+       connect(m_act_stop, &QAction::triggered, this, &StatusGridPanel::stop_audio);
+       if (m_schedule_item->item_status() != OATS::ItemStatus::PLAYING)
+           m_act_stop->setEnabled(false);
+
+       // Fade action
+       m_act_fade = new QAction("Fade");
+       connect(m_act_fade, &QAction::triggered, this, &StatusGridPanel::fade_audio);
+       if (m_schedule_item->item_status() != OATS::ItemStatus::PLAYING)
+           m_act_fade->setEnabled(false);
+
+
         menu.addAction(m_act_play);
+        menu.addAction(m_act_stop);
+        menu.addAction(m_act_fade);
         menu.exec(event->globalPos());
     }
 
@@ -105,6 +127,16 @@ namespace OATS{
     {
         emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->play_audio(parent_ref(), index());
 
+    }
+
+    void StatusGridPanel::stop_audio()
+    {
+        emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->stop_audio(parent_ref(), index());
+    }
+
+    void StatusGridPanel::fade_audio()
+    {
+        emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->fade_audio(parent_ref(), index());
     }
 
 }

@@ -21,11 +21,15 @@ namespace OATS{
     enum class ButtonFlashColor{NONE, GREEN, ORANGE, RED};
     enum class ProgressBarBGColor{RED, BLUE, GREEN};
 
+    static constexpr int FORCED_FADE_OUT_STATUS_COUNT = 15;
+    static constexpr int FORCED_FADE_OUT_COUNT_DOWN = 35;
+
     class OutputPanel : public QFrame
     {
         Q_OBJECT
     public:
         const QString color_red =  "background-color: rgb(210, 4, 45)";
+
 
         OutputPanel(QString name);
         ~OutputPanel();
@@ -41,6 +45,7 @@ namespace OATS{
 
         void play();
         void stop();
+        void fade();
         void cue_item(ScheduleItem*);
 
         PanelStatus panel_status();
@@ -80,14 +85,23 @@ namespace OATS{
         QString cue_time_string();
 
         void delete_cued_item();
+
+        void set_forced_fade_out(bool);
+        bool forced_fade_out();
+        void set_forced_fade_duration(double);
+        double forced_fade_duration();
+        void set_forced_fade_stamp(double);
+        double forced_fade_stamp();
     signals:
         void play_item(OutputPanel*);
         void stop_play(OutputPanel*);
+        void fade_audio(OutputPanel*);
     private:
         int m_id;
         QString m_panel_name;
         std::unique_ptr<QPushButton> m_play_button;
         std::unique_ptr<QPushButton> m_stop_button;
+        std::unique_ptr<QPushButton> m_fade_button;
         std::unique_ptr<QLabel> m_status_image;
         std::unique_ptr<QLabel> m_title;
         std::unique_ptr<QLabel> m_artist;
@@ -118,6 +132,10 @@ namespace OATS{
         bool m_stop_fast_flash_bit{false};
 
         QString m_cue_time_string;
+
+        bool m_forced_fade_out{false};
+        double m_forced_fade_duration{0.0};
+        double m_forced_fade_stamp{0.0};
 
         //TimeStamp m_ts;
     };

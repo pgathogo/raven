@@ -34,6 +34,7 @@ class AudioThread : public QThread
         void play_from_position(QString filename, int position);
         void pause();
         void resume();
+        void fade_audio();
         void stop();
         void signal_update();
         void change_position(int position);

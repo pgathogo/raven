@@ -96,8 +96,11 @@ public:
         std::unique_ptr<T2> dlg(nullptr);
 
         std::string searchName = selectedRowName().toStdString();
-        if (!searchName.empty()){
+
+        if (!searchName.empty())
+        {
             std::shared_ptr<BaseEntity> be = mEntityDataModel->findEntityByName(searchName);
+
             if (be){  // != nullptr){
                 T1* update_entity = dynamic_cast<T1*>(be.get());
                 dlg = std::make_unique<T2>(update_entity);

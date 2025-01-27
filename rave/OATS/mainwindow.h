@@ -210,8 +210,10 @@ public:
     void draw_horizontal_line();
 
     int index_of(int);
+
     void play_audio(OATS::OutputPanel*);
     void stop_audio(OATS::OutputPanel*);
+    void fade_audio(OATS::OutputPanel*);
     void play_outputC(OATS::OutputPanel*);
 
     int next_output_panel_id(int);
@@ -291,6 +293,8 @@ private slots:
 
     void play_button(OATS::OutputPanel*);
     void stop_button(OATS::OutputPanel*);
+    void fade_button(OATS::OutputPanel*);
+
     void go_current();
     void go_current_hour();
     void keep_current(bool);
@@ -309,6 +313,8 @@ private slots:
     void jingle_end_of_play();
 
     void play_cued_audio();
+    void stop_playing_audio();
+    void fade_playing_audio();
 
     void close_window();
 

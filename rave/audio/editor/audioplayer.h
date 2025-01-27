@@ -31,6 +31,7 @@ namespace AUDIO
         void play_audio();
         void play_audio(QString);
         void play();
+        void fade_audio();
 
         void stop_play();
         float* audio_current_peak();

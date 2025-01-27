@@ -32,20 +32,27 @@ namespace OATS{
         m_play_button->setObjectName("PlayButton");
         connect(m_play_button.get(), &QPushButton::clicked, this, &OutputPanel::play);
 
-        m_play_button->setIcon(QIcon(":/images/icons/play_01.png"));
+        m_play_button->setIcon(QIcon(":/images/icons/play_02.png"));
         m_play_button->setStyleSheet(OATSTYLE::play_button_style);
 
         m_stop_button = std::make_unique<QPushButton>("STOP "+name);
         m_stop_button->setObjectName("StopButton");
+        m_stop_button->setIcon(QIcon(":/images/icons/stop_01.png"));
         connect(m_stop_button.get(), &QPushButton::clicked, this, &OutputPanel::stop);
-
         m_stop_button->setStyleSheet(OATSTYLE::stop_button_style);
+
+        m_fade_button = std::make_unique<QPushButton>("FADE "+name);
+        m_fade_button->setObjectName("FadeButton");
+        m_fade_button->setIcon(QIcon(":/images/icons/fade_01.png"));
+        m_fade_button->setStyleSheet(OATSTYLE::fade_button_style);
+        connect(m_fade_button.get(), &QPushButton::clicked, this, &OutputPanel::fade);
 
         m_status_image = std::make_unique<QLabel>("img");
         m_layout_buttons = new QHBoxLayout();
 
         m_layout_buttons->addWidget(m_play_button.get());
         m_layout_buttons->addWidget(m_stop_button.get());
+        m_layout_buttons->addWidget(m_fade_button.get());
         m_layout_buttons->addWidget(m_status_image.get());
         m_layout_buttons->addStretch(1);
 
@@ -182,6 +189,11 @@ namespace OATS{
         // stop audio play
         emit stop_play(this);
         set_panel_style();
+    }
+
+    void OutputPanel::fade()
+    {
+        emit fade_audio(this);
     }
 
     int OutputPanel::id() const
@@ -371,7 +383,33 @@ namespace OATS{
        m_status = OATS::PanelStatus::WAITING;
     }
 
+    void OutputPanel::set_forced_fade_out(bool ffo)
+    {
+        m_forced_fade_out = ffo;
+    }
 
+    bool OutputPanel::forced_fade_out()
+    {
+        return m_forced_fade_out;
+    }
+
+    void OutputPanel::set_forced_fade_duration(double ffd)
+    {
+        m_forced_fade_duration = ffd;
+    }
+
+    double OutputPanel::forced_fade_duration()
+    {
+        return m_forced_fade_duration;
+    }
+    void OutputPanel::set_forced_fade_stamp(double ffs)
+    {
+        m_forced_fade_stamp = ffs;
+    }
+    double OutputPanel::forced_fade_stamp()
+    {
+        return m_forced_fade_stamp;
+    }
 
     void OutputPanel::set_progress_bar_background(OATS::ProgressBarBGColor bg_color)
     {

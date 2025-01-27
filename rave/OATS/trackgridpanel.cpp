@@ -170,8 +170,14 @@ namespace OATS{
     {
         m_schedule_item = schedule_item;
 
+        if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
+            m_artist_label->setText("");
+            m_duration_label->setText("");
+        } else {
+            m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
+        }
+
         m_track_label->setText(QString::fromStdString(schedule_item->audio()->title()->value()));
-        m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
 
         AUDIO::AudioTool at;
         QTime t = at.msec_to_time(schedule_item->hour(), schedule_item->audio()->playable_duration());

@@ -111,6 +111,14 @@ namespace AUDIO
         emit sig_stop_play();
     }
 
+    void AudioPlayer::fade_audio()
+    {
+        emit audio_played(m_played_audio);
+        if (m_audio_thread != nullptr)
+            m_audio_thread->fade_audio();
+
+    }
+
     void AudioPlayer::audio_position(double position, double total)
     {
         emit audio_current_position(position, total);

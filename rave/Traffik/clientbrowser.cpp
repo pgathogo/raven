@@ -19,7 +19,7 @@ ClientBrowser::ClientBrowser(QWidget *parent) :
 {
     ui->setupUi(this);
     setDialogTitle("Clients");
-    //createBrandButton();
+    createBrandButton();
     //createSpotButton();
     //createOrderButton();
     show_letter_filter();
@@ -80,7 +80,11 @@ void ClientBrowser::createBrandButton()
 {
     QPushButton* btnBrand = new QPushButton("Brand");
     btnBrand->setObjectName("btnBrand");
-    connect(btnBrand, &QPushButton::clicked, this, &ClientBrowser::openBrandBrowser);
+    //connect(btnBrand, &QPushButton::clicked, this, &ClientBrowser::openBrandBrowser);
+    connect(btnBrand, &QPushButton::clicked, this, [&](){
+       // Get count of entityDataModel and show it in a message box
+       showMessage(QString("EntityDataModel count: %1").arg(QString::number(entityDataModel().count())).toStdString());
+    });
     bui->hlExtra->addWidget(btnBrand);
 }
 

@@ -323,10 +323,9 @@ namespace AUDIO {
 
     void AudioWaveForm::clear_all_markers()
     {
-        m_audio_file.marker().reset_markers();
 
         for(MarkerType m = MarkerType::StartMarker; m <= MarkerType::EndMarker; m = MarkerType(m+1)) {
-            create_marker(m);
+            clear_marker(m);
         }
 
     }
