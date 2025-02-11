@@ -114,9 +114,21 @@ namespace AUDIO
     void AudioPlayer::fade_audio()
     {
         emit audio_played(m_played_audio);
+
         if (m_audio_thread != nullptr)
             m_audio_thread->fade_audio();
+    }
 
+    void AudioPlayer::pause_audio()
+    {
+        if (m_audio_thread != nullptr)
+            m_audio_thread->pause();
+    }
+
+    void AudioPlayer::resume_audio()
+    {
+        if(m_audio_thread != nullptr)
+            m_audio_thread->resume();
     }
 
     void AudioPlayer::audio_position(double position, double total)

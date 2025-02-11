@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QProgressBar>
+#include <QSpacerItem>
 
 #include "scheduleitem.h"
 #include "outputpanel.h"
@@ -47,11 +48,21 @@ namespace OATS{
         m_fade_button->setStyleSheet(OATSTYLE::fade_button_style);
         connect(m_fade_button.get(), &QPushButton::clicked, this, &OutputPanel::fade);
 
+        m_pause_button = std::make_unique<QPushButton>("PAUSE "+name);
+        m_pause_button->setObjectName("PauseButton");
+        m_pause_button->setIcon(QIcon(":/images/icons/pause_01.png"));
+        m_pause_button->setStyleSheet(OATSTYLE::pause_button_style);
+        connect(m_pause_button.get(), &QPushButton::clicked, this, &OutputPanel::pause);
+
         m_status_image = std::make_unique<QLabel>("img");
         m_layout_buttons = new QHBoxLayout();
 
-        m_layout_buttons->addWidget(m_play_button.get());
+        QSpacerItem* si = new QSpacerItem(40, 10, QSizePolicy::Fixed, QSizePolicy::Fixed);
+
         m_layout_buttons->addWidget(m_stop_button.get());
+        m_layout_buttons->addWidget(m_play_button.get());
+        m_layout_buttons->addItem(si);
+        m_layout_buttons->addWidget(m_pause_button.get());
         m_layout_buttons->addWidget(m_fade_button.get());
         m_layout_buttons->addWidget(m_status_image.get());
         m_layout_buttons->addStretch(1);
@@ -195,6 +206,23 @@ namespace OATS{
     {
         emit fade_audio(this);
     }
+
+    void OutputPanel::pause()
+    {
+        emit pause_audio(this);
+
+    }
+
+    long long OutputPanel::pause_tick_stamp()
+    {
+        return m_pause_tick_stamp;
+
+    }
+    void OutputPanel::set_pause_tick_stamp(long long pause_stamp)
+    {
+        m_pause_tick_stamp = pause_stamp;
+    }
+
 
     int OutputPanel::id() const
     {

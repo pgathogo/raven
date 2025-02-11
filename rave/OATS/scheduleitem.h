@@ -10,7 +10,7 @@
 namespace OATS{
 
     enum class ScheduleType{SONG, COMM, JINGLE, DROP, COMM_AUDIO, HOUR_HEADER, NEWS_BITE};
-    enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, ERROR_01};
+    enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, PAUSED, ERROR_01};
     enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
     enum class DBUpdateStatus{None, Ready, Done};
 

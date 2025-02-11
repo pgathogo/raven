@@ -18,6 +18,7 @@ namespace OATSTYLE {
     QString play_button_style{BTN_BG+BTN_DEFAULT};
     QString stop_button_style{BTN_BG+BTN_DEFAULT};
     QString fade_button_style{BTN_BG+BTN_DEFAULT};
+    QString pause_button_style{BTN_BG+BTN_DEFAULT};
 
 
     QString play_button_slow_flash_style{PLAY_SLOW_FLASH_BG+BTN_DEFAULT};

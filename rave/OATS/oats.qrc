@@ -25,5 +25,6 @@
         <file>images/icons/stop_01.png</file>
         <file>images/icons/play_02.png</file>
         <file>images/icons/fade_01.png</file>
+        <file>images/icons/pause_01.png</file>
     </qresource>
 </RCC>

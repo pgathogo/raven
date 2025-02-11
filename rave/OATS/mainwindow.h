@@ -214,6 +214,8 @@ public:
     void play_audio(OATS::OutputPanel*);
     void stop_audio(OATS::OutputPanel*);
     void fade_audio(OATS::OutputPanel*);
+    void pause_audio(OATS::OutputPanel*);
+    void resume_audio(OATS::OutputPanel*);
     void play_outputC(OATS::OutputPanel*);
 
     int next_output_panel_id(int);
@@ -294,6 +296,7 @@ private slots:
     void play_button(OATS::OutputPanel*);
     void stop_button(OATS::OutputPanel*);
     void fade_button(OATS::OutputPanel*);
+    void pause_button(OATS::OutputPanel*);
 
     void go_current();
     void go_current_hour();
@@ -315,6 +318,7 @@ private slots:
     void play_cued_audio();
     void stop_playing_audio();
     void fade_playing_audio();
+    void pause_playing_audio();
 
     void close_window();
 

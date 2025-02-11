@@ -60,6 +60,7 @@ namespace OATS{
         void play_audio(int, int);
         void stop_audio(int, int);
         void fade_audio(int, int);
+        void pause_audio(int, int);
 
         void transition_stop(int, int);
         void transition_mix(int, int);

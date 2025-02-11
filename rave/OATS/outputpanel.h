@@ -17,9 +17,10 @@ namespace OATS{
 
     class ScheduleItem;
 
-    enum class PanelStatus{WAITING, CUED, PLAYING, PLAYED, STOP};
+    enum class PanelStatus{WAITING, CUED, PLAYING, PLAYED, STOP, PAUSED};
     enum class ButtonFlashColor{NONE, GREEN, ORANGE, RED};
     enum class ProgressBarBGColor{RED, BLUE, GREEN};
+    enum class PanelButton{PLAY, STOP, FADE, PAUSE};
 
     static constexpr int FORCED_FADE_OUT_STATUS_COUNT = 15;
     static constexpr int FORCED_FADE_OUT_COUNT_DOWN = 35;
@@ -29,7 +30,6 @@ namespace OATS{
         Q_OBJECT
     public:
         const QString color_red =  "background-color: rgb(210, 4, 45)";
-
 
         OutputPanel(QString name);
         ~OutputPanel();
@@ -46,6 +46,7 @@ namespace OATS{
         void play();
         void stop();
         void fade();
+        void pause();
         void cue_item(ScheduleItem*);
 
         PanelStatus panel_status();
@@ -92,16 +93,65 @@ namespace OATS{
         double forced_fade_duration();
         void set_forced_fade_stamp(double);
         double forced_fade_stamp();
+
+        long long pause_tick_stamp();
+        void set_pause_tick_stamp(long long);
+
+
+        template<PanelButton T>
+        void disable()
+        {
+            switch (T)
+            {
+                case PanelButton::PLAY:
+                    m_play_button->setDisabled(true);
+                    break;
+                case PanelButton::STOP:
+                    m_stop_button->setDisabled(true);
+                    break;
+                case PanelButton::FADE:
+                    m_stop_button->setDisabled(true);
+                    break;
+                case PanelButton::PAUSE:
+                    m_pause_button->setDisabled(true);
+                    break;
+            }
+        }
+
+        template<PanelButton T>
+        void enable()
+        {
+            switch (T)
+            {
+                case PanelButton::PLAY:
+                    m_play_button->setEnabled(true);
+                    break;
+                case PanelButton::STOP:
+                    m_stop_button->setEnabled(true);
+                    break;
+                case PanelButton::FADE:
+                    m_fade_button->setEnabled(true);
+                    break;
+                case PanelButton::PAUSE:
+                    m_pause_button->setEnabled(true);
+                    break;
+            }
+        }
+
     signals:
         void play_item(OutputPanel*);
         void stop_play(OutputPanel*);
         void fade_audio(OutputPanel*);
+        void pause_audio(OutputPanel*);
+
     private:
         int m_id;
         QString m_panel_name;
         std::unique_ptr<QPushButton> m_play_button;
         std::unique_ptr<QPushButton> m_stop_button;
         std::unique_ptr<QPushButton> m_fade_button;
+        std::unique_ptr<QPushButton> m_pause_button;
+
         std::unique_ptr<QLabel> m_status_image;
         std::unique_ptr<QLabel> m_title;
         std::unique_ptr<QLabel> m_artist;
@@ -136,6 +186,8 @@ namespace OATS{
         bool m_forced_fade_out{false};
         double m_forced_fade_duration{0.0};
         double m_forced_fade_stamp{0.0};
+
+        long long m_pause_tick_stamp{0};
 
         //TimeStamp m_ts;
     };

@@ -168,7 +168,7 @@ void AudioThread::pause()
 
 void AudioThread::resume()
 {
-    if (!BASS_ChannelPlay(m_channel, true))
+    if (!BASS_ChannelPlay(m_channel, false))
         qDebug() << "Error resuming";
     else{
         timer->start(98);

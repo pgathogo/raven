@@ -275,6 +275,8 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
             return OATS::ItemStatus::PLAYED;
         if (s_status == "STOP")
             return OATS::ItemStatus::STOP;
+        if (s_status == "PAUSED")
+            return OATS::ItemStatus::PAUSED;
         if (s_status == "ERROR_01")
             return OATS::ItemStatus::ERROR_01;
 
@@ -363,6 +365,9 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
             break;
         case OATS::ItemStatus::STOP:
             return "STOP";
+            break;
+        case OATS::ItemStatus::PAUSED:
+            return "PAUSED";
             break;
         case OATS::ItemStatus::ERROR_01:
             return "ERROR_01";

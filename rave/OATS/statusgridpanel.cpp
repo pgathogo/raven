@@ -88,6 +88,10 @@ namespace OATS{
             setStyleSheet("background-color: rgb(78, 207, 42)");
         }
 
+        if (schedule_item->item_status() == OATS::ItemStatus::PAUSED){
+            setStyleSheet("background-color: rgb(170, 85, 127)");
+        }
+
         if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
             setStyleSheet("background-color: #fb1d04");
             m_output_name->setText("");

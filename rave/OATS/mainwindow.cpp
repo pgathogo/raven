@@ -1062,6 +1062,7 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::play_audio, this, &MainWindow::play_cued_audio);
         connect(grid_item.get(), &OATS::ScheduleGridItem::stop_audio, this, &MainWindow::stop_playing_audio);
         connect(grid_item.get(), &OATS::ScheduleGridItem::fade_audio, this, &MainWindow::fade_playing_audio);
+        connect(grid_item.get(), &OATS::ScheduleGridItem::pause_audio, this, &MainWindow::pause_playing_audio);
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_stop, this, &MainWindow::transition_stop);
         connect(grid_item.get(), &OATS::ScheduleGridItem::transition_mix, this, &MainWindow::transition_mix);
@@ -1129,6 +1130,7 @@ OATS::OutputPanel* MainWindow::create_output_panel(const QString panel_name)
     connect(panel.get(), &OATS::OutputPanel::play_item, this, &MainWindow::play_button);
     connect(panel.get(), &OATS::OutputPanel::stop_play, this, &MainWindow::stop_button);
     connect(panel.get(), &OATS::OutputPanel::fade_audio, this, &MainWindow::fade_button);
+    connect(panel.get(), &OATS::OutputPanel::pause_audio, this, &MainWindow::pause_button);
 
     auto rPtr = panel.get();
     m_output_panels.push_back(std::move(panel));
@@ -1138,8 +1140,15 @@ OATS::OutputPanel* MainWindow::create_output_panel(const QString panel_name)
 
 void MainWindow::play_button(OATS::OutputPanel* op)
 {
-    op->set_fade_trigger_tick_stamp(1);
+    if (op->panel_status() == OATS::PanelStatus::PAUSED)
+    {
+        std::cout << "Resume audio ....\n" ;
+        resume_audio(op);
+        return;
 
+    }
+
+    op->set_fade_trigger_tick_stamp(1);
     play_audio(op);
 
 }
@@ -1174,6 +1183,11 @@ void MainWindow::stop_button(OATS::OutputPanel* op)
 void MainWindow::fade_button(OATS::OutputPanel* op)
 {
     fade_audio(op);
+}
+
+void MainWindow::pause_button(OATS::OutputPanel* op)
+{
+    pause_audio(op);
 }
 
 
@@ -1607,18 +1621,28 @@ void MainWindow::count_down()
 
     case OATS::PanelStatus::PLAYING: {
 
+        if (m_outputA->panel_status()== OATS::PanelStatus::PAUSED)
+            return;
+
         long long remaining = 0;
         long long elapsed = 0;
         double  audio_duration = m_outputA->schedule_item()->audio()->playable_duration();
 
-        if (m_outputA->forced_fade_out()){
+        if (m_outputA->pause_tick_stamp() > 0 ) {
+            elapsed =  m_outputA->pause_tick_stamp() - m_outputA->start_tick_stamp();
+            m_outputA->set_start_tick_stamp(trigger_ticker-elapsed);
+            m_outputA->set_pause_tick_stamp(0);
 
-          elapsed = trigger_ticker - m_outputA->start_tick_stamp();
+        } else {
+            elapsed = trigger_ticker - m_outputA->start_tick_stamp();
+        }
+
+        if (m_outputA->forced_fade_out())
+        {
           remaining  = m_outputA->forced_fade_duration() - OATS::FORCED_FADE_OUT_COUNT_DOWN;
           m_outputA->set_forced_fade_duration(remaining);
 
         } else {
-            elapsed = trigger_ticker - m_outputA->start_tick_stamp();
             remaining  = audio_duration - elapsed;
         }
 
@@ -1698,6 +1722,9 @@ void MainWindow::count_down()
         break;
      case OATS::PanelStatus::PLAYING:
       {
+         if (m_outputB->panel_status() == OATS::PanelStatus::PAUSED)
+             return;
+
          long long remaining = 0;
          long long elapsed = 0;
          double  audio_duration = m_outputB->schedule_item()->audio()->playable_duration();
@@ -1708,7 +1735,16 @@ void MainWindow::count_down()
             m_outputB->set_forced_fade_duration(remaining);
 
          } else {
-             elapsed = trigger_ticker - m_outputB->start_tick_stamp();
+
+            if (m_outputB->pause_tick_stamp() > 0 )
+            {
+                elapsed =  m_outputB->pause_tick_stamp() - m_outputB->start_tick_stamp();
+                m_outputB->set_start_tick_stamp(trigger_ticker-elapsed);
+                m_outputB->set_pause_tick_stamp(0);
+            } else {
+                elapsed = trigger_ticker -  m_outputB->start_tick_stamp();
+            }
+
              remaining  = audio_duration - elapsed;
          }
 
@@ -1888,8 +1924,11 @@ void MainWindow::status_timer()
 
      case OATS::PanelStatus::PLAYING:
             //fade_audio(m_outputA);
-          if (m_outputA->start_tick_stamp() > 0) {
+         if (m_outputA->panel_status() == OATS::PanelStatus::PAUSED)
+                return;
 
+          if (m_outputA->start_tick_stamp() > 0)
+          {
               if (m_outputA->forced_fade_out()){
                   elapsed = trigger_ticker - m_outputA->start_tick_stamp();
                   remaining = m_outputA->forced_fade_stamp() - OATS::FORCED_FADE_OUT_STATUS_COUNT;
@@ -1897,7 +1936,17 @@ void MainWindow::status_timer()
                       remaining = 0;
                   m_outputA->set_forced_fade_stamp(remaining);
               } else {
-                  elapsed = trigger_ticker - m_outputA->start_tick_stamp();
+
+                  if (m_outputA->pause_tick_stamp() > 0)
+                  {
+                     elapsed =  m_outputA->pause_tick_stamp() - m_outputA->start_tick_stamp();
+                     m_outputA->set_start_tick_stamp(trigger_ticker-elapsed);
+                     m_outputA->set_pause_tick_stamp(0);
+
+                  }else {
+                      elapsed = trigger_ticker - m_outputA->start_tick_stamp();
+                  }
+
                   remaining = m_outputA->schedule_item()->audio()->playable_duration() - elapsed;
               }
 
@@ -1924,7 +1973,7 @@ void MainWindow::status_timer()
         if (m_outputB->start_trigger_tick_stamp() > -1  &&
             m_outputB->start_trigger_tick_stamp() <= (trigger_ticker) )
         {
-            if (m_outputA->panel_status() == OATS::PanelStatus::PLAYING)
+            if (m_outputB->panel_status() == OATS::PanelStatus::PLAYING)
                 stop_audio(m_outputA);
 
             qDebug() << "* Output B: " << "-> CUED";
@@ -1933,16 +1982,29 @@ void MainWindow::status_timer()
         break;
 
      case OATS::PanelStatus::PLAYING:
+         if (m_outputB->panel_status() == OATS::PanelStatus::PAUSED)
+             return;
+
          if (m_outputB->start_tick_stamp() > 0)
          {
              if (m_outputB->forced_fade_out()){
                  elapsed = trigger_ticker - m_outputB->start_tick_stamp();
-                 remaining = m_outputB->forced_fade_stamp() - OATS::FORCED_FADE_OUT_STATUS_COUNT;;
+                 remaining = m_outputB->forced_fade_stamp() - OATS::FORCED_FADE_OUT_STATUS_COUNT;
                  if (remaining < 0)
                      remaining = 0;
-                 m_outputB->set_forced_fade_stamp(remaining);
+
+                     m_outputB->set_forced_fade_stamp(remaining);
+
              } else {
-                 elapsed = trigger_ticker - m_outputB->start_tick_stamp();
+
+                 if (m_outputB->pause_tick_stamp() > 0) {
+                     elapsed =  m_outputB->pause_tick_stamp() - m_outputB->start_tick_stamp();
+                     m_outputB->set_start_tick_stamp(trigger_ticker-elapsed);
+                     m_outputB->set_pause_tick_stamp(0);
+                 } else {
+                     elapsed = trigger_ticker - m_outputB->start_tick_stamp();
+                 }
+
                  remaining = m_outputB->schedule_item()->audio()->playable_duration() - elapsed;
              }
 
@@ -2388,10 +2450,9 @@ void MainWindow::calculate_time_stats()
 
 void MainWindow::play_audio(OATS::OutputPanel* op)
 {
+
     if (op->panel_status() == OATS::PanelStatus::CUED)
     {
-        //std::string temp_play_channel;
-
         op->set_panel_status(OATS::PanelStatus::PLAYING);
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);
         op->schedule_item()->set_play_start_time(QTime::currentTime());
@@ -2523,6 +2584,50 @@ void MainWindow::fade_audio(OATS::OutputPanel* op)
         m_audio_player->fade_audio();
     }
 }
+
+
+void MainWindow::pause_audio(OATS::OutputPanel* op)
+{
+    if (op->schedule_item()->item_status() == OATS::ItemStatus::PLAYING)
+    {
+        // TODO: Log this action
+
+        op->set_panel_status(OATS::PanelStatus::PAUSED);
+        op->schedule_item()->set_item_status(OATS::ItemStatus::PAUSED);
+
+        op->set_pause_tick_stamp(m_audio_tool.get_tick_count());
+        op->schedule_item()->notify();
+
+        m_audio_player->pause_audio();
+        display_schedule();
+
+    }
+}
+
+void MainWindow::resume_audio(OATS::OutputPanel* op)
+{
+    op->set_panel_status(OATS::PanelStatus::PLAYING);
+    op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYING);
+    op->schedule_item()->set_play_start_time(QTime::currentTime());
+
+    op->schedule_item()->notify();
+
+    auto audio = op->schedule_item()->audio();
+
+    //FIXME: full_audio_filename to read from cache
+    std::string audio_filename = audio->full_audio_filename().toStdString();
+    QString audio_file = QString::fromStdString(audio_filename);
+
+    QString msg = QString("Resume play: %1").arg(audio_file);
+
+    log_info(msg);
+
+    m_audio_player->resume_audio();
+    display_schedule();
+
+}
+
+
 
 void MainWindow::mark_comm_as_played(int schedule_id, const QString base_filename )
 {
@@ -2951,6 +3056,17 @@ void MainWindow::fade_playing_audio()
             fade_button(op.get());
             break;
         }
+    }
+}
+
+void MainWindow::pause_playing_audio()
+{
+    for(auto const& op: m_output_panels) {
+        if (op->panel_status() == OATS::PanelStatus::PLAYING) {
+            pause_button(op.get());
+            break;
+        }
+
     }
 }
 
