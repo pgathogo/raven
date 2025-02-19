@@ -1,5 +1,6 @@
 #include <chrono>
 #include <limits>
+#include <ranges>
 
 #include <QGridLayout>
 #include <QButtonGroup>
@@ -30,26 +31,27 @@ using namespace std::chrono_literals;
 namespace OATS
 {
     Jingle::Jingle()
-        :m_grid_page_id{-1}
+        :m_page{-1}
         ,m_row{-1}
         ,m_col{-1}
+        ,m_title{""}
         ,m_jingle_id{""}
         ,m_jingle_status{Jingle::JingleStatus::Ready}
-        ,m_audio{}
+    ,m_audio{ std::make_shared<AUDIO::Audio>() }
     {
     }
 
-    Jingle::Jingle(int page_id, int row, int col, QString title)
-        :m_grid_page_id{page_id}
+    Jingle::Jingle(int page, int row, int col, QString title)
+        :m_page{page}
         ,m_row{row}
         ,m_col{col}
+        ,m_title{title}
         ,m_jingle_status{Jingle::JingleStatus::Ready}
-        ,m_audio{}
+        ,m_audio{std::make_shared<AUDIO::Audio>()}
     {
-        m_jingle_id = QString::number(page_id)+
+        m_jingle_id = QString::number(page)+
                QString::number(row)+
                QString::number(col);
-
     }
 
     Jingle::~Jingle()
@@ -58,25 +60,29 @@ namespace OATS
          //   delete m_audio;
     }
 
-    /*
     QString Jingle::title() const{
-        return m_title;
+        //return m_title;
+        return m_audio->title()->to_qstring();
+    }
+
+    bool Jingle::is_empty()
+    {
+        return m_audio->title()->to_qstring().isEmpty();
     }
 
     void Jingle::set_title(const QString title)
     {
         m_title = title;
     }
-    */
 
-    int Jingle::page_id() const
+    int Jingle::page() const
     {
-        return m_grid_page_id;
+        return m_page;
     }
 
-    void Jingle::set_page_id(int id)
+    void Jingle::set_page(int id)
     {
-        m_grid_page_id = id;
+        m_page = id;
     }
 
     int Jingle::row() const
@@ -158,18 +164,23 @@ namespace OATS
 
     /* ---------------- GridButton ----------------------------- */
 
-    GridButton::GridButton(int id)
-        :m_id{id}
-        ,m_jingle{nullptr}
+   // GridButton::GridButton(int id)
+    GridButton::GridButton(int page, int row, int col)
+        :m_page{page}
+        ,m_row{row}
+        ,m_col{col}
+        ,m_jingle{new Jingle()}
         ,m_count_down_timer{nullptr}
     {
         m_count_down_timer = std::make_unique<QTimer>(this);
         connect(m_count_down_timer.get(), &QTimer::timeout, this, &GridButton::count_down);
         setCheckable(true);
+        auto name = QString("btn_%1_%2_%3").arg(m_page).arg(m_row).arg(m_col);
+        this->setObjectName(name);
     }
 
-    GridButton::GridButton(int id, Jingle* const jingle)
-        :m_id{id}
+    GridButton::GridButton(int page, Jingle* const jingle)
+        :m_page{page}
          ,m_jingle{jingle}
     {
         setText(QString::fromStdString(jingle->audio()->title()->value()));
@@ -186,9 +197,8 @@ namespace OATS
 
     void GridButton::set_jingle(Jingle* const jingle)
     {
+        (jingle == nullptr) ? setText("") :  setText(jingle->audio()->title()->to_qstring()) ;
         m_jingle = jingle;
-        (jingle == nullptr) ?  setText("") :
-                              setText(QString::fromStdString(m_jingle->audio()->title()->value()));
     }
 
     void GridButton::start_countdown_timer()
@@ -240,7 +250,7 @@ namespace OATS
 
     void GridButton::switch_off()
     {
-        set_pixmap(QPixmap(":/images/icons/off_dot.png"));
+        remove_indicator();
         update(rect());
         setChecked(false);
     }
@@ -284,25 +294,29 @@ namespace OATS
         ,m_context_menu{nullptr}
         ,m_load_action{nullptr}
         ,m_jingle_filename{""}
+        ,m_current_grid_button{ new GridButton(0,0,0) }
     {
         m_main_layout = std::make_unique<QVBoxLayout>();
+        m_grid_layout = new QGridLayout();
 
-        //make_jingles();
         make_toolbar(m_main_layout.get());
 
         m_file_path = std::make_unique<QLabel>("Jingle fiile... ");
         m_file_path->setStyleSheet("color:#0479B0;");
         m_main_layout->addWidget(m_file_path.get());
 
-        make_grid_buttons(m_main_layout.get());
+
+        make_grid_cells();
+        make_jingle_view();
 
         make_stop_button(m_main_layout.get());
         make_pager(m_main_layout.get());
-        //make_context_menu();
-        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
-        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio);
 
-        attach_jingle_to_buttons(JINGLE_PAGE_ONE);
+        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
+        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio2);
+        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::finished, this, &JingleGrid::close_track_picker);
+
+        //attach_jingle_to_buttons(JINGLE_PAGE_ONE);
 
         m_main_layout->setStretch(2, 1);
 
@@ -315,122 +329,136 @@ namespace OATS
         return m_grid_layout;
     }
 
-    void JingleGrid::make_jingles()
+    void JingleGrid::print_grid_cells()
     {
-        /*
-        auto jingle1 = std::make_unique<Jingle>(1,0,0, "Jingle1");
-        jingle1->set_track_id(1);
-        jingle1->set_track_path("D:/Music/Studio1/");
+        for(auto page : std::views::iota(0, PAGE_COUNT)) {
+           for(auto row: std::views::iota(0, GRID_ROWS)) {
+                for (auto col : std::views::iota(0, GRID_COLS)) {
 
-        auto jingle2 = std::make_unique<Jingle>(1,0,1, "Jingle2");
-        jingle2->set_track_id(2);
-        jingle2->set_track_path("D:/Music/Studio1/");
+                    auto title = m_grid_cells[page][row][col]->title();
 
-        auto jingle3 = std::make_unique<Jingle>(1,1,0, "Jingle3");
-        jingle2->set_track_id(3);
-        jingle2->set_track_path("D:/Music/Studio1/");
+                    QString m = QString("Page: %1  Row: %2  Col: %3 Jingle= %4")
+                                    .arg(QString::number(page))
+                                    .arg(QString::number(row))
+                                    .arg(QString::number(col))
+                                    .arg(title);
 
-        auto jingle4 = std::make_unique<Jingle>(1,1,1, "Jingle4");
-        jingle2->set_track_id(4);
-        jingle2->set_track_path("D:/Music/Studio1/");
+                    qDebug() << m;
 
-        auto jingle5 = std::make_unique<Jingle>(2,0,0, "Jingle5");
-        jingle2->set_track_id(5);
-        jingle2->set_track_path("D:/Music/Studio1/");
+                }
+           }
 
-        auto jingle6 = std::make_unique<Jingle>(2,0,1, "Jingle6");
-        jingle2->set_track_id(6);
-        jingle2->set_track_path("D:/Music/Studio1/");
-
-        m_jingles.push_back(std::move(jingle1));
-        m_jingles.push_back(std::move(jingle2));
-        m_jingles.push_back(std::move(jingle3));
-        m_jingles.push_back(std::move(jingle4));
-        m_jingles.push_back(std::move(jingle5));
-        m_jingles.push_back(std::move(jingle6));
-        */
+       }
 
     }
 
+    void JingleGrid::make_grid_cells()
+    {
+        for(auto page : std::views::iota(0, PAGE_COUNT)) {
+           for(auto row: std::views::iota(0, GRID_ROWS)) {
+                for (auto col : std::views::iota(0, GRID_COLS)) {
 
-    void JingleGrid::make_grid_buttons(QVBoxLayout* main_layout)
+                   auto jingle = std::make_unique<Jingle>(page, row, col, "");
+
+                    m_grid_cells[page][row][col] = std::move(jingle);
+
+                }
+           }
+
+       }
+
+    }
+
+    void JingleGrid::make_jingle_view()
     {
         QString btn_style(
-        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
-        "border-radius: 20px;"
-        "border-style: inset;"
-        "border-bottom-width: 2px;"
-        "border-radius: 3px;"
-        "border-bottom-color:#374148;"
-        "color:#FFFFFF;"
-        "height:35;"
-        "font-weight:bold;}"
+            "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+            "border-radius: 20px;"
+            "border-style: inset;"
+            "border-bottom-width: 2px;"
+            "border-radius: 3px;"
+            "border-bottom-color:#374148;"
+            "color:#FFFFFF;"
+            "height:35;"
+            "font-weight:bold;}"
 
-        "QPushButton:hover{"
+            "QPushButton:hover{"
             "background-color:#555D64; "
             "border-width:1px;"
             "border-color:#0479B0;"
             " }"
 
-        "QPushButton:pressed{background-color:#555D64; border:none;}"
+            "QPushButton:pressed{background-color:#555D64; border:none;}"
             );
 
        m_grid_layout = new QGridLayout(this);
 
        int id=1;
-       m_grid_buttons.resize(GRID_ROWS);
-       for(int row=0; row<= GRID_ROWS-1; ++row){
-           m_grid_buttons[row].resize(GRID_COLS);
-           for(int col=0; col<GRID_COLS; ++col){
-               auto btn = std::make_unique<GridButton>(id++);
 
-               if (col < GRID_COLS/2) {
-                   btn->setStyleSheet(btn_style);
-               }else {
-                   btn->setStyleSheet(btn_style);
+       for(auto row: std::views::iota(0, GRID_ROWS)) {
 
-               }
+          for (auto col : std::views::iota(0, GRID_COLS)) {
 
-               btn->setContextMenuPolicy(Qt::CustomContextMenu);
+              GridButton* grid_button = new GridButton(id++, row, col);
 
-               connect(btn.get(), &GridButton::customContextMenuRequested, this,
-                       [=](const QPoint& pos) { open_menu_at(row, col, pos); });
+              grid_button->setStyleSheet(btn_style);
 
-               connect(btn.get(), &GridButton::clicked, this,
-                       [=](){ play_jingle_at(row, col); });
+              grid_button->setContextMenuPolicy(Qt::CustomContextMenu);
 
-               m_grid_layout->addWidget(btn.get(), row, col, 1, 1);
-               m_grid_buttons[row][col] = std::move(btn);
+              connect(grid_button, &GridButton::customContextMenuRequested, this,
+                      [=](const QPoint& pos){ open_menu_at(row, col, pos); } );
+
+              connect(grid_button, &GridButton::clicked, this,
+                      [=](){grid_button_clicked(row, col);});
+
+               m_grid_layout->addWidget(grid_button, row, col, 1, 1);
            }
-       }
+        }
 
        m_grid_layout->setVerticalSpacing(2);
+       QWidget* button_widget = new QWidget(this);
+       button_widget->setLayout(m_grid_layout);
+       m_main_layout->addWidget(button_widget);
 
-        m_button_widget = std::make_unique<QWidget>(this);
-        m_button_widget->setLayout(m_grid_layout);
-
-        main_layout->addWidget(m_button_widget.get());
     }
 
-    void JingleGrid::make_context_menu()
+    void JingleGrid::grid_button_clicked(int row, int col)
     {
-        /*
-        m_load_action = std::make_unique<QAction>("Load...", this);
-        connect(m_load_action.get(), &QAction::triggered, this,
-                [&](){ qDebug() << "Load Clicked";});
+        m_current_grid_button = dynamic_cast<GridButton*>(m_grid_layout->itemAtPosition(row, col)->widget());
 
-        m_clear_action = std::make_unique<QAction>("Clear", this);
-        connect(m_clear_action.get(), &QAction::triggered, this,
-                [](){});
+        if (m_is_track_picker_open) {
 
-        m_context_menu = std::make_unique<QMenu>();
-        m_context_menu->addAction(m_load_action.get());
-        m_context_menu->addAction(m_clear_action.get());
-        */
+            emit m_track_picker_dialog->selected_audio(
+                 const_cast<AUDIO::TrackBrowser&>(m_track_picker_dialog->track_browser()).current_selected_audio());
+            return;
+        }
+
+        if (m_current_grid_button->text().isEmpty())
+            return;
+
+        print("AAAA");
+        m_current_grid_button->set_page(m_current_page);
+        print("BBB");
+
+        emit play_jingle(m_grid_cells[m_current_page][row][col].get());
+
+        m_current_grid_button->switch_on();
+        m_play_is_on = true;
+
+        // m_current_grid_button->start_countdown_timer();
+
+    }
+
+   void JingleGrid::stop_play()
+    {
+       qDebug() << "Output C Stopped!";
+       m_current_grid_button->switch_off();
+       m_play_is_on = false;
     }
 
     void JingleGrid::open_menu_at(int row, int col, const QPoint& pos)
     {
+
        if (m_load_action == nullptr)
        {
         m_load_action = std::make_unique<QAction>("Load...", this);
@@ -448,7 +476,7 @@ namespace OATS
         connect(m_clear_action.get(), &QAction::triggered, this,
                 [&](){clear_jingle(row, col);});
 
-        m_context_menu->exec(m_grid_buttons[row][col]->mapToGlobal(pos));
+        m_context_menu->exec(dynamic_cast<GridButton*>(m_grid_layout->itemAtPosition(row, col)->widget())->mapToGlobal(pos));
     }
 
     void JingleGrid::open_load_dialog(int row, int col)
@@ -464,13 +492,16 @@ namespace OATS
         p_animation->start();
         */
 
+        // m_current_grid_cell.page = page;
         m_current_grid_cell.row = row;
         m_current_grid_cell.col = col;
 
 //        m_track_picker_dialog = std::make_unique<AUDIO::TrackPickerDialog>();
 //        connect(m_track_picker_dialog.get(), &AUDIO::TrackPickerDialog::selected_audio, this, &JingleGrid::selected_audio);
 
-        m_track_picker_dialog->exec();
+        m_is_track_picker_open = true;
+        m_track_picker_dialog->setWindowFlags(Qt::WindowStaysOnTopHint);
+        m_track_picker_dialog->show();
 
         m_load_action = nullptr;
         //p_animation->stop();
@@ -481,122 +512,34 @@ namespace OATS
         m_grid_buttons[row][col]->set_jingle(nullptr);
     }
 
-   void JingleGrid::selected_audio(std::shared_ptr<AUDIO::Audio> audio)
-   {
-       AUDIO::AudioTool at;
-       auto audio_fullname = audio->audio_lib_path()->value()+at.make_audio_filename(audio->id())+"."+audio->file_extension()->value_tolower();
-
-       QString title = QString::fromStdString(audio->title()->value());
-//       QString path = QString::fromStdString(audio->audio_lib_path()->value());
-
-       int row = m_current_grid_cell.row;
-       int col = m_current_grid_cell.col;
-
-       // No Jingle set for this button
-       if (m_grid_buttons[row][col]->jingle() == nullptr)
-       {
-
-            auto jingle = std::make_unique<Jingle>(current_page(), row, col, title);
-
-            if (!at.audio_exist(QString::fromStdString(audio_fullname))){
-                title += " - ERROR_01: File Not Found!";
-                jingle->set_jingle_status(Jingle::JingleStatus::Error);
-            }
-
-            jingle->set_audio(audio);
-            m_grid_buttons[row][col]->set_jingle(jingle.get());
-            m_grid_buttons[row][col]->set_pixmap(QPixmap(":/images/icons/off_dot.png"));
-            m_grid_buttons[row][col]->update(rect());
-
-            m_jingles.push_back(std::move(jingle));
-
-            return;
-        }
-
-        auto jingle_id =QString::number(current_page())+
-                        QString::number(row)+
-                        QString::number(col);
-
-        auto it = std::find_if(m_jingles.begin(), m_jingles.end(),
-                              FindJingle(jingle_id));
-
-       if(it != m_jingles.end())
-       {
-            if (!at.audio_exist(QString::fromStdString(audio_fullname)))
-            {
-                qDebug() << "Error file";
-                title += " - ERROR_01: File Not Found!";
-                (*it)->set_jingle_status(Jingle::JingleStatus::Error);
-            }
-
-            (*it)->set_audio(audio);
-            m_grid_buttons[row][col]->set_jingle((*it).get());
-
-       }
-
-   }
-
-    void JingleGrid::play_jingle_at(int row, int col)
+   void JingleGrid::selected_audio2(std::shared_ptr<AUDIO::Audio> audio)
     {
-        auto grid_button = m_grid_buttons[row][col].get();
+       m_current_grid_button->setText(audio->title()->to_qstring());
+       m_current_grid_button->jingle()->set_audio(audio);
 
-        if (grid_button->jingle() == nullptr)
-            return;
-
-        grid_button->switch_on();
-
-        Jingle* jingle = grid_button->jingle();
-
-        grid_button->start_countdown_timer();
-
-        emit play_jingle(grid_button->jingle());
     }
+
+
+    void JingleGrid::close_track_picker(int result)
+   {
+        m_is_track_picker_open = false;
+    }
+
 
     void JingleGrid::stop_all()
     {
         emit stop_all_jingles();
+        m_play_is_on = false;
 
-        for (int row=0; row <= GRID_ROWS-1; ++row){
-            for (int col=0; col <= GRID_COLS-1; ++col){
-                m_grid_buttons[row][col]->stop_countdown_timer();
-                // Reset jingle button background color
-            }
-        }
     }
 
     void JingleGrid::clear_buttons()
     {
         for(int row=0; row<= GRID_ROWS-1; ++row){
-            for (int col=0; col<GRID_COLS-1; ++col){
-                m_grid_buttons[row][col]->set_jingle(nullptr);
+           for (int col=0; col<GRID_COLS-1; ++col){
+                    m_grid_buttons[row][col]->set_jingle(nullptr);
             }
-        }
-    }
-
-    void JingleGrid::attach_jingle_to_buttons(int page_id)
-    {
-      int row=0;
-      int col=0;
-
-      clear_page(page_id);
-
-      for(auto const& jingle: m_jingles)
-      {
-        if (row > GRID_ROWS)
-            break;
-
-        if (jingle->page_id() == page_id)
-        {
-            m_grid_buttons[row][col]->set_jingle(jingle.get());
-            m_grid_buttons[row][col]->switch_off();
-            ++col;
-            if (col >= GRID_COLS){
-                col = 0;
-                ++row;
-            }
-         }
-      }
-
+          }
     }
 
    void JingleGrid::clear_all()
@@ -608,12 +551,14 @@ namespace OATS
 
    void JingleGrid::clear_page(int page)
    {
-       for (int row=0; row <= GRID_ROWS-1; ++row){
-           for (int col=0; col <= GRID_COLS-1; ++col){
-               m_grid_buttons[row][col]->set_jingle(nullptr);
-               m_grid_buttons[row][col]->remove_indicator();
+       //for (auto page: std::views::iota(1, PAGE_COUNT)) {
+        for (int row=0; row <= GRID_ROWS-1; ++row){
+            for (int col=0; col <= GRID_COLS-1; ++col){
+                   m_grid_buttons[row][col]->set_jingle(nullptr);
+                   m_grid_buttons[row][col]->remove_indicator();
+               }
            }
-       }
+
    }
 
    void JingleGrid::make_toolbar(QVBoxLayout* main_layout)
@@ -645,31 +590,37 @@ namespace OATS
 
        m_toolbar_layout = new QHBoxLayout();
 
-       open_btn = std::make_unique<QPushButton>("Open...");
-       save_btn = std::make_unique<QPushButton>("Save");
-       save_as_btn = std::make_unique<QPushButton>("Save As...");
-       clear_all_btn = std::make_unique<QPushButton>("Clear All");
+       m_load_btn = std::make_unique<QPushButton>("Load...");
+       m_open_btn = std::make_unique<QPushButton>("Open...");
+       m_save_btn = std::make_unique<QPushButton>("Save");
+       m_save_as_btn = std::make_unique<QPushButton>("Save As...");
+       m_clear_all_btn = std::make_unique<QPushButton>("Clear All");
 
-       open_btn->setStyleSheet(btn_style);
-       save_btn->setStyleSheet(btn_style);
-       save_as_btn->setStyleSheet(btn_style);
-       clear_all_btn->setStyleSheet(btn_style);
+       m_load_btn->setStyleSheet(btn_style);
+       m_open_btn->setStyleSheet(btn_style);
+       m_save_btn->setStyleSheet(btn_style);
+       m_save_as_btn->setStyleSheet(btn_style);
+       m_clear_all_btn->setStyleSheet(btn_style);
 
-       connect(open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
-       connect(save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
-       connect(save_as_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_as);
-       connect(clear_all_btn.get(), &QPushButton::clicked, this, &JingleGrid::clear_all);
+       connect(m_load_btn.get(), &QPushButton::clicked, this, &JingleGrid::load_audio);
+       connect(m_open_btn.get(), &QPushButton::clicked, this, &JingleGrid::get_jingles);
+       connect(m_save_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_jingles);
+       connect(m_save_as_btn.get(), &QPushButton::clicked, this, &JingleGrid::save_as);
+       connect(m_clear_all_btn.get(), &QPushButton::clicked, this, &JingleGrid::clear_all);
 
-       m_toolbar_layout->addWidget(open_btn.get());
-       m_toolbar_layout->addWidget(save_btn.get());
-       m_toolbar_layout->addWidget(save_as_btn.get());
-       m_toolbar_layout->addWidget(clear_all_btn.get());
+       m_toolbar_layout->addWidget(m_load_btn.get());
+       m_toolbar_layout->addSpacerItem(new QSpacerItem(20,40));
+       m_toolbar_layout->addWidget(m_open_btn.get());
+       m_toolbar_layout->addWidget(m_save_btn.get());
+       m_toolbar_layout->addWidget(m_save_as_btn.get());
+       m_toolbar_layout->addWidget(m_clear_all_btn.get());
        m_toolbar_layout->addStretch(1);
 
-       m_tool_buttons.push_back(std::move(open_btn));
-       m_tool_buttons.push_back(std::move(save_btn));
-       m_tool_buttons.push_back(std::move(save_as_btn));
-       m_tool_buttons.push_back(std::move(clear_all_btn));
+       m_tool_buttons.push_back(std::move(m_load_btn));
+       m_tool_buttons.push_back(std::move(m_open_btn));
+       m_tool_buttons.push_back(std::move(m_save_btn));
+       m_tool_buttons.push_back(std::move(m_save_as_btn));
+       m_tool_buttons.push_back(std::move(m_clear_all_btn));
 
        m_toolbar_widget = std::make_unique<QWidget>(this);
 
@@ -707,34 +658,58 @@ namespace OATS
         m_pager_layout = std::make_unique<QHBoxLayout>();
         m_page_button_group = std::make_unique<QButtonGroup>();
 
-        for(int i=1; i < PAGE_COUNT; ++i)
+
+        for(auto page : std::views::iota(0, PAGE_COUNT))
         {
-            auto page_button = std::make_unique<QPushButton>(QString::number(i));
+            auto page_button = std::make_unique<QPushButton>(QString::number(page+1));
             page_button->setCheckable(true);
             page_button->setStyleSheet(btn_style);
 
             connect(page_button.get(), &QPushButton::clicked, this,
-                    [=](){attach_jingle_to_buttons(i); set_current_page(i);});
+                    [=](){switch_page(page);});
+                    //[=](){attach_jingle_to_buttons2(page); set_current_page(page);});
 
             m_page_button_group->addButton(page_button.get());
             m_pager_layout->addWidget(page_button.get());
-            m_page_buttons[i] = std::move(page_button);
+            m_page_buttons[page] = std::move(page_button);
         }
 
-        m_page_buttons[1]->setChecked(true);
+        m_page_buttons[0]->setChecked(true);
+        switch_page(0);
 
         main_layout->addLayout(m_pager_layout.get());
-
     }
+
 
     int JingleGrid::current_page()
     {
         return m_current_page;
     }
 
-    void JingleGrid::set_current_page(int page)
+    void JingleGrid::switch_page(int page)
     {
+        const auto& rows = m_grid_cells[page];
+        for(const auto& [row, cols]: rows) {
+            for(const auto& [col, jingle]: cols) {
+                GridButton* gb = dynamic_cast<GridButton*>(m_grid_layout->itemAtPosition(row, col)->widget()) ;
+                gb->set_jingle(jingle.get());
+            }
+        }
+
+        qDebug() << "Current Page: "<< page;
+        qDebug() << "Grid Button Page: "<< m_current_grid_button->page();
+
         m_current_page = page;
+
+        if (m_play_is_on && m_current_page != m_current_grid_button->page()) {
+            m_current_grid_button->switch_off();
+        }
+
+        if (m_play_is_on && m_current_page == m_current_grid_button->page()) {
+            m_current_grid_button->switch_on();
+        }
+
+
     }
 
    void JingleGrid::make_stop_button(QVBoxLayout* main_layout)
@@ -752,6 +727,11 @@ namespace OATS
 
    }
 
+  void JingleGrid::load_audio()
+  {
+      open_load_dialog(0,0);
+  }
+
   void JingleGrid::get_jingles()
   {
       m_jingle_filename = QFileDialog::getOpenFileName(this,
@@ -765,7 +745,9 @@ namespace OATS
 
       open_from_file(m_jingle_filename);
 
-      attach_jingle_to_buttons(m_current_page);
+      switch_page(m_current_page);
+
+      //attach_jingle_to_buttons(m_current_page);
   }
 
   void JingleGrid::open_from_file(const QString filename)
@@ -781,28 +763,38 @@ namespace OATS
       QJsonObject jingle_json = doc_data.object();
       QJsonArray jingles = jingle_json["jingles"].toArray();
 
-      m_jingles.clear();
+      for(auto&& jingle_json : jingles) {
 
-      for(auto&& jingle_json : jingles){
-         std::unique_ptr<Jingle> jingle = std::make_unique<Jingle>();
          QJsonObject obj = jingle_json.toObject();
+
+         int page = obj["page"].toInt();
+         int row = obj["row"].toInt();
+         int col = obj["col"].toInt();
+
+         const auto& jingle = m_grid_cells[page][row][col];
 
          jingle->set_jingle_id(obj["jingle_id"].toString());
 
-         jingle->set_page_id(obj["page_id"].toInt());
+         jingle->set_page(obj["page"].toInt());
          jingle->set_row(obj["row"].toInt());
          jingle->set_col(obj["col"].toInt());
 
          auto audio = std::make_shared<AUDIO::Audio>();
+
          audio->setId(obj["track_id"].toInt());
          audio->set_title(obj["title"].toString().toStdString());
+
+         QFileInfo fi(obj["track_path"].toString());
+         audio->set_file_path(fi.path().toStdString()+"/");
+
+
          audio->set_audio_lib_path(obj["track_path"].toString().toStdString());
+
          audio->set_duration(obj["duration"].toInt());
          audio->set_file_extension(obj["extension"].toString().toStdString());
 
          jingle->set_audio(std::move(audio));
 
-         m_jingles.push_back(std::move(jingle));
       }
 
   }
@@ -812,13 +804,13 @@ namespace OATS
      QJsonObject json;
 
      json["jingle_id"] = jingle->jingle_id();
-     json["page_id"] = jingle->page_id();
+     json["page"] = jingle->page();
      json["row"] = jingle->row();
      json["col"] = jingle->col();
 
      json["track_id"] = jingle->audio()->id();
      json["title"] = QString::fromStdString(jingle->audio()->title()->value());
-     json["track_path"] = QString::fromStdString(jingle->audio()->audio_lib_path()->value());
+     json["track_path"] = jingle->audio()->full_audio_filename();
      json["extension"] = QString::fromStdString(jingle->audio()->file_extension()->value());
      json["duration"] = jingle->audio()->duration()->value();
 
@@ -831,7 +823,7 @@ namespace OATS
           m_jingle_filename = QFileDialog::getSaveFileName(this, tr("Save jingles"),
                                   "", tr("Jingles (*.jgl)"));
           if (m_jingle_filename.isEmpty())
-          return;
+             return;
       }
 
       save_to_file(m_jingle_filename);
@@ -847,24 +839,37 @@ namespace OATS
       save_to_file(m_jingle_filename);
   }
 
+
   void JingleGrid::save_to_file(const QString filename)
   {
-     QJsonArray jingles;
-     for (const auto& jingle : m_jingles) {
-         auto jingle_json = jingle_to_json(jingle);
-         jingles.push_back(jingle_json);
-     }
+      QJsonArray jingles;
 
-     QJsonObject jingle;
-     jingle["jingles"] = jingles;
-     QJsonDocument jingle_doc(jingle);
+      for(auto page : std::views::iota(0, PAGE_COUNT)) {
+          for(auto row: std::views::iota(0, GRID_ROWS)) {
+              for (auto col : std::views::iota(0, GRID_COLS)) {
 
-     QFile file(filename);
-     if (!file.open(QIODevice::WriteOnly)){
-        return;
-     }
+                  const auto& jingle = m_grid_cells[page][row][col];
 
-     file.write(jingle_doc.toJson(QJsonDocument::Indented));
+                  if (jingle->is_empty())
+                      continue;
+
+                  auto jingle_json = jingle_to_json(jingle);
+                  jingles.push_back(jingle_json);
+
+              }
+          }
+      }
+
+      QJsonObject jingle;
+      jingle["jingles"] = jingles;
+      QJsonDocument jingle_doc(jingle);
+
+      QFile file(filename);
+      if (!file.open(QIODevice::WriteOnly)) {
+          return;
+      }
+
+      file.write(jingle_doc.toJson(QJsonDocument::Indented));
   }
 
   void JingleGrid::print(const QString& msg)

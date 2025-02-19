@@ -187,7 +187,10 @@ border-radius: 3px;
           <number>0</number>
          </property>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
+          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,0">
+           <item>
+            <layout class="QHBoxLayout" name="hlTop"/>
+           </item>
            <item>
             <layout class="QVBoxLayout" name="vlStackPanel">
              <item>
@@ -712,7 +715,7 @@ Audio</string>
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

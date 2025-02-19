@@ -804,6 +804,7 @@ namespace AUDIO {
     QString Audio::full_audio_filename() const
     {
         AUDIO::AudioTool audio_tool;
+        // TODO: Check that the file_path ends with a "/"
         QString name = QString::fromStdString(this->file_path()->value()+
                 audio_tool.make_audio_filename(this->id())+"."+this->file_extension()->value_tolower());
 

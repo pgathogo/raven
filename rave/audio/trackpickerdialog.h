@@ -33,6 +33,7 @@ namespace AUDIO
         Q_OBJECT
     public:
         TrackPickerDialog(QWidget* parent=nullptr);
+        const AUDIO::TrackBrowser& track_browser();
     private slots:
         void audio_selected();
         void cancel_selection();

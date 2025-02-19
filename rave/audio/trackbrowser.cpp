@@ -66,6 +66,8 @@ namespace AUDIO
 
         m_tab_widget->addTab(m_search_widget.get(), "Search Audio");
 
+        m_tab_widget->setCurrentIndex(1);
+
         splitter->addWidget(m_top_widget.get());
         set_tab_widget_style();
 

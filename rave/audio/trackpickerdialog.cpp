@@ -70,6 +70,11 @@ namespace AUDIO
 
     }
 
+    const AUDIO::TrackBrowser& TrackPickerDialog::track_browser()
+    {
+        return *m_track_browser;
+    }
+
     void TrackPickerDialog::cancel_selection()
     {
         done(0);

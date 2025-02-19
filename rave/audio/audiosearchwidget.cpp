@@ -29,10 +29,14 @@ namespace AUDIO {
        m_lbl_title = std::make_unique<QLabel>("Title: ", this);
        m_edt_title = std::make_unique<QLineEdit>(this);
 
+       connect(m_edt_title.get(), &QLineEdit::returnPressed, this, &AudioSearchWidget::search_clicked);
+
        m_lbl_title->setStyleSheet("QLabel{color: #FFFFFF; font-weight: bold;}");
 
        m_lbl_artist = std::make_unique<QLabel>("Artist: ", this);
        m_edt_artist = std::make_unique<QLineEdit>(this);
+
+       connect(m_edt_artist.get(), &QLineEdit::returnPressed, this, &AudioSearchWidget::search_clicked);
 
        m_lbl_artist->setStyleSheet("QLabel{color: #FFFFFF; font-weight: bold;}");
 
@@ -118,6 +122,12 @@ namespace AUDIO {
            emit search_filter(artist_filter);
        }
 
+   }
+
+   void AudioSearchWidget::showEvent(QShowEvent* event)
+   {
+       m_edt_title->setFocusPolicy(Qt::StrongFocus);
+       m_edt_title->setFocus();
    }
 
 

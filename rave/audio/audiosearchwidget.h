@@ -2,6 +2,7 @@
 #define AUDIOSEARCHWIDGET_H
 
 #include <QLineEdit>
+#include <QShowEvent>
 
 #include <memory>
 
@@ -31,6 +32,10 @@ namespace  AUDIO {
         void layout_controls();
     signals:
         void search_filter(Filter);
+
+    protected:
+        void showEvent(QShowEvent*);
+
     private slots:
         void search_clicked();
     private:

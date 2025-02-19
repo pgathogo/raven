@@ -179,6 +179,7 @@ public:
 
     void compute_schedule_time();
     OATS::OutputPanel* create_output_panel(const QString);
+    OATS::OutputPanel* create_output_panel_c();
 //    void display_schedule(int start_index=0);
     void display_schedule(int grid_pos=0, int from_item_index=0);
     QTime schedule_time_at(int);
@@ -214,8 +215,13 @@ public:
     void play_audio(OATS::OutputPanel*);
     void stop_audio(OATS::OutputPanel*);
     void fade_audio(OATS::OutputPanel*);
+
     void pause_audio(OATS::OutputPanel*);
+    void pause_jingle(OATS::OutputPanel* op);
+
     void resume_audio(OATS::OutputPanel*);
+    void resume_jingle(OATS::OutputPanel*);
+
     void play_outputC(OATS::OutputPanel*);
 
     int next_output_panel_id(int);
@@ -270,6 +276,9 @@ public:
 protected:
     void wheelEvent(QWheelEvent* event) override;
 
+signals:
+    void output_C_stopped();
+
 
 private slots:
     void close_win();
@@ -297,6 +306,12 @@ private slots:
     void stop_button(OATS::OutputPanel*);
     void fade_button(OATS::OutputPanel*);
     void pause_button(OATS::OutputPanel*);
+
+    void play_c_button();
+    void stop_c_button();
+    void fade_c_button();
+    void pause_c_button();
+
 
     void go_current();
     void go_current_hour();
@@ -356,7 +371,6 @@ private:
     std::vector<std::unique_ptr<OATS::ScheduleItem>> m_schedule_items;
     std::vector<std::unique_ptr<OATS::ScheduleGridItem>> m_schedule_grid;
 
-
     std::unique_ptr<OATS::ScheduleItem> m_temp_schedule_item;
 
     std::map<Hour, std::vector<std::shared_ptr<OATS::ScheduleItem>>> m_day_schedule_items;
@@ -367,7 +381,7 @@ private:
 
     OATS::OutputPanel* m_outputA;
     OATS::OutputPanel* m_outputB;
-    std::unique_ptr<OATS::OutputPanel> m_outputC;
+    OATS::OutputPanel* m_outputC;
 
     std::vector<std::unique_ptr<OATS::OutputPanel>> m_output_panels;
 

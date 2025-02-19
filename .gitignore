@@ -13,6 +13,7 @@ CMake*
 *ninja*
 *ninja_*
 *.log
+*.jgl
 rave/OATS/.ninja_log
 rave/AudioExplorer/.ninja_log
 rave/sedric/.ninja_log
