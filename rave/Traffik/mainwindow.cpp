@@ -80,11 +80,9 @@ MainWindow::MainWindow(QApplication* app,
     setMinimumSize(w, h);
     setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
 
-
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
-
 
     Logger::info("MainWindow", "Opened MainWindow");
 }

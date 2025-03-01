@@ -141,6 +141,7 @@ MainWindow::MainWindow(QWidget *parent)
 //    connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current);
     connect(m_play_mode_panel.get(), &OATS::PlayModePanel::keep_current, this, &MainWindow::keep_current);
+
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
 
     connect(m_jingle_grid.get(), &OATS::JingleGrid::play_jingle, this, &MainWindow::play_jingle);
@@ -1202,6 +1203,7 @@ void MainWindow::stop_button(OATS::OutputPanel* op)
                                     .arg(filename);
         log_info(msg);
 
+        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop, "");
         calculate_trigger_times();
     }
 }
@@ -2650,6 +2652,8 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         //m_current_playing_item.item->set_play_channel(temp_play_channel);
 
+        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing,
+                                                     op->panel_name());
     }
 
 
@@ -2693,15 +2697,17 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
     op->set_forced_fade_out(false);
 
     op->update_progress_bar(100);
+    m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop,"");
 }
 
 void MainWindow::fade_audio(OATS::OutputPanel* op)
 {
     if (op->schedule_item()->item_status() == OATS::ItemStatus::PLAYING)
     {
+        auto FADE_DURATION = 3000;
 
-        op->set_forced_fade_duration(3000);
-        op->set_forced_fade_stamp(3000);
+        op->set_forced_fade_duration(FADE_DURATION);
+        op->set_forced_fade_stamp(FADE_DURATION);
         op->set_forced_fade_out(true);
 
         if (op->panel_name() == "C") {
@@ -2709,6 +2715,8 @@ void MainWindow::fade_audio(OATS::OutputPanel* op)
             return;
         }
 
+
+        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Fade, op->panel_name());
         m_audio_player->fade_audio();
     }
 }
@@ -2728,6 +2736,9 @@ void MainWindow::pause_audio(OATS::OutputPanel* op)
 
         m_audio_player->pause_audio();
 
+        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
+                                                     op->panel_name());
+
         display_schedule();
 
     }
@@ -2745,6 +2756,8 @@ void MainWindow::pause_jingle(OATS::OutputPanel* op)
         op->set_pause_tick_stamp(m_audio_tool.get_tick_count());
         op->schedule_item()->notify();
 
+        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
+                                                     op->panel_name());
         m_jingle_player->pause_audio();
 
         //display_schedule();
@@ -2771,6 +2784,7 @@ void MainWindow::resume_audio(OATS::OutputPanel* op)
 
     log_info(msg);
 
+    m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing, op->panel_name());
     m_audio_player->resume_audio();
     display_schedule();
 
