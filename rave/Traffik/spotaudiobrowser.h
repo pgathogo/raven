@@ -63,7 +63,7 @@ public:
 
     TRAFFIK::SpotAudio& get_spot_audio() const;
 
-    void create_button(const QString, QString, Slot, QSize size=QSize(0,0));
+    void create_button(const QString, QString, Slot, QSize size=QSize(0,0), QString icon="");
 
     void create_separator();
 

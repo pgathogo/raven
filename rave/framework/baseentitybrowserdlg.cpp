@@ -46,6 +46,9 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
 
+    bui->edtFilter->setFocusPolicy(Qt::StrongFocus);
+    bui->edtFilter->setFocus();
+
     set_button_icons();
     resize_window();
 

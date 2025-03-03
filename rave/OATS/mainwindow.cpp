@@ -255,6 +255,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_updatedb_mutex = std::make_shared<QMutex>();
 
     m_audio_meter = std::make_shared<AUDIO::AudioMeter>(m_audio_player);
+    m_audio_meter->set_tick_color(QColor("#0479B0"));
 
     //ui->hlAudioMeter->addWidget(m_audio_meter.get());
 

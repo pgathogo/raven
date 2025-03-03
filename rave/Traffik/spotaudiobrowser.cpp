@@ -50,15 +50,25 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     hideEditButton();
     hideDeleteButton();
 
-    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio, QSize(80, 20));
-    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(80, 20));
-    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties, QSize(80, 20));
-    create_separator();
-    create_button("btnPlayBack", "Listen", &SpotAudioBrowser::play_back);
-    create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play);
-    create_separator();
-    create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit);
+    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio,
+                  QSize(80, 20), "import_audio.bmp");
 
+    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(80, 20));
+
+    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties,
+                  QSize(80, 20), "audio_prop.png");
+
+    create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit,
+                  QSize(80, 20), "cue_edit.bmp");
+
+    create_separator();
+    create_button("btnPlayBack", "Play", &SpotAudioBrowser::play_back,
+                  QSize(80, 20), "play.png");
+
+    create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play,
+                  QSize(80, 20), "stop_play.png");
+
+    create_separator();
     show_delete_button(bui->hlExtra);
 
     QSpacerItem* si = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -122,7 +132,8 @@ bool SpotAudioBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
     return true;
 }
 
-void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption, Slot slot, QSize size)
+void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption,
+                                     Slot slot, QSize size, QString icon)
 {
     QPushButton* btn = new QPushButton(btn_caption);
     btn->setObjectName(btn_name);
@@ -130,6 +141,12 @@ void SpotAudioBrowser::create_button(const QString btn_name, QString btn_caption
 
     if (!size.isNull())
         btn->setMinimumSize(size);
+
+
+    if (!icon.isEmpty()) {
+        QString icon_path = QString(":/images/media/icons/%1").arg(icon);
+        btn->setIcon(QIcon(icon_path));
+    }
 
     bui->hlExtra->addWidget(btn);
 }

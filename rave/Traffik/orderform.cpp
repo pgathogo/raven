@@ -203,6 +203,10 @@ void OrderForm::disable_controls() {
 
   bui->btnClose->setEnabled(true);
 
+  QLabel* l = new QLabel("This order has spots booked. Editing is disabled.");
+  l->setStyleSheet("color: red;");
+  bui->baseContainer->layout()->addWidget(l);
+
   // ui->sbSOrdered->setEnabled(false);
 }
 

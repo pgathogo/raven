@@ -16,6 +16,7 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
     {
         int width = 280;
         int height = 50;
+        m_tick_color = QColor(Qt::black);
 
         setMinimumSize(width, height);
 
@@ -50,7 +51,6 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
 
         if (m_left_level != 0 || m_right_level != 0 ){
             update();
-            qDebug() << m_left_level  << " " << m_right_level;
         }
     }
 
@@ -171,9 +171,14 @@ AudioMeter::AudioMeter(std::shared_ptr<AudioPlayer> audio_player, QWidget *paren
 
     }
 
+    void AudioMeter::set_tick_color(const QColor color)
+    {
+        m_tick_color = color;
+    }
+
     void AudioMeter::draw_tick_marks(QPainter* painter, int width, int channel_height)
     {
-        painter->setPen(Qt::black);
+        painter->setPen(m_tick_color);
         QFont font = painter->font();
         font.setPointSize(6);
         painter->setFont(font);

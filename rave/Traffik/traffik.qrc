@@ -131,6 +131,11 @@
         <file>media/icons/deletebreak.bmp</file>
         <file>media/icons/build01.bmp</file>
         <file>media/icons/raven.bmp</file>
+        <file>media/icons/import_audio.bmp</file>
+        <file>media/icons/audio_prop.png</file>
+        <file>media/icons/cue_edit.bmp</file>
+        <file>media/icons/play.png</file>
+        <file>media/icons/stop_play.png</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

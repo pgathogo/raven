@@ -46,6 +46,7 @@ void DateTimeSelector::build_time_buttons()
     time_buttons("AM", time_text_am);
     time_buttons("PM", time_text_pm);
 
+
     ui->calWidget->setSelectedDate(m_selection.sel_date);
     set_selected_buttons();
 }
@@ -69,12 +70,11 @@ void DateTimeSelector::set_selected_buttons()
     }
 }
 
-
-void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QString>& time_text)
+void DateTimeSelector::color_btn()
 {
-
+    //"QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #C1F5C7, stop:1 #D0F6B9, stop:2 #E4F9AA, stop:3 #EFFCA2 );"
     QString btn_style(
-        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #C1F5C7, stop:1 #D0F6B9, stop:2 #E4F9AA, stop:3 #EFFCA2 );"
+        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #C1F5C7, stop:1 #D0F6B9 );"
         "border-radius: 20px;"
         "border-style: inset;"
         "border-bottom-width: 2px;"
@@ -82,6 +82,29 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
         "border-bottom-color:#F2FCA3;"
         "color:#FFFFFF;"
         "height:35;"
+        "font-weight:bold;}" );
+
+    ui->btnOK->setStyleSheet(btn_style);
+
+
+}
+
+void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QString>& time_text)
+{
+
+
+   // "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #F4D7D0, stop:1 #F9E6E3);"
+    QString morning_style(
+        "QPushButton {background-color:#FFE9A6;"
+        "height:35;"
+        "width:75;"
+        "font-weight:bold;}" );
+
+    //"QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #7B90C6, stop:1 #9FB1E0);"
+    QString evening_style(
+        "QPushButton {background-color:#7B90C6;"
+        "height:35;"
+        "width:75;"
         "font-weight:bold;}" );
 
     /*
@@ -119,16 +142,16 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
                 [&, btn, btn_text](){ m_hour_buttons[btn_text].is_selected = btn->isChecked(); });
 
         if (time_symbol == "AM"){
+            btn->setStyleSheet(morning_style);
             ui->gridTimeAM->addWidget(btn, row, col);
             if (hr == current_hour && am_pm == "AM"){
-                btn->setStyleSheet( "background-color: #7FFF00");
+                //btn->setStyleSheet( "background-color: #7FFF00");
             }
         }else{
 
+            btn->setStyleSheet(evening_style);
             if (hr == current_hour && am_pm == "PM"){
-                btn->setStyleSheet(
-                "background-color: #7FFF00"
-                );
+                //btn->setStyleSheet( "background-color: #7FFF00" );
             }
 
             ui->gridTimePM->addWidget(btn, row, col);

@@ -551,7 +551,6 @@ namespace OATS
 
    void JingleGrid::clear_page(int page)
    {
-       //for (auto page: std::views::iota(1, PAGE_COUNT)) {
         for (int row=0; row <= GRID_ROWS-1; ++row){
             for (int col=0; col <= GRID_COLS-1; ++col){
                    m_grid_buttons[row][col]->set_jingle(nullptr);

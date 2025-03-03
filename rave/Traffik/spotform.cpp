@@ -75,7 +75,11 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
     int w = 720;
     int h = 530;
 
+    int max_width = 780;
+    int max_height = 550;
+
     setMinimumSize(w, h);
+    setMaximumSize(max_width, max_height);
 }
 
 SpotForm::~SpotForm()

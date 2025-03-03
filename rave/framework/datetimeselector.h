@@ -40,6 +40,8 @@ public slots:
     void clear_selection();
 
 private:
+    void color_btn();
+
     Ui::DateTimeSelector *ui;
     std::vector<QPushButton*> m_am_buttons;
     std::map<QString, HourButtonData> m_hour_buttons;

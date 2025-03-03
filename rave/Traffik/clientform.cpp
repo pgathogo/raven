@@ -54,10 +54,14 @@ ClientForm::ClientForm(Client* client,
     if (m_client->isNew())
         set_defaults();
 
-    Logger::info("ClientForm", "Client form... opened.");
+    int width = 600;
+    int height = 480;
+    setMaximumSize(width, height);
 
     ui->edtName->setFocusPolicy(Qt::StrongFocus);
     ui->edtName->setFocus();
+
+    Logger::info("ClientForm", "Client form... opened.");
 }
 
 ClientForm::~ClientForm()
