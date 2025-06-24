@@ -7,9 +7,10 @@
 *.swp
 *__*__*
 __*__
+#CMake*
+CMakeLists.txt.user*
 *.db
 *.def
-CMake*
 *ninja*
 *ninja_*
 *.log
@@ -51,6 +52,9 @@ images
 temp
 .cmake
 .vs
+build/
+build-debug/
+build*Debug/
 rave/build-traffik-Desktop_Qt_5_13_2_MinGW_64_bit-Debug
 rave/lib
 rave/traffik/images

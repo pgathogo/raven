@@ -9,7 +9,7 @@
 
 #include "tools.h"
 
-DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets, QWidget *parent) :
+DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets,  QWidget *parent) :
     QWidget{parent},
     ui{new Ui::DayPartGrid},
     m_dayparts{},
@@ -43,6 +43,23 @@ DayPartGrid::DayPartGrid(QVBoxLayout* layout, Presets psets, QWidget *parent) :
 DayPartGrid::~DayPartGrid()
 {
     delete ui;
+}
+
+void DayPartGrid::set_size_policy(GridSizePolicy policy)
+{
+    switch(policy){
+        case GridSizePolicy::Auto:
+            setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+            break;
+        case GridSizePolicy::Fixed:
+        {
+            int w = 550;
+            int h = 200;
+            setFixedSize(w, h);
+        }
+
+    }
+
 }
 
 void DayPartGrid::prepare_grid()
@@ -113,7 +130,7 @@ void DayPartGrid::cell_clicked(int row, int col)
 
 void DayPartGrid::update_grid(std::map<int, std::string> dayparts)
 {
-    clear_all_cells();
+    //clear_all_cells();
 
     QTableWidgetItem* cell;
     int row=0;
@@ -161,6 +178,7 @@ std::map<int, std::string> DayPartGrid::read_grid()
 DaypartExt DayPartGrid::daypart_to_hours(std::map<int,std::string>&& dayparts)
 {
     DaypartExt hours;
+
     for (auto& [day, daypart] : dayparts){
         int hr = 0;
         std::vector<int> hrs;

@@ -1127,7 +1127,6 @@ void MainWindow::make_output_panel()
     m_outputB = create_output_panel("B");
 
     m_outputC = create_output_panel_c();
-
 }
 
 OATS::OutputPanel* MainWindow::create_output_panel(const QString panel_name)

@@ -12,6 +12,8 @@ namespace TRAFFIK{
     {
         m_schedule_EDM = std::make_unique<EntityDataModel>(
                     std::make_unique<Schedule>());
+
+        qDebug() << "COUNT: " << m_schedule_EDM->count();
     }
 
     RuleEngine::RuleEngine(EngineData &ed)
@@ -54,13 +56,13 @@ namespace TRAFFIK{
         /*
           - Breaks Checked
 
-          ***[ Rules depend with the prev booking ]***
+          ***[ Rules depends on the previous booking ]***
           - Type Exclusion collusions
           - Voice Exclusion collusions
           - Same Client collusions
           - Override Same Client for Different brands **
 
-          ***[ Rules don't depend with the prev booking ]***
+          ***[ Rules don't depend on the previous booking ]***
           - Full Breaks
           - Type Daypart collusions
           - Voice Daypart collusions

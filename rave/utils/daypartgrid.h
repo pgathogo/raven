@@ -38,13 +38,18 @@ struct StartPoint{
 using Presets = std::map<std::string, std::map<int, std::string>>;
 using DaypartExt = std::map<int, std::tuple<std::string, std::vector<int>>>;
 
+enum class GridSizePolicy{
+    Fixed,
+    Auto
+};
+
 class DayPartGrid : public QWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit DayPartGrid(QVBoxLayout* layout, Presets psets = {}, QWidget *parent = nullptr);
+    explicit DayPartGrid(QVBoxLayout* layout, Presets psets = {},  QWidget *parent = nullptr);
     ~DayPartGrid() override;
 
     void update_grid(std::map<int, std::string> dayparts);
@@ -55,6 +60,9 @@ public:
 
     std::vector<int> daypart_str_to_hours(const std::string&);
 
+    void clear_all_cells();
+
+    void set_size_policy(GridSizePolicy policy);
 
 private slots:
     //void saveGrid();
@@ -62,7 +70,6 @@ private slots:
     void cell_clicked(int row, int col);
     void showContextMenu(QPoint);
     void select_all_cells();
-    void clear_all_cells();
     void selectPreset();
 private:
     Ui::DayPartGrid *ui;

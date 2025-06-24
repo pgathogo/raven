@@ -291,7 +291,7 @@ void BookingOrderBrowser::cancel_query()
 
 void BookingOrderBrowser::new_booking()
 {
-    if (ui->twOrders->selectedItems().size() > 0){
+    if (ui->twOrders->selectedItems().size() > 0) {
 
         int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
         auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());

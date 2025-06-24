@@ -27,13 +27,13 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     ui(new Ui::BreakCreateForm)
 {
     ui->setupUi(this);
+
     m_break_layout = std::make_shared<BreakLayout>();
-
     m_edm_break_layout = std::make_unique<EntityDataModel>(m_break_layout);
-
     ui->tvBreakLayouts->setModel(m_edm_break_layout.get());
     ui->tvBreakLayouts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_edm_break_layout->all();
+
 
     connect(ui->tvBreakLayouts, &QTableView::clicked, this, &BreakCreateForm::break_layout_selected);
 
@@ -118,7 +118,6 @@ void BreakCreateForm::close_form()
 
 void BreakCreateForm::create_breaks()
 {
-
     if (m_edm_break_line->count() == 0){
         showMessage("Select a break layout");
         return;
@@ -268,6 +267,7 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
             if (ui->cbSelectedHours->count() == 0)
             {
                 insert_stmts += sched.make_insert_stmt(fields.vec);
+
             }else{
                 if (ui->cbSelectedHours->findText(QString::number(bll->breakHour()->value())) > -1 )
                 {
@@ -365,6 +365,7 @@ void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> b
         for (int col=0; col < col_count; ++col)
         {
             auto index = model->index(row, col);
+
             switch (col)
             {
             case 0:

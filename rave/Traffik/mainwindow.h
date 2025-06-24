@@ -74,6 +74,7 @@ private slots:
     void open_merged_browser();
     void open_setup_browser();
     void open_cue_editor();
+    void test_new_booking();
 
     void print_comm_log();
 

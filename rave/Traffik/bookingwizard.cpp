@@ -1,8 +1,15 @@
 #include <algorithm>
 #include <random>
+#include <ranges>
+#include <cstdlib>
+
 #include <QFile>
 #include <QDir>
 #include <QJsonDocument>
+#include <QAbstractItemModel>
+#include <QSpinBox>
+#include <QTableWidgetItem>
+#include <QListWidgetItem>
 
 #include "bookingwizard.h"
 #include "ui_bookingwizard.h"
@@ -16,20 +23,26 @@
 #include "spotform.h"
 #include "spottypeexclusion.h"
 
+#include "breaklayout.h"
+#include "breaklayoutline.h"
+
 #include "traffiktreeviewmodel.h"
 
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravenexception.h"
 #include "../framework/schedule.h"
+#include "../framework/ravensetup.h"
 
 #include "../utils/qchecklist.h"
 #include "../utils/daypartgrid.h"
 #include "../utils/togglebutton.h"
 #include "../utils/cachehandler.h"
 
+
+
 #define DEBUG_MODE
 
-BookingWizard::BookingWizard(Order* order, QWidget *parent)
+BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     :QWizard(parent)
     ,ui(new Ui::BookingWizard)
     ,m_order{order}
@@ -39,6 +52,8 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
     ,m_booking_EDM{nullptr}
     ,m_spot_ctx_menu{nullptr}
     ,m_spot_ctx_action{nullptr}
+    ,m_edm_break_layout{nullptr}
+    ,m_edm_breaks{nullptr}
 {
     ui->setupUi(this);
 
@@ -53,13 +68,20 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
                 std::make_unique<TimeBand>());
 
     m_timeband_EDM->all();
-    ui->cbTimeband->setModel(m_timeband_EDM);
+    //ui->cbTimeband->setModel(m_timeband_EDM);
 
-    connect(ui->cbTimeband, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &BookingWizard::timeBandChanged);
+    //ui->lvTimeBand->setModel(m_timeband_EDM);
+    //connect(ui->lvTimeBand, &QListView::clicked, this, &BookingWizard::time_band_selected);
+
+    connect(ui->twTB, &QTableWidget::itemClicked, this, &BookingWizard::time_band_selected2);
+
+    // connect(ui->cbTimeband, QOverload<int>::of(&QComboBox::currentIndexChanged),
+    //         this, &BookingWizard::timeBandChanged);
 
     connect(ui->rbAllBreaks, &QRadioButton::toggled, this, &BookingWizard::all_breaks);
     connect(ui->rbTimeband, &QRadioButton::toggled, this, &BookingWizard::toggleTimeBand);
+    connect(ui->rbManualTime, &QRadioButton::toggled, this, &BookingWizard::manual_time);
+
     connect(ui->btnBuildBreaks, &QPushButton::clicked, this, &BookingWizard::build_breaks);
 
     ui->btnBuildBreaks->setIcon(QIcon(":/images/media/icons/build01.bmp"));
@@ -72,11 +94,10 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
 
     m_daypart_grid = std::make_unique<DayPartGrid>(ui->vlDaypart);
 
-    timeBandChanged(0);
-    ui->rbTimeband->toggle();
 
     ui->edtStartDate->setDate(QDate::currentDate());
     ui->edtEndDate->setDate(order->endDate()->value());
+
 
     m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
 
@@ -90,16 +111,155 @@ BookingWizard::BookingWizard(Order* order, QWidget *parent)
     connect(ui->btnBreakSelect, &QPushButton::clicked, this, [&](){ this->toggle_selection(true);} );
     connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [&](){ this->toggle_selection(false);} );
 
+    auto break_lines = std::make_shared<BreakLayoutLine>();
+    m_edm_breaks = std::make_unique<EntityDataModel>(break_lines);
+    ui->tvBreaks->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tvBreaks->setModel(m_edm_breaks.get());
+
+    m_break_layout = std::make_shared<BreakLayout>();
+    m_edm_break_layout = std::make_unique<EntityDataModel>(m_break_layout);
+
+    ui->cbBreakTemplate->setModel(m_edm_break_layout.get());
+    m_edm_break_layout->all();
+
+    connect(ui->cbBreakTemplate, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                  this, &BookingWizard::show_breaks);
+
+
+    ui->cbBreakTemplate->currentIndexChanged(0);
+
     set_toggle_buttons();
     read_break_rules_cache();
+
+    add_tb_widget();
+
+    m_edm_setup = std::make_unique<EntityDataModel>(
+        std::make_shared<RavenSetup>() );
+    m_edm_setup->all();
+    m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
+    add_break_interval();
+
+
+    ui->rbAllBreaks->toggle();
+
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
 }
 
+
 BookingWizard::~BookingWizard()
 {
     delete ui;
+}
+
+
+void BookingWizard::add_break_interval()
+{
+    int time_interval = m_raven_setup->breakTimeInterval()->value();
+    int breaks_per_hour = 60 / time_interval;
+
+    int min = 0;
+
+    for(int ti=1; ti <= breaks_per_hour; ++ti)
+    {
+        QTime time(0, min, 0);
+
+        QString title;
+        title = QString("%1").arg(time.toString("HH:mm"));
+        if (ti == 1)
+            title = QString("%1 - %2")
+                                .arg(time.toString("HH:mm")).arg("Hour Top");
+
+        if (ti == breaks_per_hour)
+            title = QString("%1 - %2")
+                                .arg(time.toString("HH:mm")).arg("Hour Bottom");
+
+        auto lwi = new QListWidgetItem(title);
+        lwi->setFlags(lwi->flags() | Qt::ItemIsUserCheckable);
+        lwi->setCheckState(Qt::Unchecked);
+        lwi->setData(Qt::UserRole, min);
+
+        ui->lwHourSegments->addItem(lwi);
+
+        min += time_interval;
+
+    }
+
+}
+
+void BookingWizard::show_breaks(int index)
+{
+    if (index < 0)
+        return;
+
+    EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbBreakTemplate->model());
+    int bl_id = std::get<1>(*(edm->vecBegin()+index))->id() ;
+
+    BreakLayoutLine bbl;
+    auto breaks_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),
+                                         "=",
+                                         bl_id);
+
+    std::string filter = m_edm_breaks->prepareFilter(breaks_filter);
+    m_edm_breaks->search(filter);
+}
+
+
+void BookingWizard::add_tb_widget()
+{
+    ui->twTB->clear();
+    QStringList header;
+    header << "TBand" << "Dist.";
+    ui->twTB->setHorizontalHeaderLabels(header);
+
+    ui->twTB->setRowCount(m_timeband_EDM->count());
+
+    auto provider = m_timeband_EDM->getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
+
+    provider->cache()->first();
+    int row = 0;
+    do{
+        auto it_begin = provider->cache()->currentElement()->begin();
+        auto it_end = provider->cache()->currentElement()->end();
+
+        int id = -1;
+        QString tb_name;
+
+        for(; it_begin != it_end; ++it_begin)
+        {
+            std::string field_name = (*it_begin).first;
+            std::string field_value = (*it_begin).second;
+
+            if (field_name == "id")
+                id = std::stoi(field_value);
+            if (field_name == "name")
+                tb_name = QString::fromStdString(field_value);
+        }
+
+        auto twi = new QTableWidgetItem(tb_name);
+        twi->setData(Qt::UserRole, id);
+        ui->twTB->setItem(row, 0, twi);
+
+        QSpinBox* sb = new QSpinBox();
+        sb->setMaximumWidth(60);
+        ui->twTB->setCellWidget(row, 1, sb);
+        ++row;
+
+       provider->cache()->next();
+
+    }while(!provider->cache()->isLast());
+
+
+    // auto tb = dynamic_cast<TimeBand*>(e.get());
+}
+
+void BookingWizard::test_set_start_end_dates()
+{
+    ui->edtStartDate->setDate(QDate::currentDate());
+    ui->edtEndDate->setDate(QDate(2025, 6, 30));
 }
 
 void BookingWizard::set_toggle_buttons()
@@ -246,45 +406,46 @@ void BookingWizard::setup_break_select_grid()
     for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities())
     {
         Schedule* comm_break = dynamic_cast<Schedule*>(entity.get());
-        if (comm_break->break_availability() == Schedule::BreakAvailability::Break_Available){
 
-            QString date_str = comm_break->schedule_date()->value().toString();
-            QString time_str = comm_break->schedule_time()->value().toString("HH:mm");
-            QString dur_str = QString::number(comm_break->break_duration_left()->value());
+        if (comm_break->break_availability() == Schedule::BreakAvailability::Break_Not_Available)
+            continue;
 
-            QTableWidgetItem* date_item = new QTableWidgetItem(date_str);
-            date_item->setData(Qt::UserRole, comm_break->id());
+        QString date_str = comm_break->schedule_date()->value().toString();
+        QString time_str = comm_break->schedule_time()->value().toString("HH:mm");
+        QString dur_str = QString::number(comm_break->break_duration_left()->value());
 
-            ui->twBreakSelect->setItem(row, 0, date_item);
+        QTableWidgetItem* date_item = new QTableWidgetItem(date_str);
+        date_item->setData(Qt::UserRole, comm_break->id());
 
-            QTableWidgetItem* time_item = new QTableWidgetItem(time_str);
-            ui->twBreakSelect->setItem(row, 1, time_item);
-            time_item->setTextAlignment(Qt::AlignCenter);
+        ui->twBreakSelect->setItem(row, 0, date_item);
 
-            int int_date = comm_break->schedule_date()->value().day()+
-                    comm_break->schedule_date()->value().month()+
-                    comm_break->schedule_date()->value().year();
-            time_item->setData(Qt::UserRole, int_date);
+        QTableWidgetItem* time_item = new QTableWidgetItem(time_str);
+        ui->twBreakSelect->setItem(row, 1, time_item);
+        time_item->setTextAlignment(Qt::AlignCenter);
 
-            QTableWidgetItem* dur_item = new QTableWidgetItem(dur_str);
-            ui->twBreakSelect->setItem(row, 2, dur_item);
-            dur_item->setTextAlignment(Qt::AlignCenter);
-            dur_item->setData(Qt::UserRole, comm_break->schedule_date()->value().dayOfWeek());
+        int int_date = comm_break->schedule_date()->value().day()+
+            comm_break->schedule_date()->value().month()+
+            comm_break->schedule_date()->value().year();
+        time_item->setData(Qt::UserRole, int_date);
 
-            //m_selected_breaks.insert(time_str);
+        QTableWidgetItem* dur_item = new QTableWidgetItem(dur_str);
+        ui->twBreakSelect->setItem(row, 2, dur_item);
+        dur_item->setTextAlignment(Qt::AlignCenter);
+        dur_item->setData(Qt::UserRole, comm_break->schedule_date()->value().dayOfWeek());
 
-            SelectedBreak sel_break;
-            sel_break.break_id = comm_break->id();
-            sel_break.break_date = comm_break->schedule_date()->value();
-            sel_break.break_time = comm_break->schedule_time()->value();
-            sel_break.break_hour = comm_break->schedule_hour()->value();
-            sel_break.booked_spots = comm_break->booked_spots()->value();
-            sel_break.break_fill_method = comm_break->break_fill_method()->value();
-            sel_break.max_spots = comm_break->break_max_spots()->value();
-            m_selected_breaks[comm_break->id()] = sel_break;
+        //m_selected_breaks.insert(time_str);
 
-            ++row;
-        }
+        SelectedBreak sel_break;
+        sel_break.break_id = comm_break->id();
+        sel_break.break_date = comm_break->schedule_date()->value();
+        sel_break.break_time = comm_break->schedule_time()->value();
+        sel_break.break_hour = comm_break->schedule_hour()->value();
+        sel_break.booked_spots = comm_break->booked_spots()->value();
+        sel_break.break_fill_method = comm_break->break_fill_method()->value();
+        sel_break.max_spots = comm_break->break_max_spots()->value();
+        m_selected_breaks[comm_break->id()] = sel_break;
+
+        ++row;
     }
 }
 
@@ -438,8 +599,9 @@ void BookingWizard::show_order_details(Order* order)
 
 std::size_t BookingWizard::fetch_breaks_from_db(QDate start_date, QDate end_date, std::set<int> uniq_hours)
 {
-//    m_schedule_EDM = std::make_unique<EntityDataModel>(
-//                std::make_unique<Schedule>());
+
+    if (m_engine_data.m_schedule_EDM->count() > 0)
+    return m_engine_data.m_schedule_EDM->count();
 
     Schedule schedule;
     QString DATE_FORMAT = "yyyy-MM-dd";
@@ -452,52 +614,85 @@ std::size_t BookingWizard::fetch_breaks_from_db(QDate start_date, QDate end_date
                 );
 
 
-    //FIXME: Refactor the following code
-    std::size_t i = 0;
-    std::string  hr_str;
-    for (auto it=uniq_hours.begin(); it != uniq_hours.end(); ++it){
+    if (uniq_hours.size() > 0)
+    {
+        //FIXME: Refactor the following code
+        std::size_t i = 0;
+        std::string  hr_str;
+        for (auto it=uniq_hours.begin(); it != uniq_hours.end(); ++it){
         hr_str += std::to_string(*it);
         if (i < uniq_hours.size()-1)
             hr_str += ",";
         ++i;
-    }
-    hr_str = "("+hr_str+")";
+        }
 
-    auto hours_filter = std::make_tuple(
-                schedule.schedule_hour()->dbColumnName(),
-                " in ",
-                hr_str);
+        hr_str = "("+hr_str+")";
 
-    try{
-        std::string str  = m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter);
+        auto hours_filter = std::make_tuple(
+            schedule.schedule_hour()->dbColumnName(),
+            " in ",
+            hr_str);
 
-
-        std::cout << str << '\n';
-
-        m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter));
-    } catch(DatabaseException& de){
-        showMessage(de.errorMessage());
+        try{
+            //std::string str  = m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter);
+            //std::cout << str << '\n';
+                m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter, hours_filter));
+            } catch(DatabaseException& de){
+                showMessage(de.errorMessage());
+        }
+    } else {
+        try {
+            m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter));
+        } catch (DatabaseException& de) {
+            showMessage(de.errorMessage());
+        }
     }
 
     return m_engine_data.m_schedule_EDM->count();
 }
 
+/*
 void BookingWizard::timeBandChanged(int i)
 {
+
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(ui->cbTimeband->model());
     m_engine_data.current_time_band = dynamic_cast<TimeBand*>(std::get<1>(*(edm->vecBegin()+i)).get());
     populate_grid(m_engine_data.current_time_band);
     m_engine_data.target_daypart =  m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
 }
+*/
 
 void BookingWizard::all_breaks(bool state)
 {
-     ui->cbTimeband->setEnabled(!state);
+
+    std::set<int> unique_hours;
+    fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+    ui->swSelection->setCurrentIndex(0);
+    unique_hours = select_unique_hours_from_breaks();
+    populate_from_to_combos(unique_hours);
+}
+
+void BookingWizard::populate_from_to_combos(const std::set<int>& hrs)
+{
+    for (int hr : hrs)
+    {
+        ui->cbFromHour->addItem(QString::number(hr), hr);
+        ui->cbToHour->addItem(QString::number(hr), hr);
+    }
+    ui->cbFromHour->setCurrentIndex(0);
+    ui->cbToHour->setCurrentIndex(ui->cbToHour->count()-1);
+
 }
 
 void BookingWizard::toggleTimeBand(bool state)
 {
-    ui->cbTimeband->setEnabled(state);
+    ui->swSelection->setCurrentIndex(1);
+    //ui->cbTimeband->setEnabled(state);
+}
+
+void BookingWizard::manual_time(bool state)
+{
+    ui->swSelection->setCurrentIndex(2);
 }
 
 void BookingWizard::build_breaks()
@@ -525,9 +720,21 @@ void BookingWizard::build_breaks()
 
         fetch_voice_exclusions(m_engine_data);
 
-        auto unique_hours = selected_unique_hours();
+        std::set<int> unique_hours;
 
-        m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+        if (ui->rbAllBreaks->isChecked())
+        {
+            m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+            //unique_hours = select_unique_hours_from_breaks();
+        }
+
+        if (ui->rbTimeband->isChecked())
+        {
+            // Get hours from the selected timeband
+            unique_hours = selected_unique_hours();
+            m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+        }
+
 
         if (m_engine_data.break_count == 0)
         {
@@ -543,6 +750,16 @@ void BookingWizard::build_breaks()
         show_available_breaks();
 
         setup_break_select_grid();
+
+        if (ui->rbAllBreaks->isChecked())
+        {
+            AllBreaks all_breaks_sel;
+            all_breaks_sel.from_hour = ui->cbFromHour->currentData().toInt();
+            all_breaks_sel.to_hour = ui->cbToHour->currentData().toInt();
+            all_breaks_sel.hourly_intervals = get_hourly_distribution();
+
+            auto_select_breaks(all_breaks_sel);
+        }
 
     } catch(DatabaseException& de){
         showMessage(de.errorMessage());
@@ -617,6 +834,64 @@ void BookingWizard::show_spot_details(const QPoint& pos)
                                             mapToGlobal(pos));
 }
 
+/*
+void BookingWizard::time_band_selected(const QModelIndex& mi)
+{
+    m_daypart_grid->clear_all_cells();
+
+    QItemSelectionModel* ism = ui->lvTimeBand->selectionModel();
+    QModelIndexList mil = ism->selectedIndexes();
+
+    if (mil.size() == 0)
+        return;
+
+    for(auto& index : mil){
+        EntityDataModel* edm = dynamic_cast<EntityDataModel*>(const_cast<QAbstractItemModel*>(index.model()));
+        m_engine_data.current_time_band = dynamic_cast<TimeBand*>(std::get<1>(*(edm->vecBegin()+index.row())).get());
+        populate_grid(m_engine_data.current_time_band);
+        m_engine_data.target_daypart =  m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
+    }
+
+}
+*/
+
+void BookingWizard::time_band_selected2(QTableWidgetItem* twi)
+{
+
+// int id = twi->data(Qt::UserRole).toInt();
+// qDebug() << "ID: "<< id;
+
+    m_daypart_grid->clear_all_cells();
+
+    QItemSelectionModel* ism = ui->twTB->selectionModel();
+    QModelIndexList mil = ism->selectedIndexes();
+
+    if (mil.size() == 0)
+        return;
+
+     for(auto& index : mil){
+
+        m_engine_data.current_time_band = dynamic_cast<TimeBand*>(std::get<1>(*(m_timeband_EDM->vecBegin()+index.row())).get());
+        populate_grid(m_engine_data.current_time_band);
+        m_engine_data.target_daypart =  m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
+
+    }
+
+    //using DaypartExt = std::map<int, std::tuple<std::string, std::vector<int>>>;
+    for (auto& [day, tup] : m_engine_data.target_daypart) {
+        qDebug() << " Day: "<< day;
+        auto& [dp, hrs] = tup;
+        qDebug() << QString::fromStdString(dp) << " : " ;
+            for (auto& h : hrs) {
+            qDebug() << h;
+        }
+
+    }
+
+
+
+}
+
 void BookingWizard::spot_details(int spot_id)
 {
     auto spot_edm = std::make_unique<EntityDataModel>(std::make_unique<TRAFFIK::Spot>());
@@ -638,21 +913,39 @@ void BookingWizard::spot_details(int spot_id)
 
     if (spot_form->exec() == 0){}
 
-
 }
 
 std::set<int> BookingWizard::selected_unique_hours()
 {
-
     // map[1] = ("00011...", vector<5,6,9...>)
     auto daypart = m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
 
     std::set<int> unique_hours;
     for (auto& [day, dp_str_hours] : daypart){
+
         auto& [dp_str, hours] = dp_str_hours;
+
             for (auto& h : hours){
                 unique_hours.insert(h);
             }
+    }
+
+    return unique_hours;
+}
+
+std::set<int> BookingWizard::select_unique_hours_from_breaks()
+{
+
+    std::set<int> unique_hours;
+
+    for (auto& entity_record : m_engine_data.m_schedule_EDM->modelEntities())
+    {
+        auto& [name, entity] = entity_record;
+
+        auto a_break = dynamic_cast<Break*>(entity.get());
+
+        unique_hours.insert(a_break->schedule_hour()->value());
+
     }
 
     return unique_hours;
@@ -690,7 +983,7 @@ void BookingWizard::test_booking()
 
     //ui->cbTypeDaypart->setChecked(true);
 
-    ui->cbTimeband->setCurrentIndex(1);
+    //ui->cbTimeband->setCurrentIndex(1);
 
     auto uniq_hours = selected_unique_hours();
 
@@ -774,6 +1067,89 @@ void BookingWizard::auto_select_breaks_by_dow()
     }
 }
 
+std::vector<int> BookingWizard::get_hourly_distribution()
+{
+    std::vector<int>hr_dist;
+
+    for(int i=0; i < ui->lwHourSegments->count(); ++i) {
+
+        auto lwi = ui->lwHourSegments->item(i);
+
+        if (lwi->checkState() == Qt::Checked) {
+            int interval = lwi->data(Qt::UserRole).toInt();
+            hr_dist.push_back(interval);
+        }
+    }
+    return hr_dist;
+}
+
+int BookingWizard::pick_random_interval()
+{
+    int index = (rand() % ui->lwHourSegments->count());
+
+    auto lwi = ui->lwHourSegments->item(index);
+
+    int interval = lwi->data(Qt::UserRole).toInt();
+
+    return interval;
+}
+
+void BookingWizard::auto_select_breaks(const AllBreaks& ab )
+{
+    int pending_spots = m_order->spotsOrdered()->value() - m_order->spotsBooked()->value();
+
+    auto hours = std::views::iota(ab.from_hour, ab.to_hour+1);
+
+    auto is_interval_selected = [](int interval, std::vector<int> intervals) ->bool {
+        return ( (std::find(intervals.begin(), intervals.end(), interval) != intervals.end()) ? true : false);
+    };
+
+    int current_hour = -1;
+    int interval = -1;
+
+    for (int i=0; i < ui->twBreakSelect->rowCount(); ++i)
+    {
+        if (pending_spots == 0)
+            break;
+
+        auto time_str = ui->twBreakSelect->item(i, 1)->text();
+
+        auto hr_str_list = time_str.split(":");
+
+        int hr = hr_str_list[0].toInt();
+        int min = hr_str_list[1].toInt();
+
+        auto it = std::ranges::find(hours, hr);
+        if (it != hours.end())
+        {
+            if (ab.hourly_intervals.size() == 0)
+            {
+                // No interval was selected, pick a random one.
+                if (current_hour != hr)
+                    interval = pick_random_interval();
+
+                if (min == interval) {
+                    ui->twBreakSelect->selectRow(i);
+                    --pending_spots;
+                }
+
+            } else {
+                // User selected intervals
+                bool is_selected = is_interval_selected(min, ab.hourly_intervals);
+                if (is_selected) {
+                    ui->twBreakSelect->selectRow(i);
+                    --pending_spots;
+                }
+
+            }
+        }
+
+        current_hour = hr;
+
+    }
+}
+
+
 bool BookingWizard::spot_has_audio(const TRAFFIK::Spot* spot)
 {
     auto edm = EntityDataModel(
@@ -798,9 +1174,10 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
 {
     std::string schedule_ids;
     std::size_t i = 0;
-    for(auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities()){
+
+    for(auto& [name, entity] : engine_data.m_schedule_EDM->modelEntities()){
         schedule_ids += std::to_string(entity->id());
-        if ( i<m_engine_data.m_schedule_EDM->modelEntities().size()-1)
+        if ( i<engine_data.m_schedule_EDM->modelEntities().size()-1)
             schedule_ids += ",";
         ++i;
     }
@@ -926,14 +1303,17 @@ std::size_t BookingWizard::find_available_breaks()
 void BookingWizard::initializePage(int currentId)
 {
 
+    qDebug() << "Initialize Page: "<< currentId;
     if (currentId == 3){
         QAbstractButton* next_btn = button(QWizard::NextButton);
         if (next_btn){
-            next_btn->setEnabled(false);
+            qDebug() << "* Disable Next Button *";
+            next_btn->setDisabled(true);
         }
     }
 
 }
+
 
 bool BookingWizard::validateCurrentPage()
 {
@@ -950,20 +1330,48 @@ bool BookingWizard::validateCurrentPage()
             }
             break;
         case BookingWizard::Page_Dates:
-            if (ui->edtStartDate->date() < QDate::currentDate()){
+            if (ui->edtStartDate->date() < QDate::currentDate())
+            {
                 showMessage("Bookings for past dates not allowed!");
                 return false;
+
             }
-            if (ui->edtStartDate->date() > ui->edtEndDate->date()){
+
+            if (ui->edtStartDate->date() > ui->edtEndDate->date())
+            {
                 showMessage("Start date greater than End date");
                 return false;
             }
+
+            {
+                auto rows = ui->tvBreaks->selectionModel()->selectedRows();
+                qDebug() << "Selected Index: " << rows.count();
+            }
+
+            if (ui->rbAllBreaks->isChecked()) {
+
+                int from_hour = ui->cbFromHour->currentData().toInt();
+                int to_hour = ui->cbToHour->currentData().toInt();
+
+                if (from_hour > to_hour) {
+                    showMessage("`From` hour should be greater then `To` hour");
+                    return false;
+                }
+
+            }
+
+            button(QWizard::NextButton)->setEnabled(false);
+
             break;
 
         case BookingWizard::Page_Rules:
         {
             cache_break_rules();
             qDebug() << "Page_Rules...";
+
+            auto curr_page = currentPage();
+            button(QWizard::NextButton)->setEnabled(false);
+
             break;
         }
 
@@ -971,11 +1379,28 @@ bool BookingWizard::validateCurrentPage()
         {
             add_days_of_week();
             show_breaks_for_current_timeband();
+            // Check the type of break selection
+            // rbAllBreaks
+            // rbTimeband
+            // rbManualTime
+            if (ui->rbAllBreaks->isChecked()) {
+                // distribute_spot_to_all_breaks()  // Distribute selected spot to all the breaks (one spot per break)
+            }
+
+            if (ui->rbTimeband->isChecked()) {
+                // distribute_spot_to_selected_timeband() // Distribute spots to selected timebands - based on the "Dist" value
+            }
+
+            if (ui->rbManualTime->isChecked()) {
+                // distribute_spot_to_selected_breaks()
+            }
+
             break;
         }
         case BookingWizard::Page_Select_By_Day:
         {
             auto_select_breaks_by_dow();
+            qDebug() << "Validating selection by day of the WEEK *";
             break;
         }
         case BookingWizard::Page_Select_By_Date:
@@ -993,8 +1418,21 @@ bool BookingWizard::validateCurrentPage()
     return true;
 }
 
+void BookingWizard::distribute_spot_to_available_breaks()
+{
+    /*
+    for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities()())
+    {
+
+    }
+    */
+
+}
+
+
 TRAFFIK::Spot* BookingWizard::selected_spot()
 {
+
     TRAFFIK::Spot* spot{nullptr};
 
     QVariant q_col_name = ui->tvSpots->model()->data(
@@ -1111,6 +1549,7 @@ void BookingWizard::fetch_spot_exclusions(const std::string query,
                                         std::list<int>& keys)
 {
     EntityDataModel edm;
+
     edm.readRaw(query);
 
     auto provider = edm.getDBManager()->provider();

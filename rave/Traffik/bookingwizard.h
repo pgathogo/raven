@@ -6,11 +6,14 @@
 #include <QMenu>
 #include <QJsonObject>
 
-#include "timeband.h"
 #include "../framework/schedule.h"
 #include "../framework/entitydatamodel.h"
+
+#include "timeband.h"
 #include "traffikrules.h"
 #include "spot.h"
+
+class QTableWidgetItem;
 
 namespace Ui {
     class BookingWizard;
@@ -21,9 +24,12 @@ class EntityDataModel;
 class DayPartGrid;
 class Schedule;
 class WizardData;
+class RavenSetup;
 
 class ToggleButton;
 class JsonCacheHandler;
+
+class BreakLayout;
 
 struct SelectedBreak{
     int break_id;
@@ -35,7 +41,14 @@ struct SelectedBreak{
     std::string break_fill_method;
 };
 
+struct AllBreaks {
+    int from_hour=0;
+    int to_hour =0;
+    std::vector<int> hourly_intervals;
+};
+
 const QString rules_cache_file = "rules_cache_file.json";
+
 
 class BookingWizard : public QWizard
 {
@@ -49,7 +62,7 @@ public:
 
     std::vector<std::string> days_of_week{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    explicit BookingWizard(Order* order, QWidget* parent = nullptr);
+    explicit BookingWizard(Order* order,  QWidget* parent = nullptr);
     ~BookingWizard() override;
 
     std::size_t fetch_breaks_from_db(QDate, QDate, std::set<int>);
@@ -85,9 +98,15 @@ public:
     void reset_values();
     void color_label(QLabel*, Qt::GlobalColor);
 
+    void test_set_start_end_dates();
+    void add_tb_widget();
+
+    void distribute_spot_to_available_breaks();
+
     int to_int(std::string s){
         return (s.empty()) ? 0 : std::stoi(s);
     }
+
     double to_double(std::string s){
         return (s.empty()) ? 0.0 : std::stod(s);
     }
@@ -102,13 +121,17 @@ public:
     }
 
 private slots:
-    void timeBandChanged(int i);
+    // void timeBandChanged(int i);
     void all_breaks(bool);
     void toggleTimeBand(bool);
+    void manual_time(bool);
     void build_breaks();
     void apply_selection();
     void clear_selection();
     void show_spot_details(const QPoint&);
+    void show_breaks(int);
+    //void time_band_selected(const QModelIndex&);
+    void time_band_selected2(QTableWidgetItem*);
 
 private:
     Ui::BookingWizard *ui;
@@ -140,13 +163,23 @@ private:
     std::unique_ptr<JsonCacheHandler> m_cache_handler;
     QJsonObject m_rules_cache;
 
+    std::shared_ptr<BreakLayout> m_break_layout;
+
+    std::unique_ptr<EntityDataModel> m_edm_break_layout;
+    std::unique_ptr<EntityDataModel> m_edm_breaks;
+
+
     /* --------------- private methods -------------------- */
     std::set<int> selected_unique_hours();
+    std::set<int> select_unique_hours_from_breaks();
 
     QMenu* m_spot_ctx_menu;
     QAction* m_spot_ctx_action;
 
     std::map<int, SelectedBreak> m_selected_breaks;
+
+    std::unique_ptr<EntityDataModel> m_edm_setup;
+    RavenSetup* m_raven_setup;
 
     void print_selected_breaks();
 
@@ -162,8 +195,15 @@ private:
     void toggle_selection(bool);
 
     void auto_select_breaks_by_dow();
+    void auto_select_breaks(const AllBreaks&);
+    int pick_random_interval();
+    std::vector<int> get_hourly_distribution();
+
     bool spot_has_audio(const TRAFFIK::Spot*);
     void spot_details(int);
+
+    void populate_from_to_combos(const std::set<int>&);
+    void add_break_interval();
 
 };
 

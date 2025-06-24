@@ -24,6 +24,9 @@
 #include "mergedbrowser.h"
 #include "setupbrowser.h"
 
+#include "order.h"
+#include "bookingwizard.h"
+
 AccessMap MainWindow::access_map;
 
 MainWindow::MainWindow(QApplication* app,
@@ -138,9 +141,6 @@ void MainWindow::createActions()
     scheduleAction->setStatusTip(tr("Schedule"));
     connect(scheduleAction, &QAction::triggered, this, &MainWindow::open_schedule);
 
-    /*
-    */
-
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
     merged_browser_act->setIcon(QIcon(":/images/media/icons/clients.png"));
     connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
@@ -152,12 +152,19 @@ void MainWindow::createActions()
     QAction* cue_editor_act = new QAction("Cue Editor");
     connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
 
+    QAction* test_wizard_act = new QAction(tr("&Book Order"));
+    test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
+    connect(test_wizard_act, &QAction::triggered, this, &MainWindow::test_new_booking);
+
+
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(test_wizard_act);
 }
 
 
@@ -224,6 +231,20 @@ void MainWindow::open_setup_browser()
 void MainWindow::open_cue_editor()
 {
 
+}
+
+void MainWindow::test_new_booking()
+{
+    int order_id = 49;
+    auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
+    order_edm->getById({"id", "=", order_id});
+
+    Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
+    if (order != nullptr) {
+        auto bw = std::make_unique<BookingWizard>(order);
+        bw->test_set_start_end_dates();
+        bw->exec();
+    }
 }
 
 void MainWindow::print_comm_log()

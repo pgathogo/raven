@@ -4,7 +4,9 @@
 #include <memory>
 
 #include <QWidget>
+
 #include "../framework/baseentitydetaildlg.h"
+#include "../framework/dowwidget.h"
 
 #include "spot.h"
 #include "spotaudiobrowser.h"
@@ -21,9 +23,11 @@ class DayPartGrid;
 class ManyToManyBrowser;
 class EntityDataModel;
 class RavenSetup;
+class TimeBand;
 class AudioFile;
 class CueEditor;
 class SpotAudioBrowser;
+class QTableWidget;
 
 using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
 
@@ -61,8 +65,14 @@ protected:
 private slots:
     void brandsComboChanged(int);
     void on_import_audio();
+    void time_band_selected();
 
 private:
+    void add_time_band_widget();
+    void create_time_band_widget();
+    void create_dow_widget();
+    void populate_time_band_widget(const std::unique_ptr<EntityDataModel>&, QTableWidget*);
+
     Ui::SpotForm* ui;
     Client* m_client;
     TRAFFIK::Spot* m_spot;
@@ -73,6 +83,10 @@ private:
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
     RavenSetup* m_setup;
+
+    std::unique_ptr<EntityDataModel> m_edm_time_band;
+    std::unique_ptr<DowWidget> m_dow_widget;
+    QTableWidget* m_time_band_widget;
 
 };
 

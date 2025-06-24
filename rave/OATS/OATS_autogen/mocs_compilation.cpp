@@ -18,6 +18,7 @@
 #include "YFL3MR5MWG/moc_audiohistoryform.cpp"
 #include "YFL3MR5MWG/moc_audiolibwidget.cpp"
 #include "YFL3MR5MWG/moc_audiometer.cpp"
+#include "YFL3MR5MWG/moc_audiometervert.cpp"
 #include "YFL3MR5MWG/moc_audiosearchwidget.cpp"
 #include "YFL3MR5MWG/moc_audiotool.cpp"
 #include "YFL3MR5MWG/moc_audiotrackviewer.cpp"

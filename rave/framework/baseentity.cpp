@@ -230,6 +230,7 @@ void BaseEntity::baseMapFields(StringMap* map)
 
 bool BaseEntity::isNew()
 {
+
     return (id() == -1) ? true : false;
 }
 

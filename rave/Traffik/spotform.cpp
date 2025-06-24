@@ -3,6 +3,9 @@
 #include <sstream>
 
 #include <QFileDialog>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLineEdit>
 
 #include "../utils/daypartgrid.h"
 #include "../utils/tools.h"
@@ -27,6 +30,7 @@
 #include "spottypeexclusion.h"
 #include "spotaudio.h"
 #include "spotaudioform.h"
+#include "timeband.h"
 
 namespace fs = std::filesystem;
 
@@ -38,7 +42,11 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
+
+    add_time_band_widget();
+
     populateGrid();
+
     populateFormWidgets();
 
     m_MtoMVoiceOverBrowser =
@@ -129,9 +137,117 @@ std::string SpotForm::windowTitle()
     return "Spot Details - Client: " +m_client->name()->displayName();
 }
 
+void SpotForm::add_time_band_widget()
+{
+    create_time_band_widget();
+    create_dow_widget();
+}
+
+void SpotForm::create_time_band_widget()
+{
+    m_time_band_widget = new QTableWidget();
+    m_time_band_widget->setMaximumWidth(200);
+    m_time_band_widget->setColumnCount(2);
+    m_time_band_widget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    m_time_band_widget->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_time_band_widget->setSelectionMode(QAbstractItemView::MultiSelection);
+
+    connect(m_time_band_widget, &QTableWidget::itemClicked, this, &SpotForm::time_band_selected);
+
+    QStringList header;
+    header << "Band" << "Dist";
+
+    //twTimeBand->setHorizontalHeaderLabels(header);
+
+    m_edm_time_band = std::make_unique<EntityDataModel>(
+                          std::make_unique<TimeBand>());
+
+    m_edm_time_band->all();
+
+    m_time_band_widget->setRowCount(m_edm_time_band->count());
+
+    populate_time_band_widget(m_edm_time_band, m_time_band_widget);
+
+    QGroupBox* gbTimeBand = new QGroupBox("Time Bands");
+    gbTimeBand->setMaximumWidth(240);
+    gbTimeBand->setLayout(new QHBoxLayout());
+    gbTimeBand->layout()->addWidget(m_time_band_widget);
+
+    ui->vlTimeBand->addWidget(gbTimeBand);
+}
+
+void SpotForm::create_dow_widget()
+{
+    /*
+    QGridLayout* glDOW = new QGridLayout();
+    int ROW0 = 0;
+    int ROW1 = 1;
+    int COL0 = 0;
+    int COL1 = 1;
+
+    QLabel*  lblMon = new QLabel("Mon");
+    QLineEdit* edtMon = new QLineEdit();
+    glDOW->addWidget(lblMon, ROW0, COL0);
+    glDOW->addWidget(edtMon, ROW1, COL0);
+
+    */
+
+    m_dow_widget = std::make_unique<DowWidget>();
+    QGroupBox* gbDOW = new QGroupBox("Days of Week");
+    gbDOW->setLayout(m_dow_widget->grid_layout());
+    ui->hlDOW->addWidget(gbDOW);
+}
+
+
+
+void SpotForm::populate_time_band_widget(const std::unique_ptr<EntityDataModel>& edm, QTableWidget* tab)
+{
+    auto provider = edm->getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
+
+    provider->cache()->first();
+    int row = 0;
+
+    do{
+        auto it_begin = provider->cache()->currentElement()->begin();
+        auto it_end = provider->cache()->currentElement()->end();
+
+        int id = -1;
+        QString tb_name;
+
+        for(; it_begin != it_end; ++it_begin) {
+            std::string field_name = (*it_begin).first;
+            std::string field_value = (*it_begin).second;
+
+            if (field_name == "id")
+                id = std::stoi(field_value);
+            if (field_name == "name")
+                tb_name = QString::fromStdString(field_value);
+        }
+
+        auto twi = new QTableWidgetItem(tb_name);
+        twi->setData(Qt::UserRole, id);
+        tab->setItem(row, 0, twi);
+
+        QSpinBox* sb = new QSpinBox();
+        sb->setFixedWidth(50);
+        sb->setMaximum(99);
+        tab->setCellWidget(row, 1, sb);
+
+        ++row;
+
+        provider->cache()->next();
+
+    } while(!provider->cache()->isLast());
+
+
+}
+
 void SpotForm::populateGrid()
 {
     m_daypart = std::make_unique<DayPartGrid>(ui->vlDaypart);
+    m_daypart->set_size_policy(GridSizePolicy::Auto);
 
     std::map<int, std::string> dayparts;
     dayparts[1] = m_spot->daypart1()->valueToString();
@@ -170,8 +286,6 @@ void SpotForm::populateFormWidgets()
     ui->edtSpotDuration->setValue(m_spot->spot_duration()->value());
     ui->edtRealDuration->setValue(m_spot->real_duration()->value());
 
-    qDebug() << "EDM Count: "<<  m_spot->brand()->dataModel()->count();
-
     ui->cbBrands->setModel(m_spot->brand()->dataModel());
     ui->cbBrands->setCurrentIndex(ui->cbBrands->findText(
         stoq(m_spot->brand()->displayName())));
@@ -204,5 +318,20 @@ void SpotForm::update_audio_duration(int audio_duration)
 void SpotForm::closeEvent(QCloseEvent* event)
 {
     m_spot_audio_browser->stop_play();
+}
+
+void SpotForm::time_band_selected()
+{
+    m_daypart->clear_all_cells();
+
+    QItemSelectionModel* ism = m_time_band_widget->selectionModel();
+    QModelIndexList mil = ism->selectedIndexes();
+
+    if (mil.size() == 0)
+        return;
+
+    for(auto& index: mil) {
+    }
+
 }
 
