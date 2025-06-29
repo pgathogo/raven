@@ -47,7 +47,6 @@ rave/sedric/.ninja_log
 rave/sedric/build.ninja
 rave/sedric/cmake_install.cmake
 #Folders
-media
 images
 temp
 .cmake
