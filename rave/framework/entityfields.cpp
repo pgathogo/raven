@@ -455,6 +455,10 @@ std::string TextField::field_type()
 {
     return "TextField";
 }
+QString TextField::to_qstring()
+{
+    return QString::fromStdString(mValue);
+}
 
 /* -------- LookupField ------------- */
 

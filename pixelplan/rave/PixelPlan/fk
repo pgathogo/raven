@@ -1,0 +1,61 @@
+[?1049h[22;0;0t[>4;2m[?1h=[?2004h[?1004h[1;28r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?25l[28;1H"spot.cpp" [dos] 344L, 9519B[1;9Hm_client->setValue(client->id());[3;9Hm_name = createField<StringField>([31m"name"[m,[31m"Spot Name"[m);[4;9Hm_name->setMandatory([31mtrue[m);[6;9Hm_spot_duration = createField<DecimalField>([31m"spot_duration"[m, [31m"Spot Duration"[m);[7;9Hm_real_duration = createField<DecimalField>([31m"real_duration"[m, [31m"Real Duration"[m);[9;9HEntityDataModel edm;[10;9H[32mauto[m filter = std::make_tuple([31m"client_id"[m, [31m"="[m, client->id());[11;9Hstd::string fstr = edm.prepareFilter(filter);[13;9Hm_brand = createField<ForeignKeyField>([31m"brand_id"[m, [31m"Brand"[m,[14;47Hstd::make_unique<TRAFFIK::Brand>(),[15;47H[31m"brand_name"[m,[16;47Hfstr);[18;9Hm_daypart1 = createField<StringField>([31m"daypart1"[m, [31m"Daypart1"[m);[19;9Hm_daypart1->setSearchable([31mfalse[m);[21;9Hm_daypart2 = createField<StringField>([31m"daypart2"[m, [31m"Daypart2"[m);[22;9Hm_daypart2->setSearchable([31mfalse[m);[24;9Hm_daypart3 = createField<StringField>([31m"daypart3"[m, [31m"Daypart3"[m);[25;9Hm_daypart3->setSearchable([31mfalse[m);
+
+[1m[7mspot.cpp [dos] (16:32 24/07/2023)                                                     89,31 23%[13;31H[?25h[?25l[m[28;1HType  :qa  and press <Enter> to exit Vim[?5h[?25h[?5l[13;31H[?25l[28;85H^\[13;31H[?25h[?25l[28;87H^_[13;31H[?5h[?25h[?5l[?25l[28;85H    [13;31H[?25h[?25l[28;85H^\[13;31H[?25h[?5h[?5l[?25l[28;85H  [13;31H[?25h[?25l[?5h[?25h[?5l[?25l[?25h[?25l[?5h[?25h[?5l[?25l[?25h[?25l[28;85H^_[13;31H[?5h[?25h[?5l[?25l[28;85H  [13;31H[?25h[?25l[28;85H^_[13;31H[28;85H  [13;31H[?25h[?25l[?5h[?25h[?5l[?25l[28;85H^D[13;31H[28;85H  [13;1H[1;26r[1;1H[13M[1;28r[14;9Hm_daypart4 = createField<StringField>([31m"daypart4"[m, [31m"Daypart4"[m);[15;9Hm_daypart4->setSearchable([31mfalse[m);[16;9Hm_daypart5 = createField<StringField>([31m"daypart5"[m, [31m"Daypart5"[m);[17;9Hm_daypart5->setSearchable([31mfalse[m);[18;9Hm_daypart6 = createField<StringField>([31m"daypart6"[m, [31m"Daypart6"[m);[19;9Hm_daypart6->setSearchable([31mfalse[m);[20;9Hm_daypart7 = createField<StringField>([31m"daypart7"[m, [31m"Daypart6"[m);[21;9Hm_daypart7->setSearchable([31mfalse[m);[23;9HmHeader << QString::fromStdString(m_name->fieldLabel())[24;18H<<QString::fromStdString(m_spot_duration->fieldLabel());[26;9Hm_voice_over = std::make_unique<VoiceOver>();[28;1H[K[27;85H[1m[7m102,0-1 27%[13;1H[?25h[?25l[m[28;85H^D[13;1H[28;85H  [13;9H[1;26r[1;1H[13M[1;28r[14;9Hm_spot_voice_over = std::make_unique<SpotVoiceOver>([33mthis[m, m_voice_over.get());[16;9Hm_type_ex = std::make_unique<TRAFFIK::TypeExclusion>();[17;9Hm_spot_type_ex = std::make_unique<SpotTypeExclusion>([33mthis[m, m_type_ex.get() );
+
+[34m//        m_audio = std::make_unique<AUDIO::Audio>([m[31m""[m[34m);
+//        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());[m[22;9HsetTableName([31m"rave_spot"[m);[24;5H}[26;5HSpot::~Spot()[27;85H[1m[7m  115,9 32%[13;9H[?25h[?25l[m[28;1HType  :qa  and press <Enter> to exit Vim[?5h[?25h[?5l[13;9H[?25l[?25h[?25l[28;85H^\[13;9H[?25h[?25l[28;87H^\[13;9H[?25h[?5h[?5l[?25l[28;85H    [13;9H[?25h[?25l[28;85Hd[13;9H[?25h[?25l[28;86Hf[13;9H[?25h[?25l[28;87Hd[13;9H[28;85H   [13;9H::make_unique<VoiceOver>();[13;36H[K[27;9H[1m[7m[+] [dos] (16:32 24/07/2023)[13;9H[?25h[?25l[m[28;85H^H[13;9H[28;85H  [13;8H[27;91H[1m[7m8 [13;8H[?25h[?25l[m[28;85H^\[13;8H[?25h[?25l[28;87H^\[13;8H[?25h[?5h[?5l[?25l[28;85H    [13;8H[?25h[?25l[28;85H^\[13;8H[?25h[28;1H[?1004l[?2004l[?1l>[>4;m[?1049l[23;0;0tVim: Caught deadly signal HUP
+Vim: preserving files...
+Vim: Finished.
+[28;1H[23;2t[23;1tbookingsegment.cpp:    m_order = createField<ForeignKeyField>("order_id", "Order",
+bookingsegment.cpp:ForeignKeyField* BookingSegment::order() const
+brand.cpp:        m_client = createField<ForeignKeyField>("client_id", "Client",
+brand.cpp:        m_brand_manager = createField<ForeignKeyField>("brand_manager_id", "Brand Manager",
+brand.cpp:        m_client = createField<ForeignKeyField>("client_id", "Client",
+brand.cpp:        m_brand_manager = createField<ForeignKeyField>("brand_manager_id", "Brand Manager",
+brand.cpp:    ForeignKeyField* Brand::client() const
+brand.cpp:    ForeignKeyField* Brand::brand_manager() const
+breaklayoutline.cpp:    mBreakLayout = createField<ForeignKeyField>("break_layout_id", "Break Layout",
+breaklayoutline.cpp:ForeignKeyField *BreakLayoutLine::breakLayout() const
+client.cpp:    m_agency = createField<ForeignKeyField>( "agency_id", "Agency",
+client.cpp:    m_client_group = createField<ForeignKeyField>("client_group_id", "Client Group",
+client.cpp:    m_account_manager = createField<ForeignKeyField>("account_manager_id", "Account Manager",
+client.cpp:ForeignKeyField* Client::agency() const
+client.cpp:ForeignKeyField* Client::group_manager() const
+client.cpp:ForeignKeyField* Client::account_manager() const
+order.cpp:    mClient = createField<ForeignKeyField>("client_id", "Client",
+order.cpp:    mPackage = createField<ForeignKeyField>("package_id", "Package",
+order.cpp:    mAccountRep = createField<ForeignKeyField>("account_rep_id", "Account Rep",
+order.cpp:    mBrand = createField<ForeignKeyField>("brand_id", "Brand",
+order.cpp:    mAgency = createField<ForeignKeyField>("agency_id", "Agency",
+order.cpp:    mClient = createField<ForeignKeyField>("client_id", "Client",
+order.cpp:    mPackage = createField<ForeignKeyField>("package_id", "Package",
+order.cpp:    mAccountRep = createField<ForeignKeyField>("account_rep_id", "Account Rep",
+order.cpp:    mBrand = createField<ForeignKeyField>("brand_id", "Brand",
+order.cpp:    mAgency = createField<ForeignKeyField>("agency_id", "Agency",
+order.cpp:ForeignKeyField *Order::client() const
+order.cpp:ForeignKeyField *Order::package() const
+order.cpp:ForeignKeyField *Order::accountRep() const
+order.cpp:ForeignKeyField *Order::brand() const
+order.cpp:ForeignKeyField *Order::agency() const
+orderapprover.cpp:    mUserId = createField<ForeignKeyField>("user_id", "User ID",
+orderapprover.cpp:ForeignKeyField *OrderApprover::userId()
+orderbooking.cpp:    m_schedule = createField<ForeignKeyField>("schedule_id", "Schedule",
+orderbooking.cpp:    m_booking_segment = createField<ForeignKeyField>("bookingsegment_id", "Booking Segment",
+orderbooking.cpp:    m_spot = createField<ForeignKeyField>("spot_id", "Spot",
+orderbooking.cpp:    m_spot_audio = createField<ForeignKeyField>("audio_id", "Audio",
+orderbooking.cpp:ForeignKeyField *OrderBooking::booking_segment() const
+orderbooking.cpp:ForeignKeyField *OrderBooking::schedule() const
+orderbooking.cpp:ForeignKeyField *OrderBooking::spot() const
+orderbooking.cpp:ForeignKeyField *OrderBooking::audio() const
+orderform.cpp:void OrderForm::setForeignKeyField(QComboBox* cbox, ForeignKeyField* fkf)
+salesperson.cpp:    mGender = createField<ForeignKeyField>("gender", "Gender",
+salesperson.cpp:ForeignKeyField* SalesPerson::gender() const
+spot.cpp:        m_client = createField<ForeignKeyField>("client_id", "Client",
+spot.cpp:        m_brand = createField<ForeignKeyField>("brand_id", "Brand",
+spot.cpp:        m_client = createField<ForeignKeyField>("client_id", "Client",
+spot.cpp:        m_brand = createField<ForeignKeyField>("brand_id", "Brand",
+spot.cpp:    ForeignKeyField* Spot::client() const
+spot.cpp:    ForeignKeyField* Spot::brand() const
+spotaudio.cpp://        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+voiceover.cpp:    mGender = createField<ForeignKeyField>("gender", "Gender",
+voiceover.cpp:ForeignKeyField* VoiceOver::gender() const

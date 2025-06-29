@@ -177,6 +177,7 @@ class TextField :public Field{
 
         std::string displayName() const override;
         std::string field_type() override;
+        QString to_qstring();
     private:
         std::string mValue;
 };

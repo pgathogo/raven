@@ -1,0 +1,1 @@
+D:/Home/Clients/PMS/Raven/rave/Traffik/ffmpeg.exe -y -i D:\Home\Clients\PMS\RavenData\Audio\IMedia\Test\Mapenzi_CHA0003.MTS -c:a libvorbis -q:a 4 -vsync 2 D:\Home\Clients\PMS\RavenData\Audio\IMedia\Test\Mapenzi_CHA0003.ogg

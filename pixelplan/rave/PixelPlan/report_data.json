@@ -1,0 +1,50 @@
+[
+    {
+        "break_time": "11:00",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "16-11-2024",
+                "schedule_time": "11:00",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            }
+        ]
+    },
+    {
+        "break_time": "11:15",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "16-11-2024",
+                "schedule_time": "11:15",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            }
+        ]
+    },
+    {
+        "break_time": "11:30",
+        "comms": [
+            {
+                "book_status": "READY",
+                "client_name": "Proxima Media Systems Ltd.",
+                "play_date": "",
+                "play_time": "",
+                "schedule_date": "16-11-2024",
+                "schedule_time": "11:30",
+                "spot_duration": 20,
+                "spot_id": 26,
+                "spot_name": "Launching of Traffik Three"
+            }
+        ]
+    }
+]

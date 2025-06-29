@@ -111,10 +111,14 @@ std::string BaseDatabaseManager::makeInsertString(const BaseEntity& entity)
 std::string BaseDatabaseManager::make_insert_returning_string(const BaseEntity& entity)
 {
     std::string flds = columnsForInsert(entity);
+
     std::string vals = commaSepValues(entity);
+
     std::string in_a = "INSERT INTO "+entity.tableName()+"( "+flds+")";
     std::string in_b = " VALUES ("+vals+") RETURNING id; ";
     std::string insert_stmt = in_a + in_b;
+
+
     return insert_stmt;
 }
 
@@ -173,7 +177,13 @@ int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 
     sqlQuery = make_insert_returning_string(entity);
 
+    std::cout << sqlQuery << '\n';
+
     int last_id = provider()->insert_returning_id(sqlQuery);
+
+    qDebug() << "Last ID: " << last_id;
+
+
     return last_id;
 
 }

@@ -1,0 +1,49 @@
+#include <QDebug>
+#include <QMdiArea>
+
+#include "clientgroupdlg.h"
+#include "clientgroupdetaildlg.h"
+#include "clientgroup.h"
+#include "ui_clientgroupdlg.h"
+#include "../../../rave/framework/entitydatamodel.h"
+#include "../../../rave/utils/tools.h"
+
+
+ClientGroupDlg::ClientGroupDlg(QWidget *parent):
+    BaseEntityBrowserDlg(parent,
+                         std::make_unique<ClientGroup>()),
+    ui(new Ui::ClientGroupDlg)
+{
+    ui->setupUi(this);
+    setDialogTitle("Client Groups");
+}
+
+ClientGroupDlg::~ClientGroupDlg()
+{
+    delete ui;
+}
+
+void ClientGroupDlg::addRecord()
+{
+    std::unique_ptr<ClientGroup> cg = std::make_unique<ClientGroup>();
+
+    std::unique_ptr<ClientGroupDetailDlg> cgForm =
+            std::make_unique<ClientGroupDetailDlg>(cg.get());
+
+    if (cgForm->exec() > 0)
+        entityDataModel().createEntity(std::move(cg));
+}
+
+void ClientGroupDlg::updateRecord()
+{
+
+   update<ClientGroup, ClientGroupDetailDlg>();
+
+}
+
+std::string ClientGroupDlg::typeID()
+{
+    return "ClientGroupDlg";
+}
+
+

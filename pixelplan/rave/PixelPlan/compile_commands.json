@@ -1,0 +1,17 @@
+[
+{
+  "directory": "D:/Home/vscode/blog-vscode-template/build-debug",
+  "command": "C:\\PROGRA~1\\MIB055~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1442~1.344\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -ID:\\Home\\vscode\\blog-vscode-template\\build-debug\\hello_world_autogen\\include -external:IC:\\QT632\\include\\QtCore -external:IC:\\QT632\\include -external:IC:\\QT632\\mkspecs\\win32-msvc -external:IC:\\QT632\\include\\QtWidgets -external:IC:\\QT632\\include\\QtGui -external:W0 /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -Zc:__cplusplus -permissive- -utf-8 -std:c++17 /FoCMakeFiles\\hello_world.dir\\hello_world_autogen\\mocs_compilation.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\Home\\vscode\\blog-vscode-template\\build-debug\\hello_world_autogen\\mocs_compilation.cpp",
+  "file": "D:\\Home\\vscode\\blog-vscode-template\\build-debug\\hello_world_autogen\\mocs_compilation.cpp"
+},
+{
+  "directory": "D:/Home/vscode/blog-vscode-template/build-debug",
+  "command": "C:\\PROGRA~1\\MIB055~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1442~1.344\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -ID:\\Home\\vscode\\blog-vscode-template\\build-debug\\hello_world_autogen\\include -external:IC:\\QT632\\include\\QtCore -external:IC:\\QT632\\include -external:IC:\\QT632\\mkspecs\\win32-msvc -external:IC:\\QT632\\include\\QtWidgets -external:IC:\\QT632\\include\\QtGui -external:W0 /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -Zc:__cplusplus -permissive- -utf-8 -std:c++17 /FoCMakeFiles\\hello_world.dir\\main.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\Home\\vscode\\blog-vscode-template\\main.cpp",
+  "file": "D:\\Home\\vscode\\blog-vscode-template\\main.cpp"
+},
+{
+  "directory": "D:/Home/vscode/blog-vscode-template/build-debug",
+  "command": "C:\\PROGRA~1\\MIB055~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1442~1.344\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -ID:\\Home\\vscode\\blog-vscode-template\\build-debug\\hello_world_autogen\\include -external:IC:\\QT632\\include\\QtCore -external:IC:\\QT632\\include -external:IC:\\QT632\\mkspecs\\win32-msvc -external:IC:\\QT632\\include\\QtWidgets -external:IC:\\QT632\\include\\QtGui -external:W0 /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -Zc:__cplusplus -permissive- -utf-8 -std:c++17 /FoCMakeFiles\\hello_world.dir\\widget.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\Home\\vscode\\blog-vscode-template\\widget.cpp",
+  "file": "D:\\Home\\vscode\\blog-vscode-template\\widget.cpp"
+}
+]
