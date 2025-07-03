@@ -1,13 +1,13 @@
-#include "breaklayout.h"
 #include "../../../rave/framework/choicefield.h"
+
+#include "breaklayout.h"
+#include "tvprogram.h"
 
 BreakLayout::BreakLayout()
 {
-    mName = createField<StringField>("name", "Break Layout");
-    mName->setMandatory(true);
 
-    mDescription = createField<TextField>("description", "Description");
-    mDescription->setSearchable(false);
+    m_tvprogram = createField<ForeignKeyField>("tvprogram_id", "TV Program",
+                                               std::make_unique<PIXELPLAN::TVProgram>(), "title");
 
     mWeekDays = createField<StringField>("week_days", "Week Days");
     mWeekDays->setSearchable(false);
@@ -50,7 +50,7 @@ BreakLayout::BreakLayout()
     mSunBit->setFormOnly(true);
     mSunBit->setSearchable(false);
 
-    mHeader << stoq(mName->fieldLabel());
+    mHeader << stoq(m_tvprogram->fieldLabel());
     setTableName("rave_breaklayout");
 }
 
@@ -58,25 +58,18 @@ BreakLayout::~BreakLayout()
 {
 }
 
-StringField *BreakLayout::name() const
+ForeignKeyField* BreakLayout::tvprogram()
 {
-    return mName;
+    return m_tvprogram;
+
 }
 
-void BreakLayout::setName(const std::string nm)
+void BreakLayout::set_tvprogram(int prog)
 {
-    mName->setValue( nm );
+    m_tvprogram->setValue(prog);
 }
 
-TextField *BreakLayout::description() const
-{
-    return mDescription;
-}
 
-void BreakLayout::setDescription(const std::string desc)
-{
-    mDescription->setValue( desc );
-}
 
 StringField *BreakLayout::weekDays() const
 {
@@ -230,12 +223,12 @@ std::unique_ptr<BaseEntity> BreakLayout::mapFields(StringMap *raw_entity)
 
 std::vector<std::string> BreakLayout::tableViewColumns() const
 {
-    return tableViewCols<std::string>(name()->displayName());
+    return tableViewCols<std::string>(m_tvprogram->displayName());
 }
 
 std::vector<std::string> BreakLayout::tableViewValues()
 {
-    return { name()->displayName() };
+    return { m_tvprogram->displayName() };
 }
 
 QStringList BreakLayout::tableHeaders() const
@@ -245,7 +238,7 @@ QStringList BreakLayout::tableHeaders() const
 
 std::string BreakLayout::searchColumn() const
 {
-    return name()->valueToString();
+    return m_tvprogram->valueToString();
 }
 
 void BreakLayout::populateEntity()

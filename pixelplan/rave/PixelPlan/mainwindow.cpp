@@ -78,7 +78,7 @@ MainWindow::MainWindow(QApplication* app,
 //    FRAMEWORK::ApplicationContext* app_context;
 //    app_context = app_context->instance(app);
 
-    this->setWindowTitle("Raven - Traffik");
+    this->setWindowTitle("Raven - PixelPlan");
 
     int w = 1045;
     int h = 680;
@@ -147,6 +147,13 @@ void MainWindow::createActions()
     connect(actTVPrograms, &QAction::triggered, this, &MainWindow::on_tv_programs);
     mainToolBar->addAction(actTVPrograms);
 
+    QAction* scheduleAction = new QAction(tr("&BREAKS"));
+    scheduleAction->setIcon(QIcon(":/images/media/icons/schedule.png"));
+    setupMenu->addAction(scheduleAction);
+    scheduleAction->setStatusTip(tr("Schedule"));
+    connect(scheduleAction, &QAction::triggered, this, &MainWindow::open_schedule);
+    mainToolBar->addAction(scheduleAction);
+    mainToolBar->addSeparator();
 
 
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
@@ -156,14 +163,6 @@ void MainWindow::createActions()
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
 
-    QAction* scheduleAction = new QAction(tr("&SCHEDULE"));
-    scheduleAction->setIcon(QIcon(":/images/media/icons/schedule.png"));
-    setupMenu->addAction(scheduleAction);
-    scheduleAction->setStatusTip(tr("Schedule"));
-    connect(scheduleAction, &QAction::triggered, this, &MainWindow::open_schedule);
-
-    mainToolBar->addAction(scheduleAction);
-    mainToolBar->addSeparator();
 
 
     QAction* setup_browser_act = new QAction(tr("&SETUPS"));

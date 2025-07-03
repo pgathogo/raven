@@ -297,9 +297,92 @@ BREAK_FILL_METHOD = (
         ('R', 'Random')
         )
 
-class BreakLayout(models.Model):
-    name = models.CharField(max_length=255)
+class TVProgram(models.Model):
+    title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    code = models.CharField(max_length=50, unique=True)
+    CATEGORY = (
+        ('NEWS', 'News'),
+        ('SPORTS', 'Sports'),
+        ('ENTERTAINMENT', 'Entertainment'),
+        ('DOCUMENTARY', 'Documentary'),
+        ('MOVIE', 'Movie'),
+        ('SERIES', 'Series'),
+        ('DRAMA', 'Drama'),
+        ('TALK SHOW', 'Talk Show'),
+    )
+    category = models.CharField(max_length=50, choices=CATEGORY, null=True, blank=True)
+
+    LANGUAGE = (
+        ('ENGLISH', 'English'),
+        ('SWAHILI', 'Swahili'),
+        ('FRENCH', 'French'),
+        ('SPANISH', 'Spanish'),
+        ('FRENCH', 'French'),
+        ('ARABIC', 'Arabic'),
+        ('MANDARIN', 'Mandarin'),
+        ('HINDI', 'Hindi'),
+    )
+    prog_language = models.CharField(max_length=50, choices=LANGUAGE, null=True, blank=True)
+
+    AUDIENCE = (
+        ('GENERAL', 'General'),
+        ('CHILDREN', 'Children'),
+        ('TEENS', 'Teens'),
+        ('ADULTS', 'Adults'),
+        ('SENIORS', 'Seniors'),
+    )
+    audience = models.CharField(max_length=50, choices=AUDIENCE, null=True, blank=True)
+
+    broadcast_days = models.CharField(max_length=50, null=True, blank=True)  # e.g., "Mon,Tue,Wed,Thu,Fri,Sat,Sun"
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    duration = models.IntegerField(null=True, blank=True)  # Duration in minutes
+
+    # Personnel
+    producer = models.CharField(max_length=255, null=True, blank=True)
+    director = models.CharField(max_length=255, null=True, blank=True)
+    writer = models.CharField(max_length=255, null=True, blank=True)
+    presenter = models.CharField(max_length=255, null=True, blank=True)
+    prog_cast = models.TextField(null=True, blank=True)  # Comma-separated list of cast members
+
+    # Production Information
+    PRODUCTION_TYPE = (
+        ('LIVE', 'Live'),
+        ('RECORDED', 'Recorded'),
+        ('ANIMATED', 'Animated'),
+        ('DOCUMENTARY', 'Documentary'),
+        ('SYNDICATED', 'Syndicated'),
+    )
+
+    production_type = models.CharField(max_length=50, choices=PRODUCTION_TYPE, null=True, blank=True)
+    production_company = models.CharField(max_length=255, null=True, blank=True)
+    production_location = models.CharField(max_length=255, null=True, blank=True)
+
+    # Broadcast Information
+    broadcast_network = models.CharField(max_length=255, null=True, blank=True)
+    season_number = models.IntegerField(null=True, blank=True)
+    episode_number = models.IntegerField(null=True, blank=True)
+    repeat_schedule = models.CharField(max_length=255, null=True, blank=True)  # e.g., "Mon 8 PM, Wed 9 PM"
+
+    # Metadata
+    tags = models.CharField(max_length=255, null=True, blank=True)  # Comma-separated tags for easy searching
+    PARENTAL_RATING = (
+        ('G', 'General Audience'),
+        ('PG', 'Parental Guidance'),
+        ('PG-13', 'Parents Strongly Cautioned'),
+        ('R', 'Restricted'),
+        ('NC-17', 'Adults Only'),
+    )
+    parental_rating = models.CharField(max_length=5, choices=PARENTAL_RATING, null=True, blank=True)
+    cover_image = models.CharField(max_length=255, null=True, blank=True)
+    script_file = models.CharField(max_length=255, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=100, null=True, blank=True)
+
+class BreakLayout(models.Model):
+    tvprogram = models.ForeignKey(TVProgram, models.DO_NOTHING, default=0)
     time_interval = models.IntegerField(choices=TIME_INTERVAL, default=15)
     week_days = models.CharField(max_length=7)
     break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD);
@@ -479,90 +562,6 @@ class OrderBooking(models.Model):
     played_audio = models.IntegerField(default=-1, null=True, blank=True)
     book_seq = models.IntegerField(default=1, null=True)
 
-
-class TVProgram(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    code = models.CharField(max_length=50, unique=True)
-    CATEGORY = (
-        ('NEWS', 'News'),
-        ('SPORTS', 'Sports'),
-        ('ENTERTAINMENT', 'Entertainment'),
-        ('DOCUMENTARY', 'Documentary'),
-        ('MOVIE', 'Movie'),
-        ('SERIES', 'Series'),
-        ('DRAMA', 'Drama'),
-        ('TALK SHOW', 'Talk Show'),
-    )
-    category = models.CharField(max_length=50, choices=CATEGORY, null=True, blank=True)
-
-    LANGUAGE = (
-        ('ENGLISH', 'English'),
-        ('SWAHILI', 'Swahili'),
-        ('FRENCH', 'French'),
-        ('SPANISH', 'Spanish'),
-        ('FRENCH', 'French'),
-        ('ARABIC', 'Arabic'),
-        ('MANDARIN', 'Mandarin'),
-        ('HINDI', 'Hindi'),
-    )
-    prog_language = models.CharField(max_length=50, choices=LANGUAGE, null=True, blank=True)
-
-    AUDIENCE = (
-        ('GENERAL', 'General'),
-        ('CHILDREN', 'Children'),
-        ('TEENS', 'Teens'),
-        ('ADULTS', 'Adults'),
-        ('SENIORS', 'Seniors'),
-    )
-    audience = models.CharField(max_length=50, choices=AUDIENCE, null=True, blank=True)
-
-    broadcast_days = models.CharField(max_length=50, null=True, blank=True)  # e.g., "Mon,Tue,Wed,Thu,Fri,Sat,Sun"
-    start_time = models.TimeField(null=True, blank=True)
-    end_time = models.TimeField(null=True, blank=True)
-    duration = models.IntegerField(null=True, blank=True)  # Duration in minutes
-
-    # Personnel
-    producer = models.CharField(max_length=255, null=True, blank=True)
-    director = models.CharField(max_length=255, null=True, blank=True)
-    writer = models.CharField(max_length=255, null=True, blank=True)
-    presenter = models.CharField(max_length=255, null=True, blank=True)
-    prog_cast = models.TextField(null=True, blank=True)  # Comma-separated list of cast members
-
-    # Production Information
-    PRODUCTION_TYPE = (
-        ('LIVE', 'Live'),
-        ('RECORDED', 'Recorded'),
-        ('ANIMATED', 'Animated'),
-        ('DOCUMENTARY', 'Documentary'),
-        ('SYNDICATED', 'Syndicated'),
-    )
-
-    production_type = models.CharField(max_length=50, choices=PRODUCTION_TYPE, null=True, blank=True)
-    production_company = models.CharField(max_length=255, null=True, blank=True)
-    production_location = models.CharField(max_length=255, null=True, blank=True)
-
-    # Broadcast Information
-    broadcast_network = models.CharField(max_length=255, null=True, blank=True)
-    season_number = models.IntegerField(null=True, blank=True)
-    episode_number = models.IntegerField(null=True, blank=True)
-    repeat_schedule = models.CharField(max_length=255, null=True, blank=True)  # e.g., "Mon 8 PM, Wed 9 PM"
-
-    # Metadata
-    tags = models.CharField(max_length=255, null=True, blank=True)  # Comma-separated tags for easy searching
-    PARENTAL_RATING = (
-        ('G', 'General Audience'),
-        ('PG', 'Parental Guidance'),
-        ('PG-13', 'Parents Strongly Cautioned'),
-        ('R', 'Restricted'),
-        ('NC-17', 'Adults Only'),
-    )
-    parental_rating = models.CharField(max_length=5, choices=PARENTAL_RATING, null=True, blank=True)
-    cover_image = models.CharField(max_length=255, null=True, blank=True)
-    script_file = models.CharField(max_length=255, null=True, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.CharField(max_length=100, null=True, blank=True)
 
     
 

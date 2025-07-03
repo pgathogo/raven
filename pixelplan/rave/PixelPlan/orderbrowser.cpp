@@ -35,23 +35,24 @@ void OrderBrowser::addRecord()
 void OrderBrowser::updateRecord()
 {
     std::string search_name = selectedRowName().toStdString();
-    if (!search_name.empty()){
-        std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
-        Order* order = dynamic_cast<Order*>(be.get());
+    if (search_name.empty())
+        return;
 
-        qDebug() << *order;
+    std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
+    Order* order = dynamic_cast<Order*>(be.get());
 
-        auto order_form = std::make_unique<OrderForm>(mClient, order, this);
-        if (order_form->exec() > 0){
-            try{
-                updateTableViewRecord(order->tableViewValues());
-                entityDataModel().updateEntity(*order);
-                entityDataModel().all();
-            } catch (DatabaseException& de){
-                showMessage(de.errorMessage());
-            }
-        }
+    auto order_form = std::make_unique<OrderForm>(mClient, order, this);
+    if (order_form->exec() == 0)
+        return;
+
+    try{
+        updateTableViewRecord(order->tableViewValues());
+        entityDataModel().updateEntity(*order);
+        entityDataModel().all();
+    } catch (DatabaseException& de){
+        showMessage(de.errorMessage());
     }
+
 }
 
 void OrderBrowser::searchRecord()

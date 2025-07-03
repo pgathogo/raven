@@ -425,7 +425,12 @@ namespace PIXELPLAN
 
         ActionResult TVProgram::validate()
         {
-            return std::make_tuple(ActionResultType::arSUCCESS, "OK");
+            if (m_code->value()==""){
+                return std::make_tuple(ActionResultType::arERROR,
+                                       "Program code is empty!");
+            }
+
+            return BaseEntity::validate();
 
         }
 }

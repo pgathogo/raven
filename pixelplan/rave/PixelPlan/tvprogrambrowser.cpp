@@ -37,15 +37,26 @@ void TVProgramBrowser::addRecord()
 
 void TVProgramBrowser::updateRecord()
 {
+    std::string search_name = selectedRowName().toStdString();
+    if (search_name.empty())
+        return;
+
+    std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
+    std::shared_ptr<PIXELPLAN::TVProgram> tvprogram = std::dynamic_pointer_cast<PIXELPLAN::TVProgram>(be);
+
+    auto tvprog_form = std::make_unique<TVProgramForm>(tvprogram);
+
+    if (tvprog_form->exec() == 0)
+        return;
+
+    try{
+        updateTableViewRecord(tvprogram->tableViewValues());
+        entityDataModel().updateEntity(*tvprogram);
+        entityDataModel().all();
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
 
 }
 
-void TVProgramBrowser::searchRecord()
-{
-
-}
-
-bool TVProgramBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
-{
-
-}

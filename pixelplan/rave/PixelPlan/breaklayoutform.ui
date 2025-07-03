@@ -33,28 +33,30 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,1" columnminimumwidth="0,0,0">
-     <item row="1" column="1">
+    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0" columnstretch="0,1,1" rowminimumheight="0,0,0,0">
+     <item row="2" column="1">
       <widget class="QComboBox" name="cbTimeInterval"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Break Fill Method:</string>
+       </property>
+      </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>Break Layout Name:</string>
+        <string>TV Program:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Break Time Interval:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLineEdit" name="edtName"/>
-     </item>
-     <item row="1" column="2">
+     <item row="2" column="2">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string/>
@@ -62,21 +64,38 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Break Fill Method:</string>
+        <string>Break Time Interval:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="0" column="1" colspan="2">
+      <widget class="QComboBox" name="cbProgram"/>
+     </item>
+     <item row="3" column="1">
       <widget class="QComboBox" name="cbBreakFillMethod"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="lblEndTime">
+       <property name="text">
+        <string>End Time:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="lblStartTime">
+       <property name="text">
+        <string>Start time:</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string/>
+      <string>Week Days:</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -132,7 +151,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="gbCopy">
      <property name="title">
       <string>Copy Hour</string>
      </property>

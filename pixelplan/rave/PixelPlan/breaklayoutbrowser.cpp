@@ -27,10 +27,9 @@ BreakLayoutBrowser::~BreakLayoutBrowser()
 void BreakLayoutBrowser::addRecord()
 {
     auto bl = std::make_shared<BreakLayout>();
-    auto blForm = std::make_unique<BreakLayoutForm>(bl.get());
+    auto blForm = std::make_unique<BreakLayoutForm>(bl.get(), std::vector<int>());
 
     if (blForm->exec() > 0){
-        qDebug() << "WEEK DAYS: "<< stoq(bl->weekDays()->value());
         try{
             int id = entityDataModel().createEntity(std::move(bl));
             saveBreakLayoutLines(*blForm, id);
@@ -47,7 +46,7 @@ void BreakLayoutBrowser::updateRecord()
     if (!searchName.empty()){
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(searchName);
         auto breakLayout = dynamic_cast<BreakLayout*>(be.get());
-        auto blForm = std::make_unique<BreakLayoutForm>(breakLayout);
+        auto blForm = std::make_unique<BreakLayoutForm>(breakLayout, std::vector<int>());
         if (blForm->exec() > 0){
         }
     }

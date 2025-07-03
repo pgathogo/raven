@@ -15,12 +15,17 @@ class RavenSetup;
 template<typename T>
 class ChoiceField;
 
+
+namespace PIXELPLAN {
+class TVProgram;
+}
+
 class BreakLayoutForm : public BaseEntityDetailDlg
 {
     Q_OBJECT
 
 public:
-    explicit BreakLayoutForm(BreakLayout* bl,
+    explicit BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
                              QDialog* parent = nullptr);
     ~BreakLayoutForm() override;
 
@@ -37,7 +42,7 @@ public:
     void populateBreakLine();
     void set_defaults();
     void setup_ui();
-    void addBreakLines(int hour, int timeInterval=0);
+    void add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram>, int timeInterval=0);
     std::vector<EntityRecord> const& breakLines() const;
     void clearBreakTableView(int startRow, int endRow);
     void clearBreakLineModel(int startHr, int endHr);
@@ -61,12 +66,17 @@ private slots:
     void copyHourClicked();
     void undoCopyClicked();
     void timeIntervalChanged(int);
+    void on_tvprogram_changed(int i);
     void break_fill_method_changed(int);
     void test_model();
     void insert_row();
+    void delete_row_TEST();
     void delete_row();
 
 private:
+    void populate_program_combo(std::vector<int>);
+    void show_breaklines_from_db(int);
+
     std::tuple<int, int> row_identity();
 
     Ui::BreakLayoutForm *ui;
@@ -74,6 +84,11 @@ private:
     std::unique_ptr<EntityDataModel> mEDMBreakLine;
     std::unique_ptr<EntityDataModel> mEdmTSetup;
     RavenSetup* mRavenSetup;
+
+    std::unique_ptr<EntityDataModel> m_edm_tvprogram;
+    std::shared_ptr<PIXELPLAN::TVProgram> m_current_tvprogram;
+
+
     int tempFromHr;
     int tempToHr;
     int startPos;

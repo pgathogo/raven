@@ -98,6 +98,7 @@ std::string TVProgramForm::windowTitle()
 void TVProgramForm::populateEntityFields()
 {
     m_tvprogram->set_title(ui->edtTitle->text().toStdString());
+    m_tvprogram->set_code(ui->edtCode->text().toStdString());
     m_tvprogram->set_description(ui->edtDescription->toPlainText().toStdString());
 
     m_tvprogram->set_start_time(ui->edtStartTime->time());
@@ -119,10 +120,12 @@ void TVProgramForm::populateFormWidgets()
 {
 
     ui->edtTitle->setText(m_tvprogram->title()->to_qstring());
+    ui->edtCode->setText(m_tvprogram->code()->to_qstring());
     ui->edtDescription->setText(m_tvprogram->description()->to_qstring());
 
-    ui->edtStartTime->setTime(QTime(m_tvprogram->start_time()->value().fromString("HH:mm")));
-    ui->edtEndTime->setTime(QTime(m_tvprogram->end_time()->value().fromString("HH:mm")));
+
+    ui->edtStartTime->setTime(m_tvprogram->start_time()->value());
+    ui->edtEndTime->setTime(m_tvprogram->end_time()->value());
 
     ui->sbDuration->setValue(m_tvprogram->duration()->value());
 

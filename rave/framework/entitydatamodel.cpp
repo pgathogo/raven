@@ -110,14 +110,11 @@ BaseEntity* EntityModel::find_entity_by_id(int id)
 
 std::shared_ptr<BaseEntity> EntityModel::find_entity_by_id(int id)
 {
-    //auto be = std::make_shared<BaseEntity>();
-    //be = nullptr;
 
     for (auto& record : mEntities){
         const auto& [name, entity] = record;
         if (entity->id() == id){
                 return entity;
-                //break;
         }
 
     }
@@ -273,6 +270,14 @@ std::size_t EntityModel::temp_size()
     return m_temp_entities.size();
 }
 
+std::shared_ptr<BaseEntity> EntityModel::get_entity_at_row(int row)
+{
+    if (row > mEntities.size())
+        return nullptr;
+
+    return std::get<1>(mEntities.at(row));
+}
+
 /* ----------- EntityDataModel ------------------ */
 
 EntityDataModel::EntityDataModel()
@@ -348,7 +353,15 @@ const std::unique_ptr<BaseDatabaseManager> &EntityDataModel::getDBManager() cons
 
 int EntityDataModel::createEntity(std::shared_ptr<BaseEntity> entity)
 {
-    int id = dbManager->createEntity(*entity.get());
+    int id = -1;
+    try{
+        id = dbManager->createEntity(*entity.get());
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+    }
+
+
+
     if (id > 0){
         entity->setId(id);
         addEntity(std::move(entity)); // entity final resting place

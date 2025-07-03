@@ -22,11 +22,8 @@ public:
     BreakLayout();
     ~BreakLayout() override;
 
-    StringField* name() const;
-    void setName(const std::string nm);
-
-    TextField* description() const;
-    void setDescription(const std::string desc);
+    ForeignKeyField* tvprogram();
+    void set_tvprogram(int);
 
     StringField* weekDays() const;
     void setWeekDays(const std::string wkdays);
@@ -76,8 +73,7 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
 private:
-    StringField* mName;
-    TextField* mDescription;
+    ForeignKeyField* m_tvprogram;
     StringField* mWeekDays;
     ChoiceField<int>* mTimeInterval;
     ChoiceField<std::string>* m_break_fill_method;

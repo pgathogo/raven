@@ -43,7 +43,10 @@ int main(int argc, char *argv[])
     //LoginForm lf(auth.get());
     //if (lf.exec() > 0){
 
-    LoginForm lf("nbohr", "abc123", 4);
+    int station_id = 17;
+
+    LoginForm lf("nbohr", "abc123", station_id);
+
     if (lf.exec() > 0)
     {
         auto station_info = lf.get_station_info();

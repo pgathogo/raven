@@ -73,6 +73,10 @@ private slots:
     void delete_layout();
 
 private:
+    void set_defaults();
+    void setup_ui();
+    void make_progids_exclusion_list();
+
     Ui::BreakCreateForm *ui;
     std::unique_ptr<EntityDataModel> m_edm_break_layout;
     std::unique_ptr<EntityDataModel> m_edm_break_line;
@@ -83,9 +87,10 @@ private:
     std::string make_break_sql(QDate from, QDate to);
     void get_existing_schedules(ScheduleRecords&, QDate, QDate);
 
+    std::shared_ptr<BreakLayout> m_selected_breaklayout;
+    std::vector<int> m_excluded_progids; // IDs of TVPrograms
 
-    void set_defaults();
-    void setup_ui();
+
 };
 
 #endif // BREAKCREATEFORM_H

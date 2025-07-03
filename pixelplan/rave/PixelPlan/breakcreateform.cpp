@@ -24,7 +24,8 @@ struct BreakLineColumn {
 
 BreakCreateForm::BreakCreateForm(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::BreakCreateForm)
+    ui(new Ui::BreakCreateForm),
+    m_selected_breaklayout{nullptr}
 {
     ui->setupUi(this);
 
@@ -33,6 +34,8 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     ui->tvBreakLayouts->setModel(m_edm_break_layout.get());
     ui->tvBreakLayouts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_edm_break_layout->all();
+
+    make_progids_exclusion_list();
 
 
     connect(ui->tvBreakLayouts, &QTableView::clicked, this, &BreakCreateForm::break_layout_selected);
@@ -56,6 +59,14 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
 BreakCreateForm::~BreakCreateForm()
 {
     delete ui;
+}
+
+void BreakCreateForm::make_progids_exclusion_list()
+{
+    for(auto& [name, entity]: m_edm_break_layout->modelEntities()) {
+        std::shared_ptr<BreakLayout> bl = std::dynamic_pointer_cast<BreakLayout>(entity);
+        m_excluded_progids.push_back(bl->tvprogram()->value() );
+    }
 }
 
 void BreakCreateForm::set_defaults()
@@ -92,19 +103,15 @@ void BreakCreateForm::setup_ui()
 void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 {
 
-    if (index.row() > -1){
+    if (index.row() > -1) {
         int sel_row = index.row();
-        std::string layout_name = ui->tvBreakLayouts->model()->data(
-                    ui->tvBreakLayouts->model()->index(
-                        sel_row, 0)).toString().toStdString();
 
-        std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(layout_name);
-        BreakLayout* breakLayout = dynamic_cast<BreakLayout*>(be.get());
-
+        auto be = m_edm_break_layout->get_entity_at_row(sel_row);
+        m_selected_breaklayout = dynamic_pointer_cast<BreakLayout>(be);
         BreakLayoutLine bbl;
         auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),
                                                  "=",
-                                                 breakLayout->id());
+                                                 m_selected_breaklayout->id());
         std::string filter = m_edm_break_line->prepareFilter(break_line_filter);
         m_edm_break_line->search(filter);
     }
@@ -324,8 +331,9 @@ void BreakCreateForm::remove_hour()
 void BreakCreateForm::create_layout()
 {
     auto break_layout = std::make_shared<BreakLayout>();
+
     std::shared_ptr<BreakLayoutForm> blform =
-        std::make_shared<BreakLayoutForm>(break_layout.get(), this);
+        std::make_shared<BreakLayoutForm>(break_layout.get(), m_excluded_progids, this);
 
     if (blform->exec() > 0)
     {
@@ -396,20 +404,27 @@ void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> b
 
 void BreakCreateForm::edit_layout()
 {
-    auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
-    QVariant col_name{};
-    if (model_indexes.size() > 0){
-        col_name = ui->tvBreakLayouts->model()->data(model_indexes[0]);
-    }
 
-    if (col_name.toString().isEmpty())
+    // QVariant col_name{};
+    // if (model_indexes.size() > 0){
+    //     col_name = ui->tvBreakLayouts->model()->data(model_indexes[0]);
+    // }
+    // if (col_name.toString().isEmpty())
+    //     return;
+
+    // auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
+    // if (model_indexes.size() == 0)
+    //     return;
+
+    if (m_selected_breaklayout == nullptr)
         return;
 
-    std::string search_name = col_name.toString().toStdString();
-    std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
-    auto break_layout = dynamic_cast<BreakLayout*>(be.get());
-    auto bl_form = std::make_shared<BreakLayoutForm>(break_layout);
 
+    // std::string search_name = col_name.toString().toStdString();
+    // std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
+    // auto break_layout = dynamic_cast<BreakLayout*>(be.get());
+
+    auto bl_form = std::make_shared<BreakLayoutForm>(m_selected_breaklayout.get(), std::vector<int>());
 
     if (bl_form->exec() > 0){
 
@@ -455,7 +470,7 @@ void BreakCreateForm::edit_layout()
 
             bll.setBreakHour(bll.breakTime()->value().hour());
             bll.setWeekDay(1);
-            bll.setBreakLayout(break_layout->id());
+            bll.setBreakLayout(m_selected_breaklayout->id());
             edm.updateEntity(bll);
         }
 

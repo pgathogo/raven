@@ -67,6 +67,8 @@ class EntityModel : public QStandardItemModel{
 
         std::size_t temp_size();
 
+        std::shared_ptr<BaseEntity> get_entity_at_row(int);
+
     protected:
         void addEntity(std::shared_ptr<BaseEntity> entity);
         //void addEntity(BaseEntity* entity);
