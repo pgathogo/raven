@@ -69,7 +69,9 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     ui->btnPrint->setIconSize(QSize(32, 32));
 
     set_autocompleter();
+
     fill_cbox_date_filter();
+
 
     connect(ui->cbDateFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
             &BookingOrderBrowser::date_filter_changed);
@@ -170,9 +172,13 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
 
     EntityDataModel edm;
 
+
     edm.readRaw(sql.str());
 
     auto provider = edm.getDBManager()->provider();
+
+    if (provider->cacheSize() == 0)
+        return;
 
         //Bookings bookings;
 
@@ -198,7 +204,7 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                     if (field == "order_id")
                         booking.order_id = std::stoi(value);
                     if (field == "order_number")
-                        booking.order_number = str_to_int(value);
+                        booking.order_number = value;
                     if (field == "order_date")
                         booking.order_date = value;
                     if (field == "start_date")
@@ -209,16 +215,22 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                         booking.spots_ordered = str_to_int(value);
                     if (field == "spots_booked")
                         booking.spots_booked = str_to_int(value);
+
                     if (field == "spot_id")
                         booking.spot_id = str_to_int(value);
+
                     if (field == "spot_name")
                         booking.spot_name = value;
+
                     if (field == "spot_duration")
                         booking.spot_duration = str_to_double(value);
+
                     if (field == "booking_id")
                         booking.booking_id = str_to_int(value);
+
                     if (field == "booking_status")
                         booking.booking_status = value;
+
                     if (field == "play_date")
                         booking.play_date = value;
                     if (field == "play_time")
@@ -230,8 +242,6 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                     if (field == "schedule_time")
                         booking.schedule_time = value;
                 }
-
-                //order_bookings[booking.order_id].push_back(booking);
 
                 order_bookings.push_back(booking);
 
@@ -539,7 +549,13 @@ std::string BookingOrderBrowser::make_filter(int client_id)
     std::unique_ptr<EntityDataModel> setupEDM;
     setupEDM = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     setupEDM->all();
-    auto setup = dynamic_cast<RavenSetup*>(setupEDM->firstEntity().get());
+
+    std::shared_ptr<RavenSetup> setup;
+    if (setupEDM->count() > 0)
+        setup = std::dynamic_pointer_cast<RavenSetup>(setupEDM->firstEntity());
+    else
+        setup = std::make_shared<RavenSetup>();
+
 
     std::string order_approval_filter{};
 
@@ -690,8 +706,6 @@ void BookingOrderBrowser::build_client_orders(int client_id, std::string date_fi
             }
 
         }
-
-        qDebug() << "Order ID: " << client_order.order_id;
 
         build_order_bookings(client_order.order_id, client_order.order_bookings);
 

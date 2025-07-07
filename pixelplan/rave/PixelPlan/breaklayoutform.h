@@ -52,6 +52,7 @@ public:
     void set_break_fill_method(QString);
 
     QAbstractItemModel* breakline_model();
+    // std::shared_ptr<EntityDataModel> breakline_model();
     QModelIndexList selected_indexes();
 
     template<typename T>
@@ -81,7 +82,7 @@ private:
 
     Ui::BreakLayoutForm *ui;
     BreakLayout* mBreakLayout;
-    std::unique_ptr<EntityDataModel> mEDMBreakLine;
+    std::shared_ptr<EntityDataModel> m_edm_breakline;
     std::unique_ptr<EntityDataModel> mEdmTSetup;
     RavenSetup* mRavenSetup;
 

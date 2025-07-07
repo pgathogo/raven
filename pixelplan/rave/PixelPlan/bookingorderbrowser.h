@@ -51,7 +51,7 @@ struct Booking{
     std::string client_name{};
     std::string order_title{};
     int order_id{-1};
-    int order_number{-1};
+    std::string order_number{};
     std::string order_date{-1};
     std::string start_date{-1};
     std::string end_date{-1};

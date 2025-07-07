@@ -1,4 +1,5 @@
 #include <sstream>
+
 #include <QAbstractItemModel>
 
 #include "breakcreateform.h"
@@ -107,6 +108,10 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
         int sel_row = index.row();
 
         auto be = m_edm_break_layout->get_entity_at_row(sel_row);
+        if (be == nullptr)
+            return;
+
+
         m_selected_breaklayout = dynamic_pointer_cast<BreakLayout>(be);
         BreakLayoutLine bbl;
         auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),
@@ -405,30 +410,15 @@ void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> b
 void BreakCreateForm::edit_layout()
 {
 
-    // QVariant col_name{};
-    // if (model_indexes.size() > 0){
-    //     col_name = ui->tvBreakLayouts->model()->data(model_indexes[0]);
-    // }
-    // if (col_name.toString().isEmpty())
-    //     return;
-
-    // auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
-    // if (model_indexes.size() == 0)
-    //     return;
-
     if (m_selected_breaklayout == nullptr)
         return;
-
-
-    // std::string search_name = col_name.toString().toStdString();
-    // std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(search_name);
-    // auto break_layout = dynamic_cast<BreakLayout*>(be.get());
 
     auto bl_form = std::make_shared<BreakLayoutForm>(m_selected_breaklayout.get(), std::vector<int>());
 
     if (bl_form->exec() > 0){
 
         auto model = bl_form->breakline_model();
+
         int row_count = model->rowCount();
         int col_count = model->columnCount();
 
@@ -471,12 +461,17 @@ void BreakCreateForm::edit_layout()
             bll.setBreakHour(bll.breakTime()->value().hour());
             bll.setWeekDay(1);
             bll.setBreakLayout(m_selected_breaklayout->id());
-            edm.updateEntity(bll);
+
+            if (bll.id() == -1)
+                edm.createEntityDB(bll);
+            else
+                edm.updateEntity(bll);
         }
+
 
     }
 
-}
+  }
 
 void BreakCreateForm::delete_layout()
 {
@@ -486,8 +481,8 @@ void BreakCreateForm::delete_layout()
     QVariant col_name{};
     int selected_row = -1;
 
+    /*
     auto model_indexes = ui->tvBreakLayouts->selectionModel()->selectedIndexes();
-
     if (model_indexes.size() > 0){
         auto model_index = model_indexes[0];
         selected_row  = model_index.row();
@@ -503,6 +498,19 @@ void BreakCreateForm::delete_layout()
         return;
 
     auto break_layout = dynamic_cast<BreakLayout*>(be.get());
+    */
+
+    auto rows = ui->tvBreakLayouts->selectionModel()->selectedRows();
+    if (rows.count() == 0)
+        return;
+
+    int row = rows[0].row();
+
+    auto be = m_edm_break_layout->get_entity_at_row(row);
+    if (be == nullptr)
+        return;
+
+    std::shared_ptr<BreakLayout> break_layout = std::dynamic_pointer_cast<BreakLayout>(be);
 
     // Delete details first
     EntityDataModel edm(std::make_shared<BreakLayoutLine>());
@@ -511,6 +519,6 @@ void BreakCreateForm::delete_layout()
 
     // Delete header
     m_edm_break_layout->deleteEntity(*break_layout);
-    ui->tvBreakLayouts->model()->removeRow(selected_row);
+    ui->tvBreakLayouts->model()->removeRow(row);
 
 }

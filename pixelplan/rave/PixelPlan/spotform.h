@@ -82,7 +82,7 @@ private:
     std::unique_ptr<SpotAudioBrowser> m_spot_audio_browser;
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
-    RavenSetup* m_setup;
+    std::shared_ptr<RavenSetup> m_setup;
 
     std::unique_ptr<EntityDataModel> m_edm_time_band;
     std::unique_ptr<DowWidget> m_dow_widget;

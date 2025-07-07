@@ -21,7 +21,11 @@ ClientForm::ClientForm(Client* client,
     setTitle(windowTitle());
     ui->twClient->setCurrentIndex(0);
 
+    qDebug() << "AAA";
+
     populateFormWidgets();
+
+    qDebug() << "BBB";
 
     connect(ui->cbSalute, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
            [=](int i){saluteComboChanged(i);});
@@ -48,11 +52,13 @@ ClientForm::ClientForm(Client* client,
                 std::make_unique<RavenSetup>());
     m_edm_setup->all();
 
-    if (m_edm_setup->count() > 0)
+    if (m_edm_setup->count() > 0) {
         m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
 
-    if (m_client->isNew())
+        if (m_client->isNew())
         set_defaults();
+
+    }
 
     int width = 600;
     int height = 480;

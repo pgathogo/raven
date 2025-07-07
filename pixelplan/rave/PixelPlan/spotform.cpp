@@ -39,6 +39,7 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
      ,ui{new Ui::SpotForm}
      ,m_client{client}
      ,m_spot{spot}
+    ,m_setup{nullptr}
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
@@ -75,7 +76,13 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
     m_edm_setup = std::make_unique<EntityDataModel>(
                 std::make_unique<RavenSetup>());
     m_edm_setup->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
+
+
+    if (m_edm_setup->count() > 0)
+        m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
+    else
+        m_setup = std::make_shared<RavenSetup>();
+
 
 
     ui->edtRealDuration->setMaximum(999999);
@@ -164,9 +171,10 @@ void SpotForm::create_time_band_widget()
 
     m_edm_time_band->all();
 
-    m_time_band_widget->setRowCount(m_edm_time_band->count());
-
-    populate_time_band_widget(m_edm_time_band, m_time_band_widget);
+    if (m_edm_time_band->count() > 0) {
+        m_time_band_widget->setRowCount(m_edm_time_band->count());
+        populate_time_band_widget(m_edm_time_band, m_time_band_widget);
+    }
 
     QGroupBox* gbTimeBand = new QGroupBox("Time Bands");
     gbTimeBand->setMaximumWidth(240);

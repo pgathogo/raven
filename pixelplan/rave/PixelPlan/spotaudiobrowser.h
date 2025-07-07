@@ -95,7 +95,7 @@ private:
 
     ManyToMany* m_mtom;
     std::unique_ptr<EntityDataModel> m_setup_edm;
-    RavenSetup* m_setup;
+    std::shared_ptr<RavenSetup> m_setup;
     std::vector<std::unique_ptr<TRAFFIK::SpotAudio>> m_audios;
     std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
 //    std::unique_ptr<CueEditor> m_cue_editor;

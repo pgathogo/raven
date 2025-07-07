@@ -27,6 +27,7 @@
 #include "breaklayoutline.h"
 
 #include "traffiktreeviewmodel.h"
+#include "tvprogram.h"
 
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../rave/framework/ravenexception.h"
@@ -75,10 +76,14 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
 
     connect(ui->twTB, &QTableWidget::itemClicked, this, &BookingWizard::time_band_selected2);
 
+    connect(ui->lwPrograms, &QListWidget::itemClicked, this, &BookingWizard::on_programs_clicked);
+
+
     // connect(ui->cbTimeband, QOverload<int>::of(&QComboBox::currentIndexChanged),
     //         this, &BookingWizard::timeBandChanged);
 
     connect(ui->rbAllBreaks, &QRadioButton::toggled, this, &BookingWizard::all_breaks);
+    connect(ui->rbPrograms, &QRadioButton::toggled, this, &BookingWizard::tv_programs);
     connect(ui->rbTimeband, &QRadioButton::toggled, this, &BookingWizard::toggleTimeBand);
     connect(ui->rbManualTime, &QRadioButton::toggled, this, &BookingWizard::manual_time);
 
@@ -136,12 +141,16 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     m_edm_setup = std::make_unique<EntityDataModel>(
         std::make_shared<RavenSetup>() );
     m_edm_setup->all();
-    m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
-    add_break_interval();
+    if (m_edm_setup->count() > 0)
+        m_raven_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
+    else
+        m_raven_setup = std::make_shared<RavenSetup>();
 
+    //add_break_interval();
+
+    load_tv_programs();
 
     ui->rbAllBreaks->toggle();
-
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
@@ -157,7 +166,11 @@ BookingWizard::~BookingWizard()
 void BookingWizard::add_break_interval()
 {
     int time_interval = m_raven_setup->breakTimeInterval()->value();
-    int breaks_per_hour = 60 / time_interval;
+
+    int breaks_per_hour = 1;
+    if (time_interval > 0)
+        breaks_per_hour = 60 / time_interval;
+
 
     int min = 0;
 
@@ -185,8 +198,50 @@ void BookingWizard::add_break_interval()
         min += time_interval;
 
     }
+}
+
+void BookingWizard::load_tv_programs()
+{
+    auto edm = std::make_unique<EntityDataModel>(std::make_unique<PIXELPLAN::TVProgram>());
+    edm->all();
+    if (edm->count() == 0)
+        return;
+
+    auto provider = edm->getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
+
+    provider->cache()->first();
+
+    do {
+        auto it_begin = provider->cache()->currentElement()->begin();
+        auto it_end = provider->cache()->currentElement()->end();
+
+        int id = -1;
+        QString title;
+
+        for(; it_begin != it_end; ++it_begin) {
+            std::string field_name = (*it_begin).first;
+            std::string field_value = (*it_begin).second;
+
+            if (field_name == "id")
+                id = std::stoi(field_value);
+
+            if (field_name == "title")
+                title = QString::fromStdString(field_value);
+        }
+
+        auto lwi = new QListWidgetItem(title);
+        lwi->setData(Qt::UserRole, id);
+
+
+        ui->lwPrograms->addItem(lwi);
+
+        provider->cache()->next();
+    } while(!provider->cache()->isLast());
 
 }
+
 
 void BookingWizard::show_breaks(int index)
 {
@@ -549,7 +604,7 @@ void BookingWizard::commit_booking()
         std::stringstream update_order;
         update_order << "Update rave_order set spots_booked = spots_booked + "
                      << std::to_string(book_segment.booking_count()->value())
-                     << " Where order_number = "+std::to_string(m_order->orderNumber()->value());
+                     << " Where order_number = "+m_order->orderNumber()->value();
 
         edm.executeRawSQL(update_order.str());
 
@@ -590,12 +645,64 @@ int BookingWizard::find_break_slot(int break_id, int max_spots)
 
 void BookingWizard::show_order_details(Order* order)
 {
-    ui->lblOrderNo->setText(QString::number(order->orderNumber()->value()));
+    ui->lblOrderNo->setText(order->orderNumber()->to_qstring());
     ui->lblSpotsOrdered->setText(QString::number(order->spotsOrdered()->value()));
     ui->lblSpotsBooked->setText(QString::number(order->spotsBooked()->value()));
     ui->lblSpotsPending->setText(QString::number(
                                      order->spotsOrdered()->value() - order->spotsBooked()->value()));
 }
+
+
+
+std::size_t BookingWizard::fetch_program_breaks_from_db(QDate start_date, QDate end_date)
+{
+    Schedule schedule;
+    QString DATE_FORMAT = "yyyy-MM-dd";
+    QString date_range = "'"+start_date.toString(DATE_FORMAT)+"' and '"+end_date.toString(DATE_FORMAT)+"')";
+
+    auto date_range_filter = std::make_tuple(
+                "("+schedule.schedule_date()->dbColumnName(),
+                " between ",
+                date_range.toStdString()
+                );
+
+    return 0;
+}
+
+std::vector<SelectedProgramBreak> BookingWizard::get_selected_program_breaks()
+{
+    std::vector<SelectedProgramBreak> selected_breaks{};
+
+    QModelIndexList mil = ui->twBreaks->selectionModel()->selectedRows();
+
+    if (mil.size() == 0)
+        return selected_breaks;
+
+    for (auto& index : mil) {
+        int row = index.row();
+
+        SelectedProgramBreak spb;
+        QTableWidgetItem* twi_break_time = ui->twBreaks->item(row, 0);
+        spb.break_time = twi_break_time->text();
+
+        QTableWidgetItem* twi_duration = ui->twBreaks->item(row, 1);
+        spb.duration =  twi_duration->text().toInt();
+
+        QTableWidgetItem* twi_max_spots = ui->twBreaks->item(row, 2);
+        spb.max_spots = twi_max_spots->text().toInt();
+
+
+        QComboBox* combo = (QComboBox*)ui->twBreaks->cellWidget(row, 3);
+
+        spb.fill_pos  = static_cast<FillPos>(combo->currentIndex());
+
+        selected_breaks.push_back(spb);
+
+    }
+
+    return selected_breaks;;
+}
+
 
 std::size_t BookingWizard::fetch_breaks_from_db(QDate start_date, QDate end_date, std::set<int> uniq_hours)
 {
@@ -672,6 +779,12 @@ void BookingWizard::all_breaks(bool state)
     populate_from_to_combos(unique_hours);
 }
 
+
+void BookingWizard::tv_programs(bool state)
+{
+    ui->swSelection->setCurrentIndex(1);
+}
+
 void BookingWizard::populate_from_to_combos(const std::set<int>& hrs)
 {
     for (int hr : hrs)
@@ -686,13 +799,13 @@ void BookingWizard::populate_from_to_combos(const std::set<int>& hrs)
 
 void BookingWizard::toggleTimeBand(bool state)
 {
-    ui->swSelection->setCurrentIndex(1);
+    ui->swSelection->setCurrentIndex(2);
     //ui->cbTimeband->setEnabled(state);
 }
 
 void BookingWizard::manual_time(bool state)
 {
-    ui->swSelection->setCurrentIndex(2);
+    ui->swSelection->setCurrentIndex(3);
 }
 
 void BookingWizard::build_breaks()
@@ -726,6 +839,22 @@ void BookingWizard::build_breaks()
         {
             m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
             //unique_hours = select_unique_hours_from_breaks();
+        }
+
+        if (ui->rbPrograms->isChecked())
+        {
+            auto selected_breaks = get_selected_program_breaks();
+
+            for (auto& sb : selected_breaks) {
+                qDebug() << "Break Time: "<< sb.break_time;
+                qDebug() << "Duration: " << sb.duration;
+                qDebug() << "Max Spots: " << sb.max_spots;
+                qDebug() << "Fill Pos: " << static_cast<int>(sb.fill_pos);
+                qDebug() << " ----------------- ";
+            }
+
+            m_engine_data.break_count = fetch_program_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(),
+                                           selected_breaks);
         }
 
         if (ui->rbTimeband->isChecked())
@@ -855,6 +984,104 @@ void BookingWizard::time_band_selected(const QModelIndex& mi)
 }
 */
 
+void BookingWizard::on_programs_clicked(QListWidgetItem* lwi)
+{
+    // int tv_program_id = lwi->data(Qt::UserRole).toInt();
+
+    QItemSelectionModel* ism = ui->lwPrograms->selectionModel();
+    QModelIndexList indexes = ism->selectedIndexes();
+
+    if (indexes.size() == 0)
+        return;
+
+    QStringList progids;
+    for(auto& index : indexes){
+       progids << index.data(Qt::UserRole).toString();
+    }
+
+    if (progids.size() > 0) {
+        std::string ids = progids.join(",").toStdString();
+        ids = "("+ids+")";
+        fetch_program_breaks(ids);
+    }
+
+}
+
+void BookingWizard::fetch_program_breaks(std::string progids)
+{
+    // Setup the table
+    ui->twBreaks->clear();
+    QStringList header;
+    header << "Break Time" << "Duration" << "Max Spots" << "Fill Pos";
+    ui->twBreaks->setColumnCount(4);
+    ui->twBreaks->setHorizontalHeaderLabels(header);
+
+    std::stringstream sql;
+    sql << " SELECT rave_breaklayoutline.id, rave_breaklayoutline.break_time, rave_breaklayoutline.break_hour, "
+        << " rave_breaklayoutline.duration, rave_breaklayoutline.max_spots, rave_breaklayoutline.break_fill_method, "
+        << " rave_breaklayout.week_days "
+        << " FROM rave_breaklayout, rave_breaklayoutline "
+        << " WHERE rave_breaklayout.id = rave_breaklayoutline.break_layout_id "
+        << "  AND rave_breaklayout.tvprogram_id in "+progids ;
+
+    EntityDataModel  edm;
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+    if (provider->cacheSize() == 0)
+        return;
+
+    ui->twBreaks->setRowCount(provider->cacheSize());
+
+    provider->cache()->first();
+
+    int row = 0;
+    int BREAK_TIME_COL = 0;
+    int DURATION_COL   = 1;
+    int MAX_SPOTS_COL  = 2;
+    int FILL_POS_COL   = 3;
+
+    QStringList fill_pos = {"First", "In-Between", "Last"};
+
+    do {
+        auto itb = provider->cache()->currentElement()->begin();
+        auto ite = provider->cache()->currentElement()->end();
+
+        for(; itb != ite; ++itb) {
+            std::string field_name = (*itb).first;
+            std::string field_value = (*itb).second;
+
+            int bll_id = 0;
+            if (field_name == "id")
+                bll_id = to_int(field_value);
+            if (field_name == "break_time") {
+                auto twi = new QTableWidgetItem(QString::fromStdString(field_value));
+                twi->setData(Qt::UserRole, bll_id);
+                ui->twBreaks->setItem(row, BREAK_TIME_COL, twi);
+            }
+            if (field_name == "duration") {
+                auto twi = new QTableWidgetItem(QString::fromStdString(field_value));
+                ui->twBreaks->setItem(row, DURATION_COL, twi);
+            }
+            if (field_name == "max_spots") {
+                auto twi = new QTableWidgetItem(QString::fromStdString(field_value));
+                ui->twBreaks->setItem(row, MAX_SPOTS_COL, twi);
+            }
+
+            QComboBox* cb = new QComboBox();
+            cb->addItems(fill_pos);
+            ui->twBreaks->setCellWidget(row, FILL_POS_COL, cb);
+
+        }
+
+        ++row;
+
+        provider->cache()->next();
+
+    } while (!provider->cache()->isLast());
+
+}
+
 void BookingWizard::time_band_selected2(QTableWidgetItem* twi)
 {
 
@@ -887,8 +1114,6 @@ void BookingWizard::time_band_selected2(QTableWidgetItem* twi)
         }
 
     }
-
-
 
 }
 
@@ -1320,14 +1545,15 @@ bool BookingWizard::validateCurrentPage()
     switch (currentId())
     {
         case BookingWizard::Page_Spots:
-           {
-            TRAFFIK::Spot* sel_spot = selected_spot();
-            bool has_audio = spot_has_audio(sel_spot);
-            if (!has_audio){
-                showMessage("Selected spot has no audio!");
-                return false;
-            }
-            }
+           // {
+           //  TRAFFIK::Spot* sel_spot = selected_spot();
+           //  bool has_audio = spot_has_audio(sel_spot);
+           //  if (!has_audio){
+           //      showMessage("Selected spot has no audio!");
+           //      return false;
+           //  }
+           //  }
+            qDebug() << " First page ..";
             break;
         case BookingWizard::Page_Dates:
             if (ui->edtStartDate->date() < QDate::currentDate())

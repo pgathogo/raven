@@ -47,6 +47,15 @@ struct AllBreaks {
     std::vector<int> hourly_intervals;
 };
 
+enum class FillPos { First, Between, Last};
+
+struct SelectedProgramBreak {
+    QString break_time;
+    int duration;
+    int max_spots;
+    FillPos fill_pos;
+};
+
 const QString rules_cache_file = "rules_cache_file.json";
 
 
@@ -66,6 +75,8 @@ public:
     ~BookingWizard() override;
 
     std::size_t fetch_breaks_from_db(QDate, QDate, std::set<int>);
+    std::size_t fetch_program_breaks_from_db(QDate, QDate, std::vector<SelectedProgramBreak>);
+
     void find_existing_bookings(TRAFFIK::EngineData&);
     std::size_t find_available_breaks();
 
@@ -123,6 +134,7 @@ public:
 private slots:
     // void timeBandChanged(int i);
     void all_breaks(bool);
+    void tv_programs(bool);
     void toggleTimeBand(bool);
     void manual_time(bool);
     void build_breaks();
@@ -132,8 +144,39 @@ private slots:
     void show_breaks(int);
     //void time_band_selected(const QModelIndex&);
     void time_band_selected2(QTableWidgetItem*);
+    void on_programs_clicked(QListWidgetItem*);
 
 private:
+    void print_selected_breaks();
+
+    void populate_spots_table(int);
+    void populate_grid(TimeBand*);
+
+    void setup_break_select_grid();
+    bool make_booking();
+    void commit_booking();
+    void show_order_details(Order*);
+    void add_days_of_week();
+    void show_breaks_for_current_timeband();
+    void toggle_selection(bool);
+
+    void auto_select_breaks_by_dow();
+    void auto_select_breaks(const AllBreaks&);
+    int pick_random_interval();
+    std::vector<int> get_hourly_distribution();
+
+    bool spot_has_audio(const TRAFFIK::Spot*);
+    void spot_details(int);
+
+    void populate_from_to_combos(const std::set<int>&);
+    void add_break_interval();
+
+    void load_tv_programs();
+    void fetch_program_breaks(std::string);
+
+    std::vector<SelectedProgramBreak> get_selected_program_breaks();
+
+
     Ui::BookingWizard *ui;
     Order* m_order;
     std::unique_ptr<EntityDataModel> m_spot_EDM;
@@ -179,31 +222,8 @@ private:
     std::map<int, SelectedBreak> m_selected_breaks;
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
-    RavenSetup* m_raven_setup;
+    std::shared_ptr<RavenSetup> m_raven_setup;
 
-    void print_selected_breaks();
-
-    void populate_spots_table(int);
-    void populate_grid(TimeBand*);
-
-    void setup_break_select_grid();
-    bool make_booking();
-    void commit_booking();
-    void show_order_details(Order*);
-    void add_days_of_week();
-    void show_breaks_for_current_timeband();
-    void toggle_selection(bool);
-
-    void auto_select_breaks_by_dow();
-    void auto_select_breaks(const AllBreaks&);
-    int pick_random_interval();
-    std::vector<int> get_hourly_distribution();
-
-    bool spot_has_audio(const TRAFFIK::Spot*);
-    void spot_details(int);
-
-    void populate_from_to_combos(const std::set<int>&);
-    void add_break_interval();
 
 };
 

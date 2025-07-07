@@ -1,3 +1,5 @@
+#include <print>
+
 #include "breaklayoutform.h"
 #include "ui_breaklayoutform.h"
 
@@ -30,10 +32,10 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
 
-    mEDMBreakLine = std::make_unique<EntityDataModel>(
+    m_edm_breakline = std::make_unique<EntityDataModel>(
                 std::make_shared<BreakLayoutLine>());
 
-    ui->tvBreakLayoutLine->setModel(mEDMBreakLine.get());
+    ui->tvBreakLayoutLine->setModel(m_edm_breakline.get());
     ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     TimeEditDelegate* ted = new TimeEditDelegate(ui->tvBreakLayoutLine);
@@ -76,7 +78,12 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     connect(ui->tbInsert, &QToolButton::clicked, this, &BreakLayoutForm::insert_row);
     connect(ui->tbDelete, &QToolButton::clicked, this, &BreakLayoutForm::delete_row);
 
+
+    std::println("AAA");
+
     populate_program_combo(excl_progids);
+
+    std::println("BBB");
 
     if (!mBreakLayout->isNew()) {
         int index = ui->cbProgram->findData(QVariant(mBreakLayout->tvprogram()->value()));
@@ -90,8 +97,11 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
 
     set_defaults();
 
+    std::println("CCC");
 
     setup_ui();
+
+    std::println("DDD");
 
 
 }
@@ -246,7 +256,13 @@ void BreakLayoutForm::populateBreakLine()
 
     int interval =  ui->cbTimeInterval->itemData(curr_index).toInt();
 
+    std::println("666");
+
+
     add_break_lines(m_current_tvprogram, interval);
+
+    std::println("777");
+
 }
 
 void BreakLayoutForm::show_breaklines_from_db(int break_layout_id)
@@ -258,14 +274,17 @@ void BreakLayoutForm::show_breaklines_from_db(int break_layout_id)
             "=",
             break_layout_id);
 
-    std::string filter = mEDMBreakLine->prepareFilter(fk_filter);
+    std::string filter = m_edm_breakline->prepareFilter(fk_filter);
 
-    mEDMBreakLine->search(filter);
+    m_edm_breakline->search(filter);
 
 }
 
 void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvprogram, int time_interval)
 {
+    if (tvprogram == nullptr)
+        return;
+
     int break_time_interval = 0;
     int break_duration      = 0;
     int break_max_spots     = 0;
@@ -302,7 +321,7 @@ void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvpr
         breakLine->setRowId(++m_line_no);
 
         breakLine->setDBAction(DBAction::dbaCREATE);
-        mEDMBreakLine->cacheEntity(std::move(breakLine));
+        m_edm_breakline->cacheEntity(std::move(breakLine));
 
     } while(t2 < tvprogram->end_time()->value() );
 }
@@ -310,14 +329,14 @@ void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvpr
 
 std::vector<EntityRecord> const& BreakLayoutForm::breakLines() const
 {
-    return  mEDMBreakLine->modelEntities();
+    return  m_edm_breakline->modelEntities();
 }
 
 void BreakLayoutForm::clearBreakLineModel(int startHr, int endHr)
 {
     while (startHr <= endHr){
 
-        for (auto& [name, entity] : mEDMBreakLine->modelEntities()){
+        for (auto& [name, entity] : m_edm_breakline->modelEntities()){
             BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
             if (startHr == bll->breakHour()->value()){
                 bll->setDBAction(DBAction::dbaDELETE);
@@ -327,17 +346,17 @@ void BreakLayoutForm::clearBreakLineModel(int startHr, int endHr)
         ++startHr;
     }
 
-    mEDMBreakLine->deleteFromModel();
+    m_edm_breakline->deleteFromModel();
 }
 
 void BreakLayoutForm::copyHourClicked()
 {
-    startPos = mEDMBreakLine->count();
+    startPos = m_edm_breakline->count();
 
     copyHour(ui->cbFromHour->currentData().toInt(),
              ui->cbToHour->currentData().toInt() );
 
-    endPos = mEDMBreakLine->count();
+    endPos = m_edm_breakline->count();
 }
 
 void BreakLayoutForm::undoCopyClicked()
@@ -348,7 +367,7 @@ void BreakLayoutForm::undoCopyClicked()
 
 void BreakLayoutForm::clearBreakTableView(int startRow, int endRow)
 {
-    mEDMBreakLine->clearEntities();
+    m_edm_breakline->clearEntities();
 
 }
 
@@ -358,6 +377,8 @@ void BreakLayoutForm::set_defaults()
     populate_choice_combo_string(ui->cbBreakFillMethod, mBreakLayout->break_fill_method());
 
     if (mBreakLayout->isNew()){
+
+        std::println("111");
 
          ui->cbTimeInterval->setCurrentIndex(0);
          ui->cbBreakFillMethod->setCurrentIndex(0);
@@ -385,7 +406,7 @@ void BreakLayoutForm::copyHour(int fromHr, int toHr)
 
 void BreakLayoutForm::clearBreaks()
 {
-    mEDMBreakLine->clearEntities();
+    m_edm_breakline->clearEntities();
     //clearBreakTableView(0, mEDMBreakLine->count());
 
     clearBreakLineModel(0,0);
@@ -431,7 +452,10 @@ void BreakLayoutForm::timeIntervalChanged(int i)
     mBreakLayout->setTimeInterval(
                 ui->cbTimeInterval->itemData(i).toInt());
 
+    std::println("222");
+
     populateBreakLine();
+
 
     // if (mBreakLayout->isNew())
     //     populateBreakLine();
@@ -444,6 +468,9 @@ void BreakLayoutForm::on_tvprogram_changed(int i)
         return;
 
     if (m_edm_tvprogram->count() == 0)
+        return;
+
+    if (ui->cbProgram->count() == 0)
         return;
 
     auto base_entity =  m_edm_tvprogram->find_entity_by_id(
@@ -488,6 +515,7 @@ void BreakLayoutForm::set_break_fill_method(QString text)
 QAbstractItemModel* BreakLayoutForm::breakline_model()
 {
     return ui->tvBreakLayoutLine->model();
+    // return m_edm_breakline;
 }
 
 
@@ -516,40 +544,37 @@ std::tuple<int, int> BreakLayoutForm::row_identity()
 
 void BreakLayoutForm::insert_row()
 {
-    auto [unique_id, row_id] = row_identity();
+    std::println("Inserting a row...");
 
     std::shared_ptr<BreakLayoutLine> tmp_bll = std::make_shared<BreakLayoutLine>();
 
-    auto init_bll = [&](BreakLayoutLine* bll){
+    auto init_bll = [&](std::shared_ptr<BreakLayoutLine> bll){
         tmp_bll->setBreakHour(bll->breakHour()->value());
         tmp_bll->setDuration(bll->duration()->value());
-        tmp_bll->setBreakTime(bll->breakTime()->value());
+
+        int curr_index = ui->cbTimeInterval->currentIndex();
+        int interval = ui->cbTimeInterval->itemData(curr_index).toInt();
+
+        tmp_bll->setBreakTime(bll->breakTime()->value().addSecs(interval*60));
+
         tmp_bll->setMaxSpots(bll->maxSpots()->value());
         tmp_bll->set_break_fill_method(bll->break_fill_method()->value());
+        tmp_bll->setRowId(++m_line_no);
         tmp_bll->setDBAction(DBAction::dbaCREATE);
     };
 
-    auto entities = mEDMBreakLine->modelEntities();
-    for (auto& [entity_name, entity]: entities)
-    {
-        BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
 
-        if (unique_id > -1){
-            if (bll->id() == unique_id){
-                tmp_bll->setId(unique_id);
-                init_bll(bll);
-                break;
-            }
-        }else{
-            if (bll->rowId()->value() == row_id) {
-                tmp_bll->setRowId(++m_line_no);
-                init_bll(bll);
-                break;
-            }
-        }
-    }
+    auto be = m_edm_breakline->get_entity_at_row(m_edm_breakline->count()-1);
 
-    mEDMBreakLine->cacheEntity(std::move(tmp_bll));
+    if (be == nullptr)
+        return;
+
+    std::shared_ptr<BreakLayoutLine> bll = std::dynamic_pointer_cast<BreakLayoutLine>(be);
+
+    init_bll(bll);
+
+
+    m_edm_breakline->cacheEntity(std::move(tmp_bll));
 }
 
 void BreakLayoutForm::delete_row()
@@ -566,9 +591,12 @@ void BreakLayoutForm::delete_row()
 
     int row = rows[0].row();
 
-    auto be = mEDMBreakLine->get_entity_at_row(row);
+    auto be = m_edm_breakline->get_entity_at_row(row);
+    if (be == nullptr)
+        return;
+
     std::shared_ptr<BreakLayoutLine> bll = std::dynamic_pointer_cast<BreakLayoutLine>(be);
-    mEDMBreakLine->deleteEntity(*(bll.get()));
+    m_edm_breakline->deleteEntity(*(bll.get()));
 
     ui->tvBreakLayoutLine->model()->removeRow(row);
 

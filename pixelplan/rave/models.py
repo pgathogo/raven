@@ -242,7 +242,7 @@ class OrderPackage(models.Model):
 
 class Order(models.Model):
     title = models.CharField(max_length=255)
-    order_number = models.IntegerField(null=True)
+    order_number = models.CharField(max_length=50, null=True, blank=True)
     client = models.ForeignKey(Client, models.DO_NOTHING)
     order_date = models.DateField()
     start_date = models.DateField()

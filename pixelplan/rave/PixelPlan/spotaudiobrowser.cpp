@@ -76,7 +76,10 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
     m_setup_edm->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
+    if (m_setup_edm->count() > 0)
+        m_setup = std::dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
+    else
+        m_setup = std::make_shared<RavenSetup>();
 
     layout->addWidget(this);
 
@@ -358,7 +361,7 @@ void SpotAudioBrowser::audio_properties()
 
     AUDIO::Audio* audio = audio_from_selection();
     audio->set_file_path(audio->audio_lib_path()->value());
-    auto audio_form = std::make_unique<AudioForm>(audio, m_setup, FormMode::ReadOnly);
+    auto audio_form = std::make_unique<AudioForm>(audio, m_setup.get(), FormMode::ReadOnly);
     audio_form->exec();
 
 }

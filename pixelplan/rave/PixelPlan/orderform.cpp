@@ -59,7 +59,28 @@ OrderForm::OrderForm(Client *client, Order *order, QDialog *parent)
 
   dmSetup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
   dmSetup->all();
-  mSetup = dynamic_cast<RavenSetup *>(dmSetup->firstEntity().get());
+
+  if (dmSetup->count() > 0) {
+      mSetup = dynamic_cast<RavenSetup *>(dmSetup->firstEntity().get());
+
+      ui->sbAgencyComm->setValue(mSetup->agencyComm()->value());
+      setChoiceFieldDefault(ui->cbAgencyCommType,
+                mSetup->agencyCommType()->value());
+
+      ui->sbSaleRepComm->setValue(mSetup->saleRepComm()->value());
+      setChoiceFieldDefault(ui->cbSaleRepCommType,
+                mSetup->saleRepCommType()->value());
+
+      setChoiceFieldDefault(ui->cbRevenueType, mSetup->revenueType()->value());
+
+      setChoiceFieldDefault(ui->cbBillingType, mSetup->billingType()->value());
+      setChoiceFieldDefault(ui->cbBillingPeriod, mSetup->billingCycle()->value());
+      setChoiceFieldDefault(ui->cbBillingBasis, mSetup->billingBasis()->value());
+
+      ui->sbGracePeriod->setValue(mSetup->gracePeriod()->value());
+      ui->sbLateFee->setValue(mSetup->lateFee()->value());
+
+  }
 
   if (mOrder->isNew()) {
     prepare_new_order();
@@ -75,8 +96,11 @@ ActionResult OrderForm::saveRecord() {
   auto ar = mOrder->validate();
 
   if (std::get<0>(ar) == ActionResultType::arSUCCESS) {
-    dmSetup->updateEntity(*mSetup);
-    dmSetup->all();
+
+      if (dmSetup->count() > 0) {
+        dmSetup->updateEntity(*mSetup);
+        dmSetup->all();
+      }
   }
 
   return ar;
@@ -88,7 +112,7 @@ void OrderForm::populateEntityFields() {
   mOrder->setTitle(ui->edtTitle->text().toStdString());
   mClient->set_name(ui->edtClient->text().toStdString());
 
-  mOrder->setOrderNumber(ui->sbOrderNumber->value());
+  mOrder->setOrderNumber(ui->edtOrderNumber->text().toStdString());
   mOrder->setOrderDate(ui->dtOrderDate->date());
   mOrder->setStartDate(ui->dtStartDate->date());
   mOrder->setEndDate(ui->dtEndDate->date());
@@ -131,7 +155,7 @@ void OrderForm::populateFormWidgets() {
   ui->cbAccountRep->setModel(mOrder->accountRep()->dataModel());
   ui->cbPackage->setModel(mOrder->package()->dataModel());
 
-  ui->sbOrderNumber->setValue(mOrder->orderNumber()->value());
+  ui->edtOrderNumber->setText(mOrder->orderNumber()->to_qstring());
   ui->dtOrderDate->setDate(mOrder->orderDate()->value());
   ui->dtStartDate->setDate(mOrder->startDate()->value());
   ui->dtEndDate->setDate(mOrder->endDate()->value());
@@ -173,12 +197,7 @@ void OrderForm::populateChoiceCombo(QComboBox *cbox,
 }
 
 void OrderForm::prepare_new_order() {
-  mSetup->orderNumberSequence()->setValue(
-      mSetup->orderNumberSequence()->value() + 1);
-  ui->sbOrderNumber->setValue(mSetup->orderNumberSequence()->value());
-
   ui->edtClient->setText(stoq(mClient->name()->value()));
-
   setDefaults();
 }
 
@@ -211,24 +230,6 @@ void OrderForm::disable_controls() {
 }
 
 void OrderForm::setDefaults() {
-
-  ui->sbAgencyComm->setValue(mSetup->agencyComm()->value());
-  setChoiceFieldDefault(ui->cbAgencyCommType,
-                        mSetup->agencyCommType()->value());
-
-  ui->sbSaleRepComm->setValue(mSetup->saleRepComm()->value());
-  setChoiceFieldDefault(ui->cbSaleRepCommType,
-                        mSetup->saleRepCommType()->value());
-
-  setChoiceFieldDefault(ui->cbRevenueType, mSetup->revenueType()->value());
-
-  setChoiceFieldDefault(ui->cbBillingType, mSetup->billingType()->value());
-  setChoiceFieldDefault(ui->cbBillingPeriod, mSetup->billingCycle()->value());
-  setChoiceFieldDefault(ui->cbBillingBasis, mSetup->billingBasis()->value());
-
-  ui->sbGracePeriod->setValue(mSetup->gracePeriod()->value());
-  ui->sbLateFee->setValue(mSetup->lateFee()->value());
-
   ui->cbBrand->setCurrentIndex(-1);
   ui->cbAgency->setCurrentIndex(-1);
   ui->cbAccountRep->setCurrentIndex(-1);

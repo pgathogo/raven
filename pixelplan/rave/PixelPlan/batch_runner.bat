@@ -1,1 +1,1 @@
-D:/Home/Clients/PMS/Raven/rave/Traffik/ffprobe.exe -v error -show_format -of json D:/Home/Clients/PMS/RavenData/Audio/DontWanna.ogg > D:/Home/Clients/PMS/RavenData/Audio/DontWanna.prb
+D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/ffprobe.exe -v error -show_format -of json D:/Home/Clients/PMS/Studio1/Studio1Data/audio/commaudio/bidco_gea_soap_00004853.OGG > D:/Home/Clients/PMS/Studio1/Studio1Data/audio/commaudio/bidco_gea_soap_00004853.prb
