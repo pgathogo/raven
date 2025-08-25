@@ -297,6 +297,14 @@ BREAK_FILL_METHOD = (
         ('R', 'Random')
         )
 
+PARENTAL_RATING = (
+    ('G', 'General Audience'),
+    ('PG', 'Parental Guidance'),
+    ('PG-13', 'Parents Strongly Cautioned'),
+    ('R', 'Restricted'),
+    ('NC-17', 'Adults Only'),
+)
+
 class TVProgram(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
@@ -367,19 +375,27 @@ class TVProgram(models.Model):
 
     # Metadata
     tags = models.CharField(max_length=255, null=True, blank=True)  # Comma-separated tags for easy searching
-    PARENTAL_RATING = (
-        ('G', 'General Audience'),
-        ('PG', 'Parental Guidance'),
-        ('PG-13', 'Parents Strongly Cautioned'),
-        ('R', 'Restricted'),
-        ('NC-17', 'Adults Only'),
-    )
     parental_rating = models.CharField(max_length=5, choices=PARENTAL_RATING, null=True, blank=True)
     cover_image = models.CharField(max_length=255, null=True, blank=True)
     script_file = models.CharField(max_length=255, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(max_length=100, null=True, blank=True)
+
+
+class AdvertMedia(models.Model):
+    title = models.CharField(max_length=255)
+    media_file = models.CharField(max_length=300, blank=True, null=True)
+    media_path = models.CharField(max_length=300, blank=True, null=True)
+    duration = models.IntegerField(null=True, blank=True)
+    aspect_ratio = models.CharField(max_length=20, blank=True, null=True, help_text="Video aspect ratio, e.g., 16:9")
+    resolution = models.CharField(max_length=50, blank=True, null=True, help_text="Resolution of the video, e.g., 1920x1080")
+    rating = models.CharField(max_length=5, choices=PARENTAL_RATING, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING, default=0)
+    spot = models.ForeignKey(Spot, models.DO_NOTHING, default=0, null=True, blank=True)
+    
+
 
 class BreakLayout(models.Model):
     tvprogram = models.ForeignKey(TVProgram, models.DO_NOTHING, default=0)
@@ -528,6 +544,12 @@ class Schedule(models.Model):
 class SpotAudio(models.Model):
     spot = models.ForeignKey(Spot, models.DO_NOTHING)
     audio = models.ForeignKey(Audio, models.DO_NOTHING)
+    weight = models.IntegerField(default=100, null=True)
+    seq_no = models.IntegerField(default=1, null=True)
+
+class SpotMedia(models.Model):
+    spot = models.ForeignKey(Spot, models.DO_NOTHING)
+    media = models.ForeignKey(AdvertMedia, models.DO_NOTHING)
     weight = models.IntegerField(default=100, null=True)
     seq_no = models.IntegerField(default=1, null=True)
 

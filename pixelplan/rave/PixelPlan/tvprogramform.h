@@ -26,6 +26,11 @@ public:
     void populateEntityFields() override;
     void populateFormWidgets() override;
     void clear_widgets() override;
+    void show_message();
+
+private slots:
+    void on_duration_changed(int);
+    void on_end_time_changed(QTime);
 
 private:
     Ui::TVProgramForm *ui;

@@ -31,14 +31,17 @@
 #include "spotaudio.h"
 #include "spotaudioform.h"
 #include "timeband.h"
+#include "mediabrowser.h"
 
 namespace fs = std::filesystem;
 
-SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
+SpotForm::SpotForm(std::shared_ptr<Client> client,
+                   std::shared_ptr<TRAFFIK::Spot> spot,
+                   QDialog* parent)
     :BaseEntityDetailDlg{parent}
-     ,ui{new Ui::SpotForm}
-     ,m_client{client}
-     ,m_spot{spot}
+    ,ui{new Ui::SpotForm}
+    ,m_client{client}
+    ,m_spot{spot}
     ,m_setup{nullptr}
 {
     ui->setupUi(bui->baseContainer);
@@ -59,12 +62,20 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
                                                 ui->vlTypeEx,
                                                 this);
 
-    m_spot_audio_browser =
-            std::make_unique<SpotAudioBrowser>(&m_spot->spot_audio(),
-                                               ui->vlSpotAudio,
-                                               this);
+    m_media_browser = std::make_unique<MediaBrowser>(m_spot);
+    ui->vlMedia->addWidget(m_media_browser.get());
 
-    connect(m_spot_audio_browser.get(), &SpotAudioBrowser::audio_duration, this, &SpotForm::update_audio_duration);
+    // m_spot_audio_browser =
+    //         std::make_unique<SpotAudioBrowser>(&m_spot->spot_audio(),
+    //                                            ui->vlSpotAudio,
+    //                                            this);
+    // m_spot_media_browser =
+    //         std::make_unique<SpotMediaBrowser>(&m_spot->spot_media(),
+    //                                            ui->vlSpotAudio,
+    //                                            this);
+
+
+    // connect(m_spot_audio_browser.get(), &SpotAudioBrowser::audio_duration, this, &SpotForm::update_audio_duration);
 
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
@@ -128,7 +139,6 @@ const AudioCreationMode SpotForm::get_audio_creation_mode() const
     return m_spot_audio_browser->audio_creation_mode();
 }
 
-
 int SpotForm::parentId() const
 {
     return m_spot->id();
@@ -136,7 +146,7 @@ int SpotForm::parentId() const
 
 const std::unique_ptr<SpotAudioBrowser> &SpotForm::spot_browser() const
 {
-    return m_spot_audio_browser;
+    // return m_spot_audio_browser;
 }
 
 std::string SpotForm::windowTitle()
@@ -146,7 +156,7 @@ std::string SpotForm::windowTitle()
 
 void SpotForm::add_time_band_widget()
 {
-    create_time_band_widget();
+    //create_time_band_widget();
     create_dow_widget();
 }
 
@@ -325,7 +335,7 @@ void SpotForm::update_audio_duration(int audio_duration)
 
 void SpotForm::closeEvent(QCloseEvent* event)
 {
-    m_spot_audio_browser->stop_play();
+    // m_spot_audio_browser->stop_play();
 }
 
 void SpotForm::time_band_selected()

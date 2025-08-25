@@ -10,7 +10,7 @@
 
 #include "client.h"
 
-BrandForm::BrandForm(Client* client, TRAFFIK::Brand* brand,
+BrandForm::BrandForm(std::shared_ptr<Client> client, std::shared_ptr<TRAFFIK::Brand> brand,
                      QDialog *parent)
     :BaseEntityDetailDlg(parent),
      ui(new Ui::BrandForm),

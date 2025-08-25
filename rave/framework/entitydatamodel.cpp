@@ -135,8 +135,23 @@ void EntityModel::deleteFromModel()
 
 bool EntityModel::removeRows(int position, int rows, const QModelIndex &parent)
 {
+    if (parent.isValid())
+        return false;  // Not handling child items for simplicity
+
+    // if ( position < 0 || position + rows > m_data.size())
+    //     return false; // out of bounds
+
     beginRemoveRows(QModelIndex(), position, position+rows-1);
+
+    // for (int i = 0; i < rows; ++i) {
+    //     m_data.removeAt(position);
+    // }
+
+    mEntities.erase(mEntities.begin()+position);
+
+
     endRemoveRows();
+
     return true;
 }
 

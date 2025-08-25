@@ -187,11 +187,11 @@
      </widget>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
-       <string>Audio</string>
+       <string>Media</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QVBoxLayout" name="vlSpotAudio"/>
+        <layout class="QVBoxLayout" name="vlMedia"/>
        </item>
       </layout>
      </widget>

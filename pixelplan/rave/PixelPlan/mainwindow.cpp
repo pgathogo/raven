@@ -3,6 +3,10 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include <QMediaPlayer>
+#include <QVideoWidget>
+#include <QAudioOutput>
+
 #include "../../../rave/framework/valuelistbrowser.h"
 #include "../../../rave/framework/databasemanager.h"
 #include "../../../rave/framework/valuelist.h"
@@ -81,7 +85,7 @@ MainWindow::MainWindow(QApplication* app,
     this->setWindowTitle("Raven - PixelPlan");
 
     int w = 1045;
-    int h = 680;
+    int h = 700;
     setMinimumSize(w, h);
     setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
 
@@ -89,7 +93,9 @@ MainWindow::MainWindow(QApplication* app,
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
 
-    Logger::info("MainWindow", "Opened MainWindow");
+    showRegister();
+
+    Logger::info("MainWindow", "Ctor::opened MainWindow");
 }
 
 void MainWindow::createActions()
@@ -252,6 +258,23 @@ void MainWindow::open_cue_editor()
 
 void MainWindow::test_new_booking()
 {
+
+    auto player = new QMediaPlayer;
+    player->setSource(QUrl::fromLocalFile("D:/Home/Clients/Baryonic/Data/CitizenTV/BIDCO MSAFI English 39sec_23rd May 2025.mov"));
+
+    auto video_output = new QVideoWidget;
+    player->setVideoOutput(video_output);
+
+    QAudioOutput* audio_output = new QAudioOutput;
+    player->setAudioOutput(audio_output);
+
+    audio_output->setVolume(0.5);
+
+    video_output->show();
+    player->play();
+
+
+    /*
     int order_id = 49;
     auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
     order_edm->getById({"id", "=", order_id});
@@ -262,6 +285,9 @@ void MainWindow::test_new_booking()
         bw->test_set_start_end_dates();
         bw->exec();
     }
+  */
+
+
 }
 
 void MainWindow::print_comm_log()

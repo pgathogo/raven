@@ -109,12 +109,12 @@ void BookingOrderBrowser::date_filter_changed(int index)
     // qDebug() << stoq(filter);
 }
 
-void BookingOrderBrowser::set_client(Client* client)
+void BookingOrderBrowser::set_client(std::shared_ptr<Client> client)
 {
     m_client = client;
 }
 
-void BookingOrderBrowser::search_by_client(Client* client)
+void BookingOrderBrowser::search_by_client(std::shared_ptr<Client> client)
 {
     if (client != nullptr){
         set_client(client);
@@ -281,7 +281,6 @@ void BookingOrderBrowser::clear_filter()
 
 void BookingOrderBrowser::cancel_query()
 {
-    qDebug() << "** Table Size: " << m_grid_tables.size();
 
     if (m_grid_tables.size() > 0){
 
@@ -311,7 +310,7 @@ void BookingOrderBrowser::new_booking()
         Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
 
         if (order != nullptr){
-            auto bw = std::make_unique<BookingWizard>(order);
+            auto bw = std::make_unique<BookingWizard>(order, this);
             bw->exec();
         }
     }
@@ -358,7 +357,6 @@ void BookingOrderBrowser::show_spot_details(const QPoint& pos)
                         if (t_row == r && t_col == item->column())
                             break;
 
-                        qDebug() << "Row: "<< r << "Column: "<< item->column();
 
                         spot_id = item->data(Qt::UserRole).toInt();
 
@@ -403,17 +401,16 @@ void BookingOrderBrowser::show_spot_details(const QPoint& pos)
 
 void BookingOrderBrowser::spot_details(int spot_id)
 {
-    qDebug() << "Spot ID: "<< spot_id;
 
     auto spot_edm = std::make_unique<EntityDataModel>(std::make_shared<TRAFFIK::Spot>());
     spot_edm->getById({"id", "=", spot_id});
-    TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(spot_edm->getEntity().get());
-//    TRAFFIK::Spot* spot = spot_ref;
+
+    std::shared_ptr<TRAFFIK::Spot> spot = std::dynamic_pointer_cast<TRAFFIK::Spot>(spot_edm->getEntity());
 
     auto client_edm = std::make_unique<EntityDataModel>(std::make_shared<Client>());
     client_edm->getById({"id", "=", spot->client()->value()});
-    Client* client = dynamic_cast<Client*>(client_edm->getEntity().get());
-//    Client* client = client_ref;
+
+    std::shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(client_edm->getEntity());
 
     spot->voice_over().setParentId(spot_id);
     spot->type_exclusion().setParentId(spot_id);

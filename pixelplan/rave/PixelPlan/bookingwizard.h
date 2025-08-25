@@ -1,6 +1,8 @@
 #ifndef BOOKINGWIZARD_H
 #define BOOKINGWIZARD_H
 
+#include <map>
+
 #include <set>
 #include <QWizard>
 #include <QMenu>
@@ -47,6 +49,22 @@ struct AllBreaks {
     std::vector<int> hourly_intervals;
 };
 
+struct ProgramBreak {
+    int line_id = 0;
+    QString break_time = "";
+    int break_hour = 0;
+    int duration   = 0;
+    int max_spots  = 0;
+    QString fill_method = "";
+    QString dow = "";
+    int progid = 0;
+};
+
+struct Program {
+    QString title = "";
+    std::vector<ProgramBreak> breaks;
+};
+
 enum class FillPos { First, Between, Last};
 
 struct SelectedProgramBreak {
@@ -58,6 +76,7 @@ struct SelectedProgramBreak {
 
 const QString rules_cache_file = "rules_cache_file.json";
 
+using progid = int;
 
 class BookingWizard : public QWizard
 {
@@ -145,6 +164,8 @@ private slots:
     //void time_band_selected(const QModelIndex&);
     void time_band_selected2(QTableWidgetItem*);
     void on_programs_clicked(QListWidgetItem*);
+    void on_select_all();
+    void on_select_all_breaks();
 
 private:
     void print_selected_breaks();
@@ -171,11 +192,19 @@ private:
     void populate_from_to_combos(const std::set<int>&);
     void add_break_interval();
 
-    void load_tv_programs();
-    void fetch_program_breaks(std::string);
+    std::map<progid, Program> get_tv_programs();
+    // void fetch_program_breaks(std::string);
 
     std::vector<SelectedProgramBreak> get_selected_program_breaks();
 
+    void set_breaks_table(int);
+    int get_break_count(int);
+
+    void show_tv_programs(std::map<progid, Program>);
+    std::vector<ProgramBreak> fetch_all_breaks(std::map<progid, Program>);
+    std::vector<int> get_program_ids(const std::map<progid, Program>&);
+    void assign_breaks_to_programs(const std::vector<ProgramBreak>&, std::map<progid, Program>&);
+    void show_program_breaks(std::vector<ProgramBreak>);
 
     Ui::BookingWizard *ui;
     Order* m_order;
@@ -223,6 +252,8 @@ private:
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
     std::shared_ptr<RavenSetup> m_raven_setup;
+
+    std::map<progid, Program> m_programs;
 
 
 };

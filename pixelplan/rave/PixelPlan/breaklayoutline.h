@@ -52,6 +52,11 @@ public:
     std::shared_ptr<BaseEntity> cloneAsShared() override;
     void afterMapping(BaseEntity& entity) override;
 
+    bool operator<(const BreakLayoutLine& other) const {
+        return breakTime()->value() < other.breakTime()->value();
+    }
+    std::string order_by() const override { return "break_time"; }
+
 private:
     ForeignKeyField* mBreakLayout;
     IntegerField* mWeekDay;

@@ -4,9 +4,21 @@ string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
-set(MSVS_BUILD_NUM "14.42.34433")
+set(MSVS_BUILD_NUM "14.44.35207")
 
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
+
+
+if (CMAKE_GENERATOR MATCHES "Ninja")
+    file(
+        WRITE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake"
+            "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_C \"\${CMAKE_DEPFILE_FLAGS_C}\")\n"
+            "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_CXX \"\${CMAKE_DEPFILE_FLAGS_CXX}\")\n"
+    )
+    set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" CACHE INTERNAL "")
+endif()
+
+
 
 project(pixelplan VERSION 0.1 LANGUAGES CXX)
 
@@ -32,6 +44,7 @@ find_package(PostgreSQL REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
@@ -217,6 +230,22 @@ set(PROJECT_SOURCES
     tvprogramform.h
     tvprogramform.cpp
     tvprogramform.ui
+    advertmedia.h
+    advertmedia.cpp
+    tvprogramform.h
+    tvprogramform.cpp
+    tvprogramform.ui
+    tvprogrambrowser.h
+    tvprogrambrowser.cpp
+    tvprogrambrowser.ui
+    advertmediaform.h
+    advertmediaform.cpp
+    advertmediaform.ui
+    mediabrowser.h
+    mediabrowser.cpp
+    mediabrowser.ui
+
+
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
@@ -439,9 +468,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(pixelplan
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        ${RAVE_DIR}/AudioExplorer/audioexplorer.qrc
-        tvprogramform.h tvprogramform.cpp tvprogramform.ui
-        tvprogrambrowser.h tvprogrambrowser.cpp tvprogrambrowser.ui
     )
 else()
     if(ANDROID)
@@ -493,6 +519,9 @@ target_include_directories(pixelplan PRIVATE ${rave_framework_INCLUDE_DIRS})
 
 link_directories(${rave_framework_INCLUDE_DIRS})
 link_directories(${rave_security_INCLUDE_DIRS})
+
+find_package(Qt6 COMPONENTS Multimedia MultimediaWidgets REQUIRED)
+target_link_libraries(pixelplan PUBLIC Qt::Multimedia Qt::MultimediaWidgets)
 
 #link_directories(${AUDIO_LIBRARY_DIR})
 

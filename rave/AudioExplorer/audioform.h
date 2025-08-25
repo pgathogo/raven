@@ -25,7 +25,7 @@ class ChoiceField;
 
 class RavenSetup;
 
-enum class FormMode{ReadWrite, ReadOnly, WriteOnly};
+// enum class FormMode{ReadWrite, ReadOnly, WriteOnly};
 
 class AudioForm : public BaseEntityDetailDlg
 {

@@ -142,6 +142,31 @@ inline std::tuple<int, int, int> ymd(const std::string date_str)
                                std::atoi(day));
 }
 
+template<typename T>
+std::string join(std::vector<T> elements )
+{
+    std::string str="";
+    int i = 0;
+
+    for(auto elem: elements) {
+
+        if constexpr(std::is_integral_v<T>) {
+            str += std::to_string(elem);
+        } else {
+            str += elem;
+        }
+
+        i++;
+
+        if (i < elements.size() )
+
+            str += ",";
+    }
+
+    return str;
+
+}
+
 inline std::string encrypt_str(std::string str)
 {
         for (int i=0; (i < 100 && str[i] != '\0'); ++i)

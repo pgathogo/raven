@@ -27,13 +27,13 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     m_client_browser = std::make_unique<ClientBrowser>(this);
     ui->vlClient->addWidget(m_client_browser.get());
 
-    m_order_browser = std::make_unique<OrderBrowser>(new Client(), this);
+    m_order_browser = std::make_unique<OrderBrowser>(std::make_shared<Client>(), this);
     ui->vlOrder->addWidget(m_order_browser.get());
 
-    m_spot_browser = std::make_unique<SpotBrowser>(new Client(), this);
+    m_spot_browser = std::make_unique<SpotBrowser>(std::make_shared<Client>(), this);
     ui->vlSpot->addWidget(m_spot_browser.get());
 
-    m_brand_browser = std::make_unique<BrandBrowser>(new Client(), this);
+    m_brand_browser = std::make_unique<BrandBrowser>(std::make_shared<Client>(), this);
     ui->vlBrand->addWidget(m_brand_browser.get());
 
     m_book_order_browser = std::make_unique<BookingOrderBrowser>(this);
@@ -70,7 +70,8 @@ void MergedBrowser::change_tab(int index)
 
     if (ent == nullptr)
         return;
-    m_client = dynamic_cast<Client*>(ent.get());
+
+    m_client = std::dynamic_pointer_cast<Client>(ent);
 
     switch(index){
       case 1:
@@ -91,7 +92,7 @@ void MergedBrowser::change_tab(int index)
 
 void MergedBrowser::change_client(std::shared_ptr<BaseEntity> entity)
 {
-    Client* client = dynamic_cast<Client*>(entity.get());
+    std::shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(entity);
 
     m_order_browser->set_client(client);
     m_spot_browser->set_client(client);

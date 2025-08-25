@@ -71,10 +71,10 @@ public:
     void set_view_column_width();
 
     template<typename T1, typename T2, typename T3 >
-    bool add_related_record(T3* parent_entity)
+    bool add_related_record(std::shared_ptr<T3> parent_entity)
     {
         std::shared_ptr<T1> entity = std::make_shared<T1>(parent_entity);
-        std::unique_ptr<T2> form = std::make_unique<T2>(parent_entity, entity.get(), this);
+        std::unique_ptr<T2> form = std::make_unique<T2>(parent_entity, entity, this);
 
         bool created = false;
 
@@ -242,19 +242,24 @@ public:
 
 
     template<typename T, typename T2>
-    void search_related(T2* parent)
+    void search_related(std::shared_ptr<T2> parent)
     {
-        if (bui->edtFilter->text().isEmpty()){
-            T* t = dynamic_cast<T*>(entityDataModel().getEntity().get());
-           if constexpr(HasClientId<T>::value > 0){
+        if (bui->edtFilter->text().isEmpty())
+        {
+           T* t = dynamic_cast<T*>(entityDataModel().getEntity().get());
+
+           if constexpr(HasClientId<T>::value > 0)
+           {
                 auto si = std::make_tuple(t->client()->dbColumnName(), "=", parent->id());
                 try{
                     qDebug() << "<<< Going: searchByInt >>>";
                     entityDataModel().searchByInt(si);
+                    qDebug() << "Search Complete - Records: " << entityDataModel().count();
                    } catch (DatabaseException& de) {
                     showMessage(de.errorMessage());
                 }
            }
+
         }else{
             auto var_data = bui->cbFilter->itemData(bui->cbFilter->currentIndex());
             std::string columnName = var_data.toString().toStdString();

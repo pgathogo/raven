@@ -217,6 +217,7 @@ int PostgresDatabaseManager::searchByInt(const BaseEntity& entity, std::tuple<st
                     " WHERE "+ std::get<0>(field_value)+
              std::get<1>(field_value)+std::to_string(std::get<2>(field_value));
 
+
     return provider()->read(sql);
 }
 

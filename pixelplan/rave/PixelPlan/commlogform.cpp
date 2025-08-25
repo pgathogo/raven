@@ -215,51 +215,58 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 
     m_comm_logs.clear();
 
-    if (provider->cacheSize() > 0 ) {
-        provider->cache()->first();
-        do {
-            auto itB = provider->cache()->currentElement()->begin();
-            auto itE = provider->cache()->currentElement()->end();
+    if (provider->cacheSize() == 0 )
+        return;
 
-            CommercialLog comm_log;
+    provider->cache()->first();
 
-            for (; itB != itE; ++itB){
-                std::string field =  (*itB).first;
-                std::string value = (*itB).second;
+    do {
+        auto itB = provider->cache()->currentElement()->begin();
+        auto itE = provider->cache()->currentElement()->end();
 
-                if (field == "client_name")
-                    comm_log.client_name = value;
-                if (field == "spot_id")
-                    comm_log.spot_id = std::stoi(value);
-                if (field == "spot_name")
-                    comm_log.spot_name = value;
-                if (field == "spot_duration")
-                    comm_log.spot_duration = stod(value);
-                if (field == "booking_status")
-                    comm_log.booking_status = value;
+        CommercialLog comm_log;
 
-                if (field == "play_date")
-                    comm_log.play_date = QDate::fromString(stoq(value), "yyyy-MM-dd");
+        for (; itB != itE; ++itB)
+        {
+            qDebug() << "AAA";
 
-                if (field == "play_time")
-                    comm_log.play_time = QTime::fromString(stoq(value));
 
-                if (field == "booking_id")
-                    comm_log.id = std::stoi(value);
+            std::string field =  (*itB).first;
+            std::string value = (*itB).second;
 
-                if (field == "schedule_date")
-                    comm_log.schedule_date = QDate::fromString(stoq(value), "yyyy-MM-dd");
+            if (field == "client_name")
+                comm_log.client_name = value;
+            if (field == "spot_id")
+                comm_log.spot_id = std::stoi(value);
+            if (field == "spot_name")
+                comm_log.spot_name = value;
+            if (field == "spot_duration")
+                comm_log.spot_duration = stod(value);
+            if (field == "booking_status")
+                comm_log.booking_status = value;
 
-                if (field == "schedule_time")
-                    comm_log.schedule_time = QTime::fromString(stoq(value));
-            }
+            if (field == "play_date")
+                comm_log.play_date = QDate::fromString(stoq(value), "yyyy-MM-dd");
 
-            std::string log_key = comm_log.schedule_time.toString("HH:mm").toStdString();
-            m_comm_logs[log_key].push_back(comm_log);
-            provider->cache()->next();
+            if (field == "play_time")
+                comm_log.play_time = QTime::fromString(stoq(value));
 
-        } while(!provider->cache()->isLast());
-    }
+            if (field == "booking_id")
+                comm_log.id = std::stoi(value);
+
+            if (field == "schedule_date")
+                comm_log.schedule_date = QDate::fromString(stoq(value), "yyyy-MM-dd");
+
+            if (field == "schedule_time")
+                comm_log.schedule_time = QTime::fromString(stoq(value));
+        }
+
+        std::string log_key = comm_log.schedule_time.toString("HH:mm").toStdString();
+        m_comm_logs[log_key].push_back(comm_log);
+        provider->cache()->next();
+
+    } while(!provider->cache()->isLast());
+
 
     if (m_comm_logs.size() > 0)
     {

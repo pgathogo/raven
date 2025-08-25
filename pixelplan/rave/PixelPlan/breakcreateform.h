@@ -58,8 +58,6 @@ public:
         return static_cast<typename std::underlying_type<E>::type>(e);
     }
 
-
-
 private slots:
     void break_layout_selected(const QModelIndex& index);
     void close_form();
@@ -76,6 +74,7 @@ private:
     void set_defaults();
     void setup_ui();
     void make_progids_exclusion_list();
+    void print_model_items();
 
     Ui::BreakCreateForm *ui;
     std::unique_ptr<EntityDataModel> m_edm_break_layout;

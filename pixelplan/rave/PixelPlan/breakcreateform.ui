@@ -126,7 +126,7 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="lblSelHour">
        <property name="text">
         <string>Select Hour:</string>
        </property>
@@ -140,7 +140,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="lblSelectedHr">
        <property name="text">
         <string>Selected Hours:</string>
        </property>

@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QDir>
+#include <QFileInfo>
 
 #include "spotaudiobrowser.h"
 #include "ui_spotaudiobrowser.h"
@@ -34,6 +35,9 @@
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
+#include "advertmedia.h"
+#include "spotmedia.h"
+#include "advertmediaform.h"
 
 namespace fs = std::filesystem;
 
@@ -53,20 +57,20 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     create_button("btnImport", "Import", &SpotAudioBrowser::import_audio,
                   QSize(80, 20), "import_audio.bmp");
 
-    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(80, 20));
+    create_button("btnAttach", "Attach Media", &SpotAudioBrowser::attach_audio, QSize(80, 20));
 
-    create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties,
+    create_button("btnAudioProp", "Media Properties", &SpotAudioBrowser::audio_properties,
                   QSize(80, 20), "audio_prop.png");
 
-    create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit,
-                  QSize(80, 20), "cue_edit.bmp");
+    // create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit,
+    //               QSize(80, 20), "cue_edit.bmp");
 
     create_separator();
     create_button("btnPlayBack", "Play", &SpotAudioBrowser::play_back,
                   QSize(80, 20), "play.png");
 
-    create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play,
-                  QSize(80, 20), "stop_play.png");
+    // create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play,
+    //               QSize(80, 20), "stop_play.png");
 
     create_separator();
     show_delete_button(bui->hlExtra);
@@ -219,12 +223,14 @@ TRAFFIK::SpotAudio& SpotAudioBrowser::get_spot_audio() const
     return *ptr;
 }
 
+
+
 void SpotAudioBrowser::import_audio()
 {
     AUDIO::AudioTool audio_tool;
 
     auto audio_filename = QFileDialog::getOpenFileName(this,
-                                                   tr("Import Audio"), QDir::currentPath(),
+                                                   tr("Import Media"), QDir::currentPath(),
                                                    tr("OGG Files (*.ogg);; MP3 Files (*.mp3);; MTS Files (*.mts);; Wave Files (*.wav)"));
     if (audio_filename.isEmpty())
         return;

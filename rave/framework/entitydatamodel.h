@@ -69,6 +69,21 @@ class EntityModel : public QStandardItemModel{
 
         std::shared_ptr<BaseEntity> get_entity_at_row(int);
 
+        template<typename T>
+        void sort_data()
+        {
+            std::sort(mEntities.begin(), mEntities.end(),
+                      [&](const EntityRecord& first, const EntityRecord second){
+
+                std::shared_ptr<T> first_entity = std::dynamic_pointer_cast<T>(std::get<1>(first));
+                std::shared_ptr<T> second_entity = std::dynamic_pointer_cast<T>(std::get<1>(second));
+
+                return first_entity < second_entity;
+
+            });
+        }
+
+
     protected:
         void addEntity(std::shared_ptr<BaseEntity> entity);
         //void addEntity(BaseEntity* entity);

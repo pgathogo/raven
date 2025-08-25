@@ -329,13 +329,13 @@ std::string BooleanField::field_type()
 /* -------- StringField --------- */
 
 StringField::StringField()
-    :mValue{}
+    :mValue{""}
 {
 }
 
 StringField::StringField(const std::string aName, const std::string aLabel)
     :Field(aName, aLabel),
-      mValue{}
+      mValue{""}
 {
 }
 
@@ -412,10 +412,12 @@ QString StringField::to_qstring()
 /* ---- TextField ---- */
 TextField::TextField()
         :Field()
+        ,mValue{""}
 {
 }
 TextField::TextField(const std::string aName, const std::string aLabel)
         :Field(aName, aLabel)
+        ,mValue{""}
 {
 }
 TextField::~TextField()

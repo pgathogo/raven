@@ -13,9 +13,14 @@ namespace TRAFFIK{
     class SpotAudio;
 }
 
+namespace PIXELPLAN {
+    class AdvertMedia;
+}
+
 namespace AUDIO{
     class Audio;
 }
+
 
 namespace TRAFFIK {
 
@@ -23,7 +28,7 @@ namespace TRAFFIK {
     {
     public:
         Spot();
-        Spot(const Client* client);
+        Spot(const std::shared_ptr<Client> client);
         ~Spot() override;
 
         std::string tableName() const override;
@@ -107,6 +112,8 @@ namespace TRAFFIK {
 
         std::unique_ptr<AUDIO::Audio> m_audio;
         std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
+
+        std::shared_ptr<PIXELPLAN::AdvertMedia> m_advert_media;
 
     };
 }

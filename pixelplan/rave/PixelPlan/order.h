@@ -18,7 +18,7 @@ class Order : public BaseEntity
 {
 public:
     Order();
-    Order(const Client* client);
+    Order(const std::shared_ptr<Client> client);
     ~Order() override;
 
     StringField* title()const;

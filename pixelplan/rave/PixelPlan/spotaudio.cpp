@@ -6,8 +6,14 @@
 namespace TRAFFIK {
 
 SpotAudio::SpotAudio()
-    : ManyToMany{}, m_audio{nullptr}, p_audio{""}, m_parent_entity{nullptr},
-      m_detail_entity{nullptr}, m_parent_id{nullptr}, m_detail_id{nullptr} {
+    : ManyToMany{}
+    , m_audio{nullptr}
+    , p_audio{""}
+    , m_parent_entity{nullptr}
+    , m_detail_entity{nullptr}
+    , m_parent_id{nullptr}
+    , m_detail_id{nullptr}
+{
   m_parent_id = createField<IntegerField>("spot_id", "Parent ID");
   m_detail_id = createField<IntegerField>("audio_id", "Detail ID");
 
@@ -32,14 +38,14 @@ SpotAudio::SpotAudio()
 }
 
 SpotAudio::SpotAudio(BaseEntity *pEnt, BaseEntity *dEnt)
-    : ManyToMany{}, m_audio{nullptr}, p_audio{""}, m_parent_entity{pEnt},
-      m_detail_entity{dEnt} {
+    : ManyToMany{}
+    , m_audio{nullptr}
+    , p_audio{""}
+    , m_parent_entity{pEnt}
+    , m_detail_entity{dEnt}
+{
   m_parent_id = createField<IntegerField>("spot_id", "Parent ID");
   m_detail_id = createField<IntegerField>("audio_id", "Detail ID");
-
-  //        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
-  //                                              std::make_unique<AUDIO::Audio>(""),
-  //                                              "title");
 
   m_audio = dynamic_cast<AUDIO::Audio *>(m_detail_entity);
 

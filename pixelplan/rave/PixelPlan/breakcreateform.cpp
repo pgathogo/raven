@@ -1,4 +1,5 @@
 #include <sstream>
+#include <ranges>
 
 #include <QAbstractItemModel>
 
@@ -38,7 +39,6 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
 
     make_progids_exclusion_list();
 
-
     connect(ui->tvBreakLayouts, &QTableView::clicked, this, &BreakCreateForm::break_layout_selected);
 
     m_edm_break_line = std::make_unique<EntityDataModel>(std::make_shared<BreakLayoutLine>());
@@ -55,6 +55,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     set_defaults();
 
     setup_ui();
+
 }
 
 BreakCreateForm::~BreakCreateForm()
@@ -76,6 +77,7 @@ void BreakCreateForm::set_defaults()
     ui->dtFrom->setDate(QDate::currentDate());
     ui->dtTo->setDate(QDate::currentDate());
     //populate_hour_combo();
+    setMinimumSize(850, 450);
 }
 
 void BreakCreateForm::setup_ui()
@@ -99,26 +101,60 @@ void BreakCreateForm::setup_ui()
     connect(ui->btnAdd, &QToolButton::clicked, this, &BreakCreateForm::create_layout);
     connect(ui->btnEdit, &QToolButton::clicked, this, &BreakCreateForm::edit_layout);
     connect(ui->btnDelete, &QToolButton::clicked, this, &BreakCreateForm::delete_layout);
+
+    ui->lblSelHour->setVisible(false);
+    ui->lblSelectedHr->setVisible(false);
+    ui->btnAddHour->setVisible(false);
+    ui->cbSelectedHours->setVisible(false);
+    ui->btnRemoveHour->setVisible(false);
+
 }
 
 void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 {
+    auto indexes = ui->tvBreakLayouts->selectionModel()->selectedRows();
 
-    if (index.row() > -1) {
-        int sel_row = index.row();
+    if (indexes.size() == 0)
+        return;
 
-        auto be = m_edm_break_layout->get_entity_at_row(sel_row);
+    std::vector<int> bl_ids;
+
+    std::shared_ptr<BreakLayout> bl;
+
+    for(auto& index : indexes)
+    {
+        auto be = m_edm_break_layout->get_entity_at_row(index.row());
         if (be == nullptr)
-            return;
+            continue;
+
+        bl =  dynamic_pointer_cast<BreakLayout>(be);
+        bl_ids.push_back(bl->id());
+
+    }
+
+    m_selected_breaklayout = bl;
+
+    std::string ids = join<int>(bl_ids);
+    ids = "("+ ids +")";
+
+    BreakLayoutLine bbl;
+
+    auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(), " in ", ids);
+
+    std::string filter = m_edm_break_line->prepareFilter(break_line_filter);
+
+    m_edm_break_line->search(filter);
 
 
-        m_selected_breaklayout = dynamic_pointer_cast<BreakLayout>(be);
-        BreakLayoutLine bbl;
-        auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),
-                                                 "=",
-                                                 m_selected_breaklayout->id());
-        std::string filter = m_edm_break_line->prepareFilter(break_line_filter);
-        m_edm_break_line->search(filter);
+    print_model_items();
+}
+
+void BreakCreateForm::print_model_items()
+{
+    for(const auto& entity: m_edm_break_line->modelEntities())
+    {
+        auto bbl = std::dynamic_pointer_cast<BreakLayoutLine>(std::get<1>(entity));
+        qDebug() << bbl->breakTime()->value().toString("HH:mm");
     }
 
 }
@@ -147,6 +183,7 @@ void BreakCreateForm::create_breaks()
     }
 
     std::string sql = make_break_sql(ui->dtFrom->date(), ui->dtTo->date());
+
 
     if (sql.empty())
         return;
@@ -281,8 +318,9 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                 insert_stmts += sched.make_insert_stmt(fields.vec);
 
             }else{
-                if (ui->cbSelectedHours->findText(QString::number(bll->breakHour()->value())) > -1 )
+                if (ui->cbSelectedHours->findText( QString::number(bll->breakHour()->value()) ) > -1 )
                 {
+                    // Do not create break if it already exists
                     if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
                         insert_stmts += sched.make_insert_stmt(fields.vec);
 

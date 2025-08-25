@@ -36,7 +36,7 @@ private:
     Ui::MergedBrowser *ui;
     QMdiArea* m_mdi_area2;
 
-    Client* m_client;
+    std::shared_ptr<Client> m_client;
 
     std::unique_ptr<ClientBrowser> m_client_browser;
     std::unique_ptr<OrderBrowser> m_order_browser;

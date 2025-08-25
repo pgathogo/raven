@@ -41,7 +41,7 @@ public:
 
            std::shared_ptr<BaseEntity> be = findSelectedEntity();
 
-           T1* entity = dynamic_cast<T1*>(be.get());
+           std::shared_ptr<T1> entity = std::dynamic_pointer_cast<T1>(be);
 
            auto browser = std::make_unique<T2>(entity, this);
 

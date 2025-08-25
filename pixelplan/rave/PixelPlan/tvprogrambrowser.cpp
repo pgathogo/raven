@@ -16,6 +16,8 @@ TVProgramBrowser::TVProgramBrowser(QWidget *parent) :
     show_letter_filter();
 
     setDialogTitle("TV Programs");
+
+    setMinimumSize(860, 450);
 }
 
 TVProgramBrowser::~TVProgramBrowser()
@@ -51,6 +53,10 @@ void TVProgramBrowser::updateRecord()
 
     try{
         updateTableViewRecord(tvprogram->tableViewValues());
+
+        // We don't want to updated this field
+        tvprogram->created_at()->setReadOnly(true);
+
         entityDataModel().updateEntity(*tvprogram);
         entityDataModel().all();
     } catch (DatabaseException& de) {

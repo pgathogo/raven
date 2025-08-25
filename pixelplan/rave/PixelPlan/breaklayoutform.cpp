@@ -79,11 +79,8 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     connect(ui->tbDelete, &QToolButton::clicked, this, &BreakLayoutForm::delete_row);
 
 
-    std::println("AAA");
-
     populate_program_combo(excl_progids);
 
-    std::println("BBB");
 
     if (!mBreakLayout->isNew()) {
         int index = ui->cbProgram->findData(QVariant(mBreakLayout->tvprogram()->value()));
@@ -256,12 +253,7 @@ void BreakLayoutForm::populateBreakLine()
 
     int interval =  ui->cbTimeInterval->itemData(curr_index).toInt();
 
-    std::println("666");
-
-
     add_break_lines(m_current_tvprogram, interval);
-
-    std::println("777");
 
 }
 
@@ -311,6 +303,9 @@ void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvpr
         auto breakLine = std::make_unique<BreakLayoutLine>();
 
         t2 = t2.addSecs(time_interval * 60);
+
+        if (std::find(m_deleted_item.begin(), m_deleted_item.end(), t2) != m_deleted_item.end())
+            continue;
 
         breakLine->setBreakTime(t2);
         breakLine->setBreakHour(hour);
@@ -452,8 +447,6 @@ void BreakLayoutForm::timeIntervalChanged(int i)
     mBreakLayout->setTimeInterval(
                 ui->cbTimeInterval->itemData(i).toInt());
 
-    std::println("222");
-
     populateBreakLine();
 
 
@@ -583,11 +576,6 @@ void BreakLayoutForm::delete_row()
     if (rows.count() == 0)
         return;
 
-    // auto [unique_id, line_no] = row_identity();
-    // if (unique_id > -1 ){
-    //     EntityDataModel edm(std::make_shared<BreakLayoutLine>());
-    //     edm.deleteEntityByValue({"id", unique_id});
-    // }
 
     int row = rows[0].row();
 
@@ -596,10 +584,14 @@ void BreakLayoutForm::delete_row()
         return;
 
     std::shared_ptr<BreakLayoutLine> bll = std::dynamic_pointer_cast<BreakLayoutLine>(be);
+
+    m_deleted_item.push_back(bll->breakTime()->value());
+
     m_edm_breakline->deleteEntity(*(bll.get()));
 
-    ui->tvBreakLayoutLine->model()->removeRow(row);
+    ui->tvBreakLayoutLine->model()->removeRows(rows[0].row(), rows.size(),  rows[0].parent());
 
+    populateBreakLine();
 }
 
 void BreakLayoutForm::delete_row_TEST()

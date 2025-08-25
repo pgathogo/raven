@@ -11,8 +11,8 @@
 #include "brand.h"
 #include "spot.h"
 
-BrandBrowser::BrandBrowser(Client* client, QWidget *parent) :
-    BaseEntityBrowserDlg(parent, std::make_unique<TRAFFIK::Brand>()),
+BrandBrowser::BrandBrowser(std::shared_ptr<Client> client, QWidget *parent) :
+    BaseEntityBrowserDlg(parent, std::make_shared<TRAFFIK::Brand>()),
     ui(new Ui::BrandBrowser),
     m_client{client}
 {
@@ -39,7 +39,7 @@ void BrandBrowser::updateRecord()
     if (!searchName.empty()){
 
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(searchName);
-        TRAFFIK::Brand* brand = dynamic_cast<TRAFFIK::Brand*>(be.get());
+        std::shared_ptr<TRAFFIK::Brand> brand = std::dynamic_pointer_cast<TRAFFIK::Brand>(be);
         std::unique_ptr<BrandForm> brandForm =
                 std::make_unique<BrandForm>(m_client, brand, this);
         if (brandForm->exec() > 0){
@@ -60,7 +60,7 @@ void BrandBrowser::searchRecord()
     search_related<TRAFFIK::Brand, Client>(m_client);
 }
 
-void BrandBrowser::search_by_client(Client* client)
+void BrandBrowser::search_by_client(std::shared_ptr<Client> client)
 {
     search_related<TRAFFIK::Brand, Client>(client);
 }
@@ -93,7 +93,7 @@ bool BrandBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 
 }
 
-void BrandBrowser::set_client(Client *client)
+void BrandBrowser::set_client(std::shared_ptr<Client> client)
 {
     m_client = client;
 }

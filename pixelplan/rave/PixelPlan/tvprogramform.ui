@@ -112,7 +112,11 @@
              </widget>
             </item>
             <item row="1" column="1" colspan="2">
-             <widget class="QSpinBox" name="sbDuration"/>
+             <widget class="QSpinBox" name="sbDuration">
+              <property name="maximum">
+               <number>999</number>
+              </property>
+             </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_6">
@@ -133,7 +137,7 @@
             <item row="3" column="2">
              <widget class="QListWidget" name="lwDays"/>
             </item>
-            <item row="1" column="3">
+            <item row="2" column="3">
              <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -145,6 +149,13 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="1" column="3">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Minutes</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

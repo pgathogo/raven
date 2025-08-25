@@ -24,7 +24,7 @@
 
 namespace fs = std::filesystem;
 
-SpotBrowser::SpotBrowser(Client* client, QWidget* parent)
+SpotBrowser::SpotBrowser(std::shared_ptr<Client> client, QWidget* parent)
     :BaseEntityBrowserDlg(parent, std::make_shared<TRAFFIK::Spot>(client))
     ,ui{new Ui::SpotBrowser}
     ,m_client{client}
@@ -49,7 +49,7 @@ SpotBrowser::~SpotBrowser()
 void SpotBrowser::addRecord()
 {
     auto spot = std::make_shared<TRAFFIK::Spot>();
-    auto spot_form = std::make_unique<SpotForm>(m_client, spot.get(), this);
+    auto spot_form = std::make_unique<SpotForm>(m_client, spot, this);
 
     if (spot_form->exec() > 0){
         try{
@@ -78,7 +78,7 @@ void SpotBrowser::updateRecord()
 
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
 
-        TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be.get());
+        std::shared_ptr<TRAFFIK::Spot> spot = std::dynamic_pointer_cast<TRAFFIK::Spot>(be);
 
         //FIXME: Refactor code - remove this and find a way to filter brands lookup
         // based on the selected client.
@@ -91,23 +91,26 @@ void SpotBrowser::updateRecord()
 
         spot->client()->setValue(m_client->id());
 
-        std::unique_ptr<SpotForm> spot_form =
+        std::shared_ptr<SpotForm> spot_form =
                 std::make_unique<SpotForm>(m_client, spot, this);
 
         if (spot_form->exec() > 0){
             try{
+
 
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);
                 entityDataModel().all();
 
-                save_voice_overs(*spot_form);
+                // save_voice_overs(*spot_form);
 
-                save_type_exclusions(*spot_form);
+                // save_type_exclusions(*spot_form);
 
 
-                save_spot_audio(*spot_form);
+                //save_spot_audio(*spot_form);
+
+                //save_spot_media(spot_form);
 
 
             }catch(DatabaseException& de){
@@ -122,12 +125,14 @@ void SpotBrowser::searchRecord()
     search_related<TRAFFIK::Spot, Client>(m_client);
 }
 
-void SpotBrowser::search_by_client(Client* client)
+void SpotBrowser::search_by_client(std::shared_ptr<Client> client)
 {
+    qDebug() << "SpotBrowser::serarch_by_client ...";
+
     search_related<TRAFFIK::Spot, Client>(client);
 }
 
-void SpotBrowser::set_client(Client *client)
+void SpotBrowser::set_client(std::shared_ptr<Client> client)
 {
     m_client = client;
 }
@@ -279,5 +284,46 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
     }
 
-}
+ }
+
+// void SpotBrowser::save_spot_media(std::shared_ptr<SpotForm> spot_form)
+//  {
+//     qDebug() <<  "save spot media ...";
+
+//     auto edm = std::make_unique<EntityDataModel>();
+//     auto& spot_medias = spot_form->spot_medias();
+//     auto media_creation_mode = spot_form->get_media_creation_mode();
+
+//     qDebug() << "Media Count: "<< spot_medias.size();
+
+//     qDebug() <<  "BBB";
+
+
+//     for (auto& sm : spot_medias) {
+//     qDebug() <<  "CCC";
+//         PIXELPLAN::SpotMedia* s_media = static_cast<PIXELPLAN::SpotMedia*>(std::get<1>(sm).get());
+//     qDebug() <<  "DDD";
+//         if (s_media->dbAction() == DBAction::dbaCREATE)
+//         {
+//             switch(media_creation_mode)
+//             {
+//             case MediaCreationMode::Attach:
+//                 break;
+//             case MediaCreationMode::Import:
+//             {
+//     qDebug() <<  "EEE";
+//                 auto& media = s_media->get_pmedia();
+//                 // auto media = s_media->advert_media();
+//     qDebug() <<  "FFF";
+//                 qDebug() << media.title()->to_qstring();
+//                 // int id = edm->createEntity(media);
+
+//             }
+
+//             } // Switch
+
+//         } // DBAction::dbCREATE
+//     }
+
+//  }
 

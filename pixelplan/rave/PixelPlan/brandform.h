@@ -21,7 +21,7 @@ class BrandForm : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit BrandForm(Client* client, TRAFFIK::Brand* brand,
+    explicit BrandForm(std::shared_ptr<Client> client, std::shared_ptr<TRAFFIK::Brand> brand,
                        QDialog *parent = nullptr);
     ~BrandForm() override;
 
@@ -36,8 +36,8 @@ private slots:
 
 private:
     Ui::BrandForm *ui;
-    Client* mClient;
-    TRAFFIK::Brand* mBrand;
+    std::shared_ptr<Client> mClient;
+    std::shared_ptr<TRAFFIK::Brand> mBrand;
     std::unique_ptr<PickListBrowser> mPlb;
 };
 

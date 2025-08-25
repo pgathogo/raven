@@ -89,6 +89,8 @@ private:
     std::unique_ptr<EntityDataModel> m_edm_tvprogram;
     std::shared_ptr<PIXELPLAN::TVProgram> m_current_tvprogram;
 
+    std::vector<QTime> m_deleted_item;
+
 
     int tempFromHr;
     int tempToHr;

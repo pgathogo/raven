@@ -9,9 +9,14 @@
 #include "client.h"
 #include "order.h"
 
-OrderForm::OrderForm(Client *client, Order *order, QDialog *parent)
-    : BaseEntityDetailDlg(parent), ui(new Ui::OrderForm), mClient{client},
-      mOrder{order} {
+OrderForm::OrderForm(std::shared_ptr<Client> client,
+                     std::shared_ptr<Order>order,
+                     QDialog *parent)
+    : BaseEntityDetailDlg(parent)
+     ,ui(new Ui::OrderForm)
+     , mClient{client},
+     mOrder{order}
+{
   ui->setupUi(bui->baseContainer);
   setTitle(windowTitle());
 
@@ -201,7 +206,7 @@ void OrderForm::prepare_new_order() {
   setDefaults();
 }
 
-void OrderForm::prepare_for_edit(Order *order) {
+void OrderForm::prepare_for_edit(std::shared_ptr<Order> order) {
   // If any spots have been booked from this order, don't edit.
   if (order->spotsBooked()->value() > 0) {
     disable_controls();

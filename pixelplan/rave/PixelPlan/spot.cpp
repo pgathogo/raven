@@ -9,6 +9,7 @@
 
 #include "../../../rave/audio/audio.h"
 #include "spotaudio.h"
+#include "advertmedia.h"
 
 namespace TRAFFIK {
 
@@ -18,6 +19,7 @@ namespace TRAFFIK {
         ,m_real_duration{}
         ,m_client{}
         ,m_brand{}
+        ,m_spot_audio{nullptr}
     {
         m_client = createField<ForeignKeyField>("client_id", "Client",
                                                std::make_unique<Client>(), "name");
@@ -59,18 +61,20 @@ namespace TRAFFIK {
         m_type_ex = std::make_unique<TRAFFIK::TypeExclusion>();
         m_spot_type_ex = std::make_unique<SpotTypeExclusion>(this, m_type_ex.get() );
 
-        m_audio = std::make_unique<AUDIO::Audio>("");
-        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
+        // m_audio = std::make_unique<AUDIO::Audio>("");
+        // m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
+        // m_advert_media = std::make_shared<PIXELPLAN::AdvertMedia>();
 
         setTableName("rave_spot");
     }
 
-    Spot::Spot(const Client* client)
+    Spot::Spot(const std::shared_ptr<Client> client)
         :m_name{}
         ,m_spot_duration{}
         ,m_real_duration{}
         ,m_client{}
         ,m_brand{}
+        ,m_audio{nullptr}
     {
         m_client = createField<ForeignKeyField>("client_id", "Client",
                                                std::make_unique<Client>(), "name");
@@ -87,16 +91,10 @@ namespace TRAFFIK {
         std::string fstr = edm.prepareFilter(filter);
 
 
-        qDebug() << "** Spot::Client: "<< client->id();
-
-
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
                                               std::make_unique<TRAFFIK::Brand>(client),
                                               "brand_name");
                                               // fstr);
-
-        qDebug() << "* Brand Count: " << m_brand->dataModel()->count();
-
 
         m_daypart1 = createField<StringField>("daypart1", "Daypart1");
         m_daypart1->setSearchable(false);
@@ -194,7 +192,7 @@ namespace TRAFFIK {
 
         m_spot_voice_over->setParentId(spot.id());
         m_spot_type_ex->setParentId(spot.id());
-        m_spot_audio->setParentId(spot.id());
+        //m_spot_audio->setParentId(spot.id());
 
     }
 
@@ -326,6 +324,7 @@ namespace TRAFFIK {
     {
         return *m_spot_audio;
     }
+
 
     ActionResult Spot::validate()
     {

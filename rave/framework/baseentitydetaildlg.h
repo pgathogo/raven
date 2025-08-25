@@ -18,6 +18,8 @@ namespace Ui {
     class BaseEntityDetailDlg;
 }
 
+enum class FormMode{ReadWrite, ReadOnly, WriteOnly};
+
 using BrowserForms = std::vector<std::unique_ptr<ManyToManyBrowser>>;
 
 class BaseEntityDetailDlg : public QDialog
@@ -56,6 +58,11 @@ public:
             connect(edit, &T::textChanged, this, [&](){m_okay_to_close = false;});
         }
 
+        template<typename T>
+        void set_choice_field(T* cf, QComboBox* cbox)
+        {
+            cf->setValue(cbox->itemData(cbox->currentIndex()).toString().toStdString());
+        }
 
 signals:
        void dialog_is_closing();

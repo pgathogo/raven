@@ -285,10 +285,13 @@ int PostgresDataProvider::read(const std::string query)
 
         for(int j=0; j<nFields; ++j){
 
-            record->insert(std::make_pair(PQfname(res, j),
-                          PQgetvalue(res, i, j)));
+            std::string field_name = PQfname(res, j);
+            std::string field_value = PQgetvalue(res, i, j);
+
+            record->insert(std::make_pair(field_name, field_value) );
 
         }
+
 
         // cache results
         append(record);
