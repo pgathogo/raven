@@ -215,7 +215,7 @@ class Setup(models.Model):
     pay_grace_period = models.IntegerField(null=True)
     revenue_type = models.CharField(max_length=1, blank=True, null=True, choices=REVENUE_TYPE);
     order_approval_levels = models.IntegerField(null=True)
-    order_number_sequence = models.IntegerField(null=True);
+    order_number_sequence = models.IntegerField(null=True)
     order_approved_before_booking = models.BooleanField(default=False)
     break_time_interval = models.IntegerField(default=15)
     break_duration = models.IntegerField(default=120)
@@ -242,7 +242,7 @@ class OrderPackage(models.Model):
 
 class Order(models.Model):
     title = models.CharField(max_length=255)
-    order_number = models.IntegerField(null=True)
+    order_number = models.CharField(max_length=50, null=True, blank=True)
     client = models.ForeignKey(Client, models.DO_NOTHING)
     order_date = models.DateField()
     start_date = models.DateField()

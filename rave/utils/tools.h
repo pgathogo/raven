@@ -16,6 +16,11 @@
 
 #include <cstdlib>
 
+#include <vector>
+#include <set>
+#include <type_traits>
+#include <concepts>
+
 #if defined(__GNUC__) || defined(__GNUG__)
 #include <cxxabi.h>
 #endif
@@ -142,25 +147,58 @@ inline std::tuple<int, int, int> ymd(const std::string date_str)
                                std::atoi(day));
 }
 
+
 template<typename T>
-std::string join(std::vector<T> elements )
+concept AllowedType = std::same_as<T, int> || std::same_as<T, std::string>;
+
+// Concept to check type is a std::vector
+template<typename T>
+concept IsVector =
+    requires {
+    typename T::value_type;  // has a value_type member type
+    typename T::allocator_type;
+} && std::same_as<T, std::vector<typename T::value_type,
+                                 typename T::allocator_type>> &&
+                   AllowedType<typename T::value_type>;
+
+// Concept to check type is a std::set
+template<typename T>
+concept IsSet =
+    requires {
+    typename T::key_type;   // Has a key_type member type
+    typename T::key_compare;
+    typename T::allocator_type;
+} && std::same_as<T, std::set<typename T::key_type, typename T::key_compare,
+                              typename T::allocator_type>> &&
+                AllowedType<typename T::key_type>;
+
+// Combine concept to accept either vector or set
+template<typename T>
+concept VectorOrSet = IsVector<T> || IsSet<T>;
+
+
+template<VectorOrSet T>
+std::string join(const T& container)
 {
+    using ElemType = typename T::value_type;
+
     std::string str="";
     int i = 0;
 
-    for(auto elem: elements) {
-
-        if constexpr(std::is_integral_v<T>) {
+    if constexpr (std::same_as<ElemType, int>) {
+        for(const auto& elem: container) {
             str += std::to_string(elem);
-        } else {
-            str += elem;
+            i++;
+            if (i < container.size() )
+                str += ",";
         }
-
-        i++;
-
-        if (i < elements.size() )
-
-            str += ",";
+    } else if constexpr(std::same_as<ElemType, std::string>) {
+        for(const auto& elem: container) {
+            str += elem;
+            i++;
+            if (i < container.size() )
+                str += ",";
+        }
     }
 
     return str;

@@ -616,16 +616,7 @@ std::size_t BookingWizard::fetch_breaks_from_db(QDate start_date, QDate end_date
 
     if (uniq_hours.size() > 0)
     {
-        //FIXME: Refactor the following code
-        std::size_t i = 0;
-        std::string  hr_str;
-        for (auto it=uniq_hours.begin(); it != uniq_hours.end(); ++it){
-        hr_str += std::to_string(*it);
-        if (i < uniq_hours.size()-1)
-            hr_str += ",";
-        ++i;
-        }
-
+        std::string  hr_str = join(uniq_hours);
         hr_str = "("+hr_str+")";
 
         auto hours_filter = std::make_tuple(
@@ -643,6 +634,7 @@ std::size_t BookingWizard::fetch_breaks_from_db(QDate start_date, QDate end_date
     } else {
         try {
             m_engine_data.m_schedule_EDM->search(m_engine_data.m_schedule_EDM->prepareFilter(date_range_filter));
+
         } catch (DatabaseException& de) {
             showMessage(de.errorMessage());
         }
@@ -679,6 +671,7 @@ void BookingWizard::populate_from_to_combos(const std::set<int>& hrs)
         ui->cbFromHour->addItem(QString::number(hr), hr);
         ui->cbToHour->addItem(QString::number(hr), hr);
     }
+
     ui->cbFromHour->setCurrentIndex(0);
     ui->cbToHour->setCurrentIndex(ui->cbToHour->count()-1);
 
@@ -942,7 +935,7 @@ std::set<int> BookingWizard::select_unique_hours_from_breaks()
     {
         auto& [name, entity] = entity_record;
 
-        auto a_break = dynamic_cast<Break*>(entity.get());
+        auto a_break = std::dynamic_pointer_cast<Break>(entity);
 
         unique_hours.insert(a_break->schedule_hour()->value());
 
