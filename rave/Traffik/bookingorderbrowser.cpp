@@ -107,12 +107,12 @@ void BookingOrderBrowser::date_filter_changed(int index)
     // qDebug() << stoq(filter);
 }
 
-void BookingOrderBrowser::set_client(Client* client)
+void BookingOrderBrowser::set_client(std::shared_ptr<Client> client)
 {
     m_client = client;
 }
 
-void BookingOrderBrowser::search_by_client(Client* client)
+void BookingOrderBrowser::search_by_client(std::shared_ptr<Client> client)
 {
     if (client != nullptr){
         set_client(client);
@@ -397,20 +397,18 @@ void BookingOrderBrowser::spot_details(int spot_id)
 
     auto spot_edm = std::make_unique<EntityDataModel>(std::make_shared<TRAFFIK::Spot>());
     spot_edm->getById({"id", "=", spot_id});
-    TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(spot_edm->getEntity().get());
-//    TRAFFIK::Spot* spot = spot_ref;
+
+    std::shared_ptr<TRAFFIK::Spot> spot = std::dynamic_pointer_cast<TRAFFIK::Spot>(spot_edm->getEntity());
 
     auto client_edm = std::make_unique<EntityDataModel>(std::make_shared<Client>());
     client_edm->getById({"id", "=", spot->client()->value()});
-    Client* client = dynamic_cast<Client*>(client_edm->getEntity().get());
-//    Client* client = client_ref;
+
+    std::shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(client_edm->getEntity());
 
     spot->voice_over().setParentId(spot_id);
     spot->type_exclusion().setParentId(spot_id);
     spot->spot_audio().setParentId(spot_id);
 
-    std::cout << "Client Name: "<< client->name()->value() << '\n';
-    std::cout << "Spot Name: "<< spot->name()->value() << '\n';
 
     std::unique_ptr<SpotForm> spot_form =
             std::make_unique<SpotForm>(client, spot, this);
@@ -539,7 +537,8 @@ std::string BookingOrderBrowser::make_filter(int client_id)
     std::unique_ptr<EntityDataModel> setupEDM;
     setupEDM = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     setupEDM->all();
-    auto setup = dynamic_cast<RavenSetup*>(setupEDM->firstEntity().get());
+
+    auto setup = std::dynamic_pointer_cast<RavenSetup>(setupEDM->firstEntity());
 
     std::string order_approval_filter{};
 

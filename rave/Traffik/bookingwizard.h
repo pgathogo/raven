@@ -179,7 +179,7 @@ private:
     std::map<int, SelectedBreak> m_selected_breaks;
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
-    RavenSetup* m_raven_setup;
+    std::shared_ptr<RavenSetup> m_raven_setup;
 
     void print_selected_breaks();
 

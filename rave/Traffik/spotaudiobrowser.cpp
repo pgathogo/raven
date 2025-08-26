@@ -76,7 +76,8 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
     m_setup_edm->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
+
+    m_setup = std::dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
 
     layout->addWidget(this);
 

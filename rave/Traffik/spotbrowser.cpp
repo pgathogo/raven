@@ -24,7 +24,7 @@
 
 namespace fs = std::filesystem;
 
-SpotBrowser::SpotBrowser(Client* client, QWidget* parent)
+SpotBrowser::SpotBrowser(std::shared_ptr<Client> client, QWidget* parent)
     :BaseEntityBrowserDlg(parent, std::make_shared<TRAFFIK::Spot>(client))
     ,ui{new Ui::SpotBrowser}
     ,m_client{client}
@@ -49,7 +49,7 @@ SpotBrowser::~SpotBrowser()
 void SpotBrowser::addRecord()
 {
     auto spot = std::make_shared<TRAFFIK::Spot>();
-    auto spot_form = std::make_unique<SpotForm>(m_client, spot.get(), this);
+    auto spot_form = std::make_unique<SpotForm>(m_client, spot, this);
 
     if (spot_form->exec() > 0){
         try{
@@ -78,7 +78,7 @@ void SpotBrowser::updateRecord()
 
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
 
-        TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(be.get());
+        std::shared_ptr<TRAFFIK::Spot> spot = std::dynamic_pointer_cast<TRAFFIK::Spot>(be);
 
         //FIXME: Refactor code - remove this and find a way to filter brands lookup
         // based on the selected client.
@@ -122,12 +122,12 @@ void SpotBrowser::searchRecord()
     search_related<TRAFFIK::Spot, Client>(m_client);
 }
 
-void SpotBrowser::search_by_client(Client* client)
+void SpotBrowser::search_by_client(std::shared_ptr<Client> client)
 {
     search_related<TRAFFIK::Spot, Client>(client);
 }
 
-void SpotBrowser::set_client(Client *client)
+void SpotBrowser::set_client(std::shared_ptr<Client> client)
 {
     m_client = client;
 }

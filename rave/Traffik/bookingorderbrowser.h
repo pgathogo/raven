@@ -99,7 +99,7 @@ public:
 
     void setMdiArea(QMdiArea* mdi);
 
-    void search_by_client(Client*);
+    void search_by_client(std::shared_ptr<Client>);
 
 private slots:
     void search_field_changed(int i);
@@ -137,7 +137,7 @@ private:
     QMenu* m_spot_ctx_menu;
     QAction* m_spot_ctx_action;
 
-    Client* m_client;
+    std::shared_ptr<Client> m_client;
 
     int t_row{-1};
     int t_col{-1};
@@ -150,7 +150,7 @@ private:
     QTableWidget* get_selected_grid();
     void set_autocompleter();
     void fill_cbox_date_filter();
-    void set_client(Client*);
+    void set_client(std::shared_ptr<Client>);
     void build_client_orders(int, std::string, std::vector<ClientOrder>&);
     void build_order_bookings(int, std::vector<Booking>&);
     void build_order_booking_table(std::vector<ClientOrder>&);

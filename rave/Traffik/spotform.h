@@ -35,7 +35,8 @@ class SpotForm : public BaseEntityDetailDlg
 {
     Q_OBJECT
 public:
-    explicit SpotForm(Client* client, TRAFFIK::Spot* spot,
+    explicit SpotForm(std::shared_ptr<Client> client,
+                      std::shared_ptr<TRAFFIK::Spot> spot,
                       QDialog* parent = nullptr);
     ~SpotForm() override;
 
@@ -74,15 +75,15 @@ private:
     void populate_time_band_widget(const std::unique_ptr<EntityDataModel>&, QTableWidget*);
 
     Ui::SpotForm* ui;
-    Client* m_client;
-    TRAFFIK::Spot* m_spot;
+    std::shared_ptr<Client> m_client;
+    std::shared_ptr<TRAFFIK::Spot> m_spot;
     std::unique_ptr<DayPartGrid> m_daypart;
     std::unique_ptr<ManyToManyBrowser> m_MtoMVoiceOverBrowser;
     std::unique_ptr<ManyToManyBrowser> m_MtoMTypeExBrowser;
     std::unique_ptr<SpotAudioBrowser> m_spot_audio_browser;
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
-    RavenSetup* m_setup;
+    std::shared_ptr<RavenSetup> m_setup;
 
     std::unique_ptr<EntityDataModel> m_edm_time_band;
     std::unique_ptr<DowWidget> m_dow_widget;

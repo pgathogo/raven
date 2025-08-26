@@ -21,7 +21,7 @@ class OrderForm : public BaseEntityDetailDlg
     Q_OBJECT
 
 public:
-    explicit OrderForm(Client* client, Order* order,
+    explicit OrderForm(std::shared_ptr<Client> client, std::shared_ptr<Order> order,
                        QDialog* parent = nullptr);
     ~OrderForm() override;
 
@@ -32,7 +32,7 @@ public:
     void clear_widgets() override;
 
     void populateChoiceCombo(QComboBox* cbox, const ChoiceField<std::string>* cf);
-    void prepare_for_edit(Order*);
+    void prepare_for_edit(std::shared_ptr<Order>);
     void setDefaults();
     void setChoiceFieldDefault(QComboBox* cbox, const std::string val);
     void setForeignKeyField(QComboBox* cbox, ForeignKeyField* fkf);
@@ -70,9 +70,9 @@ private:
     void disable_controls();
 
     Ui::OrderForm *ui;
-    Client* mClient;
-    Order* mOrder;
+    std::shared_ptr<Client> mClient;
+    std::shared_ptr<Order> mOrder;
     std::unique_ptr<EntityDataModel> dmSetup;
-    RavenSetup* mSetup;
+    std::shared_ptr<RavenSetup> mSetup;
 };
 #endif // ORDERFORM_H

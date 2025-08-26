@@ -36,7 +36,7 @@ public:
 
 
     explicit AudioForm(AUDIO::Audio*,
-                       RavenSetup* setup,
+                       std::shared_ptr<RavenSetup> setup,
                        FormMode form_mode = FormMode::ReadWrite,
                        QDialog* parent = nullptr);
     ~AudioForm();
@@ -66,7 +66,7 @@ private slots:
 private:
     Ui::AudioForm *ui;
     AUDIO::Audio* m_audio;
-    RavenSetup* m_setup;
+    std::shared_ptr<RavenSetup> m_setup;
     std::unique_ptr<PickListBrowser> m_artist_picker;
     std::unique_ptr<AUDIO::AudioTool> m_audio_tool;
     std::string m_title_tag{""};

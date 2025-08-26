@@ -136,7 +136,7 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     m_edm_setup = std::make_unique<EntityDataModel>(
         std::make_shared<RavenSetup>() );
     m_edm_setup->all();
-    m_raven_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
+    m_raven_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
     add_break_interval();
 
 
@@ -896,12 +896,12 @@ void BookingWizard::spot_details(int spot_id)
 {
     auto spot_edm = std::make_unique<EntityDataModel>(std::make_unique<TRAFFIK::Spot>());
     spot_edm->getById({"id", "=", spot_id});
-    TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(spot_edm->getEntity().get());
+    std::shared_ptr<TRAFFIK::Spot> spot = std::dynamic_pointer_cast<TRAFFIK::Spot>(spot_edm->getEntity());
 //    TRAFFIK::Spot* spot = &spot_ref;
 
     auto client_edm = std::make_unique<EntityDataModel>(std::make_unique<Client>());
     client_edm->getById({"id", "=", spot->client()->value()});
-    Client* client = dynamic_cast<Client*>(client_edm->getEntity().get());
+    std::shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(client_edm->getEntity());
 //    Client* client = &client_ref;
 
     spot->voice_over().setParentId(spot_id);

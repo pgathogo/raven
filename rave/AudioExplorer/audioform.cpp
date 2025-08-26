@@ -15,7 +15,7 @@
 namespace fs = std::filesystem;
 
 AudioForm::AudioForm(AUDIO::Audio* audio,
-                      RavenSetup* setup,
+                     std::shared_ptr<RavenSetup> setup,
                      FormMode form_mode,
                      QDialog* parent)
     :BaseEntityDetailDlg(parent)

@@ -15,7 +15,7 @@ namespace TRAFFIK {
     {
     public:
         Brand();
-        Brand(const Client* client);
+        Brand(const std::shared_ptr<Client> client);
         ~Brand() override;
 
         void set_brand_name(std::string brand_name);

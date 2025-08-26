@@ -22,7 +22,7 @@ namespace TRAFFIK {
         setTableName("rave_brand");
     }
 
-    Brand::Brand(const Client* client)
+    Brand::Brand(const std::shared_ptr<Client> client)
         :m_brand_name{nullptr}
         ,m_client{}
         ,m_brand_manager{nullptr}

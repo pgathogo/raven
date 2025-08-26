@@ -7,8 +7,8 @@
 #include "client.h"
 #include "bookingsegment.h"
 
-OrderBrowser::OrderBrowser(Client* client, QWidget* parent) :
-    BaseEntityBrowserDlg(parent, std::make_unique<Order>(client)),
+OrderBrowser::OrderBrowser(std::shared_ptr<Client> client, QWidget* parent) :
+    BaseEntityBrowserDlg(parent, std::make_shared<Order>(client)),
     ui(new Ui::OrderBrowser),
     mClient{client}
 {
@@ -37,7 +37,8 @@ void OrderBrowser::updateRecord()
     std::string search_name = selectedRowName().toStdString();
     if (!search_name.empty()){
         std::shared_ptr<BaseEntity> be = entityDataModel().findEntityByName(search_name);
-        Order* order = dynamic_cast<Order*>(be.get());
+
+        std::shared_ptr<Order> order = std::dynamic_pointer_cast<Order>(be);
 
         qDebug() << *order;
 
@@ -62,7 +63,7 @@ void OrderBrowser::searchRecord()
 
 bool OrderBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
-   Order* order = dynamic_cast<Order*>(entity.get());
+   std::shared_ptr<Order> order = std::dynamic_pointer_cast<Order>(entity);
    EntityDataModel edm = EntityDataModel(std::make_shared<BookingSegment>());
    edm.searchByInt({"order_id", "=", order->id()});
 
@@ -75,13 +76,13 @@ bool OrderBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 
 }
 
-void OrderBrowser::search_by_client(Client* client)
+void OrderBrowser::search_by_client(std::shared_ptr<Client> client)
 {
     qDebug() << "ORDER BROWSER: "<< client->id();
     search_related<Order, Client>(client);
 }
 
-void OrderBrowser::set_client(Client* client)
+void OrderBrowser::set_client(std::shared_ptr<Client> client)
 {
     mClient = client;
 }

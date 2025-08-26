@@ -65,7 +65,7 @@ namespace TRAFFIK {
         setTableName("rave_spot");
     }
 
-    Spot::Spot(const Client* client)
+    Spot::Spot(std::shared_ptr<Client> client)
         :m_name{}
         ,m_spot_duration{}
         ,m_real_duration{}

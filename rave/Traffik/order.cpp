@@ -101,7 +101,7 @@ Order::Order()
     setTableName("rave_order");
 }
 
-Order::Order(const Client* client)
+Order::Order(std::shared_ptr<Client> client)
 {
     m_title = createField<StringField>("title", "Title");
     m_title->setMandatory(true);

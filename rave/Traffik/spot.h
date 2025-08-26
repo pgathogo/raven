@@ -23,7 +23,7 @@ namespace TRAFFIK {
     {
     public:
         Spot();
-        Spot(const Client* client);
+        Spot(std::shared_ptr<Client> client);
         ~Spot() override;
 
         std::string tableName() const override;

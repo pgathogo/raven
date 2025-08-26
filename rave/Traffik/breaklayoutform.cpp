@@ -466,7 +466,7 @@ void BreakLayoutForm::test_model()
     auto& break_lines = breakLines();
 
     for(auto& break_line : break_lines){
-        BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(std::get<1>(break_line).get());
+        std::shared_ptr<BreakLayoutLine> bll = std::dynamic_pointer_cast<BreakLayoutLine>(std::get<1>(break_line));
     }
 }
 

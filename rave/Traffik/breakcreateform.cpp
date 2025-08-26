@@ -99,7 +99,8 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
                         sel_row, 0)).toString().toStdString();
 
         std::shared_ptr<BaseEntity> be = m_edm_break_layout->findEntityByName(layout_name);
-        BreakLayout* breakLayout = dynamic_cast<BreakLayout*>(be.get());
+
+        std::shared_ptr<BreakLayout> breakLayout = dynamic_pointer_cast<BreakLayout>(be);
 
         BreakLayoutLine bbl;
         auto break_line_filter = std::make_tuple(bbl.breakLayout()->dbColumnName(),

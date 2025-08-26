@@ -34,7 +34,9 @@
 
 namespace fs = std::filesystem;
 
-SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
+SpotForm::SpotForm(std::shared_ptr<Client> client,
+                   std::shared_ptr<TRAFFIK::Spot> spot,
+                   QDialog* parent)
     :BaseEntityDetailDlg{parent}
      ,ui{new Ui::SpotForm}
      ,m_client{client}
@@ -73,9 +75,9 @@ SpotForm::SpotForm(Client* client, TRAFFIK::Spot* spot, QDialog* parent)
     ui->tabWidget->setCurrentIndex(0);
 
     m_edm_setup = std::make_unique<EntityDataModel>(
-                std::make_unique<RavenSetup>());
+                           std::make_unique<RavenSetup>());
     m_edm_setup->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_edm_setup->firstEntity().get());
+    m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
 
 
     ui->edtRealDuration->setMaximum(999999);

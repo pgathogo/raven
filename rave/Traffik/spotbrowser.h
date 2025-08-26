@@ -18,7 +18,7 @@ class SpotBrowser : public BaseEntityBrowserDlg
     Q_OBJECT
 
 public:
-    explicit SpotBrowser(Client* client, QWidget *parent=nullptr);
+    explicit SpotBrowser(std::shared_ptr<Client> client, QWidget *parent=nullptr);
     ~SpotBrowser() override;
 
     void addRecord() override;
@@ -31,12 +31,12 @@ public:
     void save_type_exclusions(const SpotForm&);
     void save_spot_audio(const SpotForm&);
 
-    void search_by_client(Client* client);
+    void search_by_client(std::shared_ptr<Client> client);
 
-    void set_client(Client* client);
+    void set_client(std::shared_ptr<Client> client);
 private:
     Ui::SpotBrowser *ui;
-    Client* m_client;
+    std::shared_ptr<Client> m_client;
 };
 
 #endif // SPOTBROWSER_H
