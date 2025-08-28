@@ -114,7 +114,8 @@ void BookingOrderBrowser::set_client(std::shared_ptr<Client> client)
 
 void BookingOrderBrowser::search_by_client(std::shared_ptr<Client> client)
 {
-    if (client != nullptr){
+    if (client != nullptr)
+    {
         set_client(client);
 
         search(client->id());
@@ -141,10 +142,6 @@ void BookingOrderBrowser::search(int client_id)
 
     build_order_booking_table(m_client_orders);
 
-    // if (order_bookings.size() > 0){
-    //     sort_bookings(order_bookings);
-    //     set_treewidget(bookings, id, date_filter);
-    // }
 
 }
 
@@ -198,7 +195,7 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                     if (field == "order_id")
                         booking.order_id = std::stoi(value);
                     if (field == "order_number")
-                        booking.order_number = str_to_int(value);
+                        booking.order_number = value;
                     if (field == "order_date")
                         booking.order_date = value;
                     if (field == "start_date")
@@ -301,7 +298,7 @@ void BookingOrderBrowser::new_booking()
         Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
 
         if (order != nullptr){
-            auto bw = std::make_unique<BookingWizard>(order);
+            auto bw = std::make_unique<BookingWizard>(order, this);
             bw->exec();
         }
     }
@@ -309,7 +306,6 @@ void BookingOrderBrowser::new_booking()
 
 void BookingOrderBrowser::show_spot_details(const QPoint& pos)
 {
-
 
     QTableWidget* selected_table{nullptr};
 

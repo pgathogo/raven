@@ -22,7 +22,7 @@ public:
     ~Order() override;
 
     StringField* title()const;
-    IntegerField* orderNumber()const;
+    StringField* orderNumber()const;
     ForeignKeyField* client()const;
     DateField* orderDate()const;
     DateField* startDate()const;
@@ -55,7 +55,7 @@ public:
     DateTimeField* addDtime()const;
 
     void setTitle(const std::string);
-    void setOrderNumber(int);
+    void setOrderNumber(const std::string);
     void setClient(int);
     void setOrderDate(QDate);
     void setStartDate(QDate);
@@ -105,7 +105,7 @@ public:
 
 private:
     StringField* m_title;
-    IntegerField* mOrderNumber;
+    StringField* mOrderNumber;
     ForeignKeyField* mClient;
     DateField* mOrderDate;
     DateField* mStartDate;

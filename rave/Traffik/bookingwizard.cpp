@@ -2,6 +2,7 @@
 #include <random>
 #include <ranges>
 #include <cstdlib>
+#include <map>
 
 #include <QFile>
 #include <QDir>
@@ -111,6 +112,10 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     connect(ui->btnBreakSelect, &QPushButton::clicked, this, [&](){ this->toggle_selection(true);} );
     connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [&](){ this->toggle_selection(false);} );
 
+    connect(ui->btnAdd, &QPushButton::clicked, this, &BookingWizard::add_distribution);
+    connect(ui->btnClearBreaks, &QPushButton::clicked, this, &BookingWizard::on_clear_breaks);
+    connect(ui->btnClearHours, &QPushButton::clicked, this, &BookingWizard::on_clear_hours);
+
     auto break_lines = std::make_shared<BreakLayoutLine>();
     m_edm_breaks = std::make_unique<EntityDataModel>(break_lines);
     ui->tvBreaks->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -141,6 +146,8 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
 
 
     ui->rbAllBreaks->toggle();
+
+    setWindowTitle("Order Booking");
 
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
@@ -391,11 +398,10 @@ void BookingWizard::setup_break_select_grid()
     qDebug() << "setup_break_select_grid" ;
 #endif
 
-    QStringList header_labels;
-    header_labels << "Date" << "Time" << "Remaining Time (secs)";
-
     ui->twBreakSelect->setColumnCount(3);
 
+    QStringList header_labels;
+    header_labels << "Date" << "Time" << "Remaining Time (secs)";
     ui->twBreakSelect->setHorizontalHeaderLabels(header_labels);
 
     ui->twBreakSelect->setRowCount(m_engine_data.available_breaks);
@@ -549,7 +555,7 @@ void BookingWizard::commit_booking()
         std::stringstream update_order;
         update_order << "Update rave_order set spots_booked = spots_booked + "
                      << std::to_string(book_segment.booking_count()->value())
-                     << " Where order_number = "+std::to_string(m_order->orderNumber()->value());
+                     << " Where order_number = "+m_order->orderNumber()->value();
 
         edm.executeRawSQL(update_order.str());
 
@@ -590,7 +596,7 @@ int BookingWizard::find_break_slot(int break_id, int max_spots)
 
 void BookingWizard::show_order_details(Order* order)
 {
-    ui->lblOrderNo->setText(QString::number(order->orderNumber()->value()));
+    ui->lblOrderNo->setText(order->orderNumber()->to_qstring());
     ui->lblSpotsOrdered->setText(QString::number(order->spotsOrdered()->value()));
     ui->lblSpotsBooked->setText(QString::number(order->spotsBooked()->value()));
     ui->lblSpotsPending->setText(QString::number(
@@ -654,8 +660,152 @@ void BookingWizard::timeBandChanged(int i)
 }
 */
 
+void BookingWizard::setup_dist_table()
+{
+    ui->twDist->setColumnCount(3);
+    QStringList header_labels;
+    header_labels << "Breaks" << "Hours" << "Action";
+    ui->twDist->setHorizontalHeaderLabels(header_labels);
+    ui->twDist->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->twDist->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->twDist->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->twDist->setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+void BookingWizard::add_distribution(bool state)
+{
+    std::map<QString, int> breaks = get_selected_breaks();
+    if (breaks.size() == 0) {
+        showMessage("No breaks selected!", QMessageBox::Critical);
+        return;
+    }
+
+    std::vector<int> hours = get_selected_hours();
+    if (hours.size() == 0) {
+        showMessage("No hours selected!", QMessageBox::Critical);
+        return;
+    }
+
+    QString key1="";
+    QComboBox* cbBreaks = new QComboBox();
+    for (auto&[title, data] : breaks) {
+        cbBreaks->addItem(title, QVariant(data));
+        key1 += QString::number(data);
+    }
+
+
+    QString key2="";
+    QComboBox* cbHours = new QComboBox();
+    for (auto& hr : hours) {
+        cbHours->addItem(QString::number(hr), QVariant(hr));
+        key2 += QString::number(hr);
+    }
+
+    QString dist_key = key1+key2;
+
+    if (m_break_dist.contains(dist_key))
+        return;
+
+    BreakDist bd{breaks, hours};
+
+    m_break_dist[dist_key] = bd;
+
+    QPushButton* btnRemove = new QPushButton("Remove");
+    connect(btnRemove, &QPushButton::clicked, this, &BookingWizard::remove_distribution);
+
+    int row_count = ui->twDist->rowCount();
+    ui->twDist->insertRow(row_count);
+    ui->twDist->setCellWidget(row_count, 0, cbBreaks);
+    ui->twDist->setCellWidget(row_count, 1, cbHours);
+    ui->twDist->setCellWidget(row_count, 2, btnRemove);
+}
+
+void BookingWizard::remove_distribution(bool state)
+{
+    int current_row =  ui->twDist->currentRow();
+    QWidget* wigBreaks = ui->twDist->cellWidget(current_row, 0);
+
+    QString key1 = "";
+    if (wigBreaks) {
+        QComboBox* cbBreaks = (QComboBox*)wigBreaks;
+        for(int i=0; i < cbBreaks->count(); ++i) {
+            int data = cbBreaks->itemData(i).toInt();
+            key1 += QString::number(data);
+        }
+        ui->twDist->removeCellWidget(current_row, 0);
+    }
+
+    QWidget* wigHours = ui->twDist->cellWidget(current_row, 1);
+    QString key2 = "";
+    if (wigHours) {
+        QComboBox* cbHours = (QComboBox*)wigHours;
+        for(int i=0; i < cbHours->count(); ++i) {
+            int data = cbHours->itemData(i).toInt();
+            key2 += QString::number(data);
+        }
+
+        QString dist_key = key1 + key2;
+
+        if (m_break_dist.contains(dist_key)) {
+            m_break_dist.erase(dist_key);
+        }
+
+        ui->twDist->removeCellWidget(current_row, 1);
+    }
+
+    ui->twDist->removeRow(current_row);
+
+}
+
+std::map<QString, int> BookingWizard::get_selected_breaks()
+{
+    std::map<QString, int> breaks;
+
+    for(int i=0; i<ui->lwHourSegments->count(); ++i){
+        auto lwi = ui->lwHourSegments->item(i);
+        if (lwi->checkState() == Qt::Checked) {
+            breaks[lwi->text()] = lwi->data(Qt::UserRole).toInt();
+        }
+    }
+    return breaks;
+}
+
+std::vector<int> BookingWizard::get_selected_hours()
+{
+    std::vector<int> hours;
+
+    for (int i=0; i < ui->lwHours->count(); ++i) {
+        auto lwi = ui->lwHours->item(i);
+        if (lwi->checkState() == Qt::Checked) {
+            hours.push_back(lwi->text().toInt());
+        }
+    }
+
+    return hours;
+}
+
+void BookingWizard::on_clear_breaks(bool)
+{
+    clear_breaks_hours(ui->lwHourSegments);
+
+}
+
+void BookingWizard::on_clear_hours(bool)
+{
+    clear_breaks_hours(ui->lwHours);
+}
+
+void BookingWizard::clear_breaks_hours(QListWidget* lwig)
+{
+    for (int i=0; i< lwig->count(); ++i) {
+        lwig->item(i)->setCheckState(Qt::Unchecked);
+    }
+
+}
+
 void BookingWizard::all_breaks(bool state)
 {
+    setup_dist_table();
 
     std::set<int> unique_hours;
     fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
@@ -668,12 +818,11 @@ void BookingWizard::populate_from_to_combos(const std::set<int>& hrs)
 {
     for (int hr : hrs)
     {
-        ui->cbFromHour->addItem(QString::number(hr), hr);
-        ui->cbToHour->addItem(QString::number(hr), hr);
+        QListWidgetItem* lwi = new QListWidgetItem(QString::number(hr));
+        lwi->setFlags(lwi->flags() | Qt::ItemIsUserCheckable);
+        lwi->setCheckState(Qt::Unchecked);
+        ui->lwHours->addItem(lwi);
     }
-
-    ui->cbFromHour->setCurrentIndex(0);
-    ui->cbToHour->setCurrentIndex(ui->cbToHour->count()-1);
 
 }
 
@@ -746,12 +895,7 @@ void BookingWizard::build_breaks()
 
         if (ui->rbAllBreaks->isChecked())
         {
-            AllBreaks all_breaks_sel;
-            all_breaks_sel.from_hour = ui->cbFromHour->currentData().toInt();
-            all_breaks_sel.to_hour = ui->cbToHour->currentData().toInt();
-            all_breaks_sel.hourly_intervals = get_hourly_distribution();
-
-            auto_select_breaks(all_breaks_sel);
+            auto_select_breaks();
         }
 
     } catch(DatabaseException& de){
@@ -1087,61 +1231,60 @@ int BookingWizard::pick_random_interval()
     return interval;
 }
 
-void BookingWizard::auto_select_breaks(const AllBreaks& ab )
+
+void BookingWizard::auto_select_breaks()
 {
     int pending_spots = m_order->spotsOrdered()->value() - m_order->spotsBooked()->value();
 
-    auto hours = std::views::iota(ab.from_hour, ab.to_hour+1);
-
-    auto is_interval_selected = [](int interval, std::vector<int> intervals) ->bool {
-        return ( (std::find(intervals.begin(), intervals.end(), interval) != intervals.end()) ? true : false);
-    };
-
-    int current_hour = -1;
-    int interval = -1;
-
-    for (int i=0; i < ui->twBreakSelect->rowCount(); ++i)
+    for(auto&[key, break_dist] : m_break_dist)
     {
-        if (pending_spots == 0)
-            break;
-
-        auto time_str = ui->twBreakSelect->item(i, 1)->text();
-
-        auto hr_str_list = time_str.split(":");
-
-        int hr = hr_str_list[0].toInt();
-        int min = hr_str_list[1].toInt();
-
-        auto it = std::ranges::find(hours, hr);
-        if (it != hours.end())
+        // For each hour select breaks
+        for(auto& hr : break_dist.hours)
         {
-            if (ab.hourly_intervals.size() == 0)
-            {
-                // No interval was selected, pick a random one.
-                if (current_hour != hr)
-                    interval = pick_random_interval();
-
-                if (min == interval) {
-                    ui->twBreakSelect->selectRow(i);
-                    --pending_spots;
-                }
-
-            } else {
-                // User selected intervals
-                bool is_selected = is_interval_selected(min, ab.hourly_intervals);
-                if (is_selected) {
-                    ui->twBreakSelect->selectRow(i);
-                    --pending_spots;
-                }
-
-            }
+            select_breaks(hr, break_dist.breaks, pending_spots);
         }
-
-        current_hour = hr;
 
     }
 }
 
+void BookingWizard::select_breaks(const int break_hour, std::map<QString, int> breaks, int& pending_spots)
+{
+    for(auto&[title, break_time] : breaks)
+    {
+        for(int i=0; i < ui->twBreakSelect->rowCount(); ++i)
+        {
+            if (pending_spots == 0)
+                return;
+
+            QString text = ui->twBreakSelect->item(i, 1)->text();
+
+            auto[hr, min] = selection_hour_and_minute(text);
+
+            if (hr != break_hour)
+                continue;
+
+            if (min != break_time)
+                continue;
+
+
+            ui->twBreakSelect->selectRow(i);
+
+            --pending_spots;
+        }
+
+    }
+
+}
+
+std::tuple<int, int> BookingWizard::selection_hour_and_minute(QString break_time)
+{
+    QStringList hr_min = break_time.split(":");
+    int hr = hr_min[0].toInt();
+    int min = hr_min[1].toInt();
+
+    return std::make_tuple(hr, min);
+
+}
 
 bool BookingWizard::spot_has_audio(const TRAFFIK::Spot* spot)
 {
@@ -1343,13 +1486,15 @@ bool BookingWizard::validateCurrentPage()
 
             if (ui->rbAllBreaks->isChecked()) {
 
-                int from_hour = ui->cbFromHour->currentData().toInt();
-                int to_hour = ui->cbToHour->currentData().toInt();
+                /*
+                 int from_hour = ui->cbFromHour->currentData().toInt();
+                 int to_hour = ui->cbToHour->currentData().toInt();
 
                 if (from_hour > to_hour) {
                     showMessage("`From` hour should be greater then `To` hour");
                     return false;
                 }
+               */
 
             }
 

@@ -196,16 +196,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="sbOrderNumber">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="maximum">
-          <number>99999999</number>
-         </property>
-        </widget>
-       </item>
        <item row="6" column="1">
         <widget class="QSpinBox" name="sbSBooked">
          <property name="readOnly">
@@ -259,6 +249,11 @@
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Order Number:</string>
          </property>
@@ -297,6 +292,9 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="edtOrderNumber"/>
        </item>
       </layout>
      </item>

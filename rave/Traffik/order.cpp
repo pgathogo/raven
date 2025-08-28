@@ -12,7 +12,7 @@ QDebug operator<<(QDebug debug, const Order& order)
 {
     debug << "ID: " << order.id() << '\n'
           << "Title: "<< order.title()->to_qstring() << '\n'
-          << "OrderNumber: "<< order.orderNumber()->value() << '\n'
+          << "OrderNumber: "<< QString::fromStdString(order.orderNumber()->value()) << '\n'
           << "Spots Ordered: "<< order.spotsOrdered()->value() << '\n'
           << "Spots Booked: "<< order.spotsBooked()->value() << '\n'
           << "Spots Played: "<< order.spotsPlayed()->value() << '\n';
@@ -25,7 +25,7 @@ Order::Order()
     m_title = createField<StringField>("title", "Title");
     m_title->setMandatory(true);
 
-    mOrderNumber = createField<IntegerField>("order_number", "Order Number");
+    mOrderNumber = createField<StringField>("order_number", "Order Number");
     mOrderNumber->setReadOnly(true);
 
     mClient = createField<ForeignKeyField>("client_id", "Client",
@@ -106,7 +106,7 @@ Order::Order(std::shared_ptr<Client> client)
     m_title = createField<StringField>("title", "Title");
     m_title->setMandatory(true);
 
-    mOrderNumber = createField<IntegerField>("order_number", "Order Number");
+    mOrderNumber = createField<StringField>("order_number", "Order Number");
 
     mClient = createField<ForeignKeyField>("client_id", "Client",
                                     std::make_unique<Client>(), "name");
@@ -194,12 +194,12 @@ Order::~Order()
 
 }
 
-StringField *Order::title() const
+StringField* Order::title() const
 {
     return m_title;
 }
 
-IntegerField *Order::orderNumber() const
+StringField* Order::orderNumber() const
 {
     return mOrderNumber;
 }
@@ -345,9 +345,9 @@ void Order::setTitle(const std::string val)
     m_title->setValue(val);
 }
 
-void Order::setOrderNumber(int i)
+void Order::setOrderNumber(const std::string ord_num)
 {
-    mOrderNumber->setValue(i);
+    mOrderNumber->setValue(ord_num);
 
 }
 

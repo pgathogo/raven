@@ -89,7 +89,7 @@ void OrderForm::populateEntityFields() {
   mOrder->setTitle(ui->edtTitle->text().toStdString());
   mClient->set_name(ui->edtClient->text().toStdString());
 
-  mOrder->setOrderNumber(ui->sbOrderNumber->value());
+  mOrder->setOrderNumber(ui->edtOrderNumber->text().toStdString());
   mOrder->setOrderDate(ui->dtOrderDate->date());
   mOrder->setStartDate(ui->dtStartDate->date());
   mOrder->setEndDate(ui->dtEndDate->date());
@@ -132,7 +132,7 @@ void OrderForm::populateFormWidgets() {
   ui->cbAccountRep->setModel(mOrder->accountRep()->dataModel());
   ui->cbPackage->setModel(mOrder->package()->dataModel());
 
-  ui->sbOrderNumber->setValue(mOrder->orderNumber()->value());
+  ui->edtOrderNumber->setText(mOrder->orderNumber()->to_qstring());
   ui->dtOrderDate->setDate(mOrder->orderDate()->value());
   ui->dtStartDate->setDate(mOrder->startDate()->value());
   ui->dtEndDate->setDate(mOrder->endDate()->value());
@@ -173,10 +173,12 @@ void OrderForm::populateChoiceCombo(QComboBox *cbox,
   // cbox->setCurrentIndex( cbox->findData(QVariant(stoq(cf->value()))) );
 }
 
-void OrderForm::prepare_new_order() {
-  mSetup->orderNumberSequence()->setValue(
-      mSetup->orderNumberSequence()->value() + 1);
-  ui->sbOrderNumber->setValue(mSetup->orderNumberSequence()->value());
+void OrderForm::prepare_new_order()
+{
+
+  // mSetup->orderNumberSequence()->setValue(
+  //     mSetup->orderNumberSequence()->value() + 1);
+  // ui->sbOrderNumber->setValue(mSetup->orderNumberSequence()->value());
 
   ui->edtClient->setText(stoq(mClient->name()->value()));
 

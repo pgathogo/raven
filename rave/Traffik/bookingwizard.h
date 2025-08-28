@@ -14,6 +14,7 @@
 #include "spot.h"
 
 class QTableWidgetItem;
+class QListWidget;
 
 namespace Ui {
     class BookingWizard;
@@ -45,6 +46,11 @@ struct AllBreaks {
     int from_hour=0;
     int to_hour =0;
     std::vector<int> hourly_intervals;
+};
+
+struct BreakDist {
+    std::map<QString, int> breaks;
+    std::vector<int> hours;
 };
 
 const QString rules_cache_file = "rules_cache_file.json";
@@ -132,8 +138,49 @@ private slots:
     void show_breaks(int);
     //void time_band_selected(const QModelIndex&);
     void time_band_selected2(QTableWidgetItem*);
+    void add_distribution(bool);
+    void remove_distribution(bool);
+    void on_clear_breaks(bool);
+    void on_clear_hours(bool);
 
 private:
+    void print_selected_breaks();
+
+    void populate_spots_table(int);
+    void populate_grid(TimeBand*);
+
+    void setup_break_select_grid();
+    bool make_booking();
+    void commit_booking();
+    void show_order_details(Order*);
+    void add_days_of_week();
+    void show_breaks_for_current_timeband();
+    void toggle_selection(bool);
+
+    void auto_select_breaks_by_dow();
+    int pick_random_interval();
+    std::vector<int> get_hourly_distribution();
+
+    bool spot_has_audio(const TRAFFIK::Spot*);
+    void spot_details(int);
+
+    void populate_from_to_combos(const std::set<int>&);
+    void add_break_interval();
+
+    void setup_dist_table();
+    std::map<QString, int> get_selected_breaks();
+    std::vector<int> get_selected_hours();
+
+    std::set<int> selected_unique_hours();
+    std::set<int> select_unique_hours_from_breaks();
+
+    void auto_select_breaks();
+    void select_breaks(const int, std::map<QString, int>, int&);
+    std::tuple<int, int> selection_hour_and_minute(QString);
+    void clear_breaks_hours(QListWidget*);
+
+
+    /*  -- Members -- */
     Ui::BookingWizard *ui;
     Order* m_order;
     std::unique_ptr<EntityDataModel> m_spot_EDM;
@@ -168,11 +215,6 @@ private:
     std::unique_ptr<EntityDataModel> m_edm_break_layout;
     std::unique_ptr<EntityDataModel> m_edm_breaks;
 
-
-    /* --------------- private methods -------------------- */
-    std::set<int> selected_unique_hours();
-    std::set<int> select_unique_hours_from_breaks();
-
     QMenu* m_spot_ctx_menu;
     QAction* m_spot_ctx_action;
 
@@ -181,29 +223,8 @@ private:
     std::unique_ptr<EntityDataModel> m_edm_setup;
     std::shared_ptr<RavenSetup> m_raven_setup;
 
-    void print_selected_breaks();
+    std::map<QString, BreakDist> m_break_dist;
 
-    void populate_spots_table(int);
-    void populate_grid(TimeBand*);
-
-    void setup_break_select_grid();
-    bool make_booking();
-    void commit_booking();
-    void show_order_details(Order*);
-    void add_days_of_week();
-    void show_breaks_for_current_timeband();
-    void toggle_selection(bool);
-
-    void auto_select_breaks_by_dow();
-    void auto_select_breaks(const AllBreaks&);
-    int pick_random_interval();
-    std::vector<int> get_hourly_distribution();
-
-    bool spot_has_audio(const TRAFFIK::Spot*);
-    void spot_details(int);
-
-    void populate_from_to_combos(const std::set<int>&);
-    void add_break_interval();
 
 };
 
