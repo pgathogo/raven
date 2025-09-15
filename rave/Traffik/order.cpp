@@ -21,7 +21,9 @@ QDebug operator<<(QDebug debug, const Order& order)
 }
 
 Order::Order()
+    :Order(nullptr)
 {
+    /*
     m_title = createField<StringField>("title", "Title");
     m_title->setMandatory(true);
 
@@ -99,18 +101,37 @@ Order::Order()
             << QString::fromStdString(m_spots_ordered->fieldLabel())
             << QString::fromStdString(m_spots_booked->fieldLabel());
     setTableName("rave_order");
+   */
 }
 
 Order::Order(std::shared_ptr<Client> client)
 {
+
+    mClient = createField<ForeignKeyField>("client_id", "Client",
+                                    std::make_unique<Client>(), "name");
+
+    std::string fstr = "";
+    if (client != nullptr)
+    {
+        if (client->id() != -1)
+        {
+            EntityDataModel edm;
+            auto filter = std::make_tuple("client_id", "=", client->id());
+            fstr = edm.prepareFilter(filter);
+            mClient->setValue(client->id());
+        }
+    }
+
+
+    mBrand = createField<ForeignKeyField>("brand_id", "Brand",
+                       std::make_unique<TRAFFIK::Brand>(),
+                       "brand_name", fstr);
+
     m_title = createField<StringField>("title", "Title");
     m_title->setMandatory(true);
 
     mOrderNumber = createField<StringField>("order_number", "Order Number");
 
-    mClient = createField<ForeignKeyField>("client_id", "Client",
-                                    std::make_unique<Client>(), "name");
-    mClient->setValue(client->id());
 
     mOrderDate = createField<DateField>("order_date", "Order Date");
     mStartDate = createField<DateField>("start_date", "Start Date");
@@ -135,13 +156,6 @@ Order::Order(std::shared_ptr<Client> client)
     mAccountRep = createField<ForeignKeyField>("account_rep_id", "Account Rep",
                                        std::make_unique<SalesPerson>(), "salesperson_name");
 
-    EntityDataModel edm;
-    auto filter = std::make_tuple("client_id", "=", client->id());
-    std::string fstr = edm.prepareFilter(filter);
-    mBrand = createField<ForeignKeyField>("brand_id", "Brand",
-                                       std::make_unique<TRAFFIK::Brand>(),
-                                       "brand_name",
-                                        fstr);
 
     mAgency = createField<ForeignKeyField>("agency_id", "Agency",
                                        std::make_unique<Agent>(), "agent_name");

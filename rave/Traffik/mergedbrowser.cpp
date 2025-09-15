@@ -27,15 +27,23 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     m_client_browser = std::make_unique<ClientBrowser>(this);
     ui->vlClient->addWidget(m_client_browser.get());
 
+    qDebug() << "Created ClientBrowser...";
+
     m_order_browser = std::make_unique<OrderBrowser>(std::make_shared<Client>(), this);
     ui->vlOrder->addWidget(m_order_browser.get());
+
+    qDebug() << "Created OrderBrowser...";
 
     m_spot_browser = std::make_unique<SpotBrowser>(std::make_shared<Client>(),
                                                    this);
     ui->vlSpot->addWidget(m_spot_browser.get());
 
+    qDebug() << "Created SpotBrowser...";
+
     m_brand_browser = std::make_unique<BrandBrowser>(std::make_shared<Client>(), this);
     ui->vlBrand->addWidget(m_brand_browser.get());
+
+    qDebug() << "Created BrandBrowser...";
 
     m_book_order_browser = std::make_unique<BookingOrderBrowser>(this);
     ui->vlBooking->addWidget(m_book_order_browser.get());

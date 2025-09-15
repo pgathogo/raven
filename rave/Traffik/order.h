@@ -17,8 +17,8 @@ class ChoiceField;
 class Order : public BaseEntity
 {
 public:
-    Order();
-    Order(std::shared_ptr<Client> client);
+    explicit Order();
+    explicit Order(std::shared_ptr<Client> client);
     ~Order() override;
 
     StringField* title()const;

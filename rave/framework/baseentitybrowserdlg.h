@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QWidget>
 #include <QVariant>
+#include <QEvent>
 
 #include <QDialog>
 #include <QMdiArea>
@@ -73,7 +74,9 @@ public:
     template<typename T1, typename T2, typename T3 >
     bool add_related_record(std::shared_ptr<T3> parent_entity)
     {
+
         std::shared_ptr<T1> entity = std::make_shared<T1>(parent_entity);
+
         std::unique_ptr<T2> form = std::make_unique<T2>(parent_entity, entity, this);
 
         bool created = false;
@@ -289,6 +292,7 @@ protected:
     void show_delete_button(QBoxLayout* layout=nullptr);
     Ui::BaseEntityBrowserDlg* bui;
     virtual void resize_window();
+    void showEvent(QShowEvent *) override;
 
 public slots:
     void addBtnClicked();

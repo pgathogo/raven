@@ -15,8 +15,10 @@ OrderBrowser::OrderBrowser(std::shared_ptr<Client> client, QWidget* parent) :
     ui->setupUi(this);
 
     if (client != nullptr){
-        setDialogTitle("Client Orders: "+stoq(client->name()->value()));
-        searchRecord();
+        if (client->id() != -1) {
+            setDialogTitle("Client Orders: "+stoq(client->name()->value()));
+            searchRecord();
+        }
     }
 
   show_letter_filter();
@@ -85,4 +87,5 @@ void OrderBrowser::search_by_client(std::shared_ptr<Client> client)
 void OrderBrowser::set_client(std::shared_ptr<Client> client)
 {
     mClient = client;
+    qDebug() << "Set Client " << client->id();
 }

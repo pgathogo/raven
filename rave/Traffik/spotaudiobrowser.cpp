@@ -367,13 +367,14 @@ void SpotAudioBrowser::audio_properties()
 void SpotAudioBrowser::play_back()
 {
 
-    if (selectedRowId() < 0){
+    if (selectedRowId() < 0) {
         showMessage("Select an Audio to Listen");
         return;
     }
 
     AUDIO::Audio* audio = audio_from_selection();
     std::string audio_file = get_audio_file(audio);
+
     if (audio_file.empty()){
         qDebug() << "No audio file to play!";
         return;

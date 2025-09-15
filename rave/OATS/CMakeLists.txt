@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
-set(MSVC_BUILD "14.42.34433")
+set(MSVC_BUILD "14.44.35207")
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 

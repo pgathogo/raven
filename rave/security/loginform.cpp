@@ -60,6 +60,12 @@ LoginForm::LoginForm(QWidget *parent)
 
 }
 
+void LoginForm::showEvent(QShowEvent*)
+{
+    ui->btnLogin->setFocusPolicy(Qt::StrongFocus);
+    ui->btnLogin->setFocus();
+}
+
 LoginForm::LoginForm(const QString username, const QString password, int station_id,
                     QWidget *parent)
     :QDialog(parent)

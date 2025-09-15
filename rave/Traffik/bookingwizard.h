@@ -53,6 +53,56 @@ struct BreakDist {
     std::vector<int> hours;
 };
 
+using TimeBandID = int;
+using DOW = int;
+using Hour = int;
+
+struct TimeBandDist {
+    int dist_count=0;
+    std::map<DOW, std::vector<Hour>> dow_hours;
+};
+
+struct BreakLine {
+    QDate break_date;
+    QString break_time = "";
+    int row = 0;
+};
+
+
+
+using BandId = int;
+
+struct BandDistribution {
+    std::vector<int> band_hours;
+};
+
+struct DistributionParams {
+    std::string start_date {""};
+    std::string end_date {""};
+};
+
+struct AllotedBreakTime {
+    int hour = -1;
+    QString break_time{ "" };
+    int slot = -1;
+
+    AllotedBreakTime() = default;
+    AllotedBreakTime(const AllotedBreakTime&) = default;
+    AllotedBreakTime& operator=(const AllotedBreakTime&) = default;
+    AllotedBreakTime(AllotedBreakTime&&) = default;
+    AllotedBreakTime& operator=(AllotedBreakTime&&) = default;
+
+    bool operator<(const AllotedBreakTime& other) const {
+        return slot < other.slot;
+    }
+
+};
+
+using BreakDate = QString;
+using BreakHour = int;
+using Breaks = std::map<BreakDate, std::map<BreakHour, std::vector<BreakLine>>>;
+using BreakAllotment = std::map<std::string, std::vector<AllotedBreakTime>>;
+
 const QString rules_cache_file = "rules_cache_file.json";
 
 
@@ -128,7 +178,7 @@ public:
 
 private slots:
     // void timeBandChanged(int i);
-    void all_breaks(bool);
+    void breaktime_placement(bool);
     void toggleTimeBand(bool);
     void manual_time(bool);
     void build_breaks();
@@ -142,6 +192,8 @@ private slots:
     void remove_distribution(bool);
     void on_clear_breaks(bool);
     void on_clear_hours(bool);
+
+    void on_test_band_dist(bool);
 
 private:
     void print_selected_breaks();
@@ -167,6 +219,7 @@ private:
     void populate_from_to_combos(const std::set<int>&);
     void add_break_interval();
 
+    void setup_timeband_table();
     void setup_dist_table();
     std::map<QString, int> get_selected_breaks();
     std::vector<int> get_selected_hours();
@@ -174,10 +227,20 @@ private:
     std::set<int> selected_unique_hours();
     std::set<int> select_unique_hours_from_breaks();
 
+    void prepare_band_breaks(Breaks&);
+    BreakAllotment find_distribution_break_slots(const DistributionParams&,
+                                                      std::map<TimeBandID, TimeBandDist>&, Breaks&);
+
     void auto_select_breaks();
     void select_breaks(const int, std::map<QString, int>, int&);
     std::tuple<int, int> selection_hour_and_minute(QString);
     void clear_breaks_hours(QListWidget*);
+
+    void read_band_distribution();
+    void print_distribution();
+    void process_distribution();
+    void print_break_allotments(const BreakAllotment&);
+    void auto_select_breaks_by_timeband(const BreakAllotment&);
 
 
     /*  -- Members -- */
@@ -224,6 +287,8 @@ private:
     std::shared_ptr<RavenSetup> m_raven_setup;
 
     std::map<QString, BreakDist> m_break_dist;
+
+    std::map<TimeBandID, TimeBandDist> m_selected_bands;
 
 
 };

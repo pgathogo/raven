@@ -3,6 +3,10 @@
 #include <ranges>
 #include <cstdlib>
 #include <map>
+#include <chrono>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 #include <QFile>
 #include <QDir>
@@ -79,7 +83,7 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     // connect(ui->cbTimeband, QOverload<int>::of(&QComboBox::currentIndexChanged),
     //         this, &BookingWizard::timeBandChanged);
 
-    connect(ui->rbAllBreaks, &QRadioButton::toggled, this, &BookingWizard::all_breaks);
+    connect(ui->rbBreakTimePlacement, &QRadioButton::toggled, this, &BookingWizard::breaktime_placement);
     connect(ui->rbTimeband, &QRadioButton::toggled, this, &BookingWizard::toggleTimeBand);
     connect(ui->rbManualTime, &QRadioButton::toggled, this, &BookingWizard::manual_time);
 
@@ -97,12 +101,9 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
 
 
     ui->edtStartDate->setDate(QDate::currentDate());
-    ui->edtEndDate->setDate(order->endDate()->value());
-
+    ui->edtEndDate->setDate(QDate::currentDate().addDays(1));
 
     m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
-
-    show_order_details(order);
 
     ui->lwSelBreaks->setSpacing(5);
 
@@ -115,6 +116,8 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     connect(ui->btnAdd, &QPushButton::clicked, this, &BookingWizard::add_distribution);
     connect(ui->btnClearBreaks, &QPushButton::clicked, this, &BookingWizard::on_clear_breaks);
     connect(ui->btnClearHours, &QPushButton::clicked, this, &BookingWizard::on_clear_hours);
+
+    connect(ui->btnBandDist, &QPushButton::clicked, this, &BookingWizard::on_test_band_dist);
 
     auto break_lines = std::make_shared<BreakLayoutLine>();
     m_edm_breaks = std::make_unique<EntityDataModel>(break_lines);
@@ -144,10 +147,14 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     m_raven_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
     add_break_interval();
 
+    ui->rbBreakTimePlacement->toggle();
 
-    ui->rbAllBreaks->toggle();
+    show_order_details(order);
 
-    setWindowTitle("Order Booking");
+    QString title = QString("Order Booking - %1").arg(order->title()->to_qstring());
+    setWindowTitle(title);
+
+    setMaximumWidth(840);
 
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
@@ -178,10 +185,12 @@ void BookingWizard::add_break_interval()
             title = QString("%1 - %2")
                                 .arg(time.toString("HH:mm")).arg("Hour Top");
 
+
         if (ti == breaks_per_hour)
             title = QString("%1 - %2")
                                 .arg(time.toString("HH:mm")).arg("Hour Bottom");
 
+        title = title.replace(0,2, "hh");
         auto lwi = new QListWidgetItem(title);
         lwi->setFlags(lwi->flags() | Qt::ItemIsUserCheckable);
         lwi->setCheckState(Qt::Unchecked);
@@ -213,14 +222,25 @@ void BookingWizard::show_breaks(int index)
 }
 
 
-void BookingWizard::add_tb_widget()
+void BookingWizard::setup_timeband_table()
 {
     ui->twTB->clear();
+    ui->twTB->setColumnCount(2);
     QStringList header;
-    header << "TBand" << "Dist.";
+    header << "Time Band" << "Dist.";
     ui->twTB->setHorizontalHeaderLabels(header);
-
     ui->twTB->setRowCount(m_timeband_EDM->count());
+
+    // ui->twTB->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    // ui->twTB->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+
+    // ui->twTB->setSelectionBehavior(QAbstractItemView::SelectRows);
+    // ui->twTB->setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+void BookingWizard::add_tb_widget()
+{
+    setup_timeband_table();
 
     auto provider = m_timeband_EDM->getDBManager()->provider();
     if (provider->cacheSize() == 0)
@@ -555,7 +575,7 @@ void BookingWizard::commit_booking()
         std::stringstream update_order;
         update_order << "Update rave_order set spots_booked = spots_booked + "
                      << std::to_string(book_segment.booking_count()->value())
-                     << " Where order_number = "+m_order->orderNumber()->value();
+                     << " Where order_number = '"+m_order->orderNumber()->value()+"'";
 
         edm.executeRawSQL(update_order.str());
 
@@ -784,13 +804,13 @@ std::vector<int> BookingWizard::get_selected_hours()
     return hours;
 }
 
-void BookingWizard::on_clear_breaks(bool)
+void BookingWizard::on_clear_breaks(bool state)
 {
     clear_breaks_hours(ui->lwHourSegments);
 
 }
 
-void BookingWizard::on_clear_hours(bool)
+void BookingWizard::on_clear_hours(bool state)
 {
     clear_breaks_hours(ui->lwHours);
 }
@@ -803,12 +823,16 @@ void BookingWizard::clear_breaks_hours(QListWidget* lwig)
 
 }
 
-void BookingWizard::all_breaks(bool state)
+void BookingWizard::breaktime_placement(bool state)
 {
+
     setup_dist_table();
 
     std::set<int> unique_hours;
     fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+
+    qDebug() << "EDM Size: " << m_engine_data.m_schedule_EDM->modelEntities().size();
+
     ui->swSelection->setCurrentIndex(0);
     unique_hours = select_unique_hours_from_breaks();
     populate_from_to_combos(unique_hours);
@@ -864,7 +888,7 @@ void BookingWizard::build_breaks()
 
         std::set<int> unique_hours;
 
-        if (ui->rbAllBreaks->isChecked())
+        if (ui->rbBreakTimePlacement->isChecked())
         {
             m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
             //unique_hours = select_unique_hours_from_breaks();
@@ -893,7 +917,23 @@ void BookingWizard::build_breaks()
 
         setup_break_select_grid();
 
-        if (ui->rbAllBreaks->isChecked())
+        if (ui->rbTimeband->isChecked())
+        {
+            Breaks breaks;
+            prepare_band_breaks(breaks);
+            DistributionParams dp;
+            dp.start_date = ui->edtStartDate->date().toString("dd-MM-yyyy").toStdString();
+            dp.end_date = ui->edtEndDate->date().toString("dd-MM-yyyy").toStdString();
+
+            BreakAllotment break_allotments = find_distribution_break_slots(dp, m_selected_bands, breaks);
+
+            print_break_allotments(break_allotments);
+
+            auto_select_breaks_by_timeband(break_allotments);
+
+        }
+
+        if (ui->rbBreakTimePlacement->isChecked())
         {
             auto_select_breaks();
         }
@@ -992,6 +1032,72 @@ void BookingWizard::time_band_selected(const QModelIndex& mi)
 }
 */
 
+void BookingWizard::read_band_distribution()
+{
+    for(int row=0; row < ui->twTB->rowCount(); ++row)
+    {
+        auto band_twi = ui->twTB->item(row, 0);
+        int tband_id = band_twi->data(Qt::UserRole).toInt();
+
+        auto wig = ui->twTB->cellWidget(row, 1);
+        QSpinBox* sb_dist = (QSpinBox*)wig;
+
+        if (sb_dist->value() == 0 )
+            continue;
+
+        std::shared_ptr<TimeBand> tband = std::dynamic_pointer_cast<TimeBand>(m_timeband_EDM->find_entity_by_id(tband_id));
+
+        m_daypart_grid->clear_all_cells();
+        populate_grid(tband.get());
+
+        auto dow_hours = m_daypart_grid->read_grid_by_time();
+
+        TimeBandDist tbd{sb_dist->value(), dow_hours};
+        m_selected_bands[tband_id] = tbd;
+    }
+
+}
+
+void BookingWizard::on_test_band_dist(bool state)
+{
+    m_selected_bands.clear();
+
+    read_band_distribution();
+
+    print_distribution();
+}
+
+void BookingWizard::print_distribution()
+{
+    for(auto&[band_id, tbdist] : m_selected_bands)
+    {
+        qDebug() << "Band ID: " << band_id;
+
+        for(auto&[dow, hours] : tbdist.dow_hours)
+        {
+
+            qDebug() << " DOW:  "<< dow;
+
+            for(auto& hr: hours) {
+                qDebug() << hr;
+            }
+
+        }
+
+        qDebug() << " ------------------------- ";
+    }
+}
+
+
+void BookingWizard::process_distribution()
+{
+
+
+}
+
+
+
+
 void BookingWizard::time_band_selected2(QTableWidgetItem* twi)
 {
 
@@ -1006,21 +1112,27 @@ void BookingWizard::time_band_selected2(QTableWidgetItem* twi)
     if (mil.size() == 0)
         return;
 
+
      for(auto& index : mil){
 
         m_engine_data.current_time_band = dynamic_cast<TimeBand*>(std::get<1>(*(m_timeband_EDM->vecBegin()+index.row())).get());
         populate_grid(m_engine_data.current_time_band);
-        m_engine_data.target_daypart =  m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
+        //m_engine_data.target_daypart =  m_daypart_grid->daypart_to_hours(m_daypart_grid->read_grid());
 
+        //auto grid_band = m_daypart_grid->read_grid_by_time();
     }
 
     //using DaypartExt = std::map<int, std::tuple<std::string, std::vector<int>>>;
-    for (auto& [day, tup] : m_engine_data.target_daypart) {
-        qDebug() << " Day: "<< day;
+    for (auto& [day, tup] : m_engine_data.target_daypart)
+    {
+       // qDebug() << " Day: "<< day;
+
         auto& [dp, hrs] = tup;
-        qDebug() << QString::fromStdString(dp) << " : " ;
+
+        //qDebug() << QString::fromStdString(dp) << " : " ;
+
             for (auto& h : hrs) {
-            qDebug() << h;
+         //   qDebug() << h;
         }
 
     }
@@ -1231,6 +1343,123 @@ int BookingWizard::pick_random_interval()
     return interval;
 }
 
+void BookingWizard::prepare_band_breaks(Breaks& breaks)
+{
+    const int DateColumn = 0;
+    const int TimeColumn = 1;
+
+    using HOUR = int;
+    using ROW  = int;
+    using BRKTIME = QString;
+
+    auto date_dow = [](QString date) -> int {
+        QString dfmt = "ddd MMM d yyyy";
+        QDate d = QDate::fromString(date, dfmt);
+        if (d.isValid())
+            return d.dayOfWeek();
+    };
+
+    auto str_to_date = [](QString date) -> QDate {
+        QString dfmt = "ddd MMM d yyyy";
+        QDate d = QDate::fromString(date, dfmt);
+        if (d.isValid())
+            return d;
+    };
+
+    auto dates_are_equal = [](QString date, QDate start_date) -> bool {
+        QString dfmt = "ddd MMM d yyyy";
+        QDate d = QDate::fromString(date, dfmt);
+
+        return (d == start_date) ? true : false;
+    };
+
+
+    QDate start_date = ui->edtStartDate->date();
+
+    QDate end_date = ui->edtEndDate->date();
+
+    while(start_date <= end_date)
+    {
+        QString str_start_date =  start_date.toString("yyyy-MM-dd");
+
+        if (!breaks.contains(str_start_date))
+            breaks[str_start_date] = {};
+
+        for(auto&[tband_id, tband_dist]: m_selected_bands)
+        {
+
+        // Loop distribution value
+            for(auto& [dow, hours]: tband_dist.dow_hours)
+            {
+
+            for(int row=0; row < ui->twBreakSelect->rowCount(); ++row)
+            {
+
+                auto date = ui->twBreakSelect->item(row, DateColumn)->text();
+
+                if (!dates_are_equal(date, start_date))
+                    continue;
+
+                if (date_dow(date) != dow)
+                    continue;
+
+
+                auto break_time = ui->twBreakSelect->item(row, TimeColumn)->text();
+
+                auto[hr, min] = selection_hour_and_minute(break_time);
+
+                if (std::find(hours.begin(), hours.end(), hr) == hours.end())
+                continue;
+
+                if (breaks[str_start_date].contains(hr) )
+                {
+                    BreakLine bl{str_to_date(date), break_time, row};
+                    breaks[str_start_date][hr].push_back(bl);
+
+                } else {
+
+                    std::vector<BreakLine> break_lines;
+                    BreakLine bl;
+                    bl.row = row;
+                    bl.break_time = break_time;
+                    bl.break_date = str_to_date(date);
+                    break_lines.push_back(bl);
+
+                    breaks[str_start_date][hr] = break_lines;
+
+                   }
+
+                }
+            }
+
+        }
+
+        start_date = start_date.addDays(1);
+    }
+
+
+    // Process breaks
+
+    for(const auto& [date, breaks_per_day] : breaks)
+    {
+        qDebug() << "Start Date: " << date;
+
+        for(auto&[hr, breaklines]: breaks_per_day)
+        {
+            qDebug() << hr << ":";
+
+            for(auto break_line: breaklines)
+            {
+                int row = break_line.row;
+                QString break_time = break_line.break_time;
+                QDate break_date = break_line.break_date;
+
+                qDebug() << "Row: " << row << "Break time" << break_time << "Date: " << break_date.toString("dd/MM/yyyy");
+            }
+        }
+    }
+}
+
 
 void BookingWizard::auto_select_breaks()
 {
@@ -1249,14 +1478,16 @@ void BookingWizard::auto_select_breaks()
 
 void BookingWizard::select_breaks(const int break_hour, std::map<QString, int> breaks, int& pending_spots)
 {
+    const int TimeColumn = 1;
+
     for(auto&[title, break_time] : breaks)
     {
-        for(int i=0; i < ui->twBreakSelect->rowCount(); ++i)
+        for(int row=0; row < ui->twBreakSelect->rowCount(); ++row)
         {
             if (pending_spots == 0)
                 return;
 
-            QString text = ui->twBreakSelect->item(i, 1)->text();
+            QString text = ui->twBreakSelect->item(row, TimeColumn)->text();
 
             auto[hr, min] = selection_hour_and_minute(text);
 
@@ -1267,7 +1498,7 @@ void BookingWizard::select_breaks(const int break_hour, std::map<QString, int> b
                 continue;
 
 
-            ui->twBreakSelect->selectRow(i);
+            ui->twBreakSelect->selectRow(row);
 
             --pending_spots;
         }
@@ -1484,7 +1715,7 @@ bool BookingWizard::validateCurrentPage()
                 qDebug() << "Selected Index: " << rows.count();
             }
 
-            if (ui->rbAllBreaks->isChecked()) {
+            if (ui->rbBreakTimePlacement->isChecked()) {
 
                 /*
                  int from_hour = ui->cbFromHour->currentData().toInt();
@@ -1518,10 +1749,10 @@ bool BookingWizard::validateCurrentPage()
             add_days_of_week();
             show_breaks_for_current_timeband();
             // Check the type of break selection
-            // rbAllBreaks
+            // rbBreakTimePlacement
             // rbTimeband
             // rbManualTime
-            if (ui->rbAllBreaks->isChecked()) {
+            if (ui->rbBreakTimePlacement->isChecked()) {
                 // distribute_spot_to_all_breaks()  // Distribute selected spot to all the breaks (one spot per break)
             }
 
@@ -1923,4 +2154,209 @@ void BookingWizard::cache_break_rules()
 
 }
 
+BreakAllotment BookingWizard::find_distribution_break_slots(const DistributionParams& dp,
+                                                  std::map<TimeBandID, TimeBandDist>& selected_bands,
+                                                  Breaks& breaks)
+{
+
+    struct BreakTime {
+        std::string break_time{ "" };
+        int slot=-1;
+    };
+
+
+    //using BreakSelection = std::map<std::string, std::map<int, std::vector<BreakTime>>>;
+
+    auto alloted_hour = [](std::vector <AllotedBreakTime> alloted_breaks, int hour) -> bool {
+        for (const auto& ab: alloted_breaks)
+        {
+            if (ab.hour == hour)
+                return true;
+        }
+        return false;
+    };
+
+    auto alloted_break_time = [](std::vector<AllotedBreakTime> alloted_breaks, QString break_time) -> bool {
+        for (const auto& ab : alloted_breaks)
+        {
+            if (ab.break_time == break_time)
+                return true;
+        }
+        return false;
+    };
+
+    auto date_to_str = [](std::chrono::year_month_day ymd) -> std::string {
+        std::ostringstream os_start_date;
+        os_start_date << ymd;
+        return os_start_date.str();
+    };
+
+    auto make_break_allotment = [](BreakLine bl, int hour) -> AllotedBreakTime {
+        AllotedBreakTime abt;
+        abt.break_time = bl.break_time;
+        abt.slot = bl.row;
+        abt.hour = hour;
+        return abt;
+    };
+
+    std::string str_start_date = dp.start_date;
+    std::string str_end_date = dp.end_date;
+
+    std::chrono::year_month_day ymd_start_date;
+    std::chrono::year_month_day ymd_end_date;
+
+    std::istringstream ss_start_date(str_start_date);
+    std::istringstream ss_end_date(str_end_date);
+
+    ss_start_date >> std::chrono::parse("%d-%m-%Y", ymd_start_date);
+    ss_end_date >> std::chrono::parse("%d-%m-%Y", ymd_end_date);
+    int distribution_counter = 1;
+
+    BreakAllotment allotments;
+
+    while (ymd_start_date <= ymd_end_date)
+    {
+        std::string str_start_date =date_to_str(ymd_start_date);
+
+        std::cout << "Start Date: " << str_start_date << '\n';
+
+        std::chrono::weekday wd{ ymd_start_date };
+
+        std::vector<int> hours;
+        int band_distribution_value = 0;
+
+        for (const auto& [band_id, band_dist] : selected_bands)
+        {
+
+            //bool found_band = false;
+            for (auto& [dow, b_hours] : band_dist.dow_hours)
+            {
+
+                if (dow == wd.iso_encoding())
+                {
+                    hours = b_hours;
+                    band_distribution_value = band_dist.dist_count;
+                    //found_band = true;
+                    break;
+                }
+
+                //if (found_band)
+                 //   break;
+            }
+
+            if (hours.size() == 0)
+                continue;
+
+            int total_breaks = 0;
+            for (const auto& hr : hours)
+            {
+                //TODO: Make the breaks map key to have the same type as str_start_date
+                std::vector<BreakLine> hb = breaks[QString::fromStdString(str_start_date)][hr];
+                total_breaks += hb.size();
+            }
+
+            distribution_counter = 1;
+            int hour_counter = 0;
+
+            while (distribution_counter <= band_distribution_value)
+            {
+                int hour = -1;
+                if (hour_counter == hours.size())
+                    hour_counter = 0;
+
+                hour = hours[hour_counter++];
+
+                std::vector<BreakLine> hour_breaks = breaks[QString::fromStdString(str_start_date)][hour];
+
+                // Distribute upto maximum breaks in an hour
+                if (distribution_counter == total_breaks + 1)
+                    break;
+
+                AllotedBreakTime abt;
+
+                for (auto& hb : hour_breaks)
+                {
+                    if (!allotments.contains(str_start_date))
+                    {
+                        abt = make_break_allotment(hb, hour);
+                        allotments[str_start_date].push_back(abt);
+                        break;
+                    }
+
+                    if (!alloted_hour(allotments[str_start_date], hour))
+                    {
+                        abt = make_break_allotment(hb, hour);
+                        allotments[str_start_date].push_back(abt);
+                        break;
+                    }
+
+                    if (!alloted_break_time(allotments[str_start_date], hb.break_time))
+                    {
+                        abt = make_break_allotment(hb, hour);
+                        allotments[str_start_date].push_back(abt);
+                        break;
+                    }
+
+                }
+
+                ++distribution_counter;
+            }
+
+        }
+
+         ymd_start_date = std::chrono::sys_days(ymd_start_date) + std::chrono::days{ 1 };
+
+    }
+
+    return allotments;
+
+}
+
+
+void BookingWizard::print_break_allotments(const BreakAllotment& bl)
+{
+    std::cout << "Total Allotments : " << bl.size() << '\n';
+    std::cout << "--ALLOTMENTS -- " << '\n';
+
+    for (const auto& [date, breaks] : bl)
+    {
+        std::cout << "Start Date: " << date << '\n';
+        auto sorted_breaks = breaks;
+        std::sort(sorted_breaks.begin(), sorted_breaks.end());
+
+        int index = 1;
+        for (auto& brk : sorted_breaks) {
+            qDebug() << index++ <<".)"
+                  << "Hour: " << brk.hour << " "
+                  << "Break Time: " << brk.break_time << " "
+                  << "Slot: " << brk.slot
+                  << '\n';
+        }
+
+    }
+}
+
+void BookingWizard::auto_select_breaks_by_timeband(const BreakAllotment& ba)
+{
+    int pending_spots = m_order->spotsOrdered()->value() - m_order->spotsBooked()->value();
+
+    for (const auto& [date, breaks] : ba)
+    {
+        auto sorted_breaks = breaks;
+        std::sort(sorted_breaks.begin(), sorted_breaks.end());
+
+        for (const auto& brk : sorted_breaks)
+        {
+            if (pending_spots == 0)
+                break;
+
+            ui->twBreakSelect->selectRow(brk.slot);
+
+             --pending_spots;
+
+        }
+
+    }
+
+}
 

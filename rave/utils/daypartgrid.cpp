@@ -164,15 +164,44 @@ bool DayPartGrid::is_cell_selected(QTableWidgetItem* cell)
 
 std::map<int, std::string> DayPartGrid::read_grid()
 {
+    // Reading cell elements from m_grid_cells to create
+    // a string of format "001011110000".
+    // Return a map of type: m_dayparts[dow] = "00011110000"
+
     m_dayparts.clear();
-    for(int r=0; r< days_in_week; ++r){
+
+    for(int dow=0; dow < days_in_week; ++dow)
+    {
       std::string day{};
-      for (int c=0; c<= hrs_in_day-1; ++c){
-          day += std::to_string(m_grid_cells[r][c]);
+
+      for (int hour=0; hour<= hrs_in_day-1; ++hour)
+      {
+          day += std::to_string(m_grid_cells[dow][hour]);
       }
-      m_dayparts[r+1] = day;
+
+      m_dayparts[dow+1] = day;
     }
+
     return m_dayparts;
+}
+
+std::map<int, std::vector<int>> DayPartGrid::read_grid_by_time()
+{
+    std::map<int, std::vector<int>> grid_cells;
+
+    for(int dow=0; dow < days_in_week; dow++)
+    {
+        for(int hour=0; hour <= hrs_in_day-1; ++hour)
+        {
+
+            if (m_grid_cells[dow][hour] == 0)
+                continue;
+            grid_cells[dow+1].push_back(hour);
+        }
+    }
+
+    return grid_cells;
+
 }
 
 DaypartExt DayPartGrid::daypart_to_hours(std::map<int,std::string>&& dayparts)

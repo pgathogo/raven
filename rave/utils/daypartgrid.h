@@ -55,6 +55,7 @@ public:
     void update_grid(std::map<int, std::string> dayparts);
 
     std::map<int, std::string> read_grid();
+    std::map<int, std::vector<int>> read_grid_by_time();
 
     DaypartExt daypart_to_hours(std::map<int,std::string>&&);
 

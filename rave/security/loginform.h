@@ -30,6 +30,8 @@ public:
     void express_login();
     void express_fetch();
     void test_login();
+protected:
+    void showEvent(QShowEvent*) override;
 
 private slots:
     void open_station_selector();
