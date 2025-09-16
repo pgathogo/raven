@@ -901,6 +901,10 @@ void BookingWizard::build_breaks()
             m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
         }
 
+        if (ui->rbManualTime->isChecked())
+        {
+            m_engine_data.break_count = fetch_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(), unique_hours);
+        }
 
         if (m_engine_data.break_count == 0)
         {
@@ -936,6 +940,11 @@ void BookingWizard::build_breaks()
         if (ui->rbBreakTimePlacement->isChecked())
         {
             auto_select_breaks();
+        }
+
+        if (ui->rbManualTime->isChecked())
+        {
+            auto_select_breaks_manaually();
         }
 
     } catch(DatabaseException& de){
@@ -2356,6 +2365,48 @@ void BookingWizard::auto_select_breaks_by_timeband(const BreakAllotment& ba)
 
         }
 
+    }
+
+}
+
+
+void BookingWizard::auto_select_breaks_manaually()
+{
+    int pending_spots = m_order->spotsOrdered()->value() - m_order->spotsBooked()->value();
+
+    QItemSelectionModel* selection_model = ui->tvBreaks->selectionModel();
+
+    QModelIndexList selected_indexes = selection_model->selectedRows();
+
+    if (selected_indexes.size() == 0)
+        return;
+
+    int BreakTimeColumn = 0;
+    std::vector<QString> selected_breaks;
+    for (auto& index : selected_indexes) {
+        if (index.column() == BreakTimeColumn) {
+             std::shared_ptr<BreakLayoutLine> bll =  std::dynamic_pointer_cast<BreakLayoutLine>(std::get<1>(*(m_edm_breaks->vecBegin()+index.row())));
+             QString str_time = bll->breakTime()->value().toString("HH:mm");
+             selected_breaks.push_back(str_time);
+             continue;
+        }
+    }
+
+    // Make selection
+    int tvBreakTimeColumn = 1;
+    for (auto& break_time : selected_breaks) {
+
+        if (pending_spots == 0)
+            break;
+
+        for(int row=0; row< ui->twBreakSelect->rowCount(); ++row) {
+            auto item = ui->twBreakSelect->item(row, tvBreakTimeColumn);
+
+            if ( item->text() == break_time) {
+                ui->twBreakSelect->selectRow(row);
+                --pending_spots;
+            }
+        }
     }
 
 }

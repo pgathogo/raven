@@ -56,13 +56,13 @@ namespace TRAFFIK{
         /*
           - Breaks Checked
 
-          ***[ Rules depends on the previous booking ]***
+          ****[ Rules that depend on the previous booking ]****
           - Type Exclusion collusions
           - Voice Exclusion collusions
           - Same Client collusions
           - Override Same Client for Different brands **
 
-          ***[ Rules don't depend on the previous booking ]***
+          ****[ Rules that don't depend on the previous booking ]****
           - Full Breaks
           - Type Daypart collusions
           - Voice Daypart collusions

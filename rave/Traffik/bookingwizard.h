@@ -241,6 +241,7 @@ private:
     void process_distribution();
     void print_break_allotments(const BreakAllotment&);
     void auto_select_breaks_by_timeband(const BreakAllotment&);
+    void auto_select_breaks_manaually();
 
 
     /*  -- Members -- */
