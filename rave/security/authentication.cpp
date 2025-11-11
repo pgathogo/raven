@@ -35,7 +35,7 @@ void Authentication::connect(const std::string uname, const std::string pword)
     QString server{};
     int port=-1;
 
-    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\PMSL\Raven\Database)", QSettings::NativeFormat);
+    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\Baryonic\Raven\Database)", QSettings::NativeFormat);
     if (registry.childKeys().contains("dbname", Qt::CaseInsensitive))
         dbname = registry.value("dbname").toString();
 
@@ -102,7 +102,7 @@ ConnInfo Authentication::cluster_server_conninfo()
     QString password{};
     int port=-1;
 
-    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\PMSL\Raven\Database)", QSettings::NativeFormat);
+    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\Baryonic\Raven\Database)", QSettings::NativeFormat);
     if (registry.childKeys().contains("clusterdb", Qt::CaseInsensitive))
         dbname = registry.value("clusterdb").toString();
 
@@ -130,7 +130,7 @@ void Authentication::connect_to_cluster_server(const std::string uname, const st
     QString server{};
     int port=-1;
 
-    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\PMSL\Raven\Database)", QSettings::NativeFormat);
+    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\Baryonic\Raven\Database)", QSettings::NativeFormat);
     if (registry.childKeys().contains("clusterdb", Qt::CaseInsensitive))
         dbname = registry.value("clusterdb").toString();
 
@@ -141,6 +141,8 @@ void Authentication::connect_to_cluster_server(const std::string uname, const st
         port = registry.value("clusterport").toInt();
 
     std::string conninfo = "user="+uname+" password="+pword+" dbname="+dbname.toStdString()+" port="+std::to_string(port);
+
+    std::cout << conninfo << '\n';
 
     ConnInfo ci;
     ci.host = server.toStdString();
@@ -253,3 +255,76 @@ AccessMap Authentication::accessMap()
     return mAccessMap;
 }
 
+StationInfo Authentication::station_by_station_code(const QString station_code)
+{
+    StationInfo si;
+
+    std::stringstream sql;
+
+    std::string station_code_filter = std::format(" and st.station_code = '{}'", station_code.toStdString());
+
+    sql << " select svr.id AS server_id, svr.server_name, svr.server_ip, svr.port_no, "
+        << " st.id AS station_id, st.station_name, st.db_name, st.cluster_id, cl.cluster_name "
+        << " from rave_server svr, rave_station st, rave_useraccess ua, rave_cluster cl"
+        << " Where svr.cluster_id = st.cluster_id "
+        << " and st.id = ua.station_id "
+        << " and cl.id = st.cluster_id "
+        << " and svr.server_type = 'DBS' "
+        << station_code_filter;
+
+    EntityDataModel edm;
+
+    edm.readRaw(sql.str());
+
+    auto provider = edm.getDBManager()->provider();
+
+    if (provider->cacheSize() == 0)
+        return si;
+
+
+    provider->cache()->first();
+    do{
+        auto itb = provider->cache()->currentElement()->begin();
+        auto ite = provider->cache()->currentElement()->end();
+
+        for (; itb != ite; ++itb)
+        {
+            std::string field = (*itb).first;
+            std::string value = (*itb).second;
+
+            if (field == "server_id")
+                si.server_id = std::stoi(value);
+
+            if (field == "server_name" && (!value.empty()))
+                si.server_name = stoq(value);
+
+            if (field == "server_ip" && (!value.empty()))
+                si.ip_address = stoq(value);
+
+            if (field == "port_no" && (!value.empty()))
+                si.port_no = std::stoi(value);
+
+            if (field == "station_id")
+                si.station_id = std::stoi(value);
+
+            if (field == "station_name" && (!value.empty()))
+                si.station_name = stoq(value);
+
+            if (field == "db_name" && (!value.empty()))
+                si.db_name = stoq(value);
+
+            if (field == "cluster_name" && (!value.empty()))
+                si.cluster_name = stoq(value);
+
+            if (field == "cluster_id")
+                si.cluster_id = std::stoi(value);
+
+        }
+
+        provider->cache()->next();
+
+    }while(!provider->cache()->isLast());
+
+    return si;
+
+}

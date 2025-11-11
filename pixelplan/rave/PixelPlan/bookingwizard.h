@@ -100,6 +100,7 @@ public:
     std::size_t find_available_breaks();
 
     bool validateCurrentPage() override;
+    int nextId() const override;
     void initializePage(int) override;
 
     TRAFFIK::Spot* selected_spot();
@@ -110,6 +111,7 @@ public:
                              std::vector<Exclusion>&,
                              std::list<int>& keys);
     int get_spot_audio(int);
+    int get_spot_media(int);
     Daypart fetch_spot_daypart(TRAFFIK::Spot&);
 
     void init_rules_state();
@@ -164,8 +166,9 @@ private slots:
     //void time_band_selected(const QModelIndex&);
     void time_band_selected2(QTableWidgetItem*);
     void on_programs_clicked(QListWidgetItem*);
-    void on_select_all();
+    void on_select_all_programs();
     void on_select_all_breaks();
+    void on_all_break_by_date_selected(bool);
 
 private:
     void print_selected_breaks();

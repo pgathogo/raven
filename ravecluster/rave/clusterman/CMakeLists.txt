@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.15)
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(MSVS_BUILD_NUM "14.41.34120")
+set(MSVS_BUILD_NUM "14.44.35207")
 
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
 
@@ -121,6 +121,10 @@ set(PROJECT_SOURCES
         ${rave_security_INCLUDE_DIRS}/contentform.ui
         ${rave_security_INCLUDE_DIRS}/contentdetailform.h
         ${rave_security_INCLUDE_DIRS}/contentdetailform.cpp
+        ${rave_security_INCLUDE_DIRS}/loginform.h
+        ${rave_security_INCLUDE_DIRS}/loginform.cpp
+        ${rave_security_INCLUDE_DIRS}/userconfig.h
+        ${rave_security_INCLUDE_DIRS}/userconfig.cpp
 
         ${rave_framework_INCLUDE_DIRS}/baseentity.cpp
         ${rave_framework_INCLUDE_DIRS}/baseentitydetaildlg.h

@@ -30,6 +30,9 @@ namespace TRAFFIK {
         m_spot_duration = createField<DecimalField>("spot_duration", "Spot Duration");
         m_real_duration = createField<DecimalField>("real_duration", "Real Duration");
 
+        m_formatted_duration = createField<StringField>("formatted_duration", "Duration");
+        m_formatted_duration->setFormOnly(true);
+
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
                                               std::make_unique<TRAFFIK::Brand>(),
                                               "brand_name");
@@ -85,6 +88,9 @@ namespace TRAFFIK {
 
         m_spot_duration = createField<DecimalField>("spot_duration", "Spot Duration");
         m_real_duration = createField<DecimalField>("real_duration", "Real Duration");
+
+        m_formatted_duration = createField<StringField>("formatted_duration", "Duration");
+        m_formatted_duration->setFormOnly(true);
 
         EntityDataModel edm;
         auto filter = std::make_tuple("client_id", "=", client->id());
@@ -158,8 +164,9 @@ namespace TRAFFIK {
 
         return tableViewCols<std::string>(
                     name()->displayName(),
-                    spot_duration()->displayName()
+                    formatted_duration()
                     );
+
     }
 
     std::vector<std::string> Spot::tableViewValues()
@@ -224,6 +231,12 @@ namespace TRAFFIK {
     void Spot::set_real_duration(double dur)
     {
         m_real_duration->setValue(dur);
+    }
+
+    std::string Spot::formatted_duration() const
+    {
+        QString s_duration = duration_to_time(spot_duration()->value()).toString("HH:mm:ss");
+        return s_duration.toStdString();
     }
 
     ForeignKeyField* Spot::client() const

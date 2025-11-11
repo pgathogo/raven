@@ -13,6 +13,9 @@ namespace ClusterManager
         m_cluster = createField<ForeignKeyField>("cluster_id", "Cluster",
                                                  std::make_unique<Cluster>(), "cluster_name");
 
+        m_station_code = createField<StringField>("station_code", "Station Code");
+
+
         m_header << QString::fromStdString(station_name()->fieldName())
                  << QString::fromStdString(cluster()->fieldName());
 
@@ -51,6 +54,11 @@ namespace ClusterManager
         return m_cluster;
     }
 
+    StringField* Station::station_code() const
+    {
+        return m_station_code;
+    }
+
     void Station::set_station_name(const std::string name)
     {
         m_station_name->setValue(name);
@@ -65,6 +73,12 @@ namespace ClusterManager
     {
         m_cluster->setValue(cluster_id);
     }
+
+    void Station::set_station_code(const std::string code)
+    {
+        m_station_code->setValue(code);
+    }
+
 
     std::string Station::tableName() const
     {

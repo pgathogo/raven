@@ -222,8 +222,11 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                     if (field == "spot_name")
                         booking.spot_name = value;
 
-                    if (field == "spot_duration")
+                    if (field == "spot_duration") {
                         booking.spot_duration = str_to_double(value);
+                        QString formatted_duration = duration_to_time(booking.spot_duration).toString("HH:mm:ss");
+                        booking.formatted_duration = formatted_duration;
+                    }
 
                     if (field == "booking_id")
                         booking.booking_id = str_to_int(value);
@@ -796,7 +799,7 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
             QTableWidgetItem* wi_spot_title = new QTableWidgetItem(stoq(booking.spot_name));
             wi_spot_title->setData(Qt::UserRole, booking.spot_id);
 
-            QTableWidgetItem* wi_spot_duration = new QTableWidgetItem(QString::number(booking.spot_duration));
+            QTableWidgetItem* wi_spot_duration = new QTableWidgetItem(booking.formatted_duration);
             QTableWidgetItem* wi_tx_date = new QTableWidgetItem(stoq(booking.play_date));
             QTableWidgetItem* wi_tx_time = new QTableWidgetItem(stoq(booking.play_time));
             QTableWidgetItem* wi_book_status = new QTableWidgetItem(stoq(booking.booking_status));

@@ -83,7 +83,7 @@ private:
 
     bool m_breaks_created{false};
     bool write_breaks_to_db(const std::string sql);
-    std::string make_break_sql(QDate from, QDate to);
+    std::string make_insert_statements(QDate from, QDate to);
     void get_existing_schedules(ScheduleRecords&, QDate, QDate);
 
     std::shared_ptr<BreakLayout> m_selected_breaklayout;

@@ -48,6 +48,9 @@ public:
     IntegerField* played_audio();
     void set_played_audio(int);
 
+    ForeignKeyField* order() const;
+    void set_order(int);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -74,6 +77,7 @@ private:
     TimeField* m_book_time;
     IntegerField* m_book_hour;
     IntegerField* m_book_seq;
+    ForeignKeyField* m_order;
 
     QStringList mHeader;
     std::string mTableName;

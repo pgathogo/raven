@@ -130,8 +130,9 @@ public:
         std::unique_ptr<T1> t1 = std::make_unique<T1>();
         std::unique_ptr<T2> form =
                 std::make_unique<T2>(t1.get());
-        if (form->exec() > 0){
 
+        if (form->exec() > 0)
+        {
             std::string create_stmt =
                     t1->make_create_stmt();
             try{
@@ -256,6 +257,8 @@ public:
                 auto si = std::make_tuple(t->client()->dbColumnName(), "=", parent->id());
                 try{
                     qDebug() << "<<< Going: searchByInt >>>";
+                    entityDataModel().clear();
+                    entityDataModel().setHeader();
                     entityDataModel().searchByInt(si);
                     qDebug() << "Search Complete - Records: " << entityDataModel().count();
                    } catch (DatabaseException& de) {

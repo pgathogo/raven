@@ -137,6 +137,8 @@
         <file>media/icons/play.png</file>
         <file>media/icons/stop_play.png</file>
         <file>media/icons/tvprograms1.png</file>
+        <file>media/icons/playlist.png</file>
+        <file>media/icons/clock1.png</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

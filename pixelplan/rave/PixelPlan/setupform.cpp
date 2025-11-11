@@ -1,5 +1,8 @@
 #include <algorithm>
+
 #include <QFileDialog>
+#include <QStandardPaths>
+
 #include "setupform.h"
 #include "ui_setupform.h"
 #include "../../../rave/framework/ui_baseentitydetaildlg.h"
@@ -50,6 +53,9 @@ SetupForm::SetupForm(RavenSetup* setup,
     connect(ui->btnAudioPath, &QPushButton::clicked, this, &SetupForm::set_audio_path);
     connect(ui->btnCommAudioPath, &QPushButton::clicked, this, &SetupForm::set_comm_audio_path);
 
+    connect(ui->btnTemplate, &QPushButton::clicked, this, &SetupForm::on_template_filepath);
+    connect(ui->btnOutputPath, &QPushButton::clicked, this, &SetupForm::on_output_path);
+
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     load_order_approvers();
@@ -97,6 +103,9 @@ void SetupForm::populateEntityFields()
 
     m_setup->set_audio_folder(ui->edtAudioPath->text().toStdString());
     m_setup->set_comm_audio_folder(ui->edtCommAudioPath->text().toStdString());
+
+    m_setup->set_playlist_templist_filepath(ui->edtTemplateFile->text().toStdString());
+    m_setup->set_playlist_output_path(ui->edtOutputPath->text().toStdString());
 }
 
 void SetupForm::populateFormWidgets()
@@ -131,6 +140,9 @@ void SetupForm::populateFormWidgets()
 
     ui->edtAudioPath->setText(stoq(m_setup->audio_folder()->value()));
     ui->edtCommAudioPath->setText(stoq(m_setup->comm_audio_folder()->value()));
+
+    ui->edtTemplateFile->setText(m_setup->playlist_template_filepath()->to_qstring());
+    ui->edtOutputPath->setText(m_setup->playlist_output_path()->to_qstring());
 }
 
 void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -290,4 +302,37 @@ void SetupForm::set_comm_audio_path()
     auto comm_audio_folder = get_audio_folder(ui->edtCommAudioPath->text());
     if (!comm_audio_folder.isEmpty())
          ui->edtCommAudioPath->setText(comm_audio_folder+"/");
+}
+
+void SetupForm::on_template_filepath()
+{
+    QString default_folder = ui->edtTemplateFile->text();
+    if (default_folder.isEmpty())
+        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+
+    auto filepath = QFileDialog::getOpenFileName(this,
+                                                 tr("Playlist Templates"),
+                                                 default_folder,
+                                                 tr("Playlist Files (*.ch1_xml)"));
+
+    if (!filepath.isEmpty())
+        ui->edtTemplateFile->setText(filepath);
+
+}
+
+void SetupForm::on_output_path()
+{
+    QString default_folder= ui->edtOutputPath->text();
+
+    if (default_folder.isEmpty())
+        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+
+    auto outpath = QFileDialog::getExistingDirectory(this,
+                                                   tr("Playlist Output Path"),
+                                                    default_folder,
+                                                    QFileDialog::ShowDirsOnly|
+                                                    QFileDialog::DontResolveSymlinks);
+    if (!outpath.isEmpty())
+        ui->edtOutputPath->setText(outpath);
+
 }

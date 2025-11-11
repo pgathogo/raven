@@ -41,6 +41,8 @@ LoginForm::LoginForm(QWidget *parent)
     ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
     ui->edtUsername->setFocus();
 
+    ui->btnSelect->setVisible(false);
+
     //ui->btnLogin->setEnabled(false);
 
     QPixmap pix;
@@ -59,12 +61,14 @@ LoginForm::LoginForm(QWidget *parent)
     setWindowTitle("Login Form");
 
 }
-
-void LoginForm::showEvent(QShowEvent*)
+LoginForm::LoginForm(const QString username, const QString password, QWidget* parent)
+    :LoginForm(parent)
 {
-    ui->btnLogin->setFocusPolicy(Qt::StrongFocus);
-    ui->btnLogin->setFocus();
+    ui->edtUsername->setText(username);
+    ui->edtPassword->setText(password);
 }
+
+/*
 
 LoginForm::LoginForm(const QString username, const QString password, int station_id,
                     QWidget *parent)
@@ -114,6 +118,13 @@ LoginForm::LoginForm(const QString username, const QString password, int station
 
     Logger::error("Login", "Test login form");
 
+}
+*/
+
+void LoginForm::showEvent(QShowEvent*)
+{
+    ui->btnLogin->setFocusPolicy(Qt::StrongFocus);
+    ui->btnLogin->setFocus();
 }
 
 LoginForm::~LoginForm()
@@ -226,6 +237,7 @@ int LoginForm::select_station()
     // if (!populated)
     //     return 0;
 
+    /*
     auto ssform = std::make_unique<SelectStationForm>(m_stations_info);
     if (ssform->exec() > 0)
     {
@@ -233,6 +245,8 @@ int LoginForm::select_station()
     }else{
         return 0;
     }
+    */
+    return 0;
 }
 
 void LoginForm::test_login()
@@ -296,13 +310,23 @@ void LoginForm::login()
         return;
     }
 
-    if (m_selected_station_id < 0 ){
-        mNoticeBar->errorNotification("Please select a station!");
-        return;
-    }
+    // if (m_selected_station_id < 0 ){
+    //     mNoticeBar->errorNotification("Please select a station!");
+    //     return;
+    // }
 
-    login_to_station(m_selected_station_id);
+    m_credentials.username = ui->edtUsername->text();
+    m_credentials.password = ui->edtPassword->text();
 
+    done(1);
+
+    // login_to_station(m_selected_station_id);
+
+}
+
+Credentials LoginForm::credentials()
+{
+    return m_credentials;
 }
 
 void LoginForm::login_to_station(int station_id)

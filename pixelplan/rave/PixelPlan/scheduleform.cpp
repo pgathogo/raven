@@ -37,6 +37,7 @@ ScheduleForm::ScheduleForm(QWidget *parent)
 
   ScheduleManTreeViewModel *sched_model =
       new ScheduleManTreeViewModel(comm_breaks);
+
   ui->tvSchedule->setModel(sched_model);
 
   load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
@@ -90,6 +91,7 @@ void ScheduleForm::create_breaks() {
 }
 
 void ScheduleForm::delete_breaks() {
+
   if (ui->tvSchedule->selectionModel()->selectedIndexes().size() == 0)
     return;
 
@@ -180,8 +182,7 @@ void ScheduleForm::delete_all_empty_breaks(QDate date, int hour) {
   std::stringstream sql;
 
   sql << " DELETE From rave_schedule "
-      << " Where schedule_date ='" + date.toString("yyyy-MM-dd").toStdString() +
-             "'"
+      << " Where schedule_date ='" + date.toString("yyyy-MM-dd").toStdString() + "'"
       << " And Schedule_hour = " + std::to_string(hour)
       << " And id NOT IN (SELECT schedule_id From rave_orderbooking) ";
 

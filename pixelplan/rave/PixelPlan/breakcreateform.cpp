@@ -134,7 +134,7 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 
     m_selected_breaklayout = bl;
 
-    std::string ids = join<int>(bl_ids);
+    std::string ids = join<std::vector<int>>(bl_ids);
     ids = "("+ ids +")";
 
     BreakLayoutLine bbl;
@@ -182,13 +182,12 @@ void BreakCreateForm::create_breaks()
         return;
     }
 
-    std::string sql = make_break_sql(ui->dtFrom->date(), ui->dtTo->date());
+    std::string insert_statements = make_insert_statements(ui->dtFrom->date(), ui->dtTo->date());
 
-
-    if (sql.empty())
+    if (insert_statements.empty())
         return;
 
-    if (write_breaks_to_db(sql))
+    if (write_breaks_to_db(insert_statements))
         close_form();
 }
 
@@ -258,7 +257,7 @@ void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from
 
 }
 
-std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
+std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
 {
     Schedule sched;
     std::string insert_stmts;
@@ -276,7 +275,9 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                 qDebug() << bt;
         }
     }
-   */
+    */
+
+
 
     auto break_exists = [&](QDate sched_date, int sched_hr, QTime sched_time)
     {
@@ -287,6 +288,7 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
             return false;
 
         for(auto& break_time: s_recs[sched_date][sched_hr]){
+
             if (break_time == sched_time.toString("hh:mm"))
                 return true;
         }
@@ -313,19 +315,9 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
                     << sched.set_break_mode("MIXED")
                     << sched.set_break_fill_method(bll->break_fill_method()->value());
 
-            if (ui->cbSelectedHours->count() == 0)
-            {
+            // Do not create break if it already exists
+            if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
                 insert_stmts += sched.make_insert_stmt(fields.vec);
-
-            }else{
-                if (ui->cbSelectedHours->findText( QString::number(bll->breakHour()->value()) ) > -1 )
-                {
-                    // Do not create break if it already exists
-                    if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
-                        insert_stmts += sched.make_insert_stmt(fields.vec);
-
-                }
-            }
 
             fields.clear();
          }
@@ -337,10 +329,10 @@ std::string BreakCreateForm::make_break_sql(QDate from, QDate to)
 }
 
 
-bool BreakCreateForm::write_breaks_to_db(const std::string sql)
+bool BreakCreateForm::write_breaks_to_db(const std::string insert_stmnts)
 {
     try{
-        m_edm_break_line->executeRawSQL(sql);
+        m_edm_break_line->executeRawSQL(insert_stmnts);
         showMessage("Breaks created successfully.");
         m_breaks_created = true;
         return true;

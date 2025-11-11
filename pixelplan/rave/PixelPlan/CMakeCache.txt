@@ -305,6 +305,9 @@ Qt6ZlibPrivate_DIR:PATH=C:/QT632/lib/cmake/Qt6ZlibPrivate
 //The directory containing a CMake configuration file for Qt6.
 Qt6_DIR:PATH=C:/QT632/lib/cmake/Qt6
 
+//The directory containing a CMake configuration file for Qt6xml.
+Qt6xml_DIR:PATH=C:/QT632/lib/cmake/Qt6Xml
+
 //Path to a library.
 SQLite3_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib
 
@@ -666,6 +669,8 @@ QT_FEATURE_dlopen:INTERNAL=OFF
 QT_FEATURE_dnslookup:INTERNAL=ON
 //Qt feature: dockwidget (from target Qt6::Widgets)
 QT_FEATURE_dockwidget:INTERNAL=ON
+//Qt feature: dom (from target Qt6::Xml)
+QT_FEATURE_dom:INTERNAL=ON
 //Qt feature: doubleconversion (from target Qt6::Core)
 QT_FEATURE_doubleconversion:INTERNAL=ON
 //Qt feature: draganddrop (from target Qt6::Gui)

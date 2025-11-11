@@ -177,7 +177,15 @@ int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 
     sqlQuery = make_insert_returning_string(entity);
 
-    int last_id = provider()->insert_returning_id(sqlQuery);
+    int last_id = -1;
+
+    try{
+
+        last_id = provider()->insert_returning_id(sqlQuery);
+
+    } catch(PostgresException& pe) {
+        return last_id;
+    }
 
     return last_id;
 
@@ -227,6 +235,7 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
+
     return provider()->read(sql);
 
 }

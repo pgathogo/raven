@@ -60,6 +60,7 @@ struct Booking{
     int spot_id{-1};
     std::string spot_name{};
     double spot_duration{0};
+    QString formatted_duration{};
     int booking_id{-1};
     std::string booking_status{};
     std::string play_date{};

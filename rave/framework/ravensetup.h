@@ -90,6 +90,13 @@ public:
     StringField* editor_filepath();
     void set_editor_filepath(const std::string);
 
+    StringField* playlist_template_filepath();
+    void set_playlist_templist_filepath(const std::string);
+
+    StringField* playlist_output_path();
+    void set_playlist_output_path(const std::string);
+
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -132,6 +139,8 @@ private:
     BooleanField* m_convert_to_ogg;
 
     StringField* m_editor_filepath;
+    StringField* m_playlist_template_filepath;
+    StringField* m_playlist_output_path;
 
     QStringList mHeader;
     std::string mTableName;

@@ -41,6 +41,7 @@ namespace AUDIO
         bool audio_exist(const QString);
 
         QTime msec_to_time(int, int);
+        QTime msec_to_time(qint64);
 
     private slots:
         void wave_gen_finished();

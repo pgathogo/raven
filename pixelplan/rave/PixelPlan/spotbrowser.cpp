@@ -1,7 +1,8 @@
-#include <QApplication>
 #include <filesystem>
 
+#include <QApplication>
 #include <QDebug>
+#include <QFile>
 
 #include "spotbrowser.h"
 #include "ui_spotbrowser.h"
@@ -14,6 +15,7 @@
 #include "orderbooking.h"
 #include "spotaudio.h"
 #include "spotaudiobrowser.h"
+#include "advertmedia.h"
 
 #include "../../../rave/audio/audio.h"
 #include "../../../rave/audio/audiotool.h"
@@ -54,13 +56,16 @@ void SpotBrowser::addRecord()
     if (spot_form->exec() > 0){
         try{
 
-            int id = entityDataModel().createEntity(std::move(spot));
+            int spot_id = entityDataModel().createEntity(std::move(spot));
 
             save_voice_overs(*spot_form);
 
             save_type_exclusions(*spot_form);
 
-            save_spot_audio(*spot_form);
+            save_advert_media(*spot_form, spot_id, m_client->id());
+
+
+            //save_spot_audio(*spot_form);
 
         }catch(DatabaseException& de){
 
@@ -94,7 +99,8 @@ void SpotBrowser::updateRecord()
         std::shared_ptr<SpotForm> spot_form =
                 std::make_unique<SpotForm>(m_client, spot, this);
 
-        if (spot_form->exec() > 0){
+        if (spot_form->exec() > 0)
+        {
             try{
 
 
@@ -103,6 +109,8 @@ void SpotBrowser::updateRecord()
                 entityDataModel().updateEntity(*spot);
                 entityDataModel().all();
 
+                save_advert_media(*spot_form, spot->id(), m_client->id());
+
                 // save_voice_overs(*spot_form);
 
                 // save_type_exclusions(*spot_form);
@@ -110,7 +118,7 @@ void SpotBrowser::updateRecord()
 
                 //save_spot_audio(*spot_form);
 
-                //save_spot_media(spot_form);
+                //save_spot_media(spot_form);spot_duration
 
 
             }catch(DatabaseException& de){
@@ -189,6 +197,56 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
         if (mtom->dbAction() == DBAction::dbaDELETE)
             edm->deleteEntity(*mtom);
     }
+}
+
+bool SpotBrowser::save_advert_media(SpotForm& sf, int spot_id, int client_id)
+{
+    std::shared_ptr<PIXELPLAN::AdvertMedia> media_advert  = sf.advert_media();
+    media_advert->set_client(client_id);
+    media_advert->set_spot(spot_id);
+
+    if (media_advert->dbAction() == DBAction::dbaCREATE)
+    {
+        EntityDataModel edm;
+
+        // Prefix the filename with spot_id
+        media_advert->set_title(std::to_string(spot_id)+"_"+
+                            media_advert->title()->value());
+
+        media_advert->set_dest_filepath(media_advert->dest_path()->value()+
+                                        media_advert->title()->value()+
+                                        "."+
+                                        media_advert->file_extension()->value());
+
+
+        int media_advert_id = edm.createEntityDB(*media_advert);
+
+        if (media_advert_id == -1) {
+            // FIXME:: Log this error "Could not create Media Advert Entity"
+            // FIXME:: Log success: { client_id, spot_id}
+            return false;
+        }
+
+        // FIXME:: Log success: {media_advert_id, client_id, spot_id}
+
+        QString src = QString::fromStdString(media_advert->src_filepath()->value());
+        QString dest = QString::fromStdString(media_advert->dest_filepath()->value());
+
+
+        if (QFile::copy(src, dest)) {
+           // FIXME:: Log succussfull copy of file
+            return true;
+        } else {
+            // FIXME:: What action to take if the copy fails!!
+            // FIXME:: Log file copy failure!!
+            return false;
+        }
+
+        // TODO:: If the spot is already booked, update the order booking "booked_audio_id"
+
+    }
+
+
 }
 
 void SpotBrowser::save_spot_audio(const SpotForm& sf)
@@ -286,44 +344,4 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
  }
 
-// void SpotBrowser::save_spot_media(std::shared_ptr<SpotForm> spot_form)
-//  {
-//     qDebug() <<  "save spot media ...";
-
-//     auto edm = std::make_unique<EntityDataModel>();
-//     auto& spot_medias = spot_form->spot_medias();
-//     auto media_creation_mode = spot_form->get_media_creation_mode();
-
-//     qDebug() << "Media Count: "<< spot_medias.size();
-
-//     qDebug() <<  "BBB";
-
-
-//     for (auto& sm : spot_medias) {
-//     qDebug() <<  "CCC";
-//         PIXELPLAN::SpotMedia* s_media = static_cast<PIXELPLAN::SpotMedia*>(std::get<1>(sm).get());
-//     qDebug() <<  "DDD";
-//         if (s_media->dbAction() == DBAction::dbaCREATE)
-//         {
-//             switch(media_creation_mode)
-//             {
-//             case MediaCreationMode::Attach:
-//                 break;
-//             case MediaCreationMode::Import:
-//             {
-//     qDebug() <<  "EEE";
-//                 auto& media = s_media->get_pmedia();
-//                 // auto media = s_media->advert_media();
-//     qDebug() <<  "FFF";
-//                 qDebug() << media.title()->to_qstring();
-//                 // int id = edm->createEntity(media);
-
-//             }
-
-//             } // Switch
-
-//         } // DBAction::dbCREATE
-//     }
-
-//  }
 

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <QDebug>
 #include "datetimeselector.h"
 #include "ui_datetimeselector.h"
@@ -19,10 +21,30 @@ DateTimeSelector::DateTimeSelector(QWidget *parent, DateTimeSelection dts)
     connect(ui->btnCancel, &QPushButton::clicked, this, &DateTimeSelector::cancel_dialog);
     connect(ui->btnClear, &QPushButton::clicked, this, &DateTimeSelector::clear_selection);
 
+
+    auto print_hours = [](std::vector<int> hrs) {
+        for(auto h : hrs){
+            qDebug() << h ;
+        }
+
+    };
+
     if (dts.sel_hours.size() > 0)
     {
+
+        //qDebug() << ">>> ARRIVED:: DTS >>>";
+        //print_hours(dts.sel_hours);
+        //qDebug() << " >>>>> ";
+
         m_selection.sel_hours = dts.sel_hours;
+
+        //qDebug() << "m_selection::Asigned";
+        //print_hours(m_selection.sel_hours);
+
         set_selected_buttons();
+
+        //qDebug() << "After set_selected_buttons() ";
+        //print_hours(m_selection.sel_hours);
     }
 
     ui->calWidget->setSelectedDate(dts.sel_date);
@@ -55,17 +77,18 @@ void DateTimeSelector::set_selected_buttons()
 {
     QString am_pm = QTime::currentTime().toString("AP");
 
-    qDebug() << "set_selected_buttons: "<< am_pm;
-
     for (int hr : m_selection.sel_hours){
-        for (auto [text, btn_data] : m_hour_buttons){
+
+        for (auto& [text, btn_state] : m_hour_buttons){
 
             if (hr == 12 && am_pm == "AM")
                 hr = 0;
 
-            if (btn_data.long_hour_fmt == hr) {
-                btn_data.button->setChecked(true);
+            if (btn_state.long_hour_fmt == hr) {
+                btn_state.button->setChecked(true);
+                btn_state.is_selected = true;
             }
+
         }
     }
 }
@@ -206,8 +229,21 @@ void DateTimeSelector::cancel_dialog()
 
 DateTimeSelection DateTimeSelector::selection()
 {
+    m_selection.sel_hours.clear();
+
+    for(auto& [text, button_state] : m_hour_buttons) {
+
+        if (button_state.is_selected) {
+            m_selection.sel_hours.push_back(button_state.long_hour_fmt);
+        }
+    }
+
+    std::sort(m_selection.sel_hours.begin(), m_selection.sel_hours.end());
+
     return m_selection;
 }
+
+
 
 void DateTimeSelector::clear_selection()
 {

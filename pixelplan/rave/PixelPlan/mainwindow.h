@@ -71,13 +71,16 @@ private slots:
     void showRegister();
     void openSetupForm();
     void on_tv_programs();
-    void open_schedule();
-    void open_merged_browser();
-    void open_setup_browser();
+    void on_schedule();
+    void on_merged_browser();
+    void on_setup_browser();
     void open_cue_editor();
     void test_new_booking();
 
+    void on_playlist();
+
     void print_comm_log();
+
 
 private:
     //PlainForm* pf;

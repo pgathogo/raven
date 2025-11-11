@@ -40,7 +40,7 @@ namespace PIXELPLAN
             m_audience->addChoice({"ADULTS", "Adults"});
             m_audience->addChoice({"SENIORS", "Seniors"});
 
-            m_broadcast_days = createField<StringField>("broadcast_days","broadcast_days");
+            m_broadcast_days = createField<StringField>("broadcast_days","Broadcasting Days");
             m_start_time = createField<TimeField>("start_time","start_time");
             m_end_time = createField<TimeField>("end_time","end_time");
             m_duration = createField<IntegerField>("duration", "Duration");
@@ -76,7 +76,8 @@ namespace PIXELPLAN
             m_script_file = createField<StringField>("script_file","script_file");
             m_created_at = createField<DateTimeField>("created_at","created_at");
 
-            m_header << QString::fromStdString(m_title->fieldLabel());
+            m_header << QString::fromStdString(m_title->fieldLabel())
+                     << QString::fromStdString(m_broadcast_days->fieldLabel());
 
             setTableName("rave_tvprogram");
 
@@ -389,14 +390,16 @@ namespace PIXELPLAN
             title()->set_display_width(300);
 
             return tableViewCols<std::string>(
-                title()->displayName()
+                title()->displayName(),
+                broadcast_days()->displayName()
             );
         }
 
         std::vector<std::string> TVProgram::tableViewValues()
         {
             return {
-                title()->displayName()
+                title()->displayName(),
+                broadcast_days()->displayName()
             };
         }
 

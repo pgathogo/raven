@@ -30,6 +30,7 @@ public:
     void save_voice_overs(const SpotForm&);
     void save_type_exclusions(const SpotForm&);
     void save_spot_audio(const SpotForm&);
+    bool save_advert_media(SpotForm&, int, int);
     // void save_spot_media(std::shared_ptr<SpotForm>);
 
     void search_by_client(std::shared_ptr<Client> client);

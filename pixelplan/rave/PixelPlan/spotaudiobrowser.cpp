@@ -365,10 +365,10 @@ void SpotAudioBrowser::audio_properties()
     if (selectedRowId() < 0 )
         return;
 
-    AUDIO::Audio* audio = audio_from_selection();
-    audio->set_file_path(audio->audio_lib_path()->value());
-    auto audio_form = std::make_unique<AudioForm>(audio, m_setup.get(), FormMode::ReadOnly);
-    audio_form->exec();
+    // AUDIO::Audio* audio = audio_from_selection();
+    // audio->set_file_path(audio->audio_lib_path()->value());
+    // auto audio_form = std::make_unique<AudioForm>(audio, m_setup.get(), FormMode::ReadOnly);
+    // audio_form->exec();
 
 }
 

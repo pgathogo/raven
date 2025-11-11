@@ -1,10 +1,12 @@
 #include "../../../rave/framework/choicefield.h"
 #include "../../../rave/framework/schedule.h"
 #include "../../../rave/audio/audio.h"
+#include "order.h"
 #include "orderbooking.h"
 #include "bookingsegment.h"
 #include "spotaudio.h"
 #include "spot.h"
+#include "advertmedia.h"
 
 OrderBooking::OrderBooking()
     :m_booking_segment{ nullptr }
@@ -33,7 +35,7 @@ OrderBooking::OrderBooking()
                                           std::make_unique<TRAFFIK::Spot>(), "name");
 
     m_spot_audio = createField<ForeignKeyField>("booked_audio_id", "Audio",
-                                          std::make_unique<AUDIO::Audio>(), "id");
+                                          std::make_unique<PIXELPLAN::AdvertMedia>(), "id");
 
     m_played_audio = createField<IntegerField>("played_audio", "Played Audio ID");
 
@@ -42,6 +44,9 @@ OrderBooking::OrderBooking()
     m_book_hour = createField<IntegerField>("book_hour", "Book Hour");
 
     m_book_seq = createField<IntegerField>("book_seq", "Book Sequence");
+
+    m_order = createField<ForeignKeyField>("order_id", "Order ID",
+                                           std::make_unique<Order>(), "order_number");
 
     mHeader << QString::fromStdString(schedule()->displayName());
 
@@ -172,6 +177,17 @@ IntegerField* OrderBooking::played_audio()
 void OrderBooking::set_played_audio(int audio_id)
 {
     m_played_audio->setValue(audio_id);
+}
+
+ForeignKeyField* OrderBooking::order() const
+{
+    return m_order;
+}
+
+void OrderBooking::set_order(int order_id)
+{
+   m_order->setValue(order_id);
+
 }
 
 std::string OrderBooking::tableName() const

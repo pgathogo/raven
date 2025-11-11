@@ -32,6 +32,7 @@
 #include "bookingwizard.h"
 
 #include "tvprogrambrowser.h"
+#include "playlistform.h"
 
 AccessMap MainWindow::access_map;
 
@@ -154,35 +155,40 @@ void MainWindow::createActions()
     mainToolBar->addAction(actTVPrograms);
 
     QAction* scheduleAction = new QAction(tr("&BREAKS"));
-    scheduleAction->setIcon(QIcon(":/images/media/icons/schedule.png"));
+    scheduleAction->setIcon(QIcon(":/images/media/icons/clock1.png"));
     setupMenu->addAction(scheduleAction);
     scheduleAction->setStatusTip(tr("Schedule"));
-    connect(scheduleAction, &QAction::triggered, this, &MainWindow::open_schedule);
+    connect(scheduleAction, &QAction::triggered, this, &MainWindow::on_schedule);
     mainToolBar->addAction(scheduleAction);
     mainToolBar->addSeparator();
 
 
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
     merged_browser_act->setIcon(QIcon(":/images/media/icons/clients.png"));
-    connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
+    connect(merged_browser_act, &QAction::triggered, this, &MainWindow::on_merged_browser);
 
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
 
 
-
     QAction* setup_browser_act = new QAction(tr("&SETUPS"));
     setupMenu->addAction(setup_browser_act);
-    connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
+    connect(setup_browser_act, &QAction::triggered, this, &MainWindow::on_setup_browser);
 
     QAction* cue_editor_act = new QAction("Cue Editor");
     connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
 
-    QAction* test_wizard_act = new QAction(tr("&Book Order"));
-    test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
-    connect(test_wizard_act, &QAction::triggered, this, &MainWindow::test_new_booking);
+    // QAction* test_wizard_act = new QAction(tr("&Book Order"));
+    // test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
+    // connect(test_wizard_act, &QAction::triggered, this, &MainWindow::test_new_booking);
+    // mainToolBar->addAction(test_wizard_act);
 
-    mainToolBar->addAction(test_wizard_act);
+    QAction* playlist_act = new QAction(tr("&PLAYLIST"));
+    playlist_act->setIcon(QIcon(":/images/media/icons/playlist.png"));
+    connect(playlist_act, &QAction::triggered, this, &MainWindow::on_playlist);
+
+    mainToolBar->addAction(playlist_act);
+
 }
 
 
@@ -233,27 +239,33 @@ void MainWindow::openSetupForm()
 }
 
 
-void MainWindow::open_schedule()
+void MainWindow::on_schedule()
 {
     ScheduleForm* schedForm = createSubWindow<ScheduleForm>();
     schedForm->exec();
 }
 
-void MainWindow::open_merged_browser()
+void MainWindow::on_merged_browser()
 {
     MergedBrowser* m_browse = createSubWindow<MergedBrowser>();
     m_browse->exec();
 }
 
-void MainWindow::open_setup_browser()
+void MainWindow::on_setup_browser()
 {
     SetupBrowser* setup_browser = createSubWindow<SetupBrowser>();
     setup_browser->exec();
 }
 
+void MainWindow::on_playlist()
+{
+    PlaylistForm* playlist_form = createSubWindow<PlaylistForm>();
+    playlist_form->exec();
+
+}
+
 void MainWindow::open_cue_editor()
 {
-
 }
 
 void MainWindow::test_new_booking()

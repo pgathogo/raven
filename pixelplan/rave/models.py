@@ -224,6 +224,8 @@ class Setup(models.Model):
     comm_audio_path = models.CharField(max_length=255, null=True, blank=True)
     convert_to_ogg = models.BooleanField(null=True, blank=True)
     editor_filepath = models.CharField(max_length=255, null=True, blank=True)
+    playlist_template_filepath = models.CharField(max_length=300, null=True, blank=True)
+    playlist_output_path = models.CharField(max_length=300, null=True, blank=True)
 
 
 class Content(models.Model):
@@ -387,6 +389,7 @@ class AdvertMedia(models.Model):
     title = models.CharField(max_length=255)
     media_file = models.CharField(max_length=300, blank=True, null=True)
     media_path = models.CharField(max_length=300, blank=True, null=True)
+    file_extension = models.CharField(max_length=10, blank=True, null=True)
     duration = models.IntegerField(null=True, blank=True)
     aspect_ratio = models.CharField(max_length=20, blank=True, null=True, help_text="Video aspect ratio, e.g., 16:9")
     resolution = models.CharField(max_length=50, blank=True, null=True, help_text="Resolution of the video, e.g., 1920x1080")
@@ -580,10 +583,7 @@ class OrderBooking(models.Model):
     play_date = models.DateField(null=True)
     play_time = models.DateTimeField(default=now(), null=True, blank=True)
     spot = models.ForeignKey(Spot, models.DO_NOTHING, default=-1)
-    booked_audio = models.ForeignKey(Audio, models.DO_NOTHING, null=True)
+    booked_audio = models.ForeignKey(AdvertMedia, models.DO_NOTHING, null=True)
     played_audio = models.IntegerField(default=-1, null=True, blank=True)
     book_seq = models.IntegerField(default=1, null=True)
-
-
-    
-
+    order = models.ForeignKey(Order,models.DO_NOTHING,  null=True)

@@ -44,6 +44,7 @@ class Station(models.Model):
     station_name = models.CharField(max_length=200)
     db_name = models.CharField(max_length=30, blank=True, null=True)
     cluster = models.ForeignKey(Cluster, models.DO_NOTHING)
+    station_code = models.CharField(max_length=10, blank=True, null=True)
 
 class AudioStore(models.Model):
     store_name = models.CharField(max_length=200)

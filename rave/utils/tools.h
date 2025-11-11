@@ -13,6 +13,7 @@
 #include <QString>
 #include <QMessageBox>
 #include <QDebug>
+#include <QTime>
 
 #include <cstdlib>
 
@@ -55,6 +56,19 @@ inline QString stoq(std::string s)
     return QString::fromStdString(s);
 }
 
+
+inline QTime duration_to_time(qint64 duration)
+{
+    // Format the duration into HH:MM:SS
+    int seconds = (duration / 1000) % 60;
+    int minutes = (duration / 60000) % 60;
+    int hours = (duration / 3600000) % 24; // Use % 24 for hours to handle cases over 24 hours
+
+    QTime time(hours, minutes, seconds);
+
+    return time;
+}
+
 inline void showMessage(std::string msg, QMessageBox::Icon icon = QMessageBox::Information)
 {
     QMessageBox msgBox;
@@ -63,6 +77,13 @@ inline void showMessage(std::string msg, QMessageBox::Icon icon = QMessageBox::I
     msgBox.exec();
 }
 
+inline void showQMessage(QString msg, QMessageBox::Icon icon = QMessageBox::Information)
+{
+    QMessageBox msgBox;
+    msgBox.setText(msg);
+    msgBox.setIcon(icon);
+    msgBox.exec();
+}
 
 inline bool confirmationMessage(const std::string msg)
 {

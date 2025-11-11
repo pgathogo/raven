@@ -1,21 +1,26 @@
 #include <sstream>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QFile>
 #include <QTextStream>
 
-#include <iostream>
-#include <fstream>
-
 #include "commlogform.h"
 #include "ui_commlogform.h"
 #include "../../../rave/utils/qchecklist.h"
 #include "../../../rave/framework/entitydatamodel.h"
+#include "../../../rave/framework/ravensetup.h"
 
 CommLogForm::CommLogForm(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CommLogForm)
+    QDialog(parent)
+    ,ui(new Ui::CommLogForm)
+    ,m_comm_log_tvm{nullptr}
+    ,m_edm_setup{nullptr}
+    ,m_setup{nullptr}
 {
     ui->setupUi(this);
     //set_hour_combobox();
@@ -30,15 +35,21 @@ CommLogForm::CommLogForm(QWidget *parent) :
 //    connect(this->m_hours, &QCheckList::signalPopupHidden, this, &CommLogForm::hours_popup_hidden);
 
     connect(ui->cbExpand, &QCheckBox::stateChanged, this, &CommLogForm::change_view_mode);
-    connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
+    // connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
     connect(ui->btnPrintSum, &QPushButton::clicked, this, &CommLogForm::print_log);
-
 
 //    setWindowState(this->windowState() | Qt::WindowFullScreen);
 
     m_process = std::make_unique<QProcess>(this);
     connect(m_process.get(), &QProcess::started, this, &CommLogForm::proc_started);
     connect(m_process.get(), &QProcess::errorOccurred, this, &CommLogForm::error_occured);
+
+    m_edm_setup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
+    m_edm_setup->all();
+
+    if (m_edm_setup->count() > 0)
+        m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
+
 
     set_default_dts();
 
@@ -95,25 +106,55 @@ void CommLogForm::set_default_dts()
 void CommLogForm::on_clicked_datetime()
 {
     //m_dts.clear();
-    std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this, m_dts);
+    //std::string hrs = comma_sep(m_dts.sel_hours);
+    //std::cout << "Before : "<< hrs << '\n';
+    auto selector = std::make_unique<DateTimeSelector>(this, m_dts);
 
-    if (dts->exec() == 1)
+    if (selector->exec() == 1)
     {
-        m_dts = dts->selection();
+
+        m_dts = selector->selection();
 
         std::string hours = comma_sep(m_dts.sel_hours);
+
         update_hours_label(hours);
+
+        if (m_comm_log_tvm != nullptr)
+            m_comm_log_tvm->clear();
+
+        m_comm_logs.clear();
+
         fetch_bookings(m_dts);
+
+        show_bookings();
+
+        ui->tvCommLog->expandAll();
 
         ui->btnDateTime->setText("Date: "+m_dts.sel_date.toString());
     }
 
 }
 
-void CommLogForm::comm_log_hours_changed(int /*i*/)
+void CommLogForm::show_bookings()
 {
-    fetch_bookings(m_dts);
+    if (m_comm_logs.size() > 0)
+    {
+        if (m_comm_log_tvm == nullptr) {
+
+            m_comm_log_tvm = std::make_unique<CommLogTreeViewModel>();
+            ui->tvCommLog->setModel(m_comm_log_tvm.get());
+        }
+
+        m_comm_log_tvm->show_data(m_comm_logs);
+
+        ui->tvCommLog->header()->setSectionResizeMode(QHeaderView::Interactive);
+        ui->cbExpand->setChecked(true);
+
+        set_column_sizes();
+    }
+
 }
+
 
 void CommLogForm::change_view_mode(int state)
 {
@@ -123,24 +164,6 @@ void CommLogForm::change_view_mode(int state)
         ui->tvCommLog->collapseAll();
 }
 
-void CommLogForm::select_all_hours(int state)
-{
-    for (std::size_t i=0; i < m_check_items.size(); ++i){
-        if (state == 0){
-            m_check_items[i]->setCheckState(Qt::Unchecked);
-        } else {
-            m_check_items[i]->setCheckState(Qt::Checked);
-        }
-    }
-
-    hours_popup_hidden();
-
-}
-
-void CommLogForm::hours_popup_hidden()
-{
-    fetch_bookings(m_dts);
-}
 
 void CommLogForm::set_hour_combobox()
 {
@@ -180,7 +203,6 @@ void CommLogForm::update_hours_label(std::string hours)
 }
 
 
-
 void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 {
     if (dts.sel_hours.size() == 0)
@@ -213,8 +235,6 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 
     auto provider =  edm.getDBManager()->provider();
 
-    m_comm_logs.clear();
-
     if (provider->cacheSize() == 0 )
         return;
 
@@ -228,8 +248,6 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 
         for (; itB != itE; ++itB)
         {
-            qDebug() << "AAA";
-
 
             std::string field =  (*itB).first;
             std::string value = (*itB).second;
@@ -268,16 +286,16 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
     } while(!provider->cache()->isLast());
 
 
-    if (m_comm_logs.size() > 0)
-    {
-        CommLogTreeViewModel* comm_log_tvm = new CommLogTreeViewModel(m_comm_logs);
-        ui->tvCommLog->setModel(comm_log_tvm);
-
-        ui->tvCommLog->header()->setSectionResizeMode(QHeaderView::Interactive);
-        ui->cbExpand->setChecked(true);
-    }
 
 }
+
+void CommLogForm::set_column_sizes()
+{
+    ui->tvCommLog->setColumnWidth(0, 250);
+    ui->tvCommLog->setColumnWidth(2, 300);
+
+}
+
 
 void CommLogForm::print_log()
 {
@@ -295,7 +313,7 @@ void CommLogForm::print_log()
             log["client_name"] = QString::fromStdString(commlog.client_name);
             log["spot_id"] = commlog.spot_id;
             log["spot_name"] = QString::fromStdString(commlog.spot_name);
-            log["spot_duration"] = commlog.spot_duration;
+            log["spot_duration"] = duration_to_time(commlog.spot_duration).toString("HH:mm:ss");
             log["book_status"] = QString::fromStdString(commlog.booking_status);
             log["play_date"] =  commlog.play_date.toString("dd-MM-yyyy");
             log["play_time"] = commlog.play_time.toString("HH:mm");
@@ -315,19 +333,35 @@ void CommLogForm::print_log()
     }
 
     //execute_report();
+    QJsonObject header;
+    header["report_title"] = "Commercial Booking Report";
+    header["station"] = m_setup->stationName()->to_qstring();
+    header["book_date"] = m_dts.sel_date.toString("dd-MM-yyyy");
 
+    std::sort(m_dts.sel_hours.begin(), m_dts.sel_hours.end());
+
+    std::string selected_hours = comma_sep(m_dts.sel_hours);
+    header["book_hours"] = QString::fromStdString(selected_hours);
+
+    QJsonArray report_header;
+    report_header.append(header);
 
     if (breaks.size() > 0) {
-        write_json_data(breaks);
+        QString filepath = "D:\\Home\\Lab\\Javascript\\electjson\\data\\report_header.json";
+        write_json_data(filepath, report_header);
+
+        filepath = "D:\\Home\\Lab\\Javascript\\electjson\\data\\report_data.json";
+        write_json_data(filepath, breaks);
         // Call report renderer
         execute_report();
     }
 }
 
-void CommLogForm::write_json_data(QJsonArray& data)
+void CommLogForm::write_json_data(const QString filepath, QJsonArray& data)
 {
     //QFile file("report_data.json");
-    QFile file("D:\\Home\\Lab\\Javascript\\electjson\\data\\report_data.json");
+    // QFile file("D:\\Home\\Lab\\Javascript\\electjson\\data\\report_data.json");
+    QFile file(filepath);
     if (!file.open(QIODevice::ReadWrite)) {
         qDebug() << "File open error";
     }
@@ -343,10 +377,10 @@ void CommLogForm::write_json_data(QJsonArray& data)
 void CommLogForm::execute_report()
 {
     //std::wstring exe = "electron";
+    QString path = "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe";
+
     QStringList args;
     args << " d:\\home\\lab\\Javascript\\electjson\\main.js breaks";
-
-    QString path = "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe";
 
     QString report_launcher = "report.bat";
 

@@ -57,6 +57,9 @@ RavenSetup::RavenSetup()
     m_convert_to_ogg = createField<BooleanField>("convert_to_ogg", "Convert Audio to OGG");
     m_editor_filepath = createField<StringField>("editor_filepath", "Editor Filepath");
 
+    m_playlist_template_filepath = createField<StringField>("playlist_template_filepath", "Template Filepath");
+    m_playlist_output_path = createField<StringField>("playlist_output_path", "Playlist Output Path");
+
     mHeader << stoq(m_station_name->fieldName());
     setTableName("rave_setup");
 }
@@ -316,6 +319,25 @@ StringField* RavenSetup::editor_filepath()
 void RavenSetup::set_editor_filepath(const std::string filepath)
 {
    m_editor_filepath->setValue(filepath);
+}
+
+StringField* RavenSetup::playlist_template_filepath()
+{
+    return m_playlist_template_filepath;
+}
+
+void RavenSetup::set_playlist_templist_filepath(const std::string path)
+{
+   m_playlist_template_filepath->setValue(path);
+}
+
+StringField* RavenSetup::playlist_output_path()
+{
+    return m_playlist_output_path;
+}
+void RavenSetup::set_playlist_output_path(const std::string path)
+{
+    m_playlist_output_path->setValue(path);
 }
 
 std::string RavenSetup::tableName() const

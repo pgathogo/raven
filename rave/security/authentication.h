@@ -24,6 +24,7 @@ public:
     std::unique_ptr<PostgresDatabaseManager> connect_to_server();
     void connect_to_station(ConnInfo);
     ConnInfo cluster_server_conninfo();
+    StationInfo station_by_station_code(const QString);
 
     static void test_connection(ConnInfo&);
 

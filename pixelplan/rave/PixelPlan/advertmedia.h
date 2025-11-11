@@ -29,6 +29,11 @@ namespace  PIXELPLAN {
         ForeignKeyField* client();
         ForeignKeyField* spot();
 
+        StringField* src_filepath() const;
+        StringField* dest_filepath() const;
+        StringField* file_extension() const;
+        StringField* dest_path() const;
+
         void set_title(const std::string);
         void set_media_file(const std::string);
         void set_media_path(const std::string);
@@ -39,6 +44,11 @@ namespace  PIXELPLAN {
         void set_created_at(QDateTime);
         void set_client(int);
         void set_spot(int);
+
+        void set_src_filepath(const std::string);
+        void set_dest_filepath(const std::string);
+        void set_file_extension(const std::string);
+        void set_dest_path(const std::string);
 
         std::string tableName() const override;
         void setTableName(const std::string table_name) override;
@@ -56,6 +66,9 @@ namespace  PIXELPLAN {
 
         [[nodiscard]] ActionResult validate() override;
 
+        std::string order_by() const override;
+
+
     private:
         StringField* m_title;
         StringField* m_media_file;
@@ -67,6 +80,11 @@ namespace  PIXELPLAN {
         DateTimeField* m_created_at;
         ForeignKeyField* m_client;
         ForeignKeyField* m_spot;
+
+        StringField* m_src_filepath;
+        StringField* m_dest_filepath;
+        StringField* m_file_extension;
+        StringField* m_dest_path;
 
         QStringList m_header;
         std::string m_table_name;

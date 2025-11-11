@@ -32,6 +32,7 @@
 #include "spotaudioform.h"
 #include "timeband.h"
 #include "mediabrowser.h"
+#include "advertmedia.h"
 
 namespace fs = std::filesystem;
 
@@ -62,8 +63,11 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
                                                 ui->vlTypeEx,
                                                 this);
 
-    m_media_browser = std::make_unique<MediaBrowser>(m_spot);
+
+    m_media_browser = std::make_unique<MediaBrowser>(m_spot, m_client);
     ui->vlMedia->addWidget(m_media_browser.get());
+
+    connect(m_media_browser.get(), &MediaBrowser::audio_duration, this, &SpotForm::on_audio_duration);
 
     // m_spot_audio_browser =
     //         std::make_unique<SpotAudioBrowser>(&m_spot->spot_audio(),
@@ -113,10 +117,24 @@ SpotForm::~SpotForm()
     delete ui;
 }
 
+std::shared_ptr<PIXELPLAN::AdvertMedia> SpotForm::advert_media()
+{
+    return m_media_browser->advert_media();
+}
+
 ActionResult SpotForm::saveRecord()
 {
+
     populateEntityFields();
     return m_spot->validate();
+}
+
+void SpotForm::on_audio_duration(qint64 duration)
+{
+
+    ui->edtSpotDuration->setTime(duration_to_time(duration));
+    ui->edtRealDuration->setValue(duration);
+    m_spot->set_spot_duration(duration);
 }
 
 std::vector<EntityRecord> const& SpotForm::voiceOvers() const
@@ -283,7 +301,9 @@ void SpotForm::populateEntityFields()
 {
     brandsComboChanged(ui->cbBrands->currentIndex());
     m_spot->set_name(ui->edtName->text().toStdString());
-    m_spot->set_spot_duration(ui->edtSpotDuration->value());
+
+    // m_spot->set_spot_duration(ui->edtRealDuration()->value());
+
     m_spot->set_real_duration(ui->edtRealDuration->value());
     m_spot->set_client(m_client->id());
 
@@ -301,7 +321,7 @@ void SpotForm::populateEntityFields()
 void SpotForm::populateFormWidgets()
 {
     ui->edtName->setText(stoq(m_spot->name()->value()));
-    ui->edtSpotDuration->setValue(m_spot->spot_duration()->value());
+    ui->edtSpotDuration->setTime(duration_to_time(m_spot->spot_duration()->value()));
     ui->edtRealDuration->setValue(m_spot->real_duration()->value());
 
     ui->cbBrands->setModel(m_spot->brand()->dataModel());

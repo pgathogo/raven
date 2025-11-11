@@ -6,15 +6,62 @@
 #include <QDateTime>
 #include <QDir>
 #include <QIODevice>
-
-#include "../security/authentication.h"
+#include <QSettings>
 
 #include "../framework/Logger.h"
+
+#include "../security/authentication.h"
 #include "../security/loginform.h"
+#include "../security/selectstationform.h"
+#include "../framework/ravenexception.h"
 
 // #define LOG_TO_FILE
 
 QString module = "Main";
+
+const std::unique_ptr<Authentication> cluster_server_authentication(QString username, QString password)
+{
+    auto app_auth = std::make_unique<Authentication>();
+
+    try{
+        app_auth->connect_to_cluster_server(username.toStdString(),password.toStdString() );
+        return std::move(app_auth);
+    }catch(DatabaseException& de){
+        std::cout << de.errorMessage();
+        //mNoticeBar->errorNotification(de.errorMessage());
+        return nullptr;
+    }
+
+}
+
+StationInfo select_station(const QString station_code)
+{
+    auto ssform = std::make_unique<SelectStationForm>();
+
+    return  ssform->station_by_station_code(station_code);
+
+}
+
+Credentials get_credentials_locally()
+{
+    Credentials cred;
+
+    QSettings registry(R"(HKEY_LOCAL_MACHINE\SOFTWARE\Baryonic\Raven\OATS)", QSettings::NativeFormat);
+
+    if (registry.childKeys().contains("username", Qt::CaseInsensitive))
+        cred.username = registry.value("username").toString();
+
+    if (registry.childKeys().contains("password", Qt::CaseInsensitive))
+        cred.password = registry.value("password").toString();
+
+    if (registry.childKeys().contains("station_code", Qt::CaseInsensitive))
+        cred.station_code = registry.value("station_code").toString();
+
+
+    return cred;
+
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -43,30 +90,47 @@ int main(int argc, char *argv[])
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
 
-    /*
-    QString msg = "MsgHeader; MsgBody";
-    QStringList msg_list = msg.split(';');
-    QString module = msg_list[0];
-    QString msg_body = msg_list[1];
-
-    qDebug() << "Module: "<< module;
-    qDebug() << "Body:  "<< msg_body;
-    */
-
-
     Logger::info(module, "Opening login form...");
 
-    LoginForm lf("nbohr", "abc123", 4);
+    //LoginForm lf("nbohr", "abc123");
+    //LoginForm lf;
 
     Logger::info(module, "User logged in...");
 
-    lf.express_login();
-    {
-        Logger::info(module, "Starting MainWindow...");
+    Credentials cred = get_credentials_locally();  //   lf.credentials();
 
-        MainWindow w;
-        w.show();
-        bool state = a.exec();
+    const auto auth = cluster_server_authentication(cred.username, cred.password);
+
+    if (auth == nullptr) {
+        QString msg = QString("User %1 failed to authenticate in the cluster server.").arg(cred.username);
+        //showQMessage(msg,  QMessageBox::Critical);
+        Logger::error(module, msg);
+        return 0;
+    }
+
+    QString msg = QString("Cluster server authentication for user %1... Successful.").arg(cred.username);
+    Logger::info(module, msg);
+
+    StationInfo station_info = auth->station_by_station_code(cred.station_code);
+
+    if (station_info.db_name == "")
+        return 0;
+
+    ConnInfo conn_info;
+    conn_info.host = station_info.ip_address.toStdString();
+    conn_info.port = station_info.port_no;
+    conn_info.db_name = station_info.db_name.toStdString();
+    conn_info.username = cred.username.toStdString();
+    conn_info.password = cred.password.toStdString();
+
+    Authentication* station_auth = new Authentication(conn_info);
+    station_auth->connect_to_server();
+
+    qDebug() << "Opening main window ...";
+
+    MainWindow w;
+    w.show();
+    bool state = a.exec();
 
     #ifdef LOG_TO_FILE
         Logger::clean();
@@ -74,6 +138,6 @@ int main(int argc, char *argv[])
 
     return state;
 
-    }
+    //}
 
 }

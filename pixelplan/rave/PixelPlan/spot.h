@@ -47,12 +47,18 @@ namespace TRAFFIK {
 
         StringField* name() const;
         void set_name(const std::string n);
+
         DecimalField* spot_duration() const;
         void set_spot_duration(double dur);
+
         DecimalField* real_duration() const;
         void set_real_duration(double dur);
+
         ForeignKeyField* client() const;
         void set_client(int client_id);
+
+        std::string formatted_duration() const;
+
         ForeignKeyField* brand() const;
         void set_brand(int brand_id);
 
@@ -89,6 +95,7 @@ namespace TRAFFIK {
         StringField* m_name;
         DecimalField* m_spot_duration;
         DecimalField* m_real_duration;
+        StringField* m_formatted_duration;
 
         ForeignKeyField* m_client;
         ForeignKeyField* m_brand;

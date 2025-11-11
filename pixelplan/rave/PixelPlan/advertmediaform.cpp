@@ -56,10 +56,30 @@ std::string AdvertMediaForm::windowTitle()
 
 void AdvertMediaForm::populateEntityFields()
 {
-    m_advert_media->set_title(ui->edtTitle->text().toStdString());
+    m_advert_media->set_title(ui->edtTitle->text().trimmed().toStdString());
     m_advert_media->set_media_file(ui->edtFilename->text().toStdString());
     m_advert_media->set_media_path(ui->edtFolder->text().toStdString());
     set_choice_field(m_advert_media->rating(), ui->cbRating);
+
+    std::string ext = m_advert_media->file_extension()->value();
+
+    m_advert_media->set_src_filepath(m_advert_media->media_file()->value());
+
+    // If you are editing a spot, check if we have a media file with the
+    // same name
+
+    std::string title = "";
+    if (m_advert_media->spot()->value() > -1)
+    {
+        title = std::to_string(m_advert_media->spot()->value())+"_"+
+                m_advert_media->title()->value();
+        m_advert_media->set_title(title);
+    } else {
+        title = m_advert_media->title()->value();
+    }
+
+    m_advert_media->set_dest_filepath(m_advert_media->dest_path()->value()+
+                      title+"."+ext);
 }
 
 void AdvertMediaForm::AdvertMediaForm::populateFormWidgets()

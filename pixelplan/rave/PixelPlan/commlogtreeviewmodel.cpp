@@ -5,17 +5,27 @@
 #include "traffiktree.h"
 #include "../utils/tools.h"
 
-CommLogTreeViewModel::CommLogTreeViewModel(CommercialLogs items, QObject *parent)
+CommLogTreeViewModel::CommLogTreeViewModel(QObject *parent)
     :QStandardItemModel{ parent }
+{
+}
+
+void CommLogTreeViewModel::setup_view_model()
 {
     setColumnCount(7);
     QStringList col_titles {"Client", "Spot Ref", "Spot Title", "Duration", "Status", "Play Date", "Play Time"};
     setHorizontalHeaderLabels(col_titles);
-
     m_root_item = invisibleRootItem();
-    read_tree_data(items);
-    build_tree(m_nodes);
     //print_tree(m_tree, 0);
+
+}
+
+void CommLogTreeViewModel::show_data(CommercialLogs& data)
+{
+    setup_view_model();
+    m_nodes.clear();
+    read_tree_data(data);
+    build_tree(m_nodes);
 }
 
 int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
@@ -32,7 +42,10 @@ int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
             QStandardItem* client_name = new QStandardItem(stoq(booking.client_name));
             QStandardItem* spot_id = new QStandardItem(QString::number(booking.spot_id));
             QStandardItem* spot_name = new QStandardItem(stoq(booking.spot_name));
-            QStandardItem* spot_duration = new QStandardItem(QString::number(booking.spot_duration));
+
+            QString formatted_duration = duration_to_time(booking.spot_duration).toString("HH:mm:ss");
+            QStandardItem* spot_duration = new QStandardItem(formatted_duration);
+
             QStandardItem* booking_status = new QStandardItem(stoq(booking.booking_status));
 
             qDebug() << booking.play_date;

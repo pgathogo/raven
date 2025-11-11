@@ -33,6 +33,11 @@ class QTableWidget;
 
 class MediaBrowser;
 
+namespace PIXELPLAN {
+class AdvertMedia;
+}
+
+
 using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
 
 class SpotForm : public BaseEntityDetailDlg
@@ -60,6 +65,8 @@ public:
     std::unique_ptr<SpotAudioBrowser> const& spot_browser() const;
     AudioCreationMode const get_audio_creation_mode() const;
 
+    std::shared_ptr<PIXELPLAN::AdvertMedia> advert_media();
+
 public slots:
     void cue_edit();
     void update_audio_duration(int);
@@ -71,6 +78,7 @@ private slots:
     void brandsComboChanged(int);
     void on_import_audio();
     void time_band_selected();
+    void on_audio_duration(qint64);
 
 private:
     void add_time_band_widget();

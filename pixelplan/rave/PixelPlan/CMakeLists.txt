@@ -19,7 +19,6 @@ if (CMAKE_GENERATOR MATCHES "Ninja")
 endif()
 
 
-
 project(pixelplan VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -42,8 +41,8 @@ set(Bass_INCLUDE_DIRS "../../../rave/lib/BassLib/Include")
 set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Xml)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets xml)
 
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
@@ -159,6 +158,8 @@ set(PROJECT_SOURCES
     breaklayoutbrowser.h
     breaklayoutbrowser.cpp
     breaklayoutbrowser.ui
+    bookedcommercialtvm.h
+    bookedcommercialtvm.cpp
     schedulemantreeviewmodel.h
     schedulemantreeviewmodel.cpp
     mergedbrowser.h
@@ -244,8 +245,11 @@ set(PROJECT_SOURCES
     mediabrowser.h
     mediabrowser.cpp
     mediabrowser.ui
-
-
+    playlistform.h
+    playlistform.cpp
+    playlistform.ui
+    playlist.h
+    playlist.cpp
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
@@ -463,6 +467,7 @@ set(PROJECT_SOURCES
 
 )
 
+#playlistform.h playlistform.cpp playlistform.ui
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(pixelplan
@@ -507,7 +512,7 @@ endif()
 target_compile_options(pixelplan PRIVATE /MT)
 target_link_options(pixelplan PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
-target_link_libraries(pixelplan PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(pixelplan PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Xml)
 
 
 target_link_libraries(pixelplan PRIVATE ${PostgreSQL_LIBRARIES})

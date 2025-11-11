@@ -12,6 +12,11 @@ namespace Ui {
 class LoginForm;
 }
 
+struct Credentials {
+    QString username{};
+    QString password{};
+    QString station_code{};
+};
 
 class LoginForm : public QDialog
 {
@@ -19,7 +24,7 @@ class LoginForm : public QDialog
 
 public:
     explicit LoginForm(QWidget* parent = nullptr);
-    explicit LoginForm(const QString, const QString, int, QWidget *parent = nullptr);
+    explicit LoginForm(const QString username, const QString password, QWidget* parent = nullptr);
     ~LoginForm();
 
     void closeEvent(QCloseEvent* event);
@@ -30,6 +35,9 @@ public:
     void express_login();
     void express_fetch();
     void test_login();
+
+    Credentials credentials();
+
 protected:
     void showEvent(QShowEvent*) override;
 
@@ -59,6 +67,9 @@ private:
 
     StationInfo m_current_station_info;
     ConnInfo m_current_conn_info;
+
+    Credentials m_credentials;
+
 };
 
 #endif // LOGINFORM_H

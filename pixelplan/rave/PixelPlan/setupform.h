@@ -46,6 +46,8 @@ private slots:
       int selectedRowId() const;
       void set_audio_path();
       void set_comm_audio_path();
+      void on_template_filepath();
+      void on_output_path();
 
 private:
     Ui::SetupForm *ui;

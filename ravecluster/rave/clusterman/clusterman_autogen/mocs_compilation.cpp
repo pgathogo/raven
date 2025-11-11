@@ -11,6 +11,7 @@
 #include "DX5S3JBGB7/moc_selectclosewidget.cpp"
 #include "QCNHDQ7SKX/moc_contentdetailform.cpp"
 #include "QCNHDQ7SKX/moc_contentform.cpp"
+#include "QCNHDQ7SKX/moc_loginform.cpp"
 #include "QCNHDQ7SKX/moc_roleform.cpp"
 #include "QCNHDQ7SKX/moc_userbrowser.cpp"
 #include "QCNHDQ7SKX/moc_userform.cpp"

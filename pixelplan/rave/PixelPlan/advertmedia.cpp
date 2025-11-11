@@ -1,3 +1,5 @@
+#include <QFileInfo>
+
 #include "advertmedia.h"
 #include "client.h"
 
@@ -35,6 +37,18 @@ namespace PIXELPLAN
 
         m_spot = createField<ForeignKeyField>("spot_id", "Spot",
                                               std::make_unique<TRAFFIK::Spot>(), "name");
+
+
+        m_src_filepath = createField<StringField>("src_filepath", "Src Filepath");
+        m_src_filepath->setFormOnly(true);
+
+        m_dest_filepath = createField<StringField>("dest_filepath", "Dest Filepath");
+        m_dest_filepath->setFormOnly(true);
+
+        m_dest_path = createField<StringField>("dest_path", "Dest Path");
+        m_dest_path->setFormOnly(true);
+
+        m_file_extension = createField<StringField>("file_extension", "File Extension");
 
         m_header << QString::fromStdString(m_title->fieldLabel());
 
@@ -148,6 +162,48 @@ namespace PIXELPLAN
         m_spot->setValue(spot_id);
     }
 
+    StringField* AdvertMedia::src_filepath() const
+    {
+        return m_src_filepath;
+    }
+
+    StringField* AdvertMedia::dest_filepath() const
+    {
+        return m_dest_filepath;
+    }
+
+    void AdvertMedia::set_src_filepath(const std::string o_filepath)
+    {
+        m_src_filepath->setValue(o_filepath);
+    }
+
+    void AdvertMedia::set_dest_filepath(const std::string d_filepath)
+    {
+        m_dest_filepath->setValue(d_filepath);
+    }
+
+    StringField* AdvertMedia::file_extension() const
+    {
+        return m_file_extension;
+    }
+
+    void AdvertMedia::set_file_extension(const std::string ext)
+    {
+        m_file_extension->setValue(ext);
+    }
+
+    StringField* AdvertMedia::dest_path() const
+    {
+        return m_dest_path;
+    }
+
+    void AdvertMedia::set_dest_path(const std::string dpath)
+    {
+         m_dest_path->setValue(dpath);
+
+    }
+
+
     std::string AdvertMedia::tableName() const
     {
         return m_table_name;
@@ -204,7 +260,19 @@ namespace PIXELPLAN
             return std::make_tuple(ActionResultType::arERROR,
                                    "Media title is empty!");
         }
+
+        // check if the filename already exists in the media store!
+        if (QFileInfo::exists(QString::fromStdString(m_dest_filepath->value()))) {
+            return std::make_tuple(ActionResultType::arERROR,
+                                   "File with the same name already exists!");
+        }
+
         return BaseEntity::validate();
+    }
+
+    std::string AdvertMedia::order_by() const
+    {
+        return "id DESC";
     }
 
  }

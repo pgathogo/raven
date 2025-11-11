@@ -342,6 +342,21 @@ namespace AUDIO
         return t;
     }
 
+    QTime AudioTool::msec_to_time(qint64 msec)
+    {
+        // Format the duration into HH:MM:SS
+        int seconds = (msec / 1000) % 60;
+        int minutes = (msec / 60000) % 60;
+        int hours = (msec / 3600000) % 24; // Use % 24 for hours to handle cases over 24 hours
+
+        QTime time(hours, minutes, seconds);
+        //QString formattedDuration = time.toString("hh:mm:ss"); /
+
+        return time;
+
+    }
+
+
     //std::string AudioTool::full_audio_name(AUDIO::Audio* audio)
     //{
     //    auto ogg_file = generate_ogg_filename(audio->id())+".ogg";

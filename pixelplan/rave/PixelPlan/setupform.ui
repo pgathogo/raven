@@ -398,10 +398,24 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_18">
+         <item row="1" column="2">
+          <widget class="QPushButton" name="btnCommAudioPath">
            <property name="text">
-            <string>Audio Path:</string>
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>Comm Audio Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_20">
+           <property name="text">
+            <string>Playlist Template File:</string>
            </property>
           </widget>
          </item>
@@ -419,10 +433,10 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_19">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_18">
            <property name="text">
-            <string>Comm Audio Path:</string>
+            <string>Media Path:</string>
            </property>
           </widget>
          </item>
@@ -433,8 +447,28 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QPushButton" name="btnCommAudioPath">
+         <item row="2" column="2">
+          <widget class="QPushButton" name="btnTemplate">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="edtTemplateFile"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_21">
+           <property name="text">
+            <string>Playlist Output Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="edtOutputPath"/>
+         </item>
+         <item row="3" column="2">
+          <widget class="QPushButton" name="btnOutputPath">
            <property name="text">
             <string>...</string>
            </property>

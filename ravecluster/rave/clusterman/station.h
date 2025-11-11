@@ -17,10 +17,12 @@ namespace ClusterManager
         StringField* station_name() const;
         StringField* db_name() const;
         ForeignKeyField* cluster() const;
+        StringField* station_code() const;
 
         void set_station_name(const std::string);
         void set_db_name(const std::string);
         void set_cluster(int);
+        void set_station_code(const std::string);
 
         std::string tableName() const override;
         std::unique_ptr<BaseEntity> mapFields(StringMap*) override;
@@ -38,6 +40,8 @@ namespace ClusterManager
         StringField* m_station_name;
         StringField* m_db_name;
         ForeignKeyField* m_cluster;
+        StringField* m_station_code;
+
 
         QStringList m_header;
         std::string m_table_name;
