@@ -143,6 +143,7 @@ namespace ClusterManager
         QString uuid();
         int parent_id();
         NodeType node_type();
+        ConfigItemType config_item_type();
         void set_id(int);
         void set_temp_id(int);
         void set_node_entity(std::shared_ptr<T>);
@@ -212,6 +213,12 @@ namespace ClusterManager
         NodeType ConfigNode<T>::node_type()
         {
             return m_node_type;
+        }
+
+        template<typename T>
+        ConfigItemType ConfigNode<T>::config_item_type()
+        {
+            return m_config_item_type;
         }
 
         template<typename T>

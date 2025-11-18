@@ -11,6 +11,7 @@
 
 #include "../../../framework/entitydatamodel.h"
 #include "confignode.h"
+#include "useraccessform.h"
 
 namespace Ui {
 class ClusterManagerDlg;
@@ -217,13 +218,17 @@ public:
     template<typename T1, typename T2>
     void delete_node(T1* node, T2* parent_node)
     {
-        if (node->child_nodes().size() > 0){
+        auto entity = node->node_entity();
+
+        // TODO::Implement a proper delete function
+
+        if (node->child_nodes().size() > 0) {
             //showMessage("Delete Failed! Node is NOT empty.");
            return;
         }
 
-        auto entity = node->node_entity();
         EntityDataModel edm;
+
         edm.deleteEntity(*entity);
 
         for(auto&[key, tuple]: parent_node->child_nodes()){
@@ -292,6 +297,7 @@ public slots:
     void edit_user(UserNode*);
     void attach_user_to_station(UserNode*);
     void grant_table_access(UserNode*);
+    void drop_user(UserNode*);
     void edit_role(RoleNode*);
     void delete_role(RoleNode*);
 
@@ -373,6 +379,7 @@ private:
     std::unique_ptr<QAction> m_act_user;
     std::unique_ptr<QAction> m_act_attach_station;
     std::unique_ptr<QAction> m_act_grant_rights;
+    std::unique_ptr<QAction> m_act_drop_role;
 
     std::unique_ptr<QAction> m_act_app;
 
@@ -396,11 +403,8 @@ private:
 
     std::unique_ptr<ClusterManager::ClusterController> m_cluster_controller;
 
-
     std::unique_ptr<NETWORK::ClientSocket> m_client_socket;
     std::unique_ptr<NETWORK::ServerSocket> m_server_socket;
-
-
 
 };
 

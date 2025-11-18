@@ -347,20 +347,21 @@ void CommLogForm::print_log()
     report_header.append(header);
 
     if (breaks.size() > 0) {
-        QString filepath = "D:\\Home\\Lab\\Javascript\\electjson\\data\\report_header.json";
+        QString filepath = m_setup->report_viewer_path()->to_qstring()+"/data/report_header.json";
+
         write_json_data(filepath, report_header);
 
-        filepath = "D:\\Home\\Lab\\Javascript\\electjson\\data\\report_data.json";
+        filepath =m_setup->report_viewer_path()->to_qstring() + "/data/report_data.json";
+
         write_json_data(filepath, breaks);
-        // Call report renderer
+
+        // Call report runner
         execute_report();
     }
 }
 
 void CommLogForm::write_json_data(const QString filepath, QJsonArray& data)
 {
-    //QFile file("report_data.json");
-    // QFile file("D:\\Home\\Lab\\Javascript\\electjson\\data\\report_data.json");
     QFile file(filepath);
     if (!file.open(QIODevice::ReadWrite)) {
         qDebug() << "File open error";
@@ -376,11 +377,10 @@ void CommLogForm::write_json_data(const QString filepath, QJsonArray& data)
 
 void CommLogForm::execute_report()
 {
-    //std::wstring exe = "electron";
-    QString path = "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe";
+    QString path = m_setup->report_runner_path()->to_qstring() + "/electron.exe";
 
     QStringList args;
-    args << " d:\\home\\lab\\Javascript\\electjson\\main.js breaks";
+    args << m_setup->report_viewer_path()->to_qstring() +"/main.js breaks";
 
     QString report_launcher = "report.bat";
 

@@ -58,6 +58,9 @@ LoginForm::LoginForm(QWidget *parent)
 
     ui->swMain->setCurrentIndex(0);
 
+    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
+    ui->edtUsername->setFocus();
+
     setWindowTitle("Login Form");
 
 }

@@ -20,6 +20,7 @@ UserAccessForm::UserAccessForm(SECURITY::User* user, QWidget *parent)
     ui->lblUser->setText(user->role_name()->to_qstring());
 
     load_stations();
+
     load_user_stations(user->role_name()->value());
 
     connect(ui->lwStations, &QListWidget::itemClicked, this, &UserAccessForm::station_selected);
@@ -95,6 +96,7 @@ void UserAccessForm::load_stations()
     edm->all();
 
     auto provider = edm->getDBManager()->provider();
+
     if (provider->cacheSize() == 0)
         return;
 
@@ -224,6 +226,7 @@ void UserAccessForm::load_user_stations(std::string username)
             m_user_access[station_id] = sa;
 
         provider->cache()->next();
+
     } while(!provider->cache()->isLast());
 
 
@@ -237,13 +240,9 @@ void UserAccessForm::station_selected(QListWidgetItem* selected_item)
 
 void UserAccessForm::add_station()
 {
-    qDebug() << "AAA";
-
     auto selected_items = ui->lwStations->selectedItems();
     if (selected_items.size() == 0)
         return;
-
-    qDebug() << "BBB";
 
     auto item = selected_items[0];
     int station_id = item->data(Qt::UserRole).toInt();
@@ -251,7 +250,6 @@ void UserAccessForm::add_station()
     if (m_user_access.contains(station_id))
         return;
 
-    qDebug() << "CCC";
 
     StationData sd = m_station_data[station_id];
 
@@ -262,8 +260,6 @@ void UserAccessForm::add_station()
         return;
     }
 
-    qDebug() << "DDD";
-
     // Check if db name is a valid database
     ConnInfo ci = find_db_server(sd.db_name, sd.cluster_id);
     if (ci.db_name.empty()){
@@ -271,7 +267,6 @@ void UserAccessForm::add_station()
         return;
     }
 
-    qDebug() << "EEE";
     QString name = sd.station_name;
 
     QListWidgetItem* s_item = new QListWidgetItem(name);
@@ -281,7 +276,6 @@ void UserAccessForm::add_station()
 
     add_access(station_id, sd.cluster_id, name);
 
-    qDebug() << "FFF";
 }
 
 void UserAccessForm::add_access(int station_id, int cluster_id, QString name)

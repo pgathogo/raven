@@ -60,6 +60,9 @@ RavenSetup::RavenSetup()
     m_playlist_template_filepath = createField<StringField>("playlist_template_filepath", "Template Filepath");
     m_playlist_output_path = createField<StringField>("playlist_output_path", "Playlist Output Path");
 
+    m_report_viewer_path = createField<StringField>("report_viewer_path", "Report Viewer Path");
+    m_report_runner_path = createField<StringField>("report_runner_path", "Report Runner Path");
+
     mHeader << stoq(m_station_name->fieldName());
     setTableName("rave_setup");
 }
@@ -339,6 +342,28 @@ void RavenSetup::set_playlist_output_path(const std::string path)
 {
     m_playlist_output_path->setValue(path);
 }
+
+StringField* RavenSetup::report_viewer_path()
+{
+    return m_report_viewer_path;
+}
+
+void RavenSetup::set_report_viewer_path(const std::string path)
+{
+    m_report_viewer_path->setValue(path);
+}
+
+StringField* RavenSetup::report_runner_path()
+{
+    return m_report_runner_path;
+}
+
+void RavenSetup::set_report_runner_path(const std::string path)
+{
+    m_report_runner_path->setValue(path);
+
+}
+
 
 std::string RavenSetup::tableName() const
 {

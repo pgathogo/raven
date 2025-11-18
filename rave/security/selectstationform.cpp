@@ -173,6 +173,8 @@ void SelectStationForm::showEvent(QShowEvent *)
 {
     fetch_user_stations(m_username);
     populate_table(m_stations_info);
+
+    ui->btnSelect->setEnabled((m_stations_info.size() > 0));
 }
 
 

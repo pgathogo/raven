@@ -20,6 +20,7 @@
 #include "../../../rave/security/roleuser.h"
 #include "../../../rave/security/content.h"
 #include "../../../rave/security/contentform.h"
+#include "../../../security/authentication.h"
 
 #include "../../../rave/security/rolemember.h"
 
@@ -40,7 +41,6 @@
 #include "serverform.h"
 #include "storagediskform.h"
 #include "audiofolderform.h"
-#include "useraccessform.h"
 #include "useraccess.h"
 #include "clustercontroller.h"
 
@@ -108,6 +108,12 @@ ClusterManagerDlg::ClusterManagerDlg(QWidget *parent)
     m_cluster_controller = std::make_unique<ClusterManager::ClusterController>();
 
     ui->treeWidget->setIconSize(QSize(25,25));
+
+    ui->btnNewStation->setVisible(false);
+    ui->btnNewAudioServer->setVisible(false);
+    ui->btnPrintTree->setVisible(false);
+    ui->btnTest->setVisible(false);
+
 
     load_data();
 }
@@ -404,17 +410,19 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
 {
    SECURITY::User* node_entity = user_node->node_entity();
 
-   std::unique_ptr<UserAccessForm> uaf = std::make_unique<UserAccessForm>(node_entity, this);
+    auto uaf = std::make_unique<UserAccessForm>(node_entity, this);
 
    if (uaf->exec() == 1)
    {
         EntityDataModel edm;
         auto user_access = uaf->user_access();
 
+        auto cluster_controller = std::make_unique<ClusterManager::ClusterController>();
 
         for (auto& [id, sa]: user_access)
         {
             auto usera = std::make_unique<ClusterManager::UserAccess>();
+
             switch(sa.status)
             {
             case AccessAction::New:
@@ -424,7 +432,17 @@ void ClusterManagerDlg::attach_user_to_station(UserNode* user_node)
                 usera->set_station(sa.station_id);
                 edm.createEntityDB(*usera);
 
-                m_cluster_controller->grant_user_station_access(usera->username()->value(), sa.station_id);
+                cluster_controller->grant_user_station_access(usera->username()->value(), sa.station_id);
+
+                auto grant_stmt = m_cluster_controller->grant_table_privileges_stmt(usera->username()->value());
+
+                try {
+                    edm.executeRawSQL(grant_stmt);
+                } catch (DatabaseException& de) {
+                    qDebug() << "Error granting privileges to the cluster \n"
+                             << stoq(de.errorMessage());
+                }
+
 
                 break;
             }
@@ -446,11 +464,23 @@ void ClusterManagerDlg::grant_table_access(UserNode* user_node)
 {
    SECURITY::User* user = user_node->node_entity();
 
-   qDebug() << "AAA";
-
    m_cluster_controller->grant_user_table_access(user->role_name()->value());
 
-   std::cout << "Access granted.\n";
+}
+
+void ClusterManagerDlg::drop_user(UserNode* user_node)
+{
+    SECURITY::User* user = static_cast<SECURITY::User*>(user_node->node_entity());
+
+    auto cluster_controller = std::make_unique<ClusterManager::ClusterController>();
+
+    auto station_ids =  cluster_controller->stations_attached_to_user(user->role_name()->value());
+
+    for (auto& sid : station_ids) {
+        qDebug() << "Station ID: " << sid;
+    }
+
+    // cluster_controller->drop_user_from_stations(user->username()->value(),
 
 }
 
@@ -1061,6 +1091,7 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
     m_act_user = std::make_unique<QAction>("User Properties");
     m_act_attach_station = std::make_unique<QAction>("Attach User to Station...");
     m_act_grant_rights = std::make_unique<QAction>("Grant table rights");
+    m_act_drop_role = std::make_unique<QAction>("Delete User");
 
 
     auto user_node = get_cluster_node<UserNode>(node_uuid);
@@ -1071,12 +1102,15 @@ void ClusterManagerDlg::show_user_context_menu(QString node_uuid, QPoint pos)
     connect(m_act_user.get(), &QAction::triggered, this, [this, user_node](){edit_user(user_node);});
     connect(m_act_attach_station.get(), &QAction::triggered, this, [this, user_node](){attach_user_to_station(user_node);});
     connect(m_act_grant_rights.get(), &QAction::triggered, this, [this, user_node](){grant_table_access(user_node);});
+    connect(m_act_drop_role.get(), &QAction::triggered, this, [this, user_node](){drop_user(user_node);});
 
     m_user_context_menu->addAction(m_act_user.get());
     m_user_context_menu->addSeparator();
     m_user_context_menu->addAction(m_act_attach_station.get());
     m_user_context_menu->addSeparator();
     m_user_context_menu->addAction(m_act_grant_rights.get());
+    m_user_context_menu->addSeparator();
+    m_user_context_menu->addAction(m_act_drop_role.get());
     m_user_context_menu->popup(ui->treeWidget->mapToGlobal(pos));
 }
 

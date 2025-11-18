@@ -101,7 +101,7 @@ MainWindow::MainWindow(QApplication* app,
 
 void MainWindow::createActions()
 {
-    traffikMenu = menuBar()->addMenu(tr("&Traffik"));
+    traffikMenu = menuBar()->addMenu(tr("&PixelPlan"));
     reportMenu = menuBar()->addMenu(tr("&Reports"));
     setupMenu = menuBar()->addMenu(tr("&System Setup"));
     helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -136,15 +136,15 @@ void MainWindow::createActions()
     /*
     */
 
-    QAction* setupAction = new QAction(tr("&Traffik Setup"));
+    QAction* setupAction = new QAction(tr("&PixelPlan Setup"));
     setupMenu->addAction(setupAction);
-    setupAction->setStatusTip(tr("Traffk Default Setup"));
+    setupAction->setStatusTip(tr("PixelPlan Default Setup"));
     connect(setupAction, &QAction::triggered, this, &MainWindow::openSetupForm);
 
     /*
     */
 
-    QToolBar* mainToolBar = addToolBar(tr("Traffik"));
+    QToolBar* mainToolBar = addToolBar(tr("PixelPlan"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
     mainToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     mainToolBar->setIconSize(QSize(60, 60));
@@ -188,6 +188,10 @@ void MainWindow::createActions()
     connect(playlist_act, &QAction::triggered, this, &MainWindow::on_playlist);
 
     mainToolBar->addAction(playlist_act);
+
+    // QAction* recon_act = new QAction(tr("&RECONCILE COMM LOGS"));
+    // connect(recon_act, &QAction::triggered, this, &MainWindow::on_recon_comm_log);
+    // mainToolBar->addAction(recon_act);
 
 }
 
@@ -261,6 +265,11 @@ void MainWindow::on_playlist()
 {
     PlaylistForm* playlist_form = createSubWindow<PlaylistForm>();
     playlist_form->exec();
+
+}
+
+void MainWindow::on_recon_comm_log()
+{
 
 }
 

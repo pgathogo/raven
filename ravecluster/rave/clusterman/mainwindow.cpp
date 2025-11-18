@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("Cluster Manager");
 
     try{
-        connect_rave_db();
+        //connect_rave_db();
     } catch(DatabaseException& de) {
         showMessage(de.errorMessage());
     }
@@ -93,8 +93,8 @@ void MainWindow::cluster_browser()
 
 void MainWindow::cluster_manager()
 {
-    ClusterManagerDlg* cluster_manager = create_sub_window<ClusterManagerDlg>();
-    cluster_manager->exec();
+    // ClusterManagerDlg* cluster_manager = create_sub_window<ClusterManagerDlg>();
+    // cluster_manager->exec();
 }
 
 

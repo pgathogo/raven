@@ -4029,9 +4029,11 @@ D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/clustermanagerdlg.h
  mdp:D:/Home/Clients/PMS/Raven/rave/framework/queryset.h
  mdp:D:/Home/Clients/PMS/Raven/rave/framework/relationmapper.h
  mdp:D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/include/sqlite3.h
+ mdp:D:/Home/Clients/PMS/Raven/rave/security/structs.h
  mdp:D:/Home/Clients/PMS/Raven/rave/utils/tools.h
  mdp:D:/Home/Clients/PMS/Raven/rave/utils/types.h
  mdp:D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/confignode.h
+ mdp:D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/useraccessform.h
 D:/Home/Clients/PMS/Raven/rave/framework/relationmapper.cpp
 D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/database.h
 D:/Home/Clients/PMS/Raven/ravecluster/rave/clusterman/server.h

@@ -78,6 +78,7 @@ private slots:
     void test_new_booking();
 
     void on_playlist();
+    void on_recon_comm_log();
 
     void print_comm_log();
 

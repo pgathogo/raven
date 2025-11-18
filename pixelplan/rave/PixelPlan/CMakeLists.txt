@@ -462,6 +462,8 @@ set(PROJECT_SOURCES
     ${RAVE_CLUSTER_DIR}/station.cpp
     ${RAVE_CLUSTER_DIR}/cluster.h
     ${RAVE_CLUSTER_DIR}/cluster.cpp
+    ${RAVE_CLUSTER_DIR}/useraccess.h
+    ${RAVE_CLUSTER_DIR}/useraccess.cpp
 
     ${RAVE_DIR}/AudioExplorer/audioexplorer.qrc
 

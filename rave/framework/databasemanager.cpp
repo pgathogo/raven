@@ -151,6 +151,8 @@ PostgresDatabaseManager::PostgresDatabaseManager(const std::string conninfo, boo
     if (fresh_conn)
         dataProvider->nullify_connector();
 
+    std::cout << "DBManager: " << conninfo << '\n';
+
     dataProvider->openConnection(conninfo);
     mConninfo = conninfo;
 }

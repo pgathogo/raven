@@ -87,7 +87,7 @@ void PostgresDataProvider::openConnection()
 {
     // read this values from registry
     //const char* conninfo = "user=postgres password=abc123 dbname=raven port=5433";
-    std::string conninfo = "user=postgres password=abc123 dbname=raven port=5433";
+    std::string conninfo = "user=postgres password= dbname=raven port=5433";
 
     mPGConnector = PostgresConnector::instance(conninfo);
     conn = mPGConnector->connection();
@@ -96,6 +96,7 @@ void PostgresDataProvider::openConnection()
 
 void PostgresDataProvider::openConnection(const std::string conninfo)
 {
+    std::cout << ">> Open Connection: " << conninfo << '\n';
     mPGConnector = PostgresConnector::instance(conninfo);
     conn = mPGConnector->connection();
 }

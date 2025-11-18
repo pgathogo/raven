@@ -56,6 +56,9 @@ SetupForm::SetupForm(RavenSetup* setup,
     connect(ui->btnTemplate, &QPushButton::clicked, this, &SetupForm::on_template_filepath);
     connect(ui->btnOutputPath, &QPushButton::clicked, this, &SetupForm::on_output_path);
 
+    connect(ui->btnReportViewer, &QPushButton::clicked, this, &SetupForm::on_viewer_path);
+    connect(ui->btnRunner, &QPushButton::clicked, this, &SetupForm::on_runner_path);
+
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     load_order_approvers();
@@ -75,7 +78,7 @@ ActionResult SetupForm::saveRecord()
 
 std::string SetupForm::windowTitle()
 {
-    return "Traffik Setup";
+    return "PixelPlan Setup";
 }
 
 void SetupForm::populateEntityFields()
@@ -106,6 +109,9 @@ void SetupForm::populateEntityFields()
 
     m_setup->set_playlist_templist_filepath(ui->edtTemplateFile->text().toStdString());
     m_setup->set_playlist_output_path(ui->edtOutputPath->text().toStdString());
+
+    m_setup->set_report_viewer_path(ui->edtReportViewer->text().toStdString());
+    m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
 }
 
 void SetupForm::populateFormWidgets()
@@ -143,6 +149,9 @@ void SetupForm::populateFormWidgets()
 
     ui->edtTemplateFile->setText(m_setup->playlist_template_filepath()->to_qstring());
     ui->edtOutputPath->setText(m_setup->playlist_output_path()->to_qstring());
+
+    ui->edtReportViewer->setText(m_setup->report_viewer_path()->to_qstring());
+    ui->edtRunner->setText(m_setup->report_runner_path()->to_qstring());
 }
 
 void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -335,4 +344,32 @@ void SetupForm::on_output_path()
     if (!outpath.isEmpty())
         ui->edtOutputPath->setText(outpath);
 
+}
+
+void SetupForm::on_viewer_path()
+{
+    QString default_folder = ui->edtReportViewer->text();
+    if (default_folder.isEmpty())
+        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    auto viewer_path = QFileDialog::getExistingDirectory(this,
+                                                         tr("Report Viewer Path"),
+                                                         default_folder,
+                                                         QFileDialog::ShowDirsOnly|
+                                                         QFileDialog::DontResolveSymlinks);
+    if (!viewer_path.isEmpty())
+        ui->edtReportViewer->setText(viewer_path);
+}
+
+void SetupForm::on_runner_path()
+{
+    QString default_folder = ui->edtRunner->text();
+    if (default_folder.isEmpty())
+        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    auto runner_path = QFileDialog::getExistingDirectory(this,
+                                                         tr("Report Runner Path"),
+                                                         default_folder,
+                                                         QFileDialog::ShowDirsOnly|
+                                                         QFileDialog::DontResolveSymlinks);
+    if (!runner_path.isEmpty())
+        ui->edtRunner->setText(runner_path);
 }

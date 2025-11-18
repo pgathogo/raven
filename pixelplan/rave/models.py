@@ -226,6 +226,8 @@ class Setup(models.Model):
     editor_filepath = models.CharField(max_length=255, null=True, blank=True)
     playlist_template_filepath = models.CharField(max_length=300, null=True, blank=True)
     playlist_output_path = models.CharField(max_length=300, null=True, blank=True)
+    report_viewer_path = models.CharField(max_length=300, null=True, blank=True)
+    report_runner_path = models.CharField(max_length=300, null=True, blank=True)
 
 
 class Content(models.Model):

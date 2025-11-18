@@ -46,6 +46,7 @@ rave/sedric/.ninja_deps
 rave/sedric/.ninja_log
 rave/sedric/build.ninja
 rave/sedric/cmake_install.cmake
+
 #Folders
 images
 temp
@@ -78,4 +79,5 @@ rave/Traffik/.vscode/
 rave/AudioExplorer/build/
 rave/sedric/XXXCMakeFiles/
 rave/sedric/build/
+upgen/
 *_autogen

@@ -20,19 +20,19 @@ int main(int argc, char *argv[])
 
     if (lf.exec() >  0)
     {
-
         Credentials cred = lf.credentials();
 
-        auto auth = std::make_unique<Authentication>();
+        std::shared_ptr<Authentication>  auth = std::make_shared<Authentication>();
 
         try{
 
             auth->connect_to_cluster_server(cred.username.toStdString(), cred.password.toStdString());
 
-
         } catch(DatabaseException& de) {
             showMessage(de.errorMessage());
         }
+
+        qDebug() << "Connecting to cluster DB...pass";
 
     }
 

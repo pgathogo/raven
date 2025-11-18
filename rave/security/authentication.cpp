@@ -1,6 +1,7 @@
 #include <sstream>
 
 #include <QSettings>
+#include <format>
 
 #include "authentication.h"
 #include "user.h"
@@ -140,9 +141,7 @@ void Authentication::connect_to_cluster_server(const std::string uname, const st
     if (registry.childKeys().contains("clusterport", Qt::CaseInsensitive))
         port = registry.value("clusterport").toInt();
 
-    std::string conninfo = "user="+uname+" password="+pword+" dbname="+dbname.toStdString()+" port="+std::to_string(port);
-
-    std::cout << conninfo << '\n';
+    std::string conninfo = std::format("user={} password={} dbname={} host={} port={}",uname, pword, dbname.toStdString(), server.toStdString(),std::to_string(port));
 
     ConnInfo ci;
     ci.host = server.toStdString();

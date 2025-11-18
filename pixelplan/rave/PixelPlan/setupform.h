@@ -48,6 +48,8 @@ private slots:
       void set_comm_audio_path();
       void on_template_filepath();
       void on_output_path();
+      void on_viewer_path();
+      void on_runner_path();
 
 private:
     Ui::SetupForm *ui;

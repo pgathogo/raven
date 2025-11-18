@@ -1,7 +1,10 @@
 #include <tuple>
+#include <format>
+
 #include "clustercontroller.h"
 #include "station.h"
 #include "server.h"
+#include "useraccess.h"
 
 #include "../framework/choicefield.h"
 #include "../framework/ravenexception.h"
@@ -272,22 +275,14 @@ namespace ClusterManager
 
     bool ClusterController::table_access(std::string username, int station_id)
     {
-        qDebug() << "1111";
 
         qDebug() << "Station ID: "<< station_id;
 
         auto stn = station(station_id);
 
-        qDebug() << "2222";
-
         std::string db_name = stn->db_name()->value();
 
-        qDebug() << "3333";
-        qDebug() << "Cluster ID: "<< stn->cluster()->value();
-
         auto db_servers = servers(stn->cluster()->value(), "DBS");
-
-        qDebug() << "4444";
 
         auto act_svrs = active_servers_by_db(std::move(db_servers), db_name);
 
@@ -311,11 +306,9 @@ namespace ClusterManager
             std::cout << "Username: "<< ci.username << '\n';
             std::cout << "Password: "<< ci.password << '\n';
 
-
             Authentication auth(ci);
             EntityDataModel grant_edm(auth);
 
-       qDebug() << "CCCC";
 
             std::string grant_table_stmt = grant_table_privileges_stmt(username);
             try{
@@ -327,7 +320,6 @@ namespace ClusterManager
                          << stoq(de.errorMessage());
             }
 
-       qDebug() << "DDDD";
 
             std::string grant_seq_stmt = grant_sequence_privileges_stmt(username);
             try{
@@ -339,14 +331,10 @@ namespace ClusterManager
                          << stoq(de.errorMessage());
             }
 
-       qDebug() << "EEEE";
-
 
         }
 
     }
-
-
 
 
     bool ClusterController::grant_user_station_access(std::string username, int station_id)
@@ -378,10 +366,14 @@ namespace ClusterManager
             std::cout << "Username: "<< ci.username << '\n';
             std::cout << "Password: "<< ci.password << '\n';
 
-
             Authentication auth(ci);
+            auth.connect_to_station(ci);
 
-            EntityDataModel edm(auth);
+
+            //break;
+
+            //EntityDataModel edm(auth);
+
 
             auto user = std::make_unique<SECURITY::User>();
 
@@ -391,13 +383,16 @@ namespace ClusterManager
             // TODO: Build a better abstraction for making create statements
             /* --------------------------------------------------------- */
 
-            EntityDataModel user_edm(auth);
+            //EntityDataModel user_edm(auth);
             std::string create_stmt = user->make_create_user_stmt();
             std::cout << create_stmt << '\n';
 
+            qDebug() << "<< Creating user in station... >>";
+
             try{
-                user_edm.executeRawSQL(create_stmt);
-                std::string msg = std::format("User created in server `{}`", ci.host);
+                //user_edm.executeRawSQL(create_stmt);
+                auth.dbManager()->executeRawSQL(create_stmt);
+                std::string msg = std::format("User created in the station `{}`", ci.host);
                 qDebug() << stoq(msg);
             } catch(DatabaseException& de){
                 qDebug() << "Error creating user: \n"
@@ -405,10 +400,12 @@ namespace ClusterManager
             }
               //  -- Sequence privileges ---
 
-            EntityDataModel seq_edm(auth);
+            qDebug() << "<< Granting privileges to sequences... >>";
+
+            //EntityDataModel seq_edm(auth);
             std::string seq_priv = grant_sequence_privileges_stmt(username);
             try{
-                seq_edm.executeRawSQL(seq_priv);
+                auth.dbManager()->executeRawSQL(seq_priv);
                 std::string seq_msg = std::format("Sequence privileges granted to user `{}`", username);
                 qDebug() << stoq(seq_msg);
             }catch(DatabaseException& de){
@@ -416,13 +413,19 @@ namespace ClusterManager
                          << stoq(de.errorMessage());
             }
 
+            qDebug() << "<< Granting privileges to database tables... >>";
+
               // Grant table privileges
-            EntityDataModel tab_edm(auth);
+            //EntityDataModel tab_edm(auth);
+
             std::string user_priv = grant_table_privileges_stmt(username);
+
             try{
-                tab_edm.executeRawSQL(user_priv);
+                auth.dbManager()->executeRawSQL(user_priv);
                 std::string priv_msg = std::format("Table privileges granted to user `{}`", username);
+
                 qDebug() << stoq(priv_msg);
+
             } catch (DatabaseException& de) {
                 qDebug() << "Error granting privileges: \n"
                          << stoq(de.errorMessage());
@@ -533,6 +536,33 @@ namespace ClusterManager
 
     }
 
+    std::string ClusterController::grant_table_privileges_stmt_v2(EntityDataModel& cluster_edm, const std::string username)
+    {
+        std::stringstream sql;
+        sql  << " SELECT table_name FROM information_schema.tables WHERE table_name ~* 'rave_' ";
+        EntityDataModel edm;
+
+        std::string grant_stmts{""};
+
+        cluster_edm.readRaw(sql.str());
+        auto cache = cluster_edm.getDBManager()->provider()->cache();
+        cache->first();
+        do{
+            auto elem = cache->currentElement();
+            auto it = elem->begin();
+            std::string table_name = (*it).second;
+
+            std::string grant_stmt = std::format("GRANT ALL ON TABLE public.{} TO {};", table_name, username);
+
+            grant_stmts += grant_stmt;
+
+            cache->next();
+        } while(!cache->isLast());
+
+        return grant_stmts;
+
+    }
+
     std::string ClusterController::grant_sequence_privileges_stmt(std::string username)
     {
        std::stringstream sql;
@@ -581,6 +611,46 @@ namespace ClusterManager
        edm.executeRawSQL(alter_stmt);
 
     }
+
+    std::vector<int> ClusterController::stations_attached_to_user(std::string username)
+    {
+        std::vector<int> station_ids;
+
+        auto edm = std::make_unique<EntityDataModel>(
+            std::make_shared<ClusterManager::UserAccess>());
+
+        ClusterManager::UserAccess ua;
+        auto user_filter = std::make_tuple(ua.username()->dbColumnName(),
+                           "=", std::format("'{}'",username));
+
+        std::string filter = edm->prepareFilter(user_filter);
+        edm->search(filter);
+
+        auto cache = edm->getDBManager()->provider()->cache();
+        cache->first();
+
+        do{
+            auto it_begin = cache->currentElement()->begin();
+            auto it_end = cache->currentElement()->end();
+
+            for(; it_begin != it_end; ++it_begin){
+                std::string field_name = (*it_begin).first;
+                std::string field_value = (*it_begin).second;
+
+                if (field_name == "station_id") {
+                    int s_id = std::stoi(field_value);
+                    station_ids.push_back(s_id);
+                }
+        }
+
+        cache->next();
+
+        } while(!cache->isLast());
+
+        return station_ids;
+
+    }
+
 
 
 

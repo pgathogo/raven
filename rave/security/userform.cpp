@@ -1,3 +1,4 @@
+#include <format>
 #include "userform.h"
 #include "ui_userform.h"
 #include "../framework/ui_baseentitydetaildlg.h"
@@ -108,8 +109,7 @@ ActionResult UserForm::saveRecord()
             EntityDataModel edm = EntityDataModel(std::make_unique<SECURITY::User>());
             auto user_filter = std::make_tuple("lower("+mUser->role_name()->dbColumnName()+")",
                                "=",
-                               mUser->role_name()->value());
-                               //mUser->role_name()->dbValueFormatter());
+                               std::format("'{}'",mUser->role_name()->value()));
             std::string filter = edm.prepareFilter(user_filter);
             edm.search(filter);
 

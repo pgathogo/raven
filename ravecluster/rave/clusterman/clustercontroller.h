@@ -44,10 +44,12 @@ class Server;
         ClusterServers active_servers_by_db(ClusterServers, std::string);
         bool create_user(SECURITY::User*);
         std::string grant_table_privileges_stmt(std::string);
+        std::string grant_table_privileges_stmt_v2(EntityDataModel&, const std::string);
         std::string grant_sequence_privileges_stmt(std::string);
         void flag_password_for_reset(std::string);
         void alter_cluster_user(std::string, std::string);
         void alter_password_cluster_server(std::string, std::string);
+        std::vector<int> stations_attached_to_user(std::string);
     private:
         void fetch_table_sequences(EntityDataModel&, std::vector<std::string>&);
         void alter_user_password(const ClusterManager::Server*, const std::string,
