@@ -26,7 +26,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QDateEdit" name="dtStartDate">
+        <widget class="QDateEdit" name="dtPlaylistDate">
          <property name="calendarPopup">
           <bool>true</bool>
          </property>

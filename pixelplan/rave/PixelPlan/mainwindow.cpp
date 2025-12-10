@@ -33,6 +33,7 @@
 
 #include "tvprogrambrowser.h"
 #include "playlistform.h"
+#include "commloganalyzer.h"
 
 AccessMap MainWindow::access_map;
 
@@ -85,14 +86,16 @@ MainWindow::MainWindow(QApplication* app,
 
     this->setWindowTitle("Raven - PixelPlan");
 
-    int w = 1045;
-    int h = 700;
-    setMinimumSize(w, h);
-    setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
-
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
+
+    int w = 1745;
+    int h = 1035;
+    setMinimumSize(w, h);
+    setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
+
+    this->resize(QSize(1745,1035));
 
     showRegister();
 
@@ -189,9 +192,10 @@ void MainWindow::createActions()
 
     mainToolBar->addAction(playlist_act);
 
-    // QAction* recon_act = new QAction(tr("&RECONCILE COMM LOGS"));
-    // connect(recon_act, &QAction::triggered, this, &MainWindow::on_recon_comm_log);
-    // mainToolBar->addAction(recon_act);
+    QAction* loganalyzer_act = new QAction(tr("&CLAS"));
+    loganalyzer_act->setIcon(QIcon(":/images/media/icons/loganalyzer.png"));
+    connect(loganalyzer_act, &QAction::triggered, this, &MainWindow::on_log_analysis);
+    mainToolBar->addAction(loganalyzer_act);
 
 }
 
@@ -268,9 +272,10 @@ void MainWindow::on_playlist()
 
 }
 
-void MainWindow::on_recon_comm_log()
+void MainWindow::on_log_analysis()
 {
-
+    CommLogAnalyzer* cla = createSubWindow<CommLogAnalyzer>();
+    cla->exec();
 }
 
 void MainWindow::open_cue_editor()

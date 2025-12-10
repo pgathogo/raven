@@ -53,6 +53,8 @@ CommLogForm::CommLogForm(QWidget *parent) :
 
     set_default_dts();
 
+    ui->tvCommLog->setAlternatingRowColors(true);
+
     ui->btnDateTime->setText("Date: "+m_dts.sel_date.toString());
 
     std::string hours = comma_sep(m_dts.sel_hours);

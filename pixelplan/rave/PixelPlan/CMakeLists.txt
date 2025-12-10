@@ -250,6 +250,9 @@ set(PROJECT_SOURCES
     playlistform.ui
     playlist.h
     playlist.cpp
+    commloganalyzer.h
+    commloganalyzer.cpp
+    commloganalyzer.ui
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h

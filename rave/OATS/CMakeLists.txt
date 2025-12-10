@@ -195,6 +195,8 @@ set(PROJECT_SOURCES
         ../../ravecluster/rave/clusterman/station.cpp
         ../../ravecluster/rave/clusterman/cluster.h
         ../../ravecluster/rave/clusterman/cluster.cpp
+        ../../ravecluster/rave/clusterman/useraccess.h
+        ../../ravecluster/rave/clusterman/useraccess.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -28,7 +28,7 @@ public:
     ~LoginForm();
 
     void closeEvent(QCloseEvent* event);
-    bool validNamePass();
+    bool check_empty_name_pass();
 
     StationInfo get_station_info();
     ConnInfo get_connection_info();
@@ -43,9 +43,9 @@ protected:
 
 private slots:
     void open_station_selector();
-    void check_forced_password_reset();
+    bool forced_to_reset_password();
     bool cluster_server_authentication(std::string, std::string);
-    void login();
+    void on_login();
     void cancel();
     void reset_password();
     void cancel_password_reset();

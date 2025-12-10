@@ -1,5 +1,7 @@
 #include <sstream>
 #include <iostream>
+#include <cassert>
+
 
 #include <QTreeWidgetItem>
 #include <QUuid>
@@ -661,6 +663,8 @@ void ClusterManagerDlg::edit_cluster()
 
 void ClusterManagerDlg::edit_station(StationNode* station_node)
 {
+    assert(station_node != nullptr);
+
     auto station = station_node->node_entity();
 
     std::unique_ptr<StationForm> sform =

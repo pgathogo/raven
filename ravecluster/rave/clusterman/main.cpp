@@ -16,29 +16,14 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-    LoginForm lf;
+    LoginForm lf("postgres", "abc123");
 
     if (lf.exec() >  0)
     {
-        Credentials cred = lf.credentials();
-
-        std::shared_ptr<Authentication>  auth = std::make_shared<Authentication>();
-
-        try{
-
-            auth->connect_to_cluster_server(cred.username.toStdString(), cred.password.toStdString());
-
-        } catch(DatabaseException& de) {
-            showMessage(de.errorMessage());
-        }
-
-        qDebug() << "Connecting to cluster DB...pass";
+        ClusterManagerDlg cmd;
+        cmd.show();
+        return a.exec();
 
     }
 
-//    MainWindow w;
-//    w.show();
-    ClusterManagerDlg cmd;
-    cmd.show();
-    return a.exec();
 }

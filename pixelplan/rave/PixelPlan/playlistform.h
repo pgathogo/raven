@@ -39,6 +39,7 @@ private:
     QString generate_guid();
     void expand_all_with_children();
     void expand_if_has_children(QModelIndex);
+    QDate previous_weekday(int current_dow);
 
     Ui::PlaylistForm *ui;
 

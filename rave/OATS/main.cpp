@@ -34,14 +34,6 @@ const std::unique_ptr<Authentication> cluster_server_authentication(QString user
 
 }
 
-StationInfo select_station(const QString station_code)
-{
-    auto ssform = std::make_unique<SelectStationForm>();
-
-    return  ssform->station_by_station_code(station_code);
-
-}
-
 Credentials get_credentials_locally()
 {
     Credentials cred;
@@ -90,20 +82,12 @@ int main(int argc, char *argv[])
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
 
-    Logger::info(module, "Opening login form...");
-
-    //LoginForm lf("nbohr", "abc123");
-    //LoginForm lf;
-
-    Logger::info(module, "User logged in...");
-
-    Credentials cred = get_credentials_locally();  //   lf.credentials();
+    Credentials cred = get_credentials_locally();
 
     const auto auth = cluster_server_authentication(cred.username, cred.password);
 
     if (auth == nullptr) {
         QString msg = QString("User %1 failed to authenticate in the cluster server.").arg(cred.username);
-        //showQMessage(msg,  QMessageBox::Critical);
         Logger::error(module, msg);
         return 0;
     }
@@ -113,8 +97,11 @@ int main(int argc, char *argv[])
 
     StationInfo station_info = auth->station_by_station_code(cred.station_code);
 
-    if (station_info.db_name == "")
+    if (station_info.db_name == "") {
+        QString msg = QString("No station with code `%1` found").arg(cred.station_code);
+        Logger::info(module, msg);
         return 0;
+    }
 
     ConnInfo conn_info;
     conn_info.host = station_info.ip_address.toStdString();
@@ -126,7 +113,13 @@ int main(int argc, char *argv[])
     Authentication* station_auth = new Authentication(conn_info);
     station_auth->connect_to_server();
 
-    qDebug() << "Opening main window ...";
+    QString auth_msg = QString("Connected to host: %1, port: %2  database: %3 ")
+                           .arg(QString::fromStdString(conn_info.host))
+                           .arg(QString::number(conn_info.port))
+                           .arg(QString::fromStdString(conn_info.db_name));
+    Logger::info(module, auth_msg);
+
+    Logger::info(module, "Opening main OATS window...");
 
     MainWindow w;
     w.show();

@@ -19,7 +19,7 @@ public:
     StationInfo selected_station();
     ~SelectStationForm();
 
-    StationInfo station_by_station_code(const QString station_code);
+    //StationInfo station_by_station_code(const QString station_code);
 
 private slots:
     void select_station();

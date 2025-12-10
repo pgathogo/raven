@@ -7,5 +7,6 @@
         <file>media/icons/main_folder_sm.bmp</file>
         <file>media/icons/audiofolder_sm.bmp</file>
         <file>media/icons/mainlib02_sm.bmp</file>
+        <file>media/icons/raven.bmp</file>
     </qresource>
 </RCC>

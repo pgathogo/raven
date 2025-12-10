@@ -16,37 +16,6 @@
 
 //#define LOG_TO_FILE
 
-bool cluster_server_authentication(QString username, QString password)
-{
-    auto app_auth = std::make_unique<Authentication>();
-    try{
-        app_auth->connect_to_cluster_server(username.toStdString(),password.toStdString() );
-        return true;
-    }catch(DatabaseException& de){
-        std::cout << de.errorMessage();
-         //mNoticeBar->errorNotification(de.errorMessage());
-        return false;
-    }
-}
-
-
-
-
-StationInfo select_station(const QString username)
-{
-    auto ssform = std::make_unique<SelectStationForm>(username);
-
-    if (ssform->exec() > 0)
-    {
-        return  ssform->selected_station();
-
-    }else{
-
-        return StationInfo();
-    }
-}
-
-
 
 QString module = "Main";
 
@@ -71,32 +40,22 @@ int main(int argc, char *argv[])
 
 #endif
 
-    //w.setWindowState(w.windowState() ^ Qt::WindowMaximized);
-    //auto auth = std::make_unique<Authentication>();
-    //auth->connect("postgres", "abc123");
-    //LoginForm lf(auth.get());
-    //if (lf.exec() > 0){
-
-    //int station_id = 17;
-    //LoginForm lf("nbohr", "abc123", station_id);
-
-    LoginForm lf;
+    LoginForm lf("jboss", "abc123");
 
     if (lf.exec() > 0)
     {
-        Credentials cred = lf.credentials();
 
-        if (!cluster_server_authentication(cred.username, cred.password)) {
-            QString msg = QString("User %1 failed to authenticate in the cluster server.").arg(cred.username);
-            showQMessage(msg,  QMessageBox::Critical);
-            Logger::error(module, msg);
-            return 0;
-        }
+        Credentials cred = lf.credentials();
 
         QString msg = QString("Cluster server authentication for user %1... Successful.").arg(cred.username);
         Logger::info(module, msg);
 
-        StationInfo station_info = select_station(cred.username);
+        auto ssform = std::make_unique<SelectStationForm>(cred.username);
+        if (ssform->exec() == 0) {
+            return 0;
+        }
+
+        StationInfo station_info = ssform->selected_station();
 
         ConnInfo conn_info;
         conn_info.host = station_info.ip_address.toStdString();
@@ -105,9 +64,12 @@ int main(int argc, char *argv[])
         conn_info.username = cred.username.toStdString();
         conn_info.password = cred.password.toStdString();
 
+        std::cout << " ===================================== " << '\n';
+        std::cout << conn_info;
+        std::cout << " ===================================== " << '\n';
+
         Authentication* auth = new Authentication(conn_info);
         auth->connect_to_server();
-
 
         //auto station_info =   lf.get_station_info();
         //auto conn_info = lf.get_connection_info();

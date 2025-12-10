@@ -29,7 +29,7 @@ LoginForm::LoginForm(QWidget *parent)
     ui->setupUi(this);
 
     connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::open_station_selector);
-    connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::login);
+    connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::on_login);
     connect(ui->btnCancel, &QPushButton::clicked, this, &LoginForm::cancel);
 
     connect(ui->btnReset, &QPushButton::clicked, this, &LoginForm::reset_password);
@@ -61,7 +61,8 @@ LoginForm::LoginForm(QWidget *parent)
     ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
     ui->edtUsername->setFocus();
 
-    setWindowTitle("Login Form");
+    setWindowTitle("PixelPlan - Login Form");
+    setWindowIcon(QIcon(":/rave_images/media/icons/raven.bmp"));
 
 }
 LoginForm::LoginForm(const QString username, const QString password, QWidget* parent)
@@ -145,7 +146,7 @@ void LoginForm::closeEvent(QCloseEvent *event)
         event->ignore();
 }
 
-bool LoginForm::validNamePass()
+bool LoginForm::check_empty_name_pass()
 {
     if (ui->edtUsername->text().isEmpty())
         return false;
@@ -206,10 +207,9 @@ bool LoginForm::cluster_server_authentication(std::string username, std::string 
 }
 
 
-void LoginForm::check_forced_password_reset()
+bool LoginForm::forced_to_reset_password()
 {
     // This check for forced password reset happens in the cluster server.
-
 
     SECURITY::UserConfig uc;
     EntityDataModel edm(std::make_unique<SECURITY::UserConfig>());
@@ -218,9 +218,10 @@ void LoginForm::check_forced_password_reset()
 
     edm.search(filter);
 
+
     if (edm.modelEntities().size() > 0)
     {
-        auto const& [name, entity] = edm.modelEntities()[0];
+        auto  entity = edm.firstEntity();
         auto ucptr = dynamic_cast<SECURITY::UserConfig*>(entity.get());
 
         int can_reset_password = ucptr->reset_password()->value();
@@ -228,8 +229,10 @@ void LoginForm::check_forced_password_reset()
         {
             ui->lblUsername->setText(ui->edtUsername->text());
             ui->swMain->setCurrentIndex(can_reset_password);
+            return true;
         }
     }
+    return false;
 
 }
 
@@ -268,7 +271,7 @@ void LoginForm::test_login()
 
 void LoginForm::express_login()
 {
-    if (!validNamePass())
+    if (!check_empty_name_pass())
     {
         mNoticeBar->errorNotification("Wrong username or password!");
         mOkClose = false;
@@ -290,7 +293,7 @@ void LoginForm::express_login()
 
 void LoginForm::express_fetch()
 {
-    check_forced_password_reset();
+    forced_to_reset_password();
 
     fetch_user_stations(ui->edtUsername->text());
     m_selected_station_id = select_station();
@@ -304,26 +307,34 @@ void LoginForm::express_fetch()
     ui->btnLogin->setEnabled(true);
 }
 
-void LoginForm::login()
+void LoginForm::on_login()
 {
-    if (!validNamePass())
+    if (!check_empty_name_pass())
     {
         mNoticeBar->errorNotification("Wrong username or password!");
         mOkClose = false;
         return;
     }
 
-    // if (m_selected_station_id < 0 ){
-    //     mNoticeBar->errorNotification("Please select a station!");
-    //     return;
-    // }
-
     m_credentials.username = ui->edtUsername->text();
     m_credentials.password = ui->edtPassword->text();
 
-    done(1);
+    std::shared_ptr<Authentication> auth = std::make_shared<Authentication>();
 
-    // login_to_station(m_selected_station_id);
+    try {
+        auth->connect_to_cluster_server(
+            m_credentials.username.toStdString(),
+            m_credentials.password.toStdString());
+
+        if (forced_to_reset_password())
+            return;
+
+    } catch (DatabaseException& de) {
+        showMessage(de.errorMessage());
+        return;
+    }
+
+    done(1);
 
 }
 
@@ -339,7 +350,7 @@ void LoginForm::login_to_station(int station_id)
     try
     {
         // if user has been forced to change password, show the password reset page
-        check_forced_password_reset();
+        forced_to_reset_password();
 
         m_current_station_info = m_stations_info[station_id];
 
@@ -427,19 +438,24 @@ void LoginForm::reset_password()
 
             Logger::info("LoginForm", "Password flag reset");
 
-            fetch_user_stations(ui->edtUsername->text());
-            m_selected_station_id = select_station();
+            m_credentials.password = QString::fromStdString(password);
+
+            mOkClose = true;
+            done(1);
+
+            //fetch_user_stations(ui->edtUsername->text());
+            //m_selected_station_id = select_station();
 
         }catch(DatabaseException& de){
             std::cout << de.errorMessage();
         }
 
-        if (m_selected_station_id > 0)
-        {
-            login_to_station(m_selected_station_id);
-            mOkClose = true;
-            done(1);
-        }
+        // if (m_selected_station_id > 0)
+        // {
+        //     login_to_station(m_selected_station_id);
+        //     mOkClose = true;
+        //     done(1);
+        // }
     }
 }
 

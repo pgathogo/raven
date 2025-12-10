@@ -22,7 +22,10 @@ SelectStationForm::SelectStationForm(const QString username, QWidget *parent) :
     connect(ui->btnCancel, &QPushButton::clicked, this, &SelectStationForm::cancel);
     connect(ui->twStations, &QTableWidget::cellDoubleClicked, this, &SelectStationForm::select_station);
 
+    ui->twStations->setAlternatingRowColors(true);
+
     setWindowTitle("Station Selection");
+    setWindowIcon(QIcon(":/rave_images/media/icons/raven.bmp"));
 }
 
 SelectStationForm::~SelectStationForm()
@@ -175,6 +178,8 @@ void SelectStationForm::showEvent(QShowEvent *)
     populate_table(m_stations_info);
 
     ui->btnSelect->setEnabled((m_stations_info.size() > 0));
+
+    ui->twStations->selectRow(0);
 }
 
 

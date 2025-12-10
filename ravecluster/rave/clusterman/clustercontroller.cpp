@@ -585,19 +585,34 @@ namespace ClusterManager
 
     void ClusterController::flag_password_for_reset(std::string username)
     {
-       std::string sql = std::format("Select * from rave_userconfig where username = '{}'", username);
-       EntityDataModel sel_edm;
-       int count = sel_edm.readRaw(sql);
+        Authentication auth1;
+        ConnInfo ci = auth1.cluster_server_conninfo();
+        ci.username = "postgres";
 
-       if (count > 0){
-           std::string upd_sql = std::format("Update rave_userconfig set reset_password = 1 where username = '{}' ", username);
-           EntityDataModel upd_edm;
-           upd_edm.executeRawSQL(upd_sql);
-       } else {
-           std::string ins_sql = std::format("Insert into rave_userconfig (username, reset_password) Values ('{}', 1)", username);
-           EntityDataModel ins_edm;
-           ins_edm.executeRawSQL(ins_sql);
-       }
+        std::cout<< "^^" << '\n';
+        std::cout << ci;
+        std::cout<< "^^" << '\n';
+
+        try {
+            Authentication::test_connection(ci);
+            Authentication auth(ci);
+            EntityDataModel sel_edm(auth);
+
+            std::string sql = std::format("Select * from rave_userconfig where username = '{}'", username);
+            int count = sel_edm.readRaw(sql);
+
+            if (count > 0){
+               std::string upd_sql = std::format("Update rave_userconfig set reset_password = 1 where username = '{}' ", username);
+               EntityDataModel upd_edm;
+               upd_edm.executeRawSQL(upd_sql);
+            } else {
+               std::string ins_sql = std::format("Insert into rave_userconfig (username, reset_password) Values ('{}', 1)", username);
+               EntityDataModel ins_edm;
+               ins_edm.executeRawSQL(ins_sql);
+            }
+        } catch (DatabaseException& de) {
+            std::cout << de.errorMessage() << '\n';
+        }
     }
 
     void ClusterController::alter_cluster_user(std::string username, std::string password)

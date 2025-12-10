@@ -1,7 +1,9 @@
 #include <algorithm>
+#include <cassert>
 
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QLineEdit>
 
 #include "setupform.h"
 #include "ui_setupform.h"
@@ -55,9 +57,12 @@ SetupForm::SetupForm(RavenSetup* setup,
 
     connect(ui->btnTemplate, &QPushButton::clicked, this, &SetupForm::on_template_filepath);
     connect(ui->btnOutputPath, &QPushButton::clicked, this, &SetupForm::on_output_path);
+    connect(ui->btnBackupPath, &QPushButton::clicked, this, &SetupForm::on_backup_path);
 
     connect(ui->btnReportViewer, &QPushButton::clicked, this, &SetupForm::on_viewer_path);
     connect(ui->btnRunner, &QPushButton::clicked, this, &SetupForm::on_runner_path);
+
+    connect(ui->btnMagicSoftLog, &QPushButton::clicked, this, &SetupForm::on_magicsoft_log_path);
 
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -109,9 +114,12 @@ void SetupForm::populateEntityFields()
 
     m_setup->set_playlist_templist_filepath(ui->edtTemplateFile->text().toStdString());
     m_setup->set_playlist_output_path(ui->edtOutputPath->text().toStdString());
+    m_setup->set_playlist_backup_path(ui->edtBackupPath->text().toStdString());
 
     m_setup->set_report_viewer_path(ui->edtReportViewer->text().toStdString());
     m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
+
+    m_setup->set_magicsoft_logfile_path(ui->edtMagicSoftLog->text().toStdString());
 }
 
 void SetupForm::populateFormWidgets()
@@ -149,9 +157,12 @@ void SetupForm::populateFormWidgets()
 
     ui->edtTemplateFile->setText(m_setup->playlist_template_filepath()->to_qstring());
     ui->edtOutputPath->setText(m_setup->playlist_output_path()->to_qstring());
+    ui->edtBackupPath->setText(m_setup->playlist_backup_path()->to_qstring());
 
     ui->edtReportViewer->setText(m_setup->report_viewer_path()->to_qstring());
     ui->edtRunner->setText(m_setup->report_runner_path()->to_qstring());
+
+    ui->edtMagicSoftLog->setText(m_setup->magicsoft_logfile_path()->to_qstring());
 }
 
 void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -315,61 +326,50 @@ void SetupForm::set_comm_audio_path()
 
 void SetupForm::on_template_filepath()
 {
-    QString default_folder = ui->edtTemplateFile->text();
-    if (default_folder.isEmpty())
-        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-
-    auto filepath = QFileDialog::getOpenFileName(this,
-                                                 tr("Playlist Templates"),
-                                                 default_folder,
-                                                 tr("Playlist Files (*.ch1_xml)"));
-
-    if (!filepath.isEmpty())
-        ui->edtTemplateFile->setText(filepath);
-
+    set_folder(ui->edtTemplateFile, "Playlist Templates");
 }
 
 void SetupForm::on_output_path()
 {
-    QString default_folder= ui->edtOutputPath->text();
+    set_folder(ui->edtOutputPath, "Playlist Output Path");
+}
 
-    if (default_folder.isEmpty())
-        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-
-    auto outpath = QFileDialog::getExistingDirectory(this,
-                                                   tr("Playlist Output Path"),
-                                                    default_folder,
-                                                    QFileDialog::ShowDirsOnly|
-                                                    QFileDialog::DontResolveSymlinks);
-    if (!outpath.isEmpty())
-        ui->edtOutputPath->setText(outpath);
-
+void SetupForm::on_backup_path()
+{
+    set_folder(ui->edtBackupPath, "Playlist Backup Path");
 }
 
 void SetupForm::on_viewer_path()
 {
-    QString default_folder = ui->edtReportViewer->text();
-    if (default_folder.isEmpty())
-        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    auto viewer_path = QFileDialog::getExistingDirectory(this,
-                                                         tr("Report Viewer Path"),
-                                                         default_folder,
-                                                         QFileDialog::ShowDirsOnly|
-                                                         QFileDialog::DontResolveSymlinks);
-    if (!viewer_path.isEmpty())
-        ui->edtReportViewer->setText(viewer_path);
+    set_folder(ui->edtReportViewer, "Report Viewer Path");
 }
 
 void SetupForm::on_runner_path()
 {
-    QString default_folder = ui->edtRunner->text();
-    if (default_folder.isEmpty())
-        default_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    auto runner_path = QFileDialog::getExistingDirectory(this,
-                                                         tr("Report Runner Path"),
-                                                         default_folder,
-                                                         QFileDialog::ShowDirsOnly|
+    set_folder(ui->edtRunner, "Report Runner Path");
+}
+
+void SetupForm::on_magicsoft_log_path()
+{
+    set_folder(ui->edtMagicSoftLog, "Magicsoft Log Path");
+
+}
+
+void SetupForm::set_folder(QLineEdit* le, const QString title)
+{
+    assert(le != nullptr);
+
+    QString def_folder = le->text();
+
+    if (def_folder.isEmpty())
+        def_folder = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+
+    QString output_path = QFileDialog::getExistingDirectory(this,
+                                                         title,
+                                                         def_folder,
+                                                         QFileDialog::ShowDirsOnly |
                                                          QFileDialog::DontResolveSymlinks);
-    if (!runner_path.isEmpty())
-        ui->edtRunner->setText(runner_path);
+    if (!output_path.isEmpty())
+        le->setText(output_path);
+
 }

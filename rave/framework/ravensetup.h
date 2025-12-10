@@ -96,12 +96,17 @@ public:
     StringField* playlist_output_path();
     void set_playlist_output_path(const std::string);
 
+    StringField* playlist_backup_path();
+    void set_playlist_backup_path(const std::string);
+
     StringField* report_viewer_path();
     void set_report_viewer_path(const std::string);
 
     StringField* report_runner_path();
     void set_report_runner_path(const std::string);
 
+    StringField* magicsoft_logfile_path();
+    void set_magicsoft_logfile_path(const std::string);
 
 
     std::string tableName() const override;
@@ -148,9 +153,11 @@ private:
     StringField* m_editor_filepath;
     StringField* m_playlist_template_filepath;
     StringField* m_playlist_output_path;
+    StringField* m_playlist_backup_path;
 
     StringField* m_report_viewer_path;
     StringField* m_report_runner_path;
+    StringField* m_magicsoft_logfile_path;
 
     QStringList mHeader;
     std::string mTableName;

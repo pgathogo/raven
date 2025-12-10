@@ -48,19 +48,23 @@ private slots:
       void set_comm_audio_path();
       void on_template_filepath();
       void on_output_path();
+      void on_backup_path();
       void on_viewer_path();
       void on_runner_path();
+      void on_magicsoft_log_path();
 
 private:
-    Ui::SetupForm *ui;
-    RavenSetup* m_setup;
-    std::unique_ptr<EntityDataModel> m_edm_approver;
+      void set_folder(QLineEdit*, const QString);
 
-    void load_order_approvers();
-    std::set<int> make_aprv_levels();
-    void populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf);
+      void load_order_approvers();
+      std::set<int> make_aprv_levels();
+      void populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf);
 
-    QString get_audio_folder(QString default_folder);
+      QString get_audio_folder(QString default_folder);
+
+      Ui::SetupForm *ui;
+      RavenSetup* m_setup;
+      std::unique_ptr<EntityDataModel> m_edm_approver;
 };
 
 #endif // SETUPFORM_H

@@ -59,9 +59,12 @@ RavenSetup::RavenSetup()
 
     m_playlist_template_filepath = createField<StringField>("playlist_template_filepath", "Template Filepath");
     m_playlist_output_path = createField<StringField>("playlist_output_path", "Playlist Output Path");
+    m_playlist_backup_path = createField<StringField>("playlist_backup_path", "Playlist Backup Path");
 
     m_report_viewer_path = createField<StringField>("report_viewer_path", "Report Viewer Path");
     m_report_runner_path = createField<StringField>("report_runner_path", "Report Runner Path");
+
+    m_magicsoft_logfile_path = createField<StringField>("magicsoft_logfile_path", "Magicsoft Logfile Path");
 
     mHeader << stoq(m_station_name->fieldName());
     setTableName("rave_setup");
@@ -343,6 +346,16 @@ void RavenSetup::set_playlist_output_path(const std::string path)
     m_playlist_output_path->setValue(path);
 }
 
+StringField* RavenSetup::playlist_backup_path()
+{
+    return m_playlist_backup_path;
+}
+
+void RavenSetup::set_playlist_backup_path(const std::string path)
+{
+   m_playlist_backup_path->setValue(path);
+}
+
 StringField* RavenSetup::report_viewer_path()
 {
     return m_report_viewer_path;
@@ -364,6 +377,17 @@ void RavenSetup::set_report_runner_path(const std::string path)
 
 }
 
+StringField* RavenSetup::magicsoft_logfile_path()
+{
+    return m_magicsoft_logfile_path;
+
+}
+
+void RavenSetup::set_magicsoft_logfile_path(const std::string path)
+{
+    m_magicsoft_logfile_path->setValue(path);
+
+}
 
 std::string RavenSetup::tableName() const
 {

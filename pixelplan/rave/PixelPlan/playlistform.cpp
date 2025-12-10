@@ -2,12 +2,16 @@
 #include <iostream>
 
 #include <QDate>
+#include <QLocale>
 #include <QTimeZone>
 #include <QUuid>
 #include <QCryptographicHash>
+#include <QFile>
 #include <QFileInfo>
 
 #include "../../../rave/framework/entitydatamodel.h"
+#include "../framework/logger.h"
+
 #include "ravensetup.h"
 
 #include "playlistform.h"
@@ -23,12 +27,12 @@ PlaylistForm::PlaylistForm(QWidget* parent)
 {
     ui->setupUi(this);
 
-    ui->dtStartDate->setDate(QDate::currentDate());
+    ui->dtPlaylistDate->setDate(QDate::currentDate());
 
     BookedAdverts ba = get_booked_adverts(QDate::currentDate());
     display_booked_adverts(ba);
 
-    connect(ui->dtStartDate, &QDateEdit::dateChanged, this, &PlaylistForm::on_date_changed);
+    connect(ui->dtPlaylistDate, &QDateEdit::dateChanged, this, &PlaylistForm::on_date_changed);
     connect(ui->btnCreateFile, &QPushButton::clicked, this, &PlaylistForm::on_create_playlist_file);
 
     m_edm_setup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
@@ -55,10 +59,26 @@ void PlaylistForm::setMdiArea(QMdiArea* mdi)
 
 void PlaylistForm::on_date_changed(const QDate& prev_date)
 {
-    m_booked_adverts = get_booked_adverts(ui->dtStartDate->date());
+    m_booked_adverts = get_booked_adverts(ui->dtPlaylistDate->date());
 
 
     display_booked_adverts(m_booked_adverts);
+}
+
+QDate PlaylistForm::previous_weekday(int current_dow)
+{
+    QDate current_date = ui->dtPlaylistDate->date();
+
+    // Subtract seven days to get a date in the previous week
+    QDate prev_week_date = current_date.addDays(-7);
+
+    // Previous week dow
+    int prev_week_dow = prev_week_date.dayOfWeek();
+
+    int days_diff = current_dow - prev_week_dow;
+
+    return prev_week_date.addDays(days_diff);
+
 }
 
 void PlaylistForm::on_create_playlist_file(bool clicked)
@@ -68,17 +88,53 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
     // 3. Loop the QDomDocument with breaks and booked adverts
     // 4. Save the updated QDomDocument to file - "
 
-    m_booked_adverts = get_booked_adverts(ui->dtStartDate->date());
+    m_booked_adverts = get_booked_adverts(ui->dtPlaylistDate->date());
+
+    if (m_booked_adverts.size() == 0)
+        return;
 
     QMessageBox msgbox;
 
+    // TODO::Set default folders if the setup paths are empty!
     QString empty_playlist_filepath = m_setup->playlist_template_filepath()->to_qstring();
     QString output_path = m_setup->playlist_output_path()->to_qstring();
+    QString playlist_backup_path = m_setup->playlist_backup_path()->to_qstring();
 
-    QString output_filepath = output_path + "/test.ch1_xml";
+    // Get day of week from date
+    int dow = ui->dtPlaylistDate->date().dayOfWeek();
+    QLocale system_locale;
+    QString long_day_name = system_locale.dayName(dow, QLocale::LongFormat) ;
+    QDate prev_week_date = previous_weekday(dow);
 
-    qDebug() << "Playlist File: "<< empty_playlist_filepath;
-    qDebug() << "Output File  : " << output_filepath;
+    bool backup_file_exists = false;
+    QString file_ext = ".ch1_xml";
+
+    QString bkup_file = long_day_name.toUpper()+"_"+prev_week_date.toString("ddMMyyyy")+file_ext;
+    QString playlist_backup_filepath = playlist_backup_path+"/"+bkup_file;
+    QFileInfo bkpfile(playlist_backup_filepath);
+
+    if (bkpfile.exists()) {
+        // QFile::remove(playlist_backup_filepath);
+        QString msg = QString("Backup file %1 exits. Skipping backup.").arg(bkup_file);
+        Logger::info("PlaylistForm", msg);
+        backup_file_exists = true;
+    }
+
+    QString output_filepath = output_path + "/"+long_day_name.toUpper()+file_ext;
+
+    // If output_filepath exists, we assume its was for the previouis week, we make a backup
+    if (QFile::exists(output_filepath)) {
+
+        // Only make a backup if we don't have a previous backup
+        if (!backup_file_exists) {
+            QString msg = QString("Creating backup file %1...").arg(bkup_file);
+            Logger::info("PlaylistForm", msg);
+            QFile::rename(output_filepath, playlist_backup_filepath);
+        } else {
+            QFile::remove(output_filepath);
+        }
+    }
+
 
     if (empty_playlist_filepath.isEmpty()) {
         msgbox.setText("Please set the playlist template file");
@@ -123,12 +179,17 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
         QMessageBox mb;
 
         if (!play_status) {
+            Logger::error("PlaylistForm", play_msg);
             mb.setText("Error saving playlist file: "+ play_msg);
             mb.exec();
             return;
         }
 
-        mb.setText("Playlist saved successfully.");
+        QString success_msg = "Playlist saved successfully.";
+        Logger::info("PlaylistForm", success_msg);
+
+        mb.setText(success_msg);
+
         mb.exec();
 }
 
