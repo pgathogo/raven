@@ -30,12 +30,8 @@ PostgresConnector* PostgresConnector::instance(const std::string conninfo)
 {
     if (mInstance == nullptr){
 
-        std::cout << " ** INSTANCE ** :" << conninfo << '\n';
-
         mInstance = new PostgresConnector(conninfo);
     }
-
-    std::cout << " ^^ INSTANCE EXISTS ^^" << '\n';
 
     return mInstance;
 }

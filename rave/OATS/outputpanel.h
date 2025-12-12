@@ -97,6 +97,7 @@ namespace OATS{
         long long pause_tick_stamp();
         void set_pause_tick_stamp(long long);
 
+        void clear_panel();
 
         template<PanelButton T>
         void disable()

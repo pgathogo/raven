@@ -314,13 +314,14 @@ private slots:
 
 
     void go_current();
-    void go_current_hour();
+    void go_to_current_hour();
     void keep_current(bool);
     void play_jingle(OATS::Jingle*);
     void stop_all_jingles();
     //void play_jingle(const QString);
 
     void reprint_schedule(int);
+    void print_schedule();
     //void queue_for_caching(AUDIO::Audio*);
     void queue_for_caching(std::shared_ptr<AUDIO::Audio>);
 //    void insert_schedule_item(int, std::unique_ptr<OATS::ScheduleItem>);

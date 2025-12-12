@@ -188,6 +188,12 @@ namespace OATS{
         m_schedule_item = s_item;
     }
 
+    void OutputPanel::clear_panel()
+    {
+        m_title->setText("");
+        m_artist->setText("");
+    }
+
     void OutputPanel::play()
     {
         // play cued item

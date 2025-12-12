@@ -96,7 +96,6 @@ void PostgresDataProvider::openConnection()
 
 void PostgresDataProvider::openConnection(const std::string conninfo)
 {
-    std::cout << ">> Open Connection: " << conninfo << '\n';
     mPGConnector = PostgresConnector::instance(conninfo);
     conn = mPGConnector->connection();
 }
