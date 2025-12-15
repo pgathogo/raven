@@ -684,7 +684,7 @@ void MainWindow::load_schedule(QDate date, int hr)
     //move_top_current_hour();
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
 
-    //go_to_current_hour();
+    go_to_current_hour();
 
 }
 
@@ -1457,8 +1457,12 @@ void MainWindow::go_to_current_hour()
 
     }
 
+    header_index = header_index - 1;
+
     std::rotate(m_schedule_items.begin(), m_schedule_items.begin() + header_index, m_schedule_items.end());
-    display_schedule();
+    display_schedule(0, header_index);
+
+    ui->gridScroll->setValue(header_index);
 
 }
 
