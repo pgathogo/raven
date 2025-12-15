@@ -283,6 +283,24 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         return OATS::ItemStatus::WAITING;
     }
 
+    std::string ScheduleItem::status_to_str()
+    {
+        switch(m_item_status) {
+        case OATS::ItemStatus::WAITING:
+            return "WAITING";
+        case OATS::ItemStatus::CUED:
+            return "CUED";
+        case OATS::ItemStatus::PLAYING:
+            return "PLAYING";
+        case OATS::ItemStatus::PLAYED:
+            return "PLAYED";
+        case OATS::ItemStatus::STOP:
+            return "STOP";
+        case OATS::ItemStatus::PAUSED:
+            return "PAUSED";
+        }
+    }
+
     void ScheduleItem::set_transition_type(OATS::TransitionType t_type)
     {
         m_transition_type = t_type;

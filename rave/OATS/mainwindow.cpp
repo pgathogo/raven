@@ -2066,6 +2066,7 @@ void MainWindow::status_timer()
 
                   remaining = m_outputA->schedule_item()->audio()->playable_duration() - elapsed;
 
+
               }
 
               m_outputA->set_time_remaining(remaining);
@@ -2350,6 +2351,8 @@ void MainWindow::cue_schedule_item(OATS::ScheduleItem* next_schedule_item, OATS:
 
     calculate_trigger_times();
 
+    display_schedule();
+
     queue_for_caching(next_schedule_item->audio());
 
 }
@@ -2484,15 +2487,9 @@ void MainWindow::calculate_trigger_times()
 
 
         if (m_current_playing_item.item->play_channel() == ChannelA){
-             qDebug() << " ------------  A PLAYING ----------------- ";
-             qDebug() << "Track Start Mark: " << track_start_mark;
-             qDebug() << " ------------------------------------------- ";
             m_outputB->set_start_trigger_tick_stamp(track_start_mark);
             m_outputB->set_fade_trigger_tick_stamp(fade_start_mark);
         }else{
-             qDebug() << " ------------  B PLAYING ----------------- ";
-             qDebug() << "Track Start Mark: " << track_start_mark;
-             qDebug() << " ------------------------------------------- ";
             m_outputA->set_start_trigger_tick_stamp(track_start_mark);
             m_outputA->set_fade_trigger_tick_stamp(fade_start_mark);
         }
@@ -2650,6 +2647,7 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
         int grid_index = index_of(op->schedule_item()->schedule_ref());
 
         m_current_playing_item.item = op->schedule_item();
+        m_current_playing_item.output_panel = op;
 
         m_current_playing_item.schedule_index = op->schedule_item()->index();
         m_current_playing_item.grid_index = grid_index;
@@ -3087,6 +3085,8 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
     m_schedule_grid[grid_pos-1]->set_subject(schedule_item(index-1));
 
     recompute_time(grid_pos);
+
+    cue_item();
 }
 
 void MainWindow::item_move_down(int schedule_ref, int grid_pos)
@@ -3099,6 +3099,8 @@ void MainWindow::item_move_down(int schedule_ref, int grid_pos)
 
     m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
     m_schedule_grid[grid_pos+1]->set_subject(schedule_item(index+1));
+
+    cue_item();
 }
 
 void MainWindow::make_item_current(int schedule_ref, int grid_pos)
@@ -3193,12 +3195,15 @@ void MainWindow::grid_clicked(int schedule_ref, int grid_pos)
 
 void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
 {
+
     int index = index_of(schedule_ref);
+
     auto si = schedule_item(index);
 
     // We don't delete a played item!
     if (si->item_status()== OATS::ItemStatus::PLAYED)
         return;
+
 
     // We don't delete commercials and hour headers
     if (si->schedule_type()==OATS::ScheduleType::COMM ||
@@ -3211,19 +3216,27 @@ void MainWindow::delete_schedule_item(int schedule_ref, int grid_pos)
     if (it == m_schedule_items.end())
         return;
 
-    if (si->item_status()==OATS::ItemStatus::CUED){
+
+    if (si->item_status()==OATS::ItemStatus::CUED ||
+        si->item_status() == OATS::ItemStatus::WAITING)
+    {
         if (si->play_channel() == ChannelA)
             m_outputA->delete_cued_item();
-        else
+
+        if (si->play_channel() == ChannelB)
             m_outputB->delete_cued_item();
+
+
+        m_schedule_items.erase(it);
+
+        ui->gridScroll->setSliderPosition(m_scrollbar_current_value);
+        ui->gridScroll->setMaximum(m_schedule_items.size() - MAX_GRID_ITEMS);
+
+        display_schedule(grid_pos, index);
+
+        if (m_current_playing_item.item != nullptr)
+            cue_item();
     }
-
-    m_schedule_items.erase(it);
-
-    display_schedule();
-
-    ui->gridScroll->setSliderPosition(m_scrollbar_current_value);
-    ui->gridScroll->setMaximum(m_schedule_items.size() - MAX_GRID_ITEMS);
 }
 
 void MainWindow::reload_schedule(int schedule_ref, int grid_pos)
@@ -3309,6 +3322,7 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     new_item->set_hour(item_at_cursor->hour());
     new_item->set_schedule_date(item_at_cursor->schedule_date());
     new_item->set_schedule_type(audio->audio_type()->value());
+    new_item->set_item_status(OATS::ItemStatus::WAITING);
     new_item->set_transition_type(OATS::TransitionType::MIX);
     new_item->set_schedule_ref(s_sched_ref++);
     new_item->set_comment("MANUAL-LOAD");
@@ -3355,6 +3369,9 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
         *m_current_playing_item.item =  *new_item.get();
     }
 
+    QTime new_item_schedule_time = new_item->schedule_time();
+
+
     auto insert_schedule_item = [&](OATS::ScheduleType s_type){
         int insert_pos = -1;
         insert_pos = index_of(schedule_ref)+1;
@@ -3369,8 +3386,41 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
 
     recompute_time(grid_pos);
 
+    if (new_item_schedule_time > m_current_playing_item.item->schedule_time()) {
+       display_schedule();
+    }
+
+
     ui->gridScroll->setMinimum(0);
     ui->gridScroll->setMaximum(m_schedule_items.size() - MAX_GRID_ITEMS);
+
+    cue_item();
+
+}
+
+void MainWindow::cue_item()
+{
+    if (m_current_playing_item.item == nullptr) {
+        display_schedule();
+        return;
+    }
+
+    auto next_schedule_item = find_next_schedule_item(m_current_playing_item.item);
+
+    if (m_current_playing_item.item != next_schedule_item) {
+        int next_index = index_of(next_schedule_item->schedule_ref());
+
+        next_schedule_item->set_index(next_index);
+
+        if (m_current_playing_item.output_panel->panel_name() == "A" ) {
+          schedule_item(next_index)->set_play_channel(ChannelB);
+          cue_schedule_item(next_schedule_item, m_outputB);
+        } else {
+          schedule_item(next_index)->set_play_channel(ChannelA);
+          cue_schedule_item(next_schedule_item, m_outputA);
+        }
+
+    }
 
 }
 
@@ -3688,7 +3738,6 @@ void MainWindow::play_next()
 
 void MainWindow::audio_played(QString played_audio)
 {
-    log_info("<<< SLOT: Audio-Played <<<");
     log_info(m_current_playing_item.item->schedule_type_to_str());
     log_info("Played Audio: "+played_audio);
 

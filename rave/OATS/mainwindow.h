@@ -86,6 +86,8 @@ struct CurrentPlayItem{
     OATS::ScheduleItem* item;
     int schedule_index{-1};
     int grid_index{-1};
+    OATS::OutputPanel* output_panel{nullptr};
+
 };
 
 struct CurrentDateTime{
@@ -358,6 +360,8 @@ private:
 
     void log_info(const QString);
     void log_error(const QString);
+
+    void cue_item();
 
 
     Ui::MainWindow *ui;
