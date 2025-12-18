@@ -280,7 +280,7 @@ protected:
 
 signals:
     void output_C_stopped();
-
+    void update_artist_title(const QString);
 
 private slots:
     void close_win();
@@ -331,6 +331,8 @@ private slots:
     void end_of_play();
     void play_next();
     void audio_played(QString);
+    void play_started();
+    void play_item_index(int, int, int);
     void jingle_end_of_play();
 
     void play_cued_audio();

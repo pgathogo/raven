@@ -8,6 +8,7 @@
 #include "../security/authentication.h"
 #include "../security/user.h"
 #include "../security/loginform.h"
+#include "../security/selectstationform.h"
 
 #include "../framework/logger.h"
 
@@ -43,15 +44,39 @@ int main(int argc, char *argv[])
     //LoginForm lf(auth.get());
     //if (lf.exec() > 0){
 
-    LoginForm lf("nbohr", "abc123", 4);
+    LoginForm lf("nbohr", "abc123");
     if (lf.exec() > 0)
     {
+        Credentials cred = lf.credentials();
+        QString msg = QString("Cluster server authentication for user %1... Successfule.").arg(cred.username);
+        Logger::info(module, msg);
+
+        auto ssform = std::make_unique<SelectStationForm>(cred.username);
+        if (ssform->exec() == 0) {
+            return 0;
+        }
+
+        StationInfo station_info = ssform->selected_station();
+
+        ConnInfo conn_info;
+        conn_info.host = station_info.ip_address.toStdString();
+        conn_info.port = station_info.port_no;
+        conn_info.db_name = station_info.db_name.toStdString();
+        conn_info.username = cred.username.toStdString();
+        conn_info.password = cred.password.toStdString();
+
+        Authentication* auth = new Authentication(conn_info);
+        auth->connect_to_server();
+
+        /*
         auto station_info = lf.get_station_info();
         auto conn_info = lf.get_connection_info();
-
         QString msg = QObject::tr("User connected to server `%1`").
                       arg(station_info.server_name);
-        Logger::info(module, msg);
+        */
+
+        QString msg1 = QString("User connected to server: %1").arg(station_info.server_name);
+        Logger::info(module, msg1);
 
         MainWindow w(&a, station_info, conn_info);
         w.resize(1300, 700);
@@ -61,6 +86,4 @@ int main(int argc, char *argv[])
 
     return 1;
 
-    //}
-    //return 0;
 }

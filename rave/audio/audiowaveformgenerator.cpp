@@ -24,24 +24,25 @@ namespace AUDIO{
 
     AudioWaveFormGenerator::~AudioWaveFormGenerator()
     {
- //       delete m_progress_dialog;
         delete m_generator_process;
     }
 
     bool AudioWaveFormGenerator::generate()
     {
+        log_info("Wave file generation started...");
+
         auto gen_engine = QDir::currentPath()+"/"+AUDIO_WAVE_FILE_EXE;
+
+        log_info(QString("Wave file generator: `%1").arg(gen_engine));
 
         QFileInfo fi(gen_engine);
         if (!fi.exists()){
+
+            log_error(QString("Wave file generator `%1` NOT found.").arg(gen_engine));
+
             throw AudioImportException("GEN-ENGINE",
                                         "Wave file generator engine does NOT exists!");
         }
-
-        // m_progress_dialog = new QProgressDialog("Reading audio file...please wait.","", 0, 100);
-        // m_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
-        // m_progress_dialog->setRange(0,0);
-        // m_progress_dialog->setCancelButton(nullptr);
 
         QString input_file  = m_audio_filename;
         QString output_file = m_wave_filename;
@@ -58,12 +59,16 @@ namespace AUDIO{
              //<< "-z" << "44100"
              //<< "-z" << "auto";
 
-        qDebug() << "INPUT File: "<< input_file;
-        qDebug() << "OUTPUT File: "<< output_file;
+        log_info(QString("Generator input file: `%1`").arg(input_file));
+        log_info(QString("Generator output file: `%1`").arg(output_file));
+
+        log_info("Wave file generation process started...");
 
         m_generator_process->start(gen_engine, args);
         // m_progress_dialog->exec();
         m_generator_process->waitForFinished();
+
+        log_info("Wave file generation process complete.");
 
         return true;
     }
@@ -95,6 +100,10 @@ namespace AUDIO{
 
     void AudioWaveFormGenerator::wave_generation_finished(int code, QProcess::ExitStatus status)
     {
+        QString msg = QString("Signal: Wave file generation process finished. Code: %1")
+                          .arg(QString::number(code));
+        log_info(msg);
+
         // m_progress_dialog->close();
     }
 

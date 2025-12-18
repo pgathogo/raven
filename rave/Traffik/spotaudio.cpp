@@ -82,6 +82,11 @@ DecimalField *SpotAudio::duration() const { return m_audio->duration(); }
 
 AUDIO::Audio *SpotAudio::audio() { return m_audio; }
 
+void SpotAudio::set_audio(AUDIO::Audio* audio)
+{
+    *m_audio = *audio;
+}
+
 std::string SpotAudio::tableName() const { return m_table_name; }
 
 void SpotAudio::setTableName(const std::string table_name) {

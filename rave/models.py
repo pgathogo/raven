@@ -225,6 +225,13 @@ class Setup(models.Model):
     convert_to_ogg = models.BooleanField(null=True, blank=True)
     editor_filepath = models.CharField(max_length=255, null=True, blank=True)
 
+    playlist_template_filepath = models.CharField(max_length=300, null=True, blank=True)
+    playlist_output_path = models.CharField(max_length=300, null=True, blank=True)
+    playlist_backup_path = models.CharField(max_length=300, null=True, blank=True)
+    report_viewer_path = models.CharField(max_length=300, null=True, blank=True)
+    report_runner_path = models.CharField(max_length=300, null=True, blank=True)
+    magicsoft_logfile_path = models.CharField(max_length=300, null=True, blank=True)
+
 
 class Content(models.Model):
     name = models.CharField(max_length=255)

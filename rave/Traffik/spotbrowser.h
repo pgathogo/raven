@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "../framework/baseentitybrowserdlg.h"
+#include "../framework/Logger.h"
 
 class QApplication;
 
@@ -12,6 +13,7 @@ class SpotForm;
 namespace Ui {
 class SpotBrowser;
 }
+
 
 class SpotBrowser : public BaseEntityBrowserDlg
 {
@@ -34,6 +36,9 @@ public:
     void search_by_client(std::shared_ptr<Client> client);
 
     void set_client(std::shared_ptr<Client> client);
+
+    void log_info(const QString msg) { Logger::info("SpotBrowser", msg);}
+    void log_error(const QString msg) { Logger::error("SpotBrowser", msg);}
 private:
     Ui::SpotBrowser *ui;
     std::shared_ptr<Client> m_client;

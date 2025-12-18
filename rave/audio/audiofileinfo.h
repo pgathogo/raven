@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QProcess>
 
+#include "../framework/Logger.h"
+
 namespace AUDIO{
 
     class AudioFileInfo : public QObject
@@ -19,8 +21,12 @@ namespace AUDIO{
         void set_audio_file(const QString& audio_file);
         void set_data(QString);
 
+        void log_info(const QString msg) { Logger::info("AudioFileInfo", msg); }
+        void log_error(const QString msg) { Logger::error("AudioFileInfo", msg); }
+
     private slots:
         void file_probe_finished(int, QProcess::ExitStatus);
+
     private:
         QString m_audio_file;
         QString m_info_file;

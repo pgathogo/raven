@@ -9,7 +9,6 @@
 #include "../framework/ravensetup.h"
 #include "../framework/ravenexception.h"
 #include "../framework/applicationcontext.h"
-#include "../framework/Logger.h"
 
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
@@ -37,6 +36,7 @@
 
 namespace fs = std::filesystem;
 
+
 SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
                                     QVBoxLayout* layout, QWidget *parent)
         :BaseEntityBrowserDlg(parent, mtom->cloneAsShared())
@@ -50,23 +50,25 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     hideEditButton();
     hideDeleteButton();
 
-    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio,
-                  QSize(80, 20), "import_audio.bmp");
+    QSize button_size = QSize(80, 20);
 
-    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, QSize(80, 20));
+    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio,
+                  button_size, "import_audio.bmp");
+
+    create_button("btnAttach", "Attach Audio", &SpotAudioBrowser::attach_audio, button_size);
 
     create_button("btnAudioProp", "Audio Properties", &SpotAudioBrowser::audio_properties,
-                  QSize(80, 20), "audio_prop.png");
+                  button_size, "audio_prop.png");
 
     create_button("btnCueEditor", "Cue Edit", &SpotAudioBrowser::cue_edit,
-                  QSize(80, 20), "cue_edit.bmp");
+                  button_size, "cue_edit.bmp");
 
     create_separator();
     create_button("btnPlayBack", "Play", &SpotAudioBrowser::play_back,
-                  QSize(80, 20), "play.png");
+                  button_size, "play.png");
 
     create_button("btnStopPlay", "Stop", &SpotAudioBrowser::stop_play,
-                  QSize(80, 20), "stop_play.png");
+                  button_size, "stop_play.png");
 
     create_separator();
     show_delete_button(bui->hlExtra);
@@ -227,18 +229,36 @@ void SpotAudioBrowser::import_audio()
     if (audio_filename.isEmpty())
         return;
 
+    log_info(QString("Imported file: %1").arg(audio_filename));
+
     AUDIO::AudioFileInfo afi(audio_filename);
-    QString file_format = afi.file_format();
+    QString file_format = afi.file_format().toLower();
+
+
+
+
+
+
+
 
     auto audio = std::make_unique<AUDIO::Audio>(audio_filename.toStdString());
-    auto audio_shared = std::make_shared<AUDIO::Audio>(audio_filename.toStdString());
+    // auto audio_shared = std::make_shared<AUDIO::Audio>(audio_filename.toStdString());
+
+    log_info(QString("Audio lib path: %1").arg(m_setup->audio_folder()->to_qstring()));
 
     audio->set_audio_lib_path(m_setup->audio_folder()->value());
 
+    log_info(QString("Audio ADF file: %1").arg(QString::fromStdString(audio->audio_file().adf_file())));
+
     if (fs::exists(audio->audio_file().adf_file()) )
     {
+        log_info(QString("Found ADF file."));
+
         AUDIO::ADFRepository adf_repo;
         CueMarker cue_marker =  adf_repo.read_markers(audio->audio_file().adf_file());
+
+        log_info(QString("Adding cue markers to ADF file..."));
+
         audio->audio_file().set_marker(cue_marker);
     }
 
@@ -247,50 +267,88 @@ void SpotAudioBrowser::import_audio()
     // Add some audio attributes - name, description etc.
     auto spot_audio_form = std::make_unique<SpotAudioForm>(spot_audio.get());
 
+    log_info(QString("Opening spot audio form..."));
+
     if (spot_audio_form->exec() > 0){
+
+        log_info(QString("Saved spot audio form..."));
+
+        log_info(QString("Checking for wave file..."));
 
         if (!fs::exists(spot_audio->audio()->audio_file().wave_file()) )
         {
+            log_info(QString("Wave file NOT found.").arg(
+                QString::fromStdString(spot_audio->audio()->audio_file().wave_file())));
+
             try{
+                log_info(QString("Creating AudioWaveFormGenerator..."));
                 auto wave_gen = std::make_unique<AUDIO::AudioWaveFormGenerator>(audio_filename);
                 wave_gen->generate();
+
+                log_info(QString("Created wave file `%1`").arg(wave_gen->wave_filename()));
+
                 audio->audio_file().set_wave_file(wave_gen->wave_filename().toStdString());
             } catch (AudioImportException& aie) {
+
+                log_error(QString("Error generating wave file"));
+
                 showMessage(aie.errorMessage());
             }
 
-            if (file_format == "ogg")
-            {
-                auto audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio_filename);
-                spot_audio->audio()->set_file_extension("OGG");
-                spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
-            }
+        }
 
-            if (file_format == "mp3")
-            {
-                try{
-                    auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_filename);
-                    audio_converter->convert();
+        log_info(QString("Audio file format: %1").arg(file_format));
 
-                    // File has been converted to OGG, change the extension
-                    spot_audio->audio()->set_file_extension("OGG");
+        if (file_format == "ogg")
+        {
+            log_info(QString("Create OggToOggConverter..."));
 
-                    spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
-                } catch (AudioImportException& aie) {
-                    showMessage(aie.errorMessage());
-                }
-            }
+            auto audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio_filename);
+            spot_audio->audio()->set_file_extension("OGG");
 
-            if (file_format == "mts")
-            {
-                auto audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio_filename);
-                audio_converter->convert();
-                auto mts_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(audio_converter.get());
-                spot_audio->audio()->set_audio_filename(mts_file->dest_mp3_filename().toStdString());
-                spot_audio->audio()->set_file_extension("OGG");
-            }
+            log_info(QString("Ogg filename `%1` ").arg(audio_converter->ogg_filename()));
+
+            spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
 
         }
+
+        if (file_format == "mp3")
+        {
+            try{
+                log_info("Creating Mp3ToOggConverter...");
+
+                auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio_filename);
+                audio_converter->convert();
+
+                // File has been converted to OGG, change the extension
+                spot_audio->audio()->set_file_extension("OGG");
+
+                log_info(QString("Converted file: `%1` ").arg(audio_converter->ogg_filename()));
+
+                spot_audio->audio()->audio_file().set_ogg_filename(audio_converter->ogg_filename().toStdString());
+            } catch (AudioImportException& aie) {
+
+                log_error("Error converting Mp3 to OGG");
+
+                showMessage(aie.errorMessage());
+            }
+        }
+
+        if (file_format == "mts")
+        {
+            log_info(QString("Creating MtsToMp3Converter..."));
+
+            auto audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio_filename);
+            audio_converter->convert();
+
+            auto mts_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(audio_converter.get());
+
+            log_info(QString("Converted file: %1").arg(mts_file->dest_mp3_filename()));
+
+            spot_audio->audio()->set_audio_filename(mts_file->dest_mp3_filename().toStdString());
+            spot_audio->audio()->set_file_extension("OGG");
+        }
+
 
         spot_audio->set_audio_lib_path(m_setup->comm_audio_folder()->value());
 
@@ -304,21 +362,31 @@ void SpotAudioBrowser::import_audio()
         af.set_audio_title(spot_audio->title()->value());
         af.set_artist_name("");
 
+        log_info(QString("Assigning Audio: `%1` to SpotAudio").arg(audio->title()->to_qstring()));
+
+        spot_audio->set_audio(spot_audio->audio());
+
+        log_info(QString("Opening AudioWaveForm..."));
+
+
         auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(af);
         if (wave_form->exec() == 1)
         {
+            log_info(QString("Saved AudioWaveForm."));
+
             spot_audio->audio()->set_audio_file(af);
             spot_audio->set_marker(wave_form->cue_marker());
             spot_audio->set_duration(af.duration());
 
             spot_audio->setDBAction(DBAction::dbaCREATE);
 
-            auto& p_audio = spot_audio->get_paudio();
-
-            p_audio = *spot_audio->audio();
+            //auto& p_audio = spot_audio->get_paudio();
+            ////p_audio = *spot_audio->audio();
 
             // Emit audio duration signal
             emit audio_duration(af.duration());
+
+            log_info("Cached Audio...");
 
             entityDataModel().cacheEntity(std::move(spot_audio));
         };

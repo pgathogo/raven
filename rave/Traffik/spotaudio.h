@@ -31,6 +31,8 @@ namespace TRAFFIK{
 
         AUDIO::Audio* audio();
 
+        void set_audio(AUDIO::Audio*);
+
 //        void set_audio(int val);
         void set_audio_date(QDate);
         void set_weight(int val);

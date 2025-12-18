@@ -31,7 +31,7 @@ namespace OATS{
         m_time_digit = std::make_unique<QLabel>("00:00:00");
         m_time_digit->setStyleSheet(
              {"font-weight: bold;"
-             "font-size: 30pt;"
+             "font-size: 40pt;"
              "background-color:transparent;"
              "color:#00ff00;"
              "border:none;"
@@ -49,6 +49,7 @@ namespace OATS{
             "background-color:transparent;"
             "color:#FFFFFF;"
             "border:none;"
+            "margin:0px;"
         });
             //"color:#BB86FC;"
 

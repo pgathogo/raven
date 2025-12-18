@@ -22,6 +22,7 @@ namespace OATS{
         TrackGridPanel(QWidget*);
         ~TrackGridPanel() override;
         void update(OATS::ScheduleItem* schedule_item) override;
+        void update_artist(const QString);
     protected:
         void contextMenuEvent(QContextMenuEvent* event) override;
 //        void mousePressEvent(QMouseEvent* event) override;
@@ -33,6 +34,7 @@ namespace OATS{
         void make_audio_current();
         void delete_item();
         void reload_schedule();
+
 
     private:
         QGridLayout* m_layout;

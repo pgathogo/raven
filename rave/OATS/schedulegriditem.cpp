@@ -85,6 +85,11 @@ namespace OATS{
         return m_schedule_item;
     }
 
+    void ScheduleGridItem::update_artist_title(const QString title)
+    {
+        m_track_panel->update_artist(title);
+    }
+
     void ScheduleGridItem::update(OATS::Subject* changed_subject)
     {
         auto si = dynamic_cast<OATS::ScheduleItem*>(changed_subject);

@@ -235,6 +235,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::end_of_play);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::play_next, this, &MainWindow::play_next);
     connect(m_audio_player.get(), &AUDIO::AudioPlayer::audio_played, this, &MainWindow::audio_played);
+    connect(m_audio_player.get(), &AUDIO::AudioPlayer::sig_start_play, this, &MainWindow::play_started);
+    connect(m_audio_player.get(), &AUDIO::AudioPlayer::sig_play_item_index, this, &MainWindow::play_item_index);
 
     m_jingle_player = std::make_unique<AUDIO::AudioPlayer>();
     connect(m_jingle_player.get(), &AUDIO::AudioPlayer::end_of_play, this, &MainWindow::jingle_end_of_play);
@@ -684,7 +686,11 @@ void MainWindow::load_schedule(QDate date, int hr)
     //move_top_current_hour();
     connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
 
+    qInfo() << "Go to current hour...";
+
     go_to_current_hour();
+
+    qInfo() << "Load schedule...done.";
 
 }
 
@@ -853,6 +859,8 @@ void MainWindow::fetch_commercials_bydate(QDate date)
 
     provider->cache()->first();
 
+    qDebug() << "fetch_commercials_bydate";
+
     do{
         auto it_begin = provider->cache()->currentElement()->begin();
         auto it_end = provider->cache()->currentElement()->end();
@@ -885,9 +893,12 @@ void MainWindow::fetch_commercials_bydate(QDate date)
             }
 
         }
+
         cb.db_persisted = false;
         cb.break_played = false;
         cb.base_filename = QString::fromStdString(m_audio_tool.make_audio_filename(cb.audio_id));
+
+        qDebug() << "CommBreak Schedule ID: "<< cb.schedule_id;
 
         if (m_comm_breaks.contains(cb.schedule_id)) {
            m_comm_breaks[cb.schedule_id].push_back(cb) ;
@@ -1045,7 +1056,7 @@ void MainWindow::make_playlist_grid()
         }
 
         auto grid_item = std::make_unique<OATS::ScheduleGridItem>(si);
-        si->notify();;
+        si->notify();
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_up, this, &MainWindow::item_move_up);
         connect(grid_item.get(), &OATS::ScheduleGridItem::move_down, this, &MainWindow::item_move_down);
@@ -1053,6 +1064,8 @@ void MainWindow::make_playlist_grid()
         connect(grid_item.get(), &OATS::ScheduleGridItem::insert_item, this, &MainWindow::grid_clicked);
         connect(grid_item.get(), &OATS::ScheduleGridItem::delete_item, this, &MainWindow::delete_schedule_item);
         connect(grid_item.get(), &OATS::ScheduleGridItem::reload_schedule, this, &MainWindow::reload_schedule);
+
+        connect(this, &MainWindow::update_artist_title, grid_item.get(), &OATS::ScheduleGridItem::update_artist_title);
 
         connect(grid_item.get(), &OATS::ScheduleGridItem::play_audio, this, &MainWindow::play_cued_audio);
         connect(grid_item.get(), &OATS::ScheduleGridItem::stop_audio, this, &MainWindow::stop_playing_audio);
@@ -1076,14 +1089,10 @@ void MainWindow::make_playlist_grid()
         ui->gridScroll->setMaximum(MAX_GRID_ITEMS);
     }
 
-    //ui->gridScroll->setPageStep(MAX_GRID_ITEMS/2);
     ui->gridScroll->setPageStep(1);
-
-    //go_current_hour();
 
     m_scrollbar_current_value = ui->gridScroll->value();
 
-    //connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
 }
 
 
@@ -1457,10 +1466,10 @@ void MainWindow::go_to_current_hour()
 
     }
 
+
     header_index = header_index - 1;
 
     std::rotate(m_schedule_items.begin(), m_schedule_items.begin() + header_index, m_schedule_items.end());
-    display_schedule(0, header_index);
 
     ui->gridScroll->setValue(header_index);
 
@@ -2615,6 +2624,8 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         op->schedule_item()->notify();
 
+        int grid_index = index_of(op->schedule_item()->schedule_ref());
+
         if (op->schedule_item()->schedule_type() == OATS::ScheduleType::COMM)
         {
             auto break_items = m_comm_breaks[op->schedule_item()->id()];
@@ -2629,7 +2640,10 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
                 QString msg = QString("Play Comm: OP: %1  :Audio: %2").arg(op->panel_name()).arg(audio_file);
                 log_info(msg);
 
-                m_audio_player->append_playlist(op->panel_name(), audio_file);
+                m_audio_player->append_playlist(grid_index,
+                                                op->schedule_item()->id(),
+                                                op->panel_name(),
+                                                audio_file);
             }
 
             log_info("** Comm Playing Audio ** ");
@@ -2648,10 +2662,10 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
             m_audio_player->play_audio(audio_filepath);
         }
 
-        int grid_index = index_of(op->schedule_item()->schedule_ref());
+        // int grid_index = index_of(op->schedule_item()->schedule_ref());
 
-        m_current_playing_item.item = op->schedule_item();
         m_current_playing_item.output_panel = op;
+        m_current_playing_item.item = op->schedule_item();
 
         m_current_playing_item.schedule_index = op->schedule_item()->index();
         m_current_playing_item.grid_index = grid_index;
@@ -2678,10 +2692,8 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
                         cue_schedule_item(next_schedule_item, next_output_panel);
                 }
             }else {
-                qDebug() << " ** ALERT ** " << "DARN next_schedule_item  == NULLPTR ";
+                qDebug() << " *[ ALERT ] - DARN next_schedule_item is a NULLPTR ";
             }
-
-
 
         }
 
@@ -3059,7 +3071,14 @@ void MainWindow::play_outputC(OATS::OutputPanel* op)
 
     QString audio_fullname = op->schedule_item()->audio()->full_audio_filename();
 
-    m_jingle_player->append_playlist(JinglePlayoutChannel, audio_fullname);
+    int grid_index = index_of(op->schedule_item()->schedule_ref());
+
+    m_jingle_player->append_playlist(
+                  grid_index,
+                  op->schedule_item()->id(),
+                  JinglePlayoutChannel,
+                  audio_fullname);
+
     m_jingle_player->play_audio();
 
 }
@@ -3263,7 +3282,6 @@ void MainWindow::reload_schedule(int schedule_ref, int grid_pos)
     for (int i=schedule_ref; i <= m_schedule_items.size()-1; ++i){
         qDebug() << "SREF: " << m_schedule_items[i]->schedule_ref();
     }
-
 
 }
 
@@ -3750,9 +3768,27 @@ void MainWindow::audio_played(QString played_audio)
         QFileInfo fi(played_audio);
         mark_comm_as_played(m_current_playing_item.item->id(), fi.baseName() );
 
-
     }
 
+}
+
+void MainWindow::play_started()
+{
+    qDebug() << "Audio play started...";
+
+}
+
+void MainWindow::play_item_index(int grid_index, int schedule_id, int index)
+{
+    qDebug() << "Grid Index: " << grid_index << "Schedule ID: " << schedule_id << "Audio Index: " << index;
+
+    if (!m_comm_breaks.contains(schedule_id))
+        return;
+
+    auto break_items = m_comm_breaks[schedule_id];
+    auto comm_break = break_items.at(index);
+    QString comm_title = comm_break.comm_title;
+    m_schedule_grid[grid_index]->update_artist_title(comm_title);
 }
 
 void MainWindow::jingle_end_of_play()

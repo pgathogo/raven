@@ -8,6 +8,7 @@ namespace AUDIO
     AudioPlayer::OutputChannel current_output_channel = AudioPlayer::OutputChannel::ChannelA;
 
     int AudioPlayer::play_list_index = 0;
+    int AudioPlayer::play_counter = 0;
 
     AudioPlayer::AudioPlayer()
         :m_audio_thread{nullptr}
@@ -81,22 +82,27 @@ namespace AUDIO
     void AudioPlayer::play_audio()
     {
         if (m_playlist.size() > 0) {
-            //m_audio_thread->play(m_playlist[0].audio_filename);
             play_audio(m_playlist[0].audio_filename);
+
+            emit sig_play_item_index(m_playlist[0].grid_index,
+                                     m_playlist[0].schedule_id,
+                                     AudioPlayer::play_counter++);
+
             m_playlist.erase(m_playlist.begin());
             --AudioPlayer::play_list_index;
-        emit sig_start_play();
         }
     }
 
-    void AudioPlayer::append_playlist(QString output, QString filename)
+    void AudioPlayer::append_playlist(int grid_index, int schedule_id, QString output, QString filename)
     {
         PlayList pl;
+        pl.grid_index = grid_index;
+        pl.schedule_id = schedule_id;
         pl.output_channel = output;
         pl.audio_filename = filename;
-        qDebug() << "Audio Player: "<<filename;
         m_playlist.push_back(pl);
         ++AudioPlayer::play_list_index;
+        AudioPlayer::play_counter = 0;
     }
 
     void AudioPlayer::stop_play()

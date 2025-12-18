@@ -11,6 +11,8 @@
 namespace AUDIO
 {
     struct PlayList{
+        int grid_index=-1;
+        int schedule_id=-1;
         QString output_channel{""};
         QString audio_filename{""};
     };
@@ -41,7 +43,7 @@ namespace AUDIO
         void update_output_channel(QString, QString);
         OutputChannel str_to_channel(QString);
 
-        void append_playlist(QString, QString);
+        void append_playlist(int, int, QString, QString);
         std::tuple<float, float> audio_levels();
 
         void set_audio_file(const AudioFile);
@@ -62,8 +64,10 @@ namespace AUDIO
         void audio_played(QString);
         void current_peak(float fft[1024]);
         void audio_current_position(double, double);
+
         void sig_start_play();
         void sig_stop_play();
+        void sig_play_item_index(int, int, int);
 
     private slots:
         void end_of_playback();
@@ -76,6 +80,7 @@ namespace AUDIO
         std::vector<PlayList> m_playlist;
         static OutputChannel current_output_channel;
         static int play_list_index;
+        static int play_counter;
         QString m_played_audio;
     };
 }

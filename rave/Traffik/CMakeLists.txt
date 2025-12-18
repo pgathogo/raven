@@ -51,6 +51,11 @@ set(CMAKE_EXE_LINKER_FLAGS "-static")
 # include_directories(${LIMEREPORT_INCLUDE_DIR})
 # set(LIMEREPORT_LIBRARIES ${LIMEREPORT_LIBRARY})
 
+set(RAVE_AUDIO_EDITOR "../audio/editor")
+set(RAVE_FRAMEWORK "../framework")
+set(RAVE_SECURITY "../security")
+set(UTILS_DIR "../utils")
+set(RAVE_CLUSTER_DIR "../../ravecluster/rave/clusterman")
 
 
 set(PROJECT_SOURCES
@@ -227,20 +232,6 @@ set(PROJECT_SOURCES
     ../audio/audiofileinfo.h
     ../audio/audiofileinfo.cpp
 
-    ../audio/editor/audiographic.cpp
-    ../audio/editor/audiographic.h
-    ../audio/editor/audioplayer.h
-    ../audio/editor/audioplayer.cpp
-    ../audio/editor/audiothread.h
-    ../audio/editor/audiothread.cpp
-    ../audio/editor/audiowaveform.h
-    ../audio/editor/audiowaveform.cpp
-    ../audio/editor/subjectobserver.cpp
-    ../audio/editor/vumeter.h
-    ../audio/editor/vumeter.cpp
-    ../audio/editor/markindicator.h
-    ../audio/editor/subjectobserver.h
-
     ../audio/trackbrowser.h
     ../audio/trackbrowser.cpp
     ../audio/trackpickerdialog.h
@@ -266,14 +257,28 @@ set(PROJECT_SOURCES
     ../audio/audiofolder.h
     ../audio/audiofolder.cpp
 
+    ${RAVE_AUDIO_EDITOR}/audiographic.cpp
+    ${RAVE_AUDIO_EDITOR}/audiographic.h
+    ${RAVE_AUDIO_EDITOR}/audioplayer.h
+    ${RAVE_AUDIO_EDITOR}/audioplayer.cpp
+    ${RAVE_AUDIO_EDITOR}/audiothread.h
+    ${RAVE_AUDIO_EDITOR}/audiothread.cpp
+    ${RAVE_AUDIO_EDITOR}/audiowaveform.h
+    ${RAVE_AUDIO_EDITOR}/audiowaveform.cpp
+    ${RAVE_AUDIO_EDITOR}/subjectobserver.cpp
+    ${RAVE_AUDIO_EDITOR}/vumeter.h
+    ${RAVE_AUDIO_EDITOR}/vumeter.cpp
+    ${RAVE_AUDIO_EDITOR}/markindicator.h
+    ${RAVE_AUDIO_EDITOR}/subjectobserver.h
+
     ../AudioExplorer/audioform.h
     ../AudioExplorer/audioform.cpp
+    ../AudioExplorer/audioexplorer.qrc
 
     ../framework/tree.h
     ../framework/tree.cpp
     ../framework/treeviewmodel.h
     ../framework/treeviewmodel.cpp
-
 
     ../framework/ravensetup.h
     ../framework/ravensetup.cpp
@@ -406,16 +411,17 @@ set(PROJECT_SOURCES
     ../utils/cachehandler.h
     ../utils/cachehandler.cpp
 
-    ../../ravecluster/rave/clusterman/clustercontroller.h
-    ../../ravecluster/rave/clusterman/clustercontroller.cpp
-    ../../ravecluster/rave/clusterman/server.h
-    ../../ravecluster/rave/clusterman/server.cpp
-    ../../ravecluster/rave/clusterman/station.h
-    ../../ravecluster/rave/clusterman/station.cpp
-    ../../ravecluster/rave/clusterman/cluster.h
-    ../../ravecluster/rave/clusterman/cluster.cpp
+    ${RAVE_CLUSTER_DIR}/clustercontroller.h
+    ${RAVE_CLUSTER_DIR}/clustercontroller.cpp
+    ${RAVE_CLUSTER_DIR}/server.h
+    ${RAVE_CLUSTER_DIR}/server.cpp
+    ${RAVE_CLUSTER_DIR}/station.h
+    ${RAVE_CLUSTER_DIR}/station.cpp
+    ${RAVE_CLUSTER_DIR}/cluster.h
+    ${RAVE_CLUSTER_DIR}/cluster.cpp
+    ${RAVE_CLUSTER_DIR}/useraccess.h
+    ${RAVE_CLUSTER_DIR}/useraccess.cpp
 
-    ../AudioExplorer/audioexplorer.qrc
 
 )
 

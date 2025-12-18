@@ -166,16 +166,14 @@ namespace OATS{
         emit dynamic_cast<OATS::ScheduleGridItem*>(parent())->reload_schedule(parent_ref(), index());
     }
 
+    void TrackGridPanel::update_artist(const QString title)
+    {
+        m_artist_label->setText(title);
+    }
+
     void TrackGridPanel::update(OATS::ScheduleItem* schedule_item)
     {
         m_schedule_item = schedule_item;
-
-        if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER){
-            m_artist_label->setText("");
-            m_duration_label->setText("");
-        } else {
-            m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
-        }
 
         m_track_label->setText(QString::fromStdString(schedule_item->audio()->title()->value()));
 
@@ -187,15 +185,23 @@ namespace OATS{
         setStyleSheet("background-color: #636160;");
         m_track_label->setStyleSheet("color: #FFFFFF");
 
+        if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER) {
+            m_artist_label->setText("");
+            m_duration_label->setText("");
+        }
+
+
         if (schedule_item->schedule_type() == OATS::ScheduleType::COMM){
             //m_duration_label->setText("");
             m_track_label->setStyleSheet("color: #353935");
             setStyleSheet("background-color: #FFDB58");
+            //m_artist_label->setText("");
         }
             //setStyleSheet("background-color: rgb(40, 133, 220)");
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::SONG){
             setStyleSheet("background-color: #40B5AD");
+            m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
 
         }
             //setStyleSheet("background-color: #088F8F");

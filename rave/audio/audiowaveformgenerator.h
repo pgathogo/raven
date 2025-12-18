@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QProcess>
 
+#include "../framework/Logger.h"
+
 class QProgressDialog;
-//class QProcess;
 
 namespace AUDIO{
 
@@ -25,6 +26,9 @@ namespace AUDIO{
         QString wave_filename();
         void set_wave_filename(QString);
         void remove_wave_file();
+
+        void log_info(const QString msg) { Logger::info("AudioWaveFromGenerator", msg);}
+        void log_error(const QString msg) { Logger::error("AudioWaveFromGenerator", msg);}
 
     private slots:
         void wave_generation_finished(int, QProcess::ExitStatus);

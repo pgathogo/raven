@@ -39,7 +39,7 @@ namespace OATS
         m_lbl_music_remain->setStyleSheet("QLabel{"
                                           "color:#F8153B;"
                                           "font-weight: bold; "
-                                          "font-size: 18pt;"
+                                          "font-size: 25pt;"
                                           "background-color:transparent;}");
 
         // QFont font_music_remain("Arial", 16, QFont::Bold);
@@ -51,7 +51,7 @@ namespace OATS
 
         m_lbl_hour_remain = new QLabel("00:00");
         m_lbl_hour_remain->setAlignment(Qt::AlignCenter);
-        m_lbl_hour_remain->setStyleSheet("QLabel{color:#F56D4D; font-weight: bold; font-size: 18pt;"
+        m_lbl_hour_remain->setStyleSheet("QLabel{color:#F56D4D; font-weight: bold; font-size: 25pt;"
                                          "background-color:transparent;}");
 
         // QFont font_hour_remain("Arial", 16, QFont::Bold);
@@ -66,7 +66,7 @@ namespace OATS
 
         m_lbl_talk_remain = new QLabel("00:00");
         m_lbl_talk_remain->setAlignment(Qt::AlignCenter);
-        m_lbl_talk_remain->setStyleSheet("QLabel{color:#FECC5D; font-weight: bold; font-size: 18pt;"
+        m_lbl_talk_remain->setStyleSheet("QLabel{color:#FECC5D; font-weight: bold; font-size: 25pt;"
                                          "background-color:transparent;}");
 
         // QFont font_talk_remain("Arial",16, QFont::Bold);

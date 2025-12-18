@@ -11,7 +11,7 @@
 
 OrderForm::OrderForm(std::shared_ptr<Client> client,
                      std::shared_ptr<Order>order,
-                     QDialog *parent)
+                     QDialog* parent)
     : BaseEntityDetailDlg(parent)
      ,ui(new Ui::OrderForm)
      , mClient{client},

@@ -5,6 +5,7 @@
 #include <QWidget>
 
 #include "../framework/manytomanybrowser.h"
+#include "../framework/Logger.h"
 
 // #include "../audio/trackbrowser.h"
 // #include "../audio/trackpickerdialog.h"
@@ -79,6 +80,9 @@ protected:
 public slots:
     void stop_play();
     void selected_audio(std::shared_ptr<AUDIO::Audio>);
+
+    void log_info(QString msg) { Logger::info("SpotAudioBrowser", msg);}
+    void log_error(QString msg) { Logger::error("SpotAudioBrowser", msg);}
 
 private slots:
     void import_audio();
