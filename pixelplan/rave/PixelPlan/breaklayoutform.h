@@ -79,6 +79,7 @@ private:
     void show_breaklines_from_db(int);
 
     std::tuple<int, int> row_identity();
+    void register_dow_checkboxes();
 
     Ui::BreakLayoutForm *ui;
     BreakLayout* mBreakLayout;
@@ -91,6 +92,7 @@ private:
 
     std::vector<QTime> m_deleted_item;
 
+    std::map<QString, QCheckBox*> m_dow_checkboxes;
 
     int tempFromHr;
     int tempToHr;

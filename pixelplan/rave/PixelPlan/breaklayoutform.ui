@@ -103,6 +103,9 @@
         <property name="text">
          <string>Monday</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -144,6 +147,9 @@
        <widget class="QCheckBox" name="cbSun">
         <property name="text">
          <string>Sunday</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

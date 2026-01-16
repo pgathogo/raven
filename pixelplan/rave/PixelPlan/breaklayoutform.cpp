@@ -88,17 +88,14 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
         ui->cbProgram->setEnabled(false);
     }
 
+    register_dow_checkboxes();
 
     ui->gbCopy->setHidden(true);
     hideSaveNewBtn();
 
     set_defaults();
 
-    std::println("CCC");
-
     setup_ui();
-
-    std::println("DDD");
 
 
 }
@@ -197,6 +194,7 @@ void BreakLayoutForm::populateFormWidgets()
     populate_choice_combo_int(ui->cbTimeInterval, mBreakLayout->timeInterval());
 
     auto cs = [](int i){ return (i==0) ? Qt::Unchecked : Qt::Checked; };
+
     ui->cbMon->setCheckState(cs(mBreakLayout->monBit()->value()));
     ui->cbTue->setCheckState(cs(mBreakLayout->tueBit()->value()));
     ui->cbWed->setCheckState(cs(mBreakLayout->wedBit()->value()));
@@ -455,6 +453,17 @@ void BreakLayoutForm::timeIntervalChanged(int i)
 }
 
 
+void BreakLayoutForm::register_dow_checkboxes()
+{
+    m_dow_checkboxes["Mon"] = ui->cbMon;
+    m_dow_checkboxes["Tue"] = ui->cbTue;
+    m_dow_checkboxes["Wed"] = ui->cbWed;
+    m_dow_checkboxes["Thur"] = ui->cbThu;
+    m_dow_checkboxes["Fri"] = ui->cbFri;
+    m_dow_checkboxes["Sat"] = ui->cbSat;
+    m_dow_checkboxes["Sun"] = ui->cbSun;
+}
+
 void BreakLayoutForm::on_tvprogram_changed(int i)
 {
     if (m_edm_tvprogram == nullptr)
@@ -475,6 +484,21 @@ void BreakLayoutForm::on_tvprogram_changed(int i)
 
     ui->lblStartTime->setText("Start Time: "+m_current_tvprogram->start_time()->value().toString("hh:mm"));
     ui->lblEndTime->setText("End Time: "+m_current_tvprogram->end_time()->value().toString("hh:mm"));
+
+    for(auto& [key, cb]: m_dow_checkboxes) {
+        cb->setCheckState(Qt::Unchecked);
+    }
+
+    QString dow = m_current_tvprogram->broadcast_days()->to_qstring();
+    QStringList dow_list = dow.split(QLatin1Char(','));
+
+
+    if (m_dow_checkboxes.size() > 0) {
+        for(int i=0; i<dow_list.size(); ++i) {
+            m_dow_checkboxes[dow_list.at(i)]->setCheckState(Qt::Checked);
+        }
+    }
+
 }
 
 void BreakLayoutForm::break_fill_method_changed(int index)
