@@ -22,6 +22,7 @@ QString module = "Main";
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setWindowIcon(QIcon(":/images/media/icons/ravenicon.ico"));
 
 #ifdef LOG_TO_FILE
     QString log_path = QCoreApplication::applicationDirPath()+"/log";
@@ -40,7 +41,7 @@ int main(int argc, char *argv[])
 
 #endif
 
-    LoginForm lf("jboss", "abc123");
+    LoginForm lf;
 
     if (lf.exec() > 0)
     {
@@ -64,15 +65,8 @@ int main(int argc, char *argv[])
         conn_info.username = cred.username.toStdString();
         conn_info.password = cred.password.toStdString();
 
-        std::cout << " ===================================== " << '\n';
-        std::cout << conn_info;
-        std::cout << " ===================================== " << '\n';
-
         Authentication* auth = new Authentication(conn_info);
         auth->connect_to_server();
-
-        //auto station_info =   lf.get_station_info();
-        //auto conn_info = lf.get_connection_info();
 
         QString msg1 = QObject::tr("User connected to server `%1`").
                       arg(station_info.server_name);

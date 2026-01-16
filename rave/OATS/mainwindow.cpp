@@ -25,6 +25,7 @@
 #include <QButtonGroup>
 #include <QString>
 #include <QFileInfo>
+#include <QGraphicsDropShadowEffect>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -153,6 +154,8 @@ MainWindow::MainWindow(QWidget *parent)
             [&](){ ui->swMain->setCurrentIndex(0);
             m_control_page = ControlPage::Home;
         });
+    ui->btnHome->setIcon(QIcon(":/images/icons/home03.png"));
+    ui->btnHome->setIconSize(QSize(100,40));
 
     connect(ui->btnComm, &QPushButton::clicked, this,
             [&](){
@@ -191,6 +194,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_control_buttons_group->addButton(ui->btnLoad);
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close_window);
+    ui->btnExit->setIcon(QIcon(":/images/icons/exit01.png"));
+    ui->btnExit->setIconSize(QSize(100,40));
 
     ui->btnExit->setStyleSheet(
         "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
@@ -281,7 +286,25 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow::showFullScreen();
     */
 
+    ui->lblClient->setText("Citizen Radio");
+
+    ui->lblClient->setStyleSheet( "QLabel {"
+                                 "  color: #00FFFF;"        // Neon Cyan
+                                 "  font-family: 'Arial';"
+                                 "  font-weight: bold;"
+                                 "  font-size: 32px;"
+                                 "  background: transparent;"
+                                 "}" );
+    QGraphicsDropShadowEffect* glow_effect= new QGraphicsDropShadowEffect(this);
+    glow_effect->setBlurRadius(15);
+    glow_effect->setOffset(0, 0);
+    glow_effect->setColor(QColor(0, 255,255,200));
+
+    ui->lblClient->setGraphicsEffect(glow_effect);
+
     setStyleSheet("QMainWindow{background-color: #222222;}");
+
+    setWindowTitle("Raven - OATS");
 
     log_info("App load-up. Done.");
 
@@ -309,7 +332,10 @@ void MainWindow::style_page_controls()
         "border-bottom-color:#374148;"
         "border-radius: 3px;"
         "color:#FFFFFF;"
-       "font-weight:bold;}"
+        "font-weight:bold;"
+        "text-align: bottom;"
+       "}"
+
        "QPushButton:hover{background-color:#555D64;border:none; }"
 
        "QPushButton:pressed {"

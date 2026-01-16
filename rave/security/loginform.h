@@ -38,6 +38,8 @@ public:
 
     Credentials credentials();
 
+    // void eventFilter(QObject *, QEvent *) override;
+
 protected:
     void showEvent(QShowEvent*) override;
 

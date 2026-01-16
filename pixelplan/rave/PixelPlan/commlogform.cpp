@@ -233,8 +233,6 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
     EntityDataModel edm;
     edm.readRaw(sql.str());
 
-    std::cout << sql.str() << '\n';
-
     auto provider =  edm.getDBManager()->provider();
 
     if (provider->cacheSize() == 0 )
@@ -286,8 +284,6 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
         provider->cache()->next();
 
     } while(!provider->cache()->isLast());
-
-
 
 }
 

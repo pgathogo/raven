@@ -43,7 +43,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
 
     bui->tvEntity->setModel(mEntityDataModel.get());
-    bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
 
     set_button_icons();
@@ -195,8 +195,8 @@ void BaseEntityBrowserDlg::searchRecord()
 
         entityDataModel().search_with_filter(filter);
 
-        set_view_column_width();
     }
+        set_view_column_width();
 }
 
 void BaseEntityBrowserDlg::set_view_column_width()
@@ -205,8 +205,9 @@ void BaseEntityBrowserDlg::set_view_column_width()
    for (auto& display_name: m_entity->tableViewColumns()){
        for(auto const& [name, field]: m_entity->fields()){
            if (field->displayName() == display_name){
-               if (field->display_width() > 0)
+               if (field->display_width() > 0) {
                    bui->tvEntity->setColumnWidth(col++, field->display_width());
+               }
            }
        }
    }

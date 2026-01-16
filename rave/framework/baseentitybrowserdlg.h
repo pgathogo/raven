@@ -280,7 +280,6 @@ public:
             }
         }
 
-        qDebug() << "<<< END:searchRelated >>>";
     }
 
 protected:

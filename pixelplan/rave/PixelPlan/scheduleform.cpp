@@ -1,13 +1,17 @@
-#include "scheduleform.h"
-#include "traffik_autogen/include/ui_scheduleform.h"
 #include <QMdiArea>
 
 #include "../../../rave/framework/choicefield.h"
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../rave/framework/ravenexception.h"
 #include "../../../rave/framework/schedule.h"
+
 #include "breakcreateform.h"
 #include "schedulemantreeviewmodel.h"
+#include "ui_scheduleform.h"
+#include "scheduleform.h"
+
+
+//#include "traffik_autogen/include/ui_scheduleform.h"
 
 
 ScheduleForm::ScheduleForm(QWidget *parent)
@@ -42,7 +46,7 @@ ScheduleForm::ScheduleForm(QWidget *parent)
 
   load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
 
-  setWindowTitle("Schedule Management Form");
+  setWindowTitle("Breaks Management");
 }
 
 ScheduleForm::~ScheduleForm() { delete ui; }

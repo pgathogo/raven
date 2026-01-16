@@ -62,6 +62,7 @@ MainWindow::MainWindow(QApplication* app,
     ,clientRptAction{}
     ,plainFormAction{}
     ,mPGManager{}
+    ,m_station_info{si}
 {
     ui->setupUi(this);
 
@@ -90,12 +91,12 @@ MainWindow::MainWindow(QApplication* app,
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
 
-    int w = 1745;
-    int h = 1035;
+    int w = 800;
+    int h = 700;
     setMinimumSize(w, h);
     setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
 
-    this->resize(QSize(1745,1035));
+    this->resize(QSize(w,h));
 
     showRegister();
 
@@ -136,16 +137,10 @@ void MainWindow::createActions()
     clientRptSubMenu->addAction(clientListAction);
     //connect(commlogAction, &QAction::triggered, this, &MainWindow::printCommLog);
 
-    /*
-    */
-
     QAction* setupAction = new QAction(tr("&PixelPlan Setup"));
     setupMenu->addAction(setupAction);
     setupAction->setStatusTip(tr("PixelPlan Default Setup"));
     connect(setupAction, &QAction::triggered, this, &MainWindow::openSetupForm);
-
-    /*
-    */
 
     QToolBar* mainToolBar = addToolBar(tr("PixelPlan"));
     mainToolBar->setStyleSheet("QToolButton{padding: 10px }");
@@ -154,7 +149,7 @@ void MainWindow::createActions()
 
     QAction* actTVPrograms  = new QAction("&TV PROGRAMS");
     actTVPrograms->setIcon(QIcon(":/images/media/icons/tvprograms1.png"));
-    connect(actTVPrograms, &QAction::triggered, this, &MainWindow::on_tv_programs);
+    connect(actTVPrograms, &QAction::triggered, this, &MainWindow::open_tv_programs);
     mainToolBar->addAction(actTVPrograms);
 
     QAction* scheduleAction = new QAction(tr("&BREAKS"));
@@ -165,18 +160,16 @@ void MainWindow::createActions()
     mainToolBar->addAction(scheduleAction);
     mainToolBar->addSeparator();
 
-
     QAction* merged_browser_act = new QAction(tr("&CLIENTS"));
     merged_browser_act->setIcon(QIcon(":/images/media/icons/clients.png"));
-    connect(merged_browser_act, &QAction::triggered, this, &MainWindow::on_merged_browser);
+    connect(merged_browser_act, &QAction::triggered, this, &MainWindow::open_merged_browser);
 
     mainToolBar->addAction(merged_browser_act);
     mainToolBar->addSeparator();
 
-
     QAction* setup_browser_act = new QAction(tr("&SETUPS"));
     setupMenu->addAction(setup_browser_act);
-    connect(setup_browser_act, &QAction::triggered, this, &MainWindow::on_setup_browser);
+    connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
     QAction* cue_editor_act = new QAction("Cue Editor");
     connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
@@ -188,14 +181,29 @@ void MainWindow::createActions()
 
     QAction* playlist_act = new QAction(tr("&PLAYLIST"));
     playlist_act->setIcon(QIcon(":/images/media/icons/playlist.png"));
-    connect(playlist_act, &QAction::triggered, this, &MainWindow::on_playlist);
+    connect(playlist_act, &QAction::triggered, this, &MainWindow::open_playlist);
 
     mainToolBar->addAction(playlist_act);
 
-    QAction* loganalyzer_act = new QAction(tr("&CLAS"));
-    loganalyzer_act->setIcon(QIcon(":/images/media/icons/loganalyzer.png"));
-    connect(loganalyzer_act, &QAction::triggered, this, &MainWindow::on_log_analysis);
-    mainToolBar->addAction(loganalyzer_act);
+
+    QLabel* lbl_station_name = new QLabel(m_station_info.station_name);
+    QFont lbl_font = lbl_station_name->font();
+    lbl_font.setBold(true);
+    lbl_font.setPointSize(28);
+    lbl_station_name->setFont(lbl_font);
+
+    QWidget* spacer = new QWidget();
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+    mainToolBar->addWidget(spacer);
+
+    mainToolBar->addWidget(lbl_station_name);
+
+
+    // QAction* loganalyzer_act = new QAction(tr("&CLAS"));
+    // loganalyzer_act->setIcon(QIcon(":/images/media/icons/loganalyzer.png"));
+    // connect(loganalyzer_act, &QAction::triggered, this, &MainWindow::on_log_analysis);
+    // mainToolBar->addAction(loganalyzer_act);
 
 }
 
@@ -214,7 +222,7 @@ void MainWindow::showRegister()
     }
 }
 
-void MainWindow::on_tv_programs()
+void MainWindow::open_tv_programs()
 {
     TVProgramBrowser* tv_program_browser = createSubWindow<TVProgramBrowser>();
     tv_program_browser->exec();
@@ -253,26 +261,26 @@ void MainWindow::on_schedule()
     schedForm->exec();
 }
 
-void MainWindow::on_merged_browser()
+void MainWindow::open_merged_browser()
 {
     MergedBrowser* m_browse = createSubWindow<MergedBrowser>();
     m_browse->exec();
 }
 
-void MainWindow::on_setup_browser()
+void MainWindow::open_setup_browser()
 {
     SetupBrowser* setup_browser = createSubWindow<SetupBrowser>();
     setup_browser->exec();
 }
 
-void MainWindow::on_playlist()
+void MainWindow::open_playlist()
 {
     PlaylistForm* playlist_form = createSubWindow<PlaylistForm>();
     playlist_form->exec();
 
 }
 
-void MainWindow::on_log_analysis()
+void MainWindow::open_log_analysis()
 {
     CommLogAnalyzer* cla = createSubWindow<CommLogAnalyzer>();
     cla->exec();

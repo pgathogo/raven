@@ -35,11 +35,22 @@ LoginForm::LoginForm(QWidget *parent)
     connect(ui->btnReset, &QPushButton::clicked, this, &LoginForm::reset_password);
     connect(ui->btnCancelReset, &QPushButton::clicked, this, &LoginForm::cancel_password_reset);
 
+    // When user clicks enter
+    bool ok = connect(ui->edtUsername, &QLineEdit::returnPressed, [](){
+        qDebug() << "Signal fired!"; });
+    connect(ui->edtUsername, &QLineEdit::editingFinished, [](){qDebug() << "Editing Finished!";});
+    // connet(ui->edtPassword, &QLineEdit::returnPressed, this, &LoginForm::on_login);
+
+    Q_ASSERT(ok);
+
     mNoticeBar = new NotificationBar(ui->vlNotice);
     m_reset_notice_bar = new NotificationBar(ui->vlReset);
 
-    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
-    ui->edtUsername->setFocus();
+    ui->btnSelect->setDefault(false);
+
+    // ui->edtUsername->installEventFilter(this);
+    // ui->edtPassword->installEventFilter(this);
+
 
     ui->btnSelect->setVisible(false);
 
@@ -58,13 +69,13 @@ LoginForm::LoginForm(QWidget *parent)
 
     ui->swMain->setCurrentIndex(0);
 
-    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
-    ui->edtUsername->setFocus();
-
     setWindowTitle("PixelPlan - Login Form");
     setWindowIcon(QIcon(":/rave_images/media/icons/raven.bmp"));
 
 }
+
+
+
 LoginForm::LoginForm(const QString username, const QString password, QWidget* parent)
     :LoginForm(parent)
 {
@@ -72,63 +83,27 @@ LoginForm::LoginForm(const QString username, const QString password, QWidget* pa
     ui->edtPassword->setText(password);
 }
 
-/*
 
-LoginForm::LoginForm(const QString username, const QString password, int station_id,
-                    QWidget *parent)
-    :QDialog(parent)
-    ,ui(new Ui::LoginForm)
-    ,m_app_auth{nullptr}
-    ,mNoticeBar{}
-    ,mOkClose{true}
-    ,m_selected_station_id{station_id}
-{
-    ui->setupUi(this);
+// void LoginForm::eventFilter(QObject* obj, QEvent* event)
+// {
+//     qDebug() << "* Event triggered *";
 
-    connect(ui->btnSelect, &QPushButton::clicked, this, &LoginForm::open_station_selector);
-    connect(ui->btnLogin, &QPushButton::clicked, this, &LoginForm::login);
-    connect(ui->btnCancel, &QPushButton::clicked, this, &LoginForm::cancel);
+//     if ((obj == ui->edtUsername || obj == ui->edtPassword) && event->type() == QEvent::KeyPress) {
+//         QKeyEvent* key_event = static_cast<QKeyEvent*>(event);
+//         if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return) {
+//             on_login();
+//             return true;
+//         }
+//     }
 
-    connect(ui->btnReset, &QPushButton::clicked, this, &LoginForm::reset_password);
-    connect(ui->btnCancelReset, &QPushButton::clicked, this, &LoginForm::cancel_password_reset);
+//     return QObject::eventFilter(obj, event);
+// }
 
-    mNoticeBar = new NotificationBar(ui->vlNotice);
-    m_reset_notice_bar = new NotificationBar(ui->vlReset);
-
-    ui->edtUsername->setText(username);
-    ui->edtPassword->setText(password);
-
-    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
-    ui->edtUsername->setFocus();
-
-    //ui->btnSelect->setEnabled(false);
-
-    QPixmap pix;
-    pix.load(":/rave_images/media/icons/password_sm.bmp");
-//    pix = pix.scaled(ui->lblImage->size(), Qt::KeepAspectRatioByExpanding);
-    ui->lblImage->setPixmap(pix);
-
-
-    QPixmap pix_reset;
-    pix_reset.load(":/rave_images/media/icons/reset_password_sm.bmp");
-//    pix_reset = pix_reset.scaled(ui->lblImageReset->size(), Qt::KeepAspectRatioByExpanding);
-    ui->lblImageReset->setPixmap(pix_reset) ;
-
-    ui->swMain->setCurrentIndex(0);
-
-    setWindowTitle("Login Form");
-
-    Logger::info("Login", "Opened login form");
-
-    Logger::error("Login", "Test login form");
-
-}
-*/
 
 void LoginForm::showEvent(QShowEvent*)
 {
-    ui->btnLogin->setFocusPolicy(Qt::StrongFocus);
-    ui->btnLogin->setFocus();
+    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
+    ui->edtUsername->setFocus();
 }
 
 LoginForm::~LoginForm()

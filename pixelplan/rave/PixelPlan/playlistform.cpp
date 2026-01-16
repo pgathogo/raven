@@ -10,6 +10,7 @@
 #include <QFileInfo>
 
 #include "../../../rave/framework/entitydatamodel.h"
+#include "../../../utils/tools.h"
 #include "../framework/logger.h"
 
 #include "ravensetup.h"
@@ -81,6 +82,20 @@ QDate PlaylistForm::previous_weekday(int current_dow)
 
 }
 
+
+QString PlaylistForm::make_playlist_output_filepath(int dow)
+{
+    QString output_path = m_setup->playlist_output_path()->to_qstring();
+
+    QString file_ext = ".ch1_xml";
+    QLocale system_locale;
+    QString long_day_name = system_locale.dayName(dow, QLocale::LongFormat);
+    QString output_filepath = output_path + "/" + long_day_name.toUpper()+file_ext;
+
+    return output_filepath;
+
+}
+
 void PlaylistForm::on_create_playlist_file(bool clicked)
 {
     // 1. Get our empty playlist XML file
@@ -89,21 +104,30 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
     // 4. Save the updated QDomDocument to file - "
 
     m_booked_adverts = get_booked_adverts(ui->dtPlaylistDate->date());
-
-    if (m_booked_adverts.size() == 0)
+    if (m_booked_adverts.size() == 0) {
+        showMessage("No items to create a playlist!");
         return;
+    }
 
-    QMessageBox msgbox;
+    QString output_filepath = make_playlist_output_filepath(ui->dtPlaylistDate->date().dayOfWeek());
+    QFileInfo fi(output_filepath);
+    std::string confirm_msg = std::format("Create playlist `{}`?", fi.fileName().toStdString());
+
+    if (!confirmationMessage(confirm_msg)) {
+        return;
+    }
+
 
     // TODO::Set default folders if the setup paths are empty!
     QString empty_playlist_filepath = m_setup->playlist_template_filepath()->to_qstring();
-    QString output_path = m_setup->playlist_output_path()->to_qstring();
+
     QString playlist_backup_path = m_setup->playlist_backup_path()->to_qstring();
 
     // Get day of week from date
     int dow = ui->dtPlaylistDate->date().dayOfWeek();
     QLocale system_locale;
     QString long_day_name = system_locale.dayName(dow, QLocale::LongFormat) ;
+
     QDate prev_week_date = previous_weekday(dow);
 
     bool backup_file_exists = false;
@@ -120,7 +144,7 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
         backup_file_exists = true;
     }
 
-    QString output_filepath = output_path + "/"+long_day_name.toUpper()+file_ext;
+    //QString output_filepath = output_path + "/"+long_day_name.toUpper()+file_ext;
 
     // If output_filepath exists, we assume its was for the previouis week, we make a backup
     if (QFile::exists(output_filepath)) {
@@ -137,8 +161,7 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
 
 
     if (empty_playlist_filepath.isEmpty()) {
-        msgbox.setText("Please set the playlist template file");
-        msgbox.exec();
+        showMessage("Please set the playlist template file");
         return;
     }
 
@@ -146,9 +169,9 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
 
     auto [status, msg] = playlist.set_playlist_content();
 
+
     if (!status) {
-        msgbox.setText(msg);
-        msgbox.exec();
+        showQMessage(msg);
         return;
     }
 
@@ -171,26 +194,21 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
             playlist.create_playlist_item(advert_attributes);
         }
 
-
     }
 
-        auto [play_status, play_msg] = playlist.save_playlist();
+   auto [play_status, play_msg] = playlist.save_playlist();
 
-        QMessageBox mb;
+    if (!play_status) {
+        Logger::error("PlaylistForm", play_msg);
+        showQMessage("Error saving playlist file: "+ play_msg, QMessageBox::Warning);
+        return;
+    }
 
-        if (!play_status) {
-            Logger::error("PlaylistForm", play_msg);
-            mb.setText("Error saving playlist file: "+ play_msg);
-            mb.exec();
-            return;
-        }
+    QString success_msg = "Playlist saved successfully.";
+    Logger::info("PlaylistForm", success_msg);
 
-        QString success_msg = "Playlist saved successfully.";
-        Logger::info("PlaylistForm", success_msg);
+    showQMessage(success_msg);
 
-        mb.setText(success_msg);
-
-        mb.exec();
 }
 
 void PlaylistForm::set_comm_break_attr(std::string title,
@@ -391,8 +409,6 @@ void PlaylistForm::expand_if_has_children(QModelIndex index)
     }
 
     int row_count = ui->tvPlaylist->model()->rowCount(index);
-
-    qDebug() << "Tree rowcount ..." << row_count;
 
     for(int row=0; row < row_count; ++row)
     {

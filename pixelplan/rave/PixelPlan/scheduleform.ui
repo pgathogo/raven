@@ -30,12 +30,11 @@
        <property name="font">
         <font>
          <pointsize>12</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>Schedule Management</string>
+        <string>Breaks Management</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>
@@ -56,7 +55,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Schedule Date:</string>
+        <string>Date:</string>
        </property>
       </widget>
      </item>

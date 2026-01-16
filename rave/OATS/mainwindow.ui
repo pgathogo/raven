@@ -233,7 +233,7 @@ border-radius: 3px;
                       <number>30</number>
                      </property>
                      <item>
-                      <widget class="QLabel" name="label">
+                      <widget class="QLabel" name="lblLogoHeader">
                        <property name="font">
                         <font>
                          <bold>true</bold>
@@ -264,9 +264,9 @@ border-radius: 3px;
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLabel" name="label_3">
+                      <widget class="QLabel" name="lblLogoFooter">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Product by: PMSL&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Product by: Baryonic Systems&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -308,7 +308,7 @@ border-radius: 3px;
                         <string notr="true"/>
                        </property>
                        <property name="text">
-                        <string>EXIT</string>
+                        <string/>
                        </property>
                       </widget>
                      </item>

@@ -70,15 +70,15 @@ private slots:
     void browseClients();
     void showRegister();
     void openSetupForm();
-    void on_tv_programs();
+    void open_tv_programs();
     void on_schedule();
-    void on_merged_browser();
-    void on_setup_browser();
+    void open_merged_browser();
+    void open_setup_browser();
     void open_cue_editor();
     void test_new_booking();
 
-    void on_playlist();
-    void on_log_analysis();
+    void open_playlist();
+    void open_log_analysis();
 
     void print_comm_log();
 
@@ -110,6 +110,8 @@ private:
     PostgresDatabaseManager* mPGManager;
     void createActions();
     static AccessMap access_map;
+
+    StationInfo m_station_info;
 
     //LimeReport::ReportEngine* m_report;
 };

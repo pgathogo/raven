@@ -326,7 +326,25 @@ void SetupForm::set_comm_audio_path()
 
 void SetupForm::on_template_filepath()
 {
-    set_folder(ui->edtTemplateFile, "Playlist Templates");
+    //set_folder(ui->edtTemplateFile, "Playlist Templates");
+    // assert(le != nullptr);
+
+    QString def_filepath = ui->edtTemplateFile->text();
+    QString def_folder = "";
+
+    if (def_filepath.isEmpty()) {
+        def_filepath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    } else {
+        QFileInfo fi(def_filepath);
+        def_folder = fi.absolutePath();
+    }
+
+    QString output_filepath = QFileDialog::getOpenFileName(this,
+                                                         "Playlist Template File",
+                                                         def_folder,
+                                                           "Playlist Templates (*.CH_XML *.CH1_XML)");
+    if (!output_filepath.isEmpty())
+        ui->edtTemplateFile->setText(output_filepath);
 }
 
 void SetupForm::on_output_path()
