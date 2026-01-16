@@ -103,6 +103,7 @@ class Client(models.Model):
     late_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     grace_period = models.IntegerField(null=True)
     bill_cycle = models.CharField(max_length=1, blank=True, null=True, choices=BILL_CYCLE)
+    erp_code = models.CharField(max_length=50, null=True, blank=True)
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=255)

@@ -23,7 +23,9 @@ public:
 
     void addRecord() override;
     void updateRecord() override;
-    void deleteRecord()  override;
+    // void deleteRecord()  override;
+
+    bool okay_to_delete(std::shared_ptr<BaseEntity> entity) override;
 
     std::string typeID() override;
 

@@ -51,10 +51,11 @@ void ClientBrowser::updateRecord()
     update<Client, ClientForm>();
 }
 
-void ClientBrowser::deleteRecord()
+bool ClientBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
-    if (selectedRowId() > 0){
-       std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+    if (selectedRowId() > 0)
+    {
+       // std::shared_ptr<BaseEntity> entity = findSelectedEntity();
        Client* client = dynamic_cast<Client*>(entity.get());
        EntityDataModel edm = EntityDataModel(std::make_shared<Order>());
        edm.searchByInt({"client_id", "=", client->id()});
@@ -65,7 +66,11 @@ void ClientBrowser::deleteRecord()
            QString msg = QString("Client with ID: %1 has some existing orders! Delete aborted.").
                           arg(QString::number(client->id()));
             Logger::info("ClientBrower", msg);
+
+           return false;
        }
+
+       return true;
 
     }
 
