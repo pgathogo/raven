@@ -66,6 +66,7 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
 
     m_media_browser = std::make_unique<MediaBrowser>(m_spot, m_client);
     ui->vlMedia->addWidget(m_media_browser.get());
+    m_media_browser->show_media_file();
 
     connect(m_media_browser.get(), &MediaBrowser::audio_duration, this, &SpotForm::on_audio_duration);
 

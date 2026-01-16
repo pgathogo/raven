@@ -1,3 +1,5 @@
+#include <format>
+
 #include <QDateTime>
 #include <QFileDialog>
 #include <QVBoxLayout>
@@ -9,6 +11,7 @@
 #include <QVideoFrame>
 
 #include <QTimer>
+#include <QFileInfo>
 
 #include "mediabrowser.h"
 #include "ui_mediabrowser.h"
@@ -37,6 +40,13 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
 {
     ui->setupUi(this);
 
+    m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
+    m_setup_edm->all();
+    if (m_setup_edm->count() > 0)
+        m_setup = std::dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
+    else
+        m_setup = std::make_shared<RavenSetup>();
+
     connect(ui->btnImport, &QPushButton::clicked, this, &MediaBrowser::import_media);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MediaBrowser::play_media);
     connect(ui->btnPause, &QPushButton::clicked, this, &MediaBrowser::pause_media);
@@ -49,54 +59,51 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
     std::string full_filename = "";
 
     if (m_advert_media == nullptr) {
+
         m_advert_media = std::make_shared<PIXELPLAN::AdvertMedia>();
+
     }else{
 
-        std::string full_filename = m_advert_media->media_path()->value() +
-                                    m_advert_media->title()->value() +
-                                    "."+m_advert_media->file_extension()->value();
+        full_filename = std::format("{}{}",m_advert_media->media_path()->value(),
+                                                m_advert_media->title()->value());
+
+
+        if (m_advert_media->file_extension()->value() != "")
+            full_filename = full_filename +"."+m_advert_media->file_extension()->value();
 
         //show_media(QString::fromStdString(full_filename));
 
     }
 
-    m_setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
-    m_setup_edm->all();
-    if (m_setup_edm->count() > 0)
-        m_setup = std::dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
-    else
-        m_setup = std::make_shared<RavenSetup>();
+    m_media_filename =  QString::fromStdString(full_filename);
 
-
-    qDebug() << "1111";
-
-    m_video_widget = new QVideoWidget();
-    m_video_widget->setMinimumSize(QSize(580, 320));
-
-    qDebug() << "AAA";
-
-    m_hlplayer = new QVBoxLayout(ui->wigPlayer);
-    m_hlplayer->addWidget(m_video_widget);
-
-    qDebug() << "BBB";
-
-    m_media_player = std::make_unique<QMediaPlayer>();
-    connect(m_media_player.get(), &QMediaPlayer::mediaStatusChanged, this, &MediaBrowser::on_media_status_changed);
-    //m_media_player->setVideoOutput(m_video_widget);
-
-    qDebug() << "CCC";
-
-    m_audio_output = std::make_unique<QAudioOutput>();
-    m_media_player->setAudioOutput(m_audio_output.get());
-    m_audio_output->setVolume(0);
-
-    qDebug() << "DDD";
-    //m_media_player->setSource(QUrl::fromLocalFile(media_filename));
-
-    show_media(QString::fromStdString(full_filename));
     ui->wigProperties->setVisible(false);
 
 }
+
+void MediaBrowser::show_media_file()
+{
+    m_audio_output = std::make_unique<QAudioOutput>();
+    m_audio_output->setVolume(0.5);
+
+    m_media_player = std::make_unique<QMediaPlayer>(this);
+    connect(m_media_player.get(), &QMediaPlayer::mediaStatusChanged, this, &MediaBrowser::media_status_changed);
+    m_media_player->setAudioOutput(m_audio_output.get());
+
+    m_media_player->setSource(QUrl::fromLocalFile(m_media_filename));
+
+    m_video_widget = new QVideoWidget(this);
+    m_video_widget->setMinimumSize(QSize(150, 200));
+    m_video_widget->setFullScreen(true);
+
+    m_media_player->setVideoOutput(m_video_widget);
+
+    m_hlplayer = new QHBoxLayout(ui->wigPlayer);
+    m_hlplayer->addWidget(m_video_widget);
+
+    m_video_widget->show();
+}
+
 
 MediaBrowser::~MediaBrowser()
 {
@@ -137,6 +144,7 @@ std::shared_ptr<PIXELPLAN::AdvertMedia> MediaBrowser::find_spot_advert_media(int
 
     if (edm.count() == 0)
         return nullptr;
+
 
     auto provider = edm.getDBManager()->provider();
 
@@ -206,12 +214,10 @@ void MediaBrowser::import_media()
 
     m_advert_media->set_title(fi.fileName().toStdString());
 
-
     m_advert_media->set_media_file(media_filename.toStdString());
     m_advert_media->set_media_path(m_setup->audio_folder()->value());
     m_advert_media->set_file_extension(fi.suffix().toStdString());
     m_advert_media->set_dest_path(m_setup->audio_folder()->value());
-
 
     m_advert_media->set_created_at(QDateTime().currentDateTime());
     m_advert_media->set_client(m_spot->client()->value());
@@ -232,7 +238,6 @@ void MediaBrowser::import_media()
         show_media(media_filename);
 
         emit audio_duration(m_advert_media->duration()->value());
-
 
         // EntityDataModel edm;
         // int id = edm.createEntityDB(*m_advert_media);
@@ -268,8 +273,10 @@ void MediaBrowser::show_media(const QString media_filename)
     //connect(m_media_player.get(), &QMediaPlayer::mediaStatusChanged, this, &MediaBrowser::on_media_status_changed);
 
 
-    m_media_player->stop();
+    //m_media_player->stop();
     m_media_player->setSource(QUrl::fromLocalFile(media_filename));
+    m_video_widget->show();
+    make_property_widget();
 
 
     /*
@@ -286,13 +293,11 @@ void MediaBrowser::show_media(const QString media_filename)
     //m_hlplayer->addWidget(m_video_widget);
    */
 
-    m_video_widget->show();
-
-    make_property_widget();
 }
 
 void MediaBrowser::make_property_widget()
 {
+
     QLabel* lbl_fname = new QLabel("Filename:");
     QLabel* fname_value =  new QLabel(m_advert_media->title()->to_qstring()+
                                      "."+m_advert_media->file_extension()->to_qstring());
@@ -348,7 +353,7 @@ void MediaBrowser::on_properties(bool state)
     ui->wigProperties->setVisible(ui->btnProperties->isChecked());
 }
 
-void MediaBrowser::on_media_status_changed(QMediaPlayer::MediaStatus status)
+void MediaBrowser::media_status_changed(QMediaPlayer::MediaStatus status)
 {
     if (status == QMediaPlayer::LoadedMedia)
     {

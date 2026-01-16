@@ -37,12 +37,14 @@ public:
 
     std::shared_ptr<PIXELPLAN::AdvertMedia> advert_media();
 
+    void show_media_file();
+
 private slots:
     void import_media();
     void play_media();
     void pause_media();
     void stop_media();
-    void on_media_status_changed(QMediaPlayer::MediaStatus);
+    void media_status_changed(QMediaPlayer::MediaStatus);
     void on_properties(bool);
 
 signals:
@@ -67,7 +69,9 @@ private:
     QVideoWidget* m_video_widget;
     std::unique_ptr<QAudioOutput> m_audio_output;
 
-    QVBoxLayout* m_hlplayer;
+    QString m_media_filename;
+
+    QHBoxLayout* m_hlplayer;
 
 
 };
