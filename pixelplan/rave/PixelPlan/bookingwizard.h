@@ -100,8 +100,8 @@ public:
     std::size_t find_available_breaks();
 
     bool validateCurrentPage() override;
-    int nextId() const override;
-    void initializePage(int) override;
+    //int nextId() const override;
+    //void initializePage(int) override;
 
     TRAFFIK::Spot* selected_spot();
 
@@ -165,10 +165,10 @@ private slots:
     void show_breaks(int);
     //void time_band_selected(const QModelIndex&);
     void time_band_selected2(QTableWidgetItem*);
-    void on_programs_clicked(QListWidgetItem*);
-    void on_select_all_programs();
-    void on_select_all_breaks();
-    void on_all_break_by_date_selected(bool);
+    void programs_clicked(QListWidgetItem*);
+    void select_all_programs();
+    void select_all_breaks();
+    void all_break_by_date_selected(bool);
 
 private:
     void print_selected_breaks();
@@ -208,6 +208,8 @@ private:
     std::vector<int> get_program_ids(const std::map<progid, Program>&);
     void assign_breaks_to_programs(const std::vector<ProgramBreak>&, std::map<progid, Program>&);
     void show_program_breaks(std::vector<ProgramBreak>);
+
+    void disable_select_by_dow_page();
 
     Ui::BookingWizard *ui;
     Order* m_order;

@@ -80,10 +80,10 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     //connect(ui->lvTimeBand, &QListView::clicked, this, &BookingWizard::time_band_selected);
 
     connect(ui->twTB, &QTableWidget::itemClicked, this, &BookingWizard::time_band_selected2);
-    connect(ui->lwPrograms, &QListWidget::itemClicked, this, &BookingWizard::on_programs_clicked);
+    connect(ui->lwPrograms, &QListWidget::itemClicked, this, &BookingWizard::programs_clicked);
 
-    connect(ui->cbAllPrograms, &QCheckBox::toggled, this, &BookingWizard::on_select_all_programs);
-    connect(ui->cbAllBreaks, &QCheckBox::toggled, this, &BookingWizard::on_select_all_breaks);
+    connect(ui->cbAllPrograms, &QCheckBox::toggled, this, &BookingWizard::select_all_programs);
+    connect(ui->cbAllBreaks, &QCheckBox::toggled, this, &BookingWizard::select_all_breaks);
 
 
     // connect(ui->cbTimeband, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -104,7 +104,7 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
         this->ui->lblTotalBookings->setText(QString::number(this->ui->twBreakSelect->selectedRanges().size()));
     });
 
-    connect(ui->btnDateBreakSel, &QPushButton::clicked, this, &BookingWizard::on_all_break_by_date_selected);
+    connect(ui->btnDateBreakSel, &QPushButton::clicked, this, &BookingWizard::all_break_by_date_selected);
     connect(ui->btnDateBreakUnSel, &QPushButton::clicked, this, [&](){ ui->twBreakSelect->clearSelection(); });
 
     m_daypart_grid = std::make_unique<DayPartGrid>(ui->vlDaypart);
@@ -168,6 +168,8 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     ui->rbPrograms->toggle();
 
     ui->rbManualTime->setVisible(false);
+
+    disable_select_by_dow_page();
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
@@ -1053,7 +1055,7 @@ void BookingWizard::time_band_selected(const QModelIndex& mi)
 }
 */
 
-void BookingWizard::on_programs_clicked(QListWidgetItem* lwi)
+void BookingWizard::programs_clicked(QListWidgetItem* lwi)
 {
 
     QItemSelectionModel* ism = ui->lwPrograms->selectionModel();
@@ -1085,7 +1087,7 @@ void BookingWizard::on_programs_clicked(QListWidgetItem* lwi)
 
 }
 
-void BookingWizard::on_select_all_programs()
+void BookingWizard::select_all_programs()
 {
     if (ui->cbAllPrograms->isChecked()) {
 
@@ -1102,7 +1104,7 @@ void BookingWizard::on_select_all_programs()
 }
 
 
-void BookingWizard::on_select_all_breaks()
+void BookingWizard::select_all_breaks()
 {
     if (ui->cbAllBreaks->isChecked()) {
         ui->twBreaks->selectAll();
@@ -1806,9 +1808,10 @@ std::size_t BookingWizard::find_available_breaks()
     return m_rule_engine->find_breaks();
 }
 
+/*
 void BookingWizard::initializePage(int currentId)
 {
-  /*
+
     qDebug() << "Initialize Page: "<< currentId;
     if (currentId == 3){
         QAbstractButton* next_btn = button(QWizard::NextButton);
@@ -1817,13 +1820,15 @@ void BookingWizard::initializePage(int currentId)
             next_btn->setDisabled(true);
         }
     }
- */
 
 }
+*/
 
 
 bool BookingWizard::validateCurrentPage()
 {
+    std::cout << "Current ID: " << currentId();
+
     switch (currentId())
     {
         case BookingWizard::Page_Spots:
@@ -1910,7 +1915,7 @@ bool BookingWizard::validateCurrentPage()
                 // distribute_spot_to_selected_breaks()
             }
 
-            on_all_break_by_date_selected(true);
+            all_break_by_date_selected(true);
 
             break;
         }
@@ -1924,8 +1929,10 @@ bool BookingWizard::validateCurrentPage()
         {
             TRAFFIK::TraffikTreeViewModel* tvm  = new TRAFFIK::TraffikTreeViewModel(ui->twBreakSelect->selectedItems());
             ui->tvSummary->setModel(tvm);
+            ui->tvSummary->expandAll();
             break;
         }
+
         case BookingWizard::Page_Final:
             return make_booking();
             //break;
@@ -1935,6 +1942,7 @@ bool BookingWizard::validateCurrentPage()
     return true;
 }
 
+/*
 int BookingWizard::nextId() const
 {
 
@@ -1945,8 +1953,16 @@ int BookingWizard::nextId() const
     }
 
 }
+*/
+void BookingWizard::disable_select_by_dow_page()
+{
+    ui->btnClearSel->setEnabled(false);
+    ui->btnBreakSelApply->setEnabled(false);
+    ui->btnBreakSelect->setEnabled(false);
+    ui->btnBreakUnselect->setEnabled(false);
+}
 
-void BookingWizard::on_all_break_by_date_selected(bool checked)
+void BookingWizard::all_break_by_date_selected(bool checked)
 {
     for (int i=0; i < ui->twBreakSelect->rowCount(); ++i) {
         ui->twBreakSelect->selectRow(i);

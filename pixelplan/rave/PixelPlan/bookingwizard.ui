@@ -386,7 +386,7 @@
      <layout class="QHBoxLayout" name="hlAll"/>
     </item>
     <item>
-     <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0,1,0" rowminimumheight="40,40,40,40,40,40,40,40" columnminimumwidth="0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0,1" rowminimumheight="40,40,40,40,40,40,40,40" columnminimumwidth="0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
