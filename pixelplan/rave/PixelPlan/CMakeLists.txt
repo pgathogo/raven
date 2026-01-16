@@ -70,6 +70,14 @@ set(RAVE_SECURITY_DIR "../../../rave/security")
 set(UTILS_DIR "../../../rave/utils")
 set(RAVE_CLUSTER_DIR "../../../ravecluster/rave/clusterman")
 
+# Ninja built-in workaround for Windows timestamp issues
+#set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E touch_nocreate <TARGET>")
+
+if(WIN32)
+    set(CMAKE_CL_SHOWINCLUDES_PREFIX "Note: including file: ")
+    set(CMAKE_DEPFILE_FLAGS_C "/showIncludes")
+    set(CMAKE_DEPFILE_FLAGS_CXX "/showIncludes")
+endif()
 
 set(PROJECT_SOURCES
     main.cpp
@@ -474,8 +482,27 @@ set(PROJECT_SOURCES
 
 #playlistform.h playlistform.cpp playlistform.ui
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    enable_language("RC")
+    set(RC_FILE "${CMAKE_CURRENT_SOURCE_DIR}/appicon.rc")
+    set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/ravenicon64.ico")
+
+    # Verify files exists
+    if(NOT EXISTS ${APP_ICON})
+       message(WARNING "Icon file not found! ${APP_ICON}")
+    endif()
+
+    if (NOT EXISTS ${RC_FILE})
+       message(WARNING "RC file not found! ${RC_FILE}")
+    endif()
+
+    list(APPEND PROJECT_SOURCES ${RC_FILE})
+
+endif()
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(pixelplan
+        #WIN32          # Critical: Tells Windows it's a GUI app
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
@@ -486,10 +513,13 @@ else()
         )
     else()
         add_executable(pixelplan
+            #WIN32
             ${PROJECT_SOURCES}
+            ${RC_FILE}
         )
     endif()
 endif()
+
 
 if (MSVC)
     target_compile_options(pixelplan PRIVATE "/W0")
@@ -584,3 +614,4 @@ set_target_properties(pixelplan PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(pixelplan)
 endif()
+

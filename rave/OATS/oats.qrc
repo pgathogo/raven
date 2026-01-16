@@ -26,5 +26,8 @@
         <file>images/icons/play_02.png</file>
         <file>images/icons/fade_01.png</file>
         <file>images/icons/pause_01.png</file>
+        <file>images/icons/exit01.png</file>
+        <file>images/icons/home02.png</file>
+        <file>images/icons/home03.png</file>
     </qresource>
 </RCC>
