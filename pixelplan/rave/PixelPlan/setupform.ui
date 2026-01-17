@@ -516,10 +516,40 @@
           <string>Reporting:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_6">
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="edtKey"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="btnSaveConfig">
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="btnReportViewer">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_22">
             <property name="text">
              <string>Viewer Path:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="edtRunner"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="edtReportViewer"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="btnConfig">
+            <property name="text">
+             <string>Config</string>
             </property>
            </widget>
           </item>
@@ -530,9 +560,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="edtRunner"/>
-          </item>
           <item row="1" column="2">
            <widget class="QPushButton" name="btnRunner">
             <property name="text">
@@ -540,15 +567,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="edtReportViewer"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="btnReportViewer">
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="edtValue"/>
           </item>
          </layout>
         </widget>

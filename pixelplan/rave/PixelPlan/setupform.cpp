@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <tuple>
 
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -13,6 +14,7 @@
 #include "../../../rave/framework/choicefield.h"
 #include "orderapprover.h"
 #include "approverform.h"
+
 
 
 SetupForm::SetupForm(RavenSetup* setup,
@@ -68,7 +70,11 @@ SetupForm::SetupForm(RavenSetup* setup,
 
     load_order_approvers();
 
+
+
 }
+
+
 
 SetupForm::~SetupForm()
 {
@@ -78,6 +84,8 @@ SetupForm::~SetupForm()
 ActionResult SetupForm::saveRecord()
 {
     populateEntityFields();
+    m_config_manager.write_config();
+
     return m_setup->validate();
 }
 
@@ -116,8 +124,11 @@ void SetupForm::populateEntityFields()
     m_setup->set_playlist_output_path(ui->edtOutputPath->text().toStdString());
     m_setup->set_playlist_backup_path(ui->edtBackupPath->text().toStdString());
 
-    m_setup->set_report_viewer_path(ui->edtReportViewer->text().toStdString());
-    m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
+    auto [rv_status, rv_msg] = m_config_manager.update_value("report_viewer_path",  ui->edtReportViewer->text());
+    auto [rr_status, rr_msg] = m_config_manager.update_value("report_runner_path",  ui->edtRunner->text());
+
+    // m_setup->set_report_viewer_path(ui->edtReportViewer->text().toStdString());
+    // m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
 
     m_setup->set_magicsoft_logfile_path(ui->edtMagicSoftLog->text().toStdString());
 }
@@ -159,10 +170,19 @@ void SetupForm::populateFormWidgets()
     ui->edtOutputPath->setText(m_setup->playlist_output_path()->to_qstring());
     ui->edtBackupPath->setText(m_setup->playlist_backup_path()->to_qstring());
 
-    ui->edtReportViewer->setText(m_setup->report_viewer_path()->to_qstring());
-    ui->edtRunner->setText(m_setup->report_runner_path()->to_qstring());
-
     ui->edtMagicSoftLog->setText(m_setup->magicsoft_logfile_path()->to_qstring());
+
+    // Read local config file
+    auto [status, msg] = m_config_manager.read_config("setup.json");
+
+    if (status) {
+        ui->edtReportViewer->setText(m_config_manager.get_value("report_viewer_path"));
+        ui->edtRunner->setText(m_config_manager.get_value("report_runner_path"));
+
+        // ui->edtReportViewer->setText(m_setup->report_viewer_path()->to_qstring());
+        // ui->edtRunner->setText(m_setup->report_runner_path()->to_qstring());
+    }
+
 }
 
 void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)

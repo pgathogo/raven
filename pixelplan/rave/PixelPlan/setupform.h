@@ -4,6 +4,7 @@
 #include <set>
 #include <QWidget>
 #include "../../../rave/framework/baseentitydetaildlg.h"
+#include "configmanager.h"
 
 namespace Ui {
 class SetupForm;
@@ -65,6 +66,7 @@ private:
       Ui::SetupForm *ui;
       RavenSetup* m_setup;
       std::unique_ptr<EntityDataModel> m_edm_approver;
+      PIXELPLAN::ConfigManager m_config_manager;
 };
 
 #endif // SETUPFORM_H

@@ -261,6 +261,8 @@ set(PROJECT_SOURCES
     commloganalyzer.h
     commloganalyzer.cpp
     commloganalyzer.ui
+    configmanager.h
+    configmanager.cpp
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
