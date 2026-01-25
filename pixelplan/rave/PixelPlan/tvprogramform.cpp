@@ -22,7 +22,7 @@ TVProgramForm::TVProgramForm(std::shared_ptr<PIXELPLAN::TVProgram> tvprogram, QD
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
 
-    connect(ui->sbDuration, &QSpinBox::valueChanged, this, &TVProgramForm::on_duration_changed);
+    //connect(ui->sbDuration, &QSpinBox::valueChanged, this, &TVProgramForm::on_duration_changed);
     connect(ui->edtEndTime, &QTimeEdit::timeChanged, this, &TVProgramForm::on_end_time_changed);
 
     populate_weekdays();
@@ -107,7 +107,7 @@ void TVProgramForm::populateEntityFields()
     m_tvprogram->set_start_time(ui->edtStartTime->time());
     m_tvprogram->set_end_time(ui->edtEndTime->time());
 
-    m_tvprogram->set_duration(ui->sbDuration->value());
+    // m_tvprogram->set_duration(ui->sbDuration->value());
     m_tvprogram->set_producer(ui->edtProducer->text().toStdString());
     m_tvprogram->set_director(ui->edtDirector->text().toStdString());
     m_tvprogram->set_writer(ui->edtWriter->text().toStdString());
@@ -130,7 +130,7 @@ void TVProgramForm::populateFormWidgets()
     ui->edtStartTime->setTime(m_tvprogram->start_time()->value());
     ui->edtEndTime->setTime(m_tvprogram->end_time()->value());
 
-    ui->sbDuration->setValue(m_tvprogram->duration()->value());
+    // ui->sbDuration->setValue(m_tvprogram->duration()->value());
 
     ui->edtProducer->setText(m_tvprogram->producer()->to_qstring());
     ui->edtDirector->setText(m_tvprogram->director()->to_qstring());
@@ -152,16 +152,11 @@ void TVProgramForm::on_duration_changed(int minutes)
 
 }
 
+
+
 void TVProgramForm::on_end_time_changed(QTime new_time)
 {
-    auto start_time = ui->edtStartTime->time();
 
-    if (new_time < start_time) {
-        QMessageBox mbox;
-        mbox.setText("End time is less than start time!");
-        mbox.exec();
-        ui->edtEndTime->setTime(ui->edtStartTime->time());
-    }
 }
 
 

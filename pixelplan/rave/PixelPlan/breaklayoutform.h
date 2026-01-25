@@ -81,6 +81,8 @@ private:
     std::tuple<int, int> row_identity();
     void register_dow_checkboxes();
 
+    bool is_time_range(const QTime&, const QTime&, const QTime&);
+
     Ui::BreakLayoutForm *ui;
     BreakLayout* mBreakLayout;
     std::shared_ptr<EntityDataModel> m_edm_breakline;

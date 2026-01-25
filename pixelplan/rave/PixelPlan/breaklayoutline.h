@@ -55,7 +55,7 @@ public:
     bool operator<(const BreakLayoutLine& other) const {
         return breakTime()->value() < other.breakTime()->value();
     }
-    std::string order_by() const override { return "break_time"; }
+    std::string order_by() const override { return "id"; }
 
 private:
     ForeignKeyField* mBreakLayout;

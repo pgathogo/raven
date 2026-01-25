@@ -112,6 +112,9 @@ public:
     std::shared_ptr<BaseEntity> cloneAsShared() override;
     void afterMapping(BaseEntity& entity) override;
 
+
+    std::string order_by() const override { return "schedule_date, id"; }
+
     void setDefaults();
     void setTableViewColumns(const std::vector<std::string> cols);
     void setTableViewValues(const std::vector<std::string> vals);

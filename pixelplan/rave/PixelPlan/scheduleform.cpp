@@ -77,8 +77,6 @@ void ScheduleForm::load_schedule(const QDate &date) {
   std::string filter =
       m_edm_schedule->prepareFilter(date_filter, breaks_only_filter);
 
-  qDebug() << stoq(filter);
-
   m_edm_schedule->search(filter);
 
   build_tree_view();
@@ -142,7 +140,8 @@ void ScheduleForm::build_tree_view() {
     return method_map[f_m];
   };
 
-  Breaks comm_breaks;
+  //Breaks comm_breaks;
+  OrderedMap comm_breaks;
 
   for (auto &[name, entity] : m_edm_schedule->modelEntities()) {
     Schedule *schedule = dynamic_cast<Schedule *>(entity.get());
@@ -162,10 +161,13 @@ void ScheduleForm::build_tree_view() {
     comm_break.booked_spots = schedule->booked_spots()->value();
     comm_break.time_left = schedule->break_duration_left()->value();
 
-    comm_breaks[comm_break.schedule_hour].push_back(comm_break);
+    //comm_breaks[comm_break.schedule_hour].push_back(comm_break);
+    comm_breaks.insert(comm_break.schedule_hour, comm_break);
   }
 
-  if (comm_breaks.size() > 0) {
+  // Sort breaks by id
+
+  if (comm_breaks.insertion_order().size() > 0) {
     ScheduleManTreeViewModel *sched_model =
         new ScheduleManTreeViewModel(comm_breaks);
     ui->tvSchedule->setModel(sched_model);

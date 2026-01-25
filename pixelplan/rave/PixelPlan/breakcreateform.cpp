@@ -56,6 +56,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
 
     setup_ui();
 
+
 }
 
 BreakCreateForm::~BreakCreateForm()
@@ -145,8 +146,6 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 
     m_edm_break_line->search(filter);
 
-
-    print_model_items();
 }
 
 void BreakCreateForm::print_model_items()

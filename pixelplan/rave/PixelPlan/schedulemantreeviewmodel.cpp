@@ -17,15 +17,24 @@ ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent
     build_tree(m_nodes);
 }
 
-int ScheduleManTreeViewModel::read_tree_data(const Breaks& items)
+int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
 {
     int parent_id = 0;
-    for (auto& [hour, breaks] : items){
+    //for (auto& [hour, breaks] : items){
+    std::vector<int> hours = items.insertion_order();
+    for ( const auto& hour : hours) {
+
         TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode("Hour: "+std::to_string(hour),
                                      std::to_string(hour), ++parent_id, -1, hour);
+
         m_nodes.push_back(parent_node);
         int child_id = 0;
-        for(auto& comm_break : breaks){
+
+        auto breaks = items.get_value(hour);
+
+        for(const auto& comm_break : breaks)
+        {
+
             TRAFFIK::TraffikNode* child_node = new TRAFFIK::TraffikNode(comm_break.schedule_time, "",
                                         ++child_id, parent_id, comm_break.id);
 

@@ -1,5 +1,9 @@
 #include <print>
 
+#include <QDateTime>
+#include <QTime>
+#include <QDate>
+
 #include "breaklayoutform.h"
 #include "ui_breaklayoutform.h"
 
@@ -294,13 +298,12 @@ void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvpr
     int min  = tvprogram->start_time()->value().minute();
 
     QTime start_time(hour, min, 0);
-
     QTime t2 = start_time;
+
+    //QDateTime start_dt(QDate()::currentDate(), tvprogram->start_time()->value());
 
     do {
         auto breakLine = std::make_unique<BreakLayoutLine>();
-
-        t2 = t2.addSecs(time_interval * 60);
 
         if (std::find(m_deleted_item.begin(), m_deleted_item.end(), t2) != m_deleted_item.end())
             continue;
@@ -316,7 +319,21 @@ void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvpr
         breakLine->setDBAction(DBAction::dbaCREATE);
         m_edm_breakline->cacheEntity(std::move(breakLine));
 
-    } while(t2 < tvprogram->end_time()->value() );
+        t2 = t2.addSecs(time_interval * 60);
+
+    } while (is_time_range(t2, start_time, tvprogram->end_time()->value() ) );
+
+    //} while(t2 < tvprogram->end_time()->value() );
+}
+
+bool BreakLayoutForm::is_time_range(const QTime& current, const QTime& start, const QTime& end)
+{
+    if (start <= end) {
+        // Normal range (e.g., 21:00 to 23:00)
+        return current >= start && current < end;
+    } else {
+        return current >= start || current < end;
+    }
 }
 
 
@@ -370,8 +387,6 @@ void BreakLayoutForm::set_defaults()
     populate_choice_combo_string(ui->cbBreakFillMethod, mBreakLayout->break_fill_method());
 
     if (mBreakLayout->isNew()){
-
-        std::println("111");
 
          ui->cbTimeInterval->setCurrentIndex(0);
          ui->cbBreakFillMethod->setCurrentIndex(0);
@@ -443,7 +458,8 @@ void BreakLayoutForm::undoCopy(int fromHr, int toHr)
 void BreakLayoutForm::timeIntervalChanged(int i)
 {
     mBreakLayout->setTimeInterval(
-                ui->cbTimeInterval->itemData(i).toInt());
+                ui->cbTimeInterval->itemData(i).toInt()
+        );
 
     populateBreakLine();
 

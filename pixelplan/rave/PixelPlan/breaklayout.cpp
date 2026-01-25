@@ -13,6 +13,7 @@ BreakLayout::BreakLayout()
     mWeekDays->setSearchable(false);
 
     mTimeInterval = createField<ChoiceField<int>>("time_interval", "Time Interval");
+    mTimeInterval->addChoice({30, "30 Mins"});
     mTimeInterval->addChoice({15, "15 Mins"});
     mTimeInterval->addChoice({10, "10 Mins"});
     mTimeInterval->addChoice({5, "5 Mins"});
@@ -253,3 +254,4 @@ std::shared_ptr<BaseEntity> BreakLayout::cloneAsShared()
 void BreakLayout::afterMapping(BaseEntity &entity)
 {
 }
+

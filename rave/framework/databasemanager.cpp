@@ -238,6 +238,9 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
 
+    std::cout << sql << '\n';
+
+
     return provider()->read(sql);
 
 }

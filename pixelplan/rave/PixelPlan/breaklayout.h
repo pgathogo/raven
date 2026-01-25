@@ -72,6 +72,7 @@ public:
     std::shared_ptr<BaseEntity> cloneAsShared() override;
     void afterMapping(BaseEntity& entity) override;
 
+
 private:
     ForeignKeyField* m_tvprogram;
     StringField* mWeekDays;

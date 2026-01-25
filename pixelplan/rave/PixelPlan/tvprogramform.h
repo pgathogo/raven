@@ -33,6 +33,7 @@ private slots:
     void on_end_time_changed(QTime);
 
 private:
+
     Ui::TVProgramForm *ui;
 
     std::shared_ptr<PIXELPLAN::TVProgram> m_tvprogram;
