@@ -7,6 +7,8 @@
 *.swp
 *__*__*
 __*__
+*.rar
+*.zip
 #CMake*
 CMakeLists.txt.user*
 *.db
