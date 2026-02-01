@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QTime>
 #include <QDate>
+#include <QStringList>
 
 #include "breaklayoutform.h"
 #include "ui_breaklayoutform.h"
@@ -33,6 +34,7 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     ,m_edm_tvprogram{nullptr}
     ,m_current_tvprogram{nullptr}
 {
+
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());
 
@@ -64,7 +66,6 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     if (mEdmTSetup->count() > 0)
         mRavenSetup = dynamic_cast<RavenSetup*>(mEdmTSetup->firstEntity().get());
 
-    populateFormWidgets();
 
     connect(ui->cbTimeInterval, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &BreakLayoutForm::timeIntervalChanged);
@@ -85,6 +86,7 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
 
     populate_program_combo(excl_progids);
 
+    populateFormWidgets();
 
     if (!mBreakLayout->isNew()) {
         int index = ui->cbProgram->findData(QVariant(mBreakLayout->tvprogram()->value()));
@@ -92,15 +94,17 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
         ui->cbProgram->setEnabled(false);
     }
 
+
     register_dow_checkboxes();
 
     ui->gbCopy->setHidden(true);
     hideSaveNewBtn();
 
+
     set_defaults();
 
-    setup_ui();
 
+    setup_ui();
 
 }
 
@@ -194,21 +198,50 @@ void BreakLayoutForm::populateEntityFields()
 
 void BreakLayoutForm::populateFormWidgets()
 {
-    // ui->edtName->setText(stoq(mBreakLayout->name()->value()));
+    constexpr int MON=0;
+    constexpr int TUE=1;
+    constexpr int WED=2;
+    constexpr int THR=3;
+    constexpr int FRI=4;
+    constexpr int SAT=5;
+    constexpr int SUN=6;
+
+    QString bcast_days = m_current_tvprogram->broadcast_days()->to_qstring();
+    QStringList bd = bcast_days.split(",");
+
+    auto bd_contains = [&](QString dow) {
+        return(bd.contains(dow)) ? 1 : 0;
+    };
+
+    QStringList days_of_week = {"Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"};
+
+    std::string bd_bits;
+
+    for (int i=0; i < days_of_week.size(); ++i){
+
+        bd_bits += std::to_string(bd_contains(days_of_week.at(i)));
+    }
+
+    std::string dow =  mBreakLayout->weekDays()->value() ;
+
+    if (dow.empty())
+        dow = bd_bits;
+
+
     populate_choice_combo_int(ui->cbTimeInterval, mBreakLayout->timeInterval());
 
     auto cs = [](int i){ return (i==0) ? Qt::Unchecked : Qt::Checked; };
+    auto check_state = [&](char c) { return cs(std::stoi(std::string(1, c) ) ); };
 
-    ui->cbMon->setCheckState(cs(mBreakLayout->monBit()->value()));
-    ui->cbTue->setCheckState(cs(mBreakLayout->tueBit()->value()));
-    ui->cbWed->setCheckState(cs(mBreakLayout->wedBit()->value()));
-    ui->cbThu->setCheckState(cs(mBreakLayout->thuBit()->value()));
-    ui->cbFri->setCheckState(cs(mBreakLayout->friBit()->value()));
-    ui->cbSat->setCheckState(cs(mBreakLayout->satBit()->value()));
-    ui->cbSun->setCheckState(cs(mBreakLayout->sunBit()->value()));
+    ui->cbMon->setCheckState(check_state(dow[MON]));
+    ui->cbTue->setCheckState(check_state(dow[TUE]));
+    ui->cbWed->setCheckState(check_state(dow[WED]));
+    ui->cbThu->setCheckState(check_state(dow[THR]));
+    ui->cbFri->setCheckState(check_state(dow[FRI]));
+    ui->cbSat->setCheckState(check_state(dow[SAT]));
+    ui->cbSun->setCheckState(check_state(dow[SUN]));
 
     //populateCopyCB();
-
 
     //populateBreakLine();
 
@@ -657,9 +690,6 @@ void BreakLayoutForm::delete_row_TEST()
         }
 
     }
-
-    qDebug() << "Unique ID: "<< unique_id;
-    qDebug() << "Row ID: "<< row_id;
 
     // if (unique_id > -1) {
     //     EntityDataModel edm(std::make_shared<BreakLayoutLine>());

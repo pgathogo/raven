@@ -151,7 +151,6 @@ PostgresDatabaseManager::PostgresDatabaseManager(const std::string conninfo, boo
     if (fresh_conn)
         dataProvider->nullify_connector();
 
-    std::cout << "DBManager: " << conninfo << '\n';
 
     dataProvider->openConnection(conninfo);
     mConninfo = conninfo;
@@ -237,8 +236,6 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     std::string flds = columnsForSelection(entity);
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
-
-    std::cout << sql << '\n';
 
 
     return provider()->read(sql);

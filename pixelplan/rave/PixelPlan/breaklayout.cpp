@@ -103,6 +103,15 @@ void BreakLayout::set_break_fill_method(const std::string method)
     m_break_fill_method->setValue(method);
 }
 
+void BreakLayout::update_weekdays(int dow, int bit)
+{
+    std::string weekdays =  weekDays()->value();
+    weekdays[dow] = static_cast<char>(bit);
+    setWeekDays(weekdays);
+
+    // mMonBit->setValue( bit );
+}
+
 IntegerField *BreakLayout::monBit() const
 {
     return mMonBit;
@@ -110,7 +119,8 @@ IntegerField *BreakLayout::monBit() const
 
 void BreakLayout::setMonBit(int bit)
 {
-    mMonBit->setValue( bit );
+    update_weekdays(MON, bit);
+    mMonBit->setValue(bit);
 }
 
 IntegerField *BreakLayout::tueBit() const
@@ -120,6 +130,8 @@ IntegerField *BreakLayout::tueBit() const
 
 void BreakLayout::setTueBit(int bit)
 {
+
+    update_weekdays(TUE, bit);
     mTueBit->setValue( bit );
 }
 
@@ -130,6 +142,7 @@ IntegerField *BreakLayout::wedBit() const
 
 void BreakLayout::setWedBit(int bit)
 {
+    update_weekdays(WED, bit);
     mWedBit->setValue( bit );
 }
 
@@ -140,6 +153,7 @@ IntegerField *BreakLayout::thuBit() const
 
 void BreakLayout::setThuBit(int bit)
 {
+    update_weekdays(THR, bit);
     mThuBit->setValue( bit );
 }
 
@@ -150,6 +164,7 @@ IntegerField *BreakLayout::friBit() const
 
 void BreakLayout::setFriBit(int bit)
 {
+    update_weekdays(FRI, bit);
     mFriBit->setValue( bit );
 }
 
@@ -160,6 +175,7 @@ IntegerField *BreakLayout::satBit() const
 
 void BreakLayout::setSatBit(int bit)
 {
+    update_weekdays(SAT, bit);
     mSatBit->setValue( bit );
 }
 
@@ -170,6 +186,7 @@ IntegerField *BreakLayout::sunBit() const
 
 void BreakLayout::setSunBit(int bit)
 {
+    update_weekdays(SUN, bit);
     mSunBit->setValue( bit );
 }
 

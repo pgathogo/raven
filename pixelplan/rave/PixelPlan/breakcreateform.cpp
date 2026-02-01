@@ -130,10 +130,13 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 
         bl =  dynamic_pointer_cast<BreakLayout>(be);
         bl_ids.push_back(bl->id());
-
     }
 
     m_selected_breaklayout = bl;
+
+    std::string dow = m_selected_breaklayout->weekDays()->value();
+
+    std::cout << dow << '\n';
 
     std::string ids = join<std::vector<int>>(bl_ids);
     ids = "("+ ids +")";
@@ -182,6 +185,7 @@ void BreakCreateForm::create_breaks()
     }
 
     std::string insert_statements = make_insert_statements(ui->dtFrom->date(), ui->dtTo->date());
+
 
     if (insert_statements.empty())
         return;
@@ -259,10 +263,11 @@ void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from
 std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
 {
     Schedule sched;
-    std::string insert_stmts;
+    std::string insert_stmts = "";
     Vectored<Field> fields;
 
     ScheduleRecords s_recs;
+
     get_existing_schedules(s_recs, from, to);
 
     /*
@@ -275,7 +280,6 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
         }
     }
     */
-
 
 
     auto break_exists = [&](QDate sched_date, int sched_hr, QTime sched_time)
@@ -295,10 +299,24 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
         return false;
     };
 
+    auto dow_allowed = [&](int dow){
+        std::string weekdays = m_selected_breaklayout->weekDays()->value();
+        std::string s(1, weekdays[dow-1]);
+        return ( std::stoi(s) == 1) ? true : false;
+    };
+
     QDate tmpDate = from;
 
     while (tmpDate <= to)
     {
+
+        if(!dow_allowed(tmpDate.dayOfWeek())) {
+            qDebug() << "Date: " << tmpDate.toString("dd-MM-yyyy") << "DOW: "<< tmpDate.dayOfWeek() << ".... Skipped";
+            tmpDate = tmpDate.addDays(1);
+            continue;
+        }
+
+
         for (auto& [name, entity] : m_edm_break_line->modelEntities())
         {
             BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
@@ -364,7 +382,11 @@ void BreakCreateForm::remove_hour()
 
 void BreakCreateForm::create_layout()
 {
+    qDebug() << "4444";
+
     auto break_layout = std::make_shared<BreakLayout>();
+
+    qDebug() << "5555";
 
     std::shared_ptr<BreakLayoutForm> blform =
         std::make_shared<BreakLayoutForm>(break_layout.get(), m_excluded_progids, this);
@@ -454,7 +476,6 @@ void BreakCreateForm::edit_layout()
         std::map<QString, QString> fill_method;
         fill_method["Sequence"] = "S";
         fill_method["Random"] = "R";
-
 
         EntityDataModel edm(std::make_shared<BreakLayoutLine>());
 

@@ -86,7 +86,7 @@ public:
 
         horizontalLayout->addWidget(btnDelete);
 
-        horizontalSpacer_2 = new QSpacerItem(20, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
+        horizontalSpacer_2 = new QSpacerItem(20, 20, QSizePolicy::Policy::Preferred, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer_2);
 
@@ -107,9 +107,10 @@ public:
         vlGrid->setObjectName(QString::fromUtf8("vlGrid"));
         tvEntity = new QTableView(BaseEntityBrowserDlg);
         tvEntity->setObjectName(QString::fromUtf8("tvEntity"));
-        tvEntity->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        tvEntity->setSelectionMode(QAbstractItemView::SingleSelection);
-        tvEntity->setSelectionBehavior(QAbstractItemView::SelectRows);
+        tvEntity->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
+        tvEntity->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+        tvEntity->setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
+        tvEntity->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 
         vlGrid->addWidget(tvEntity);
 
@@ -125,7 +126,7 @@ public:
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        gridLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+        gridLayout->setSizeConstraint(QLayout::SizeConstraint::SetDefaultConstraint);
         label = new QLabel(BaseEntityBrowserDlg);
         label->setObjectName(QString::fromUtf8("label"));
 

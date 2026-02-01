@@ -13,6 +13,15 @@ using Sun = int;
 
 using WeekDayBits = std::tuple<Mon, Tue, Wed, Thu, Fri, Sat, Sun>;
 
+constexpr int MON=1;
+constexpr int TUE=2;
+constexpr int WED=3;
+constexpr int THR=4;
+constexpr int FRI=5;
+constexpr int SAT=6;
+constexpr int SUN=7;
+
+
 template<typename T>
 class ChoiceField;
 
@@ -57,6 +66,7 @@ public:
 
     WeekDayBits getAccessBit(std::string abit);
     std::string access_bit_tostring();
+    void update_weekdays(int, int);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
