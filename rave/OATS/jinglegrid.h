@@ -135,8 +135,8 @@ namespace OATS
         Q_OBJECT
     public:
         const int PAGE_COUNT = 10;
-        const int GRID_ROWS  = 10;
-        const int GRID_COLS  = 2;
+        const int GRID_ROWS  = 5; // 10
+        const int GRID_COLS  = 4; // 2
 
         int JINGLE_PAGE_ONE = 1;
 

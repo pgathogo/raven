@@ -391,6 +391,27 @@ namespace OATS
             "QPushButton:pressed{background-color:#555D64; border:none;}"
             );
 
+
+        QString jingle_btn_style(
+            "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
+            "border-radius: 20px;"
+            "border-style: inset;"
+            "border-bottom-width: 2px;"
+            "border-radius: 3px;"
+            "border-bottom-color:#374148;"
+            "color:#FFFFFF;"
+            "height:80;"
+            "width:50;"
+            "font-weight:bold;}"
+
+            "QPushButton:hover{"
+            "background-color:#555D64; "
+            "border-width:1px;"
+            "border-color:#0479B0;"
+            " }"
+
+            "QPushButton:pressed{background-color:#555D64; border:none;}"
+            );
        m_grid_layout = new QGridLayout(this);
 
        int id=1;
@@ -401,7 +422,7 @@ namespace OATS
 
               GridButton* grid_button = new GridButton(id++, row, col);
 
-              grid_button->setStyleSheet(btn_style);
+              grid_button->setStyleSheet(jingle_btn_style);
 
               grid_button->setContextMenuPolicy(Qt::CustomContextMenu);
 
