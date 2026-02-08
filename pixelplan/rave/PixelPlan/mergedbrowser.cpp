@@ -64,6 +64,7 @@ MergedBrowser::~MergedBrowser()
     delete ui;
 }
 
+
 void MergedBrowser::change_tab(int index)
 {
     std::shared_ptr<BaseEntity> ent = m_client_browser->findSelectedEntity();

@@ -27,6 +27,7 @@ OrderBooking::OrderBooking()
     m_booking_status->addChoice({"READY","READY"});
     m_booking_status->addChoice({"PLAYED","PLAYED"});
     m_booking_status->addChoice({"CANCELLED","CANCEL"});
+    m_booking_status->addChoice({"SKIPPED","SKIPPED"});
 
     m_play_date = createField<DateField>("play_date", "Play Date");
     m_play_time = createField<DateTimeField>("play_time", "Play Time");

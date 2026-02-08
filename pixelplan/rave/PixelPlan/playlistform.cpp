@@ -440,6 +440,7 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
         << " LEFT JOIN rave_client d ON c.client_id = d.id "
         << " LEFT JOIN rave_advertmedia e ON b.booked_audio_id = e.id "
         << " WHERE a.schedule_date = '"+current_date+"'"
+        << "   AND b.booking_status = 'READY' "
         << " ORDER by a.schedule_time ASC ";
 
     EntityDataModel edm;
@@ -499,8 +500,11 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
         }
 
 
-        if (!ba.filename.isEmpty())
-            ba.filepath = ba.media_path + ba.filename + "."+ ba.file_extension;
+        ba.filepath = ba.media_path + ba.filename;
+
+        auto file_ext = get_extension(ba.filename.toStdString());
+        if (file_ext.empty())
+            ba.filepath = ba.filepath + "."+ ba.file_extension;
 
         booked_adverts[ba.booked_time].push_back(ba);
 
@@ -511,4 +515,13 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
     return booked_adverts;
 
+}
+
+std::string PlaylistForm::get_extension(const std::string filename)
+{
+    size_t last_dot_pos = filename.find_last_of('.');
+    if (last_dot_pos != std::string::npos && last_dot_pos != 0) {
+        return filename.substr(last_dot_pos);
+    }
+    return "";
 }

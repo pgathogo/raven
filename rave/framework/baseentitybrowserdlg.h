@@ -256,11 +256,10 @@ public:
            {
                 auto si = std::make_tuple(t->client()->dbColumnName(), "=", parent->id());
                 try{
-                    qDebug() << "<<< Going: searchByInt >>>";
                     entityDataModel().clear();
                     entityDataModel().setHeader();
                     entityDataModel().searchByInt(si);
-                    qDebug() << "Search Complete - Records: " << entityDataModel().count();
+
                    } catch (DatabaseException& de) {
                     showMessage(de.errorMessage());
                 }
@@ -279,6 +278,8 @@ public:
                 entityDataModel().search(filter);
             }
         }
+
+        set_view_column_width();
 
     }
 

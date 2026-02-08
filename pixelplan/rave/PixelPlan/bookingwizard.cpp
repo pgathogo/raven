@@ -938,7 +938,7 @@ void BookingWizard::build_breaks()
 
         if (m_engine_data.break_count == 0)
         {
-            showMessage("No Breaks for the selected data range!");
+            showMessage("No Breaks for the selected date range!");
             this->button(QWizard::NextButton)->setDisabled(true);
             return;
         }

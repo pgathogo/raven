@@ -206,6 +206,7 @@ void BaseEntityBrowserDlg::set_view_column_width()
        for(auto const& [name, field]: m_entity->fields()){
            if (field->displayName() == display_name){
                if (field->display_width() > 0) {
+
                    bui->tvEntity->setColumnWidth(col++, field->display_width());
                }
            }

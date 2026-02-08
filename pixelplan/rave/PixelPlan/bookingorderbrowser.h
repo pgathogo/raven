@@ -6,6 +6,7 @@
 #include <QItemDelegate>
 #include <QMenu>
 #include <QCompleter>
+#include <QTableWidgetItem>
 #include "../../../rave/framework/picklistbrowser.h"
 
 
@@ -86,6 +87,32 @@ struct ClientOrder {
 };
 
 
+class BookingItem
+{
+public:
+    BookingItem(Booking bk);
+
+    void set_font_color(QColor c);
+
+    QTableWidgetItem* book_date();
+    QTableWidgetItem* book_time();
+    QTableWidgetItem* spot_title();
+    QTableWidgetItem* spot_duration();
+    QTableWidgetItem* tx_date();
+    QTableWidgetItem* tx_time();
+    QTableWidgetItem* book_status();
+
+private:
+    QTableWidgetItem* m_book_date = nullptr;
+    QTableWidgetItem* m_book_time = nullptr;
+    QTableWidgetItem* m_spot_title = nullptr;
+    QTableWidgetItem* m_spot_duration = nullptr;
+    QTableWidgetItem* m_tx_date = nullptr;
+    QTableWidgetItem* m_tx_time = nullptr;
+    QTableWidgetItem* m_book_status = nullptr;
+};
+
+
 using Bookings = std::map<int, std::vector<Booking>>;
 
 class BookingOrderBrowser : public QDialog
@@ -101,6 +128,7 @@ public:
     void setMdiArea(QMdiArea* mdi);
 
     void search_by_client(std::shared_ptr<Client>);
+    BookingItem make_booking_item(Booking);
 
 private slots:
     void search_field_changed(int i);

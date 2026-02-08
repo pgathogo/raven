@@ -41,6 +41,7 @@ private:
     void expand_if_has_children(QModelIndex);
     QDate previous_weekday(int current_dow);
     QString make_playlist_output_filepath(int);
+    std::string get_extension(const std::string);
 
     Ui::PlaylistForm *ui;
 

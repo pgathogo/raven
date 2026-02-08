@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabDetails">
       <attribute name="title">
@@ -63,13 +63,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QTimeEdit" name="edtSpotDuration">
-           <property name="displayFormat">
-            <string>HH:mm:ss</string>
-           </property>
-          </widget>
-         </item>
          <item row="4" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
@@ -90,6 +83,12 @@
              <width>100</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
            </property>
            <property name="maximum">
             <number>999999999</number>
@@ -118,6 +117,30 @@
          </item>
          <item row="0" column="1" colspan="2">
           <widget class="QLineEdit" name="edtName"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QTimeEdit" name="edtSpotDuration">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="displayFormat">
+            <string>HH:mm:ss</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

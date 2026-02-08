@@ -1,6 +1,6 @@
 #include <sstream>
-#include <QTreeWidgetItem>
 #include <QTableWidget>
+#include <QTreeWidgetItem>
 
 #include "bookingorderbrowser.h"
 #include "ui_bookingorderbrowser.h"
@@ -15,6 +15,43 @@
 #include "spotaudio.h"
 #include "../../../framework/entitydatamodel.h"
 #include "../../../utils/tools.h"
+
+
+BookingItem::BookingItem(Booking bk)
+{
+    m_book_date = new QTableWidgetItem(stoq(bk.schedule_date));
+    m_book_date->setData(Qt::UserRole, bk.order_id);
+
+    m_book_time = new QTableWidgetItem(stoq(bk.schedule_time));
+    m_book_time->setData(Qt::UserRole, bk.booking_id);
+
+    m_spot_title = new QTableWidgetItem(stoq(bk.spot_name));
+    m_spot_title->setData(Qt::UserRole, bk.spot_id);
+
+    m_spot_duration = new QTableWidgetItem(bk.formatted_duration);
+    m_tx_date = new QTableWidgetItem(stoq(bk.play_date));
+    m_tx_time = new QTableWidgetItem(stoq(bk.play_time));
+    m_book_status = new QTableWidgetItem(stoq(bk.booking_status));
+}
+
+void BookingItem::set_font_color(QColor c)
+{
+    m_book_date->setForeground(QBrush(c));
+    m_book_time->setForeground(QBrush(c));
+    m_spot_title->setForeground(QBrush(c));
+    m_spot_duration->setForeground(QBrush(c));
+    m_tx_date->setForeground(QBrush(c));
+    m_tx_time->setForeground(QBrush(c));
+    m_book_status->setForeground(QBrush(c));
+}
+
+QTableWidgetItem* BookingItem::book_date() { return m_book_date; }
+QTableWidgetItem* BookingItem::book_time() { return m_book_time; }
+QTableWidgetItem* BookingItem::spot_title() { return m_spot_title; }
+QTableWidgetItem* BookingItem::spot_duration() { return m_spot_duration; }
+QTableWidgetItem* BookingItem::tx_date() { return m_tx_date; }
+QTableWidgetItem* BookingItem::tx_time() { return m_tx_time; }
+QTableWidgetItem* BookingItem::book_status() { return m_book_status; }
 
 
 BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
@@ -51,6 +88,7 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     QAction* actReady = new QAction(tr("&Ready"), this);
     QAction* actPlayed = new QAction(tr("&Played"), this);
     QAction* actCancelled = new QAction(tr("&Cancelled"), this);
+    QAction* actSkipped = new QAction(tr("&Skipped"), this);
 
     connect(actAll, &QAction::triggered, this, &BookingOrderBrowser::print_all_bookings);
 
@@ -58,6 +96,7 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     menu->addAction(actReady);
     menu->addAction(actPlayed);
     menu->addAction(actCancelled);
+    menu->addAction(actSkipped);
 
     ui->btnPrint->setMenu(menu);
 
@@ -505,12 +544,15 @@ void BookingOrderBrowser::cancel_booking()
 
     }
 
+
     QString selected_ids = ids.join(",");
 
     std::stringstream sql;
 
     sql << "Update rave_orderbooking set booking_status = 'CANCELLED'"
         << " Where id in ( "+ selected_ids.toStdString()+ ")";
+
+    std::cout << sql.str() << '\n';
 
     EntityDataModel edm;
 
@@ -786,33 +828,21 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
         int row = 0;
         for (auto& booking : co.order_bookings)
         {
-
             if (booking.schedule_date.empty())
                 continue;
 
-            QTableWidgetItem* wi_book_date = new QTableWidgetItem(stoq(booking.schedule_date));
-            wi_book_date->setData(Qt::UserRole, co.order_id);
+            auto bi = make_booking_item(booking);
 
-            QTableWidgetItem* wi_book_time = new QTableWidgetItem(stoq(booking.schedule_time));
-            wi_book_time->setData(Qt::UserRole, booking.booking_id);
+            table->insertRow(row);
 
-            QTableWidgetItem* wi_spot_title = new QTableWidgetItem(stoq(booking.spot_name));
-            wi_spot_title->setData(Qt::UserRole, booking.spot_id);
+            table->setItem(row, 0, bi.book_date());
+            table->setItem(row, 1, bi.book_time());
+            table->setItem(row, 2, bi.spot_title());
+            table->setItem(row, 3, bi.spot_duration());
 
-            QTableWidgetItem* wi_spot_duration = new QTableWidgetItem(booking.formatted_duration);
-            QTableWidgetItem* wi_tx_date = new QTableWidgetItem(stoq(booking.play_date));
-            QTableWidgetItem* wi_tx_time = new QTableWidgetItem(stoq(booking.play_time));
-            QTableWidgetItem* wi_book_status = new QTableWidgetItem(stoq(booking.booking_status));
-
-            //table->insertRow(row);
-
-            table->setItem(row, 0, wi_book_date);
-            table->setItem(row, 1, wi_book_time);
-            table->setItem(row, 2, wi_spot_title);
-            table->setItem(row, 3, wi_spot_duration);
-            table->setItem(row, 4, wi_tx_date);
-            table->setItem(row, 5, wi_tx_time);
-            table->setItem(row, 6, wi_book_status);
+            table->setItem(row, 4, bi.tx_date());
+            table->setItem(row, 5, bi.tx_time());
+            table->setItem(row, 6, bi.book_status());
 
             table->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -824,6 +854,26 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
     }
 
 }
+
+BookingItem BookingOrderBrowser::make_booking_item(Booking bk)
+{
+    BookingItem bi(bk);
+
+    if (bk.booking_status == "READY") {
+        bi.set_font_color(QColor(Qt::green));
+    }
+
+    if (bk.booking_status == "CANCELLED") {
+        bi.set_font_color(QColor(Qt::red));
+    }
+
+    if (bk.booking_status == "SKIPPED") {
+        bi.set_font_color(QColor(Qt::blue));
+    }
+
+    return bi;
+}
+
 
 
 void BookingOrderBrowser::make_inner_table_headers(QTableWidget* table, int row_count)
@@ -849,12 +899,12 @@ void BookingOrderBrowser::make_inner_table_headers(QTableWidget* table, int row_
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    table->setColumnWidth(0, 200);
-    table->setColumnWidth(1, 200);
+    table->setColumnWidth(0, 80);
+    table->setColumnWidth(1, 80);
     table->setColumnWidth(2, 300);
-    table->setColumnWidth(3, 150);
-    table->setColumnWidth(4, 200);
-    table->setColumnWidth(5, 200);
+    table->setColumnWidth(3, 80);
+    table->setColumnWidth(4, 80);
+    table->setColumnWidth(5, 80);
     table->setColumnWidth(6, 100);
 }
 

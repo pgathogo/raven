@@ -21,11 +21,7 @@ ClientForm::ClientForm(Client* client,
     setTitle(windowTitle());
     ui->twClient->setCurrentIndex(0);
 
-    qDebug() << "AAA";
-
     populateFormWidgets();
-
-    qDebug() << "BBB";
 
     connect(ui->cbSalute, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
            [=](int i){saluteComboChanged(i);});

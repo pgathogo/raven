@@ -57,6 +57,7 @@ private:
     QTime duration_to_time(qint64);
     void setChoiceFieldDefault(QComboBox*, const std::string);
     void set_choice_field(ChoiceField<std::string>*, QComboBox*);
+    std::string get_extension(const std::string);
 
     Ui::AdvertMediaForm *ui;
     std::shared_ptr<PIXELPLAN::AdvertMedia> m_advert_media;

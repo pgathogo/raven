@@ -346,10 +346,10 @@ namespace TRAFFIK {
                                    "Set spot Name!");
         }
 
-        if (m_spot_duration->value() == 0.0){
-            return std::make_tuple(ActionResultType::arERROR,
-                                   "Set spot duration!");
-        }
+        // if (m_spot_duration->value() == 0.0){
+        //     return std::make_tuple(ActionResultType::arERROR,
+        //                            "Set spot duration!");
+        // }
 
         if (m_client->value() == -1){
             return std::make_tuple(ActionResultType::arERROR,

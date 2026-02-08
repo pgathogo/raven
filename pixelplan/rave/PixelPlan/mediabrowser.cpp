@@ -12,6 +12,7 @@
 
 #include <QTimer>
 #include <QFileInfo>
+#include <QDir>
 
 #include "mediabrowser.h"
 #include "ui_mediabrowser.h"
@@ -68,10 +69,14 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
                                                 m_advert_media->title()->value());
 
 
-        if (m_advert_media->file_extension()->value() != "")
-            full_filename = full_filename +"."+m_advert_media->file_extension()->value();
+        // Some titles have file extension - avoid appending extra extension
 
-        //show_media(QString::fromStdString(full_filename));
+        auto file_ext = get_extension(full_filename);
+        if (file_ext.empty()) {
+
+             if (m_advert_media->file_extension()->value() != "")
+                 full_filename = full_filename +"."+m_advert_media->file_extension()->value();
+        }
 
     }
 
@@ -81,19 +86,41 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
 
 }
 
+
+std::string MediaBrowser::get_extension(const std::string filename)
+{
+    size_t last_dot_pos = filename.find_last_of('.');
+    if (last_dot_pos != std::string::npos && last_dot_pos != 0) {
+        return filename.substr(last_dot_pos);
+    }
+    return "";
+}
+
+
+
 void MediaBrowser::show_media_file()
 {
     m_audio_output = std::make_unique<QAudioOutput>();
+
     m_audio_output->setVolume(0.5);
 
     m_media_player = std::make_unique<QMediaPlayer>(this);
     connect(m_media_player.get(), &QMediaPlayer::mediaStatusChanged, this, &MediaBrowser::media_status_changed);
     m_media_player->setAudioOutput(m_audio_output.get());
 
-    m_media_player->setSource(QUrl::fromLocalFile(m_media_filename));
+
+    //m_media_filename = m_media_filename.replace("//","\\");
+    //m_media_filename = m_media_filename.replace('/', '\\');
+
+    qDebug() << "Media File: " << m_media_filename;
+
+
+    m_media_player->setSource( QUrl(m_media_filename) );
 
     m_video_widget = new QVideoWidget(this);
-    m_video_widget->setMinimumSize(QSize(150, 200));
+    m_video_widget->setMinimumSize(QSize(640, 360));
+    m_video_widget->setAspectRatioMode(Qt::KeepAspectRatio);
+
     m_video_widget->setFullScreen(true);
 
     m_media_player->setVideoOutput(m_video_widget);
@@ -362,5 +389,48 @@ void MediaBrowser::media_status_changed(QMediaPlayer::MediaStatus status)
         m_media_player->play();
         QTimer::singleShot(100, m_media_player.get(), &QMediaPlayer::pause);
     }
+
+}
+/*
+QString MediaBrowser::convertNetworkPath(const QString& urlPath)
+{
+    if (urlPath.startsWith("file://")) {
+        // Remove file:// prefix
+        QString path = urlPath.mid(7);
+
+        // For network paths starting with // or a server name
+        if (path.startsWith("//") || path.contains(":/")) {
+            // Convert to Windows native UNC path
+            // Replace forward slashes with backslashes for Windows
+            path = path.replace('/', '\\');
+            // Remove any remaining forward slashes at start
+            if (path.startsWith("\\")) {
+                path = path.mid(2); // Remove leading \\
+            }
+            return path;
+        }
+    }
+    return urlPath;
+}
+*/
+
+QString MediaBrowser::conv(const QString& urlpath)
+{
+    if (urlpath.startsWith("file://")) {
+        // Remove file:// prefix
+        QString path = urlpath.mid(7);
+
+        if (path.startsWith("//") || path.contains(":/")) {
+            // Convert to Windows native UNC path
+            path = path.replace('/', '\\');
+            if (path.startsWith("\\")) {
+                path = path.mid(2);
+            }
+            return path;
+        }
+
+    }
+
+    return urlpath;
 
 }

@@ -24,6 +24,18 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/images/media/icons/ravenicon.ico"));
 
+    qputenv("QT_QUICK_BACKEND","software");
+    qputenv("QT_RHI_BACKEND","software");
+
+    qputenv("QT_MULTIMEDIA_PREFERED_PLUGINS", "windowsmediafoundation");
+
+    qputenv("QT_DISABLE_HW_TEXTURES_CONVERSION", "1");
+    qputenv("QT_FFMPEG_DECODING_HW_DEVICE_TYPES",",");
+
+
+
+
+
 #ifdef LOG_TO_FILE
     QString log_path = QCoreApplication::applicationDirPath()+"/log";
 

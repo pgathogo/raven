@@ -78,7 +78,6 @@ bool OrderBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 
 void OrderBrowser::search_by_client(std::shared_ptr<Client> client)
 {
-    qDebug() << "ORDER BROWSER: "<< client->id();
     search_related<Order, Client>(client);
 }
 
