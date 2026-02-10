@@ -1,10 +1,17 @@
 #include <sstream>
+#include <format>
+
 #include <QTableWidget>
 #include <QTreeWidgetItem>
+#include <QDateTime>
+#include <QMessageBox>
+
+#include "../../../framework/ravensetup.h"
+#include "../../../framework/entitydatamodel.h"
+#include "../../../utils/tools.h"
 
 #include "bookingorderbrowser.h"
 #include "ui_bookingorderbrowser.h"
-#include "../../../framework/ravensetup.h"
 #include "client.h"
 #include "order.h"
 #include "spot.h"
@@ -13,8 +20,7 @@
 #include "spotvoiceover.h"
 #include "spottypeexclusion.h"
 #include "spotaudio.h"
-#include "../../../framework/entitydatamodel.h"
-#include "../../../utils/tools.h"
+#include "voidbookingform.h"
 
 
 BookingItem::BookingItem(Booking bk)
@@ -54,7 +60,7 @@ QTableWidgetItem* BookingItem::tx_time() { return m_tx_time; }
 QTableWidgetItem* BookingItem::book_status() { return m_book_status; }
 
 
-BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
+BookingOrderBrowser::BookingOrderBrowser(const std::string username, QWidget *parent)
     :QDialog(parent)
     ,ui(new Ui::BookingOrderBrowser)
     ,m_mdi_area{nullptr}
@@ -62,7 +68,9 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     ,m_spot_ctx_menu{nullptr}
     ,m_spot_ctx_action{nullptr}
     ,m_client{nullptr}
+    ,m_username{username}
 {
+
     ui->setupUi(this);
 
     connect(ui->cbFilter, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -71,7 +79,8 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     connect(ui->btnSearch, &QPushButton::clicked, this, &BookingOrderBrowser::search);
     connect(ui->btnSelectFilter, &QPushButton::clicked, this, &BookingOrderBrowser::select_filter);
     connect(ui->btnClearFilter, &QPushButton::clicked, this, &BookingOrderBrowser::clear_filter);
-    connect(ui->btnCancel, &QPushButton::clicked, this, &BookingOrderBrowser::cancel_query);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &BookingOrderBrowser::cancel_clicked);
+    connect(ui->btnSkip, &QPushButton::clicked, this, &BookingOrderBrowser::skip_clicked);
     connect(ui->btnNew, &QPushButton::clicked, this, &BookingOrderBrowser::new_booking);
 
     ui->cbBookPeriod->setCurrentIndex(1);
@@ -104,6 +113,10 @@ BookingOrderBrowser::BookingOrderBrowser(QWidget *parent)
     ui->btnNew->setIconSize(QSize(32,32));
     ui->btnCancel->setIcon(QIcon(":/images/media/icons/cancelbooking.bmp"));
     ui->btnCancel->setIconSize(QSize(32, 32));
+
+    ui->btnSkip->setIconSize(QSize(32, 32));
+    ui->btnSkip->setIcon(QIcon(":/images/media/icons/skip.png"));
+
     ui->btnPrint->setIcon(QIcon(":/images/media/icons/printbooking.bmp"));
     ui->btnPrint->setIconSize(QSize(32, 32));
 
@@ -321,18 +334,83 @@ void BookingOrderBrowser::clear_filter()
     m_label = "";
 }
 
-void BookingOrderBrowser::cancel_query()
-{
 
+void BookingOrderBrowser::cancel_clicked()
+{
+    void_query(VoidType::Cancel);
+}
+
+void BookingOrderBrowser::skip_clicked()
+{
+    void_query(VoidType::Skip);
+}
+
+std::tuple<std::string, std::string> BookingOrderBrowser::tag_n_type(VoidType vt)
+{
+    std::string qry_tag{""};
+    std::string void_type{""};
+
+    switch (vt)
+    {
+        case VoidType::Cancel:
+        {
+            qry_tag = "Cancel";
+            void_type = "CANCELLED";
+            break;
+        }
+        case VoidType::Skip:
+        {
+            qry_tag = "Skip";
+            void_type = "SKIPPED";
+            break;
+        }
+    }
+
+    std::tuple<std::string, std::string> tag_type = std::make_tuple(qry_tag, void_type);
+    return tag_type;
+}
+
+
+void BookingOrderBrowser::void_query(VoidType vt)
+{
+    auto [qry_tag, void_type] = tag_n_type(vt);
+
+    auto [order_id, bookings] = get_selected_bookings();
+
+    if (bookings.size() == 0 ) {
+        auto msg = QString("Please select bookings to %1").arg(QString::fromStdString(qry_tag));
+        QMessageBox mbox;
+        mbox.setText(msg);
+        mbox.exec();
+        return;
+    }
+
+    std::string qry_msg = std::format("{} selected bookings?", qry_tag);
     if (m_grid_tables.size() > 0){
 
         int ret = QMessageBox::warning(this, tr("Booking Order"),
-                                       tr("Cancel selected bookings?"),
+                                       QString::fromStdString(qry_msg),
                                        QMessageBox::Yes | QMessageBox::No) ;
         switch(ret){
-        case QMessageBox::Yes:
-            cancel_booking();
-            break;
+            case QMessageBox::Yes:
+            {
+                auto vbf = std::make_unique<PIXELPLAN::VoidBookingForm>(QString::fromStdString(qry_tag));
+
+                if (vbf->exec() == 1) {
+                    Reason reason = vbf->void_reason();
+
+                    VoidReason vr;
+                    vr.reason_id = reason.reason_id;
+                    vr.other_reason = reason.other_reason;
+                    vr.void_type = void_type;
+                    vr.username = m_username;
+
+                    void_booking(order_id, bookings, vr);
+                }
+
+                break;
+            }
+
         case QMessageBox::No:
             break;
         }
@@ -352,7 +430,7 @@ void BookingOrderBrowser::new_booking()
         Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
 
         if (order != nullptr){
-            auto bw = std::make_unique<BookingWizard>(order, this);
+            auto bw = std::make_unique<BookingWizard>(m_username, order, this);
             bw->exec();
         }
     }
@@ -513,8 +591,62 @@ void BookingOrderBrowser::set_autocompleter()
 
 }
 
-void BookingOrderBrowser::cancel_booking()
+std::tuple<int, std::vector<int>> BookingOrderBrowser::get_selected_bookings()
 {
+    using ORDER_NUM = int;
+    using BOOKINGS = std::vector<int>;
+
+    std::tuple<ORDER_NUM, BOOKINGS> selected_bookings;
+
+    int order_id{-1};
+
+    for (auto node : m_tree_nodes)
+    {
+        auto w = ui->twOrders->itemWidget(node, 0);
+        QTableWidget* table = dynamic_cast<QTableWidget*>(w);
+
+        std::vector<int> booking_ids;
+
+        for (auto& item : table->selectedItems())
+        {
+            if (item->column() == 0)
+            {
+                 order_id = item->data(Qt::UserRole).toInt();
+            }
+
+            if (item->column() == 1)
+            {
+                int booking_id = item->data(Qt::UserRole).toInt();
+                booking_ids.push_back(booking_id);
+                //ids << QString::number(booking_id);
+                //++revert_counter[order_id];
+            }
+        }
+
+        selected_bookings = std::make_tuple(order_id, booking_ids);
+
+    }
+
+    return selected_bookings;
+
+}
+
+std::string BookingOrderBrowser::vector_to_comma_sep(const std::vector<int>& vec)
+{
+    std::stringstream ss;
+    for(size_t i=0; i < vec.size(); ++i) {
+        ss << vec[i];
+        if (i < vec.size() - 1) {
+            ss << ",";
+        }
+    }
+
+    return ss.str();
+}
+
+void BookingOrderBrowser::void_booking(int order_id, std::vector<int> bookings, VoidReason vr)
+{
+    /*
     QStringList ids;
     std::map<int, int> revert_counter;
 
@@ -543,16 +675,25 @@ void BookingOrderBrowser::cancel_booking()
         }
 
     }
-
-
     QString selected_ids = ids.join(",");
+    */
+
+    std::string selected_ids = vector_to_comma_sep(bookings);
 
     std::stringstream sql;
 
-    sql << "Update rave_orderbooking set booking_status = 'CANCELLED'"
-        << " Where id in ( "+ selected_ids.toStdString()+ ")";
+    std::string bk_status = std::format("booking_status = '{}' ", vr.void_type);
+    std::string bk_reason_id = std::format("void_reason_id = {}", std::to_string(vr.reason_id));
+    std::string bk_comments = std::format("comments = '{}'", vr.other_reason);
+    std::string bk_void_dtime = std::format("void_dtime = '{}'", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm").toStdString());
+    std::string bk_username = std::format("void_login = '{}'", vr.username);
 
-    std::cout << sql.str() << '\n';
+    sql << "BEGIN;Update rave_orderbooking set "+bk_status+""
+        << ","+bk_reason_id+""
+        << ","+bk_comments+""
+        << ","+bk_void_dtime+""
+        << ","+bk_username+""
+        << " Where id in ( "+ selected_ids+ "); COMMIT;";
 
     EntityDataModel edm;
 
@@ -564,19 +705,20 @@ void BookingOrderBrowser::cancel_booking()
 
     std::stringstream revert_spots_booked;
 
-    for (auto [order_id, count] : revert_counter)
-    {
-        revert_spots_booked << "Update rave_order set "
-                            << " spots_booked = spots_booked - "+ std::to_string(count)
-                            << " where id = "+ std::to_string(order_id);
-        try{
-           edm.executeRawSQL(revert_spots_booked.str());
-        }catch(DatabaseException de){
-            showMessage(de.errorMessage());
-            break;
-        }
+    // for (auto [order_id, count] : revert_counter)
+    //{
+    revert_spots_booked << "BEGIN; Update rave_order set "
+                        << " spots_booked = spots_booked - "+ std::to_string(bookings.size())
+                        << " where id = "+ std::to_string(order_id)+"; COMMIT;";
 
+    EntityDataModel edm_update;
+    try{
+        edm_update.executeRawSQL(revert_spots_booked.str());
+    }catch(DatabaseException de){
+        showMessage(de.errorMessage());
     }
+
+    //}
 
 }
 

@@ -86,6 +86,12 @@ struct ClientOrder {
     std::vector<Booking> order_bookings;
 };
 
+struct VoidReason {
+    int reason_id;
+    std::string other_reason;
+    std::string void_type;
+    std::string username;
+};
 
 class BookingItem
 {
@@ -115,6 +121,8 @@ private:
 
 using Bookings = std::map<int, std::vector<Booking>>;
 
+enum class VoidType{Cancel, Skip};
+
 class BookingOrderBrowser : public QDialog
 {
     Q_OBJECT
@@ -122,7 +130,8 @@ class BookingOrderBrowser : public QDialog
 public:
     enum FilterField{Client_Name_Field=0, Order_Title_Field, Booking_Period_Field};
 
-    explicit BookingOrderBrowser(QWidget *parent = nullptr);
+
+    explicit BookingOrderBrowser(const std::string, QWidget *parent = nullptr);
     ~BookingOrderBrowser();
 
     void setMdiArea(QMdiArea* mdi);
@@ -135,7 +144,8 @@ private slots:
     void search(int);
     void select_filter();
     void clear_filter();
-    void cancel_query();
+    void cancel_clicked();
+    void skip_clicked();
     void new_booking();
     void show_spot_details(const QPoint& pos);
     void spot_details(int);
@@ -145,6 +155,28 @@ private slots:
     void print_all_bookings();
 
 private:
+    void set_treewidget(Bookings&, int, const std::string);
+    void resizeColumnsToContents(QTreeWidget& tree_widget);
+    void sort_bookings(std::vector<Booking>&);
+    void void_booking(int, std::vector<int>, VoidReason);
+    void make_spot_menu();
+    QTableWidget* get_selected_grid();
+    void set_autocompleter();
+    void fill_cbox_date_filter();
+    void set_client(std::shared_ptr<Client>);
+    void build_client_orders(int, std::string, std::vector<ClientOrder>&);
+    void build_order_bookings(int, std::vector<Booking>&);
+    void build_order_booking_table(std::vector<ClientOrder>&);
+    void make_inner_table_headers(QTableWidget*, int);
+
+    void void_query(VoidType);
+    std::tuple<std::string, std::string> tag_n_type(VoidType);
+    std::tuple<int, std::vector<int>> get_selected_bookings();
+
+    std::string vector_to_comma_sep(const std::vector<int>&);
+
+
+
     Ui::BookingOrderBrowser *ui;
     QMdiArea* m_mdi_area;
     std::unique_ptr<PickListBrowser> m_picklist_browser;
@@ -171,19 +203,8 @@ private:
     int t_row{-1};
     int t_col{-1};
 
-    void set_treewidget(Bookings&, int, const std::string);
-    void resizeColumnsToContents(QTreeWidget& tree_widget);
-    void sort_bookings(std::vector<Booking>&);
-    void cancel_booking();
-    void make_spot_menu();
-    QTableWidget* get_selected_grid();
-    void set_autocompleter();
-    void fill_cbox_date_filter();
-    void set_client(std::shared_ptr<Client>);
-    void build_client_orders(int, std::string, std::vector<ClientOrder>&);
-    void build_order_bookings(int, std::vector<Booking>&);
-    void build_order_booking_table(std::vector<ClientOrder>&);
-    void make_inner_table_headers(QTableWidget*, int);
+    std::string m_username;
+
 
     QCompleter* m_completer;
     std::unique_ptr<EntityDataModel> m_client_edm;

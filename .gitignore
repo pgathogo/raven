@@ -17,6 +17,7 @@ CMakeLists.txt.user*
 *ninja_*
 *.log
 *.jgl
+*.sql
 rave/OATS/.ninja_log
 rave/AudioExplorer/.ninja_log
 rave/sedric/.ninja_log

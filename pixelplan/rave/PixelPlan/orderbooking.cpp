@@ -8,6 +8,8 @@
 #include "spot.h"
 #include "advertmedia.h"
 
+#include "reasonvoidbooking.h"
+
 OrderBooking::OrderBooking()
     :m_booking_segment{ nullptr }
     ,m_schedule{ nullptr }
@@ -48,6 +50,12 @@ OrderBooking::OrderBooking()
 
     m_order = createField<ForeignKeyField>("order_id", "Order ID",
                                            std::make_unique<Order>(), "order_number");
+
+    m_void_reason = createField<ForeignKeyField>("void_reason_id", "Void Reaason",
+                                                 std::make_unique<PIXELPLAN::ReasonVoidBooking>(), "reason");
+    m_comment = createField<TextField>("comments", "Comment");
+    m_add_login = createField<StringField>("add_login" , "Add login");
+    m_add_dtime = createField<DateTimeField>("add_dtime", "Add Date Time");
 
     mHeader << QString::fromStdString(schedule()->displayName());
 
@@ -190,6 +198,56 @@ void OrderBooking::set_order(int order_id)
    m_order->setValue(order_id);
 
 }
+
+ForeignKeyField* OrderBooking::void_reason()
+{
+    return m_void_reason;
+}
+
+void OrderBooking::set_void_reason(int reason)
+{
+    m_void_reason->setValue(reason);
+
+}
+
+TextField* OrderBooking::comment()
+{
+    return m_comment;
+
+}
+
+void OrderBooking::set_comment(const std::string comment)
+{
+    m_comment->setValue(comment);
+
+}
+
+StringField* OrderBooking::add_login()
+{
+    return m_add_login;
+
+}
+
+
+void OrderBooking::set_add_login(const std::string login)
+{
+    m_add_login->setValue(login);
+
+}
+
+DateTimeField* OrderBooking::add_dtime()
+{
+    return m_add_dtime;
+
+}
+
+void OrderBooking::set_add_dtime(QDateTime dtime)
+{
+    m_add_dtime->setValue(dtime);
+
+}
+
+
 
 std::string OrderBooking::tableName() const
 {

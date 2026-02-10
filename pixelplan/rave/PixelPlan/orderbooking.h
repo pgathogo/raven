@@ -51,6 +51,18 @@ public:
     ForeignKeyField* order() const;
     void set_order(int);
 
+    ForeignKeyField* void_reason();
+    void set_void_reason(int);
+
+    TextField* comment();
+    void set_comment(const std::string);
+
+    StringField* add_login();
+    void set_add_login(const std::string);
+
+    DateTimeField* add_dtime();
+    void set_add_dtime(QDateTime);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -78,6 +90,11 @@ private:
     IntegerField* m_book_hour;
     IntegerField* m_book_seq;
     ForeignKeyField* m_order;
+
+    ForeignKeyField* m_void_reason;
+    TextField* m_comment;
+    StringField* m_add_login;
+    DateTimeField* m_add_dtime;
 
     QStringList mHeader;
     std::string mTableName;

@@ -8,6 +8,8 @@
 #include "salespersonbrowser.h"
 #include "agentbrowser.h"
 #include "timebandbrowser.h"
+#include "voidreasonbrowser.h"
+
 #include "../../../rave/security/userbrowser.h"
 #include "../../../rave/security/rolebrowser.h"
 #include "../../../rave/security/contentbrowser.h"
@@ -40,12 +42,15 @@ SetupBrowser::SetupBrowser(QWidget *parent)
     m_content_tab = new TabWidget(new ContentBrowser());
     m_content_auth_tab = new TabWidget(new ContentAuthBrowser());
 
+    m_booking_void_reason_tab = new TabWidget(new VoidReasonBrowser());
+
     ui->tabMain->addTab(m_client_group_tab, "Client Group");
     //ui->tabMain->addTab(m_gender_tab, "Gender");
     ui->tabMain->addTab(m_type_exclusion_tab, "Type Exclusions");
     ui->tabMain->addTab(m_voice_over_tab, "Voice Over");
     ui->tabMain->addTab(m_sales_person_tab, "Sales Persons");
     ui->tabMain->addTab(m_agents_tab, "Agents");
+    ui->tabMain->addTab(m_booking_void_reason_tab, "Booking Void Reasons");
     //ui->tabMain->addTab(m_timeband_tab, "Time Bands");
 
     // ui->tabMain->addTab(m_users_tab, "System Users");

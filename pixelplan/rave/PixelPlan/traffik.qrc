@@ -141,6 +141,7 @@
         <file>media/icons/clock1.png</file>
         <file>media/icons/loganalyzer.png</file>
         <file>media/icons/ravenicon.ico</file>
+        <file>media/icons/skip.png</file>
     </qresource>
     <qresource prefix="/editor">
         <file>media/editor/mark_audio.png</file>

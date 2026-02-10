@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/images/media/icons/ravenicon.ico"));
 
-    qputenv("QT_QUICK_BACKEND","software");
+    //qputenv("QT_QUICK_BACKEND","software");
     qputenv("QT_RHI_BACKEND","software");
 
     qputenv("QT_MULTIMEDIA_PREFERED_PLUGINS", "windowsmediafoundation");
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
 #endif
 
-    LoginForm lf;
+    LoginForm lf("jboss", "abc123");
 
     if (lf.exec() > 0)
     {

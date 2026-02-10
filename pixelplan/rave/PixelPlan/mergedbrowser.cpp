@@ -11,7 +11,7 @@
 #include "brandbrowser.h"
 #include "bookingorderbrowser.h"
 
-MergedBrowser::MergedBrowser(QWidget *parent)
+MergedBrowser::MergedBrowser(const std::string username, QWidget *parent)
     :QDialog(parent)
     ,ui(new Ui::MergedBrowser)
     ,m_mdi_area2{nullptr}
@@ -19,7 +19,9 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     ,m_client_browser{nullptr}
     ,m_order_browser{nullptr}
     ,m_spot_browser{nullptr}
+    ,m_username{username}
 {
+
     ui->setupUi(this);
 
     ui->tabMain->setCurrentIndex(0);
@@ -36,7 +38,7 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     m_brand_browser = std::make_unique<BrandBrowser>(std::make_shared<Client>(), this);
     ui->vlBrand->addWidget(m_brand_browser.get());
 
-    m_book_order_browser = std::make_unique<BookingOrderBrowser>(this);
+    m_book_order_browser = std::make_unique<BookingOrderBrowser>(m_username, this);
     ui->vlBooking->addWidget(m_book_order_browser.get());
 
     ui->lblTitle->setText("");

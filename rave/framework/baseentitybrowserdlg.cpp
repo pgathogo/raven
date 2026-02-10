@@ -173,12 +173,17 @@ void BaseEntityBrowserDlg::searchRecord()
     if (bui->edtFilter->text().isEmpty() &&
         m_entity->filter() == "")
     {
+        qDebug() << "AAAA";
+
         entityDataModel().all();
+
+        qDebug() << "BBBB";
     }
     else
     {
         auto data = bui->cbFilter->itemData(
                             bui->cbFilter->currentIndex()).value<QVariant>();
+
         std::string columnName = data.toString().toStdString();
         std::string item = bui->edtFilter->text().toStdString();
 

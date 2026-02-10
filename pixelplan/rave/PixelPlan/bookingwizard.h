@@ -90,7 +90,7 @@ public:
 
     std::vector<std::string> days_of_week{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    explicit BookingWizard(Order* order,  QWidget* parent = nullptr);
+    explicit BookingWizard(const std::string, Order* order,  QWidget* parent = nullptr);
     ~BookingWizard() override;
 
     std::size_t fetch_breaks_from_db(QDate, QDate, std::set<int>);
@@ -259,6 +259,8 @@ private:
     std::shared_ptr<RavenSetup> m_raven_setup;
 
     std::map<progid, Program> m_programs;
+
+    std::string m_username;
 
 
 };

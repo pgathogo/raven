@@ -23,7 +23,7 @@ class MergedBrowser : public QDialog
     Q_OBJECT
 
 public:
-    explicit MergedBrowser(QWidget* parent = nullptr);
+    explicit MergedBrowser(const std::string, QWidget* parent = nullptr);
     ~MergedBrowser();
 
     void setMdiArea(QMdiArea* mdi);
@@ -44,5 +44,7 @@ private:
     std::unique_ptr<BrandBrowser> m_brand_browser;
 
     std::unique_ptr<BookingOrderBrowser> m_book_order_browser;
+
+    std::string m_username;
 };
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
+    <width>746</width>
     <height>469</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
        <item>
         <widget class="QPushButton" name="btnSkip">
          <property name="text">
-          <string>Skipped Booking</string>
+          <string>Skip Booking</string>
          </property>
         </widget>
        </item>

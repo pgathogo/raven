@@ -39,6 +39,7 @@ private:
     TabWidget* m_role_tab;
     TabWidget* m_content_tab;
     TabWidget* m_content_auth_tab;
+    TabWidget* m_booking_void_reason_tab;
 };
 
 class TabWidget : public QWidget

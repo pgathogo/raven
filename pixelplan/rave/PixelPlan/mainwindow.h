@@ -112,6 +112,7 @@ private:
     static AccessMap access_map;
 
     StationInfo m_station_info;
+    ConnInfo m_conn_info;
 
     //LimeReport::ReportEngine* m_report;
 };

@@ -48,7 +48,7 @@
 
 #define DEBUG_MODE
 
-BookingWizard::BookingWizard(Order* order,  QWidget *parent)
+BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget *parent)
     :QWizard(parent)
     ,ui(new Ui::BookingWizard)
     ,m_order{order}
@@ -60,6 +60,7 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     ,m_spot_ctx_action{nullptr}
     ,m_edm_break_layout{nullptr}
     ,m_edm_breaks{nullptr}
+    ,m_username{username}
 {
     ui->setupUi(this);
 
@@ -618,6 +619,10 @@ void BookingWizard::commit_booking()
                 order_booking.set_audio(m_engine_data.spot_to_book.audio_id);
                 order_booking.set_order(m_order->id());
 
+                order_booking.set_add_dtime(QDateTime::currentDateTime());
+                order_booking.set_add_login(m_username);
+                order_booking.set_void_reason(-1);
+
                 // Sequential slotting
                 if (selected_break.break_fill_method == "S") {
                     order_booking.set_book_seq(++selected_break.booked_spots);
@@ -632,6 +637,8 @@ void BookingWizard::commit_booking()
                 qDebug() << "Creating New Oder..." ;
 
                 edm.createEntityDB(order_booking);
+
+                qDebug() << "Order created.";
 
                 // Deduct time remainining on this break
                 std::stringstream  sql ;
@@ -1063,7 +1070,6 @@ void BookingWizard::programs_clicked(QListWidgetItem* lwi)
 
     if (indexes.size() == 0)
         return;
-
 
     if (!ui->cbAllPrograms->isChecked())
     {

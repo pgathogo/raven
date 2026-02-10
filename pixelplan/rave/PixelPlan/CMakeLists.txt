@@ -263,6 +263,13 @@ set(PROJECT_SOURCES
     commloganalyzer.ui
     configmanager.h
     configmanager.cpp
+    reasonvoidbooking.h
+    reasonvoidbooking.cpp
+    voidreasonbrowser.h
+    voidreasonbrowser.cpp
+    voidreasonbrowser.ui
+    voidbookingform.h
+    voidbookingform.cpp
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
@@ -507,6 +514,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         #WIN32          # Critical: Tells Windows it's a GUI app
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        voidreasonbrowser.h voidreasonbrowser.cpp voidreasonbrowser.ui
+        voidbookingreasonform.h voidbookingreasonform.cpp voidbookingreasonform.ui
     )
 else()
     if(ANDROID)

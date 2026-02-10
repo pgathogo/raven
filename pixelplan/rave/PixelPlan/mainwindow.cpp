@@ -35,6 +35,8 @@
 #include "playlistform.h"
 #include "commloganalyzer.h"
 
+#include "voidbookingform.h"
+
 AccessMap MainWindow::access_map;
 
 MainWindow::MainWindow(QApplication* app,
@@ -63,6 +65,7 @@ MainWindow::MainWindow(QApplication* app,
     ,plainFormAction{}
     ,mPGManager{}
     ,m_station_info{si}
+    ,m_conn_info{ci}
 {
     ui->setupUi(this);
 
@@ -185,7 +188,6 @@ void MainWindow::createActions()
 
     mainToolBar->addAction(playlist_act);
 
-
     QLabel* lbl_station_name = new QLabel(m_station_info.station_name);
     QFont lbl_font = lbl_station_name->font();
     lbl_font.setBold(true);
@@ -263,7 +265,7 @@ void MainWindow::on_schedule()
 
 void MainWindow::open_merged_browser()
 {
-    MergedBrowser* m_browse = createSubWindow<MergedBrowser>();
+    MergedBrowser* m_browse = createSubWindow<MergedBrowser>(m_conn_info.username);
     m_browse->exec();
 }
 

@@ -572,6 +572,10 @@ class BookingSegment(models.Model):
     add_login = models.CharField(max_length=15, null=True, blank=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
 
+class ReasonVoidBooking(models.Model):
+    reason = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
 BOOKING_STATUS = (
         ('READY','READY'),
         ('PLAYED','PLAYED'),
@@ -592,3 +596,9 @@ class OrderBooking(models.Model):
     played_audio = models.IntegerField(default=-1, null=True, blank=True)
     book_seq = models.IntegerField(default=1, null=True)
     order = models.ForeignKey(Order,models.DO_NOTHING,  null=True)
+    void_reason = models.ForeignKey(ReasonVoidBooking, models.DO_NOTHING, null=True, blank=True)
+    void_login = models.CharField(max_length=15, null=True, blank=True)
+    void_dtime = models.DateTimeField(null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
