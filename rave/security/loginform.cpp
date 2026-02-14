@@ -51,7 +51,6 @@ LoginForm::LoginForm(QWidget *parent)
     // ui->edtUsername->installEventFilter(this);
     // ui->edtPassword->installEventFilter(this);
 
-
     ui->btnSelect->setVisible(false);
 
     //ui->btnLogin->setEnabled(false);
@@ -75,30 +74,38 @@ LoginForm::LoginForm(QWidget *parent)
 }
 
 
-
 LoginForm::LoginForm(const QString username, const QString password, QWidget* parent)
     :LoginForm(parent)
 {
     ui->edtUsername->setText(username);
     ui->edtPassword->setText(password);
+
 }
 
+void LoginForm::set_username(QString usern)
+{
+    ui->edtUsername->setText(usern);
+}
 
-// void LoginForm::eventFilter(QObject* obj, QEvent* event)
-// {
-//     qDebug() << "* Event triggered *";
+void LoginForm::set_password(QString pass)
+{
+    ui->edtPassword->setText(pass);
+}
 
-//     if ((obj == ui->edtUsername || obj == ui->edtPassword) && event->type() == QEvent::KeyPress) {
-//         QKeyEvent* key_event = static_cast<QKeyEvent*>(event);
-//         if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return) {
-//             on_login();
-//             return true;
-//         }
-//     }
+void LoginForm::set_auto_save(bool auto_save)
+{
+    if (auto_save) {
+        ui->cbSaveCred->setCheckState(Qt::Checked);
+    } else {
+        ui->cbSaveCred->setCheckState(Qt::Unchecked);
 
-//     return QObject::eventFilter(obj, event);
-// }
+    }
+}
 
+bool LoginForm::save_credentials()
+{
+    return m_save_credentials;
+}
 
 void LoginForm::showEvent(QShowEvent*)
 {
@@ -297,9 +304,9 @@ void LoginForm::on_login()
     std::shared_ptr<Authentication> auth = std::make_shared<Authentication>();
 
     try {
-        auth->connect_to_cluster_server(
-            m_credentials.username.toStdString(),
-            m_credentials.password.toStdString());
+            auth->connect_to_cluster_server(
+                m_credentials.username.toStdString(),
+                m_credentials.password.toStdString());
 
         if (forced_to_reset_password())
             return;
@@ -308,6 +315,8 @@ void LoginForm::on_login()
         showMessage(de.errorMessage());
         return;
     }
+
+   m_save_credentials = (ui->cbSaveCred->checkState() == Qt::Checked) ? true : false;
 
     done(1);
 

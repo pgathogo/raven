@@ -377,17 +377,19 @@ void BookingOrderBrowser::void_query(VoidType vt)
 
     auto [order_id, bookings] = get_selected_bookings();
 
+    QString tag = QString::fromStdString(qry_tag);
+
     if (bookings.size() == 0 ) {
-        auto msg = QString("Please select bookings to %1").arg(QString::fromStdString(qry_tag));
-        QMessageBox mbox;
-        mbox.setText(msg);
-        mbox.exec();
+        auto msg = QString("Please select bookings to %1").arg(tag);
+        auto title = QString("%1 Booking(s)").arg(tag);
+        QMessageBox::information(this, title, msg);
         return;
     }
 
     std::string qry_msg = std::format("{} selected bookings?", qry_tag);
-    if (m_grid_tables.size() > 0){
 
+    if (m_grid_tables.size() > 0)
+    {
         int ret = QMessageBox::warning(this, tr("Booking Order"),
                                        QString::fromStdString(qry_msg),
                                        QMessageBox::Yes | QMessageBox::No) ;
@@ -420,20 +422,30 @@ void BookingOrderBrowser::void_query(VoidType vt)
 
 void BookingOrderBrowser::new_booking()
 {
-    if (ui->twOrders->selectedItems().size() > 0) {
-
-        int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
-        auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
-
-        order_edm->getById({"id", "=", order_id});
-
-        Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
-
-        if (order != nullptr){
-            auto bw = std::make_unique<BookingWizard>(m_username, order, this);
-            bw->exec();
-        }
+    if ( ui->twOrders->selectedItems().size() == 0 ||
+        ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt() == 0)
+    {
+        auto msg = QString("Please select an order to book");
+        QMessageBox::information(this, "Booking Order", msg);
+        return;
     }
+
+    int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
+
+    qDebug() << "Order Selected: " << order_id;
+
+
+    auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
+
+    order_edm->getById({"id", "=", order_id});
+
+    Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
+
+    if (order != nullptr){
+        auto bw = std::make_unique<BookingWizard>(m_username, order, this);
+        bw->exec();
+    }
+
 }
 
 void BookingOrderBrowser::show_spot_details(const QPoint& pos)
@@ -618,8 +630,6 @@ std::tuple<int, std::vector<int>> BookingOrderBrowser::get_selected_bookings()
             {
                 int booking_id = item->data(Qt::UserRole).toInt();
                 booking_ids.push_back(booking_id);
-                //ids << QString::number(booking_id);
-                //++revert_counter[order_id];
             }
         }
 
@@ -646,54 +656,30 @@ std::string BookingOrderBrowser::vector_to_comma_sep(const std::vector<int>& vec
 
 void BookingOrderBrowser::void_booking(int order_id, std::vector<int> bookings, VoidReason vr)
 {
-    /*
-    QStringList ids;
-    std::map<int, int> revert_counter;
-
-    int order_id = -1;
-    int booking_id = -1;
-
-    for (auto node: m_tree_nodes)
-    {
-        auto w = ui->twOrders->itemWidget(node, 0);
-        QTableWidget* table = dynamic_cast<QTableWidget*>(w);
-
-        for (auto& item : table->selectedItems())
-        {
-            if (item->column() == 0)
-            {
-                 order_id = item->data(Qt::UserRole).toInt();
-            }
-
-            if (item->column() == 1)
-            {
-                booking_id = item->data(Qt::UserRole).toInt();
-                ids << QString::number(booking_id);
-                ++revert_counter[order_id];
-            }
-
-        }
-
-    }
-    QString selected_ids = ids.join(",");
-    */
 
     std::string selected_ids = vector_to_comma_sep(bookings);
 
     std::stringstream sql;
 
     std::string bk_status = std::format("booking_status = '{}' ", vr.void_type);
-    std::string bk_reason_id = std::format("void_reason_id = {}", std::to_string(vr.reason_id));
+
+    std::string bk_reason_id{""};
+    if (vr.reason_id == -1) {
+        bk_reason_id = std::format("void_reason_id = null");
+    } else {
+        bk_reason_id = std::format("void_reason_id = {}", std::to_string(vr.reason_id));
+    }
+
     std::string bk_comments = std::format("comments = '{}'", vr.other_reason);
     std::string bk_void_dtime = std::format("void_dtime = '{}'", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm").toStdString());
     std::string bk_username = std::format("void_login = '{}'", vr.username);
 
-    sql << "BEGIN;Update rave_orderbooking set "+bk_status+""
+    sql << "Update rave_orderbooking set "+bk_status+""
         << ","+bk_reason_id+""
         << ","+bk_comments+""
         << ","+bk_void_dtime+""
         << ","+bk_username+""
-        << " Where id in ( "+ selected_ids+ "); COMMIT;";
+        << " Where id in ( "+ selected_ids+ "); ";
 
     EntityDataModel edm;
 
@@ -707,9 +693,9 @@ void BookingOrderBrowser::void_booking(int order_id, std::vector<int> bookings, 
 
     // for (auto [order_id, count] : revert_counter)
     //{
-    revert_spots_booked << "BEGIN; Update rave_order set "
+    revert_spots_booked << "Update rave_order set "
                         << " spots_booked = spots_booked - "+ std::to_string(bookings.size())
-                        << " where id = "+ std::to_string(order_id)+"; COMMIT;";
+                        << " where id = "+ std::to_string(order_id)+";";
 
     EntityDataModel edm_update;
     try{
@@ -950,7 +936,6 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
         wi_order_node->setText(6, QString::number(co.spots_booked));
         wi_order_node->setText(7, stoq(co.client_name));
 
-
         QTableWidget* table = new QTableWidget(ui->twOrders);
         QTreeWidgetItem* booking_node = new QTreeWidgetItem(wi_order_node);
         booking_node->setFirstColumnSpanned(true);
@@ -1002,7 +987,7 @@ BookingItem BookingOrderBrowser::make_booking_item(Booking bk)
     BookingItem bi(bk);
 
     if (bk.booking_status == "READY") {
-        bi.set_font_color(QColor(Qt::green));
+        bi.set_font_color(QColor(Qt::black));
     }
 
     if (bk.booking_status == "CANCELLED") {

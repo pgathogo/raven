@@ -13,6 +13,8 @@
 #include "../../../rave/framework/logger.h"
 #include "../../../rave/utils/tools.h"
 
+#include "configmanager.h"
+
 
 //#define LOG_TO_FILE
 
@@ -52,8 +54,33 @@ int main(int argc, char *argv[])
     Logger::init(log_filepath);
 
 #endif
+    PIXELPLAN::ConfigManager config_manager;
+    auto [status, msg] = config_manager.read_config("setup.json");
 
-    LoginForm lf("jboss", "abc123");
+    QString auto_login = "";
+    QString username = "";
+    QString password = "";
+
+    if (status) {
+
+        auto_login = config_manager.get_value("login", "auto_login");
+
+        if (!auto_login.isEmpty()) {
+            username = config_manager.get_value("login", "username");
+            password = config_manager.get_value("login", "password");
+        }
+    }
+
+    LoginForm lf;
+
+    if (auto_login == "1") {
+        lf.set_username(username);
+        lf.set_password(password);
+        lf.set_auto_save(true);
+    } else {
+        LoginForm lf(username, password);
+        lf.set_auto_save(false);
+    }
 
     if (lf.exec() > 0)
     {
@@ -84,6 +111,23 @@ int main(int argc, char *argv[])
                       arg(station_info.server_name);
 
         Logger::info(module, msg1);
+
+        if (lf.save_credentials())
+        {
+
+          auto [login_status, login_msg] = config_manager.update_value("login", "auto_login", "1");
+          auto [user_status, user_msg] = config_manager.update_value("login", "username",  cred.username);
+          auto [pass_status, pass_msg] = config_manager.update_value("login", "password",  cred.password);
+
+        } else {
+
+          config_manager.update_value("login", "auto_login", "");
+          config_manager.update_value("login", "username",  "");
+          config_manager.update_value("login", "password",  "");
+
+        }
+
+        config_manager.write_config();
 
         MainWindow w(&a, station_info, conn_info);
         w.resize(1300, 700);

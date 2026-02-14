@@ -70,10 +70,7 @@ SetupForm::SetupForm(RavenSetup* setup,
 
     load_order_approvers();
 
-
-
 }
-
 
 
 SetupForm::~SetupForm()
@@ -124,8 +121,8 @@ void SetupForm::populateEntityFields()
     m_setup->set_playlist_output_path(ui->edtOutputPath->text().toStdString());
     m_setup->set_playlist_backup_path(ui->edtBackupPath->text().toStdString());
 
-    auto [rv_status, rv_msg] = m_config_manager.update_value("report_viewer_path",  ui->edtReportViewer->text());
-    auto [rr_status, rr_msg] = m_config_manager.update_value("report_runner_path",  ui->edtRunner->text());
+    auto [rv_status, rv_msg] = m_config_manager.update_value("setup", "report_viewer_path",  ui->edtReportViewer->text());
+    auto [rr_status, rr_msg] = m_config_manager.update_value("setup", "report_runner_path",  ui->edtRunner->text());
 
     // m_setup->set_report_viewer_path(ui->edtReportViewer->text().toStdString());
     // m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
@@ -176,8 +173,8 @@ void SetupForm::populateFormWidgets()
     auto [status, msg] = m_config_manager.read_config("setup.json");
 
     if (status) {
-        ui->edtReportViewer->setText(m_config_manager.get_value("report_viewer_path"));
-        ui->edtRunner->setText(m_config_manager.get_value("report_runner_path"));
+        ui->edtReportViewer->setText(m_config_manager.get_value("setup", "report_viewer_path"));
+        ui->edtRunner->setText(m_config_manager.get_value("setup", "report_runner_path"));
 
         // ui->edtReportViewer->setText(m_setup->report_viewer_path()->to_qstring());
         // ui->edtRunner->setText(m_setup->report_runner_path()->to_qstring());

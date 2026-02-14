@@ -15,9 +15,11 @@ namespace PIXELPLAN
         explicit ConfigManager();
         ErrorOr read_config(const QString&);
         ErrorOr write_config();
-        ErrorOr update_value(const QString&, const QString&);
-        QString get_value(const QString&);
+        ErrorOr update_value(const QString&, const QString&, const QString&);
+        QString get_value(const QString&, const QString&);
     private:
+        QJsonDocument make_empty_document();
+
         QJsonDocument m_json_doc;
         QString m_config_filepath;
     };

@@ -37,6 +37,11 @@ public:
     void test_login();
 
     Credentials credentials();
+    bool save_credentials();
+
+    void set_username(QString);
+    void set_password(QString);
+    void set_auto_save(bool);
 
     // void eventFilter(QObject *, QEvent *) override;
 
@@ -71,6 +76,8 @@ private:
     ConnInfo m_current_conn_info;
 
     Credentials m_credentials;
+
+    bool m_save_credentials;
 
 };
 
