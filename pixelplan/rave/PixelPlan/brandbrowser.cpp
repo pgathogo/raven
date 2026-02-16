@@ -46,7 +46,8 @@ void BrandBrowser::updateRecord()
             try{
                 updateTableViewRecord(brand->tableViewValues());
                 entityDataModel().updateEntity(*brand);
-                entityDataModel().all();
+                auto si = std::make_tuple("id", "=", m_client->id());
+                entityDataModel().searchByInt(si);
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());

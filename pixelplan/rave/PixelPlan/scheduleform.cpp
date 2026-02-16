@@ -65,6 +65,8 @@ void ScheduleForm::load_schedule(const QDate &date) {
 
   clear_schedule();
 
+  qDebug() << "Clear entities...";
+
   m_edm_schedule->clearEntities();
 
   Schedule sched;
@@ -77,9 +79,17 @@ void ScheduleForm::load_schedule(const QDate &date) {
   std::string filter =
       m_edm_schedule->prepareFilter(date_filter, breaks_only_filter);
 
+  std::cout << filter << '\n';
+
+  qDebug() << "Search...";
+
   m_edm_schedule->search(filter);
 
+  qDebug() << "Build tree view...";
+
   build_tree_view();
+
+  qDebug() << "Load schedule done.";
 }
 
 void ScheduleForm::schedule_date_changed(const QDate &date) {

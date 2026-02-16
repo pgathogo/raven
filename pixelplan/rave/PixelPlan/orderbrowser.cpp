@@ -48,7 +48,8 @@ void OrderBrowser::updateRecord()
     try{
         updateTableViewRecord(order->tableViewValues());
         entityDataModel().updateEntity(*order);
-        entityDataModel().all();
+        auto si = std::make_tuple("id", "=", mClient->id());
+        entityDataModel().searchByInt(si);
     } catch (DatabaseException& de){
         showMessage(de.errorMessage());
     }

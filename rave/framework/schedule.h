@@ -89,7 +89,7 @@ public:
     StringField* set_break_fill_method(std::string);
 
     TextField* comment()const;
-    void set_comment(const std::string val);
+    TextField* set_comment(const std::string val);
 
     bool isBad() const;
     void setIsBad(bool flag);

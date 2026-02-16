@@ -17,6 +17,7 @@ using TreeData = std::tuple<std::string, std::string, std::string>;
 struct BookedAdvert {
     QDate booked_date;
     QTime booked_time;
+    QString break_title;
     QString spot_name{};
     QString client_name{};
     int duration=0;
@@ -26,6 +27,8 @@ struct BookedAdvert {
     QString file_extension{};
     QString filepath{};
 };
+
+using BreakTitle = std::map<QTime, QString>;
 
 
 using BookedAdverts = std::map<QTime, std::vector<BookedAdvert>>;

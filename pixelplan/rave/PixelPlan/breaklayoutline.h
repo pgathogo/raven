@@ -39,6 +39,9 @@ public:
     ChoiceField<std::string>* break_fill_method() const;
     void set_break_fill_method(const std::string);
 
+    StringField* title() const;
+    void set_title(const std::string);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -67,6 +70,8 @@ private:
     IntegerField* mRowId;
 
     ChoiceField<std::string>* m_break_fill_method;
+
+    StringField* m_title;
 
     QStringList mHeader;
     std::string mTableName;

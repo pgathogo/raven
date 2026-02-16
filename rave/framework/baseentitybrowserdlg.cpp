@@ -43,6 +43,7 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
     mEntityDataModel = std::make_unique<EntityDataModel>(std::move(entity));
 
     bui->tvEntity->setModel(mEntityDataModel.get());
+    bui->tvEntity->setEditTriggers(QAbstractItemView::NoEditTriggers);
     // bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateFilterCombo();
 

@@ -327,9 +327,10 @@ StringField* Schedule::set_break_fill_method(std::string fill_method)
     return m_break_fill_method;
 }
 
-void Schedule::set_comment(const std::string val)
+TextField* Schedule::set_comment(const std::string val)
 {
     m_comment->setValue(val);
+    return m_comment;
 }
 
 bool Schedule::isBad() const

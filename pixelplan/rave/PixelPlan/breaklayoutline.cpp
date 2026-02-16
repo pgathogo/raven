@@ -21,7 +21,10 @@ BreakLayoutLine::BreakLayoutLine()
     m_break_fill_method->addChoice({"S", "Sequence"});
     m_break_fill_method->addChoice({"R", "Random"});
 
-    mHeader << stoq(mBreakTime->fieldLabel())
+    m_title = createField<StringField>("title", "Title");
+
+    mHeader << stoq(m_title->fieldLabel())
+            << stoq(mBreakTime->fieldLabel())
             << stoq(mDuration->fieldLabel())
             << stoq(mMaxSpots->fieldLabel())
             << stoq(m_break_fill_method->fieldLabel())
@@ -116,6 +119,17 @@ void BreakLayoutLine::set_break_fill_method(const std::string method)
     m_break_fill_method->setValue(method);
 }
 
+StringField* BreakLayoutLine::title() const
+{
+    return m_title;
+}
+
+void BreakLayoutLine::set_title(const std::string val)
+{
+    m_title->setValue(val);
+
+}
+
 std::string BreakLayoutLine::tableName() const
 {
     return mTableName;
@@ -134,6 +148,7 @@ std::unique_ptr<BaseEntity> BreakLayoutLine::mapFields(StringMap *raw_entity)
 std::vector<std::string> BreakLayoutLine::tableViewColumns() const
 {
     return tableViewCols<std::string>(
+                title()->displayName(),
                 breakTime()->displayName(),
                 duration()->displayName(),
                 maxSpots()->displayName(),

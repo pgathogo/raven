@@ -443,7 +443,9 @@ void BookingOrderBrowser::new_booking()
 
     if (order != nullptr){
         auto bw = std::make_unique<BookingWizard>(m_username, order, this);
-        bw->exec();
+        if (bw->exec() == 1) {
+            search(m_client->id());
+        }
     }
 
 }

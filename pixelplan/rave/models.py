@@ -419,6 +419,7 @@ class BreakLayoutLine(models.Model):
     duration = models.IntegerField()
     max_spots = models.IntegerField()
     break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD);
+    title = models.CharField(max_length=255, null=True, blank=True)
 
 ARTIST_TYPE = (
         ('F','FEMALE'),

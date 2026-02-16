@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iostream>
+#include <format>
 
 #include <QDate>
 #include <QLocale>
@@ -180,8 +181,10 @@ void PlaylistForm::on_create_playlist_file(bool clicked)
     {
         auto comm_break_attributes = playlist.attributes();
 
+        std::string break_title = m_break_titles[time].toStdString();
+
         std::string t_str = time.toString("hh:mm").toStdString();
-        std::string title = "Commercial Break: "+t_str;
+        std::string title = std::format("{} ({})", break_title, t_str);
 
         set_comm_break_attr(title, comm_break_attributes);
         playlist.create_playlist_item(comm_break_attributes);
@@ -430,7 +433,7 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
     std::stringstream sql;
 
-    sql << "SELECT a.schedule_date, a.schedule_time, "
+    sql << "SELECT a.schedule_date, a.schedule_time, a.comment, "
         << " c.id AS spot_id, c.name AS spot_name, c.spot_duration, "
         << " d.name AS client_name, "
         << " e.title, e.media_path, e.file_extension "
@@ -476,6 +479,10 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
                 ba.booked_time = QTime::fromString(stime, "hh:mm:ss");
             }
 
+            if (field_name == "comment") {
+                ba.break_title = QString::fromStdString(field_value);
+            }
+
             if (field_name == "spot_id")
                 ba.spot_id = str_to_int(field_value);
 
@@ -506,7 +513,13 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
         if (file_ext.empty())
             ba.filepath = ba.filepath + "."+ ba.file_extension;
 
+
+
         booked_adverts[ba.booked_time].push_back(ba);
+
+        // Record the break title
+        m_break_titles[ba.booked_time] = ba.break_title;
+
 
         provider->cache()->next();
 

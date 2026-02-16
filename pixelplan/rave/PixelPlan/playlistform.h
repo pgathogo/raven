@@ -51,6 +51,7 @@ private:
     std::unique_ptr<EntityDataModel> m_edm_setup;
     std::shared_ptr<RavenSetup> m_setup;
     BookedAdverts m_booked_adverts;
+    BreakTitle m_break_titles;
     int m_items_order = 10000000;
 
     static int comm_header_id;

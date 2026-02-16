@@ -17,11 +17,12 @@
 #include "breaklayoutform.h"
 
 struct BreakLineColumn {
-    static constexpr int BreakTime=0;
-    static constexpr int Duration=1;
-    static constexpr int MaxSpots=2;
-    static constexpr int BreakFillMethod=3;
-    static constexpr int Id=4;
+    static constexpr int Title=0;
+    static constexpr int BreakTime=1;
+    static constexpr int Duration=2;
+    static constexpr int MaxSpots=3;
+    static constexpr int BreakFillMethod=4;
+    static constexpr int Id=5;
 };
 
 BreakCreateForm::BreakCreateForm(QWidget *parent) :
@@ -330,7 +331,8 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
                     << sched.set_booked_spots(0)
                     << sched.set_schedule_item_type("COMM-BREAK")
                     << sched.set_break_mode("MIXED")
-                    << sched.set_break_fill_method(bll->break_fill_method()->value());
+                    << sched.set_break_fill_method(bll->break_fill_method()->value())
+                    << sched.set_comment(bll->title()->value());
 
             // Do not create break if it already exists
             if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
@@ -433,16 +435,19 @@ void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> b
             switch (col)
             {
             case 0:
+                qDebug() << model->data(index).toString();
+                bll->set_title(model->data(index).toString().toStdString());
+            case 1:
                 bll->setBreakTime(model->data(index).toTime());
                 hour = model->data(index).toTime().hour();
                 break;
-            case 1:
+            case 2:
                 bll->setDuration(model->data(index).toInt());
                 break;
-            case 2:
+            case 3:
                 bll->setMaxSpots(model->data(index).toInt());
                 break;
-            case 3:
+            case 4:
                 bll->set_break_fill_method(
                     fill_method[model->data(index).toString()].toStdString());
                 break;
@@ -489,7 +494,9 @@ void BreakCreateForm::edit_layout()
 
                 switch(column)
                 {
-                // case static_cast<int>(BreakLineColumn::BreakTime):
+                case BreakLineColumn::Title:
+                    bll.set_title(data.toString().toStdString());
+                    break;
                 case BreakLineColumn::BreakTime:
                     bll.setBreakTime(data.toTime());
                     break;

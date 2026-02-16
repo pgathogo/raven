@@ -107,7 +107,8 @@ void SpotBrowser::updateRecord()
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);
-                entityDataModel().all();
+                auto si = std::make_tuple("id", "=", m_client->id());
+                entityDataModel().searchByInt(si);
 
                 save_advert_media(*spot_form, spot->id(), m_client->id());
 

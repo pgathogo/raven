@@ -45,20 +45,20 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     TimeEditDelegate* ted = new TimeEditDelegate(ui->tvBreakLayoutLine);
-    ui->tvBreakLayoutLine->setItemDelegateForColumn(0, ted);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(1, ted);
 
     SpinBoxDelegate* sbd = new SpinBoxDelegate(ui->tvBreakLayoutLine);
-    ui->tvBreakLayoutLine->setItemDelegateForColumn(1, sbd);
     ui->tvBreakLayoutLine->setItemDelegateForColumn(2, sbd);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(3, sbd);
 
     std::map<QString, QVariant> data;
     data["Sequence"] = "S";
     data["Random"] = "R";
     ComboBoxItemDelegate*  cbid = new ComboBoxItemDelegate(data, ui->tvBreakLayoutLine);
-    ui->tvBreakLayoutLine->setItemDelegateForColumn(3, cbid);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(4, cbid);
 
     ReadOnlyDelegate* rod = new ReadOnlyDelegate(ui->tvBreakLayoutLine);
-    ui->tvBreakLayoutLine->setItemDelegateForColumn(4, rod);
+    ui->tvBreakLayoutLine->setItemDelegateForColumn(5, rod);
 
     mEdmTSetup = std::make_unique<EntityDataModel>(
                 std::make_shared<RavenSetup>());
