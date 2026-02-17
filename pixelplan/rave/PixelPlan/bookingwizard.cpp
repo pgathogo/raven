@@ -110,10 +110,8 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
 
     m_daypart_grid = std::make_unique<DayPartGrid>(ui->vlDaypart);
 
-
     ui->edtStartDate->setDate(QDate::currentDate());
     ui->edtEndDate->setDate(order->endDate()->value());
-
 
     m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
 
@@ -141,8 +139,11 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
     connect(ui->cbBreakTemplate, QOverload<int>::of(&QComboBox::currentIndexChanged),
                   this, &BookingWizard::show_breaks);
 
-
     ui->cbBreakTemplate->currentIndexChanged(0);
+
+    // Check when breaks are selected using the checkbox
+    connect(ui->twBreaks, &QTableWidget::itemChanged, this, &BookingWizard::break_sel_changed);
+    ui->twBreaks->setSelectionMode(QAbstractItemView::MultiSelection);
 
     set_toggle_buttons();
     read_break_rules_cache();
@@ -171,6 +172,9 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
     ui->rbManualTime->setVisible(false);
 
     disable_select_by_dow_page();
+
+    ui->tvSplitter->setStretchFactor(0, 1);
+    ui->tvSplitter->setStretchFactor(1, 2);
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
@@ -500,6 +504,12 @@ void BookingWizard::setup_break_select_grid()
 
     int row = 0;
 
+    // constexpr int CHECK_COL = 0;
+    constexpr int DATE_COL = 0;
+    constexpr int TIME_COL = 1;
+    constexpr int DURATION_COL = 2;
+
+
     for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities())
     {
         Schedule* comm_break = dynamic_cast<Schedule*>(entity.get());
@@ -511,26 +521,30 @@ void BookingWizard::setup_break_select_grid()
         QString time_str = comm_break->schedule_time()->value().toString("HH:mm");
         QString dur_str = QString::number(comm_break->break_duration_left()->value());
 
+        // Checkbox
+        // QTableWidgetItem* cbox_item = new QTableWidgetItem();
+        // cbox_item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+        // cbox_item->setCheckState(Qt::Unchecked);
+        // ui->twBreaks->setItem(row, CHECK_COL, cbox_item);
+
         QTableWidgetItem* date_item = new QTableWidgetItem(date_str);
         date_item->setData(Qt::UserRole, comm_break->id());
 
-        ui->twBreakSelect->setItem(row, 0, date_item);
+        ui->twBreakSelect->setItem(row, DATE_COL, date_item);
 
         QTableWidgetItem* time_item = new QTableWidgetItem(time_str);
-        ui->twBreakSelect->setItem(row, 1, time_item);
+        ui->twBreakSelect->setItem(row, TIME_COL, time_item);
         time_item->setTextAlignment(Qt::AlignCenter);
 
         int int_date = comm_break->schedule_date()->value().day()+
             comm_break->schedule_date()->value().month()+
             comm_break->schedule_date()->value().year();
-        time_item->setData(Qt::UserRole, int_date);
+            time_item->setData(Qt::UserRole, int_date);
 
         QTableWidgetItem* dur_item = new QTableWidgetItem(dur_str);
-        ui->twBreakSelect->setItem(row, 2, dur_item);
+        ui->twBreakSelect->setItem(row, DURATION_COL, dur_item);
         dur_item->setTextAlignment(Qt::AlignCenter);
         dur_item->setData(Qt::UserRole, comm_break->schedule_date()->value().dayOfWeek());
-
-        //m_selected_breaks.insert(time_str);
 
         SelectedBreak sel_break;
         sel_break.break_id = comm_break->id();
@@ -634,11 +648,7 @@ void BookingWizard::commit_booking()
                     order_booking.set_book_seq(break_slot);
                 }
 
-                qDebug() << "Creating New Oder..." ;
-
                 edm.createEntityDB(order_booking);
-
-                qDebug() << "Order created.";
 
                 // Deduct time remainining on this break
                 std::stringstream  sql ;
@@ -762,22 +772,27 @@ std::vector<SelectedProgramBreak> BookingWizard::get_selected_program_breaks()
     if (mil.size() == 0)
         return selected_breaks;
 
+    constexpr int BREAK_TIME_COL = 1;
+    constexpr int DURATION_COL   = 2;
+    constexpr int MAX_SPOTS_COL  = 3;
+    constexpr int FILL_POS       = 4;
+
 
     for (auto& index : mil) {
         int row = index.row();
 
         SelectedProgramBreak spb;
-        QTableWidgetItem* twi_break_time = ui->twBreaks->item(row, 0);
+        QTableWidgetItem* twi_break_time = ui->twBreaks->item(row, BREAK_TIME_COL);
         spb.break_time = twi_break_time->text();
 
-        QTableWidgetItem* twi_duration = ui->twBreaks->item(row, 1);
+        QTableWidgetItem* twi_duration = ui->twBreaks->item(row, DURATION_COL);
         spb.duration =  twi_duration->text().toInt();
 
-        QTableWidgetItem* twi_max_spots = ui->twBreaks->item(row, 2);
+        QTableWidgetItem* twi_max_spots = ui->twBreaks->item(row, MAX_SPOTS_COL);
         spb.max_spots = twi_max_spots->text().toInt();
 
 
-        QComboBox* combo = (QComboBox*)ui->twBreaks->cellWidget(row, 3);
+        QComboBox* combo = (QComboBox*)ui->twBreaks->cellWidget(row, FILL_POS);
 
         spb.fill_pos  = static_cast<FillPos>(combo->currentIndex());
 
@@ -927,6 +942,7 @@ void BookingWizard::build_breaks()
             //unique_hours = select_unique_hours_from_breaks();
         }
 
+
         if (ui->rbPrograms->isChecked())
         {
             auto selected_breaks = get_selected_program_breaks();
@@ -934,6 +950,7 @@ void BookingWizard::build_breaks()
             m_engine_data.break_count = fetch_program_breaks_from_db(ui->edtStartDate->date(), ui->edtEndDate->date(),
                                            selected_breaks);
         }
+
 
         if (ui->rbTimeband->isChecked())
         {
@@ -1123,10 +1140,12 @@ void BookingWizard::set_breaks_table(int row_count)
 {
     // Setup the table
     QStringList header;
-    header << "Break Time" << "Duration" << "Max Spots" << "Fill Pos";
-    ui->twBreaks->setColumnCount(4);
+    header << "" << "Break Time" << "Duration" << "Max Spots" << "Fill Pos";
+    ui->twBreaks->setColumnCount(5);
     ui->twBreaks->setHorizontalHeaderLabels(header);
     ui->twBreaks->setRowCount(row_count);
+
+    ui->twBreaks->setColumnWidth(0, 20);
 }
 
 int BookingWizard::get_break_count(int prog_id)
@@ -1234,14 +1253,21 @@ void BookingWizard::show_program_breaks(std::vector<ProgramBreak> breaks)
     set_breaks_table(breaks.size());
 
     int row = 0;
-    int BREAK_TIME_COL = 0;
-    int DURATION_COL   = 1;
-    int MAX_SPOTS_COL  = 2;
-    int FILL_POS_COL   = 3;
+    int CHECK_COL = 0;
+    int BREAK_TIME_COL = 1;
+    int DURATION_COL   = 2;
+    int MAX_SPOTS_COL  = 3;
+    int FILL_POS_COL   = 4;
 
     QStringList fill_pos = {"First", "In-Between", "Last"};
 
     for (auto& pb: breaks) {
+
+        // Checkbox
+        QTableWidgetItem* cbox_item = new QTableWidgetItem();
+        cbox_item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+        cbox_item->setCheckState(Qt::Unchecked);
+        ui->twBreaks->setItem(row, CHECK_COL, cbox_item);
 
         // Break Time
         auto twi_btime = new QTableWidgetItem(pb.break_time);
@@ -1265,6 +1291,28 @@ void BookingWizard::show_program_breaks(std::vector<ProgramBreak> breaks)
 
     }
 
+}
+void BookingWizard::break_sel_changed(QTableWidgetItem* item)
+{
+    if (item->column() == 0) {
+
+        ui->twBreaks->blockSignals(true);
+
+        if (item->checkState() == Qt::Checked) {
+            ui->twBreaks->selectRow(item->row());
+
+        } else {
+
+            if (item->checkState() == Qt::Unchecked) {
+                QModelIndex index = ui->twBreaks->model()->index(item->row(), item->column());
+                QItemSelection selection;
+                selection.select(index, index);
+                ui->twBreaks->selectionModel()->select(selection, QItemSelectionModel::Deselect | QItemSelectionModel::Rows);
+            }
+        }
+
+        ui->twBreaks->blockSignals(false);
+    }
 }
 
 std::vector<int> BookingWizard::get_program_ids(const std::map<progid, Program>& programs)

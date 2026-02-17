@@ -169,6 +169,7 @@ private slots:
     void select_all_programs();
     void select_all_breaks();
     void all_break_by_date_selected(bool);
+    void break_sel_changed(QTableWidgetItem*);
 
 private:
     void print_selected_breaks();

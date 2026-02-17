@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
+    <width>900</width>
     <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>750</width>
+    <width>900</width>
     <height>490</height>
    </size>
   </property>
@@ -243,7 +243,7 @@
       <widget class="QWidget" name="page">
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QSplitter" name="splitter_2">
+         <widget class="QSplitter" name="tvSplitter">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>

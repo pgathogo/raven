@@ -153,6 +153,7 @@ private slots:
     void date_filter_changed(int);
 
     void print_all_bookings();
+    void booking_item_clicked(QTableWidgetItem*);
 
 private:
     void set_treewidget(Bookings&, int, const std::string);

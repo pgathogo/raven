@@ -91,6 +91,7 @@ BookingOrderBrowser::BookingOrderBrowser(const std::string username, QWidget *pa
     m_item_delegate.setHeight(30);
     ui->twOrders->setItemDelegate(&m_item_delegate);
 
+
     PrintBookingMenu* menu = new PrintBookingMenu(ui->btnPrint, this);
 
     QAction* actAll = new QAction(tr("&All"));
@@ -123,7 +124,6 @@ BookingOrderBrowser::BookingOrderBrowser(const std::string username, QWidget *pa
     set_autocompleter();
 
     fill_cbox_date_filter();
-
 
     connect(ui->cbDateFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
             &BookingOrderBrowser::date_filter_changed);
@@ -334,6 +334,16 @@ void BookingOrderBrowser::clear_filter()
     m_label = "";
 }
 
+void BookingOrderBrowser::booking_item_clicked(QTableWidgetItem* item)
+{
+    if (item) {
+
+
+
+
+    }
+
+}
 
 void BookingOrderBrowser::cancel_clicked()
 {
@@ -386,7 +396,7 @@ void BookingOrderBrowser::void_query(VoidType vt)
         return;
     }
 
-    std::string qry_msg = std::format("{} selected bookings?", qry_tag);
+    std::string qry_msg = std::format("{} {} selected booking(s)?", qry_tag, std::to_string(bookings.size()));
 
     if (m_grid_tables.size() > 0)
     {
@@ -408,6 +418,8 @@ void BookingOrderBrowser::void_query(VoidType vt)
                     vr.username = m_username;
 
                     void_booking(order_id, bookings, vr);
+
+                    search(m_client->id());
                 }
 
                 break;
@@ -535,7 +547,6 @@ void BookingOrderBrowser::show_spot_details(const QPoint& pos)
 
 void BookingOrderBrowser::spot_details(int spot_id)
 {
-
     auto spot_edm = std::make_unique<EntityDataModel>(std::make_shared<TRAFFIK::Spot>());
     spot_edm->getById({"id", "=", spot_id});
 
@@ -547,11 +558,8 @@ void BookingOrderBrowser::spot_details(int spot_id)
     std::shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(client_edm->getEntity());
 
     spot->voice_over().setParentId(spot_id);
-    spot->type_exclusion().setParentId(spot_id);
-    spot->spot_audio().setParentId(spot_id);
 
-    std::cout << "Client Name: "<< client->name()->value() << '\n';
-    std::cout << "Spot Name: "<< spot->name()->value() << '\n';
+    spot->type_exclusion().setParentId(spot_id);
 
     std::unique_ptr<SpotForm> spot_form =
             std::make_unique<SpotForm>(client, spot, this);
@@ -621,6 +629,8 @@ std::tuple<int, std::vector<int>> BookingOrderBrowser::get_selected_bookings()
 
         std::vector<int> booking_ids;
 
+        int booking_id = -1;
+
         for (auto& item : table->selectedItems())
         {
             if (item->column() == 0)
@@ -630,8 +640,15 @@ std::tuple<int, std::vector<int>> BookingOrderBrowser::get_selected_bookings()
 
             if (item->column() == 1)
             {
-                int booking_id = item->data(Qt::UserRole).toInt();
-                booking_ids.push_back(booking_id);
+                booking_id = item->data(Qt::UserRole).toInt();
+            }
+
+            if (item->column() == 6)
+            {
+                if (item->text() == "READY") {
+                    booking_ids.push_back(booking_id);
+                }
+
             }
         }
 
@@ -976,6 +993,30 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
             table->setContextMenuPolicy(Qt::CustomContextMenu);
 
             connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
+
+            connect(table, &QTableWidget::itemClicked, this, [this, table](QTableWidgetItem* item){
+
+                int col6 = 6;
+
+                if (item) {
+
+                    QTableWidgetItem* twi = table->item(item->row(), col6);
+
+                    if(twi)
+
+                        if (twi->text() == "SKIPPED" || twi->text() == "CANCELLED") {
+
+                            this->ui->btnSkip->setEnabled(false);
+                            this->ui->btnCancel->setEnabled(false);
+
+                        } else {
+
+                            this->ui->btnSkip->setEnabled(true);
+                            this->ui->btnCancel->setEnabled(true);
+                        }
+                }
+
+                  });
 
             ++row;
         }

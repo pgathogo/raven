@@ -386,7 +386,7 @@ QString PlaylistForm::generate_guid()
 
 void PlaylistForm::display_booked_adverts(BookedAdverts& ba)
 {
-    BookedCommercialTreeViewModel* bctvm = new BookedCommercialTreeViewModel(ba);
+    BookedCommercialTreeViewModel* bctvm = new BookedCommercialTreeViewModel(ba, m_break_titles);
     ui->tvPlaylist->setModel(bctvm);
     ui->tvPlaylist->header()->setSectionResizeMode(QHeaderView::Stretch);
 

@@ -36,8 +36,8 @@ using BookedAdverts = std::map<QTime, std::vector<BookedAdvert>>;
 class BookedCommercialTreeViewModel: public QStandardItemModel {
 
 public:
-    BookedCommercialTreeViewModel(BookedAdverts booked_adverts, QObject* parent=nullptr);
-    int read_tree_data(const BookedAdverts&);
+    BookedCommercialTreeViewModel(BookedAdverts, BreakTitle, QObject* parent=nullptr);
+    int read_tree_data(const BookedAdverts&, BreakTitle&);
     void insert_node(TreeNode, TRAFFIK::TraffikNode*);
     void print_tree(TreeNode, int level=0);
     TreeData tokenize(std::string);

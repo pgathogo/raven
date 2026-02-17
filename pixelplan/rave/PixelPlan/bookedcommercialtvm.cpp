@@ -1,10 +1,11 @@
+#include <format>
 #include <QStandardItem>
 
 #include "bookedcommercialtvm.h"
 #include "traffiktree.h"
 #include "../utils/tools.h"
 
-BookedCommercialTreeViewModel::BookedCommercialTreeViewModel(BookedAdverts adverts, QObject* parent)
+BookedCommercialTreeViewModel::BookedCommercialTreeViewModel(BookedAdverts adverts, BreakTitle break_titles, QObject* parent)
     :QStandardItemModel{ parent }
 {
     setColumnCount(3);
@@ -12,18 +13,19 @@ BookedCommercialTreeViewModel::BookedCommercialTreeViewModel(BookedAdverts adver
     setHorizontalHeaderLabels(columns);
 
     m_root_item = invisibleRootItem();
-    read_tree_data(adverts);
+    read_tree_data(adverts, break_titles);
     build_tree(m_nodes);
 }
 
-int BookedCommercialTreeViewModel::read_tree_data(const BookedAdverts& items)
+int BookedCommercialTreeViewModel::read_tree_data(const BookedAdverts& items, BreakTitle& break_titles)
 {
     int parent_id = 0;
     int node_id = 0;
     for(auto& [break_time, booked_adverts]: items)
     {
         std::string t_str = break_time.toString("hh:mm").toStdString();
-        std::string parent_title = "Commercial Break: "+t_str;
+        std::string title = break_titles[break_time].toStdString();
+        std::string parent_title = std::format("{} ({})", title, t_str);
 
         TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode(parent_title,
                                                                      t_str,
