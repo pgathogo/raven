@@ -151,14 +151,22 @@ void ScheduleForm::build_tree_view() {
 
     Break comm_break;
     comm_break.id = schedule->id();
+
     comm_break.schedule_date =
         schedule->schedule_date()->value().toString("yyyy-mm-dd").toStdString();
+
     comm_break.schedule_hour = schedule->schedule_hour()->value();
+
+    comm_break.comment = schedule->comment()->value();
+
     comm_break.schedule_time =
         schedule->schedule_time()->value().toString("hh:mm").toStdString();
+
     comm_break.break_mode = schedule->break_mode()->displayName();
+
     comm_break.break_fill_method =
         method_type(schedule->break_fill_method()->value());
+
     comm_break.max_spots = schedule->break_max_spots()->value();
     comm_break.break_duration = schedule->break_duration()->value();
     comm_break.booked_spots = schedule->booked_spots()->value();
@@ -175,7 +183,14 @@ void ScheduleForm::build_tree_view() {
         new ScheduleManTreeViewModel(comm_breaks);
     ui->tvSchedule->setModel(sched_model);
 
-    ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
+    // ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tvSchedule->setColumnWidth(0, 200);
+    ui->tvSchedule->setColumnWidth(1, 100);
+    ui->tvSchedule->setColumnWidth(2, 100);
+    ui->tvSchedule->setColumnWidth(3, 100);
+    ui->tvSchedule->setColumnWidth(4, 100);
+    ui->tvSchedule->setColumnWidth(5, 100);
+    ui->tvSchedule->setColumnWidth(6, 150);
 
     ui->btnDelete->setEnabled(true);
   }

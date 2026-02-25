@@ -1,6 +1,8 @@
 #ifndef SCHEDULEMANTREEVIEWMODEL_H
 #define SCHEDULEMANTREEVIEWMODEL_H
 
+#include <tuple>
+
 #include <QStandardItemModel>
 #include <QTableWidgetItem>
 
@@ -31,19 +33,27 @@ struct Break {
 
 class OrderedMap {
 public:
+    using hour = int;
+    using break_name = std::string;
+
     void insert(int key, Break value) {
         if (m_data.find(key) == m_data.end()) {
-            m_insertion_order.push_back(key);
+
+            auto hour_break_name = std::make_tuple(key, value.comment);
+
+            m_insertion_order.push_back(hour_break_name);
         }
+
         m_data[key].push_back(value);
     }
     std::vector<Break> get_value(int key) {
         return m_data.at(key);
     }
-    std::vector<int> insertion_order(){ return m_insertion_order; }
+
+    std::vector<std::tuple<hour, break_name>> insertion_order(){ return m_insertion_order; }
 
 private:
-    std::vector<int> m_insertion_order;
+    std::vector<std::tuple<hour, break_name>> m_insertion_order;
     std::unordered_map<int, std::vector<Break>> m_data;
 };
 

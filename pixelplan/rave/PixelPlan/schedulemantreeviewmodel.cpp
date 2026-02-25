@@ -1,3 +1,5 @@
+#include <format>
+
 #include <QStandardItem>
 #include <QDebug>
 
@@ -20,11 +22,15 @@ ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent
 int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
 {
     int parent_id = 0;
-    std::vector<int> hours = items.insertion_order();
+    std::vector<std::tuple<int, std::string>> hours = items.insertion_order();
 
-    for ( const auto& hour : hours) {
+    for ( const auto& hour_break_name : hours) {
 
-        TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode("Hour: "+std::to_string(hour),
+        auto [hour, break_name] = hour_break_name;
+
+        std::string title = std::format("{}: {}", break_name, std::to_string(hour));
+
+        TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode(title,
                                      std::to_string(hour), ++parent_id, -1, hour);
 
         m_nodes.push_back(parent_node);
