@@ -1517,7 +1517,6 @@ QTime MainWindow::schedule_time_at(int index)
 
 void MainWindow::scroll_changed(int new_pos)
 {
-
     if (new_pos > m_scrollbar_current_value){
         scroll_down();
     }else{

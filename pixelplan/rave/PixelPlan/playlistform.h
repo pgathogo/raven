@@ -10,7 +10,6 @@ class PlaylistForm;
 }
 
 class QMdiArea;
-class EntityDateModel;
 class RavenSetup;
 
 class PlaylistForm : public QDialog
@@ -24,8 +23,9 @@ public:
     void setMdiArea(QMdiArea*);
 
 public slots:
-    void on_date_changed(const QDate&);
-    void on_create_playlist_file(bool);
+    void date_changed(const QDate&);
+    void create_playlist_file(bool);
+    void generate_cts();
 
 
 private:
@@ -41,7 +41,6 @@ private:
     void expand_if_has_children(QModelIndex);
     QDate previous_weekday(int current_dow);
     QString make_playlist_output_filepath(int);
-    std::string get_extension(const std::string);
 
     Ui::PlaylistForm *ui;
 
@@ -51,7 +50,7 @@ private:
     std::unique_ptr<EntityDataModel> m_edm_setup;
     std::shared_ptr<RavenSetup> m_setup;
     BookedAdverts m_booked_adverts;
-    BreakTitle m_break_titles;
+    BreakTitles m_break_titles;
     int m_items_order = 10000000;
 
     static int comm_header_id;

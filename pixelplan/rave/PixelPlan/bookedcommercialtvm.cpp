@@ -5,7 +5,7 @@
 #include "traffiktree.h"
 #include "../utils/tools.h"
 
-BookedCommercialTreeViewModel::BookedCommercialTreeViewModel(BookedAdverts adverts, BreakTitle break_titles, QObject* parent)
+BookedCommercialTreeViewModel::BookedCommercialTreeViewModel(BookedAdverts adverts, BreakTitles break_titles, QObject* parent)
     :QStandardItemModel{ parent }
 {
     setColumnCount(3);
@@ -17,7 +17,7 @@ BookedCommercialTreeViewModel::BookedCommercialTreeViewModel(BookedAdverts adver
     build_tree(m_nodes);
 }
 
-int BookedCommercialTreeViewModel::read_tree_data(const BookedAdverts& items, BreakTitle& break_titles)
+int BookedCommercialTreeViewModel::read_tree_data(const BookedAdverts& items, BreakTitles& break_titles)
 {
     int parent_id = 0;
     int node_id = 0;

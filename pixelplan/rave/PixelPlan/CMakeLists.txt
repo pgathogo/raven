@@ -44,11 +44,14 @@ find_package(PostgreSQL REQUIRED)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Xml)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets xml)
 
-
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
 set(CMAKE_EXE_LINKER_FLAGS "-static")
+
+
+
+
 #set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 
@@ -69,6 +72,7 @@ set(RAVE_FRAMEWORK_DIR "../../../rave/framework")
 set(RAVE_SECURITY_DIR "../../../rave/security")
 set(UTILS_DIR "../../../rave/utils")
 set(RAVE_CLUSTER_DIR "../../../ravecluster/rave/clusterman")
+set(QXLSX_DIR "third_party/QXlsx/QXlsx")
 
 # Ninja built-in workaround for Windows timestamp issues
 #set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E touch_nocreate <TARGET>")
@@ -270,6 +274,10 @@ set(PROJECT_SOURCES
     voidreasonbrowser.ui
     voidbookingform.h
     voidbookingform.cpp
+    ctsgenerator.h
+    ctsgenerator.cpp
+    formatselectorwidget.h
+    formatselectorwidget.cpp
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
@@ -487,6 +495,90 @@ set(PROJECT_SOURCES
 
     ${RAVE_DIR}/AudioExplorer/audioexplorer.qrc
 
+    ${QXLSX_DIR}/header/xlsxabstractooxmlfile.h
+    ${QXLSX_DIR}/header/xlsxabstractooxmlfile_p.h
+    ${QXLSX_DIR}/header/xlsxabstractsheet.h
+    ${QXLSX_DIR}/header/xlsxabstractsheet_p.h
+    ${QXLSX_DIR}/header/xlsxcell.h
+    ${QXLSX_DIR}/header/xlsxcell_p.h
+    ${QXLSX_DIR}/header/xlsxcellformula.h
+    ${QXLSX_DIR}/header/xlsxcellformula_p.h
+    ${QXLSX_DIR}/header/xlsxcelllocation.h
+    ${QXLSX_DIR}/header/xlsxcellrange.h
+    ${QXLSX_DIR}/header/xlsxcellreference.h
+    ${QXLSX_DIR}/header/xlsxchart.h
+    ${QXLSX_DIR}/header/xlsxchart_p.h
+    ${QXLSX_DIR}/header/xlsxchartsheet.h
+    ${QXLSX_DIR}/header/xlsxchartsheet_p.h
+    ${QXLSX_DIR}/header/xlsxcolor_p.h
+    ${QXLSX_DIR}/header/xlsxconditionalformatting.h
+    ${QXLSX_DIR}/header/xlsxconditionalformatting_p.h
+    ${QXLSX_DIR}/header/xlsxcontenttypes_p.h
+    ${QXLSX_DIR}/header/xlsxdatavalidation.h
+    ${QXLSX_DIR}/header/xlsxdatavalidation_p.h
+    ${QXLSX_DIR}/header/xlsxdatetype.h
+    ${QXLSX_DIR}/header/xlsxdocpropsapp_p.h
+    ${QXLSX_DIR}/header/xlsxdocpropscore_p.h
+    ${QXLSX_DIR}/header/xlsxdocument.h
+    ${QXLSX_DIR}/header/xlsxdocument_p.h
+    ${QXLSX_DIR}/header/xlsxdrawing_p.h
+    ${QXLSX_DIR}/header/xlsxdrawinganchor_p.h
+    ${QXLSX_DIR}/header/xlsxformat.h
+    ${QXLSX_DIR}/header/xlsxformat_p.h
+    ${QXLSX_DIR}/header/xlsxglobal.h
+    ${QXLSX_DIR}/header/xlsxmediafile_p.h
+    ${QXLSX_DIR}/header/xlsxnumformatparser_p.h
+    ${QXLSX_DIR}/header/xlsxreadsax.h
+    ${QXLSX_DIR}/header/xlsxrelationships_p.h
+    ${QXLSX_DIR}/header/xlsxrichstring.h
+    ${QXLSX_DIR}/header/xlsxrichstring_p.h
+    ${QXLSX_DIR}/header/xlsxsharedstrings_p.h
+    ${QXLSX_DIR}/header/xlsxsimpleooxmlfile_p.h
+    ${QXLSX_DIR}/header/xlsxstyles_p.h
+    ${QXLSX_DIR}/header/xlsxtheme_p.h
+    ${QXLSX_DIR}/header/xlsxutility_p.h
+    ${QXLSX_DIR}/header/xlsxworkbook.h
+    ${QXLSX_DIR}/header/xlsxworkbook_p.h
+    ${QXLSX_DIR}/header/xlsxworksheet.h
+    ${QXLSX_DIR}/header/xlsxworksheet_p.h
+    ${QXLSX_DIR}/header/xlsxzipreader_p.h
+    ${QXLSX_DIR}/header/xlsxzipwriter_p.h
+
+    ${QXLSX_DIR}/source/xlsxabstractooxmlfile.cpp
+    ${QXLSX_DIR}/source/xlsxabstractsheet.cpp
+    ${QXLSX_DIR}/source/xlsxcell.cpp
+    ${QXLSX_DIR}/source/xlsxcellformula.cpp
+    ${QXLSX_DIR}/source/xlsxcelllocation.cpp
+    ${QXLSX_DIR}/source/xlsxcellrange.cpp
+    ${QXLSX_DIR}/source/xlsxcellreference.cpp
+    ${QXLSX_DIR}/source/xlsxchart.cpp
+    ${QXLSX_DIR}/source/xlsxchartsheet.cpp
+    ${QXLSX_DIR}/source/xlsxcolor.cpp
+    ${QXLSX_DIR}/source/xlsxconditionalformatting.cpp
+    ${QXLSX_DIR}/source/xlsxcontenttypes.cpp
+    ${QXLSX_DIR}/source/xlsxdatavalidation.cpp
+    ${QXLSX_DIR}/source/xlsxdatetype.cpp
+    ${QXLSX_DIR}/source/xlsxdocpropsapp.cpp
+    ${QXLSX_DIR}/source/xlsxdocpropscore.cpp
+    ${QXLSX_DIR}/source/xlsxdocument.cpp
+    ${QXLSX_DIR}/source/xlsxdrawing.cpp
+    ${QXLSX_DIR}/source/xlsxdrawinganchor.cpp
+    ${QXLSX_DIR}/source/xlsxformat.cpp
+    ${QXLSX_DIR}/source/xlsxmediafile.cpp
+    ${QXLSX_DIR}/source/xlsxnumformatparser.cpp
+    ${QXLSX_DIR}/source/xlsxreadsax.cpp
+    ${QXLSX_DIR}/source/xlsxrelationships.cpp
+    ${QXLSX_DIR}/source/xlsxrichstring.cpp
+    ${QXLSX_DIR}/source/xlsxsharedstrings.cpp
+    ${QXLSX_DIR}/source/xlsxsimpleooxmlfile.cpp
+    ${QXLSX_DIR}/source/xlsxstyles.cpp
+    ${QXLSX_DIR}/source/xlsxtheme.cpp
+    ${QXLSX_DIR}/source/xlsxutility.cpp
+    ${QXLSX_DIR}/source/xlsxworkbook.cpp
+    ${QXLSX_DIR}/source/xlsxworksheet.cpp
+    ${QXLSX_DIR}/source/xlsxzipreader.cpp
+    ${QXLSX_DIR}/source/xlsxzipwriter.cpp
+
 )
 
 #playlistform.h playlistform.cpp playlistform.ui
@@ -511,7 +603,7 @@ endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(pixelplan
-        #WIN32          # Critical: Tells Windows it's a GUI app
+        WIN32          # Critical: Tells Windows it's a GUI app
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         voidreasonbrowser.h voidreasonbrowser.cpp voidreasonbrowser.ui
@@ -524,7 +616,7 @@ else()
         )
     else()
         add_executable(pixelplan
-            #WIN32
+           WIN32
             ${PROJECT_SOURCES}
             ${RC_FILE}
         )
@@ -615,6 +707,8 @@ include_directories(${sqlite3_INCLUDE_DIR})
 target_link_directories(pixelplan PRIVATE ${sqlite3_LIBRARY_DIR})
 target_link_libraries(pixelplan PRIVATE ${SQLite3_LIBRARY})
 
+add_subdirectory("third_party/QXlsx/QXlsx")
+target_link_libraries(pixelplan PRIVATE QXlsx::QXlsx)
 
 set_target_properties(pixelplan PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

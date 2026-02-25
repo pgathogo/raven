@@ -65,6 +65,7 @@ SetupForm::SetupForm(RavenSetup* setup,
     connect(ui->btnRunner, &QPushButton::clicked, this, &SetupForm::on_runner_path);
 
     connect(ui->btnMagicSoftLog, &QPushButton::clicked, this, &SetupForm::on_magicsoft_log_path);
+    connect(ui->btnCTS, &QPushButton::clicked, this, &SetupForm::cts_filepath);
 
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -128,6 +129,7 @@ void SetupForm::populateEntityFields()
     // m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
 
     m_setup->set_magicsoft_logfile_path(ui->edtMagicSoftLog->text().toStdString());
+    m_setup->set_cts_filepath(ui->edtCTSFilepath->text().toStdString());
 }
 
 void SetupForm::populateFormWidgets()
@@ -168,6 +170,9 @@ void SetupForm::populateFormWidgets()
     ui->edtBackupPath->setText(m_setup->playlist_backup_path()->to_qstring());
 
     ui->edtMagicSoftLog->setText(m_setup->magicsoft_logfile_path()->to_qstring());
+
+    ui->edtCTSFilepath->setText(m_setup->cts_filepath()->to_qstring());
+
 
     // Read local config file
     auto [status, msg] = m_config_manager.read_config("setup.json");
@@ -390,6 +395,11 @@ void SetupForm::on_magicsoft_log_path()
 {
     set_folder(ui->edtMagicSoftLog, "Magicsoft Log Path");
 
+}
+
+void SetupForm::cts_filepath()
+{
+    set_folder(ui->edtCTSFilepath, "CTC Filepath");
 }
 
 void SetupForm::set_folder(QLineEdit* le, const QString title)

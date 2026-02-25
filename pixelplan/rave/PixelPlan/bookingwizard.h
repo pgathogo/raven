@@ -190,7 +190,7 @@ private:
     int pick_random_interval();
     std::vector<int> get_hourly_distribution();
 
-    bool spot_has_audio(const TRAFFIK::Spot*);
+    bool spot_has_media(const TRAFFIK::Spot*);
     void spot_details(int);
 
     void populate_from_to_combos(const std::set<int>&);

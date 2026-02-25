@@ -1712,20 +1712,20 @@ void BookingWizard::auto_select_breaks(const AllBreaks& ab )
 }
 
 
-bool BookingWizard::spot_has_audio(const TRAFFIK::Spot* spot)
+bool BookingWizard::spot_has_media(const TRAFFIK::Spot* spot)
 {
     auto edm = EntityDataModel(
-               std::make_shared<TRAFFIK::SpotAudio>());
+               std::make_shared<PIXELPLAN::AdvertMedia>());
 
-    auto saudio = std::make_unique<TRAFFIK::SpotAudio>();
+    auto smedia = std::make_unique<PIXELPLAN::AdvertMedia>();
 
-    auto audio_filter = std::make_tuple(
-                saudio->parentId()->dbColumnName(),
+    auto media_filter = std::make_tuple(
+                smedia->spot()->dbColumnName(),
                 " = ",
                 spot->id()
                 );
 
-    std::string filter = edm.prepareFilter(audio_filter);
+    std::string filter = edm.prepareFilter(media_filter);
 
     edm.search(filter);
 
@@ -1886,16 +1886,21 @@ bool BookingWizard::validateCurrentPage()
     switch (currentId())
     {
         case BookingWizard::Page_Spots:
-           // {
-           //  TRAFFIK::Spot* sel_spot = selected_spot();
-           //  bool has_audio = spot_has_audio(sel_spot);
-           //  if (!has_audio){
-           //      showMessage("Selected spot has no audio!");
-           //      return false;
-           //  }
-           //  }
-            qDebug() << " First page ..";
+            {
+             TRAFFIK::Spot* sel_spot = selected_spot();
+             if (sel_spot == nullptr){
+                 showMessage("Please select a spot to book!");
+                 return false;
+             }
+
+             bool has_media = spot_has_media(sel_spot);
+             if (!has_media){
+                 showMessage("Selected spot has no media!");
+                 return false;
+             }
+
             break;
+           }
         case BookingWizard::Page_Dates:
             if (ui->edtStartDate->date() < QDate::currentDate())
             {

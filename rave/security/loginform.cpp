@@ -109,8 +109,11 @@ bool LoginForm::save_credentials()
 
 void LoginForm::showEvent(QShowEvent*)
 {
-    ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
-    ui->edtUsername->setFocus();
+    // ui->edtUsername->setFocusPolicy(Qt::StrongFocus);
+    // ui->edtUsername->setFocus();
+
+    ui->btnLogin->setFocusPolicy(Qt::StrongFocus);
+    ui->btnLogin->setFocus();
 }
 
 LoginForm::~LoginForm()

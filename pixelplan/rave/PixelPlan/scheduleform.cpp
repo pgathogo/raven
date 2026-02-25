@@ -19,6 +19,9 @@ ScheduleForm::ScheduleForm(QWidget *parent)
       mMdiArea{nullptr} {
 
   ui->setupUi(this);
+
+  ui->dtSchedule->setDate(QDate::currentDate());
+
   connect(ui->dtSchedule, &QDateEdit::dateChanged, this,
           &ScheduleForm::schedule_date_changed);
   connect(ui->btnCreate, &QPushButton::clicked, this,
@@ -29,7 +32,6 @@ ScheduleForm::ScheduleForm(QWidget *parent)
   m_edm_schedule =
       std::make_unique<EntityDataModel>(std::make_shared<Schedule>());
 
-  ui->dtSchedule->setDate(QDate::currentDate());
 
   // ui->btnDelete->setEnabled(false);
   ui->btnCreate->setIcon(QIcon(":/images/media/icons/createbreak.bmp"));
@@ -65,8 +67,6 @@ void ScheduleForm::load_schedule(const QDate &date) {
 
   clear_schedule();
 
-  qDebug() << "Clear entities...";
-
   m_edm_schedule->clearEntities();
 
   Schedule sched;
@@ -79,17 +79,10 @@ void ScheduleForm::load_schedule(const QDate &date) {
   std::string filter =
       m_edm_schedule->prepareFilter(date_filter, breaks_only_filter);
 
-  std::cout << filter << '\n';
-
-  qDebug() << "Search...";
-
   m_edm_schedule->search(filter);
-
-  qDebug() << "Build tree view...";
 
   build_tree_view();
 
-  qDebug() << "Load schedule done.";
 }
 
 void ScheduleForm::schedule_date_changed(const QDate &date) {

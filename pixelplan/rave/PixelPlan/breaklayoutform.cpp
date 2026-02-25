@@ -42,7 +42,7 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
                 std::make_shared<BreakLayoutLine>());
 
     ui->tvBreakLayoutLine->setModel(m_edm_breakline.get());
-    ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // ui->tvBreakLayoutLine->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     TimeEditDelegate* ted = new TimeEditDelegate(ui->tvBreakLayoutLine);
     ui->tvBreakLayoutLine->setItemDelegateForColumn(1, ted);
@@ -60,9 +60,12 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     ReadOnlyDelegate* rod = new ReadOnlyDelegate(ui->tvBreakLayoutLine);
     ui->tvBreakLayoutLine->setItemDelegateForColumn(5, rod);
 
+    ui->tvBreakLayoutLine->setColumnWidth(0, 300);
+
     mEdmTSetup = std::make_unique<EntityDataModel>(
                 std::make_shared<RavenSetup>());
     mEdmTSetup->all();
+
     if (mEdmTSetup->count() > 0)
         mRavenSetup = dynamic_cast<RavenSetup*>(mEdmTSetup->firstEntity().get());
 

@@ -17,6 +17,9 @@
 //Path to a library.
 BASS_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/BassLib/Lib/bass.lib
 
+//Build in shared lib mode
+BUILD_SHARED_LIBS:BOOL=OFF
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
 
@@ -38,6 +41,8 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=/O2 /Ob2 /DNDEBUG
 
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=/Zi /O2 /Ob1 /DNDEBUG
+
+CMAKE_CXX_STANDARD:STRING=17
 
 //Libraries linked by default with all C++ applications.
 CMAKE_CXX_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
@@ -238,6 +243,30 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=OFF
 
+//Enable to build 7-Zip packages
+CPACK_BINARY_7Z:BOOL=OFF
+
+//Enable to build IFW packages
+CPACK_BINARY_IFW:BOOL=OFF
+
+//Enable to build NSIS packages
+CPACK_BINARY_NSIS:BOOL=ON
+
+//Enable to build NuGet packages
+CPACK_BINARY_NUGET:BOOL=OFF
+
+//Enable to build WiX packages
+CPACK_BINARY_WIX:BOOL=OFF
+
+//Enable to build ZIP packages
+CPACK_BINARY_ZIP:BOOL=OFF
+
+//Enable to build 7-Zip source packages
+CPACK_SOURCE_7Z:BOOL=ON
+
+//Enable to build ZIP source packages
+CPACK_SOURCE_ZIP:BOOL=ON
+
 //Path to a library.
 DbgHelp_LIBRARY:FILEPATH=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x64/DbgHelp.Lib
 
@@ -268,6 +297,15 @@ QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 
 //The directory containing a CMake configuration file for QT.
 QT_DIR:PATH=C:/QT632/lib/cmake/Qt6
+
+//Value Computed by CMake
+QXlsx_BINARY_DIR:STATIC=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/third_party/QXlsx/QXlsx
+
+//Value Computed by CMake
+QXlsx_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+QXlsx_SOURCE_DIR:STATIC=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/third_party/QXlsx/QXlsx
 
 //The directory containing a CMake configuration file for Qt6CoreTools.
 Qt6CoreTools_DIR:PATH=C:/QT632/lib/cmake/Qt6CoreTools
@@ -440,7 +478,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -487,6 +525,22 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 CMAKE_USER_MAKE_RULES_OVERRIDE:INTERNAL=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/GNUMakeRulesOverwrite.cmake
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_7Z
+CPACK_BINARY_7Z-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_IFW
+CPACK_BINARY_IFW-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_NSIS
+CPACK_BINARY_NSIS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_NUGET
+CPACK_BINARY_NUGET-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_WIX
+CPACK_BINARY_WIX-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_ZIP
+CPACK_BINARY_ZIP-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_7Z
+CPACK_SOURCE_7Z-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_ZIP
+CPACK_SOURCE_ZIP-ADVANCED:INTERNAL=1
 //Details about finding PostgreSQL
 FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/Program Files/PostgreSQL/14/lib/libpq.lib][C:/Program Files/PostgreSQL/14/include][c ][v14.5()]
 //Details about finding Threads

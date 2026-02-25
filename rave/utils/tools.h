@@ -85,6 +85,18 @@ inline void showQMessage(QString msg, QMessageBox::Icon icon = QMessageBox::Info
     msgBox.exec();
 }
 
+inline std::string get_extension(const std::string filename)
+{
+    size_t last_dot_pos = filename.find_last_of('.');
+
+    if (last_dot_pos != std::string::npos && last_dot_pos !=  filename.length() - 1) {
+        return filename.substr(last_dot_pos);
+    }
+
+    return "";
+}
+
+
 inline bool confirmationMessage(const std::string msg)
 {
     bool result = false;

@@ -108,6 +108,8 @@ public:
     StringField* magicsoft_logfile_path();
     void set_magicsoft_logfile_path(const std::string);
 
+    StringField* cts_filepath();
+    void set_cts_filepath(const std::string);
 
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
@@ -158,6 +160,8 @@ private:
     StringField* m_report_viewer_path;
     StringField* m_report_runner_path;
     StringField* m_magicsoft_logfile_path;
+
+    StringField* m_cts_filepath;
 
     QStringList mHeader;
     std::string mTableName;

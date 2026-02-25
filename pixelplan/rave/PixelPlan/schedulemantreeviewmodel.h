@@ -18,6 +18,7 @@ using SelectedItems = QList<QTableWidgetItem *>;
 struct Break {
   int id{-1};
   std::string schedule_date{};
+  std::string comment{};
   int schedule_hour{-1};
   std::string schedule_time{};
   std::string break_mode{};

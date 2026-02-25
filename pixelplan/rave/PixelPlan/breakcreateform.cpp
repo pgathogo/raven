@@ -1,5 +1,6 @@
 #include <sstream>
 #include <ranges>
+#include <format>
 
 #include <QAbstractItemModel>
 
@@ -13,7 +14,6 @@
 #include "../../../rave/framework/datetimeselector.h"
 
 #include "breaklayout.h"
-#include "breaklayoutline.h"
 #include "breaklayoutform.h"
 
 struct BreakLineColumn {
@@ -44,8 +44,10 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
 
     m_edm_break_line = std::make_unique<EntityDataModel>(std::make_shared<BreakLayoutLine>());
 
-    ui->tvBreakLines->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // ui->tvBreakLines->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvBreakLines->setModel(m_edm_break_line.get());
+
+    ui->tvBreakLines->setColumnWidth(0, 300);
 
     connect(ui->btnCreate, &QPushButton::clicked, this, &BreakCreateForm::create_breaks);
     connect(ui->btnCancel, &QPushButton::clicked, this, &BreakCreateForm::close_form);
@@ -332,7 +334,8 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
                     << sched.set_schedule_item_type("COMM-BREAK")
                     << sched.set_break_mode("MIXED")
                     << sched.set_break_fill_method(bll->break_fill_method()->value())
-                    << sched.set_comment(bll->title()->value());
+                    << sched.set_comment(bll->title()->value())
+                   << sched.set_break_layout_line(bll->id());
 
             // Do not create break if it already exists
             if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
@@ -384,11 +387,7 @@ void BreakCreateForm::remove_hour()
 
 void BreakCreateForm::create_layout()
 {
-    qDebug() << "4444";
-
     auto break_layout = std::make_shared<BreakLayout>();
-
-    qDebug() << "5555";
 
     std::shared_ptr<BreakLayoutForm> blform =
         std::make_shared<BreakLayoutForm>(break_layout.get(), m_excluded_progids, this);
@@ -519,10 +518,14 @@ void BreakCreateForm::edit_layout()
             bll.setWeekDay(1);
             bll.setBreakLayout(m_selected_breaklayout->id());
 
-            if (bll.id() == -1)
+            if (bll.id() == -1) {
                 edm.createEntityDB(bll);
-            else
+            } else {
                 edm.updateEntity(bll);
+                // Update schedule where break_layout_line_id = bll.id()
+                update_schedule_for_break_line(bll);
+            }
+
         }
 
 
@@ -577,5 +580,26 @@ void BreakCreateForm::delete_layout()
     // Delete header
     m_edm_break_layout->deleteEntity(*break_layout);
     ui->tvBreakLayouts->model()->removeRow(row);
+
+}
+
+bool BreakCreateForm::update_schedule_for_break_line(BreakLayoutLine& bll)
+{
+  // For now we just update the comment - break title
+   std::string  update1 = std::format("UPDATE rave_schedule set comment = '{}'", bll.title()->value());
+
+   std::stringstream sql;
+
+   sql << update1
+       << " where break_layout_line_id = " << bll.id();
+
+   EntityDataModel edm;
+   try {
+       edm.executeRawSQL(sql.str());
+       return true;
+   } catch (DatabaseException& de) {
+       showMessage(de.errorMessage());
+       return false;
+   }
 
 }

@@ -37,7 +37,6 @@ public:
 
     void set_client(std::shared_ptr<Client> client);
 private:
-    std::string get_extension(const std::string);
 
     Ui::SpotBrowser *ui;
     std::shared_ptr<Client> m_client;

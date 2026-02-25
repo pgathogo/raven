@@ -28,7 +28,7 @@ struct BookedAdvert {
     QString filepath{};
 };
 
-using BreakTitle = std::map<QTime, QString>;
+using BreakTitles = std::map<QTime, QString>;
 
 
 using BookedAdverts = std::map<QTime, std::vector<BookedAdvert>>;
@@ -36,8 +36,8 @@ using BookedAdverts = std::map<QTime, std::vector<BookedAdvert>>;
 class BookedCommercialTreeViewModel: public QStandardItemModel {
 
 public:
-    BookedCommercialTreeViewModel(BookedAdverts, BreakTitle, QObject* parent=nullptr);
-    int read_tree_data(const BookedAdverts&, BreakTitle&);
+    BookedCommercialTreeViewModel(BookedAdverts, BreakTitles, QObject* parent=nullptr);
+    int read_tree_data(const BookedAdverts&, BreakTitles&);
     void insert_node(TreeNode, TRAFFIK::TraffikNode*);
     void print_tree(TreeNode, int level=0);
     TreeData tokenize(std::string);

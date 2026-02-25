@@ -22,10 +22,20 @@ namespace OATS{
 
         //setStyleSheet(style);
 
+
         m_time_panel = std::make_unique<OATS::TimeGridPanel>(this);
         m_track_panel = std::make_unique<OATS::TrackGridPanel>(this);
         m_status_panel = std::make_unique<OATS::StatusGridPanel>(this);
         m_transition_mode_panel = std::make_unique<OATS::TransitionModeGridPanel>(this);
+
+        int current_hour = QTime::currentTime().hour();
+
+        qDebug() << "Current Hour: " << current_hour << " | Schedule Item Hour: " << m_schedule_item->hour();
+
+
+        if (current_hour == m_schedule_item->hour()){
+            m_track_panel->setStyleSheet(current_hour_stylesheet());
+        }
 
         m_layout = new QHBoxLayout();
         m_layout->setSpacing(0);
@@ -121,5 +131,22 @@ namespace OATS{
     void ScheduleGridItem::set_item_status(OATS::ItemStatus i_status)
     {
         m_schedule_item->set_item_status(i_status);
+    }
+
+    QString ScheduleGridItem::current_hour_stylesheet()
+    {
+        QString ss = R"(
+            QWidget {
+            background-color: #1E1E1E;
+            border: 2px solid #E53935;
+            border-radius: 2px;
+            }
+            QWidget:hover {
+            border-color: #FF5252;  /* Lighter red on hover */
+            }
+        )" ;
+
+        return ss;
+
     }
 }

@@ -19,6 +19,7 @@
 
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../rave/audio/audiotool.h"
+#include "../../../utils/tools.h"
 
 
 #include "advertmedia.h"
@@ -52,7 +53,6 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
     connect(ui->btnPlay, &QPushButton::clicked, this, &MediaBrowser::play_media);
     connect(ui->btnPause, &QPushButton::clicked, this, &MediaBrowser::pause_media);
     connect(ui->btnStop, &QPushButton::clicked, this, &MediaBrowser::stop_media);
-
     connect(ui->btnProperties, &QPushButton::clicked, this, &MediaBrowser::on_properties);
 
     m_advert_media = std::move(find_spot_advert_media(spot->id()));
@@ -70,12 +70,13 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
 
 
         // Some titles have file extension - avoid appending extra extension
+        auto file_ext = get_extension(m_advert_media->title()->value());
 
-        auto file_ext = get_extension(full_filename);
         if (file_ext.empty()) {
 
-             if (m_advert_media->file_extension()->value() != "")
+            if (!m_advert_media->file_extension()->value().empty()) {
                  full_filename = full_filename +"."+m_advert_media->file_extension()->value();
+            }
         }
 
     }
@@ -85,18 +86,6 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
     ui->wigProperties->setVisible(false);
 
 }
-
-
-std::string MediaBrowser::get_extension(const std::string filename)
-{
-    size_t last_dot_pos = filename.find_last_of('.');
-    if (last_dot_pos != std::string::npos && last_dot_pos != 0) {
-        return filename.substr(last_dot_pos);
-    }
-    return "";
-}
-
-
 
 void MediaBrowser::show_media_file()
 {

@@ -99,8 +99,10 @@ void SpotBrowser::updateRecord()
         std::shared_ptr<SpotForm> spot_form =
                 std::make_unique<SpotForm>(m_client, spot, this);
 
+
         if (spot_form->exec() > 0)
         {
+
             try{
 
 
@@ -200,15 +202,6 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
     }
 }
 
-std::string SpotBrowser::get_extension(const std::string filename)
-{
-    size_t last_dot_pos = filename.find_last_of('.');
-    if (last_dot_pos != std::string::npos && last_dot_pos != 0) {
-        return filename.substr(last_dot_pos);
-    }
-    return "";
-}
-
 bool SpotBrowser::save_advert_media(SpotForm& sf, int spot_id, int client_id)
 {
     std::shared_ptr<PIXELPLAN::AdvertMedia> media_advert  = sf.advert_media();
@@ -220,11 +213,12 @@ bool SpotBrowser::save_advert_media(SpotForm& sf, int spot_id, int client_id)
         EntityDataModel edm;
 
         // Prefix the filename with spot_id
-        media_advert->set_title(std::to_string(spot_id)+"_"+
-                            media_advert->title()->value());
+        // media_advert->set_title(std::to_string(spot_id)+"_"+
+        //                     media_advert->title()->value());
 
 
-        auto dest_filepath = media_advert->dest_path()->value()+ media_advert->title()->value();
+        //auto dest_filepath = media_advert->dest_path()->value()+ media_advert->title()->value();
+        auto dest_filepath = media_advert->dest_filepath()->value();
 
         auto file_ext = get_extension(dest_filepath);
 
@@ -236,11 +230,7 @@ bool SpotBrowser::save_advert_media(SpotForm& sf, int spot_id, int client_id)
         q_filepath = q_filepath.replace("//", "\\\\");
         q_filepath = q_filepath.replace('/', "\\");
 
-        qDebug() << "Q Filepath: "<< q_filepath;
-
         dest_filepath = q_filepath.toStdString();
-
-        std::cout << "Dest Filepath: " << dest_filepath << '\n';
 
         media_advert->set_dest_filepath(dest_filepath);
 

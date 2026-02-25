@@ -5,8 +5,10 @@
 
 #include "advertmediaform.h"
 #include "ui_advertmediaform.h"
+
 #include "../../../rave/framework/ui_baseentitydetaildlg.h"
 #include "../../../rave/framework/choicefield.h"
+#include "../../../utils/tools.h"
 
 #include "advertmedia.h"
 
@@ -53,15 +55,6 @@ std::string AdvertMediaForm::windowTitle()
     return "Media Details- "+m_title_tag+" Media";
 }
 
-std::string AdvertMediaForm::get_extension(const std::string filename)
-{
-    size_t last_dot_pos = filename.find_last_of('.');
-    if (last_dot_pos != std::string::npos && last_dot_pos != 0) {
-        return filename.substr(last_dot_pos);
-    }
-    return "";
-}
-
 void AdvertMediaForm::populateEntityFields()
 {
     m_advert_media->set_title(ui->edtTitle->text().trimmed().toStdString());
@@ -90,11 +83,7 @@ void AdvertMediaForm::populateEntityFields()
 
     auto dest_filename = m_advert_media->dest_path()->value()+title;
 
-    std::cout << "Dest Filename: "<< dest_filename << '\n';
-
     auto extension = get_extension(title);
-
-    std::cout << "Ext: " << extension << '\n';
 
     if (extension.empty()) {
         dest_filename = dest_filename + "." + ext;

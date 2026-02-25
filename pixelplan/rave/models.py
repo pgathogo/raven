@@ -231,6 +231,7 @@ class Setup(models.Model):
     report_viewer_path = models.CharField(max_length=300, null=True, blank=True)
     report_runner_path = models.CharField(max_length=300, null=True, blank=True)
     magicsoft_logfile_path = models.CharField(max_length=300, null=True, blank=True)
+    cts_filepath = models.CharField(max_length=300, null=True, blank=True)
 
 
 class Content(models.Model):
@@ -548,6 +549,7 @@ class Schedule(models.Model):
     break_duration_left = models.IntegerField(default=0, null=True)
     break_mode = models.CharField(max_length=8, choices=BREAK_MODE, default='MIXED', null=True, blank=True)
     break_status = models.CharField(max_length=6, choices=BREAK_STATUS, default='OPEN', null=True, blank=True)
+    break_layout_line = models.ForeignKey(BreakLayoutLine, models.DO_NOTHING, null=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
 
 class SpotAudio(models.Model):

@@ -9,6 +9,8 @@
 __*__
 *.rar
 *.zip
+*.xlsx
+*.json
 #CMake*
 CMakeLists.txt.user*
 *.db
@@ -83,4 +85,5 @@ rave/AudioExplorer/build/
 rave/sedric/XXXCMakeFiles/
 rave/sedric/build/
 upgen/
+third_party/
 *_autogen

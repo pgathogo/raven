@@ -50,14 +50,12 @@ private slots:
 signals:
     void audio_duration(int);
 
-
 private:
     std::shared_ptr<PIXELPLAN::AdvertMedia> find_spot_advert_media(int);
     void show_media(const QString media_filename);
     void make_property_widget();
     //QString convertNetworkPath(const QString& urlPath);
     QString conv(const QString& urlpath);
-    std::string get_extension(const std::string);
 
     Ui::MediaBrowser *ui;
 

@@ -27,6 +27,8 @@ namespace OATS{
         //setFixedWidth(450);
         setStyleSheet("QFrame#TrackPanel{background-color: #222222;}");
 
+        setStyleSheet("background-color: #313131");
+
         m_layout = new QGridLayout();
 
         QFont f_track("JetBrains Mono", 12, QFont::Bold);

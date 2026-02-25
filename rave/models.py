@@ -231,7 +231,7 @@ class Setup(models.Model):
     report_viewer_path = models.CharField(max_length=300, null=True, blank=True)
     report_runner_path = models.CharField(max_length=300, null=True, blank=True)
     magicsoft_logfile_path = models.CharField(max_length=300, null=True, blank=True)
-
+    cts_filepath = models.CharField(max_length=300, null=True, blank=True )
 
 class Content(models.Model):
     name = models.CharField(max_length=255)

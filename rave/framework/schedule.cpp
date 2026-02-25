@@ -1,8 +1,10 @@
 #include "schedule.h"
+
 #include "../framework/choicefield.h"
 #include "../framework/entitydatamodel.h"
-
 #include "../audio/audio.h"
+
+#include "breaklayoutline.h"
 
 
 Schedule::Schedule()
@@ -57,6 +59,9 @@ Schedule::Schedule()
     m_break_status = createField<ChoiceField<std::string>>("break_status", "Break Status");
     m_break_status->addChoice({"LOCKED", "Locked"});
     m_break_status->addChoice({"OPEN", "Open"});
+
+    m_break_layout_line = createField<ForeignKeyField>("break_layout_line_id", "BreakLayoutLine",
+                                               std::make_unique<BreakLayoutLine>(), "title");
 
     m_break_fill_method = createField<StringField>("break_fill_method", "Break Fill Method");
 
@@ -332,6 +337,20 @@ TextField* Schedule::set_comment(const std::string val)
     m_comment->setValue(val);
     return m_comment;
 }
+
+ForeignKeyField* Schedule::break_layout_line()
+{
+    return m_break_layout_line;
+
+}
+
+ForeignKeyField* Schedule::set_break_layout_line(int val)
+{
+    m_break_layout_line->setValue(val);
+    return m_break_layout_line;
+
+}
+
 
 bool Schedule::isBad() const
 {

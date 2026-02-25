@@ -15,9 +15,14 @@
 #include "../framework/logger.h"
 
 #include "ravensetup.h"
+#include "ctsgenerator.h"
 
 #include "playlistform.h"
 #include "ui_playlistform.h"
+
+#include "xlsxdocument.h"
+#include "xlsxrichstring.h"
+#include "xlsxformat.h"
 
 int PlaylistForm::comm_header_id = 0;
 
@@ -31,11 +36,13 @@ PlaylistForm::PlaylistForm(QWidget* parent)
 
     ui->dtPlaylistDate->setDate(QDate::currentDate());
 
-    BookedAdverts ba = get_booked_adverts(QDate::currentDate());
-    display_booked_adverts(ba);
+    m_booked_adverts = get_booked_adverts(QDate::currentDate());
+    display_booked_adverts(m_booked_adverts);
 
-    connect(ui->dtPlaylistDate, &QDateEdit::dateChanged, this, &PlaylistForm::on_date_changed);
-    connect(ui->btnCreateFile, &QPushButton::clicked, this, &PlaylistForm::on_create_playlist_file);
+    connect(ui->dtPlaylistDate, &QDateEdit::dateChanged, this, &PlaylistForm::date_changed);
+    connect(ui->btnCreateFile, &QPushButton::clicked, this, &PlaylistForm::create_playlist_file);
+
+    connect(ui->btnXL, &QPushButton::clicked, this, &PlaylistForm::generate_cts);
 
     m_edm_setup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_edm_setup->all();
@@ -59,10 +66,16 @@ void PlaylistForm::setMdiArea(QMdiArea* mdi)
     m_mdi_area = mdi;
 }
 
-void PlaylistForm::on_date_changed(const QDate& prev_date)
+void PlaylistForm::generate_cts()
+{
+    PIXELPLAN::CTSGenerator  cts_gen(ui->dtPlaylistDate->date(), m_booked_adverts, m_break_titles);
+    cts_gen.exec();
+
+}
+
+void PlaylistForm::date_changed(const QDate& prev_date)
 {
     m_booked_adverts = get_booked_adverts(ui->dtPlaylistDate->date());
-
 
     display_booked_adverts(m_booked_adverts);
 }
@@ -97,7 +110,7 @@ QString PlaylistForm::make_playlist_output_filepath(int dow)
 
 }
 
-void PlaylistForm::on_create_playlist_file(bool clicked)
+void PlaylistForm::create_playlist_file(bool clicked)
 {
     // 1. Get our empty playlist XML file
     // 2. Load the XML file to the DomDocument
@@ -433,18 +446,17 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
     std::stringstream sql;
 
-    sql << "SELECT a.schedule_date, a.schedule_time, a.comment, "
-        << " c.id AS spot_id, c.name AS spot_name, c.spot_duration, "
-        << " d.name AS client_name, "
-        << " e.title, e.media_path, e.file_extension "
-        <<  "FROM rave_schedule a "
-        << " LEFT OUTER JOIN rave_orderbooking b ON a.id = b.schedule_id "
-        << " LEFT JOIN rave_spot c ON b.spot_id = c.id "
-        << " LEFT JOIN rave_client d ON c.client_id = d.id "
-        << " LEFT JOIN rave_advertmedia e ON b.booked_audio_id = e.id "
-        << " WHERE a.schedule_date = '"+current_date+"'"
-        << "   AND b.booking_status = 'READY' "
-        << " ORDER by a.schedule_time ASC ";
+    sql << " SELECT a.schedule_date, a.schedule_time, a.comment, "
+        <<      " c.id AS spot_id, c.name AS spot_name, c.spot_duration, "
+        <<      " d.name AS client_name, "
+        <<      " e.title, e.media_path, e.file_extension "
+        <<      " FROM rave_schedule a"
+        <<      " LEFT OUTER JOIN rave_orderbooking b  ON a.id = b.schedule_id "
+        <<      " LEFT JOIN rave_spot c ON b.spot_id = c.id "
+        <<      " LEFT JOIN rave_client d ON c.client_id = d.id "
+        <<      " LEFT JOIN rave_advertmedia e ON b.booked_audio_id = e.id "
+        <<      " WHERE a.schedule_date = '"+current_date+"'"
+        <<      " ORDER by a.schedule_time ASC ";
 
     EntityDataModel edm;
 
@@ -483,36 +495,73 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
                 ba.break_title = QString::fromStdString(field_value);
             }
 
-            if (field_name == "spot_id")
-                ba.spot_id = str_to_int(field_value);
+            if (field_name == "spot_id") {
+                if (field_value.empty()) {
+                    ba.spot_id = -1;
+                } else {
+                    ba.spot_id = str_to_int(field_value);
+                }
+            }
 
-            if (field_name == "spot_name")
-                ba.spot_name = QString::fromStdString(field_value);
+            if (field_name == "spot_name") {
+                if (field_value.empty()) {
+                    ba.spot_name = "";
+                } else {
+                    ba.spot_name = QString::fromStdString(field_value);
+                }
+            }
 
-            if (field_name == "spot_duration")
-                ba.duration = str_to_int(field_value);
+            if (field_name == "spot_duration") {
+                if (field_value.empty()) {
+                    ba.duration = 0;
+                } else {
+                    ba.duration = str_to_int(field_value);
+                }
+            }
 
-            if (field_name == "client_name")
-                ba.client_name = QString::fromStdString(field_value);
+            if (field_name == "client_name") {
+                if (field_value.empty()) {
+                    ba.client_name = "";
+                } else {
+                    ba.client_name = QString::fromStdString(field_value);
+                }
+            }
 
-            if (field_name == "title")
-                ba.filename = QString::fromStdString(field_value);
+            if (field_name == "title") {
+                if (field_value.empty()) {
+                    ba.filename = "";
+                } else {
+                    ba.filename = QString::fromStdString(field_value);
+                }
+            }
 
-            if (field_name == "media_path")
-                ba.media_path = QString::fromStdString(field_value);
+            if (field_name == "media_path") {
+                if (field_value.empty()) {
+                    ba.media_path = "";
+                } else {
+                    ba.media_path = QString::fromStdString(field_value);
+                }
+            }
 
-            if (field_name == "file_extension")
-                ba.file_extension = QString::fromStdString(field_value);
+            if (field_name == "file_extension") {
+                if (field_value.empty()) {
+                    ba.file_extension = "";
+                } else {
+                    ba.file_extension = QString::fromStdString(field_value);
+                }
+            }
 
         }
 
 
         ba.filepath = ba.media_path + ba.filename;
 
-        auto file_ext = get_extension(ba.filename.toStdString());
-        if (file_ext.empty())
-            ba.filepath = ba.filepath + "."+ ba.file_extension;
+        if (!ba.filename.isEmpty()) {
 
+            auto file_ext = get_extension(ba.filename.toStdString());
+            if (file_ext.empty())
+                ba.filepath = ba.filepath + "."+ ba.file_extension;
+        }
 
 
         booked_adverts[ba.booked_time].push_back(ba);
@@ -528,13 +577,4 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
     return booked_adverts;
 
-}
-
-std::string PlaylistForm::get_extension(const std::string filename)
-{
-    size_t last_dot_pos = filename.find_last_of('.');
-    if (last_dot_pos != std::string::npos && last_dot_pos != 0) {
-        return filename.substr(last_dot_pos);
-    }
-    return "";
 }

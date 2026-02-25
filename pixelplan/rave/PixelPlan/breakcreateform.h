@@ -5,12 +5,13 @@
 #include <QDialog>
 #include <type_traits>
 
+#include "breaklayoutline.h"
+
 namespace Ui {
 class BreakCreateForm;
 }
 
 class EntityDataModel;
-class BreakLayoutLine;
 class BreakLayout;
 class BreakLayoutForm;
 class Schedule;
@@ -75,6 +76,7 @@ private:
     void setup_ui();
     void make_progids_exclusion_list();
     void print_model_items();
+    bool update_schedule_for_break_line(BreakLayoutLine&);
 
     Ui::BreakCreateForm *ui;
     std::unique_ptr<EntityDataModel> m_edm_break_layout;

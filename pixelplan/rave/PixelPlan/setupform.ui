@@ -342,83 +342,11 @@
      </widget>
      <widget class="QWidget" name="tbBreaks">
       <attribute name="title">
-       <string>Breaks</string>
+       <string>File Locations</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0">
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_17">
-           <property name="text">
-            <string>Break Duration:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QSpinBox" name="edtMaxSpots"/>
-         </item>
-         <item row="0" column="1">
-          <widget class="QSpinBox" name="sbTimeInterval"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_16">
-           <property name="text">
-            <string>Break Time Interval:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>350</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Break Max Spots:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QSpinBox" name="sbBreakDuration">
-           <property name="maximum">
-            <number>999</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_24">
-           <property name="text">
-            <string>Magicsoft Log Path:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QPushButton" name="btnMagicSoftLog">
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="edtCommAudioPath">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="edtAudioPath">
            <property name="readOnly">
@@ -426,29 +354,15 @@
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="edtMagicSoftLog"/>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="btnAudioPath">
+         <item row="2" column="2">
+          <widget class="QPushButton" name="btnTemplate">
            <property name="text">
             <string>...</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_19">
-           <property name="text">
-            <string>Comm Audio Path:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QPushButton" name="btnCommAudioPath">
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="edtBackupPath"/>
          </item>
          <item row="3" column="1">
           <widget class="QLineEdit" name="edtOutputPath"/>
@@ -460,15 +374,50 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="edtTemplateFile"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_20">
-           <property name="text">
-            <string>Playlist Template File:</string>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="edtCommAudioPath">
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_25">
+           <property name="text">
+            <string>Playlist Backup Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="btnCommAudioPath">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="btnAudioPath">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QPushButton" name="btnBackupPath">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>Magicsoft Log Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="edtTemplateFile"/>
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_18">
@@ -484,25 +433,42 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="btnTemplate">
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="edtMagicSoftLog"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_20">
+           <property name="text">
+            <string>Playlist Template File:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>Comm Audio Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QPushButton" name="btnMagicSoftLog">
            <property name="text">
             <string>...</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_25">
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_26">
            <property name="text">
-            <string>Playlist Backup Path:</string>
+            <string>CTS File Path:</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="edtBackupPath"/>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="edtCTSFilepath"/>
          </item>
-         <item row="4" column="2">
-          <widget class="QPushButton" name="btnBackupPath">
+         <item row="6" column="2">
+          <widget class="QPushButton" name="btnCTS">
            <property name="text">
             <string>...</string>
            </property>
@@ -562,6 +528,77 @@
           <size>
            <width>20</width>
            <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Breaks</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>Break Duration:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="edtMaxSpots"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="sbTimeInterval"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Break Time Interval:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>350</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Break Max Spots:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="sbBreakDuration">
+           <property name="maximum">
+            <number>999</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>297</height>
           </size>
          </property>
         </spacer>

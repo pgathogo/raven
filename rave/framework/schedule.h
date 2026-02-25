@@ -88,6 +88,10 @@ public:
     StringField* break_fill_method() const;
     StringField* set_break_fill_method(std::string);
 
+    ForeignKeyField* break_layout_line();
+    ForeignKeyField* set_break_layout_line(int);
+
+
     TextField* comment()const;
     TextField* set_comment(const std::string val);
 
@@ -113,7 +117,7 @@ public:
     void afterMapping(BaseEntity& entity) override;
 
 
-    std::string order_by() const override { return "schedule_date, id"; }
+    std::string order_by() const override { return "schedule_date, schedule_time, id"; }
 
     void setDefaults();
     void setTableViewColumns(const std::vector<std::string> cols);
@@ -149,6 +153,7 @@ private:
     IntegerField* m_break_duration_left;
     ChoiceField<std::string>* m_break_mode;
     ChoiceField<std::string>* m_break_status;
+    ForeignKeyField* m_break_layout_line;
     TextField* m_comment;
 
     int m_break_availability;

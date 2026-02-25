@@ -20,8 +20,8 @@ ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent
 int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
 {
     int parent_id = 0;
-    //for (auto& [hour, breaks] : items){
     std::vector<int> hours = items.insertion_order();
+
     for ( const auto& hour : hours) {
 
         TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode("Hour: "+std::to_string(hour),
@@ -39,6 +39,7 @@ int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
                                         ++child_id, parent_id, comm_break.id);
 
             QStandardItem* schedule_time = new QStandardItem(stoq(comm_break.schedule_time));
+
             QStandardItem* break_mode = new QStandardItem(stoq(comm_break.break_mode));
             QStandardItem* max_spots = new QStandardItem(QString::number(comm_break.max_spots));
             QStandardItem* duration = new QStandardItem(QString::number(comm_break.break_duration));

@@ -65,6 +65,7 @@ RavenSetup::RavenSetup()
     m_report_runner_path = createField<StringField>("report_runner_path", "Report Runner Path");
 
     m_magicsoft_logfile_path = createField<StringField>("magicsoft_logfile_path", "Magicsoft Logfile Path");
+    m_cts_filepath = createField<StringField>("cts_filepath", "CTS Filepath");
 
     mHeader << stoq(m_station_name->fieldName());
     setTableName("rave_setup");
@@ -387,6 +388,16 @@ void RavenSetup::set_magicsoft_logfile_path(const std::string path)
 {
     m_magicsoft_logfile_path->setValue(path);
 
+}
+
+StringField* RavenSetup::cts_filepath()
+{
+    return m_cts_filepath;
+}
+
+void RavenSetup::set_cts_filepath(const std::string cts)
+{
+    m_cts_filepath->setValue(cts);
 }
 
 std::string RavenSetup::tableName() const

@@ -35,7 +35,6 @@ namespace OATS{
         void delete_item();
         void reload_schedule();
 
-
     private:
         QGridLayout* m_layout;
         std::unique_ptr<QLabel> m_track_label;

@@ -71,6 +71,8 @@ namespace OATS{
         void update_artist_title(const QString);
 
     private:
+        QString current_hour_stylesheet();
+
         OATS::ItemStatus m_item_status;
         QHBoxLayout* m_layout;
         std::unique_ptr<OATS::TimeGridPanel> m_time_panel;
