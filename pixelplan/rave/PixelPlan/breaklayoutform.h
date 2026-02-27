@@ -82,6 +82,8 @@ private:
     void register_dow_checkboxes();
 
     bool is_time_range(const QTime&, const QTime&, const QTime&);
+    bool break_used_in_schedule(int);
+    bool delete_schedule_for_break_line(int);
 
     Ui::BreakLayoutForm *ui;
     BreakLayout* mBreakLayout;

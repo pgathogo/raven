@@ -162,10 +162,12 @@ void BreakLayoutForm::setup_ui()
     QPixmap ins_row(":/images/media/icons/insert_row.png");
     QIcon ins_icon(ins_row);
     ui->tbInsert->setIcon(ins_icon);
+    ui->tbInsert->setMinimumSize(QSize(35, 35));
 
     QPixmap del_row(":/images/media/icons/remove_row.png");
     QIcon del_icon(del_row);
     ui->tbDelete->setIcon(del_icon);
+    ui->tbDelete->setMinimumSize(QSize(35, 35));
 }
 
 ActionResult BreakLayoutForm::saveRecord()
@@ -244,9 +246,6 @@ void BreakLayoutForm::populateFormWidgets()
     ui->cbSat->setCheckState(check_state(dow[SAT]));
     ui->cbSun->setCheckState(check_state(dow[SUN]));
 
-    //populateCopyCB();
-
-    //populateBreakLine();
 
 }
 
@@ -648,26 +647,87 @@ void BreakLayoutForm::insert_row()
 
 void BreakLayoutForm::delete_row()
 {
-    QModelIndexList rows = ui->tvBreakLayoutLine->selectionModel()->selectedRows();
-    if (rows.count() == 0)
-        return;
+    // 1. Get the current active index from the selection model
+    QModelIndex currentIndex = ui->tvBreakLayoutLine->selectionModel()->currentIndex();
 
 
-    int row = rows[0].row();
 
-    auto be = m_edm_breakline->get_entity_at_row(row);
-    if (be == nullptr)
-        return;
 
-    std::shared_ptr<BreakLayoutLine> bll = std::dynamic_pointer_cast<BreakLayoutLine>(be);
+    // QModelIndexList rows = ui->tvBreakLayoutLine->selectionModel()->selectedRows();
+    // if (rows.count() == 0)
+    //     return;
 
-    m_deleted_item.push_back(bll->breakTime()->value());
+    // int row = rows[0].row();
 
-    m_edm_breakline->deleteEntity(*(bll.get()));
+    // 2. Check if the index is valid (user actually has something selected)
+    if (currentIndex.isValid()) {
 
-    ui->tvBreakLayoutLine->model()->removeRows(rows[0].row(), rows.size(),  rows[0].parent());
+        int row = currentIndex.row();
 
-    populateBreakLine();
+        auto be = m_edm_breakline->get_entity_at_row(row);
+        if (be == nullptr)
+            return;
+
+        std::shared_ptr<BreakLayoutLine> bll = std::dynamic_pointer_cast<BreakLayoutLine>(be);
+
+        m_deleted_item.push_back(bll->breakTime()->value());
+
+
+        // Check if this break has been used in schedule, if so, show message and return
+        if (break_used_in_schedule(bll->id())){
+            showMessage("Cannot delete break line. This break line has been used in schedule.");
+            return;
+        }
+
+        // Delete schedule entries with this break line id and booked_spots = 0
+        delete_schedule_for_break_line(bll->id());
+
+        // Remove selected item
+        //ui->tvBreakLayoutLine->model()->removeRows(row, rows.size(),  rows[0].parent());
+
+        // 3. Remove exactly ONE row at the current position
+        ui->tvBreakLayoutLine->model()->removeRow(currentIndex.row(), currentIndex.parent());
+
+        m_edm_breakline->deleteEntity( *(bll.get()) );
+    }
+
+}
+
+bool BreakLayoutForm::break_used_in_schedule(int break_id)
+{
+    std::string sql{};
+    sql = std::format("SELECT id FROM rave_schedule WHERE break_layout_line_id = {} and booked_spots > 0", break_id);
+
+    EntityDataModel edm;
+
+    try {
+        edm.readRaw(sql);
+    } catch(DatabaseException de) {
+        showMessage(de.errorMessage());
+    }
+
+    auto provider = edm.getDBManager()->provider();
+
+    if (provider->cacheSize() == 0)
+        return false;
+
+    return true;
+}
+
+bool BreakLayoutForm::delete_schedule_for_break_line(int break_id)
+{
+    std::string sql{};
+    sql = std::format("DELETE FROM rave_schedule WHERE break_layout_line_id = {} and booked_spots = 0", break_id);
+    EntityDataModel edm;
+
+    try {
+        edm.executeRawSQL(sql);
+    } catch(DatabaseException de) {
+        showMessage(de.errorMessage());
+        return false;
+    }
+
+    return true;
 }
 
 void BreakLayoutForm::delete_row_TEST()

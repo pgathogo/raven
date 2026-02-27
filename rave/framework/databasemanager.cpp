@@ -284,7 +284,17 @@ int PostgresDatabaseManager::deleteEntity(const BaseEntity& entity)
 {
     std::string sql{};
     sql = "DELETE FROM "+entity.tableName()+" WHERE ID ="+std::to_string(entity.id());
-    return provider()->executeQuery(sql);
+
+    bool result;
+
+    try {
+        result =  provider()->executeQuery(sql);
+
+    } catch (PostgresException& pe) {
+        return 0;
+    }
+
+    return result ? 1 : 0;
 }
 
 int PostgresDatabaseManager::deleteEntityByValue(const std::string table_name,
