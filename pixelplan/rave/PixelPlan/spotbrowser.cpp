@@ -202,25 +202,36 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
     }
 }
 
+std::string SpotBrowser::append_prefix(std::string title, int spot_id)
+{
+    // First check if we have prefix characters before "_" and check if they are the same as spot id
+    auto prefix = title.substr(0, title.find("_"));
+    if (prefix == std::to_string(spot_id))
+        return title;
+    return std::to_string(spot_id)+"_"+title;
+}
+
 bool SpotBrowser::save_advert_media(SpotForm& sf, int spot_id, int client_id)
 {
     std::shared_ptr<PIXELPLAN::AdvertMedia> media_advert  = sf.advert_media();
     media_advert->set_client(client_id);
     media_advert->set_spot(spot_id);
 
+
     if (media_advert->dbAction() == DBAction::dbaCREATE)
     {
         EntityDataModel edm;
 
-        // Prefix the filename with spot_id
-        // media_advert->set_title(std::to_string(spot_id)+"_"+
-        //                     media_advert->title()->value());
+        // Append spot id prefix to media file
+        media_advert->set_title(append_prefix(media_advert->title()->value(), spot_id));
 
+        auto title = media_advert->title()->value();
 
-        //auto dest_filepath = media_advert->dest_path()->value()+ media_advert->title()->value();
+        media_advert->set_dest_filepath( media_advert->dest_path()->value()+title );
+
         auto dest_filepath = media_advert->dest_filepath()->value();
 
-        auto file_ext = get_extension(dest_filepath);
+        auto file_ext = get_extension(title);
 
         if (file_ext.empty())
             dest_filepath = dest_filepath + "." + media_advert->file_extension()->value();
@@ -233,7 +244,6 @@ bool SpotBrowser::save_advert_media(SpotForm& sf, int spot_id, int client_id)
         dest_filepath = q_filepath.toStdString();
 
         media_advert->set_dest_filepath(dest_filepath);
-
 
         int media_advert_id = edm.createEntityDB(*media_advert);
 

@@ -13,6 +13,11 @@ namespace Ui {
 class SpotBrowser;
 }
 
+enum class FormCrudMode{
+    Create,
+    Edit
+};
+
 class SpotBrowser : public BaseEntityBrowserDlg
 {
     Q_OBJECT
@@ -37,6 +42,7 @@ public:
 
     void set_client(std::shared_ptr<Client> client);
 private:
+    std::string append_prefix(std::string, int);
 
     Ui::SpotBrowser *ui;
     std::shared_ptr<Client> m_client;
