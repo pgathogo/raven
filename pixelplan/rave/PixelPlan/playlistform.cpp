@@ -34,6 +34,8 @@ PlaylistForm::PlaylistForm(QWidget* parent)
 {
     ui->setupUi(this);
 
+    m_config_manager.read_config("setup.json");
+
     ui->dtPlaylistDate->setDate(QDate::currentDate());
 
     m_booked_adverts = get_booked_adverts(QDate::currentDate());
@@ -51,8 +53,11 @@ PlaylistForm::PlaylistForm(QWidget* parent)
         m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
     }
 
+
     setFixedSize(1020, 480);
     setWindowTitle("View Booked Adverts");
+
+
 
 }
 
@@ -434,8 +439,25 @@ void PlaylistForm::expand_if_has_children(QModelIndex index)
             expand_if_has_children(child_index);
         }
     }
+}
+
+QString PlaylistForm::replace_relative_path(QString path)
+{
+
+    QString target = m_config_manager.get_value("drive_mapping", "media_path_tag");
+    QString replacement = m_config_manager.get_value("drive_mapping", "media_path_rep");
+
+    replacement = replacement+":\\";
+
+    if (path.contains(target)) {
+        return path.replace(target, replacement);
+    }
+
+    return path;
 
 }
+
+
 
 BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 {
@@ -539,7 +561,13 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
                 if (field_value.empty()) {
                     ba.media_path = "";
                 } else {
+
                     ba.media_path = QString::fromStdString(field_value);
+
+                    // Replace section of the string "\\10.10.20.115\itv" in string "\\10.10.20.115\itv\parent\folder\"
+                    // in ba.media_path with "D:\\" if it exists
+                    ba.media_path = replace_relative_path(ba.media_path);
+
                 }
             }
 

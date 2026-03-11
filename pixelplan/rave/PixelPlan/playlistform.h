@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "bookedcommercialtvm.h"
 #include "playlist.h"
+#include "configmanager.h"
 
 namespace Ui {
 class PlaylistForm;
@@ -42,6 +43,8 @@ private:
     QDate previous_weekday(int current_dow);
     QString make_playlist_output_filepath(int);
 
+    QString replace_relative_path(QString);
+
     Ui::PlaylistForm *ui;
 
     QMdiArea* m_mdi_area;
@@ -52,6 +55,10 @@ private:
     BookedAdverts m_booked_adverts;
     BreakTitles m_break_titles;
     int m_items_order = 10000000;
+
+    PIXELPLAN::ConfigManager m_config_manager;
+    QString m_media_path_tag;
+    QString m_media_path_rep;
 
     static int comm_header_id;
 

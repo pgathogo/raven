@@ -27,6 +27,7 @@
 #include "spot.h"
 #include "client.h"
 #include "ravensetup.h"
+#include "configmanager.h"
 
 MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
                            std::shared_ptr<Client> client,
@@ -65,21 +66,24 @@ MediaBrowser::MediaBrowser(std::shared_ptr<TRAFFIK::Spot> spot,
 
     }else{
 
-        full_filename = std::format("{}{}",m_advert_media->media_path()->value(),
-                                                m_advert_media->title()->value());
+        // full_filename = std::format("{}{}",m_advert_media->media_path()->value(),
+        //                                         m_advert_media->title()->value());
 
+        full_filename = m_advert_media->media_filepath();
 
         // Some titles have file extension - avoid appending extra extension
-        auto file_ext = get_extension(m_advert_media->title()->value());
+        // auto file_ext = get_extension(m_advert_media->title()->value());
 
-        if (file_ext.empty()) {
+        // if (file_ext.empty()) {
 
-            if (!m_advert_media->file_extension()->value().empty()) {
-                 full_filename = full_filename +"."+m_advert_media->file_extension()->value();
-            }
-        }
+        //     if (!m_advert_media->file_extension()->value().empty()) {
+        //          full_filename = full_filename +"."+m_advert_media->file_extension()->value();
+        //     }
+        // }
 
     }
+
+    std::cout << "Full Filename: " << full_filename << '\n';
 
     m_media_filename =  QString::fromStdString(full_filename);
 
@@ -97,14 +101,21 @@ void MediaBrowser::show_media_file()
     connect(m_media_player.get(), &QMediaPlayer::mediaStatusChanged, this, &MediaBrowser::media_status_changed);
     m_media_player->setAudioOutput(m_audio_output.get());
 
+    QUrl url = QUrl::fromLocalFile(m_media_filename);
+    QString url_str = url.toString();
 
-    //m_media_filename = m_media_filename.replace("//","\\");
-    //m_media_filename = m_media_filename.replace('/', '\\');
+    if (url_str.startsWith("file://") && !url_str.startsWith("file:////")) {
+        url_str = "file:////"+url_str.mid(7);
+        url = QUrl(url_str);
+    }
 
-    qDebug() << "Media File: " << m_media_filename;
+    m_media_player->setSource( url );
 
-
-    m_media_player->setSource( QUrl(m_media_filename) );
+    if (m_media_player->source().isValid()) {
+        qDebug() << "Valid URL: " << m_media_player->source();
+    } else {
+        qDebug() << "- INVALID -";
+    }
 
     m_video_widget = new QVideoWidget(this);
     m_video_widget->setMinimumSize(QSize(640, 360));
@@ -315,8 +326,9 @@ void MediaBrowser::make_property_widget()
 {
 
     QLabel* lbl_fname = new QLabel("Filename:");
-    QLabel* fname_value =  new QLabel(m_advert_media->title()->to_qstring()+
-                                     "."+m_advert_media->file_extension()->to_qstring());
+    // QLabel* fname_value =  new QLabel(m_advert_media->title()->to_qstring()+
+    //                                  "."+m_advert_media->file_extension()->to_qstring());
+    QLabel* fname_value = new QLabel(QString::fromStdString(m_advert_media->full_title()));
 
     QLabel* lbl_filepath = new QLabel("Media Folder:");
     QLabel* filepath = new QLabel(m_advert_media->media_path()->to_qstring());

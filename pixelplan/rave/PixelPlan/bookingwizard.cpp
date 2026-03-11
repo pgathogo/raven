@@ -1081,7 +1081,6 @@ void BookingWizard::time_band_selected(const QModelIndex& mi)
 
 void BookingWizard::programs_clicked(QListWidgetItem* lwi)
 {
-
     QItemSelectionModel* ism = ui->lwPrograms->selectionModel();
     QModelIndexList indexes = ism->selectedIndexes();
 
@@ -1247,6 +1246,10 @@ void BookingWizard::fetch_program_breaks(std::string progids)
 
 void BookingWizard::show_program_breaks(std::vector<ProgramBreak> breaks)
 {
+    std::sort(breaks.begin(), breaks.end(), [](const ProgramBreak& lhs, ProgramBreak& rhs) {
+        return (lhs.break_time < rhs.break_time);
+    });
+
     if (breaks.size() == 0)
         return;
 

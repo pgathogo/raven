@@ -110,7 +110,7 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
     int max_height = 550;
 
     setMinimumSize(w, h);
-    setMaximumSize(max_width, max_height);
+    //setMaximumSize(max_width, max_height);
 }
 
 SpotForm::~SpotForm()

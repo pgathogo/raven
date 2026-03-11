@@ -50,6 +50,9 @@ namespace  PIXELPLAN {
         void set_file_extension(const std::string);
         void set_dest_path(const std::string);
 
+        std::string media_filepath() const;
+        std::string full_title() const;
+
         std::string tableName() const override;
         void setTableName(const std::string table_name) override;
         std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;

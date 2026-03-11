@@ -203,6 +203,50 @@ namespace PIXELPLAN
 
     }
 
+    std::string AdvertMedia::media_filepath() const
+    {
+        std::string full_filepath = "";
+
+        if (!media_path()->value().empty() && !media_file()->value().empty()) {
+            full_filepath = media_path()->value() + full_title();
+
+            // if (!file_extension()->value().empty()) {
+            //     full_filepath += "." + file_extension()->value();
+            // }
+        }
+
+        return full_filepath;
+    }
+
+    std::string AdvertMedia::full_title() const
+    {
+      std::string cleaned_title = title()->value();
+
+      // Check if there is a file extension in the title return title else add file_extension()
+      // If get_extension returns an extension not equivalent with file_extension() - add file_extension
+      std::string ext = get_extension(cleaned_title);
+      // Clean the "." in ext string if ext is not empty
+      if (!ext.empty()) {
+          ext.replace(0,1,"");
+      }
+
+      std::cout << "Ext: " << ext << '\n';
+      std::cout << "File Ext: " << file_extension()->value() << '\n';
+
+      if (ext.empty() && !file_extension()->value().empty()) {
+          cleaned_title += "." + file_extension()->value();
+      }
+
+      if (!ext.empty() && !file_extension()->value().empty()) {
+          if (ext != file_extension()->value()) {
+              cleaned_title += "." + file_extension()->value();
+          }
+      }
+
+      return cleaned_title;
+
+    }
+
 
     std::string AdvertMedia::tableName() const
     {

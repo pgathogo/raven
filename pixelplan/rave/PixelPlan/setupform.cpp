@@ -125,8 +125,8 @@ void SetupForm::populateEntityFields()
     auto [rv_status, rv_msg] = m_config_manager.update_value("setup", "report_viewer_path",  ui->edtReportViewer->text());
     auto [rr_status, rr_msg] = m_config_manager.update_value("setup", "report_runner_path",  ui->edtRunner->text());
 
-    // m_setup->set_report_viewer_path(ui->edtReportViewer->text().toStdString());
-    // m_setup->set_report_runner_path(ui->edtRunner->text().toStdString());
+    m_config_manager.update_value("drive_mapping", "media_path_tag",  ui->edtMPathSrc->text());
+    m_config_manager.update_value("drive_mapping", "media_path_rep",  ui->edtMPathTag->text());
 
     m_setup->set_magicsoft_logfile_path(ui->edtMagicSoftLog->text().toStdString());
     m_setup->set_cts_filepath(ui->edtCTSFilepath->text().toStdString());
@@ -181,8 +181,9 @@ void SetupForm::populateFormWidgets()
         ui->edtReportViewer->setText(m_config_manager.get_value("setup", "report_viewer_path"));
         ui->edtRunner->setText(m_config_manager.get_value("setup", "report_runner_path"));
 
-        // ui->edtReportViewer->setText(m_setup->report_viewer_path()->to_qstring());
-        // ui->edtRunner->setText(m_setup->report_runner_path()->to_qstring());
+        // Drive mapping
+        ui->edtMPathSrc->setText(m_config_manager.get_value("drive_mapping", "media_path_tag"));
+        ui->edtMPathTag->setText(m_config_manager.get_value("drive_mapping", "media_path_rep"));
     }
 
 }
