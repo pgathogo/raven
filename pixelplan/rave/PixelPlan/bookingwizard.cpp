@@ -1165,84 +1165,6 @@ int BookingWizard::get_break_count(int prog_id)
 
 }
 
-/*
-void BookingWizard::fetch_program_breaks(std::string progids)
-{
-    ui->twBreaks->clearContents();
-    ui->twBreaks->setRowCount(0);
-
-    std::stringstream sql;
-    sql << " SELECT rave_breaklayoutline.id, rave_breaklayoutline.break_time, rave_breaklayoutline.break_hour, "
-        << " rave_breaklayoutline.duration, rave_breaklayoutline.max_spots, rave_breaklayoutline.break_fill_method, "
-        << " rave_breaklayout.week_days "
-        << " FROM rave_breaklayout, rave_breaklayoutline "
-        << " WHERE rave_breaklayout.id = rave_breaklayoutline.break_layout_id "
-        << "  AND rave_breaklayout.tvprogram_id in "+progids ;
-
-    EntityDataModel  edm;
-    edm.readRaw(sql.str());
-
-    auto provider = edm.getDBManager()->provider();
-    if (provider->cacheSize() == 0)
-        return;
-
-
-    set_breaks_table(provider->cacheSize());
-
-    provider->cache()->first();
-
-    int row = 0;
-    int BREAK_TIME_COL = 0;
-    int DURATION_COL   = 1;
-    int MAX_SPOTS_COL  = 2;
-    int FILL_POS_COL   = 3;
-
-    QStringList fill_pos = {"First", "In-Between", "Last"};
-
-    do {
-        auto itb = provider->cache()->currentElement()->begin();
-        auto ite = provider->cache()->currentElement()->end();
-
-        for(; itb != ite; ++itb) {
-            std::string field_name = (*itb).first;
-            std::string field_value = (*itb).second;
-
-            int bll_id = 0;
-
-            if (field_name == "id")
-                bll_id = to_int(field_value);
-
-            if (field_name == "break_time") {
-                auto twi = new QTableWidgetItem(QString::fromStdString(field_value));
-                twi->setData(Qt::UserRole, bll_id);
-                ui->twBreaks->setItem(row, BREAK_TIME_COL, twi);
-            }
-
-            if (field_name == "duration") {
-                auto twi = new QTableWidgetItem(QString::fromStdString(field_value));
-                ui->twBreaks->setItem(row, DURATION_COL, twi);
-            }
-
-            if (field_name == "max_spots") {
-                auto twi = new QTableWidgetItem(QString::fromStdString(field_value));
-                ui->twBreaks->setItem(row, MAX_SPOTS_COL, twi);
-            }
-
-            QComboBox* cb = new QComboBox();
-            cb->addItems(fill_pos);
-            ui->twBreaks->setCellWidget(row, FILL_POS_COL, cb);
-
-        }
-
-        ++row;
-
-        provider->cache()->next();
-
-    } while (!provider->cache()->isLast());
-
-}
-*/
-
 
 void BookingWizard::show_program_breaks(std::vector<ProgramBreak> breaks)
 {
@@ -1256,11 +1178,11 @@ void BookingWizard::show_program_breaks(std::vector<ProgramBreak> breaks)
     set_breaks_table(breaks.size());
 
     int row = 0;
-    int CHECK_COL = 0;
-    int BREAK_TIME_COL = 1;
-    int DURATION_COL   = 2;
-    int MAX_SPOTS_COL  = 3;
-    int FILL_POS_COL   = 4;
+    constexpr int CHECK_COL = 0;
+    constexpr int BREAK_TIME_COL = 1;
+    constexpr int DURATION_COL   = 2;
+    constexpr int MAX_SPOTS_COL  = 3;
+    constexpr int FILL_POS_COL   = 4;
 
     QStringList fill_pos = {"First", "In-Between", "Last"};
 

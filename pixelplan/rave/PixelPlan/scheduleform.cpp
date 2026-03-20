@@ -15,9 +15,11 @@
 
 
 ScheduleForm::ScheduleForm(QWidget *parent)
-    : QDialog(parent), ui(new Ui::ScheduleForm), m_edm_schedule{nullptr},
-      mMdiArea{nullptr} {
-
+    : QDialog(parent)
+    , ui(new Ui::ScheduleForm)
+    , m_edm_schedule{nullptr}
+    , mMdiArea{nullptr}
+{
   ui->setupUi(this);
 
   ui->dtSchedule->setDate(QDate::currentDate());
@@ -32,7 +34,6 @@ ScheduleForm::ScheduleForm(QWidget *parent)
   m_edm_schedule =
       std::make_unique<EntityDataModel>(std::make_shared<Schedule>());
 
-
   // ui->btnDelete->setEnabled(false);
   ui->btnCreate->setIcon(QIcon(":/images/media/icons/createbreak.bmp"));
   ui->btnCreate->setIconSize(QSize(35, 35));
@@ -41,10 +42,41 @@ ScheduleForm::ScheduleForm(QWidget *parent)
 
   Breaks comm_breaks;
 
-  ScheduleManTreeViewModel *sched_model =
+  ScheduleManTreeViewModel* sched_model =
       new ScheduleManTreeViewModel(comm_breaks);
 
   ui->tvSchedule->setModel(sched_model);
+  ui->tvSchedule->setColumnWidth(0,10);
+
+
+  ui->tvSchedule->setStyleSheet(
+          " QTreeView { background: #fafafa; color: #374151; border: 1px solid #e9d5ff; alternate-background-color: #f0f9ff;  }"
+          " QTreeView::item:hover { background: #fce7f3; } "
+          " QTreeView::item:selected { background: #ddd6fe; color: #4c1d95; } "
+          " QHeaderView::section { "
+              " background: qlineargradient(x1:0,y1:0,x2:1,y2:0, "
+              " stop:0 #f3e8ff, stop:1 #e0f2fe); "
+              " color: #6b21a8; "
+              " border: none; "
+              " border-bottom: 1px solid #e9d5ff; "
+              " padding: 5px 8px; "
+              " font-weight: bold; "
+          " } ");
+
+
+  /*
+  ui->tvSchedule->setStyleSheet(
+  " QTreeView {  background: #fffbf2; color: #1c1917;  alternate-background-color: #fffdf5; border: 2px solid #fcd34d; border-radius: 6px; }"
+  " QTreeView::item:hover { background: #fef9ee; } "
+  " QTreeView::item:selected { background: #fde68a; color: #92400e; } "
+  " QHeaderView::section { "
+  " background: #fef3c7; "
+  " color: #92400e; "
+  " border: none; "
+   "    border-bottom: 2px solid #fcd34d; "
+  " padding: 6px 8px; "
+      "    font-weight: bold; } ");
+   */
 
   load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
 

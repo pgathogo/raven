@@ -20,7 +20,6 @@ namespace PIXELPLAN {
 
 #define __TAG
 #define FOR_EACH_ELEMENT_TYPE \
-        __TAG(Invalid) \
         __TAG(ID) \
         __TAG(CHANNEL) \
         __TAG(ORD) \
@@ -74,7 +73,10 @@ namespace PIXELPLAN {
         __TAG(AUTOMATION_OUT) \
         __TAG(GUID) \
         __TAG(SubtitleEnabled) \
+        __TAG(AUDIO_FADE) \
         __TAG(Count)
+
+#undef __TAG
 
     struct PlaylistElement {
 
@@ -95,7 +97,7 @@ namespace PIXELPLAN {
             }
         }
 
-        TagType m_tag_type{ TagType::Invalid };
+        TagType m_tag_type{ TagType::ID };
 
 
     };

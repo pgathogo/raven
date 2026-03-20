@@ -26,6 +26,7 @@ struct BookedAdvert {
     QString media_path{};
     QString file_extension{};
     QString filepath{};
+    long long int file_size;
 };
 
 using BreakTitles = std::map<QTime, QString>;

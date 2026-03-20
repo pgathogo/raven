@@ -603,7 +603,7 @@ endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(pixelplan
-        WIN32          # Critical: Tells Windows it's a GUI app
+        #WIN32          # Critical: Tells Windows it's a GUI app
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         voidreasonbrowser.h voidreasonbrowser.cpp voidreasonbrowser.ui
@@ -616,7 +616,7 @@ else()
         )
     else()
         add_executable(pixelplan
-           WIN32
+           #WIN32
             ${PROJECT_SOURCES}
             ${RC_FILE}
         )

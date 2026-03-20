@@ -10,8 +10,8 @@
 ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent)
     :QStandardItemModel{ parent }
 {
-    setColumnCount(7);
-    QStringList col_titles {"Schedule Time", "Break Mode", "Max Spots", "Duration", "Booked Spots", "Time Left", "Fill Method"};
+    setColumnCount(8);
+    QStringList col_titles {"Break Hour", "Break Time", "Break Mode", "Max Spots", "Duration", "Booked Spots", "Time Left", "Fill Method"};
     setHorizontalHeaderLabels(col_titles);
 
     m_root_item = invisibleRootItem();
@@ -28,7 +28,7 @@ int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
 
         auto [hour, break_name] = hour_break_name;
 
-        std::string title = std::format("{}: {}", break_name, std::to_string(hour));
+        std::string title = std::format("{}", std::to_string(hour));
 
         TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode(title,
                                      std::to_string(hour), ++parent_id, -1, hour);
@@ -44,7 +44,11 @@ int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
             TRAFFIK::TraffikNode* child_node = new TRAFFIK::TraffikNode(comm_break.schedule_time, "",
                                         ++child_id, parent_id, comm_break.id);
 
-            QStandardItem* schedule_time = new QStandardItem(stoq(comm_break.schedule_time));
+            // std::string str_time = std::format("{}: {}", comm_break.comment, comm_break.schedule_time);
+            //QStandardItem* schedule_time = new QStandardItem(stoq(str_time));
+
+            QStandardItem* break_name_item = new QStandardItem(stoq(comm_break.comment));
+            QStandardItem* break_time = new QStandardItem(stoq(comm_break.schedule_time));
 
             QStandardItem* break_mode = new QStandardItem(stoq(comm_break.break_mode));
             QStandardItem* max_spots = new QStandardItem(QString::number(comm_break.max_spots));
@@ -53,7 +57,9 @@ int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
             QStandardItem* time_left = new QStandardItem(QString::number(comm_break.time_left));
             QStandardItem* fill_method = new QStandardItem(stoq(comm_break.break_fill_method));
 
-            child_node->add_column(schedule_time);
+            //child_node->add_column(schedule_time);
+            child_node->add_column(break_name_item);
+            child_node->add_column(break_time);
             child_node->add_column(break_mode);
             child_node->add_column(max_spots);
             child_node->add_column(duration);
@@ -82,17 +88,15 @@ void ScheduleManTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode *> &n
 
 }
 
-//void ScheduleManTreeViewModel::treeClicked(QModelIndex mindex)
-//{
-//    qDebug() << "C++ " << mindex.data(Qt::UserRole).toInt();
-//}
-
 
 void ScheduleManTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node)
 {
     bool found=false;
-    for(auto& [id, parent] : tree_node){
+
+    for(auto& [id, parent] : tree_node)
+    {
         if (found) return;
+
         if (id == node->parent_id()){
             parent->children()[node->node_id()] = node;
             parent->appendRow(node->columns());

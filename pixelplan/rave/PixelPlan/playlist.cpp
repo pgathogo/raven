@@ -26,7 +26,7 @@ bool Playlist::attribute_has_zero_value(std::string attr)
         "TOTAL_DURATION", "VIDEO_WIDTH", "VIDEO_HEIGHT", "TFF", "SWAP_FIELD",
         "INTERLACED", "INTERLACED_FORCED", "ASPECT_RATIO", "ASPECT_RATIO_FORCED",
         "FRAME_RATE", "MATERIAL_AVAILABILITY", "COLOR_ADJUSTEMENT", "COLOR_SPACE",
-        "SOUND_GAIN", "FILE_ID", "REQUEST_ANALYZE_INSTRUCTION"
+        "SOUND_GAIN", "FILE_ID", "REQUEST_ANALYZE_INSTRUCTION", "AUDIO_FADE"
     };
 
     auto it = std::find(tags_with_zero.begin(), tags_with_zero.end(), attr);
@@ -48,7 +48,7 @@ PlaylistItemAttributes Playlist::attributes()
     int tag_count = static_cast<int>(PlaylistElement::TagType::Count);
     PlaylistElement pl_elem;
 
-    for(int i=0; i < tag_count-1; ++i) {
+    for(int i=0; i < tag_count; ++i) {
         pl_elem.m_tag_type = static_cast<PlaylistElement::TagType>(i);
 
         if (attribute_has_zero_value(pl_elem.to_string())) {

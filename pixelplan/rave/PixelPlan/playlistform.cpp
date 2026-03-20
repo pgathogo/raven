@@ -7,8 +7,10 @@
 #include <QTimeZone>
 #include <QUuid>
 #include <QCryptographicHash>
+#include <QByteArray>
 #include <QFile>
 #include <QFileInfo>
+#include <QInputDialog>
 
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../utils/tools.h"
@@ -46,6 +48,9 @@ PlaylistForm::PlaylistForm(QWidget* parent)
 
     connect(ui->btnXL, &QPushButton::clicked, this, &PlaylistForm::generate_cts);
 
+    // Test Hash function
+    connect(ui->btnHash, &QPushButton::clicked, this, &PlaylistForm::test_hash);
+
     m_edm_setup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_edm_setup->all();
 
@@ -53,11 +58,24 @@ PlaylistForm::PlaylistForm(QWidget* parent)
         m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
     }
 
+    ui->tvPlaylist->setStyleSheet(
+        " QTreeView { background: #fafafa; color: #374151; border: 1px solid #e9d5ff; alternate-background-color: #f0f9ff;  }"
+        " QTreeView::item:hover { background: #fce7f3; } "
+        " QTreeView::item:selected { background: #ddd6fe; color: #4c1d95; } "
+        " QHeaderView::section { "
+        " background: qlineargradient(x1:0,y1:0,x2:1,y2:0, "
+        " stop:0 #f3e8ff, stop:1 #e0f2fe); "
+        " color: #6b21a8; "
+        " border: none; "
+        " border-bottom: 1px solid #e9d5ff; "
+        " padding: 5px 8px; "
+        " font-weight: bold; "
+        " } ");
 
-    setFixedSize(1020, 480);
+
+    //setFixedSize(1020, 480);
+    setMinimumSize(1020, 480);
     setWindowTitle("View Booked Adverts");
-
-
 
 }
 
@@ -130,12 +148,15 @@ void PlaylistForm::create_playlist_file(bool clicked)
 
     QString output_filepath = make_playlist_output_filepath(ui->dtPlaylistDate->date().dayOfWeek());
     QFileInfo fi(output_filepath);
-    std::string confirm_msg = std::format("Create playlist `{}`?", fi.fileName().toStdString());
 
-    if (!confirmationMessage(confirm_msg)) {
+
+    QString filename = fi.baseName();
+    QString path = fi.absolutePath();
+    QString ext = fi.completeSuffix();
+
+    if ( !confirm_playlist_filename(filename) ) {
         return;
     }
-
 
     // TODO::Set default folders if the setup paths are empty!
     QString empty_playlist_filepath = m_setup->playlist_template_filepath()->to_qstring();
@@ -271,6 +292,9 @@ void PlaylistForm::set_comm_break_attr(std::string title,
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::SubtitleEnabled;
     attrs[ple.to_string()] = "1";
 
+    ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::AUDIO_FADE;
+    attrs[ple.to_string()] = "0";
+
 }
 
 void PlaylistForm::set_advert_attr(const BookedAdvert& ba, PIXELPLAN::PlaylistItemAttributes& attrs)
@@ -301,9 +325,9 @@ void PlaylistForm::set_advert_attr(const BookedAdvert& ba, PIXELPLAN::PlaylistIt
 
     // -----
 
-    QFileInfo fi(ba.filepath);
+    // QFileInfo fi(ba.filepath);
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::FILE_SIZE;
-    attrs[ple.to_string()] = std::to_string(fi.size());
+    attrs[ple.to_string()] = std::to_string(ba.file_size);
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::TOTAL_DURATION;
     attrs[ple.to_string()] = std::to_string(ba.duration * 1000);  //TODO:: Confirm MagicSoft milliseconds calculations!!
@@ -316,37 +340,67 @@ void PlaylistForm::set_advert_attr(const BookedAdvert& ba, PIXELPLAN::PlaylistIt
     attrs[ple.to_string()] = "1";
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::VIDEO_WIDTH;
-    attrs[ple.to_string()] = "1920";
+    attrs[ple.to_string()] = "0";
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::VIDEO_HEIGHT;
-    attrs[ple.to_string()] = "1080";
+    attrs[ple.to_string()] = "0";
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::ASPECT_RATIO;
-    attrs[ple.to_string()] = "1.7778";
+    attrs[ple.to_string()] = "0";
+
+    std::string clip_path = ba.filepath.toStdString();
+    std::string file_mod_time =  file_modification_time().toStdString();
+    // std::string file_size =  std::to_string(fi.size());
+    std::string prog_ts_selected = "-1";
+    std::string input_string = std::format("{}{}{}{}",
+                       clip_path,
+                       file_mod_time,
+                       std::to_string(ba.file_size),
+                       prog_ts_selected);
+
+
+    //const signed char* c_input_string = reinterpret_cast<const signed char*>(input_string.c_str());
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::FILE_ID;
-    attrs[ple.to_string()] = "83473843847384738";
+    ULLONG file_hash = hash64(input_string.c_str());
+    attrs[ple.to_string()] = std::to_string(file_hash);  //file_id(QString::fromStdString(input_string)).toStdString();
+
+    //attrs[ple.to_string()] = guid.toStdString();
+    //attrs[ple.to_string()] = "83473843847384738";
 
     // ----
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::ANALYZED;
-    attrs[ple.to_string()] = "0";
+    attrs[ple.to_string()] = "1";
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::DATE_TEMPLATE_SET;
     attrs[ple.to_string()] = date_template_set().toStdString();
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::GUID;
-    attrs[ple.to_string()] = generate_guid().toStdString();
+    //attrs[ple.to_string()] = generate_guid().toStdString();
+    //QString guid_key = "114478C8-560E-48D1-9840-1FE89BF3454F";
+
+
+    QString guid_key = "7190949985028587665";
+    //QString filename = "Z:\9_GITHOMO KIEGA WITH ZETECH TIP 1 good.mp4";
+
+    QString filename = QFileInfo(ba.filepath).fileName();
+    QString det_guid = generateDeterministicGuid(guid_key, filename);
+
+    attrs[ple.to_string()] = det_guid.toStdString();
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::SubtitleEnabled;
     attrs[ple.to_string()] = "1";
+
+    ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::AUDIO_FADE;
+    attrs[ple.to_string()] = "0";
 }
 
 QString PlaylistForm::estimated_entry_time()
 {
     // 2. Define the timezone using the constructor with the offset in seconds
     // The offset "+03:00" is equivalent to 3 hours * 60 minutes * 60 seconds.
-    int offsetSeconds = 3 * 60 * 60;
+    constexpr int offsetSeconds = 3 * 60 * 60;
     QTimeZone timeZone(offsetSeconds);
 
     QTime time(0, 0, 0);
@@ -400,6 +454,125 @@ QString PlaylistForm::generate_guid()
     //ui->lblGuid1->setText(guidString);
     return guid.toString(QUuid::WithoutBraces).toUpper();
 }
+
+
+QString PlaylistForm::generateDeterministicGuid(const QString &key, const QString &inputString)
+{
+    // 1. Combine key and string
+    QByteArray data = (key + inputString).toUtf8();
+
+    // 2. Generate SHA-1 Hash
+    QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
+
+    // 3. Format as UUID (taking first 16 bytes for 128-bit)
+    // For proper RFC 4122 v5, byte manipulation is required,
+    // but this creates a unique hash-based identifier.
+    QByteArray uuidData = hash.left(16);
+
+    // Set specific version/variant bits if necessary, otherwise:
+    QUuid uuid = QUuid::fromRfc4122(uuidData);
+    return uuid.toString(QUuid::WithoutBraces).toUpper();
+}
+
+QString PlaylistForm::file_id(const QString& input_string)
+{
+    // 1. Combine key and string
+    //QByteArray data = (key + inputString).toUtf8();
+
+    // 2. Generate SHA-1 Hash
+    QByteArray hash = QCryptographicHash::hash(input_string.toUtf8(), QCryptographicHash::Sha1);
+
+    // 3. Format as UUID (taking first 16 bytes for 128-bit)
+    // For proper RFC 4122 v5, byte manipulation is required,
+    // but this creates a unique hash-based identifier.
+    QByteArray uuidData = hash.left(16);
+
+    qDebug() << uuidData.toHex();
+
+    return uuidData.toHex().toUpper();
+
+    // Set specific version/variant bits if necessary, otherwise:
+    //QUuid uuid = QUuid::fromRfc4122(uuidData);
+    //return uuid.toString(QUuid::WithoutBraces).toUpper();
+}
+
+int PlaylistForm::hash(const SCHAR* string)
+{
+
+    SCHAR c;
+
+    SLONG value = 0;
+
+    while ((c = *string++))
+        value = (value << 1) + static_cast<char>(std::toupper(c));
+
+    return ((value >= 0) ? value : -value) % HASH_SIZE;
+}
+
+uint64_t PlaylistForm::hash19(const char* str)
+{
+    uint64_t value = 0;
+    unsigned char c;
+
+    while ((c = *str++))
+        value = value * 131 + std::toupper(c);
+
+    return value % 10000000000000000000ULL;
+}
+
+unsigned int PlaylistForm::basicHash(const UCHAR* s)
+{
+    unsigned long long h = 0;
+    while (*s) {
+        h = (h << 4) + UPPER(*s++);
+        unsigned long long high = h & 0xF000000000000000ULL;
+        if (high) h ^= high >> 24;
+        h &= ~high;
+    }
+    return h;
+
+}
+
+unsigned long long PlaylistForm::hash64(const char* s) {
+    unsigned long long h = 0;
+    unsigned char c;
+    while ((c = UPPER(*s++))) {
+        h = (h << 4) + c;
+        unsigned long long g = h & 0xF000000000000000ULL;
+        if (g != 0) {
+            h ^= (g >> 24);
+            h &= ~g;
+        }
+    }
+    return h;
+}
+
+
+void PlaylistForm::test_hash()
+{
+    //uint64_t hash_value = hash19("Z:\9_GITHOMO KIEGA WITH ZETECH TIP 1 good.mp42026-03-16T07:24:55Z0-1");
+    //std::string value = "Z:\9_GITHOMO KIEGA WITH ZETECH TIP 1 good.mp42026-03-16T07:24:55Z0-1";
+    //std::string value = "This_is_my_input_string";
+    //int length = static_cast<int>(value.size());
+    //const char* c_str_value = reinterpret_cast<const char*>(value.c_str());
+    //const char* c_str_value = "This_is_my_input_string";
+    const char* c_str_value = "Z:\9_GITHOMO KIEGA WITH ZETECH TIP 1 good.mp42026-03-16T07:24:55Z0-1";
+    unsigned long long hash_value = hash64(c_str_value);
+    qDebug() << "Hash19 Value: " << hash_value;
+
+    // QString guid_key = "7190949985028587665";
+    //QString guid_key = "114478C8-560E-48D1-9840-1FE89BF3454F";
+    //QString guid_key = "97dcc9ce3b2a43ad9dff4eed2f05755f";
+    //QString filename = "Z:\9_GITHOMO KIEGA WITH ZETECH TIP 1 good.mp4";
+    //QString file_id = "7190949985028587665";
+    //QString det_guid = generateDeterministicGuid(guid_key, file_id);
+
+    //qDebug() << "Deterministic GUID: " << det_guid;
+
+
+}
+
+
 
 
 void PlaylistForm::display_booked_adverts(BookedAdverts& ba)
@@ -489,6 +662,9 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
     if (provider->cacheSize() == 0)
         return booked_adverts;
 
+
+    QString network_path{""};
+
     provider->cache()->first();
 
     do {
@@ -562,7 +738,9 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
                     ba.media_path = "";
                 } else {
 
+
                     ba.media_path = QString::fromStdString(field_value);
+                    network_path = ba.media_path;
 
                     // Replace section of the string "\\10.10.20.115\itv" in string "\\10.10.20.115\itv\parent\folder\"
                     // in ba.media_path with "D:\\" if it exists
@@ -581,9 +759,12 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
         }
 
+        // Get file size via network path before replacing to a local mapped drive
+        QString network_filepath = network_path + ba.filename;
+        QFileInfo ni(network_filepath);
+        ba.file_size = ni.size();
 
         ba.filepath = ba.media_path + ba.filename;
-
         if (!ba.filename.isEmpty()) {
 
             auto file_ext = get_extension(ba.filename.toStdString());
@@ -604,5 +785,22 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
 
     return booked_adverts;
+
+}
+
+bool PlaylistForm::confirm_playlist_filename(QString& filename)
+{
+    bool ok = false;
+
+    QString text = QInputDialog::getText(this, tr("Set playlist filename"),
+                                         tr("Filename:"), QLineEdit::Normal,
+                                      filename, &ok) ;
+
+    if (ok && !text.isEmpty()) {
+        filename = text;
+        return ok;
+    }
+
+    return ok;
 
 }
