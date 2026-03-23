@@ -24,10 +24,13 @@ void TypeExclusionBrowser::addRecord()
     auto tex = std::make_shared<TRAFFIK::TypeExclusion>();
 
     std::unique_ptr<TypeExclusionDetails> texForm =
-            std::make_unique<TypeExclusionDetails>(tex.get());
+        std::make_unique<TypeExclusionDetails>(tex.get());
 
-    if (texForm->exec() > 0)
+    if (texForm->exec() > 0) {
+        std::cout << "Name: " << tex->name()->value() << '\n';
+
         entityDataModel().createEntity(std::move(tex));
+    }
 }
 
 void TypeExclusionBrowser::updateRecord()

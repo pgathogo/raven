@@ -7,10 +7,10 @@
 #include "agent.h"
 
 AgentForm::AgentForm(Agent* agent,
-        QDialog *parent) :
-    BaseEntityDetailDlg(parent),
-    ui(new Ui::AgentForm),
-    mAgent{agent}
+        QDialog *parent)
+    : BaseEntityDetailDlg(parent)
+    , ui(new Ui::AgentForm)
+    , mAgent{agent}
 {
     ui->setupUi(bui->baseContainer);
     setTitle(windowTitle());

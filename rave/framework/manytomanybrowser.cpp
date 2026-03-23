@@ -57,7 +57,12 @@ void ManyToManyBrowser::addRecord()
 
         if (be->dbAction() == DBAction::dbaCREATE)
         {
+            qDebug() << "** DBAction::dbaCREATE **";
+            qDebug() << "Parent ID: " << mMtoM->parentId()->value();
+            std::cout << "Table Name: " << mMtoM->tableName() << '\n';
+
             auto m2m =  mMtoM->copy(mMtoM->parentEntity(), be);
+
             m2m->setParentId(mMtoM->parentId()->value());
             m2m->setDetailId(be->id());
             m2m->setT(mMtoM->tableName());

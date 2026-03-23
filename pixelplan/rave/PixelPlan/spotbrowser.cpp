@@ -64,7 +64,6 @@ void SpotBrowser::addRecord()
 
             save_advert_media(*spot_form, spot_id, m_client->id());
 
-
             //save_spot_audio(*spot_form);
 
         }catch(DatabaseException& de){
@@ -114,14 +113,9 @@ void SpotBrowser::updateRecord()
 
                 save_advert_media(*spot_form, spot->id(), m_client->id());
 
-                // save_voice_overs(*spot_form);
+                save_voice_overs(*spot_form);
 
-                // save_type_exclusions(*spot_form);
-
-
-                //save_spot_audio(*spot_form);
-
-                //save_spot_media(spot_form);spot_duration
+                save_type_exclusions(*spot_form);
 
 
             }catch(DatabaseException& de){
@@ -188,10 +182,18 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
            std::make_unique<EntityDataModel>();
 
     auto& types = sf.typeExclusions();
+
+    std::cout << "Size of Type Exclusions: " << types.size() << std::endl;
+
+
     for(auto& type : types){
         ManyToMany* mtom = dynamic_cast<ManyToMany*>(std::get<1>(type).get());
 
+        std::cout << "MtoM Parent ID: " << mtom->parentId()->value() << std::endl;
+
         if (mtom->dbAction() == DBAction::dbaCREATE){
+
+            std::cout << "Creating Type Exclusion with Detail ID: " << mtom->detailId()->value() << std::endl;
 
             mtom->setParentId(sf.parentId());
             edm->createEntityDB(*mtom);

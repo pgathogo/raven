@@ -37,10 +37,10 @@ SetupBrowser::SetupBrowser(QWidget *parent)
 
     //m_timeband_tab = new TabWidget(new TimeBandBrowser());
 
-    m_users_tab = new TabWidget(new UserBrowser());
-    m_role_tab = new TabWidget(new RoleBrowser());
-    m_content_tab = new TabWidget(new ContentBrowser());
-    m_content_auth_tab = new TabWidget(new ContentAuthBrowser());
+    // m_users_tab = new TabWidget(new UserBrowser());
+    // m_role_tab = new TabWidget(new RoleBrowser());
+    // m_content_tab = new TabWidget(new ContentBrowser());
+    // m_content_auth_tab = new TabWidget(new ContentAuthBrowser());
 
     m_booking_void_reason_tab = new TabWidget(new VoidReasonBrowser());
 
@@ -54,10 +54,11 @@ SetupBrowser::SetupBrowser(QWidget *parent)
     ui->tabMain->addTab(m_agents_tab, "Agents");
     ui->tabMain->addTab(m_booking_void_reason_tab, "Booking Void Reasons");
 
-
     ui->tabMain->setCurrentIndex(0);
 
     setMinimumSize(1035, 500);
+
+    setWindowTitle("Setup");
 
 }
 

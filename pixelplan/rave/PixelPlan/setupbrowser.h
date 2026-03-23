@@ -35,10 +35,12 @@ private:
     TabWidget* m_sales_person_tab;
     TabWidget* m_agents_tab;
     TabWidget* m_timeband_tab;
-    TabWidget* m_users_tab;
-    TabWidget* m_role_tab;
-    TabWidget* m_content_tab;
-    TabWidget* m_content_auth_tab;
+
+    // TabWidget* m_users_tab;
+    // TabWidget* m_role_tab;
+    // TabWidget* m_content_tab;
+    // TabWidget* m_content_auth_tab;
+
     TabWidget* m_booking_void_reason_tab;
 };
 

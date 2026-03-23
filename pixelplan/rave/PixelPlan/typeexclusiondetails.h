@@ -27,7 +27,7 @@ public:
 
 private:
     Ui::TypeExclusionDetails *ui;
-    TRAFFIK::TypeExclusion* typeEx;
+    TRAFFIK::TypeExclusion* m_typeEx;
     DayPartGrid* dpg;
 };
 

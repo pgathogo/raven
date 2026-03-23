@@ -9,11 +9,11 @@ namespace TRAFFIK {
     ApproverForm::ApproverForm(OrderApprover* orderAprv,
                               std::set<int>& levels,
                               const std::list<std::string> approvers,
-                               QDialog *parent) :
-        BaseEntityDetailDlg(parent),
-        ui(new Ui::ApproverForm),
-        mOrderAprv{ orderAprv },
-        mApprovers{ approvers }
+                               QDialog *parent)
+    : BaseEntityDetailDlg(parent)
+    , ui(new Ui::ApproverForm)
+    , mOrderAprv{ orderAprv }
+    , mApprovers{ approvers }
     {
         ui->setupUi(bui->baseContainer);
         setTitle(windowTitle());

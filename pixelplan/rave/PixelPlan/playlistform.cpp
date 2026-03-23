@@ -48,9 +48,6 @@ PlaylistForm::PlaylistForm(QWidget* parent)
 
     connect(ui->btnXL, &QPushButton::clicked, this, &PlaylistForm::generate_cts);
 
-    // Test Hash function
-    connect(ui->btnHash, &QPushButton::clicked, this, &PlaylistForm::test_hash);
-
     m_edm_setup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_edm_setup->all();
 
@@ -377,17 +374,14 @@ void PlaylistForm::set_advert_attr(const BookedAdvert& ba, PIXELPLAN::PlaylistIt
     attrs[ple.to_string()] = date_template_set().toStdString();
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::GUID;
-    //attrs[ple.to_string()] = generate_guid().toStdString();
+    attrs[ple.to_string()] = generate_guid().toStdString();
+
     //QString guid_key = "114478C8-560E-48D1-9840-1FE89BF3454F";
-
-
-    QString guid_key = "7190949985028587665";
+    //QString guid_key = "7190949985028587665";
     //QString filename = "Z:\9_GITHOMO KIEGA WITH ZETECH TIP 1 good.mp4";
-
-    QString filename = QFileInfo(ba.filepath).fileName();
-    QString det_guid = generateDeterministicGuid(guid_key, filename);
-
-    attrs[ple.to_string()] = det_guid.toStdString();
+    //QString filename = QFileInfo(ba.filepath).fileName();
+    //QString det_guid = generateDeterministicGuid(guid_key, filename);
+    //attrs[ple.to_string()] = det_guid.toStdString();
 
     ple.m_tag_type = PIXELPLAN::PlaylistElement::TagType::SubtitleEnabled;
     attrs[ple.to_string()] = "1";
