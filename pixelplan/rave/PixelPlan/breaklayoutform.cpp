@@ -198,6 +198,7 @@ void BreakLayoutForm::populateEntityFields()
    int curr_index = ui->cbProgram->currentIndex();
    int tvprog_id = ui->cbProgram->itemData(curr_index).toInt();
    mBreakLayout->set_tvprogram(tvprog_id);
+   mBreakLayout->setDeleted(0);
 
 }
 
@@ -349,6 +350,7 @@ void BreakLayoutForm::add_break_lines(std::shared_ptr<PIXELPLAN::TVProgram> tvpr
         breakLine->setMaxSpots(break_max_spots);
         breakLine->setWeekDay(1);
         breakLine->set_break_fill_method(fill_method);
+        breakLine->set_deleted(0);
         breakLine->setRowId(++m_line_no);
 
         breakLine->setDBAction(DBAction::dbaCREATE);
@@ -627,6 +629,7 @@ void BreakLayoutForm::insert_row()
 
         tmp_bll->setMaxSpots(bll->maxSpots()->value());
         tmp_bll->set_break_fill_method(bll->break_fill_method()->value());
+        tmp_bll->set_deleted(0);
         tmp_bll->setRowId(++m_line_no);
         tmp_bll->setDBAction(DBAction::dbaCREATE);
     };

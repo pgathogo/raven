@@ -89,6 +89,9 @@ namespace PIXELPLAN
         void set_created_at(QDateTime);
         void set_created_by(const std::string);
 
+        IntegerField* deleted();
+        void set_deleted(int del);
+
         std::string tableName() const override;
         void setTableName(const std::string table_name) override;
         std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -139,6 +142,8 @@ namespace PIXELPLAN
 
         DateTimeField* m_created_at;
         StringField* m_created_by;
+
+        IntegerField* m_deleted;
 
         QStringList m_header;
         std::string m_table_name;

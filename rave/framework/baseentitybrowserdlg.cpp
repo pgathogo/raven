@@ -174,11 +174,14 @@ void BaseEntityBrowserDlg::searchRecord()
     if (bui->edtFilter->text().isEmpty() &&
         m_entity->filter() == "")
     {
-        qDebug() << "AAAA";
+        std::string where_clause = " WHERE 1=1 ";
+        std::string special_filter = "";
+        std::string sf = special_search_filter();
+        if (sf != "")
+            special_filter = std::format(" AND {} ",sf);
 
-        entityDataModel().all();
-
-        qDebug() << "BBBB";
+        std::string filter = where_clause + special_filter;
+        entityDataModel().search_with_filter(filter);
     }
     else
     {
@@ -197,12 +200,23 @@ void BaseEntityBrowserDlg::searchRecord()
         if (m_entity->filter() != "")
             and_clause = " AND "+ m_entity->filter();
 
-        std::string filter = where_clause + and_clause;
+
+        std::string special_filter = "";
+        std::string sf = special_search_filter();
+        if (sf != "")
+            special_filter = std::format(" AND {} ",sf);
+
+        std::string filter = where_clause + and_clause + special_filter;
 
         entityDataModel().search_with_filter(filter);
 
     }
         set_view_column_width();
+}
+
+std::string BaseEntityBrowserDlg::special_search_filter()
+{
+    return "";
 }
 
 void BaseEntityBrowserDlg::set_view_column_width()
@@ -251,8 +265,8 @@ void BaseEntityBrowserDlg::deleteRecord()
 
   std::shared_ptr<BaseEntity> entity = findSelectedEntity();
 
-  if (okay_to_delete(entity) ){
-
+  if (okay_to_delete(entity) )
+  {
        entity->setDBAction(DBAction::dbaDELETE);
 
        try{
@@ -263,6 +277,7 @@ void BaseEntityBrowserDlg::deleteRecord()
            showMessage(de.errorMessage());
         }
   }
+
 }
 
 std::shared_ptr<BaseEntity> BaseEntityBrowserDlg::findSelectedEntity()

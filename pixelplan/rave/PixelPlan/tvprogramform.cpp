@@ -115,6 +115,7 @@ void TVProgramForm::populateEntityFields()
     m_tvprogram->set_cast(ui->edtCast->toPlainText().toStdString());
 
     m_tvprogram->set_broadcast_days(weekdays_to_str().toStdString());
+    m_tvprogram->set_deleted(0);
 
 
 }

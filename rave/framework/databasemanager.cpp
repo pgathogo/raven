@@ -291,10 +291,11 @@ int PostgresDatabaseManager::deleteEntity(const BaseEntity& entity)
         result =  provider()->executeQuery(sql);
 
     } catch (PostgresException& pe) {
-        return 0;
+        std::cerr << pe.errorMessage() << '\n';
+        throw;
     }
 
-    return result ? 1 : 0;
+    return 1;
 }
 
 int PostgresDatabaseManager::deleteEntityByValue(const std::string table_name,
@@ -304,7 +305,15 @@ int PostgresDatabaseManager::deleteEntityByValue(const std::string table_name,
     sql = "DELETE FROM "+table_name+" WHERE "+
             std::get<0>(column)+" = "+
            std::to_string(std::get<1>(column));
-    return provider()->executeQuery(sql);
+
+    try {
+        provider()->executeQuery(sql);
+    } catch (PostgresException& pe) {
+        std::cerr << pe.errorMessage() << '\n';
+        throw;
+    }
+
+    return 1;
 }
 
 void PostgresDatabaseManager::loadEntity(BaseEntity& entity)

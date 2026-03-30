@@ -63,6 +63,33 @@ void TVProgramBrowser::updateRecord()
         showMessage(de.errorMessage());
     }
 
+}
 
+void TVProgramBrowser::deleteRecord()
+{
+    // Mark program as deleted instead of deleting from database
+    std::shared_ptr<BaseEntity> entity = findSelectedEntity();
+
+    if (entity == nullptr)
+        return;
+
+    std::shared_ptr<PIXELPLAN::TVProgram> tvprogram = std::dynamic_pointer_cast<PIXELPLAN::TVProgram>(entity);
+
+    EntityDataModel edm;
+    std::string update_stmt = std::format("UPDATE {} SET deleted = 1 WHERE id = {}",
+                                        tvprogram->tableName(), tvprogram->id());
+     try {
+         edm.executeRawSQL(update_stmt);
+     } catch (DatabaseException& de) {
+         showMessage(de.errorMessage());
+         return;
+     }
+
+    removeSelectedRow();
+}
+
+std::string TVProgramBrowser::special_search_filter()
+{
+    return " deleted = 0 ";
 }
 

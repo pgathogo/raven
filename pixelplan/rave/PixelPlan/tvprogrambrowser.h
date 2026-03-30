@@ -16,9 +16,10 @@ public:
     explicit TVProgramBrowser(QWidget *parent = nullptr);
     ~TVProgramBrowser();
 
-
     void addRecord() override;
     void updateRecord() override;
+    void deleteRecord() override;
+    std::string special_search_filter() override;
 
 private:
     Ui::TVProgramBrowser *ui;

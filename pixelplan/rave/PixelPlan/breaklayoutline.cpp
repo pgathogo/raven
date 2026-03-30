@@ -23,6 +23,8 @@ BreakLayoutLine::BreakLayoutLine()
 
     m_title = createField<StringField>("title", "Title");
 
+    m_deleted = createField<IntegerField>("deleted", "Deleted");
+
     mHeader << stoq(m_title->fieldLabel())
             << stoq(mBreakTime->fieldLabel())
             << stoq(mDuration->fieldLabel())
@@ -128,6 +130,16 @@ void BreakLayoutLine::set_title(const std::string val)
 {
     m_title->setValue(val);
 
+}
+
+IntegerField* BreakLayoutLine::deleted()
+{
+    return m_deleted;
+}
+
+void BreakLayoutLine::set_deleted(int del)
+{
+   m_deleted->setValue(del);
 }
 
 std::string BreakLayoutLine::tableName() const

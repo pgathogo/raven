@@ -65,6 +65,8 @@ namespace PIXELPLAN
             m_repeat_schedule = createField<StringField>("repeat_schedule","repeat_schedule");
             m_tags = createField<StringField>("tags","tags");
 
+            m_deleted = createField<IntegerField>("deleted", "Deleted");
+
             m_parental_rating = createField<ChoiceField<std::string>>("parental_rating","parental_rating");
             m_parental_rating->addChoice({"G", "General Audience"});
             m_parental_rating->addChoice({"PG", "Parental Guidance"});
@@ -368,6 +370,16 @@ namespace PIXELPLAN
         void  TVProgram::set_created_by(const std::string create_by)
         {
             m_created_by->setValue(create_by);
+        }
+
+        IntegerField* TVProgram::deleted()
+        {
+            return m_deleted;
+        }
+
+        void TVProgram::set_deleted(int del)
+        {
+            m_deleted->setValue(del);
         }
 
         std::string TVProgram::tableName() const

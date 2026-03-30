@@ -64,6 +64,9 @@ public:
     IntegerField* sunBit() const;
     void setSunBit(int bit);
 
+    IntegerField* deleted();
+    void setDeleted(int del);
+
     WeekDayBits getAccessBit(std::string abit);
     std::string access_bit_tostring();
     void update_weekdays(int, int);
@@ -96,6 +99,8 @@ private:
     IntegerField* mFriBit;
     IntegerField* mSatBit;
     IntegerField* mSunBit;
+
+    IntegerField* m_deleted;
 
     QStringList mHeader;
     std::string mTableName;

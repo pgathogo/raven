@@ -389,6 +389,7 @@ class TVProgram(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(max_length=100, null=True, blank=True)
+    deleted = models.IntegerField(default=0)
 
 
 class AdvertMedia(models.Model):
@@ -403,17 +404,16 @@ class AdvertMedia(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey(Client, models.DO_NOTHING, default=0)
     spot = models.ForeignKey(Spot, models.DO_NOTHING, default=0, null=True, blank=True)
-    
-
 
 class BreakLayout(models.Model):
     tvprogram = models.ForeignKey(TVProgram, models.DO_NOTHING, default=0)
     time_interval = models.IntegerField(choices=TIME_INTERVAL, default=15)
     week_days = models.CharField(max_length=7)
     break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD);
+    deleted = models.IntegerField(default=0)
 
 class BreakLayoutLine(models.Model):
-    break_layout = models.ForeignKey(BreakLayout, models.DO_NOTHING)
+    break_layout = models.ForeignKey(BreakLayout, models.DO_NOTHING, null=True)
     week_day = models.IntegerField()
     break_time = models.TimeField(auto_now=False, auto_now_add=False)
     break_hour = models.IntegerField(default=0)
@@ -421,6 +421,8 @@ class BreakLayoutLine(models.Model):
     max_spots = models.IntegerField()
     break_fill_method = models.CharField(max_length=1, blank=True, null=True, choices=BREAK_FILL_METHOD);
     title = models.CharField(max_length=255, null=True, blank=True)
+    deleted = models.IntegerField(default=0)
+
 
 ARTIST_TYPE = (
         ('F','FEMALE'),

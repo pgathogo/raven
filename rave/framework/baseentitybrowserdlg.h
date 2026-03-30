@@ -56,6 +56,7 @@ public:
     virtual void deleteRecord();
     virtual void searchRecord();
     virtual bool okay_to_delete(std::shared_ptr<BaseEntity> entity);
+    virtual std::string special_search_filter();
 
     virtual std::string typeID();
 

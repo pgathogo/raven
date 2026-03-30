@@ -42,6 +42,9 @@ public:
     StringField* title() const;
     void set_title(const std::string);
 
+    IntegerField* deleted();
+    void set_deleted(int del);
+
     std::string tableName() const override;
     void setTableName(const std::string table_name) override;
     std::unique_ptr<BaseEntity> mapFields(StringMap* raw_entity) override;
@@ -68,6 +71,8 @@ private:
     IntegerField* mDuration;
     IntegerField* mMaxSpots;
     IntegerField* mRowId;
+
+    IntegerField* m_deleted;
 
     ChoiceField<std::string>* m_break_fill_method;
 

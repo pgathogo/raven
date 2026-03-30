@@ -51,6 +51,8 @@ BreakLayout::BreakLayout()
     mSunBit->setFormOnly(true);
     mSunBit->setSearchable(false);
 
+    m_deleted = createField<IntegerField>("deleted", "Deleted");
+
     mHeader << stoq(m_tvprogram->fieldLabel());
     setTableName("rave_breaklayout");
 }
@@ -188,6 +190,18 @@ void BreakLayout::setSunBit(int bit)
 {
     update_weekdays(SUN, bit);
     mSunBit->setValue( bit );
+}
+
+IntegerField* BreakLayout::deleted()
+{
+    return m_deleted;
+}
+
+
+void BreakLayout::setDeleted(int del)
+{
+    m_deleted->setValue(del);
+
 }
 
 WeekDayBits BreakLayout::getAccessBit(std::string abit)

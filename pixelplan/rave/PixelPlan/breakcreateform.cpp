@@ -1,6 +1,7 @@
 #include <sstream>
 #include <ranges>
 #include <format>
+#include <tuple>
 
 #include <QAbstractItemModel>
 
@@ -25,10 +26,10 @@ struct BreakLineColumn {
     static constexpr int Id=5;
 };
 
-BreakCreateForm::BreakCreateForm(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::BreakCreateForm),
-    m_selected_breaklayout{nullptr}
+BreakCreateForm::BreakCreateForm(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::BreakCreateForm)
+    , m_selected_breaklayout{nullptr}
 {
     ui->setupUi(this);
 
@@ -36,7 +37,8 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     m_edm_break_layout = std::make_unique<EntityDataModel>(m_break_layout);
     ui->tvBreakLayouts->setModel(m_edm_break_layout.get());
     ui->tvBreakLayouts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    m_edm_break_layout->all();
+
+    fetch_break_layouts();
 
     make_progids_exclusion_list();
 
@@ -60,6 +62,14 @@ BreakCreateForm::BreakCreateForm(QWidget *parent) :
     setup_ui();
 
 
+}
+
+void BreakCreateForm::fetch_break_layouts()
+{
+    m_edm_break_layout->clear();
+    auto deleted_filter = std::make_tuple(m_break_layout->deleted()->dbColumnName(), "=", 0);
+    std::string filter = m_edm_break_layout->prepareFilter(deleted_filter);
+    m_edm_break_layout->search(filter);
 }
 
 BreakCreateForm::~BreakCreateForm()
@@ -139,7 +149,6 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 
     std::string dow = m_selected_breaklayout->weekDays()->value();
 
-    std::cout << dow << '\n';
 
     std::string ids = join<std::vector<int>>(bl_ids);
     ids = "("+ ids +")";
@@ -456,6 +465,7 @@ void BreakCreateForm::save_break_layout_lines(std::shared_ptr<BreakLayoutForm> b
         bll->setBreakHour(hour);
         bll->setWeekDay(1);
         bll->setBreakLayout(layout_header_id);
+        bll->set_deleted(0);
 
         edm->createEntity(std::move(bll));
     }
@@ -572,14 +582,57 @@ void BreakCreateForm::delete_layout()
 
     std::shared_ptr<BreakLayout> break_layout = std::dynamic_pointer_cast<BreakLayout>(be);
 
-    // Delete details first
-    EntityDataModel edm(std::make_shared<BreakLayoutLine>());
-    edm.deleteEntityByValue({"break_layout_id", break_layout->id()});
-    m_edm_break_line->clearEntities();
+    int break_layout_id = break_layout->id();
 
-    // Delete header
-    m_edm_break_layout->deleteEntity(*break_layout);
-    ui->tvBreakLayouts->model()->removeRow(row);
+    auto set_delete_status_breaklayoutline = [break_layout_id](int deleted_flag) {
+
+        EntityDataModel edm; //(std::make_shared<BreakLayoutLine>());
+                std::string update_stmt = std::format("UPDATE rave_breaklayoutline SET deleted = {} WHERE break_layout_id = {}",
+                                            deleted_flag, break_layout_id);
+                try {
+                    edm.executeRawSQL(update_stmt);
+                } catch (DatabaseException& de) {
+                    showMessage(de.errorMessage());
+                    return false;
+                }
+                return true;
+    };
+
+    auto set_delete_status_breaklayout = [break_layout_id](int deleted_flag) {
+        EntityDataModel edm; //(std::make_shared<BreakLayout>());
+        std::string update_layout_stmt = std::format("UPDATE rave_breaklayout SET deleted = {} WHERE id = {}",
+                                        deleted_flag, break_layout_id);
+        try {
+            edm.executeRawSQL(update_layout_stmt);
+        } catch (DatabaseException& de) {
+            showMessage(de.errorMessage());
+            return false;
+        }
+        return true;
+    };
+
+    int DELETED_FLAG   = 1;
+    int UNDELETED_FLAG = 0;
+
+    bool breakline_updated = set_delete_status_breaklayoutline(DELETED_FLAG);
+
+    if (!breakline_updated) {
+        return;
+    }
+
+    bool layout_updated = set_delete_status_breaklayout(DELETED_FLAG);
+
+    if (!layout_updated) {
+        // Rollback breakline delete status
+        set_delete_status_breaklayoutline(UNDELETED_FLAG);
+        return;
+    }
+
+    fetch_break_layouts();
+
+    // All is good, now we can remove the break layout from the view
+    //m_edm_break_layout->removeEntity(*break_layout.get());
+
 
 }
 
