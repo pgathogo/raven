@@ -332,6 +332,8 @@ EntityDataModel::~EntityDataModel()
 
 void EntityDataModel::populateEntities()
 {
+    if (dbManager->provider()->cacheSize() == 0 ) return;
+
     clearEntities();
 
     dbManager->provider()->cache()->first();
@@ -486,6 +488,18 @@ std::string EntityDataModel::make_insert_stmt(const BaseEntity &entity)
 void EntityDataModel::executeRawSQL(const std::string sql)
 {
     dbManager->executeRawSQL( sql );
+}
+
+void EntityDataModel::execute_raw_sql_mapped(const std::string sql)
+{
+    try {
+        dbManager->readRaw( sql );
+
+    } catch (PostgresException& pe) {
+        throw;
+    }
+
+    populateEntities();
 }
 
 int EntityDataModel::insert_returning_id(const std::string sql)

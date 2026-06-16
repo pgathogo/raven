@@ -27,16 +27,11 @@ AudioExplorer_SOURCE_DIR:STATIC=D:/Home/Clients/PMS/Raven/rave/AudioExplorer
 BASS_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/BassLib/Lib/bass.lib
 
 //Path to a program.
-CMAKE_ADDR2LINE:FILEPATH=D:/cygwin64/bin/addr2line.exe
+CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.50.35717/bin/Hostx64/x64/lib.exe
 
-//Path to a program.
-CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostx64/x64/lib.exe
-
-//No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:STRING=Release
-
-//Enable colored diagnostics throughout.
-CMAKE_COLOR_DIAGNOSTICS:BOOL=ON
+//Choose the type of build, options are: None Debug Release RelWithDebInfo
+// MinSizeRel ...
+CMAKE_BUILD_TYPE:STRING=Debug
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /GR /EHsc
@@ -56,9 +51,6 @@ CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=/Zi /O2 /Ob1 /DNDEBUG
 //Libraries linked by default with all C++ applications.
 CMAKE_CXX_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
 
-//Path to a program.
-CMAKE_DLLTOOL:FILEPATH=D:/cygwin64/bin/dlltool.exe
-
 //Flags used by the linker during all build types.
 CMAKE_EXE_LINKER_FLAGS:STRING=/machine:x64
 
@@ -73,6 +65,9 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
+
+//Enable/Disable output of build database during the build.
+CMAKE_EXPORT_BUILD_DATABASE:BOOL=OFF
 
 //Enable/Disable output of compile commands during generation.
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
@@ -117,7 +112,7 @@ CMAKE_INSTALL_MANDIR:PATH=
 CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/AudioExplorer
+CMAKE_INSTALL_PREFIX:PATH=D:/Home/Clients/PMS/Raven/rave/AudioExplore
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
@@ -132,7 +127,7 @@ CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
 CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostx64/x64/link.exe
+CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.50.35717/bin/Hostx64/x64/link.exe
 
 //make program
 CMAKE_MAKE_PROGRAM:FILEPATH=C:/PROGRA~1/CMake/bin/ninja.exe
@@ -158,16 +153,10 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 
 //Path to a program.
-CMAKE_MT:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.22621.0/x64/mt.exe
+CMAKE_MT:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.28000.0/x64/mt.exe
 
-//Path to a program.
-CMAKE_NM:FILEPATH=D:/cygwin64/bin/nm.exe
-
-//Path to a program.
-CMAKE_OBJCOPY:FILEPATH=D:/cygwin64/bin/objcopy.exe
-
-//Path to a program.
-CMAKE_OBJDUMP:FILEPATH=D:/cygwin64/bin/objdump.exe
+//Value Computed by CMake
+CMAKE_PROJECT_COMPAT_VERSION:STATIC=
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -177,6 +166,9 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=AudioExplorer
+
+//Value Computed by CMake
+CMAKE_PROJECT_SPDX_LICENSE:STATIC=
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=0.1
@@ -194,7 +186,7 @@ CMAKE_PROJECT_VERSION_PATCH:STATIC=
 CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //RC compiler
-CMAKE_RC_COMPILER:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.22621.0/x64/rc.exe
+CMAKE_RC_COMPILER:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.28000.0/x64/rc.exe
 
 //Flags for Windows Resource Compiler during all build types.
 CMAKE_RC_FLAGS:STRING=-DWIN32
@@ -210,9 +202,6 @@ CMAKE_RC_FLAGS_RELEASE:STRING=
 
 //Flags for Windows Resource Compiler during RELWITHDEBINFO builds.
 CMAKE_RC_FLAGS_RELWITHDEBINFO:STRING=
-
-//Path to a program.
-CMAKE_READELF:FILEPATH=D:/cygwin64/bin/readelf.exe
 
 //Flags used by the linker during the creation of shared libraries
 // during all build types.
@@ -241,28 +230,25 @@ CMAKE_SKIP_INSTALL_RPATH:BOOL=OFF
 //If set, runtime paths are not added when using shared libraries.
 CMAKE_SKIP_RPATH:BOOL=OFF
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during all build types.
 CMAKE_STATIC_LINKER_FLAGS:STRING=/machine:x64
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during DEBUG builds.
 CMAKE_STATIC_LINKER_FLAGS_DEBUG:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during MINSIZEREL builds.
 CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during RELEASE builds.
 CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during RELWITHDEBINFO builds.
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
-
-//Path to a program.
-CMAKE_STRIP:FILEPATH=D:/cygwin64/bin/strip.exe
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -273,7 +259,7 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=OFF
 //The Set the PostgreSQL_INCLUDE_DIR cmake cache entry to the top-level
 // directory containing the PostgreSQL include directories. E.g
 // /usr/local/include/PostgreSQL/8.4 or C:/Program Files/PostgreSQL/8.4/include
-PostgreSQL_INCLUDE_DIR:PATH=C:/Program Files/PostgreSQL/14/include
+PostgreSQL_INCLUDE_DIR:PATH=C:/Program Files/PostgreSQL/16/include
 
 //The Set the PostgreSQL_LIBRARY_DIR cmake cache entry to the top-level
 // directory containing the PostgreSQL libraries.
@@ -281,12 +267,12 @@ PostgreSQL_LIBRARY_DEBUG:FILEPATH=PostgreSQL_LIBRARY_DEBUG-NOTFOUND
 
 //The Set the PostgreSQL_LIBRARY_DIR cmake cache entry to the top-level
 // directory containing the PostgreSQL libraries.
-PostgreSQL_LIBRARY_RELEASE:FILEPATH=C:/Program Files/PostgreSQL/14/lib/libpq.lib
+PostgreSQL_LIBRARY_RELEASE:FILEPATH=C:/Program Files/PostgreSQL/16/lib/libpq.lib
 
 //The Set the PostgreSQL_INCLUDE_DIR cmake cache entry to the top-level
 // directory containing the PostgreSQL include directories. E.g
 // /usr/local/include/PostgreSQL/8.4 or C:/Program Files/PostgreSQL/8.4/include
-PostgreSQL_TYPE_INCLUDE_DIR:PATH=C:/Program Files/PostgreSQL/14/include/server
+PostgreSQL_TYPE_INCLUDE_DIR:PATH=C:/Program Files/PostgreSQL/16/include/server
 
 //Additional directories where find(Qt6 ...) host Qt components
 // are searched
@@ -296,63 +282,56 @@ QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH:STRING=
 QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 
 //The directory containing a CMake configuration file for QT.
-QT_DIR:PATH=C:/QT632/lib/cmake/Qt6
+QT_DIR:PATH=D:/QT632/lib/cmake/Qt6
 
 //The directory containing a CMake configuration file for Qt6CoreTools.
-Qt6CoreTools_DIR:PATH=C:/QT632/lib/cmake/Qt6CoreTools
+Qt6CoreTools_DIR:PATH=D:/QT632/lib/cmake/Qt6CoreTools
 
 //The directory containing a CMake configuration file for Qt6Core.
-Qt6Core_DIR:PATH=C:/QT632/lib/cmake/Qt6Core
+Qt6Core_DIR:PATH=D:/QT632/lib/cmake/Qt6Core
 
 //The directory containing a CMake configuration file for Qt6EntryPointPrivate.
-Qt6EntryPointPrivate_DIR:PATH=C:/QT632/lib/cmake/Qt6EntryPointPrivate
+Qt6EntryPointPrivate_DIR:PATH=D:/QT632/lib/cmake/Qt6EntryPointPrivate
 
 //The directory containing a CMake configuration file for Qt6GuiTools.
-Qt6GuiTools_DIR:PATH=C:/QT632/lib/cmake/Qt6GuiTools
+Qt6GuiTools_DIR:PATH=D:/QT632/lib/cmake/Qt6GuiTools
 
 //The directory containing a CMake configuration file for Qt6Gui.
-Qt6Gui_DIR:PATH=C:/QT632/lib/cmake/Qt6Gui
+Qt6Gui_DIR:PATH=D:/QT632/lib/cmake/Qt6Gui
 
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
-Qt6WidgetsTools_DIR:PATH=C:/QT632/lib/cmake/Qt6WidgetsTools
+Qt6WidgetsTools_DIR:PATH=D:/QT632/lib/cmake/Qt6WidgetsTools
 
 //The directory containing a CMake configuration file for Qt6Widgets.
-Qt6Widgets_DIR:PATH=C:/QT632/lib/cmake/Qt6Widgets
+Qt6Widgets_DIR:PATH=D:/QT632/lib/cmake/Qt6Widgets
 
 //The directory containing a CMake configuration file for Qt6ZlibPrivate.
-Qt6ZlibPrivate_DIR:PATH=C:/QT632/lib/cmake/Qt6ZlibPrivate
+Qt6ZlibPrivate_DIR:PATH=D:/QT632/lib/cmake/Qt6ZlibPrivate
 
 //The directory containing a CMake configuration file for Qt6.
-Qt6_DIR:PATH=C:/QT632/lib/cmake/Qt6
-
-//Path to a library.
-Qwt_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/qwt5/lib/qwt5-qt6.lib
-
-SETUPAPI_LIBRARY:FILEPATH=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x64/SetupAPI.Lib
+Qt6_DIR:PATH=D:/QT632/lib/cmake/Qt6
 
 //Path to a library.
 SQLite3_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib
 
 //Path to a program.
-WINDEPLOYQT_EXECUTABLE:FILEPATH=C:/QT632/bin/windeployqt.exe
+WINDEPLOYQT_EXECUTABLE:FILEPATH=D:/QT632/bin/windeployqt.exe
 
 
 ########################
 # INTERNAL cache entries
 ########################
 
-//ADVANCED property for variable: CMAKE_ADDR2LINE
-CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=d:/Home/Clients/PMS/Raven/rave/AudioExplorer
 //Major version of cmake used to create the current loaded cache
-CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
+CMAKE_CACHE_MAJOR_VERSION:INTERNAL=4
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=24
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=3
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=1
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake.exe
 //Path to cpack program executable.
@@ -371,8 +350,6 @@ CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_STANDARD_LIBRARIES
 CMAKE_CXX_STANDARD_LIBRARIES-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_DLLTOOL
-CMAKE_DLLTOOL-ADVANCED:INTERNAL=1
 //Path to cache edit program executable.
 CMAKE_EDIT_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake-gui.exe
 //Executable file format
@@ -387,6 +364,8 @@ CMAKE_EXE_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_EXE_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_EXPORT_BUILD_DATABASE
+CMAKE_EXPORT_BUILD_DATABASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXPORT_COMPILE_COMMANDS
 CMAKE_EXPORT_COMPILE_COMMANDS-ADVANCED:INTERNAL=1
 //Name of external makefile project generator.
@@ -442,6 +421,8 @@ CMAKE_INSTALL_SHAREDSTATEDIR-ADVANCED:INTERNAL=1
 CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
+//Name of CMakeLists files to read
+CMAKE_LIST_FILE_NAME:INTERNAL=CMakeLists.txt
 //ADVANCED property for variable: CMAKE_MAKE_PROGRAM
 CMAKE_MAKE_PROGRAM-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS
@@ -456,14 +437,8 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_NM
-CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
 CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
-//ADVANCED property for variable: CMAKE_OBJCOPY
-CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_OBJDUMP
-CMAKE_OBJDUMP-ADVANCED:INTERNAL=1
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -481,10 +456,8 @@ CMAKE_RC_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_RC_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_RC_FLAGS_RELWITHDEBINFO
 CMAKE_RC_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_READELF
-CMAKE_READELF-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.24
+CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-4.3
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG
@@ -509,12 +482,10 @@ CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_STRIP
-CMAKE_STRIP-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding PostgreSQL
-FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/Program Files/PostgreSQL/14/lib/libpq.lib][C:/Program Files/PostgreSQL/14/include][c ][v14.5()]
+FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/Program Files/PostgreSQL/16/lib/libpq.lib][C:/Program Files/PostgreSQL/16/include][ ][v16.13()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding WrapAtomic
@@ -1232,5 +1203,5 @@ QT_FEATURE_xrender:INTERNAL=OFF
 //Qt feature: zstd (from target Qt6::Core)
 QT_FEATURE_zstd:INTERNAL=OFF
 //CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/AudioExplorer
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=D:/Home/Clients/PMS/Raven/rave/AudioExplore
 

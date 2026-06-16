@@ -79,6 +79,7 @@ protected:
     void setTitle(std::string title);
 
     void disableSaveBtn();
+    void enable_save_btn();
     void hideSaveBtn();
     void disableSaveNewBtn();
     void hideSaveNewBtn();

@@ -237,7 +237,6 @@ int PostgresDatabaseManager::search(const BaseEntity& entity, const std::string 
     sql = "SELECT "+flds+" FROM "+entity.tableName()+
                     " WHERE "+ filter+" ORDER BY "+entity.order_by();
 
-
     return provider()->read(sql);
 
 }
@@ -267,8 +266,13 @@ int PostgresDatabaseManager::starts_with(const BaseEntity &entity, std::tuple<st
 
 void PostgresDatabaseManager::executeRawSQL(const std::string sql)
 {
-    provider()->executeQuery(sql);
+    try {
+        provider()->executeQuery(sql);
+    } catch (PostgresException& pe) {
+        throw;
+    }
 }
+
 
 int PostgresDatabaseManager::readRaw(const std::string sql)
 {
@@ -463,6 +467,7 @@ void SQLiteDatabaseManager::executeRawSQL(const std::string sql)
 {
 
 }
+
 int SQLiteDatabaseManager::readRaw(const std::string sql)
 {
 

@@ -143,7 +143,9 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
 
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_setup_edm->all();
-    m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
+
+    //m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
+    m_setup = dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
 
     m_editor_process = std::make_unique<QProcess>(this);
 

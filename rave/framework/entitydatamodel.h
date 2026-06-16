@@ -129,6 +129,7 @@ public:
 
     std::string make_insert_stmt(const BaseEntity& entity);
     void executeRawSQL(const std::string sql);
+    void execute_raw_sql_mapped(const std::string sql);
     int insert_returning_id(const std::string sql);
     int readRaw(const std::string sql);
 

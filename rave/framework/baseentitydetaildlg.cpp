@@ -118,6 +118,11 @@ void BaseEntityDetailDlg::disableSaveBtn()
     bui->btnSave->setEnabled(false);
 }
 
+void BaseEntityDetailDlg::enable_save_btn()
+{
+    bui->btnSave->setEnabled(true);
+}
+
 void BaseEntityDetailDlg::hideSaveBtn()
 {
     bui->btnSave->setVisible(false);

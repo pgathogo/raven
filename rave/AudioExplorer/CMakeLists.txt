@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.15)
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(MSVS_BUILD_NUM "14.42.34433")
+set(MSVS_BUILD_NUM "14.50.35717")
 
-set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
+set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
 
 project(AudioExplorer VERSION 0.1 LANGUAGES CXX)
 
@@ -17,7 +17,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(rave_framework_INCLUDE_DIRS "../framework")
@@ -165,6 +165,8 @@ set(PROJECT_SOURCES
         ../../ravecluster/rave/clusterman/station.cpp
         ../../ravecluster/rave/clusterman/cluster.h
         ../../ravecluster/rave/clusterman/cluster.cpp
+        ../../ravecluster/rave/clusterman/useraccess.h
+        ../../ravecluster/rave/clusterman/useraccess.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.15)
 
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
-set(MSVC_BUILD "14.44.35207")
+set(MSVC_BUILD "14.50.35717")
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVC_BUILD}/bin/Hostx64/x64/cl.exe")
+set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVC_BUILD}/bin/Hostx64/x64/cl.exe")
 
 project(OATS VERSION 0.1 LANGUAGES CXX)
 
@@ -20,7 +20,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #set(CMAKE_BUILD_TYPE Debug)
@@ -91,6 +91,12 @@ set(PROJECT_SOURCES
         timeanalyzertextwidget.cpp
         oats.qrc
         oats_styles.h
+
+
+        ../Traffik/breaklayout.h
+        ../Traffik/breaklayout.cpp
+        ../Traffik/breaklayoutline.h
+        ../Traffik/breaklayoutline.cpp
 
         ../rave.qrc
 

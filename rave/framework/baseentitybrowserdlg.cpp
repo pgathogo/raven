@@ -241,15 +241,37 @@ void BaseEntityBrowserDlg::filter_by_letter(int index)
     QString tab_text = m_letter_filter_widget->get_tabwidget()->tabText(index);
 
     if (tab_text == "*"){
-        entityDataModel().all();
+        std::string where_clause = " WHERE 1=1 ";
+        std::string special_filter = "";
+        std::string sf = special_search_filter();
+
+        if (sf != "")
+            special_filter = std::format(" AND {} ", sf);
+
+        std::string filter = where_clause + special_filter;
+
+        entityDataModel().search_with_filter(filter);
+
         return;
     }
 
     auto data = bui->cbFilter->itemData(
                         bui->cbFilter->currentIndex()).value<QVariant>();
     std::string columnName = data.toString().toStdString();
-    auto searchItem = std::make_tuple(columnName, tab_text.toStdString());
-    entityDataModel().starts_with(searchItem);
+    //auto searchItem = std::make_tuple(columnName, tab_text.toStdString());
+
+    std::string where_clause = std::format(" WHERE LOWER( {} ) LIKE '{}%'", columnName, tab_text.toLower().toStdString());
+    std::string special_filter = "";
+    std::string sf = special_search_filter();
+
+    if (sf != "")
+        special_filter = std::format(" AND {} ", sf);
+
+    std::string filter = where_clause + special_filter;
+
+    entityDataModel().search_with_filter(filter);
+
+    //entityDataModel().starts_with(searchItem);
 
 }
 

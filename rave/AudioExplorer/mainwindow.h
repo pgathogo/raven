@@ -224,7 +224,7 @@ private:
 
     std::unique_ptr<AUDIO::AudioWaveForm> m_audio_wave_form;
 
-    RavenSetup* m_setup;
+    std::shared_ptr<RavenSetup> m_setup;
     std::unique_ptr<EntityDataModel> m_setup_edm;
 
     std::unique_ptr<QProcess> m_editor_process;

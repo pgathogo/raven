@@ -143,11 +143,13 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 
     res = PQexec(conn, query.c_str());
 
-    if (PQresultStatus(res) != PGRES_COMMAND_OK){
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
         std::string errorMsg = "EXECUTE command failed!\n";
         errorMsg += PQerrorMessage(conn);
         PQexec(conn, "ROLLBACK");
         cleanFinish(res);
+
         throw PostgresException("EXCEUTE", errorMsg);
     }
 
