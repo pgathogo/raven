@@ -60,7 +60,7 @@ private:
     QDate previous_weekday(int current_dow);
     QString make_playlist_output_filepath(int);
 
-    QString replace_relative_path(QString);
+    QString replace_relative_path_with_mapped_drive(QString);
     bool confirm_playlist_filename(QString&);
 
     Ui::PlaylistForm *ui;

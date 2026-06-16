@@ -4,9 +4,9 @@ string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
-set(MSVS_BUILD_NUM "14.44.35207")
+set(MSVS_BUILD_NUM "14.50.35717")
 
-set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
+set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
 
 
 if (CMAKE_GENERATOR MATCHES "Ninja")
@@ -603,7 +603,7 @@ endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(pixelplan
-        WIN32          # Critical: Tells Windows it's a GUI app
+        #WIN32          # Critical: Tells Windows it's a GUI app
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         voidreasonbrowser.h voidreasonbrowser.cpp voidreasonbrowser.ui
@@ -616,7 +616,7 @@ else()
         )
     else()
         add_executable(pixelplan
-            WIN32
+            #WIN32
             ${PROJECT_SOURCES}
             ${RC_FILE}
         )

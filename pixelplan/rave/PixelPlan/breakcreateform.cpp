@@ -35,6 +35,7 @@ BreakCreateForm::BreakCreateForm(QWidget *parent)
 
     m_break_layout = std::make_shared<BreakLayout>();
     m_edm_break_layout = std::make_unique<EntityDataModel>(m_break_layout);
+
     ui->tvBreakLayouts->setModel(m_edm_break_layout.get());
     ui->tvBreakLayouts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -116,6 +117,8 @@ void BreakCreateForm::setup_ui()
     connect(ui->btnEdit, &QToolButton::clicked, this, &BreakCreateForm::edit_layout);
     connect(ui->btnDelete, &QToolButton::clicked, this, &BreakCreateForm::delete_layout);
 
+    connect(ui->cbAll, &QCheckBox::toggled, this, &BreakCreateForm::select_all_breaks);
+
     ui->lblSelHour->setVisible(false);
     ui->lblSelectedHr->setVisible(false);
     ui->btnAddHour->setVisible(false);
@@ -161,6 +164,12 @@ void BreakCreateForm::break_layout_selected(const QModelIndex &index)
 
     m_edm_break_line->search(filter);
 
+    if (m_edm_break_line->count() > 0) {
+        ui->cbAll->setChecked(false);
+        ui->cbAll->setChecked(true);
+    }
+
+
 }
 
 void BreakCreateForm::print_model_items()
@@ -185,8 +194,11 @@ void BreakCreateForm::create_breaks()
         return;
     }
 
+    QString break_count = QString("%1 break(s) selected. Continue with break creation?")
+                              .arg(ui->tvBreakLines->selectionModel()->selectedRows().count());
+
     auto reply = QMessageBox::question(this, "Create Breaks",
-                                       "Continue with Break Creation?",
+                                       break_count,
                                        QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::No)
         return;
@@ -196,13 +208,20 @@ void BreakCreateForm::create_breaks()
         return;
     }
 
-    std::string insert_statements = make_insert_statements(ui->dtFrom->date(), ui->dtTo->date());
+    std::vector<std::shared_ptr<BreakLayoutLine>> selected_break_lines;
+    for (int r=0; r < ui->tvBreakLines->selectionModel()->selectedRows().count(); ++r)
+    {
+        QModelIndex index = ui->tvBreakLines->selectionModel()->selectedRows().at(r);
+        auto bbl = std::dynamic_pointer_cast<BreakLayoutLine>(m_edm_break_line->get_entity_at_row(index.row()));
+        selected_break_lines.push_back(bbl);
+    }
 
+    std::string insert_statements = make_insert_statements(ui->dtFrom->date(), ui->dtTo->date(), selected_break_lines);
 
     if (insert_statements.empty())
         return;
 
-    if (write_breaks_to_db(insert_statements))
+    if (insert_breaks_to_db(insert_statements))
         close_form();
 }
 
@@ -210,16 +229,20 @@ void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from
 {
     std::stringstream sql;
 
-    sql << " Select schedule_date, schedule_hour, schedule_time "
-        << " From rave_schedule ";
+    sql << " SELECT schedule_date, schedule_hour, schedule_time "
+        << " FROM rave_schedule, rave_breaklayoutline, rave_breaklayout "
+        << " WHERE rave_schedule.break_layout_line_id = rave_breaklayoutline.id "
+        << " AND rave_breaklayoutline.break_layout_id = rave_breaklayout.id "
+        << " AND rave_breaklayout.deleted = 0 " ;
 
-    std::string where_filter = std::format(" Where schedule_date between '{}' and '{}' ",
+    std::string where_filter = std::format(" AND rave_schedule.schedule_date between '{}' and '{}' ",
                                            from.toString("yyyy-MM-dd").toStdString(),
                                            to.toString("yyyy-MM-dd").toStdString());
 
-    std::string order_str = " Order by schedule_date, schedule_hour, schedule_time ";
+    std::string order_str = " Order by rave_schedule.schedule_date, rave_schedule.schedule_hour, rave_schedule.schedule_time ";
 
     sql << where_filter << order_str;
+
 
     EntityDataModel edm;
     edm.readRaw(sql.str());
@@ -272,7 +295,7 @@ void BreakCreateForm::get_existing_schedules(ScheduleRecords& s_recs, QDate from
 
 }
 
-std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
+std::string BreakCreateForm::make_insert_statements(QDate from, QDate to, const std::vector<std::shared_ptr<BreakLayoutLine>>& selected_break_lines)
 {
     Schedule sched;
     std::string insert_stmts = "";
@@ -281,6 +304,11 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
     ScheduleRecords s_recs;
 
     get_existing_schedules(s_recs, from, to);
+
+    // s_recs = map[schedule_date][schedule_hour] = vector of schedule_time
+    // For example:
+    // s_recs[2024-07-01][10] = ["10:00", "10:30", "10:45"]
+
 
     /*
     for (auto& [dt, hours]: s_recs){
@@ -291,18 +319,28 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
                 qDebug() << bt;
         }
     }
-    */
+   */
 
 
     auto break_exists = [&](QDate sched_date, int sched_hr, QTime sched_time)
     {
-        if (s_recs.find(sched_date) == s_recs.end() )
-            return false;
 
-        if (s_recs[sched_date].find(sched_hr) == s_recs[sched_date].end() )
+        if (s_recs.find(sched_date) == s_recs.end() ) {
+            s_recs[sched_date].insert(std::pair(sched_hr, std::vector<QString>()));
+            s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
             return false;
+        }
 
-        for(auto& break_time: s_recs[sched_date][sched_hr]){
+
+        if (s_recs[sched_date].find(sched_hr) == s_recs[sched_date].end() ) {
+            s_recs[sched_date].insert(std::pair(sched_hr, std::vector<QString>()));
+            s_recs[sched_date][sched_hr].push_back(sched_time.toString("hh:mm"));
+            return false;
+        }
+
+
+        for(auto& break_time: s_recs[sched_date][sched_hr])
+        {
 
             if (break_time == sched_time.toString("hh:mm"))
                 return true;
@@ -323,15 +361,15 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
     {
 
         if(!dow_allowed(tmpDate.dayOfWeek())) {
-            qDebug() << "Date: " << tmpDate.toString("dd-MM-yyyy") << "DOW: "<< tmpDate.dayOfWeek() << ".... Skipped";
             tmpDate = tmpDate.addDays(1);
             continue;
         }
 
 
-        for (auto& [name, entity] : m_edm_break_line->modelEntities())
+        //for (auto& [name, entity] : m_edm_break_line->modelEntities())
+        for (auto bll : selected_break_lines)
         {
-            BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
+            // BreakLayoutLine* bll = dynamic_cast<BreakLayoutLine*>(entity.get());
 
             fields << sched.set_schedule_date(tmpDate)
                     << sched.set_schedule_time(bll->breakTime()->value())
@@ -344,11 +382,13 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
                     << sched.set_break_mode("MIXED")
                     << sched.set_break_fill_method(bll->break_fill_method()->value())
                     << sched.set_comment(bll->title()->value())
-                   << sched.set_break_layout_line(bll->id());
+                    << sched.set_break_layout_line(bll->id());
 
             // Do not create break if it already exists
-            if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value()))
+            if (!break_exists(tmpDate, bll->breakHour()->value(), bll->breakTime()->value())) {
                 insert_stmts += sched.make_insert_stmt(fields.vec);
+
+            }
 
             fields.clear();
          }
@@ -360,7 +400,7 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to)
 }
 
 
-bool BreakCreateForm::write_breaks_to_db(const std::string insert_stmnts)
+bool BreakCreateForm::insert_breaks_to_db(const std::string insert_stmnts)
 {
     try{
         m_edm_break_line->executeRawSQL(insert_stmnts);
@@ -527,6 +567,7 @@ void BreakCreateForm::edit_layout()
             bll.setBreakHour(bll.breakTime()->value().hour());
             bll.setWeekDay(1);
             bll.setBreakLayout(m_selected_breaklayout->id());
+            bll.set_deleted(0);
 
             if (bll.id() == -1) {
                 edm.createEntityDB(bll);
@@ -654,5 +695,15 @@ bool BreakCreateForm::update_schedule_for_break_line(BreakLayoutLine& bll)
        showMessage(de.errorMessage());
        return false;
    }
+
+}
+
+void BreakCreateForm::select_all_breaks()
+{
+    if (ui->cbAll->isChecked()) {
+        ui->tvBreakLines->selectAll();
+    } else {
+        ui->tvBreakLines->clearSelection();
+    }
 
 }

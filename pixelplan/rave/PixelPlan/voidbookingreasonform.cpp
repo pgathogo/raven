@@ -47,7 +47,7 @@ void VoidBookingReasonForm::populateEntityFields()
 
 std::string VoidBookingReasonForm::windowTitle()
 {
-    return "Void Booking Reason";
+    return "Reason to Void Booking";
 }
 
 void VoidBookingReasonForm::clear_widgets()

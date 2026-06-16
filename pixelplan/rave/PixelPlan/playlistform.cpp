@@ -41,6 +41,7 @@ PlaylistForm::PlaylistForm(QWidget* parent)
     ui->dtPlaylistDate->setDate(QDate::currentDate());
 
     m_booked_adverts = get_booked_adverts(QDate::currentDate());
+
     display_booked_adverts(m_booked_adverts);
 
     connect(ui->dtPlaylistDate, &QDateEdit::dateChanged, this, &PlaylistForm::date_changed);
@@ -69,7 +70,6 @@ PlaylistForm::PlaylistForm(QWidget* parent)
         " font-weight: bold; "
         " } ");
 
-
     //setFixedSize(1020, 480);
     setMinimumSize(1020, 480);
     setWindowTitle("View Booked Adverts");
@@ -90,7 +90,6 @@ void PlaylistForm::generate_cts()
 {
     PIXELPLAN::CTSGenerator  cts_gen(ui->dtPlaylistDate->date(), m_booked_adverts, m_break_titles);
     cts_gen.exec();
-
 }
 
 void PlaylistForm::date_changed(const QDate& prev_date)
@@ -145,7 +144,6 @@ void PlaylistForm::create_playlist_file(bool clicked)
 
     QString output_filepath = make_playlist_output_filepath(ui->dtPlaylistDate->date().dayOfWeek());
     QFileInfo fi(output_filepath);
-
 
     QString filename = fi.baseName();
     QString path = fi.absolutePath();
@@ -225,15 +223,19 @@ void PlaylistForm::create_playlist_file(bool clicked)
         set_comm_break_attr(title, comm_break_attributes);
         playlist.create_playlist_item(comm_break_attributes);
 
-        for(auto& advert : adverts) {
+        for(auto& advert : adverts)
+        {
             if (advert.filepath.isEmpty())
                 continue;
+
             auto advert_attributes = playlist.attributes();
             set_advert_attr(advert, advert_attributes);
+
             playlist.create_playlist_item(advert_attributes);
         }
 
     }
+
 
    auto [play_status, play_msg] = playlist.save_playlist();
 
@@ -481,7 +483,6 @@ QString PlaylistForm::file_id(const QString& input_string)
     // but this creates a unique hash-based identifier.
     QByteArray uuidData = hash.left(16);
 
-    qDebug() << uuidData.toHex();
 
     return uuidData.toHex().toUpper();
 
@@ -581,11 +582,8 @@ void PlaylistForm::display_booked_adverts(BookedAdverts& ba)
 
 void PlaylistForm::expand_all_with_children()
 {
-    qDebug() << "Start expansion....";
 
     QModelIndex parent_index = QModelIndex(); //ui->tvPlaylist->model()->index(0,0, QModelIndex());
-
-    qDebug() << "Found parent index...";
 
     expand_if_has_children(parent_index);
 }
@@ -608,11 +606,15 @@ void PlaylistForm::expand_if_has_children(QModelIndex index)
     }
 }
 
-QString PlaylistForm::replace_relative_path(QString path)
+QString PlaylistForm::replace_relative_path_with_mapped_drive(QString path)
 {
+    // Replaces relative path: "\\10.10.22.5\itv" with mapped drive: "Z:\itv"
 
     QString target = m_config_manager.get_value("drive_mapping", "media_path_tag");
     QString replacement = m_config_manager.get_value("drive_mapping", "media_path_rep");
+
+    if (target.isEmpty()) return "";
+    if (replacement.isEmpty())  return "";
 
     replacement = replacement+":\\";
 
@@ -644,7 +646,9 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
         <<      " LEFT JOIN rave_spot c ON b.spot_id = c.id "
         <<      " LEFT JOIN rave_client d ON c.client_id = d.id "
         <<      " LEFT JOIN rave_advertmedia e ON b.booked_audio_id = e.id "
+        <<      " LEFT JOIN rave_breaklayoutline f ON a.break_layout_line_id = f.id "
         <<      " WHERE a.schedule_date = '"+current_date+"'"
+        <<      "   AND f.deleted = 0 "
         <<      " ORDER by a.schedule_time ASC ";
 
     EntityDataModel edm;
@@ -738,7 +742,9 @@ BookedAdverts PlaylistForm::get_booked_adverts(QDate date)
 
                     // Replace section of the string "\\10.10.20.115\itv" in string "\\10.10.20.115\itv\parent\folder\"
                     // in ba.media_path with "D:\\" if it exists
-                    ba.media_path = replace_relative_path(ba.media_path);
+                    QString mapped_path = replace_relative_path_with_mapped_drive(ba.media_path);
+                    if (!mapped_path.isEmpty())
+                        ba.media_path = replace_relative_path_with_mapped_drive(ba.media_path);
 
                 }
             }

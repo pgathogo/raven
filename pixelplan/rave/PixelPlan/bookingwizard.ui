@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>500</height>
+    <width>917</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -274,11 +274,35 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_14">
             <item>
-             <widget class="QCheckBox" name="cbAllBreaks">
-              <property name="text">
-               <string>All Breaks</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QCheckBox" name="cbAllBreaks">
+                <property name="text">
+                 <string>All Breaks</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblSelCount">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QTableWidget" name="twBreaks">
@@ -1008,137 +1032,6 @@
          <size>
           <width>200</width>
           <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWizardPage" name="wpSelByDay">
-   <property name="title">
-    <string>Break Selection By Day of Week</string>
-   </property>
-   <property name="subTitle">
-    <string>Break selection by day of week</string>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_21">
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
-      <property name="topMargin">
-       <number>20</number>
-      </property>
-      <item>
-       <widget class="QPushButton" name="btnClearSel">
-        <property name="text">
-         <string>Clear Selection</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>10</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <item>
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Day of Week:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTableWidget" name="twDOW">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectRows</enum>
-        </property>
-        <property name="columnCount">
-         <number>2</number>
-        </property>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-        <column/>
-        <column/>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnBreakSelApply">
-      <property name="text">
-       <string>&lt;&lt; Apply</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_8">
-      <item>
-       <widget class="QLabel" name="label_15">
-        <property name="text">
-         <string>Breaks</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QListWidget" name="lwSelBreaks">
-        <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectRows</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_9">
-      <property name="topMargin">
-       <number>20</number>
-      </property>
-      <item>
-       <widget class="QPushButton" name="btnBreakSelect">
-        <property name="text">
-         <string>Select All</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnBreakUnselect">
-        <property name="text">
-         <string>Un-Select All</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
          </size>
         </property>
        </spacer>

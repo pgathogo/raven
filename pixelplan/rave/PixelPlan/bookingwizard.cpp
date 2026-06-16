@@ -117,13 +117,13 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
 
     show_order_details(order);
 
-    ui->lwSelBreaks->setSpacing(5);
+    // ui->lwSelBreaks->setSpacing(5);
 
-    connect(ui->btnBreakSelApply, &QPushButton::clicked, this, &BookingWizard::apply_selection);
-    connect(ui->btnClearSel, &QPushButton::clicked, this, &BookingWizard::clear_selection);
+    // connect(ui->btnBreakSelApply, &QPushButton::clicked, this, &BookingWizard::apply_selection);
+    // connect(ui->btnClearSel, &QPushButton::clicked, this, &BookingWizard::clear_selection);
 
-    connect(ui->btnBreakSelect, &QPushButton::clicked, this, [&](){ this->toggle_selection(true);} );
-    connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [&](){ this->toggle_selection(false);} );
+    // connect(ui->btnBreakSelect, &QPushButton::clicked, this, [&](){ this->toggle_selection(true);} );
+    // connect(ui->btnBreakUnselect, &QPushButton::clicked, this, [&](){ this->toggle_selection(false);} );
 
     auto break_lines = std::make_shared<BreakLayoutLine>();
     m_edm_breaks = std::make_unique<EntityDataModel>(break_lines);
@@ -175,6 +175,8 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
 
     ui->tvSplitter->setStretchFactor(0, 1);
     ui->tvSplitter->setStretchFactor(1, 2);
+
+    ui->lblSelCount->setText("Selected Breaks: 0");
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
     //setPixmap(QWizard::WatermarkPixmap, *wpixmap);
@@ -229,7 +231,12 @@ std::map<progid, Program> BookingWizard::get_tv_programs()
     std::map<progid, Program> programs;
 
     auto edm = std::make_unique<EntityDataModel>(std::make_unique<PIXELPLAN::TVProgram>());
-    edm->all();
+
+    std::string where_clause = std::format(" WHERE deleted = 0 ");
+
+    // edm->all();
+
+    edm->search_with_filter(where_clause);
 
     if (edm->count() == 0)
         return programs;
@@ -509,6 +516,8 @@ void BookingWizard::setup_break_select_grid()
     constexpr int TIME_COL = 1;
     constexpr int DURATION_COL = 2;
 
+    std::vector<SelectedBreak> selected_breaks;
+
 
     for (auto& [name, entity] : m_engine_data.m_schedule_EDM->modelEntities())
     {
@@ -554,9 +563,21 @@ void BookingWizard::setup_break_select_grid()
         sel_break.booked_spots = comm_break->booked_spots()->value();
         sel_break.break_fill_method = comm_break->break_fill_method()->value();
         sel_break.max_spots = comm_break->break_max_spots()->value();
-        m_selected_breaks[comm_break->id()] = sel_break;
+        selected_breaks.push_back(sel_break);
+        // m_selected_breaks[comm_break->id()] = sel_break;
 
         ++row;
+    }
+
+    std::sort(selected_breaks.begin(), selected_breaks.end(), [](const SelectedBreak& a, const SelectedBreak& b){
+        if (a.break_date == b.break_date)
+            return a.break_time < b.break_time;
+        return a.break_date < b.break_date;
+    });
+
+    for (const auto& sel_break : selected_breaks)
+    {
+        m_selected_breaks[sel_break.break_id] = sel_break;
     }
 }
 
@@ -1007,6 +1028,7 @@ void BookingWizard::reset_values()
 
 void BookingWizard::apply_selection()
 {
+    /*
     m_dow_selection.clear();
 
     auto sel_days = ui->twDOW->selectedItems();
@@ -1027,16 +1049,21 @@ void BookingWizard::apply_selection()
             }
         }
     }
+  */
+
 }
 
 void BookingWizard::clear_selection()
 {
+    /*
     auto sel_days = ui->twDOW->selectedItems();
+
     for (int i=0; i < sel_days.count(); ++i){
         auto item = sel_days.at(i);
         QComboBox* combo = (QComboBox*)ui->twDOW->cellWidget(item->row() , 1);
         combo->clear();
     }
+   */
 }
 
 void BookingWizard::show_spot_details(const QPoint& pos)
@@ -1225,6 +1252,7 @@ void BookingWizard::break_sel_changed(QTableWidgetItem* item)
 
         if (item->checkState() == Qt::Checked) {
             ui->twBreaks->selectRow(item->row());
+            ++m_selected_breaks_count;
 
         } else {
 
@@ -1233,11 +1261,17 @@ void BookingWizard::break_sel_changed(QTableWidgetItem* item)
                 QItemSelection selection;
                 selection.select(index, index);
                 ui->twBreaks->selectionModel()->select(selection, QItemSelectionModel::Deselect | QItemSelectionModel::Rows);
+
+                if (m_selected_breaks_count > 0)
+                    --m_selected_breaks_count;
             }
         }
 
         ui->twBreaks->blockSignals(false);
     }
+
+    QString selected_breaks_txt = QString("Selected Breaks: %1").arg(QString::number(m_selected_breaks_count));
+    ui->lblSelCount->setText(selected_breaks_txt);
 }
 
 std::vector<int> BookingWizard::get_program_ids(const std::map<progid, Program>& programs)
@@ -1492,6 +1526,7 @@ void BookingWizard::test_booking()
 
 void BookingWizard::add_days_of_week()
 {
+    /*
     int i=1;
     int row = 0;
 
@@ -1501,8 +1536,9 @@ void BookingWizard::add_days_of_week()
     ui->twDOW->setHorizontalHeaderLabels(header);
 
     ui->twDOW->setRowCount(days_of_week.size());
-    for (std::string dow : days_of_week){
 
+    for (std::string dow : days_of_week)
+    {
         QTableWidgetItem* dow_item = new QTableWidgetItem(QString::fromStdString(dow));
         //QTableWidgetItem* dow_breaks = new QTableWidgetItem();
 
@@ -1514,25 +1550,31 @@ void BookingWizard::add_days_of_week()
         //ui->twDOW->setItem(row, 1, dow_breaks);
         ++row;
     }
+*/
 }
 
 void BookingWizard::show_breaks_for_current_timeband()
 {
+    /*
     ui->lwSelBreaks->clear();
-    for (auto [break_id, selected_break] : m_selected_breaks){
+    for (auto [break_id, selected_break] : m_selected_breaks)
+    {
         QListWidgetItem* item = new QListWidgetItem(selected_break.break_time.toString("HH:mm"));
         ui->lwSelBreaks->addItem(item);
     }
+   */
 }
 
 void BookingWizard::toggle_selection(bool mode)
 {
+    /*
     auto breaks = ui->lwSelBreaks;
 
     for (int i=0; i < ui->lwSelBreaks->count(); ++i){
         auto item = breaks->item(i);
         item->setSelected(mode);
     }
+   */
 
 }
 
@@ -1806,7 +1848,6 @@ void BookingWizard::initializePage(int currentId)
 
 bool BookingWizard::validateCurrentPage()
 {
-    std::cout << "Current ID: " << currentId();
 
     switch (currentId())
     {
@@ -1863,8 +1904,6 @@ bool BookingWizard::validateCurrentPage()
         case BookingWizard::Page_Rules:
         {
             cache_break_rules();
-            qDebug() << "Page_Rules...";
-
 
             auto curr_page = currentPage();
             //button(QWizard::NextButton)->setEnabled(false);
@@ -1903,12 +1942,12 @@ bool BookingWizard::validateCurrentPage()
 
             break;
         }
-        case BookingWizard::Page_Select_By_Day:
-        {
-            auto_select_breaks_by_dow();
-            qDebug() << "Validating selection by day of the WEEK *";
-            break;
-        }
+        // case BookingWizard::Page_Select_By_Day:
+        // {
+        //     auto_select_breaks_by_dow();
+        //     qDebug() << "Validating selection by day of the WEEK *";
+        //     break;
+        // }
         case BookingWizard::Page_Select_By_Date:
         {
             TRAFFIK::TraffikTreeViewModel* tvm  = new TRAFFIK::TraffikTreeViewModel(ui->twBreakSelect->selectedItems());
@@ -1940,10 +1979,10 @@ int BookingWizard::nextId() const
 */
 void BookingWizard::disable_select_by_dow_page()
 {
-    ui->btnClearSel->setEnabled(false);
-    ui->btnBreakSelApply->setEnabled(false);
-    ui->btnBreakSelect->setEnabled(false);
-    ui->btnBreakUnselect->setEnabled(false);
+    //ui->btnClearSel->setEnabled(false);
+    // ui->btnBreakSelApply->setEnabled(false);
+    // ui->btnBreakSelect->setEnabled(false);
+    // ui->btnBreakUnselect->setEnabled(false);
 }
 
 void BookingWizard::all_break_by_date_selected(bool checked)
@@ -2017,8 +2056,6 @@ void BookingWizard::fetch_type_exclusions(TRAFFIK::EngineData& engine_data)
        << " FROM rave_spottypeexclusion, rave_typeexclusion "
        << " WHERE rave_spottypeexclusion.detail_id = rave_typeexclusion.id "
        << " AND rave_spottypeexclusion.parent_id = "+std::to_string(engine_data.spot_to_book.spot_id);
-
-    std::cout << sql.str() << '\n';
 
     fetch_spot_exclusions(sql.str(),
                         m_engine_data.spot_to_book.type_exclusions,

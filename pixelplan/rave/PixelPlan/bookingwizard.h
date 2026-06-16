@@ -86,7 +86,7 @@ public:
     using Break = Schedule;
 
     enum {Page_Spots=0, Page_Dates, Page_Rules, Page_Build_Breaks,
-          Page_Select_By_Day, Page_Select_By_Date, Page_Final};
+          Page_Select_By_Date, Page_Final};
 
     std::vector<std::string> days_of_week{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
@@ -262,6 +262,8 @@ private:
     std::map<progid, Program> m_programs;
 
     std::string m_username;
+
+    int m_selected_breaks_count{0};
 
 
 };

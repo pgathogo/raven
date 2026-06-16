@@ -105,7 +105,8 @@ void MediaBrowser::show_media_file()
     QString url_str = url.toString();
 
     if (url_str.startsWith("file://") && !url_str.startsWith("file:////")) {
-        url_str = "file:////"+url_str.mid(7);
+        //url_str = "file:////"+url_str.mid(7);
+        url_str = "file://"+url_str.mid(7);
         url = QUrl(url_str);
     }
 

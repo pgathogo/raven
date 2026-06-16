@@ -91,7 +91,6 @@ BookingOrderBrowser::BookingOrderBrowser(const std::string username, QWidget *pa
     m_item_delegate.setHeight(30);
     ui->twOrders->setItemDelegate(&m_item_delegate);
 
-
     PrintBookingMenu* menu = new PrintBookingMenu(ui->btnPrint, this);
 
     QAction* actAll = new QAction(tr("&All"));
@@ -409,6 +408,7 @@ void BookingOrderBrowser::void_query(VoidType vt)
                 auto vbf = std::make_unique<PIXELPLAN::VoidBookingForm>(QString::fromStdString(qry_tag));
 
                 if (vbf->exec() == 1) {
+
                     Reason reason = vbf->void_reason();
 
                     VoidReason vr;

@@ -84,6 +84,7 @@ private:
     bool is_time_range(const QTime&, const QTime&, const QTime&);
     bool break_used_in_schedule(int);
     bool delete_schedule_for_break_line(int);
+    void program_savable(int);
 
     Ui::BreakLayoutForm *ui;
     BreakLayout* mBreakLayout;
@@ -97,6 +98,8 @@ private:
     std::vector<QTime> m_deleted_item;
 
     std::map<QString, QCheckBox*> m_dow_checkboxes;
+
+    std::vector<int> m_excluded_progids;
 
     int tempFromHr;
     int tempToHr;

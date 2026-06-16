@@ -94,24 +94,40 @@ void ScheduleForm::clear_schedule() {
   }
 }
 
-void ScheduleForm::load_schedule(const QDate &date) {
-  const std::string ignore_case = "IGNORE-CASE";
+void ScheduleForm::load_schedule(const QDate &date)
+{
+    std::string str_date = date.toString("yyyy-MM-dd").toStdString();
 
-  clear_schedule();
+    std::string sql = std::format(
+        "SELECT "
+        "rave_schedule.id, rave_schedule.schedule_date, rave_schedule.schedule_time, rave_schedule.schedule_hour,"
+        "rave_schedule.fade_in, rave_schedule.fade_out, rave_schedule.fade_delay, rave_schedule.play_status, rave_schedule.play_date,"
+        "rave_schedule.play_time, rave_schedule.auto_transition, rave_schedule.live_transition, rave_schedule.schedule_item_type,"
+        "rave_schedule.break_duration, rave_schedule.break_start_win, rave_schedule.break_end_win, rave_schedule.break_max_spots,"
+        "rave_schedule.break_fill_method, rave_schedule.booked_spots, rave_schedule.break_duration_left, rave_schedule.break_mode,"
+        "rave_schedule.break_status, rave_schedule.comment, rave_schedule.audio_id, rave_schedule.break_layout_line_id"
+        " FROM rave_schedule, rave_breaklayoutline, rave_breaklayout"
+        " WHERE rave_schedule.break_layout_line_id = rave_breaklayoutline.id"
+        " AND rave_breaklayoutline.break_layout_id = rave_breaklayout.id"
+        " AND rave_breaklayout.deleted = 0"
+        " AND rave_schedule.schedule_date = '{}'"
+        " AND rave_schedule.schedule_item_type = 'COMM-BREAK'"
+        " ORDER BY rave_schedule.schedule_date, rave_schedule.schedule_hour,"
+        " rave_schedule.schedule_time ", str_date );
 
-  m_edm_schedule->clearEntities();
 
-  Schedule sched;
-  auto date_filter =
-      std::make_tuple(sched.schedule_date()->dbColumnName(), "=", date);
+  try {
 
-  auto breaks_only_filter = std::make_tuple(
-      sched.schedule_item_type()->dbColumnName(), ignore_case, "COMM-BREAK");
+      m_edm_schedule->execute_raw_sql_mapped(sql);
 
-  std::string filter =
-      m_edm_schedule->prepareFilter(date_filter, breaks_only_filter);
+      if (m_edm_schedule->count() == 0)
+          return;
 
-  m_edm_schedule->search(filter);
+    } catch (PostgresException& pe) {
+        std::cerr << pe.errorMessage() << '\n';
+
+    }
+
 
   build_tree_view();
 
@@ -178,7 +194,8 @@ void ScheduleForm::build_tree_view() {
   //Breaks comm_breaks;
   OrderedMap comm_breaks;
 
-  for (auto &[name, entity] : m_edm_schedule->modelEntities()) {
+  for (auto &[name, entity] : m_edm_schedule->modelEntities())
+  {
     Schedule *schedule = dynamic_cast<Schedule *>(entity.get());
 
     Break comm_break;

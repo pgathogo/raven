@@ -87,6 +87,8 @@ void VoidBookingForm::make_widgets()
 }
 void VoidBookingForm::reason_changed(int i)
 {
+    if (m_cbReasons->count() == 0 ) return;
+
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(m_cbReasons->model());
     m_reason.reason_id  = std::get<1>(*(edm->vecBegin()+i))->id();
 }
@@ -104,6 +106,7 @@ void VoidBookingForm::ok_clicked(bool state)
 {
     m_reason.is_other_reason = (m_cbOther->checkState()== Qt::Unchecked) ? false : true;
     m_reason.other_reason = m_edtOther->toPlainText().toStdString();
+
     reason_changed(m_cbReasons->currentIndex());
 
     // Check if other reasons - we have comments

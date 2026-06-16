@@ -33,6 +33,7 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     ,m_line_no{0}
     ,m_edm_tvprogram{nullptr}
     ,m_current_tvprogram{nullptr}
+    ,m_excluded_progids{excl_progids}
 {
 
     ui->setupUi(bui->baseContainer);
@@ -86,7 +87,6 @@ BreakLayoutForm::BreakLayoutForm(BreakLayout* bl, std::vector<int> excl_progids,
     connect(ui->tbInsert, &QToolButton::clicked, this, &BreakLayoutForm::insert_row);
     connect(ui->tbDelete, &QToolButton::clicked, this, &BreakLayoutForm::delete_row);
 
-
     populate_program_combo(excl_progids);
 
     populateFormWidgets();
@@ -119,10 +119,15 @@ BreakLayoutForm::~BreakLayoutForm()
 void BreakLayoutForm::populate_program_combo(std::vector<int> ex_progids)
 {
     m_edm_tvprogram = std::make_unique<EntityDataModel>(std::make_unique<PIXELPLAN::TVProgram>());
-    m_edm_tvprogram->all();
+
+    auto deleted_filter = std::make_tuple("deleted", "=", 0);
+    std::string filter = m_edm_tvprogram->prepareFilter(deleted_filter);
+
+    m_edm_tvprogram->search(filter);
 
     if (m_edm_tvprogram->count() == 0)
         return;
+
 
     auto provider = m_edm_tvprogram->getDBManager()->provider();
     if(provider->cacheSize() == 0)
@@ -148,8 +153,8 @@ void BreakLayoutForm::populate_program_combo(std::vector<int> ex_progids)
         }
 
         // Only show TVPrograms not in the exclusion list
-        if (std::find(ex_progids.begin(), ex_progids.end(), id) == ex_progids.end())
-            ui->cbProgram->addItem(title, QVariant(id));
+        //if (std::find(ex_progids.begin(), ex_progids.end(), id) == ex_progids.end())
+         ui->cbProgram->addItem(title, QVariant(id));
 
 
         provider->cache()->next();
@@ -213,11 +218,13 @@ void BreakLayoutForm::populateFormWidgets()
     constexpr int SUN=6;
 
     QString bcast_days = m_current_tvprogram->broadcast_days()->to_qstring();
+
     QStringList bd = bcast_days.split(",");
 
     auto bd_contains = [&](QString dow) {
         return(bd.contains(dow)) ? 1 : 0;
     };
+
 
     QStringList days_of_week = {"Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"};
 
@@ -232,7 +239,6 @@ void BreakLayoutForm::populateFormWidgets()
 
     if (dow.empty())
         dow = bd_bits;
-
 
     populate_choice_combo_int(ui->cbTimeInterval, mBreakLayout->timeInterval());
 
@@ -434,6 +440,9 @@ void BreakLayoutForm::set_defaults()
     else{
         show_breaklines_from_db(mBreakLayout->id());
     }
+
+    program_savable(0);
+
 }
 
 void BreakLayoutForm::copyHour(int fromHr, int toHr)
@@ -519,14 +528,19 @@ void BreakLayoutForm::register_dow_checkboxes()
 
 void BreakLayoutForm::on_tvprogram_changed(int i)
 {
+
     if (m_edm_tvprogram == nullptr)
         return;
+
 
     if (m_edm_tvprogram->count() == 0)
         return;
 
+
     if (ui->cbProgram->count() == 0)
         return;
+
+
 
     auto base_entity =  m_edm_tvprogram->find_entity_by_id(
         ui->cbProgram->itemData(i).toInt() );
@@ -550,6 +564,18 @@ void BreakLayoutForm::on_tvprogram_changed(int i)
         for(int i=0; i<dow_list.size(); ++i) {
             m_dow_checkboxes[dow_list.at(i)]->setCheckState(Qt::Checked);
         }
+    }
+
+    program_savable(i);
+}
+
+void BreakLayoutForm::program_savable(int i)
+{
+    int prog_id = ui->cbProgram->itemData(i).toInt();
+    if (std::find(m_excluded_progids.begin(), m_excluded_progids.end(), prog_id) != m_excluded_progids.end()) {
+        disableSaveBtn();
+    } else {
+        enable_save_btn();
     }
 
 }

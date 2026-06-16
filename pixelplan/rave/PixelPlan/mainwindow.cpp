@@ -72,16 +72,19 @@ MainWindow::MainWindow(QApplication* app,
     createActions();
 
     std::string uname = std::format("Username: {}    ", ci.username);
-    std::string station = std::format("Station: {}   ", si.station_name.toStdString());
     std::string host = std::format("Host: {}    ", si.ip_address.toStdString());
 
-    QLabel* station_label = new QLabel(QString::fromStdString(station));
+    QString dbname = QString("Database: %1    ").arg(si.db_name);
+
+    QString station = QString("Station: %1   ").arg(si.station_name);
+    QLabel* station_label = new QLabel(station);
     station_label->setStyleSheet("font-weight: bold; color: red");
 
     QStatusBar* sb = new QStatusBar(this);
     sb->addWidget(new QLabel(QString::fromStdString(uname)));
     sb->addWidget(station_label);
     sb->addWidget(new QLabel(QString::fromStdString(host)));
+    sb->addWidget(new QLabel(dbname));
     setStatusBar(sb);
 
 //    m_report = new LimeReport::ReportEngine(this);
@@ -281,7 +284,6 @@ void MainWindow::open_playlist()
 {
     PlaylistForm* playlist_form = createSubWindow<PlaylistForm>();
     playlist_form->exec();
-
 }
 
 void MainWindow::open_log_analysis()

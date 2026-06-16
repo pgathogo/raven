@@ -15,7 +15,7 @@ namespace TRAFFIK{
         m_root_item = invisibleRootItem();
         read_tree_data(items);
         build_tree(m_nodes);
-        //print_tree(m_tree, 0);
+        print_tree(m_tree, 0);
     }
 
     int TraffikTreeViewModel::read_tree_data(const SelectedItems& items)

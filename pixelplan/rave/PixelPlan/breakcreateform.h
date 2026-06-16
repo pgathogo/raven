@@ -71,6 +71,8 @@ private slots:
     void edit_layout();
     void delete_layout();
 
+    void select_all_breaks();
+
 private:
     void set_defaults();
     void setup_ui();
@@ -85,8 +87,9 @@ private:
     std::shared_ptr<BreakLayout> m_break_layout;
 
     bool m_breaks_created{false};
-    bool write_breaks_to_db(const std::string sql);
-    std::string make_insert_statements(QDate from, QDate to);
+    bool insert_breaks_to_db(const std::string sql);
+    //std::string make_insert_statements(QDate from, QDate to);
+    std::string make_insert_statements(QDate, QDate, const std::vector<std::shared_ptr<BreakLayoutLine>>&);
     void get_existing_schedules(ScheduleRecords&, QDate, QDate);
 
     std::shared_ptr<BreakLayout> m_selected_breaklayout;
