@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
-set(MSVC_BUILD "14.50.35717")
+set(MSVC_BUILD "14.51.36231")
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
@@ -10,7 +10,7 @@ set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC
 
 project(OATS VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
 
@@ -263,7 +263,7 @@ target_link_libraries(OATS PRIVATE ${BASS_LIBRARY})
 set(sqlite3_INCLUDE_DIR "../lib/sqlite3/include")
 set(sqlite3_LIBRARY_DIR "../lib/sqlite3/lib")
 
-find_library(SQLite3_LIBRARY sqlite3 ${sqlite3_LIBARRY_DIR})
+find_library(SQLite3_LIBRARY sqlite3 ${sqlite3_LIBRARY_DIR})
 if (SQLite3_LIBRARY)
     message(STATUS "SQLite3 library found!")
 endif()
