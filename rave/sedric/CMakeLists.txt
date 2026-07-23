@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.15)
 
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(MSVS_BUILD_NUM "14.50.35717")
+set(MSVS_BUILD_NUM "14.51.36231")
 
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
 
 project(sedric LANGUAGES CXX)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

@@ -4,7 +4,7 @@ string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 #set(CMAKE_CXX_COMPILER "C:/mingw64/bin/g++.exe")
 
-set(MSVS_BUILD_NUM "14.50.35717")
+set(MSVS_BUILD_NUM "14.51.36231")
 
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
 
@@ -22,7 +22,7 @@ endif()
 project(pixelplan VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -48,8 +48,6 @@ include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
 
 set(CMAKE_EXE_LINKER_FLAGS "-static")
-
-
 
 
 #set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")

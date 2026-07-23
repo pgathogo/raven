@@ -21,11 +21,12 @@ BASS_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/BassLib/Lib/bass.lib
 BUILD_SHARED_LIBS:BOOL=OFF
 
 //Path to a program.
-CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.50.35717/bin/Hostx64/x64/lib.exe
+CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lib.exe
 
-//Choose the type of build, options are: None Debug Release RelWithDebInfo
-// MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=Debug
+//Semicolon separated list of supported configuration types, only
+// supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
+// else will be ignored.
+CMAKE_CONFIGURATION_TYPES:STRING=Debug;Release;MinSizeRel;RelWithDebInfo
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /EHsc
@@ -61,12 +62,6 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
-
-//Enable/Disable output of build database during the build.
-CMAKE_EXPORT_BUILD_DATABASE:BOOL=OFF
-
-//Enable/Disable output of compile commands during generation.
-CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
 
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/CMakeFiles/pkgRedirects
@@ -108,7 +103,7 @@ CMAKE_INSTALL_MANDIR:PATH=
 CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files/pixelplan
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
@@ -123,10 +118,7 @@ CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
 CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.50.35717/bin/Hostx64/x64/link.exe
-
-//make program
-CMAKE_MAKE_PROGRAM:FILEPATH=C:/PROGRA~1/CMake/bin/ninja.exe
+CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -149,7 +141,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 
 //Path to a program.
-CMAKE_MT:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.28000.0/x64/mt.exe
+CMAKE_MT:FILEPATH=CMAKE_MT-NOTFOUND
 
 //Value Computed by CMake
 CMAKE_PROJECT_COMPAT_VERSION:STATIC=
@@ -182,7 +174,7 @@ CMAKE_PROJECT_VERSION_PATCH:STATIC=
 CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //RC compiler
-CMAKE_RC_COMPILER:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.28000.0/x64/rc.exe
+CMAKE_RC_COMPILER:FILEPATH=rc
 
 //Flags for Windows Resource Compiler during all build types.
 CMAKE_RC_FLAGS:STRING=-DWIN32
@@ -280,7 +272,7 @@ CPACK_SOURCE_7Z:BOOL=ON
 CPACK_SOURCE_ZIP:BOOL=ON
 
 //Path to a library.
-DbgHelp_LIBRARY:FILEPATH=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.28000.0/um/x64/DbgHelp.Lib
+DbgHelp_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/DbgHelp.Lib
 
 //The Set the PostgreSQL_INCLUDE_DIR cmake cache entry to the top-level
 // directory containing the PostgreSQL include directories. E.g
@@ -308,7 +300,7 @@ QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH:STRING=
 QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 
 //The directory containing a CMake configuration file for QT.
-QT_DIR:PATH=D:/QT632/lib/cmake/Qt6
+QT_DIR:PATH=D:/QT6111/lib/cmake/Qt6
 
 //Value Computed by CMake
 QXlsx_BINARY_DIR:STATIC=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/third_party/QXlsx/QXlsx
@@ -319,50 +311,56 @@ QXlsx_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 QXlsx_SOURCE_DIR:STATIC=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/third_party/QXlsx/QXlsx
 
+//The directory containing a CMake configuration file for Qt6Concurrent.
+Qt6Concurrent_DIR:PATH=D:/QT6111/lib/cmake/Qt6Concurrent
+
+//The directory containing a CMake configuration file for Qt6CorePrivate.
+Qt6CorePrivate_DIR:PATH=D:/QT6111/lib/cmake/Qt6CorePrivate
+
 //The directory containing a CMake configuration file for Qt6CoreTools.
-Qt6CoreTools_DIR:PATH=D:/QT632/lib/cmake/Qt6CoreTools
+Qt6CoreTools_DIR:PATH=D:/QT6111/lib/cmake/Qt6CoreTools
 
 //The directory containing a CMake configuration file for Qt6Core.
-Qt6Core_DIR:PATH=D:/QT632/lib/cmake/Qt6Core
+Qt6Core_DIR:PATH=D:/QT6111/lib/cmake/Qt6Core
 
 //The directory containing a CMake configuration file for Qt6EntryPointPrivate.
-Qt6EntryPointPrivate_DIR:PATH=D:/QT632/lib/cmake/Qt6EntryPointPrivate
+Qt6EntryPointPrivate_DIR:PATH=D:/QT6111/lib/cmake/Qt6EntryPointPrivate
+
+//The directory containing a CMake configuration file for Qt6GuiPrivate.
+Qt6GuiPrivate_DIR:PATH=D:/QT6111/lib/cmake/Qt6GuiPrivate
 
 //The directory containing a CMake configuration file for Qt6GuiTools.
-Qt6GuiTools_DIR:PATH=D:/QT632/lib/cmake/Qt6GuiTools
+Qt6GuiTools_DIR:PATH=D:/QT6111/lib/cmake/Qt6GuiTools
 
 //The directory containing a CMake configuration file for Qt6Gui.
-Qt6Gui_DIR:PATH=D:/QT632/lib/cmake/Qt6Gui
+Qt6Gui_DIR:PATH=D:/QT6111/lib/cmake/Qt6Gui
 
 //The directory containing a CMake configuration file for Qt6MultimediaWidgets.
-Qt6MultimediaWidgets_DIR:PATH=D:/QT632/lib/cmake/Qt6MultimediaWidgets
+Qt6MultimediaWidgets_DIR:PATH=D:/QT6111/lib/cmake/Qt6MultimediaWidgets
 
 //The directory containing a CMake configuration file for Qt6Multimedia.
-Qt6Multimedia_DIR:PATH=D:/QT632/lib/cmake/Qt6Multimedia
+Qt6Multimedia_DIR:PATH=D:/QT6111/lib/cmake/Qt6Multimedia
 
 //The directory containing a CMake configuration file for Qt6Network.
-Qt6Network_DIR:PATH=D:/QT632/lib/cmake/Qt6Network
+Qt6Network_DIR:PATH=D:/QT6111/lib/cmake/Qt6Network
 
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
-Qt6WidgetsTools_DIR:PATH=D:/QT632/lib/cmake/Qt6WidgetsTools
+Qt6WidgetsTools_DIR:PATH=D:/QT6111/lib/cmake/Qt6WidgetsTools
 
 //The directory containing a CMake configuration file for Qt6Widgets.
-Qt6Widgets_DIR:PATH=D:/QT632/lib/cmake/Qt6Widgets
-
-//The directory containing a CMake configuration file for Qt6ZlibPrivate.
-Qt6ZlibPrivate_DIR:PATH=D:/QT632/lib/cmake/Qt6ZlibPrivate
+Qt6Widgets_DIR:PATH=D:/QT6111/lib/cmake/Qt6Widgets
 
 //The directory containing a CMake configuration file for Qt6.
-Qt6_DIR:PATH=D:/QT632/lib/cmake/Qt6
+Qt6_DIR:PATH=D:/QT6111/lib/cmake/Qt6
 
 //The directory containing a CMake configuration file for Qt6xml.
-Qt6xml_DIR:PATH=D:/QT632/lib/cmake/Qt6Xml
+Qt6xml_DIR:PATH=D:/QT6111/lib/cmake/Qt6Xml
 
 //Path to a library.
 SQLite3_LIBRARY:FILEPATH=D:/Home/Clients/PMS/Raven/rave/lib/sqlite3/lib/sqlite3.lib
 
 //Path to a program.
-WINDEPLOYQT_EXECUTABLE:FILEPATH=D:/QT632/bin/windeployqt.exe
+WINDEPLOYQT_EXECUTABLE:FILEPATH=D:/QT6111/bin/windeployqt.exe
 
 //Value Computed by CMake
 pixelplan_BINARY_DIR:STATIC=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan
@@ -406,8 +404,6 @@ CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_STANDARD_LIBRARIES
 CMAKE_CXX_STANDARD_LIBRARIES-ADVANCED:INTERNAL=1
-//Path to cache edit program executable.
-CMAKE_EDIT_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake-gui.exe
 //Executable file format
 CMAKE_EXECUTABLE_FORMAT:INTERNAL=Unknown
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS
@@ -420,18 +416,14 @@ CMAKE_EXE_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_EXE_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_EXPORT_BUILD_DATABASE
-CMAKE_EXPORT_BUILD_DATABASE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_EXPORT_COMPILE_COMMANDS
-CMAKE_EXPORT_COMPILE_COMMANDS-ADVANCED:INTERNAL=1
 //Name of external makefile project generator.
 CMAKE_EXTRA_GENERATOR:INTERNAL=
 //Name of generator.
-CMAKE_GENERATOR:INTERNAL=Ninja
+CMAKE_GENERATOR:INTERNAL=Visual Studio 18 2026
 //Generator instance identifier.
-CMAKE_GENERATOR_INSTANCE:INTERNAL=
+CMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files/Microsoft Visual Studio/18/Community
 //Name of generator platform.
-CMAKE_GENERATOR_PLATFORM:INTERNAL=
+CMAKE_GENERATOR_PLATFORM:INTERNAL=x64
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Test CMAKE_HAVE_LIBC_PTHREAD
@@ -479,8 +471,6 @@ CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //Name of CMakeLists files to read
 CMAKE_LIST_FILE_NAME:INTERNAL=CMakeLists.txt
-//ADVANCED property for variable: CMAKE_MAKE_PROGRAM
-CMAKE_MAKE_PROGRAM-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS
 CMAKE_MODULE_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS_DEBUG
@@ -538,7 +528,6 @@ CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
-CMAKE_USER_MAKE_RULES_OVERRIDE:INTERNAL=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan/GNUMakeRulesOverwrite.cmake
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CPACK_BINARY_7Z
@@ -575,10 +564,14 @@ PostgreSQL_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 PostgreSQL_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PostgreSQL_TYPE_INCLUDE_DIR
 PostgreSQL_TYPE_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//Qt feature: aaudio (from target Qt6::Multimedia)
+QT_FEATURE_aaudio:INTERNAL=OFF
 //Qt feature: abstractbutton (from target Qt6::Widgets)
 QT_FEATURE_abstractbutton:INTERNAL=ON
 //Qt feature: abstractslider (from target Qt6::Widgets)
 QT_FEATURE_abstractslider:INTERNAL=ON
+//Qt feature: accept4 (from target Qt6::Core)
+QT_FEATURE_accept4:INTERNAL=OFF
 //Qt feature: accessibility (from target Qt6::Gui)
 QT_FEATURE_accessibility:INTERNAL=ON
 //Qt feature: accessibility_atspi_bridge (from target Qt6::Gui)
@@ -587,14 +580,10 @@ QT_FEATURE_accessibility_atspi_bridge:INTERNAL=OFF
 QT_FEATURE_action:INTERNAL=ON
 //Qt feature: aesni (from target Qt6::Core)
 QT_FEATURE_aesni:INTERNAL=ON
-//Qt feature: alloca (from target Qt6::Core)
-QT_FEATURE_alloca:INTERNAL=ON
-//Qt feature: alloca_h (from target Qt6::Core)
-QT_FEATURE_alloca_h:INTERNAL=OFF
-//Qt feature: alloca_malloc_h (from target Qt6::Core)
-QT_FEATURE_alloca_malloc_h:INTERNAL=ON
 //Qt feature: alsa (from target Qt6::Multimedia)
 QT_FEATURE_alsa:INTERNAL=OFF
+//Qt feature: android_16kb_pages (from target Qt6::Core)
+QT_FEATURE_android_16kb_pages:INTERNAL=OFF
 //Qt feature: android_style_assets (from target Qt6::Core)
 QT_FEATURE_android_style_assets:INTERNAL=OFF
 //Qt feature: animation (from target Qt6::Core)
@@ -605,6 +594,10 @@ QT_FEATURE_appstore_compliant:INTERNAL=OFF
 QT_FEATURE_arm_crc32:INTERNAL=OFF
 //Qt feature: arm_crypto (from target Qt6::Core)
 QT_FEATURE_arm_crypto:INTERNAL=OFF
+//Qt feature: arm_sve (from target Qt6::Core)
+QT_FEATURE_arm_sve:INTERNAL=OFF
+//Qt feature: async_io (from target Qt6::Core)
+QT_FEATURE_async_io:INTERNAL=ON
 //Qt feature: avfoundation (from target Qt6::Multimedia)
 QT_FEATURE_avfoundation:INTERNAL=OFF
 //Qt feature: avx (from target Qt6::Core)
@@ -627,18 +620,18 @@ QT_FEATURE_avx512ifma:INTERNAL=ON
 QT_FEATURE_avx512pf:INTERNAL=ON
 //Qt feature: avx512vbmi (from target Qt6::Core)
 QT_FEATURE_avx512vbmi:INTERNAL=ON
+//Qt feature: avx512vbmi2 (from target Qt6::Core)
+QT_FEATURE_avx512vbmi2:INTERNAL=ON
 //Qt feature: avx512vl (from target Qt6::Core)
 QT_FEATURE_avx512vl:INTERNAL=ON
 //Qt feature: backtrace (from target Qt6::Core)
 QT_FEATURE_backtrace:INTERNAL=OFF
+//Qt feature: broken_threadlocal_dtors (from target Qt6::Core)
+QT_FEATURE_broken_threadlocal_dtors:INTERNAL=ON
 //Qt feature: brotli (from target Qt6::Network)
 QT_FEATURE_brotli:INTERNAL=OFF
 //Qt feature: buttongroup (from target Qt6::Widgets)
 QT_FEATURE_buttongroup:INTERNAL=ON
-//Qt feature: c11 (from target Qt6::Core)
-QT_FEATURE_c11:INTERNAL=ON
-//Qt feature: c99 (from target Qt6::Core)
-QT_FEATURE_c99:INTERNAL=ON
 //Qt feature: calendarwidget (from target Qt6::Widgets)
 QT_FEATURE_calendarwidget:INTERNAL=ON
 //Qt feature: cborstreamreader (from target Qt6::Core)
@@ -673,32 +666,36 @@ QT_FEATURE_concatenatetablesproxymodel:INTERNAL=ON
 QT_FEATURE_concurrent:INTERNAL=ON
 //Qt feature: contextmenu (from target Qt6::Widgets)
 QT_FEATURE_contextmenu:INTERNAL=ON
+//Qt feature: copy_file_range (from target Qt6::Core)
+QT_FEATURE_copy_file_range:INTERNAL=OFF
+//Qt feature: coreaudio (from target Qt6::Multimedia)
+QT_FEATURE_coreaudio:INTERNAL=OFF
 //Qt feature: cpp_winrt (from target Qt6::Core)
-QT_FEATURE_cpp_winrt:INTERNAL=ON
+QT_FEATURE_cpp_winrt:INTERNAL=OFF
 //Qt feature: cross_compile (from target Qt6::Core)
 QT_FEATURE_cross_compile:INTERNAL=OFF
 //Qt feature: cssparser (from target Qt6::Gui)
 QT_FEATURE_cssparser:INTERNAL=ON
+//Qt feature: ctf (from target Qt6::Core)
+QT_FEATURE_ctf:INTERNAL=OFF
 //Qt feature: cursor (from target Qt6::Gui)
 QT_FEATURE_cursor:INTERNAL=ON
-//Qt feature: cxx11 (from target Qt6::Core)
-QT_FEATURE_cxx11:INTERNAL=ON
 //Qt feature: cxx11_future (from target Qt6::Core)
 QT_FEATURE_cxx11_future:INTERNAL=ON
-//Qt feature: cxx14 (from target Qt6::Core)
-QT_FEATURE_cxx14:INTERNAL=ON
-//Qt feature: cxx17 (from target Qt6::Core)
-QT_FEATURE_cxx17:INTERNAL=ON
 //Qt feature: cxx17_filesystem (from target Qt6::Core)
 QT_FEATURE_cxx17_filesystem:INTERNAL=ON
-//Qt feature: cxx1z (from target Qt6::Core)
-QT_FEATURE_cxx1z:INTERNAL=ON
 //Qt feature: cxx20 (from target Qt6::Core)
 QT_FEATURE_cxx20:INTERNAL=OFF
+//Qt feature: cxx20_format (from target Qt6::Core)
+QT_FEATURE_cxx20_format:INTERNAL=ON
+//Qt feature: cxx23_stacktrace (from target Qt6::Core)
+QT_FEATURE_cxx23_stacktrace:INTERNAL=OFF
 //Qt feature: cxx2a (from target Qt6::Core)
 QT_FEATURE_cxx2a:INTERNAL=OFF
 //Qt feature: cxx2b (from target Qt6::Core)
 QT_FEATURE_cxx2b:INTERNAL=OFF
+//Qt feature: cxx2c (from target Qt6::Core)
+QT_FEATURE_cxx2c:INTERNAL=OFF
 //Qt feature: datawidgetmapper (from target Qt6::Widgets)
 QT_FEATURE_datawidgetmapper:INTERNAL=ON
 //Qt feature: datestring (from target Qt6::Core)
@@ -712,9 +709,9 @@ QT_FEATURE_dbus:INTERNAL=ON
 //Qt feature: dbus_linked (from target Qt6::Core)
 QT_FEATURE_dbus_linked:INTERNAL=OFF
 //Qt feature: debug (from target Qt6::Core)
-QT_FEATURE_debug:INTERNAL=ON
+QT_FEATURE_debug:INTERNAL=OFF
 //Qt feature: debug_and_release (from target Qt6::Core)
-QT_FEATURE_debug_and_release:INTERNAL=ON
+QT_FEATURE_debug_and_release:INTERNAL=OFF
 //Qt feature: desktopservices (from target Qt6::Gui)
 QT_FEATURE_desktopservices:INTERNAL=ON
 //Qt feature: developer_build (from target Qt6::Core)
@@ -735,10 +732,16 @@ QT_FEATURE_directfb:INTERNAL=OFF
 QT_FEATURE_directwrite:INTERNAL=ON
 //Qt feature: directwrite3 (from target Qt6::Gui)
 QT_FEATURE_directwrite3:INTERNAL=ON
+//Qt feature: directwritecolrv1 (from target Qt6::Gui)
+QT_FEATURE_directwritecolrv1:INTERNAL=ON
+//Qt feature: dladdr (from target Qt6::Core)
+QT_FEATURE_dladdr:INTERNAL=OFF
 //Qt feature: dlopen (from target Qt6::Core)
 QT_FEATURE_dlopen:INTERNAL=OFF
 //Qt feature: dnslookup (from target Qt6::Network)
 QT_FEATURE_dnslookup:INTERNAL=ON
+//Qt feature: doc_snippets (from target Qt6::Core)
+QT_FEATURE_doc_snippets:INTERNAL=OFF
 //Qt feature: dockwidget (from target Qt6::Widgets)
 QT_FEATURE_dockwidget:INTERNAL=ON
 //Qt feature: dom (from target Qt6::Xml)
@@ -751,6 +754,8 @@ QT_FEATURE_draganddrop:INTERNAL=ON
 QT_FEATURE_drm_atomic:INTERNAL=OFF
 //Qt feature: dtls (from target Qt6::Network)
 QT_FEATURE_dtls:INTERNAL=OFF
+//Qt feature: dup3 (from target Qt6::Core)
+QT_FEATURE_dup3:INTERNAL=OFF
 //Qt feature: dynamicgl (from target Qt6::Gui)
 QT_FEATURE_dynamicgl:INTERNAL=ON
 //Qt feature: easingcurve (from target Qt6::Core)
@@ -759,6 +764,8 @@ QT_FEATURE_easingcurve:INTERNAL=ON
 QT_FEATURE_effects:INTERNAL=ON
 //Qt feature: egl (from target Qt6::Gui)
 QT_FEATURE_egl:INTERNAL=OFF
+//Qt feature: egl_extension_platform_wayland (from target Qt6::Gui)
+QT_FEATURE_egl_extension_platform_wayland:INTERNAL=OFF
 //Qt feature: egl_x11 (from target Qt6::Gui)
 QT_FEATURE_egl_x11:INTERNAL=OFF
 //Qt feature: eglfs (from target Qt6::Gui)
@@ -783,18 +790,22 @@ QT_FEATURE_eglfs_viv_wl:INTERNAL=OFF
 QT_FEATURE_eglfs_vsp2:INTERNAL=OFF
 //Qt feature: eglfs_x11 (from target Qt6::Gui)
 QT_FEATURE_eglfs_x11:INTERNAL=OFF
+//Qt feature: elf_private_full_version (from target Qt6::Core)
+QT_FEATURE_elf_private_full_version:INTERNAL=OFF
+//Qt feature: emojisegmenter (from target Qt6::Gui)
+QT_FEATURE_emojisegmenter:INTERNAL=ON
 //Qt feature: errormessage (from target Qt6::Widgets)
 QT_FEATURE_errormessage:INTERNAL=ON
 //Qt feature: etw (from target Qt6::Core)
 QT_FEATURE_etw:INTERNAL=OFF
 //Qt feature: evdev (from target Qt6::Gui)
 QT_FEATURE_evdev:INTERNAL=OFF
-//Qt feature: eventfd (from target Qt6::Core)
-QT_FEATURE_eventfd:INTERNAL=OFF
-//Qt feature: evr (from target Qt6::Multimedia)
-QT_FEATURE_evr:INTERNAL=ON
 //Qt feature: f16c (from target Qt6::Core)
 QT_FEATURE_f16c:INTERNAL=ON
+//Qt feature: ffmpeg (from target Qt6::Multimedia)
+QT_FEATURE_ffmpeg:INTERNAL=OFF
+//Qt feature: ffmpeg_stubs (from target Qt6::Multimedia)
+QT_FEATURE_ffmpeg_stubs:INTERNAL=OFF
 //Qt feature: filedialog (from target Qt6::Widgets)
 QT_FEATURE_filedialog:INTERNAL=ON
 //Qt feature: filesystemiterator (from target Qt6::Core)
@@ -811,6 +822,10 @@ QT_FEATURE_fontconfig:INTERNAL=OFF
 QT_FEATURE_fontdialog:INTERNAL=ON
 //Qt feature: force_asserts (from target Qt6::Core)
 QT_FEATURE_force_asserts:INTERNAL=OFF
+//Qt feature: force_bundled_libs (from target Qt6::Core)
+QT_FEATURE_force_bundled_libs:INTERNAL=OFF
+//Qt feature: force_system_libs (from target Qt6::Core)
+QT_FEATURE_force_system_libs:INTERNAL=OFF
 //Qt feature: forkfd_pidfd (from target Qt6::Core)
 QT_FEATURE_forkfd_pidfd:INTERNAL=OFF
 //Qt feature: formlayout (from target Qt6::Widgets)
@@ -823,8 +838,6 @@ QT_FEATURE_freetype:INTERNAL=ON
 QT_FEATURE_fscompleter:INTERNAL=ON
 //Qt feature: futimens (from target Qt6::Core)
 QT_FEATURE_futimens:INTERNAL=OFF
-//Qt feature: futimes (from target Qt6::Core)
-QT_FEATURE_futimes:INTERNAL=OFF
 //Qt feature: future (from target Qt6::Core)
 QT_FEATURE_future:INTERNAL=ON
 //Qt feature: gc_binaries (from target Qt6::Core)
@@ -841,12 +854,14 @@ QT_FEATURE_getifaddrs:INTERNAL=OFF
 QT_FEATURE_gif:INTERNAL=ON
 //Qt feature: glib (from target Qt6::Core)
 QT_FEATURE_glib:INTERNAL=OFF
-//Qt feature: glibc (from target Qt6::Core)
-QT_FEATURE_glibc:INTERNAL=OFF
+//Qt feature: glibc_fortify_source (from target Qt6::Core)
+QT_FEATURE_glibc_fortify_source:INTERNAL=OFF
 //Qt feature: gpu_vivante (from target Qt6::Multimedia)
 QT_FEATURE_gpu_vivante:INTERNAL=OFF
 //Qt feature: graphicseffect (from target Qt6::Widgets)
 QT_FEATURE_graphicseffect:INTERNAL=ON
+//Qt feature: graphicsframecapture (from target Qt6::Gui)
+QT_FEATURE_graphicsframecapture:INTERNAL=OFF
 //Qt feature: graphicsview (from target Qt6::Widgets)
 QT_FEATURE_graphicsview:INTERNAL=ON
 //Qt feature: groupbox (from target Qt6::Widgets)
@@ -855,12 +870,14 @@ QT_FEATURE_groupbox:INTERNAL=ON
 QT_FEATURE_gssapi:INTERNAL=OFF
 //Qt feature: gstreamer (from target Qt6::Multimedia)
 QT_FEATURE_gstreamer:INTERNAL=OFF
-//Qt feature: gstreamer_1_0 (from target Qt6::Multimedia)
-QT_FEATURE_gstreamer_1_0:INTERNAL=OFF
-//Qt feature: gstreamer_app (from target Qt6::Multimedia)
-QT_FEATURE_gstreamer_app:INTERNAL=OFF
 //Qt feature: gstreamer_gl (from target Qt6::Multimedia)
 QT_FEATURE_gstreamer_gl:INTERNAL=OFF
+//Qt feature: gstreamer_gl_egl (from target Qt6::Multimedia)
+QT_FEATURE_gstreamer_gl_egl:INTERNAL=OFF
+//Qt feature: gstreamer_gl_wayland (from target Qt6::Multimedia)
+QT_FEATURE_gstreamer_gl_wayland:INTERNAL=OFF
+//Qt feature: gstreamer_gl_x11 (from target Qt6::Multimedia)
+QT_FEATURE_gstreamer_gl_x11:INTERNAL=OFF
 //Qt feature: gstreamer_photography (from target Qt6::Multimedia)
 QT_FEATURE_gstreamer_photography:INTERNAL=OFF
 //Qt feature: gtk3 (from target Qt6::Widgets)
@@ -881,8 +898,6 @@ QT_FEATURE_ico:INTERNAL=ON
 QT_FEATURE_icu:INTERNAL=OFF
 //Qt feature: identityproxymodel (from target Qt6::Core)
 QT_FEATURE_identityproxymodel:INTERNAL=ON
-//Qt feature: ifr_index (from target Qt6::Network)
-QT_FEATURE_ifr_index:INTERNAL=OFF
 //Qt feature: im (from target Qt6::Gui)
 QT_FEATURE_im:INTERNAL=ON
 //Qt feature: image_heuristic_mask (from target Qt6::Gui)
@@ -914,7 +929,7 @@ QT_FEATURE_integrityfb:INTERNAL=OFF
 //Qt feature: integrityhid (from target Qt6::Gui)
 QT_FEATURE_integrityhid:INTERNAL=OFF
 //Qt feature: intelcet (from target Qt6::Core)
-QT_FEATURE_intelcet:INTERNAL=OFF
+QT_FEATURE_intelcet:INTERNAL=ON
 //Qt feature: ipv6ifname (from target Qt6::Network)
 QT_FEATURE_ipv6ifname:INTERNAL=OFF
 //Qt feature: islamiccivilcalendar (from target Qt6::Core)
@@ -925,6 +940,8 @@ QT_FEATURE_itemmodel:INTERNAL=ON
 QT_FEATURE_itemviews:INTERNAL=ON
 //Qt feature: jalalicalendar (from target Qt6::Core)
 QT_FEATURE_jalalicalendar:INTERNAL=ON
+//Qt feature: jemalloc (from target Qt6::Core)
+QT_FEATURE_jemalloc:INTERNAL=OFF
 //Qt feature: journald (from target Qt6::Core)
 QT_FEATURE_journald:INTERNAL=OFF
 //Qt feature: jpeg (from target Qt6::Gui)
@@ -937,8 +954,12 @@ QT_FEATURE_kms:INTERNAL=OFF
 QT_FEATURE_label:INTERNAL=ON
 //Qt feature: largefile (from target Qt6::Core)
 QT_FEATURE_largefile:INTERNAL=ON
+//Qt feature: lasx (from target Qt6::Core)
+QT_FEATURE_lasx:INTERNAL=OFF
 //Qt feature: lcdnumber (from target Qt6::Widgets)
 QT_FEATURE_lcdnumber:INTERNAL=ON
+//Qt feature: libcpp_hardening (from target Qt6::Core)
+QT_FEATURE_libcpp_hardening:INTERNAL=OFF
 //Qt feature: libinput (from target Qt6::Gui)
 QT_FEATURE_libinput:INTERNAL=OFF
 //Qt feature: libinput_axis_api (from target Qt6::Gui)
@@ -949,8 +970,14 @@ QT_FEATURE_libinput_hires_wheel_support:INTERNAL=OFF
 QT_FEATURE_libproxy:INTERNAL=OFF
 //Qt feature: library (from target Qt6::Core)
 QT_FEATURE_library:INTERNAL=ON
+//Qt feature: libresolv (from target Qt6::Network)
+QT_FEATURE_libresolv:INTERNAL=OFF
+//Qt feature: libstdcpp_assertions (from target Qt6::Core)
+QT_FEATURE_libstdcpp_assertions:INTERNAL=OFF
 //Qt feature: libudev (from target Qt6::Core)
 QT_FEATURE_libudev:INTERNAL=OFF
+//Qt feature: liburing (from target Qt6::Core)
+QT_FEATURE_liburing:INTERNAL=OFF
 //Qt feature: lineedit (from target Qt6::Widgets)
 QT_FEATURE_lineedit:INTERNAL=ON
 //Qt feature: linkat (from target Qt6::Core)
@@ -969,18 +996,30 @@ QT_FEATURE_listview:INTERNAL=ON
 QT_FEATURE_listwidget:INTERNAL=ON
 //Qt feature: localserver (from target Qt6::Network)
 QT_FEATURE_localserver:INTERNAL=ON
+//Qt feature: localtime_r (from target Qt6::Core)
+QT_FEATURE_localtime_r:INTERNAL=OFF
+//Qt feature: localtime_s (from target Qt6::Core)
+QT_FEATURE_localtime_s:INTERNAL=ON
+//Qt feature: lsx (from target Qt6::Core)
+QT_FEATURE_lsx:INTERNAL=OFF
 //Qt feature: lttng (from target Qt6::Core)
 QT_FEATURE_lttng:INTERNAL=OFF
 //Qt feature: mainwindow (from target Qt6::Widgets)
 QT_FEATURE_mainwindow:INTERNAL=ON
 //Qt feature: mdiarea (from target Qt6::Widgets)
 QT_FEATURE_mdiarea:INTERNAL=ON
+//Qt feature: memmem (from target Qt6::Core)
+QT_FEATURE_memmem:INTERNAL=OFF
+//Qt feature: memrchr (from target Qt6::Core)
+QT_FEATURE_memrchr:INTERNAL=OFF
 //Qt feature: menu (from target Qt6::Widgets)
 QT_FEATURE_menu:INTERNAL=ON
 //Qt feature: menubar (from target Qt6::Widgets)
 QT_FEATURE_menubar:INTERNAL=ON
 //Qt feature: messagebox (from target Qt6::Widgets)
 QT_FEATURE_messagebox:INTERNAL=ON
+//Qt feature: metal (from target Qt6::Gui)
+QT_FEATURE_metal:INTERNAL=OFF
 //Qt feature: mimetype (from target Qt6::Core)
 QT_FEATURE_mimetype:INTERNAL=ON
 //Qt feature: mimetype_database (from target Qt6::Core)
@@ -997,6 +1036,10 @@ QT_FEATURE_movie:INTERNAL=ON
 QT_FEATURE_mtdev:INTERNAL=OFF
 //Qt feature: multiprocess (from target Qt6::Gui)
 QT_FEATURE_multiprocess:INTERNAL=ON
+//Qt feature: native_android_backend (from target Qt6::Multimedia)
+QT_FEATURE_native_android_backend:INTERNAL=OFF
+//Qt feature: native_windows_backend (from target Qt6::Multimedia)
+QT_FEATURE_native_windows_backend:INTERNAL=ON
 //Qt feature: neon (from target Qt6::Core)
 QT_FEATURE_neon:INTERNAL=OFF
 //Qt feature: network (from target Qt6::Core)
@@ -1009,10 +1052,10 @@ QT_FEATURE_networkinterface:INTERNAL=ON
 QT_FEATURE_networklistmanager:INTERNAL=ON
 //Qt feature: networkproxy (from target Qt6::Network)
 QT_FEATURE_networkproxy:INTERNAL=ON
+//Qt feature: no_direct_extern_access (from target Qt6::Core)
+QT_FEATURE_no_direct_extern_access:INTERNAL=OFF
 //Qt feature: no_pkg_config (from target Qt6::Core)
 QT_FEATURE_no_pkg_config:INTERNAL=ON
-//Qt feature: no_prefix (from target Qt6::Core)
-QT_FEATURE_no_prefix:INTERNAL=OFF
 //Qt feature: ocsp (from target Qt6::Network)
 QT_FEATURE_ocsp:INTERNAL=OFF
 //Qt feature: opengl (from target Qt6::Gui)
@@ -1025,26 +1068,38 @@ QT_FEATURE_opengles3:INTERNAL=OFF
 QT_FEATURE_opengles31:INTERNAL=OFF
 //Qt feature: opengles32 (from target Qt6::Gui)
 QT_FEATURE_opengles32:INTERNAL=OFF
-//Qt feature: openssl (from target Qt6::Network)
+//Qt feature: openssl (from target Qt6::Core)
 QT_FEATURE_openssl:INTERNAL=OFF
-//Qt feature: openssl_linked (from target Qt6::Network)
+//Qt feature: openssl_hash (from target Qt6::Core)
+QT_FEATURE_openssl_hash:INTERNAL=OFF
+//Qt feature: openssl_linked (from target Qt6::Core)
 QT_FEATURE_openssl_linked:INTERNAL=OFF
-//Qt feature: opensslv11 (from target Qt6::Network)
+//Qt feature: opensslv11 (from target Qt6::Core)
 QT_FEATURE_opensslv11:INTERNAL=OFF
+//Qt feature: opensslv30 (from target Qt6::Core)
+QT_FEATURE_opensslv30:INTERNAL=OFF
 //Qt feature: openvg (from target Qt6::Gui)
 QT_FEATURE_openvg:INTERNAL=OFF
 //Qt feature: pcre2 (from target Qt6::Core)
 QT_FEATURE_pcre2:INTERNAL=ON
 //Qt feature: pdf (from target Qt6::Gui)
 QT_FEATURE_pdf:INTERNAL=ON
+//Qt feature: permissions (from target Qt6::Core)
+QT_FEATURE_permissions:INTERNAL=ON
 //Qt feature: picture (from target Qt6::Gui)
 QT_FEATURE_picture:INTERNAL=ON
+//Qt feature: pipewire (from target Qt6::Multimedia)
+QT_FEATURE_pipewire:INTERNAL=OFF
+//Qt feature: pipewire_screencapture (from target Qt6::Multimedia)
+QT_FEATURE_pipewire_screencapture:INTERNAL=OFF
 //Qt feature: pkg_config (from target Qt6::Core)
 QT_FEATURE_pkg_config:INTERNAL=OFF
 //Qt feature: plugin_manifest (from target Qt6::Core)
 QT_FEATURE_plugin_manifest:INTERNAL=ON
 //Qt feature: png (from target Qt6::Gui)
 QT_FEATURE_png:INTERNAL=ON
+//Qt feature: poll_exit_on_error (from target Qt6::Core)
+QT_FEATURE_poll_exit_on_error:INTERNAL=OFF
 //Qt feature: poll_poll (from target Qt6::Core)
 QT_FEATURE_poll_poll:INTERNAL=OFF
 //Qt feature: poll_pollts (from target Qt6::Core)
@@ -1055,8 +1110,10 @@ QT_FEATURE_poll_ppoll:INTERNAL=OFF
 QT_FEATURE_poll_select:INTERNAL=OFF
 //Qt feature: posix_fallocate (from target Qt6::Core)
 QT_FEATURE_posix_fallocate:INTERNAL=OFF
-//Qt feature: precompile_header (from target Qt6::Core)
-QT_FEATURE_precompile_header:INTERNAL=ON
+//Qt feature: posix_sem (from target Qt6::Core)
+QT_FEATURE_posix_sem:INTERNAL=OFF
+//Qt feature: posix_shm (from target Qt6::Core)
+QT_FEATURE_posix_shm:INTERNAL=OFF
 //Qt feature: printsupport (from target Qt6::Core)
 QT_FEATURE_printsupport:INTERNAL=ON
 //Qt feature: private_tests (from target Qt6::Core)
@@ -1069,10 +1126,18 @@ QT_FEATURE_processenvironment:INTERNAL=ON
 QT_FEATURE_progressbar:INTERNAL=ON
 //Qt feature: progressdialog (from target Qt6::Widgets)
 QT_FEATURE_progressdialog:INTERNAL=ON
-//Qt feature: properties (from target Qt6::Core)
-QT_FEATURE_properties:INTERNAL=ON
 //Qt feature: proxymodel (from target Qt6::Core)
 QT_FEATURE_proxymodel:INTERNAL=ON
+//Qt feature: pthread_clockjoin (from target Qt6::Core)
+QT_FEATURE_pthread_clockjoin:INTERNAL=OFF
+//Qt feature: pthread_condattr_setclock (from target Qt6::Core)
+QT_FEATURE_pthread_condattr_setclock:INTERNAL=OFF
+//Qt feature: pthread_timedjoin (from target Qt6::Core)
+QT_FEATURE_pthread_timedjoin:INTERNAL=OFF
+//Qt feature: publicsuffix_qt (from target Qt6::Network)
+QT_FEATURE_publicsuffix_qt:INTERNAL=ON
+//Qt feature: publicsuffix_system (from target Qt6::Network)
+QT_FEATURE_publicsuffix_system:INTERNAL=OFF
 //Qt feature: pulseaudio (from target Qt6::Multimedia)
 QT_FEATURE_pulseaudio:INTERNAL=OFF
 //Qt feature: pushbutton (from target Qt6::Widgets)
@@ -1081,6 +1146,8 @@ QT_FEATURE_pushbutton:INTERNAL=ON
 QT_FEATURE_qqnx_imf:INTERNAL=OFF
 //Qt feature: qqnx_pps (from target Qt6::Core)
 QT_FEATURE_qqnx_pps:INTERNAL=OFF
+//Qt feature: qtgui_threadpool (from target Qt6::Gui)
+QT_FEATURE_qtgui_threadpool:INTERNAL=ON
 //Qt feature: radiobutton (from target Qt6::Widgets)
 QT_FEATURE_radiobutton:INTERNAL=ON
 //Qt feature: raster_64bit (from target Qt6::Gui)
@@ -1099,14 +1166,20 @@ QT_FEATURE_reduce_relocations:INTERNAL=OFF
 QT_FEATURE_regularexpression:INTERNAL=ON
 //Qt feature: relocatable (from target Qt6::Core)
 QT_FEATURE_relocatable:INTERNAL=ON
+//Qt feature: relro_now_linker (from target Qt6::Core)
+QT_FEATURE_relro_now_linker:INTERNAL=OFF
 //Qt feature: renameat2 (from target Qt6::Core)
 QT_FEATURE_renameat2:INTERNAL=OFF
+//Qt feature: res_setservers (from target Qt6::Network)
+QT_FEATURE_res_setservers:INTERNAL=OFF
 //Qt feature: resizehandler (from target Qt6::Widgets)
 QT_FEATURE_resizehandler:INTERNAL=ON
 //Qt feature: rpath (from target Qt6::Core)
 QT_FEATURE_rpath:INTERNAL=OFF
 //Qt feature: rubberband (from target Qt6::Widgets)
 QT_FEATURE_rubberband:INTERNAL=ON
+//Qt feature: run_opengl_tests (from target Qt6::Gui)
+QT_FEATURE_run_opengl_tests:INTERNAL=ON
 //Qt feature: schannel (from target Qt6::Network)
 QT_FEATURE_schannel:INTERNAL=ON
 //Qt feature: scrollarea (from target Qt6::Widgets)
@@ -1137,8 +1210,6 @@ QT_FEATURE_sharedmemory:INTERNAL=ON
 QT_FEATURE_shortcut:INTERNAL=ON
 //Qt feature: signaling_nan (from target Qt6::Core)
 QT_FEATURE_signaling_nan:INTERNAL=ON
-//Qt feature: simdAlways (from target Qt6::Core)
-QT_FEATURE_simdAlways:INTERNAL=ON
 //Qt feature: simulator_and_device (from target Qt6::Core)
 QT_FEATURE_simulator_and_device:INTERNAL=OFF
 //Qt feature: sizegrip (from target Qt6::Widgets)
@@ -1151,6 +1222,10 @@ QT_FEATURE_slog2:INTERNAL=OFF
 QT_FEATURE_socks5:INTERNAL=ON
 //Qt feature: sortfilterproxymodel (from target Qt6::Core)
 QT_FEATURE_sortfilterproxymodel:INTERNAL=ON
+//Qt feature: spatialaudio (from target Qt6::Multimedia)
+QT_FEATURE_spatialaudio:INTERNAL=ON
+//Qt feature: spatialaudio_quick3d (from target Qt6::Multimedia)
+QT_FEATURE_spatialaudio_quick3d:INTERNAL=ON
 //Qt feature: spinbox (from target Qt6::Widgets)
 QT_FEATURE_spinbox:INTERNAL=ON
 //Qt feature: splashscreen (from target Qt6::Widgets)
@@ -1173,8 +1248,10 @@ QT_FEATURE_ssl:INTERNAL=ON
 QT_FEATURE_sspi:INTERNAL=ON
 //Qt feature: ssse3 (from target Qt6::Core)
 QT_FEATURE_ssse3:INTERNAL=ON
-//Qt feature: stack_protector_strong (from target Qt6::Core)
-QT_FEATURE_stack_protector_strong:INTERNAL=OFF
+//Qt feature: stack_clash_protection (from target Qt6::Core)
+QT_FEATURE_stack_clash_protection:INTERNAL=OFF
+//Qt feature: stack_protector (from target Qt6::Core)
+QT_FEATURE_stack_protector:INTERNAL=OFF
 //Qt feature: stackedwidget (from target Qt6::Widgets)
 QT_FEATURE_stackedwidget:INTERNAL=ON
 //Qt feature: standarditemmodel (from target Qt6::Gui)
@@ -1185,8 +1262,6 @@ QT_FEATURE_static:INTERNAL=OFF
 QT_FEATURE_statusbar:INTERNAL=ON
 //Qt feature: statustip (from target Qt6::Widgets)
 QT_FEATURE_statustip:INTERNAL=ON
-//Qt feature: statx (from target Qt6::Core)
-QT_FEATURE_statx:INTERNAL=OFF
 //Qt feature: std_atomic64 (from target Qt6::Core)
 QT_FEATURE_std_atomic64:INTERNAL=ON
 //Qt feature: stdlib_libcpp (from target Qt6::Core)
@@ -1203,6 +1278,8 @@ QT_FEATURE_style_mac:INTERNAL=OFF
 QT_FEATURE_style_stylesheet:INTERNAL=ON
 //Qt feature: style_windows (from target Qt6::Widgets)
 QT_FEATURE_style_windows:INTERNAL=ON
+//Qt feature: style_windows11 (from target Qt6::Widgets)
+QT_FEATURE_style_windows11:INTERNAL=ON
 //Qt feature: style_windowsvista (from target Qt6::Widgets)
 QT_FEATURE_style_windowsvista:INTERNAL=ON
 //Qt feature: syntaxhighlighter (from target Qt6::Widgets)
@@ -1235,6 +1312,10 @@ QT_FEATURE_system_zlib:INTERNAL=OFF
 QT_FEATURE_systemsemaphore:INTERNAL=ON
 //Qt feature: systemtrayicon (from target Qt6::Gui)
 QT_FEATURE_systemtrayicon:INTERNAL=ON
+//Qt feature: sysv_sem (from target Qt6::Core)
+QT_FEATURE_sysv_sem:INTERNAL=OFF
+//Qt feature: sysv_shm (from target Qt6::Core)
+QT_FEATURE_sysv_shm:INTERNAL=OFF
 //Qt feature: tabbar (from target Qt6::Widgets)
 QT_FEATURE_tabbar:INTERNAL=ON
 //Qt feature: tabletevent (from target Qt6::Gui)
@@ -1247,6 +1328,10 @@ QT_FEATURE_tablewidget:INTERNAL=ON
 QT_FEATURE_tabwidget:INTERNAL=ON
 //Qt feature: temporaryfile (from target Qt6::Core)
 QT_FEATURE_temporaryfile:INTERNAL=ON
+//Qt feature: test_gui (from target Qt6::Core)
+QT_FEATURE_test_gui:INTERNAL=ON
+//Qt feature: test_squish (from target Qt6::Core)
+QT_FEATURE_test_squish:INTERNAL=ON
 //Qt feature: testlib (from target Qt6::Core)
 QT_FEATURE_testlib:INTERNAL=ON
 //Qt feature: textbrowser (from target Qt6::Widgets)
@@ -1267,6 +1352,10 @@ QT_FEATURE_textodfwriter:INTERNAL=ON
 QT_FEATURE_thread:INTERNAL=ON
 //Qt feature: timezone (from target Qt6::Core)
 QT_FEATURE_timezone:INTERNAL=ON
+//Qt feature: timezone_locale (from target Qt6::Core)
+QT_FEATURE_timezone_locale:INTERNAL=ON
+//Qt feature: timezone_tzdb (from target Qt6::Core)
+QT_FEATURE_timezone_tzdb:INTERNAL=OFF
 //Qt feature: toolbar (from target Qt6::Widgets)
 QT_FEATURE_toolbar:INTERNAL=ON
 //Qt feature: toolbox (from target Qt6::Widgets)
@@ -1285,6 +1374,8 @@ QT_FEATURE_transposeproxymodel:INTERNAL=ON
 QT_FEATURE_treeview:INTERNAL=ON
 //Qt feature: treewidget (from target Qt6::Widgets)
 QT_FEATURE_treewidget:INTERNAL=ON
+//Qt feature: trivial_auto_var_init_pattern (from target Qt6::Core)
+QT_FEATURE_trivial_auto_var_init_pattern:INTERNAL=OFF
 //Qt feature: tslib (from target Qt6::Gui)
 QT_FEATURE_tslib:INTERNAL=OFF
 //Qt feature: tuiotouch (from target Qt6::Gui)
@@ -1307,8 +1398,16 @@ QT_FEATURE_use_gold_linker:INTERNAL=OFF
 QT_FEATURE_use_lld_linker:INTERNAL=OFF
 //Qt feature: use_mold_linker (from target Qt6::Core)
 QT_FEATURE_use_mold_linker:INTERNAL=OFF
+//Qt feature: vaapi (from target Qt6::Multimedia)
+QT_FEATURE_vaapi:INTERNAL=OFF
+//Qt feature: vaes (from target Qt6::Core)
+QT_FEATURE_vaes:INTERNAL=ON
 //Qt feature: validator (from target Qt6::Gui)
 QT_FEATURE_validator:INTERNAL=ON
+//Qt feature: version_tagging (from target Qt6::Core)
+QT_FEATURE_version_tagging:INTERNAL=ON
+//Qt feature: videotoolbox (from target Qt6::Multimedia)
+QT_FEATURE_videotoolbox:INTERNAL=OFF
 //Qt feature: vkgen (from target Qt6::Gui)
 QT_FEATURE_vkgen:INTERNAL=ON
 //Qt feature: vkkhrdisplay (from target Qt6::Gui)
@@ -1319,6 +1418,54 @@ QT_FEATURE_vnc:INTERNAL=OFF
 QT_FEATURE_vsp2:INTERNAL=OFF
 //Qt feature: vulkan (from target Qt6::Gui)
 QT_FEATURE_vulkan:INTERNAL=OFF
+//Qt feature: vxpipedrv (from target Qt6::Core)
+QT_FEATURE_vxpipedrv:INTERNAL=OFF
+//Qt feature: vxworksevdev (from target Qt6::Gui)
+QT_FEATURE_vxworksevdev:INTERNAL=OFF
+//Qt feature: wasapi (from target Qt6::Multimedia)
+QT_FEATURE_wasapi:INTERNAL=ON
+//Qt feature: wasm (from target Qt6::Multimedia)
+QT_FEATURE_wasm:INTERNAL=OFF
+//Qt feature: wasm_exceptions (from target Qt6::Core)
+QT_FEATURE_wasm_exceptions:INTERNAL=OFF
+//Qt feature: wasm_jspi (from target Qt6::Core)
+QT_FEATURE_wasm_jspi:INTERNAL=OFF
+//Qt feature: wasm_simd128 (from target Qt6::Core)
+QT_FEATURE_wasm_simd128:INTERNAL=OFF
+//Qt feature: wayland (from target Qt6::Gui)
+QT_FEATURE_wayland:INTERNAL=OFF
+//Qt feature: wayland_brcm (from target Qt6::Gui)
+QT_FEATURE_wayland_brcm:INTERNAL=OFF
+//Qt feature: wayland_client (from target Qt6::Gui)
+QT_FEATURE_wayland_client:INTERNAL=OFF
+//Qt feature: wayland_client_fullscreen_shell_v1 (from target Qt6::Gui)
+QT_FEATURE_wayland_client_fullscreen_shell_v1:INTERNAL=OFF
+//Qt feature: wayland_client_primary_selection (from target Qt6::Gui)
+QT_FEATURE_wayland_client_primary_selection:INTERNAL=ON
+//Qt feature: wayland_client_wl_shell (from target Qt6::Gui)
+QT_FEATURE_wayland_client_wl_shell:INTERNAL=OFF
+//Qt feature: wayland_client_xdg_shell (from target Qt6::Gui)
+QT_FEATURE_wayland_client_xdg_shell:INTERNAL=OFF
+//Qt feature: wayland_datadevice (from target Qt6::Gui)
+QT_FEATURE_wayland_datadevice:INTERNAL=ON
+//Qt feature: wayland_dmabuf_server_buffer (from target Qt6::Gui)
+QT_FEATURE_wayland_dmabuf_server_buffer:INTERNAL=OFF
+//Qt feature: wayland_drm_egl_server_buffer (from target Qt6::Gui)
+QT_FEATURE_wayland_drm_egl_server_buffer:INTERNAL=OFF
+//Qt feature: wayland_egl (from target Qt6::Gui)
+QT_FEATURE_wayland_egl:INTERNAL=OFF
+//Qt feature: wayland_libhybris_egl_server_buffer (from target
+// Qt6::Gui)
+QT_FEATURE_wayland_libhybris_egl_server_buffer:INTERNAL=OFF
+//Qt feature: wayland_server (from target Qt6::Gui)
+QT_FEATURE_wayland_server:INTERNAL=OFF
+//Qt feature: wayland_shm_emulation_server_buffer (from target
+// Qt6::Gui)
+QT_FEATURE_wayland_shm_emulation_server_buffer:INTERNAL=OFF
+//Qt feature: wayland_vulkan_server_buffer (from target Qt6::Gui)
+QT_FEATURE_wayland_vulkan_server_buffer:INTERNAL=OFF
+//Qt feature: waylandscanner (from target Qt6::Gui)
+QT_FEATURE_waylandscanner:INTERNAL=OFF
 //Qt feature: whatsthis (from target Qt6::Gui)
 QT_FEATURE_whatsthis:INTERNAL=ON
 //Qt feature: wheelevent (from target Qt6::Gui)
@@ -1327,12 +1474,17 @@ QT_FEATURE_wheelevent:INTERNAL=ON
 QT_FEATURE_widgets:INTERNAL=ON
 //Qt feature: widgettextcontrol (from target Qt6::Widgets)
 QT_FEATURE_widgettextcontrol:INTERNAL=ON
+//Qt feature: windows_ioring (from target Qt6::Core)
+QT_FEATURE_windows_ioring:INTERNAL=ON
+//Qt feature: windows_ioring_skip_builder_param_checks (from target
+// Qt6::Core)
+QT_FEATURE_windows_ioring_skip_builder_param_checks:INTERNAL=ON
+//Qt feature: winsdkicu (from target Qt6::Core)
+QT_FEATURE_winsdkicu:INTERNAL=ON
 //Qt feature: wizard (from target Qt6::Widgets)
 QT_FEATURE_wizard:INTERNAL=ON
-//Qt feature: wmf (from target Qt6::Multimedia)
-QT_FEATURE_wmf:INTERNAL=ON
-//Qt feature: wmsdk (from target Qt6::Multimedia)
-QT_FEATURE_wmsdk:INTERNAL=ON
+//Qt feature: x86intrin (from target Qt6::Core)
+QT_FEATURE_x86intrin:INTERNAL=ON
 //Qt feature: xcb (from target Qt6::Gui)
 QT_FEATURE_xcb:INTERNAL=OFF
 //Qt feature: xcb_egl_plugin (from target Qt6::Gui)
@@ -1341,8 +1493,6 @@ QT_FEATURE_xcb_egl_plugin:INTERNAL=OFF
 QT_FEATURE_xcb_glx:INTERNAL=OFF
 //Qt feature: xcb_glx_plugin (from target Qt6::Gui)
 QT_FEATURE_xcb_glx_plugin:INTERNAL=OFF
-//Qt feature: xcb_native_painting (from target Qt6::Gui)
-QT_FEATURE_xcb_native_painting:INTERNAL=OFF
 //Qt feature: xcb_sm (from target Qt6::Gui)
 QT_FEATURE_xcb_sm:INTERNAL=OFF
 //Qt feature: xcb_xlib (from target Qt6::Gui)
@@ -1361,10 +1511,8 @@ QT_FEATURE_xmlstream:INTERNAL=ON
 QT_FEATURE_xmlstreamreader:INTERNAL=ON
 //Qt feature: xmlstreamwriter (from target Qt6::Core)
 QT_FEATURE_xmlstreamwriter:INTERNAL=ON
-//Qt feature: xrender (from target Qt6::Gui)
-QT_FEATURE_xrender:INTERNAL=OFF
 //Qt feature: zstd (from target Qt6::Core)
 QT_FEATURE_zstd:INTERNAL=OFF
 //CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=D:/Home/Clients/PMS/Raven/pixelplan/rave/PixelPlan
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files/pixelplan
 

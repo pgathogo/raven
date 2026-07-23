@@ -327,7 +327,6 @@ void MainWindow::test_new_booking()
     }
   */
 
-
 }
 
 void MainWindow::print_comm_log()
