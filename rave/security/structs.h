@@ -33,6 +33,16 @@ inline std::ostream& operator<<(std::ostream& os, const StationInfo& si) {
 
 
 struct ConnInfo{
+    ConnInfo(){}
+    ConnInfo(const StationInfo& si, const std::string& uname,
+             const std::string& pword) {
+        host = si.ip_address.toStdString();
+        port = si.port_no;
+        db_name = si.db_name.toStdString();
+        username = uname;
+        password = pword;
+    }
+
     std::string host{""};
     std::string username{""};
     std::string password{""};
