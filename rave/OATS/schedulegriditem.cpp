@@ -22,10 +22,10 @@ namespace OATS{
 
         //setStyleSheet(style);
 
-
         m_time_panel = std::make_unique<OATS::TimeGridPanel>(this);
         m_track_panel = std::make_unique<OATS::TrackGridPanel>(this);
         m_status_panel = std::make_unique<OATS::StatusGridPanel>(this);
+
         m_transition_mode_panel = std::make_unique<OATS::TransitionModeGridPanel>(this);
 
         int current_hour = QTime::currentTime().hour();

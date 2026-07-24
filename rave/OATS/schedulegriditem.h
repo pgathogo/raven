@@ -22,6 +22,7 @@ namespace OATS{
     class TrackGridPanel;
     class StatusGridPanel;
     class TransitionModeGridPanel;
+    class GridPanel;
 
     enum class ItemStatus;
 

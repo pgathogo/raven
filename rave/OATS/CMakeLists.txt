@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.15)
 
 set(MSVC_BUILD "14.51.36231")
 
+
 string(REGEX REPLACE "/W[3|4]" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVC_BUILD}/bin/Hostx64/x64/cl.exe")
@@ -13,6 +14,8 @@ project(OATS VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_BUILD_TYPE "Release")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
+# set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>") # For /MT and /MTd
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -233,7 +236,7 @@ if (MSVC)
      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
  endif()
 
-target_compile_options(OATS PRIVATE /MT)
+# target_compile_options(OATS PRIVATE /MT)
 target_link_options(OATS PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
 target_link_libraries(OATS PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

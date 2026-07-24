@@ -66,24 +66,28 @@ namespace OATS{
 
     void TransitionModeGridPanel::contextMenuEvent(QContextMenuEvent* event)
     {
+
+        if (m_schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER)
+            return;
+
         QMenu menu;
         m_act_stop = std::make_unique<QAction>("Stop");
         m_act_mix = std::make_unique<QAction>("Mix");
-        m_act_cut = std::make_unique<QAction>("Cut");
+        //m_act_cut = std::make_unique<QAction>("Cut");
 
         if (m_schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
             m_act_stop->setEnabled(false);
             m_act_mix->setEnabled(false);
-            m_act_cut->setEnabled(false);
+            //m_act_cut->setEnabled(false);
         }
 
         connect(m_act_stop.get(), &QAction::triggered, this, &OATS::TransitionModeGridPanel::tran_mode_stop);
         connect(m_act_mix.get(), &QAction::triggered, this, &OATS::TransitionModeGridPanel::tran_mode_mix);
-        connect(m_act_cut.get(), &QAction::triggered, this, &OATS::TransitionModeGridPanel::tran_mode_cut);
+        //connect(m_act_cut.get(), &QAction::triggered, this, &OATS::TransitionModeGridPanel::tran_mode_cut);
 
         menu.addAction(m_act_stop.get());
         menu.addAction(m_act_mix.get());
-        menu.addAction(m_act_cut.get());
+        //menu.addAction(m_act_cut.get());
 
         menu.exec(event->globalPos());
     }

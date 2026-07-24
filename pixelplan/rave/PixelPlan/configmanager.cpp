@@ -35,10 +35,10 @@ namespace PIXELPLAN
 
   ErrorOr ConfigManager::read_config(const QString& config_filepath)
   {
-      // Check if config file exists
       if (config_filepath.isEmpty())
-          return std::make_tuple(false, "Empty config file");
+          return std::make_tuple(false, "Pass a config file");
 
+      // Check if config file exists
       QFileInfo fi(config_filepath);
       if (!fi.exists())
           return std::make_tuple(false, "Config file does not exists!");
