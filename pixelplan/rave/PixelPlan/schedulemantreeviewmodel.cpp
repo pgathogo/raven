@@ -7,7 +7,7 @@
 #include "traffiktree.h"
 #include "../utils/tools.h"
 
-ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks items, QObject *parent)
+ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks& items, QObject *parent)
     :QStandardItemModel{ parent }
 {
     setColumnCount(8);

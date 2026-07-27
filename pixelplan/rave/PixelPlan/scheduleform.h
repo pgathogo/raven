@@ -4,6 +4,8 @@
 #include <memory>
 #include <QDialog>
 
+#include "schedulemantreeviewmodel.h"
+
 namespace Ui {
 class ScheduleForm;
 }
@@ -36,7 +38,8 @@ private:
     std::unique_ptr<EntityDataModel> m_edm_schedule;
     QMdiArea* mMdiArea;
 
-    void build_tree_view();
+    void build_tree_view_mapped(const EntityDataModel&);
+    void build_tree_view(OrderedMap&);
     QDate current_date();
 };
 

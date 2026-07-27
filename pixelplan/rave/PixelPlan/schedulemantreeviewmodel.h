@@ -64,7 +64,7 @@ class ScheduleManTreeViewModel : public QStandardItemModel {
   // Q_OBJECT
 
 public:
-  ScheduleManTreeViewModel(Breaks items, QObject *parent = nullptr);
+  ScheduleManTreeViewModel(Breaks& items, QObject *parent = nullptr);
   int read_tree_data(Breaks& items);
   void insert_node(TreeNode tree_node, TRAFFIK::TraffikNode *node);
   void print_tree(TreeNode tree_node, int level = 0);

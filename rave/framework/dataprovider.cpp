@@ -225,15 +225,18 @@ int PostgresDataProvider::insert_returning_id(const std::string query)
 
 int PostgresDataProvider::read(const std::string query)
 {
+
     clear();
 
     PGresult* res;
     int nFields;
     int i;
 
+
     static auto cleanFinish = [](PGconn* conn, PGresult* res){
         PQclear(res);
     };
+
 
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
@@ -299,7 +302,6 @@ int PostgresDataProvider::read(const std::string query)
         append(record);
 
     }
-
 
     PQclear(res);
     res = PQexec(conn, "CLEAR mcursor");

@@ -337,16 +337,20 @@ void EntityDataModel::populateEntities()
     clearEntities();
 
     dbManager->provider()->cache()->first();
+
     do{
        auto e = dbManager->provider()->cache()->currentElement();
        auto ent = getEntity()->cloneAsShared();
 
        ent->baseMapFields(e);
+
        ent->afterMapping(*ent.get());
 
        addEntity(std::move(ent));
 
        dbManager->provider()->cache()->next();
+
+
     }while(!dbManager->provider()->cache()->isLast());
 
 }
@@ -377,12 +381,11 @@ int EntityDataModel::createEntity(std::shared_ptr<BaseEntity> entity)
         showMessage(de.errorMessage());
     }
 
-
-
     if (id > 0){
         entity->setId(id);
         addEntity(std::move(entity)); // entity final resting place
     }
+
     return id;
 }
 
@@ -498,7 +501,6 @@ void EntityDataModel::execute_raw_sql_mapped(const std::string sql)
     } catch (PostgresException& pe) {
         throw;
     }
-
     populateEntities();
 }
 

@@ -6,7 +6,6 @@
 #include "../../../rave/framework/schedule.h"
 
 #include "breakcreateform.h"
-#include "schedulemantreeviewmodel.h"
 #include "ui_scheduleform.h"
 #include "scheduleform.h"
 
@@ -20,19 +19,24 @@ ScheduleForm::ScheduleForm(QWidget *parent)
     , m_edm_schedule{nullptr}
     , mMdiArea{nullptr}
 {
+
   ui->setupUi(this);
 
   ui->dtSchedule->setDate(QDate::currentDate());
 
-  connect(ui->dtSchedule, &QDateEdit::dateChanged, this,
-          &ScheduleForm::schedule_date_changed);
+   connect(ui->dtSchedule, &QDateEdit::dateChanged, this,
+           &ScheduleForm::schedule_date_changed);
+
   connect(ui->btnCreate, &QPushButton::clicked, this,
           &ScheduleForm::create_breaks);
   connect(ui->btnDelete, &QPushButton::clicked, this,
           &ScheduleForm::delete_breaks);
 
+    /*
   m_edm_schedule =
       std::make_unique<EntityDataModel>(std::make_shared<Schedule>());
+
+  */
 
   // ui->btnDelete->setEnabled(false);
   ui->btnCreate->setIcon(QIcon(":/images/media/icons/createbreak.bmp"));
@@ -48,7 +52,13 @@ ScheduleForm::ScheduleForm(QWidget *parent)
   ui->tvSchedule->setModel(sched_model);
   ui->tvSchedule->setColumnWidth(0,10);
 
+  load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
 
+  setWindowTitle("Breaks Management");
+
+}
+
+  /*
   ui->tvSchedule->setStyleSheet(
           " QTreeView { background: #fafafa; color: #374151; border: 1px solid #e9d5ff; alternate-background-color: #f0f9ff;  }"
           " QTreeView::item:hover { background: #fce7f3; } "
@@ -62,7 +72,7 @@ ScheduleForm::ScheduleForm(QWidget *parent)
               " padding: 5px 8px; "
               " font-weight: bold; "
           " } ");
-
+   */
 
   /*
   ui->tvSchedule->setStyleSheet(
@@ -78,10 +88,6 @@ ScheduleForm::ScheduleForm(QWidget *parent)
       "    font-weight: bold; } ");
    */
 
-  load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
-
-  setWindowTitle("Breaks Management");
-}
 
 ScheduleForm::~ScheduleForm() { delete ui; }
 
@@ -115,21 +121,100 @@ void ScheduleForm::load_schedule(const QDate &date)
         " ORDER BY rave_schedule.schedule_date, rave_schedule.schedule_hour,"
         " rave_schedule.schedule_time ", str_date );
 
+      EntityDataModel edm;
 
-  try {
+    try {
 
-      m_edm_schedule->execute_raw_sql_mapped(sql);
+      int record_count = edm.readRaw(sql);
 
-      if (m_edm_schedule->count() == 0)
+      if (record_count == 0)
           return;
 
+      qDebug() << "Record Count: " << record_count;
+
+
     } catch (PostgresException& pe) {
+      qDebug() << QString::fromStdString(pe.errorMessage()) << '\n';
         std::cerr << pe.errorMessage() << '\n';
 
     }
 
+    auto method_type = [](std::string f_m) -> std::string {
+       if (f_m == "")
+         return f_m;
 
-  build_tree_view();
+    std::map<std::string, std::string> method_map;
+    method_map["R"] = "Random";
+    method_map["S"] = "Sequence";
+
+    return method_map[f_m];
+  };
+
+
+  //Breaks comm_breaks;
+  OrderedMap comm_breaks;
+
+  auto provider = edm.getDBManager()->provider();
+  if (provider->cacheSize() == 0)
+      return;
+
+  provider->cache()->first();
+
+  do {
+
+      auto itB = provider->cache()->currentElement()->begin();
+      auto itE = provider->cache()->currentElement()->end();
+
+      Break comm_break;
+
+      for(; itB != itE; ++itB)
+      {
+          std::string field_name = (*itB).first;
+          std::string field_value = (*itB).second;
+
+          if (field_name == "id")
+          comm_break.id = std::stoi(field_value);
+
+          if (field_name == "schedule_date")
+              comm_break.schedule_date = field_value;
+
+          if (field_name == "schedule_hour")
+              comm_break.schedule_hour = std::stoi(field_value);
+
+          if (field_name == "comment")
+              comm_break.comment = field_value;
+
+          if (field_name == "schedule_time")
+              comm_break.schedule_time = field_value;
+
+          if (field_name == "break_mode")
+              comm_break.break_mode = field_value;
+
+          if (field_name == "break_fill_method")
+              comm_break.break_fill_method = method_type(field_value);
+
+          if (field_name == "break_max_spots")
+              comm_break.max_spots = std::stoi(field_value);
+
+          if (field_name == "break_duration")
+              comm_break.break_duration = std::stoi(field_value);
+
+          if (field_name == "booked_spots")
+              comm_break.booked_spots = std::stoi(field_value);
+
+          if (field_name == "break_duration_left")
+              comm_break.time_left = std::stoi(field_value);
+
+      }
+      comm_breaks.insert(comm_break.schedule_hour, comm_break);
+
+    provider->cache()->next();
+
+  } while(!provider->cache()->isLast());
+
+
+  // Show Items in a TreeView
+  build_tree_view(comm_breaks);
 
 }
 
@@ -179,7 +264,32 @@ void ScheduleForm::delete_breaks() {
 
 void ScheduleForm::hour_clicked(QListWidgetItem *item) {}
 
-void ScheduleForm::build_tree_view() {
+void ScheduleForm::build_tree_view(OrderedMap& comm_breaks)
+{
+  if (comm_breaks.insertion_order().size() > 0) {
+
+    ScheduleManTreeViewModel *sched_model =
+        new ScheduleManTreeViewModel(comm_breaks);
+
+    ui->tvSchedule->setModel(sched_model);
+
+    // ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tvSchedule->setColumnWidth(0, 200);
+    ui->tvSchedule->setColumnWidth(1, 100);
+    ui->tvSchedule->setColumnWidth(2, 100);
+    ui->tvSchedule->setColumnWidth(3, 100);
+    ui->tvSchedule->setColumnWidth(4, 100);
+    ui->tvSchedule->setColumnWidth(5, 100);
+    ui->tvSchedule->setColumnWidth(6, 150);
+
+    ui->btnDelete->setEnabled(true);
+  }
+}
+
+
+void ScheduleForm::build_tree_view_mapped(const EntityDataModel& edm )
+{
+
   auto method_type = [](std::string f_m) -> std::string {
     if (f_m == "")
       return f_m;
@@ -194,9 +304,12 @@ void ScheduleForm::build_tree_view() {
   //Breaks comm_breaks;
   OrderedMap comm_breaks;
 
-  for (auto &[name, entity] : m_edm_schedule->modelEntities())
+  //for (auto &[name, entity] : m_edm_schedule->modelEntities())
+  for (auto &[name, entity] : edm.modelEntities())
   {
     Schedule *schedule = dynamic_cast<Schedule *>(entity.get());
+
+    qDebug() << "333" ;
 
     Break comm_break;
     comm_break.id = schedule->id();
@@ -221,6 +334,7 @@ void ScheduleForm::build_tree_view() {
     comm_break.booked_spots = schedule->booked_spots()->value();
     comm_break.time_left = schedule->break_duration_left()->value();
 
+    qDebug() << "444" ;
     //comm_breaks[comm_break.schedule_hour].push_back(comm_break);
     comm_breaks.insert(comm_break.schedule_hour, comm_break);
   }
@@ -243,6 +357,7 @@ void ScheduleForm::build_tree_view() {
 
     ui->btnDelete->setEnabled(true);
   }
+
 }
 
 QDate ScheduleForm::current_date() {
