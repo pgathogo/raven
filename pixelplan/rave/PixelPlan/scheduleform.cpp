@@ -130,8 +130,6 @@ void ScheduleForm::load_schedule(const QDate &date)
       if (record_count == 0)
           return;
 
-      qDebug() << "Record Count: " << record_count;
-
 
     } catch (PostgresException& pe) {
       qDebug() << QString::fromStdString(pe.errorMessage()) << '\n';
@@ -224,8 +222,10 @@ void ScheduleForm::schedule_date_changed(const QDate &date) {
 
 void ScheduleForm::create_breaks() {
   auto bcForm = std::make_unique<BreakCreateForm>(this);
-  if (bcForm->exec() > 0)
-    load_schedule(current_date());
+
+    if (bcForm->exec() > 0) {
+        load_schedule(current_date());
+    }
 }
 
 void ScheduleForm::delete_breaks() {
@@ -309,8 +309,6 @@ void ScheduleForm::build_tree_view_mapped(const EntityDataModel& edm )
   {
     Schedule *schedule = dynamic_cast<Schedule *>(entity.get());
 
-    qDebug() << "333" ;
-
     Break comm_break;
     comm_break.id = schedule->id();
 
@@ -334,7 +332,6 @@ void ScheduleForm::build_tree_view_mapped(const EntityDataModel& edm )
     comm_break.booked_spots = schedule->booked_spots()->value();
     comm_break.time_left = schedule->break_duration_left()->value();
 
-    qDebug() << "444" ;
     //comm_breaks[comm_break.schedule_hour].push_back(comm_break);
     comm_breaks.insert(comm_break.schedule_hour, comm_break);
   }
@@ -377,7 +374,6 @@ void ScheduleForm::delete_all_empty_breaks(QDate date, int hour) {
   EntityDataModel edm;
 
   try {
-    qDebug() << stoq(sql.str());
     edm.executeRawSQL(sql.str());
     showMessage("Break(s) deleted successfully.");
   } catch (DatabaseException &de) {

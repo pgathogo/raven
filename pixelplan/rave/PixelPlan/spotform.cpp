@@ -100,7 +100,6 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
         m_setup = std::make_shared<RavenSetup>();
 
 
-
     ui->edtRealDuration->setMaximum(999999);
 
     int w = 720;
@@ -125,14 +124,12 @@ std::shared_ptr<PIXELPLAN::AdvertMedia> SpotForm::advert_media()
 
 ActionResult SpotForm::saveRecord()
 {
-
     populateEntityFields();
     return m_spot->validate();
 }
 
 void SpotForm::on_audio_duration(qint64 duration)
 {
-
     ui->edtSpotDuration->setTime(duration_to_time(duration));
     ui->edtRealDuration->setValue(duration);
     m_spot->set_spot_duration(duration);
@@ -230,9 +227,10 @@ void SpotForm::create_dow_widget()
     */
 
     m_dow_widget = std::make_unique<DowWidget>();
-    QGroupBox* gbDOW = new QGroupBox("Days of Week");
-    gbDOW->setLayout(m_dow_widget->grid_layout());
-    ui->hlDOW->addWidget(gbDOW);
+    //QGroupBox* gbDOW = new QGroupBox("Days of Week");
+    ui->vlDOW->addWidget(m_dow_widget.get());
+    //gbDOW->setLayout(ui->vlDOW);
+    //gbDOW->setLayout(m_dow_widget->grid_layout());
 }
 
 

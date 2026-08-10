@@ -386,8 +386,6 @@ void MediaBrowser::media_status_changed(QMediaPlayer::MediaStatus status)
 {
     if (status == QMediaPlayer::LoadedMedia)
     {
-        qDebug() << " --- media_status_changed ---";
-
         m_media_player->play();
         QTimer::singleShot(100, m_media_player.get(), &QMediaPlayer::pause);
     }

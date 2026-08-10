@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabDetails">
       <attribute name="title">
@@ -88,7 +88,7 @@
             <bool>true</bool>
            </property>
            <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
+            <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
            <property name="maximum">
             <number>999999999</number>
@@ -105,7 +105,7 @@
          <item row="1" column="2">
           <spacer name="horizontalSpacer">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -135,7 +135,7 @@
             <bool>true</bool>
            </property>
            <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
+            <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
            <property name="displayFormat">
             <string>HH:mm:ss</string>
@@ -147,7 +147,7 @@
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -167,7 +167,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
          <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
+          <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
          </property>
          <item>
           <layout class="QVBoxLayout" name="vlTimeBand"/>
@@ -178,12 +178,12 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="hlDOW"/>
+        <layout class="QVBoxLayout" name="vlDOW"/>
        </item>
        <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>

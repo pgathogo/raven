@@ -4,8 +4,17 @@
 
 DowWidget::DowWidget(QWidget* parent)
 {
+   m_glDow = new QGridLayout();
+
     make_week_days();
     make_dow_grid();
+
+    // QVBoxLayout* main_layout = new QVBoxLayout();
+    // main_layout->addLayout(m_glDow);
+     setLayout(m_glDow);
+
+
+
 }
 
 void DowWidget::make_week_days()
@@ -21,7 +30,6 @@ void DowWidget::make_week_days()
 
 void DowWidget::make_dow_grid()
 {
-   m_glDow = new QGridLayout();
 
     int DOW  = 7;
     int ROW0 = 0;
@@ -30,7 +38,8 @@ void DowWidget::make_dow_grid()
     for(int day=0; day < DOW; ++day) {
         QLabel* lbl = new QLabel(m_week_days[day]);
         auto sp = std::make_unique<QSpinBox>();
-        sp->setMaximumWidth(50);
+
+        sp->setMinimumSize(50, 50);  //setMaximumWidth(50);
         sp->setRange(0, 99);
 
         m_glDow->addWidget(lbl, ROW0, day);

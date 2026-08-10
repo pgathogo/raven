@@ -547,7 +547,10 @@ int ForeignKeyField::value() const
 
 EntityDataModel* ForeignKeyField::dataModel() const
 {
-    return lookups[fieldName()].get();
+    if (lookups.size() > 0)
+        return lookups[fieldName()].get();
+    else
+        return new EntityDataModel();
 }
 
 std::unique_ptr<BaseEntity> const& ForeignKeyField::data_model_entity() const

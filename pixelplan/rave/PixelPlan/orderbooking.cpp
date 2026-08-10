@@ -19,11 +19,12 @@ OrderBooking::OrderBooking()
     ,m_spot{ nullptr }
     ,m_spot_audio{ nullptr }
 {
-    m_schedule = createField<ForeignKeyField>("schedule_id", "Schedule",
-                                             std::make_unique<Schedule>(), "schedule_date");
 
     m_booking_segment = createField<ForeignKeyField>("bookingsegment_id", "Booking Segment",
                                                    std::make_unique<BookingSegment>(), "booking_date");
+
+    m_schedule = createField<ForeignKeyField>("schedule_id", "Schedule",
+                                             std::make_unique<Schedule>(), "schedule_date");
 
     m_booking_status = createField<ChoiceField<std::string>>("booking_status", "Booking Status");
     m_booking_status->addChoice({"READY","READY"});
@@ -53,6 +54,7 @@ OrderBooking::OrderBooking()
 
     m_void_reason = createField<ForeignKeyField>("void_reason_id", "Void Reaason",
                                                  std::make_unique<PIXELPLAN::ReasonVoidBooking>(), "reason");
+
     m_comment = createField<TextField>("comments", "Comment");
     m_add_login = createField<StringField>("add_login" , "Add login");
     m_add_dtime = createField<DateTimeField>("add_dtime", "Add Date Time");

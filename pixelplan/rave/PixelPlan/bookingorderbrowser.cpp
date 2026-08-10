@@ -383,7 +383,6 @@ std::tuple<std::string, std::string> BookingOrderBrowser::tag_n_type(VoidType vt
 void BookingOrderBrowser::void_query(VoidType vt)
 {
     auto [qry_tag, void_type] = tag_n_type(vt);
-
     auto [order_id, bookings] = get_selected_bookings();
 
     QString tag = QString::fromStdString(qry_tag);
@@ -405,6 +404,7 @@ void BookingOrderBrowser::void_query(VoidType vt)
         switch(ret){
             case QMessageBox::Yes:
             {
+
                 auto vbf = std::make_unique<PIXELPLAN::VoidBookingForm>(QString::fromStdString(qry_tag));
 
                 if (vbf->exec() == 1) {
@@ -443,9 +443,6 @@ void BookingOrderBrowser::new_booking()
     }
 
     int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
-
-    qDebug() << "Order Selected: " << order_id;
-
 
     auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
 
@@ -622,14 +619,14 @@ std::tuple<int, std::vector<int>> BookingOrderBrowser::get_selected_bookings()
 
     int order_id{-1};
 
+    std::vector<int> booking_ids;
+    int booking_id = -1;
+
     for (auto node : m_tree_nodes)
     {
         auto w = ui->twOrders->itemWidget(node, 0);
+
         QTableWidget* table = dynamic_cast<QTableWidget*>(w);
-
-        std::vector<int> booking_ids;
-
-        int booking_id = -1;
 
         for (auto& item : table->selectedItems())
         {
@@ -645,16 +642,19 @@ std::tuple<int, std::vector<int>> BookingOrderBrowser::get_selected_bookings()
 
             if (item->column() == 6)
             {
+
                 if (item->text() == "READY") {
+
                     booking_ids.push_back(booking_id);
+
                 }
 
             }
         }
 
-        selected_bookings = std::make_tuple(order_id, booking_ids);
-
     }
+
+    selected_bookings = std::make_tuple(order_id, booking_ids);
 
     return selected_bookings;
 
@@ -938,6 +938,9 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
     ui->twOrders->setColumnWidth(0, 300);
 
     bool parent_is_created;
+
+    m_tree_nodes.clear();
+
     for (auto& co: client_orders)
     {
         parent_is_created = false;

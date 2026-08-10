@@ -14,6 +14,7 @@
 
 #include "voidbookingform.h"
 #include "orderbooking.h"
+#include "reasonvoidbooking.h"
 
 #include "../../../rave/framework/entitydatamodel.h"
 
@@ -25,6 +26,7 @@ VoidBookingForm::VoidBookingForm(const QString void_type, QDialog* parent)
     m_void_type = void_type;
 
     make_widgets();
+
     m_edtOther->setEnabled(false);
 
     QString title = QString("Reason to %1 Booking").arg(m_void_type);
@@ -35,14 +37,24 @@ void VoidBookingForm::make_widgets()
 {
     QString lbl = QString("%1 Reason:").arg(m_void_type);
     QLabel* lbl_reason = new QLabel(lbl);
+
     m_cbReasons = new QComboBox();
 
-    OrderBooking ob;
-    m_cbReasons->setModel(ob.void_reason()->dataModel());
+    //OrderBooking ob;
+    //auto edm = std::make_unique<EntityDataModel>(std::make_shared<PIXELPLAN::ReasonVoidBooking>());
 
-    // connect(m_cbReasons, QOverload<int>::of(&QComboBox::currentIndexChanged),
-    //         this, &VoidBookingForm::reason_changed);
+    auto edm = new EntityDataModel(std::make_shared<PIXELPLAN::ReasonVoidBooking>());
+    edm->all();
 
+    m_cbReasons->setModel(edm);
+
+    //m_cbReasons->setModel(ob.void_reason()->dataModel());
+
+    connect(m_cbReasons, QOverload<int>::of(&QComboBox::currentIndexChanged),
+             this, &VoidBookingForm::reason_changed);
+
+
+    // Write this statment
     m_cbReasons->setCurrentIndex(0);
 
     m_cbOther = new QCheckBox("Other");
@@ -91,6 +103,7 @@ void VoidBookingForm::reason_changed(int i)
 
     EntityDataModel* edm = dynamic_cast<EntityDataModel*>(m_cbReasons->model());
     m_reason.reason_id  = std::get<1>(*(edm->vecBegin()+i))->id();
+
 }
 
 void VoidBookingForm::other_selected(int state)

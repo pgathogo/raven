@@ -19,7 +19,6 @@ Schedule::Schedule()
     m_schedule_date = createField<DateField>("schedule_date", "Schedule Date:");
     m_schedule_time = createField<TimeField>("schedule_time", "Schedule Time:");
 
-
     m_schedule_hour = createField<IntegerField>("schedule_hour", "Schedule Hour");
 
     m_audio = createField<ForeignKeyField>("audio_id", "Audio",
@@ -61,7 +60,7 @@ Schedule::Schedule()
     m_break_status->addChoice({"OPEN", "Open"});
 
     m_break_layout_line = createField<ForeignKeyField>("break_layout_line_id", "BreakLayoutLine",
-                                               std::make_unique<BreakLayoutLine>(), "title");
+                                               std::make_unique<BreakLayoutLine>(), "title", "id=-1");
 
     m_break_fill_method = createField<StringField>("break_fill_method", "Break Fill Method");
 

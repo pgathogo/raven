@@ -120,6 +120,7 @@ void PostgresDataProvider::nullify_connector()
 
 bool PostgresDataProvider::executeQuery(const std::string query)
 {
+    qDebug() << "-- ExecuteQuery --";
 
     PGresult* res = nullptr;
 
@@ -143,6 +144,8 @@ bool PostgresDataProvider::executeQuery(const std::string query)
 
     res = PQexec(conn, query.c_str());
 
+    qDebug() << " 2222 ";
+
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
         std::string errorMsg = "EXECUTE command failed!\n";
@@ -153,7 +156,11 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         throw PostgresException("EXCEUTE", errorMsg);
     }
 
+    qDebug() << " 3333 ";
+
     res = PQexec(conn, "COMMIT");
+
+    qDebug() << " 4444 ";
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         std::string errorMsg = "COMMIT command failed!\n";
@@ -162,6 +169,8 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         cleanFinish(res);
         throw PostgresException("COMMIT", errorMsg);
     }
+
+    qDebug() << " 5555 ";
 
     cleanFinish(res);
 

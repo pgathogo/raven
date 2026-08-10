@@ -2,6 +2,8 @@
 #include <ranges>
 #include <format>
 #include <tuple>
+#include <thread>
+#include <chrono>
 
 #include <QAbstractItemModel>
 
@@ -218,8 +220,11 @@ void BreakCreateForm::create_breaks()
 
     std::string insert_statements = make_insert_statements(ui->dtFrom->date(), ui->dtTo->date(), selected_break_lines);
 
-    if (insert_statements.empty())
-        return;
+    //std::cout << insert_statements << '\n';
+
+    if (insert_statements.empty()) {
+         return;
+    }
 
     if (insert_breaks_to_db(insert_statements))
         close_form();
@@ -349,7 +354,7 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to, const 
         return false;
     };
 
-    auto dow_allowed = [&](int dow){
+    auto dow_allowed = [&](int dow) {
         std::string weekdays = m_selected_breaklayout->weekDays()->value();
         std::string s(1, weekdays[dow-1]);
         return ( std::stoi(s) == 1) ? true : false;
@@ -364,7 +369,6 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to, const 
             tmpDate = tmpDate.addDays(1);
             continue;
         }
-
 
         //for (auto& [name, entity] : m_edm_break_line->modelEntities())
         for (auto bll : selected_break_lines)
@@ -403,7 +407,12 @@ std::string BreakCreateForm::make_insert_statements(QDate from, QDate to, const 
 bool BreakCreateForm::insert_breaks_to_db(const std::string insert_stmnts)
 {
     try{
+
         m_edm_break_line->executeRawSQL(insert_stmnts);
+
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(500ms);
+
         showMessage("Breaks created successfully.");
         m_breaks_created = true;
         return true;
@@ -421,7 +430,7 @@ void BreakCreateForm::add_hour()
 {
     std::unique_ptr<DateTimeSelector> dts = std::make_unique<DateTimeSelector>(this);
 
-    if (dts->exec() == 1){
+    if (dts->exec() == 1) {
         DateTimeSelection selection = dts->selection();
         for(int hour : selection.sel_hours)
             ui->cbSelectedHours->addItem(QString::number(hour));
