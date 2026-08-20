@@ -11,6 +11,8 @@ Schedule::Schedule()
     :mIsBad{false}
      ,m_break_availability{Schedule::Break_Available}
 {
+    qDebug() << "AAA";
+
     // create fields
     m_display_row_id = createField<IntegerField>("display_row_id", "Display Row Id");
     m_display_row_id->setFormOnly(true);
@@ -21,9 +23,11 @@ Schedule::Schedule()
 
     m_schedule_hour = createField<IntegerField>("schedule_hour", "Schedule Hour");
 
+    qDebug() << "BBB";
     m_audio = createField<ForeignKeyField>("audio_id", "Audio",
                                       std::make_unique<AUDIO::Audio>(""), "title");
 
+    qDebug() << "CCC";
     m_fade_in = createField<IntegerField>("fade_in", "Fade In");
     m_fade_out = createField<IntegerField>("fade_out", "Fade Out");
     m_fade_delay = createField<IntegerField>("fade_delay", "Fade Delay");
@@ -59,9 +63,11 @@ Schedule::Schedule()
     m_break_status->addChoice({"LOCKED", "Locked"});
     m_break_status->addChoice({"OPEN", "Open"});
 
+    qDebug() << "DDD";
     m_break_layout_line = createField<ForeignKeyField>("break_layout_line_id", "BreakLayoutLine",
                                                std::make_unique<BreakLayoutLine>(), "title", "id=-1");
 
+    qDebug() << "EEE";
     m_break_fill_method = createField<StringField>("break_fill_method", "Break Fill Method");
 
     m_comment = createField<TextField>("comment", "Comment");
@@ -74,9 +80,12 @@ Schedule::Schedule()
             << stoq(m_break_duration_left->fieldLabel())
             << stoq(m_break_status->fieldLabel());
 
+    qDebug() << "FFF";
     setTableName("rave_schedule");
 
+    qDebug() << "GGG";
     setDefaults();
+    qDebug() << "HHH";
 }
 
 Schedule::~Schedule()

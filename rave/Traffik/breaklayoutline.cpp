@@ -8,6 +8,7 @@ BreakLayoutLine::BreakLayoutLine()
 {
     mBreakLayout = createField<ForeignKeyField>("break_layout_id", "Break Layout",
                                                 std::make_unique<BreakLayout>(), "name");
+
     mWeekDay = createField<IntegerField>("week_day", "Week Day");
     mBreakTime = createField<TimeField>("break_time", "Break Time");
     mBreakHour = createField<IntegerField>("break_hour", "Break Hour");

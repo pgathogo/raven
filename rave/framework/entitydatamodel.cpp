@@ -254,6 +254,11 @@ std::shared_ptr<BaseEntity> EntityModel::getEntity()
     return mEntity;
 }
 
+std::shared_ptr<BaseEntity> EntityModel::get_entity_at(int index)
+{
+    return std::get<1>(mEntities.at(index)) ;
+}
+
 void EntityModel::set_entity(std::shared_ptr<BaseEntity> entity)
 {
     mEntity = std::move(entity);

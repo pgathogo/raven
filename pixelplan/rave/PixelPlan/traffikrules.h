@@ -19,7 +19,7 @@ using Daypart = std::map<DayOfWeek, std::tuple<std::string, std::vector<int>>>;
 using Exclusion = std::tuple<ExclusionID, Daypart>;
 
 
-namespace TRAFFIK {
+namespace PIXELPLAN {
 
     enum FailedBreakCode {BreakFull=1, TypeExcl, VoiceExcl,
                         TypeDaypart, VoiceDaypart, SpotDaypart, SameClient, DiffSpotSameAudio};
@@ -66,6 +66,15 @@ namespace TRAFFIK {
         std::vector<FailedBreak> failed_breaks;
         std::unique_ptr<EntityDataModel> m_schedule_EDM;
         std::map<int , std::tuple<std::string, std::vector<int>>> target_daypart;
+    };
+
+    enum class FillPos { First, Between, Last};
+
+    struct SelectedProgramBreak {
+        QString break_time;
+        int duration;
+        int max_spots;
+        FillPos fill_pos;
     };
 
     class BaseRule;

@@ -181,6 +181,22 @@ set(PROJECT_SOURCES
     bookingwizard.h
     bookingwizard.cpp
     bookingwizard.ui
+
+    orderbookingwizard.h
+    orderbookingwizard.cpp
+    bookingdatepage.h
+    bookingdatepage.cpp
+    bookingrulespage.h
+    bookingrulespage.cpp
+    buildbreakspage.h
+    buildbreakspage.cpp
+    spotspage.h
+    spotspage.cpp
+    breakselectionpage.h
+    breakselectionpage.cpp
+    summarypage.h
+    summarypage.cpp
+
     traffikrules.h
     traffikrules.cpp
     timeband.h
@@ -206,6 +222,8 @@ set(PROJECT_SOURCES
     salespersonform.h
     salespersonform.cpp
     salespersonform.ui
+    schedule.h
+    schedule.cpp
     voiceoverbrowser.h
     voiceoverbrowser.cpp
     voiceoverbrowser.ui
@@ -351,8 +369,6 @@ set(PROJECT_SOURCES
     ${RAVE_FRAMEWORK_DIR}/ravensetup.h
     ${RAVE_FRAMEWORK_DIR}/ravensetup.cpp
     ${RAVE_FRAMEWORK_DIR}/entityregister.h
-    ${RAVE_FRAMEWORK_DIR}/schedule.h
-    ${RAVE_FRAMEWORK_DIR}/schedule.cpp
     ${RAVE_FRAMEWORK_DIR}/relationmapper.h
     ${RAVE_FRAMEWORK_DIR}/relationmapper.cpp
     ${RAVE_FRAMEWORK_DIR}/entitydatamodel.h

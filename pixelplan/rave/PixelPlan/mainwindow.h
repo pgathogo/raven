@@ -74,7 +74,7 @@ private slots:
     void on_schedule();
     void open_merged_browser();
     void open_setup_browser();
-    void open_cue_editor();
+    void open_book_wizard();
     void test_new_booking();
 
     void open_playlist();

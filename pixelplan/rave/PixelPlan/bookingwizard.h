@@ -8,8 +8,8 @@
 #include <QMenu>
 #include <QJsonObject>
 
-#include "../../../rave/framework/schedule.h"
 #include "../../../rave/framework/entitydatamodel.h"
+#include "schedule.h"
 
 #include "timeband.h"
 #include "traffikrules.h"
@@ -96,7 +96,7 @@ public:
     std::size_t fetch_breaks_from_db(QDate, QDate, std::set<int>);
     std::size_t fetch_program_breaks_from_db(QDate, QDate, std::vector<SelectedProgramBreak>);
 
-    void find_existing_bookings(TRAFFIK::EngineData&);
+    void find_existing_bookings(PIXELPLAN::EngineData&);
     std::size_t find_available_breaks();
 
     bool validateCurrentPage() override;
@@ -105,8 +105,8 @@ public:
 
     TRAFFIK::Spot* selected_spot();
 
-    void fetch_type_exclusions(TRAFFIK::EngineData&);
-    void fetch_voice_exclusions(TRAFFIK::EngineData&);
+    void fetch_type_exclusions(PIXELPLAN::EngineData&);
+    void fetch_voice_exclusions(PIXELPLAN::EngineData&);
     void fetch_spot_exclusions(const std::string,
                              std::vector<Exclusion>&,
                              std::list<int>& keys);
@@ -219,8 +219,8 @@ private:
     std::unique_ptr<DayPartGrid> m_daypart_grid;
     std::unique_ptr<EntityDataModel> m_booking_EDM;
 
-    TRAFFIK::EngineData m_engine_data;
-    std::unique_ptr<TRAFFIK::RuleEngine> m_rule_engine;
+    PIXELPLAN::EngineData m_engine_data;
+    std::unique_ptr<PIXELPLAN::RuleEngine> m_rule_engine;
 
     std::map<int, std::vector<std::string>> m_dow_selection;
 

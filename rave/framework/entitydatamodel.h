@@ -52,6 +52,8 @@ class EntityModel : public QStandardItemModel{
 
         std::shared_ptr<BaseEntity> getEntity();
 
+        std::shared_ptr<BaseEntity> get_entity_at(int);
+
         void set_entity(std::shared_ptr<BaseEntity>);
 
         std::shared_ptr<BaseEntity> const& get_entity() const;

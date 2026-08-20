@@ -36,6 +36,7 @@
 #include "commloganalyzer.h"
 
 #include "voidbookingform.h"
+#include "orderbookingwizard.h"
 
 AccessMap MainWindow::access_map;
 
@@ -179,8 +180,9 @@ void MainWindow::createActions()
     setupMenu->addAction(setup_browser_act);
     connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
-    QAction* cue_editor_act = new QAction("Cue Editor");
-    connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
+    QAction* book_wizard = new QAction("Booking Wizard");
+    mainToolBar->addAction(book_wizard);
+    connect(book_wizard, &QAction::triggered, this, &MainWindow::open_book_wizard);
 
     // QAction* test_wizard_act = new QAction(tr("&Book Order"));
     // test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
@@ -292,8 +294,13 @@ void MainWindow::open_log_analysis()
     cla->exec();
 }
 
-void MainWindow::open_cue_editor()
+void MainWindow::open_book_wizard()
 {
+    Order* order = new Order();
+    //auto bw = std::make_unique<BookingWizard>("tester", order);
+    auto bw = std::make_unique<PIXELPLAN::OrderBookingWizard>("tester", order);
+    bw->exec();
+
 }
 
 void MainWindow::test_new_booking()

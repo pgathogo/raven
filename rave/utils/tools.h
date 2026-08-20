@@ -14,6 +14,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QTime>
+#include <QFrame>
 
 #include <cstdlib>
 
@@ -56,6 +57,13 @@ inline QString stoq(std::string s)
     return QString::fromStdString(s);
 }
 
+inline int to_int(std::string s){
+    return (s.empty()) ? 0 : std::stoi(s);
+}
+
+inline double to_double(std::string s){
+return (s.empty()) ? 0.0 : std::stod(s);
+}
 
 inline QTime duration_to_time(qint64 duration)
 {
@@ -254,6 +262,22 @@ inline std::string decrypt_str(std::string str)
             str[i] = str[i] - 2;
         }
         return str;
+}
+
+inline QFrame* horizontal_line(QWidget* parent)
+{
+    QFrame* hline = new QFrame(parent);
+    hline->setFrameShape(QFrame::HLine);
+    hline->setFrameShadow(QFrame::Sunken);
+    return hline;
+}
+
+inline QFrame* vertical_line(QWidget* parent)
+{
+    QFrame* vline = new QFrame(parent);
+    vline->setFrameShape(QFrame::VLine);
+    vline->setFrameShadow(QFrame::Sunken);
+    return vline;
 }
 
 

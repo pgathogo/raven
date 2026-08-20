@@ -487,10 +487,11 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
         ,m_unique_fk_entity{nullptr}
         ,mCurrText{aName}
 {
+
     auto it = lookups.find(aName);
 
     if (it == lookups.end()){
-        lookups[aName]= std::make_unique<EntityDataModel>(std::move(fkEntity));
+         lookups[aName]= std::make_unique<EntityDataModel>(std::move(fkEntity));
         if (filter.empty()){
             lookups[aName]->all();
         }else{
@@ -502,6 +503,7 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
             lookups[aName]->search(filter);
         }
     }
+
 
 }
 

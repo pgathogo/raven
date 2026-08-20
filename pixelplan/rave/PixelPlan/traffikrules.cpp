@@ -1,19 +1,19 @@
 #include <algorithm>
 #include <QCheckBox>
 #include "traffikrules.h"
-#include "../../../rave/framework/schedule.h"
+#include "schedule.h"
 #include "../../../rave/framework/entitydatamodel.h"
 
 #define DEBUG_MODE
 
-namespace TRAFFIK{
+namespace PIXELPLAN{
 
     EngineData::EngineData()
     {
-        m_schedule_EDM = std::make_unique<EntityDataModel>(
-                    std::make_unique<Schedule>());
+         m_schedule_EDM = std::make_unique<EntityDataModel>(
+                     std::make_shared<Schedule>());
 
-        qDebug() << "COUNT: " << m_schedule_EDM->count();
+        // qDebug() << "COUNT: " << m_schedule_EDM->count();
     }
 
     RuleEngine::RuleEngine(EngineData &ed)

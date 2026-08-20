@@ -33,10 +33,10 @@
 #include "traffiktreeviewmodel.h"
 #include "tvprogram.h"
 #include "advertmedia.h"
+#include "schedule.h"
 
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../rave/framework/ravenexception.h"
-#include "../../../rave/framework/schedule.h"
 #include "../../../rave/framework/ravensetup.h"
 
 #include "../../../rave/utils/qchecklist.h"
@@ -64,7 +64,12 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
 {
     ui->setupUi(this);
 
-    populate_spots_table(m_order->client()->value());
+    //populate_spots_table(m_order->client()->value());
+
+    populate_spots_table(1);
+    // ui->tvSpots->selectRow(0);
+
+
 
     ui->tvSpots->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvSpots->setModel(m_spot_EDM.get());
@@ -113,9 +118,16 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
     ui->edtStartDate->setDate(QDate::currentDate());
     ui->edtEndDate->setDate(order->endDate()->value());
 
-    m_rule_engine = std::make_unique<TRAFFIK::RuleEngine>(m_engine_data);
+    m_rule_engine = std::make_unique<PIXELPLAN::RuleEngine>(m_engine_data);
+
+
+
+
 
     show_order_details(order);
+
+
+
 
     // ui->lwSelBreaks->setSpacing(5);
 
@@ -464,18 +476,27 @@ void BookingWizard::set_toggle_buttons()
 void BookingWizard::populate_spots_table(int client_id)
 {
 
+    qDebug() << "AAA";
+
     m_spot_EDM = std::make_unique<EntityDataModel>(
                 std::make_shared<TRAFFIK::Spot>());
 
+    qDebug() << "BBB";
+
    auto spot = std::make_unique<TRAFFIK::Spot>();
+
+    qDebug() << "CCC";
 
     auto spotFilter = std::make_tuple(
                 spot->client()->dbColumnName(),
                 " = ",
                 client_id);
 
+    qDebug() << "DDD";
+
     m_spot_EDM->search(m_spot_EDM->prepareFilter(spotFilter));
 
+    qDebug() << "EEE";
 }
 
 void BookingWizard::populate_grid(TimeBand* timeBand)
@@ -931,8 +952,8 @@ void BookingWizard::manual_time(bool state)
 
 void BookingWizard::build_breaks()
 {
-//    test_booking();
-//    return;
+    // test_booking();
+    // return;
 
     reset_values();
 
@@ -1016,6 +1037,7 @@ void BookingWizard::reset_values()
 {
     ui->imgFullBreaks->clear();
     ui->imgTypeDaypart->clear();
+
     color_label(ui->lblTotalBreaks, Qt::black);
     color_label(ui->lblFullBreaks, Qt::black);
     color_label(ui->lblTypeExclusion, Qt::black);
@@ -1476,8 +1498,8 @@ void BookingWizard::test_booking()
 {
     init_rules_state();
 
-    //populate_spots_table(5);
-    //ui->tvSpots->selectRow(0);
+    // populate_spots_table(1);
+    // ui->tvSpots->selectRow(0);
     TRAFFIK::Spot* spot{nullptr};
 
     try{
@@ -1699,7 +1721,7 @@ bool BookingWizard::spot_has_media(const TRAFFIK::Spot* spot)
     return edm.count() > 0 ? true : false;
 }
 
-void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
+void BookingWizard::find_existing_bookings(PIXELPLAN::EngineData& engine_data)
 {
     std::string schedule_ids;
     std::size_t i = 0;
@@ -1744,7 +1766,7 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
             auto itB = provider->cache()->currentElement()->begin();
             auto itE = provider->cache()->currentElement()->end();
 
-            TRAFFIK::BookingRecord br;
+            PIXELPLAN::BookingRecord br;
             Daypart typeDaypart;
             Daypart voDaypart;
             int sd = 1;  // spot daypart postfix
@@ -1920,8 +1942,16 @@ bool BookingWizard::validateCurrentPage()
                 return false;
             }
 
+            qDebug() << "AAA";
+
             add_days_of_week();
+
+            qDebug() << "BBB";
+
             show_breaks_for_current_timeband();
+
+            qDebug() << "CCC";
+
             // Check the type of break selection
             // rbAllBreaks
             // rbTimeband
@@ -1938,16 +1968,25 @@ bool BookingWizard::validateCurrentPage()
                 // distribute_spot_to_selected_breaks()
             }
 
+            qDebug() << "DDD";
+
             all_break_by_date_selected(true);
+
+            qDebug() << "EEE";
 
             break;
         }
+
+
         // case BookingWizard::Page_Select_By_Day:
         // {
         //     auto_select_breaks_by_dow();
         //     qDebug() << "Validating selection by day of the WEEK *";
         //     break;
         // }
+
+
+
         case BookingWizard::Page_Select_By_Date:
         {
             TRAFFIK::TraffikTreeViewModel* tvm  = new TRAFFIK::TraffikTreeViewModel(ui->twBreakSelect->selectedItems());
@@ -2048,7 +2087,7 @@ Daypart BookingWizard::fetch_spot_daypart(TRAFFIK::Spot& spot)
     return daypart;
 }
 
-void BookingWizard::fetch_type_exclusions(TRAFFIK::EngineData& engine_data)
+void BookingWizard::fetch_type_exclusions(PIXELPLAN::EngineData& engine_data)
 {
 
     std::stringstream sql;
@@ -2062,7 +2101,7 @@ void BookingWizard::fetch_type_exclusions(TRAFFIK::EngineData& engine_data)
                         m_engine_data.spot_to_book.type_ex_keys);
 }
 
-void BookingWizard::fetch_voice_exclusions(TRAFFIK::EngineData& engine_data)
+void BookingWizard::fetch_voice_exclusions(PIXELPLAN::EngineData& engine_data)
 {
     std::stringstream sql;
     sql << "SELECT rave_voiceover.* "
@@ -2218,14 +2257,14 @@ void BookingWizard::fetch_spot_exclusions(const std::string query,
 
 void BookingWizard::init_rules_state()
 {
-    TRAFFIK::FullBreakRule::enable_or_disable(m_toggle_break_duration->isChecked());
-    TRAFFIK::TypeExclusionRule::enable_or_disable(m_toggle_type_ex->isChecked());
-    TRAFFIK::VoiceExclusionRule::enable_or_disable(m_toggle_voice_ex->isChecked());
-    TRAFFIK::TypeDaypartRule::enable_or_disable(m_toggle_type_daypart->isChecked());
-    TRAFFIK::VoiceDaypartRule::enable_or_disable(m_toggle_voice_daypart->isChecked());
-    TRAFFIK::SpotDaypartRule::enable_or_disable(m_toggle_spot_daypart->isChecked());
-    TRAFFIK::SameClientRule::enable_or_disable(m_toggle_same_client->isChecked());
-    TRAFFIK::OverrideSameClientRule::enable_or_disable(m_toggle_override->isChecked());
+    PIXELPLAN::FullBreakRule::enable_or_disable(m_toggle_break_duration->isChecked());
+    PIXELPLAN::TypeExclusionRule::enable_or_disable(m_toggle_type_ex->isChecked());
+    PIXELPLAN::VoiceExclusionRule::enable_or_disable(m_toggle_voice_ex->isChecked());
+    PIXELPLAN::TypeDaypartRule::enable_or_disable(m_toggle_type_daypart->isChecked());
+    PIXELPLAN::VoiceDaypartRule::enable_or_disable(m_toggle_voice_daypart->isChecked());
+    PIXELPLAN::SpotDaypartRule::enable_or_disable(m_toggle_spot_daypart->isChecked());
+    PIXELPLAN::SameClientRule::enable_or_disable(m_toggle_same_client->isChecked());
+    PIXELPLAN::OverrideSameClientRule::enable_or_disable(m_toggle_override->isChecked());
 
     QString zero{"0"};
     ui->lblFullBreaks->setText(zero);
@@ -2244,66 +2283,66 @@ void BookingWizard::show_available_breaks()
     ui->lblBreaksChecked->setText(
                 stoq(std::to_string(m_engine_data.break_count)));
 
-    if (TRAFFIK::FullBreakRule::failed_break_count() > 0)
+    if (PIXELPLAN::FullBreakRule::failed_break_count() > 0)
     {
         ui->lblFullBreaks->setText(
-                    stoq(std::to_string(TRAFFIK::FullBreakRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::FullBreakRule::failed_break_count())));
         ui->imgFullBreaks->setPixmap(pm_breaks);
         color_label(ui->lblFullBreaks, Qt::red);
     }
 
-    if (TRAFFIK::TypeExclusionRule::failed_break_count() > 0)
+    if (PIXELPLAN::TypeExclusionRule::failed_break_count() > 0)
     {
         ui->lblTypeExclusion->setText(
-                    stoq(std::to_string(TRAFFIK::TypeExclusionRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::TypeExclusionRule::failed_break_count())));
         ui->imgTypeEx->setPixmap(pm_breaks);
         color_label(ui->lblTypeExclusion, Qt::red);
     }
 
-    if (TRAFFIK::VoiceExclusionRule::failed_break_count() > 0)
+    if (PIXELPLAN::VoiceExclusionRule::failed_break_count() > 0)
     {
         ui->lblVoiceExclusion->setText(
-                    stoq(std::to_string(TRAFFIK::VoiceExclusionRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::VoiceExclusionRule::failed_break_count())));
         ui->imgVoiceEx->setPixmap(pm_breaks);
         color_label(ui->lblVoiceExclusion, Qt::red);
     }
 
-    if (TRAFFIK::TypeDaypartRule::failed_break_count() > 0)
+    if (PIXELPLAN::TypeDaypartRule::failed_break_count() > 0)
     {
         ui->lblTypeDaypart->setText(
-                    stoq(std::to_string(TRAFFIK::TypeDaypartRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::TypeDaypartRule::failed_break_count())));
         ui->imgTypeDaypart->setPixmap(pm_breaks);
         color_label(ui->lblTypeDaypart, Qt::red);
     }
 
-    if (TRAFFIK::VoiceDaypartRule::failed_break_count() > 0)
+    if (PIXELPLAN::VoiceDaypartRule::failed_break_count() > 0)
     {
         ui->lblVoiceDaypart->setText(
-                    stoq(std::to_string(TRAFFIK::VoiceDaypartRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::VoiceDaypartRule::failed_break_count())));
         ui->imgVoiceDaypart->setPixmap(pm_breaks);
         color_label(ui->lblVoiceDaypart, Qt::red);
     }
 
-    if (TRAFFIK::SpotDaypartRule::failed_break_count() > 0)
+    if (PIXELPLAN::SpotDaypartRule::failed_break_count() > 0)
     {
         ui->lblSpotDaypart->setText(
-                    stoq(std::to_string(TRAFFIK::SpotDaypartRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::SpotDaypartRule::failed_break_count())));
         ui->imgSpotDaypart->setPixmap(pm_breaks);
         color_label(ui->lblSpotDaypart, Qt::red);
     }
 
-    if (TRAFFIK::SameClientRule::failed_break_count() > 0)
+    if (PIXELPLAN::SameClientRule::failed_break_count() > 0)
     {
         ui->lblNoSameClient->setText(
-                    stoq(std::to_string(TRAFFIK::SameClientRule::failed_break_count())));
+                    stoq(std::to_string(PIXELPLAN::SameClientRule::failed_break_count())));
         ui->imgSameClient->setPixmap(pm_breaks);
         color_label(ui->lblNoSameClient, Qt::red);
     }
 
-    if(TRAFFIK::OverrideSameClientRule::failed_break_count() > 0)
+    if(PIXELPLAN::OverrideSameClientRule::failed_break_count() > 0)
     {
         ui->lblSameClientDiffBrands->setText(
-            stoq(std::to_string(TRAFFIK::OverrideSameClientRule::failed_break_count()))+"+" );
+            stoq(std::to_string(PIXELPLAN::OverrideSameClientRule::failed_break_count()))+"+" );
             ui->imgDiffBrand->setPixmap(pm_breaks);
             color_label(ui->lblSameClientDiffBrands, Qt::red);
     }
