@@ -48,7 +48,7 @@ namespace PIXELPLAN
 
     private slots:
         void on_program_clicked(QListWidgetItem*);
-        void on_break_sel_changed(QTableWidgetItem*);
+        void on_item_clicked(QTableWidgetItem*);
         void select_all_programs();
         void select_all_breaks(bool);
 
@@ -59,6 +59,8 @@ namespace PIXELPLAN
         void set_breaks_table(QTableWidget*);
         void show_program_breaks(std::vector<ProgramBreak>&);
         void fetch_selected_program_breaks();
+        bool breaks_selected();
+        void show_selection_count();
 
         // std::shared_ptr<BookingContext> m_booking_context;
         OrderBookingWizard* m_wizard;
@@ -72,7 +74,6 @@ namespace PIXELPLAN
         QCheckBox* m_cb_all_breaks;
 
         std::map<progid, Program> m_programs;
-        int m_selected_breaks_count{0};
     };
 }
 

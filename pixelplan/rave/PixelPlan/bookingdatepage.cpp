@@ -33,8 +33,10 @@ namespace PIXELPLAN
         setup_ui();
 
         get_tv_programs(m_programs);
-
         show_tv_programs(m_programs);
+
+        m_de_start_date->setDate(QDate::currentDate());
+        m_de_end_date->setDate(QDate::currentDate());
     }
 
     void BookingDatePage::setup_ui()
@@ -63,7 +65,6 @@ namespace PIXELPLAN
         date_layout->addSpacing(40);
 
         main_layout->addLayout(date_layout);
-
 
 
         // --------- TV Programs Section  ------------------
@@ -106,7 +107,9 @@ namespace PIXELPLAN
         hl_sel_breaks->addWidget(m_lbl_selected_break_count, 1);
 
         m_tw_breaks = new QTableWidget();
-        connect(m_tw_breaks, &QTableWidget::itemChanged, this, &BookingDatePage::on_break_sel_changed);
+        m_tw_breaks->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        m_tw_breaks->setSelectionBehavior(QAbstractItemView::SelectRows);
+        connect(m_tw_breaks, &QTableWidget::itemClicked, this, &BookingDatePage::on_item_clicked);
         set_breaks_table(m_tw_breaks);
 
         vl_breaks_layout->addLayout(hl_sel_breaks);
@@ -126,14 +129,14 @@ namespace PIXELPLAN
     void BookingDatePage::set_breaks_table(QTableWidget* tw)
     {
         QStringList header;
-        header << "" << "Break Time" << "Duration" << "Max Spots" << "Fill Pos";
+        header << "Break Time" << "Duration" << "Max Spots" << "Fill Pos";
 
-        tw->setColumnCount(5);
+        tw->setColumnCount(4);
         tw->setHorizontalHeaderLabels(header);
 
         //ui->twBreaks->setRowCount(row_count);
 
-        tw->setColumnWidth(0, 20);
+        // tw->setColumnWidth(0, 20);
     }
 
     void BookingDatePage::on_program_clicked(QListWidgetItem* item)
@@ -164,39 +167,23 @@ namespace PIXELPLAN
         //     show_program_breaks(m_programs[prog_id].breaks);
     }
 
-    void BookingDatePage::on_break_sel_changed(QTableWidgetItem* item)
+
+    void BookingDatePage::on_item_clicked(QTableWidgetItem* item)
     {
-        if (item->column() == 0) {
-
-        m_tw_breaks->blockSignals(true);
-
-        if (item->checkState() == Qt::Checked) {
-            m_tw_breaks->selectRow(item->row());
-            ++m_selected_breaks_count;
-
-        } else {
-
-            if (item->checkState() == Qt::Unchecked) {
-                QModelIndex index = m_tw_breaks->model()->index(item->row(), item->column());
-                QItemSelection selection;
-                selection.select(index, index);
-                m_tw_breaks->selectionModel()->select(selection, QItemSelectionModel::Deselect | QItemSelectionModel::Rows);
-
-            if (m_selected_breaks_count > 0)
-                --m_selected_breaks_count;
-            }
+        /*
+        if (item) {
+            (item->isSelected()) ?  ++m_selected_breaks_count :  --m_selected_breaks_count;
         }
+        */
 
-            m_tw_breaks->blockSignals(false);
-        }
+        show_selection_count();
 
-        QString count = QString("%1").arg(QString::number(m_selected_breaks_count));
-        m_lbl_selected_break_count->setText(count);
 
     }
 
     void BookingDatePage::select_all_breaks(bool checked)
     {
+        /*
         for (int row=0; row < m_tw_breaks->rowCount(); row++) {
             auto item = m_tw_breaks->item(row, 0);
             if (item) {
@@ -204,11 +191,30 @@ namespace PIXELPLAN
                 item->setSelected(checked);
             }
         }
+        */
+
+        if (m_cb_all_breaks->isChecked()) {
+
+            m_tw_breaks->selectAll();
+
+        } else {
+            m_tw_breaks->clearSelection();
+
+        }
+
+        show_selection_count();
 
         m_wizard->booking_data.is_all_breaks = checked;
 
     }
 
+    void BookingDatePage::show_selection_count()
+    {
+
+        int sel_count = m_tw_breaks->selectionModel()->selectedRows().count();
+        QString count = QString("%1").arg(QString::number(sel_count));
+        m_lbl_selected_break_count->setText(count);
+    }
 
     void BookingDatePage::show_program_breaks(std::vector<ProgramBreak>& breaks)
     {
@@ -222,11 +228,11 @@ namespace PIXELPLAN
         m_tw_breaks->clearContents();
         m_tw_breaks->setRowCount(0);
 
-        constexpr int CHECK_COL = 0;
-        constexpr int BREAK_TIME_COL = 1;
-        constexpr int DURATION_COL   = 2;
-        constexpr int MAX_SPOTS_COL  = 3;
-        constexpr int FILL_POS_COL   = 4;
+        //constexpr int CHECK_COL = 0;
+        constexpr int BREAK_TIME_COL = 0;
+        constexpr int DURATION_COL   = 1;
+        constexpr int MAX_SPOTS_COL  = 2;
+        constexpr int FILL_POS_COL   = 3;
 
         QStringList fill_pos = {"First", "In-Between", "Last"};
 
@@ -237,10 +243,12 @@ namespace PIXELPLAN
             m_tw_breaks->insertRow(row);
 
             // Checkbox
+            /*
             QTableWidgetItem* cbox_item = new QTableWidgetItem();
             cbox_item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
             cbox_item->setCheckState(Qt::Unchecked);
             m_tw_breaks->setItem(row, CHECK_COL, cbox_item);
+            */
 
             // Break Time
             auto twi_btime = new QTableWidgetItem(pb.break_time);
@@ -275,6 +283,13 @@ namespace PIXELPLAN
 
         m_wizard->booking_data.start_date = m_de_start_date->date();
         m_wizard->booking_data.end_date = m_de_end_date->date();
+
+        if (!breaks_selected()) {
+            showMessage("No breaks selected for placing booking", QMessageBox::Critical);
+            return false;
+        }
+
+        fetch_selected_program_breaks();
 
         return true;
 
@@ -411,19 +426,22 @@ namespace PIXELPLAN
 
     }
 
+    bool BookingDatePage::breaks_selected()
+    {
+        return (m_tw_breaks->selectionModel()->selectedRows().size() > 0) ? true : false;
+    }
+
     void BookingDatePage::fetch_selected_program_breaks()
     {
-        //std::vector<SelectedProgramBreak> selected_breaks{};
+        if (!breaks_selected())
+            return;
 
         QModelIndexList mil = m_tw_breaks->selectionModel()->selectedRows();
 
-        if (mil.size() == 0)
-            return;
-
-        constexpr int BREAK_TIME_COL = 1;
-        constexpr int DURATION_COL   = 2;
-        constexpr int MAX_SPOTS_COL  = 3;
-        constexpr int FILL_POS       = 4;
+        constexpr int BREAK_TIME_COL = 0;
+        constexpr int DURATION_COL   = 1;
+        constexpr int MAX_SPOTS_COL  = 2;
+        constexpr int FILL_POS       = 3;
 
         for (auto& index : mil)
         {

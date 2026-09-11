@@ -10,9 +10,13 @@
 namespace PIXELPLAN
 {
 
-    OrderBookingWizard::OrderBookingWizard(const std::string& username,
-                           Order* order, QWidget* parent)
+    OrderBookingWizard::OrderBookingWizard(const QString& username,
+                           std::shared_ptr<Order> order, QWidget* parent)
+    : m_order{ order }
     {
+        booking_data.order = order;
+        booking_data.username = username;
+
         const int WIDTH = 865;
         const int HEIGHT = 600;
 

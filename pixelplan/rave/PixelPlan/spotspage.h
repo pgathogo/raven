@@ -20,8 +20,6 @@ namespace  PIXELPLAN
 
         inline static QString name {"spots_page"};
 
-        void print() { qDebug() << "I am a: " << name; }
-
     private slots:
         void on_spot_clicked(const QModelIndex&);
 

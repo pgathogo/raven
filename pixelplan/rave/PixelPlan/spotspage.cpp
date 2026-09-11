@@ -32,6 +32,8 @@ void SpotsPage::setup_ui()
     m_tvspots = new QTableView();
 
     m_tvspots->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    m_tvspots->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
     connect(m_tvspots, &QTableView::clicked, this, &SpotsPage::on_spot_clicked);
 
     QHBoxLayout* search_layout = new QHBoxLayout();
@@ -56,6 +58,7 @@ void SpotsPage::populate_spots_table(int client_id)
         );
 
     auto spot = std::make_unique<TRAFFIK::Spot>();
+
     auto spot_filter = std::make_tuple(
                            spot->client()->dbColumnName(),
                            " = ",
@@ -87,6 +90,8 @@ bool SpotsPage::validatePage()
         showMessage("Please select a spot", QMessageBox::Information);
         return false;
     }
+
+    return true;
 
 }
 

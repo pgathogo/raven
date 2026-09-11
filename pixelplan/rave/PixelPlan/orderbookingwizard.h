@@ -10,6 +10,8 @@
 #include "spotspage.h"
 #include "traffikrules.h"
 
+class QTableWidgetItem;
+
 class Order;
 
 namespace TRAFFIK {
@@ -33,6 +35,7 @@ namespace PIXELPLAN
     };
 
     struct BookingData {
+        std::shared_ptr<Order> order;
         std::shared_ptr<TRAFFIK::Spot> spot{nullptr};
         bool is_all_breaks{false};
         QDate start_date;
@@ -41,6 +44,9 @@ namespace PIXELPLAN
         // std::unique_ptr<PIXELPLAN::RuleEngine> m_rule_engine;
         std::shared_ptr<PIXELPLAN::EngineData> m_engine_data{nullptr};
         std::map<int, SelectedBreak> final_selected_breaks;
+        QList<QTableWidgetItem*> sel_breaks;
+        int sel_break_count{0};
+        QString username;
     };
 
     class OrderBookingWizard : public QWizard
@@ -48,7 +54,7 @@ namespace PIXELPLAN
         Q_OBJECT
 
     public:
-        explicit OrderBookingWizard(const std::string&, Order*, QWidget* parent=nullptr);
+        explicit OrderBookingWizard(const QString&, std::shared_ptr<Order>, QWidget* parent=nullptr);
 
         ~OrderBookingWizard();
 
@@ -72,6 +78,8 @@ namespace PIXELPLAN
         void init_rules_state();
 
     private:
+
+        std::shared_ptr<Order> m_order;
 
         std::map<QString, QWizardPage*> m_pages;
         std::map<QString, std::function<std::unique_ptr<QWizardPage>()>> m_page_types;

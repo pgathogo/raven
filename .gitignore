@@ -11,6 +11,8 @@ __*__
 *.zip
 *.xlsx
 *.json
+*.ps1
+
 #CMake*
 CMakeLists.txt.user*
 *.db

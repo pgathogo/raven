@@ -38,34 +38,26 @@ PlaylistForm::PlaylistForm(QWidget* parent)
 
     ui->setupUi(this);
 
-    qDebug() << "AAA";
     m_config_manager.read_config("setup.json");
 
-    qDebug() << "BBB";
     ui->dtPlaylistDate->setDate(QDate::currentDate());
 
-    qDebug() << "CCC";
     m_booked_adverts = get_booked_adverts(QDate::currentDate());
 
-    qDebug() << "DDD";
     display_booked_adverts(m_booked_adverts);
 
-    qDebug() << "EEEE";
     connect(ui->dtPlaylistDate, &QDateEdit::dateChanged, this, &PlaylistForm::date_changed);
     connect(ui->btnCreateFile, &QPushButton::clicked, this, &PlaylistForm::create_playlist_file);
 
     connect(ui->btnXL, &QPushButton::clicked, this, &PlaylistForm::generate_cts);
 
-    qDebug() << "FFF";
     m_edm_setup = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
     m_edm_setup->all();
 
-    qDebug() << "GGG";
     if (m_edm_setup->count() > 0) {
         m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
     }
 
-    qDebug() << "HHH";
     ui->tvPlaylist->setStyleSheet(
         " QTreeView { background: #fafafa; color: #374151; border: 1px solid #e9d5ff; alternate-background-color: #f0f9ff;  }"
         " QTreeView::item:hover { background: #fce7f3; } "
@@ -80,7 +72,6 @@ PlaylistForm::PlaylistForm(QWidget* parent)
         " font-weight: bold; "
         " } ");
 
-    qDebug() << "JJJ";
     //setFixedSize(1020, 480);
     setMinimumSize(1020, 480);
     setWindowTitle("View Booked Adverts");
@@ -148,6 +139,7 @@ void PlaylistForm::create_playlist_file(bool clicked)
     // 4. Save the updated QDomDocument to file - "
 
     m_booked_adverts = get_booked_adverts(ui->dtPlaylistDate->date());
+
     if (m_booked_adverts.size() == 0) {
         showMessage("No items to create a playlist!");
         return;
@@ -257,9 +249,13 @@ void PlaylistForm::create_playlist_file(bool clicked)
     }
 
     QString success_msg = "Playlist saved successfully.";
+
+    save_message_box(success_msg, playlist.output_filepath());
+
+
     Logger::info("PlaylistForm", success_msg);
 
-    showQMessage(success_msg);
+    // showQMessage(success_msg);
 
 }
 

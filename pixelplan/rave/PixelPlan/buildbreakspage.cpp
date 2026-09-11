@@ -159,6 +159,7 @@ void BuildBreaksPage::setup_ui()
 void BuildBreaksPage::on_build_breaks()
 {
     reset_values();
+
     m_wizard->init_rules_state();
 
     m_engine_data->spot_to_book.spot_id = m_wizard->booking_data.spot->id();
@@ -188,7 +189,7 @@ void BuildBreaksPage::on_build_breaks()
     }
 
 
-    //auto selected_breaks = get_selected_program_breaks();
+    // auto selected_breaks = get_selected_program_breaks();
 
     m_engine_data->break_count = fetch_program_breaks_from_db(
         m_wizard->booking_data.start_date,
@@ -691,6 +692,8 @@ void BuildBreaksPage::find_existing_bookings(PIXELPLAN::EngineData& engine_data)
     }
 
 }
+
+
 
 std::size_t BuildBreaksPage::find_available_breaks()
 {

@@ -180,9 +180,11 @@ void MainWindow::createActions()
     setupMenu->addAction(setup_browser_act);
     connect(setup_browser_act, &QAction::triggered, this, &MainWindow::open_setup_browser);
 
+    /*
     QAction* book_wizard = new QAction("Booking Wizard");
     mainToolBar->addAction(book_wizard);
     connect(book_wizard, &QAction::triggered, this, &MainWindow::open_book_wizard);
+    */
 
     // QAction* test_wizard_act = new QAction(tr("&Book Order"));
     // test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
@@ -296,7 +298,11 @@ void MainWindow::open_log_analysis()
 
 void MainWindow::open_book_wizard()
 {
-    Order* order = new Order();
+    auto order = std::make_shared<Order>();
+    order->setOrderNumber("T1001");
+    order->setSpotsOrdered(62);
+    order->setSpotsBooked(28);
+    order->setId(24);
     //auto bw = std::make_unique<BookingWizard>("tester", order);
     auto bw = std::make_unique<PIXELPLAN::OrderBookingWizard>("tester", order);
     bw->exec();

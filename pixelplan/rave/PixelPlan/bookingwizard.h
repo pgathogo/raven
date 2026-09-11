@@ -90,7 +90,7 @@ public:
 
     std::vector<std::string> days_of_week{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    explicit BookingWizard(const std::string, Order* order,  QWidget* parent = nullptr);
+    explicit BookingWizard(const std::string, std::shared_ptr<Order> order,  QWidget* parent = nullptr);
     ~BookingWizard() override;
 
     std::size_t fetch_breaks_from_db(QDate, QDate, std::set<int>);
@@ -180,7 +180,7 @@ private:
     void setup_break_select_grid();
     bool make_booking();
     void commit_booking();
-    void show_order_details(Order*);
+    void show_order_details(std::shared_ptr<Order>);
     void add_days_of_week();
     void show_breaks_for_current_timeband();
     void toggle_selection(bool);
@@ -213,7 +213,7 @@ private:
     void disable_select_by_dow_page();
 
     Ui::BookingWizard *ui;
-    Order* m_order;
+    std::shared_ptr<Order> m_order;
     std::unique_ptr<EntityDataModel> m_spot_EDM;
     EntityDataModel* m_timeband_EDM;
     std::unique_ptr<DayPartGrid> m_daypart_grid;

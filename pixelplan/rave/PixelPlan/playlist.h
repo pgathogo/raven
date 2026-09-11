@@ -120,6 +120,8 @@ namespace PIXELPLAN {
         void make_attribute_elements(PlaylistItemAttributes&, QDomElement&);
         ErrorOr save_playlist();
 
+        QString output_filepath() { return m_output_filepath; }
+
 
     private:
         QString m_playlist_file;

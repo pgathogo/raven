@@ -1,4 +1,5 @@
 #include <QCheckBox>
+#include <QComboBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QGridLayout>
@@ -10,6 +11,7 @@
 #include "breakselectionpage.h"
 #include "orderbookingwizard.h"
 #include "schedule.h"
+#include "order.h"
 #include "traffikrules.h"
 
 namespace PIXELPLAN
@@ -30,8 +32,10 @@ void  BreakSelectionPage::setup_ui()
     QVBoxLayout* main_layout = new QVBoxLayout();
 
     QHBoxLayout* hl_sel_all = new QHBoxLayout();
-    QCheckBox* cb_all = new QCheckBox("Select All");
-    hl_sel_all->addWidget(cb_all);
+    m_cb_all = new QCheckBox("Select All");
+    connect(m_cb_all, &QCheckBox::toggled, this, &BreakSelectionPage::on_state_changed);
+
+    hl_sel_all->addWidget(m_cb_all);
     hl_sel_all->addStretch();
 
     main_layout->addLayout(hl_sel_all);
@@ -39,6 +43,11 @@ void  BreakSelectionPage::setup_ui()
     QHBoxLayout* hl_items = new QHBoxLayout();
 
     m_tw_break_select = new QTableWidget();
+    m_tw_break_select->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_tw_break_select->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_tw_break_select->setCornerButtonEnabled(true);
+    connect(m_tw_break_select, &QTableWidget::itemClicked, this, &BreakSelectionPage::on_item_clicked);
+
     hl_items->addWidget(m_tw_break_select);
 
     QVBoxLayout* vl_grid = new QVBoxLayout();
@@ -48,15 +57,15 @@ void  BreakSelectionPage::setup_ui()
 
     QGridLayout* gl_top = new QGridLayout();
     QLabel* lbl_avail = new QLabel("Available Breaks:");
-    QLabel* lbl_avail_val = new QLabel("0");
+    m_lbl_avail_val = new QLabel("0");
 
     QLabel* lbl_sel = new QLabel("Selected Breaks:");
-    QLabel* lbl_sel_val = new QLabel("0");
+    m_lbl_sel_val = new QLabel("0");
 
     gl_top->addWidget(lbl_avail, 0, 0);
-    gl_top->addWidget(lbl_avail_val, 0, 1);
+    gl_top->addWidget(m_lbl_avail_val, 0, 1);
     gl_top->addWidget(lbl_sel, 1, 0);
-    gl_top->addWidget(lbl_sel_val, 1, 1);
+    gl_top->addWidget(m_lbl_sel_val, 1, 1);
 
     vl_grid->addLayout(gl_top);
 
@@ -64,22 +73,25 @@ void  BreakSelectionPage::setup_ui()
 
     QGridLayout* gl_bottom = new QGridLayout();
     QLabel* lbl_order = new QLabel("Order Number:");
-    QLabel* lbl_order_val = new QLabel("0");
+    m_lbl_order_val = new QLabel("0");
+
     QLabel* lbl_spots_ordered = new QLabel("Spots Ordered:");
-    QLabel* lbl_spots_ordered_val = new QLabel("0");
+    m_lbl_spots_ordered_val = new QLabel("0");
+
     QLabel* lbl_spots_booked = new QLabel("Spots Booked");
-    QLabel* lbl_spots_booked_val = new QLabel("0");
+    m_lbl_spots_booked_val = new QLabel("0");
+
     QLabel* lbl_spots_pending = new QLabel("Spots Pending:");
     QLabel* lbl_spots_pending_val = new QLabel("0");
 
     gl_bottom->addWidget(lbl_order, 0, 0);
-    gl_bottom->addWidget(lbl_order_val, 0, 1);
+    gl_bottom->addWidget(m_lbl_order_val, 0, 1);
 
     gl_bottom->addWidget(lbl_spots_ordered, 1, 0);
-    gl_bottom->addWidget(lbl_spots_ordered_val, 1, 1);
+    gl_bottom->addWidget(m_lbl_spots_ordered_val, 1, 1);
 
     gl_bottom->addWidget(lbl_spots_booked, 2, 0);
-    gl_bottom->addWidget(lbl_spots_booked_val, 2, 1);
+    gl_bottom->addWidget(m_lbl_spots_booked_val, 2, 1);
 
     gl_bottom->addWidget(lbl_spots_pending, 3, 0);
     gl_bottom->addWidget(lbl_spots_pending_val, 3, 1);
@@ -97,8 +109,28 @@ void  BreakSelectionPage::setup_ui()
 void BreakSelectionPage::initializePage()
 {
     setup_break_select_grid();
+    m_cb_all->setChecked(true);
+
+    m_lbl_avail_val->setText(QString::number(m_wizard->booking_data.m_engine_data->available_breaks));
+    m_lbl_order_val->setText(m_wizard->booking_data.order->orderNumber()->to_qstring());
+    m_lbl_spots_ordered_val->setText(QString::number(m_wizard->booking_data.order->spotsOrdered()->value()));
+    m_lbl_spots_booked_val->setText(QString::number(m_wizard->booking_data.order->spotsBooked()->value()));
 
 }
+
+bool BreakSelectionPage::validatePage()
+{
+    if (m_tw_break_select->selectionModel()->selectedRows().count() == 0) {
+        showMessage("No breaks selected!", QMessageBox::Critical);
+        return false;
+    }
+
+    m_wizard->booking_data.sel_breaks = m_tw_break_select->selectedItems();
+    m_wizard->booking_data.sel_break_count = m_tw_break_select->selectionModel()->selectedRows().count();
+
+    return true;
+}
+
 
 void BreakSelectionPage::setup_break_select_grid()
 {
@@ -174,6 +206,33 @@ void BreakSelectionPage::setup_break_select_grid()
     {
         m_wizard->booking_data.final_selected_breaks[sel_break.break_id] = sel_break;
     }
+}
+
+void BreakSelectionPage::on_state_changed(int state)
+{
+
+    if (m_cb_all->isChecked()) {
+
+        m_tw_break_select->selectAll();
+
+    } else {
+        m_tw_break_select->clearSelection();
+    }
+
+    show_selection_count();
+}
+
+void BreakSelectionPage::on_item_clicked(QTableWidgetItem* item)
+{
+
+    show_selection_count();
+
+}
+
+void BreakSelectionPage::show_selection_count()
+{
+    int sel_count = m_tw_break_select->selectionModel()->selectedRows().count();
+    m_lbl_sel_val->setText(QString::number(sel_count));
 }
 
 } // namespace

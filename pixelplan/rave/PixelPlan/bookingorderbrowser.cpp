@@ -21,6 +21,7 @@
 #include "spottypeexclusion.h"
 #include "spotaudio.h"
 #include "voidbookingform.h"
+#include "orderbookingwizard.h"
 
 
 BookingItem::BookingItem(Booking bk)
@@ -448,10 +449,12 @@ void BookingOrderBrowser::new_booking()
 
     order_edm->getById({"id", "=", order_id});
 
-    Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
+    std::shared_ptr<Order> order = dynamic_pointer_cast<Order>(order_edm->getEntity());
 
     if (order != nullptr){
-        auto bw = std::make_unique<BookingWizard>(m_username, order, this);
+        // auto bw = std::make_unique<BookingWizard>(m_username, order, this);
+        QString uname = QString::fromStdString(m_username);
+        auto bw = std::make_unique<PIXELPLAN::OrderBookingWizard>(uname, order);
         if (bw->exec() == 1) {
             search(m_client->id());
         }

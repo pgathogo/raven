@@ -7,6 +7,9 @@
 #include <QJsonObject>
 #include <QTabWidget>
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
+#include <QDesktopServices>
 
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../utils/tools.h"
@@ -327,13 +330,56 @@ namespace PIXELPLAN {
         }
 
         if (xlsx.saveAs(cts_filepath)) {
-            showQMessage("CTS file created successfully: " + cts_filepath, QMessageBox::Information);
+
+            save_message_box("CTS file created successfully", cts_filepath);
+            //showQMessage("CTS file created successfully: " + cts_filepath, QMessageBox::Information);
+
         } else {
+
             showQMessage("Failed to create Excel file: " + cts_filepath, QMessageBox::Warning);
         }
 
         return true;
     }
+
+    /*
+    void CTSGenerator::save_message_box(const QString& title, const QString& filepath)
+    {
+        QMessageBox msg_box;
+        msg_box.setStyleSheet("QMessageBox { min-width: 600px; }");
+        msg_box.setText(title);
+        msg_box.setInformativeText(filepath);
+        msg_box.setStandardButtons(QMessageBox::Ok | QMessageBox::Close);
+        msg_box.setDefaultButton(QMessageBox::Close);
+        msg_box.setIcon(QMessageBox::Question);
+
+        QPushButton* ok_btn = qobject_cast<QPushButton*>(msg_box.button(QMessageBox::Ok));
+
+        if (ok_btn) {
+            ok_btn->setText("Open");
+        }
+
+        int ret = msg_box.exec();
+
+        switch (ret) {
+        case QMessageBox::Ok:
+        {
+            // Extract directory from filepath
+            QFileInfo fi(filepath);
+            QDir dir = fi.absoluteDir();
+            QString file_path = dir.path();
+
+            QDesktopServices::openUrl(QUrl::fromLocalFile(file_path));
+
+            break;
+        }
+        case QMessageBox::Close:
+            break;
+        }
+
+    }
+    */
+
 
 
 }

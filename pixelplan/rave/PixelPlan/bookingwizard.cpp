@@ -48,7 +48,7 @@
 
 #define DEBUG_MODE
 
-BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget *parent)
+BookingWizard::BookingWizard(const std::string username, std::shared_ptr<Order> order,  QWidget *parent)
     :QWizard(parent)
     ,ui(new Ui::BookingWizard)
     ,m_order{order}
@@ -64,11 +64,10 @@ BookingWizard::BookingWizard(const std::string username, Order* order,  QWidget 
 {
     ui->setupUi(this);
 
-    //populate_spots_table(m_order->client()->value());
+    populate_spots_table(m_order->client()->value());
 
-    populate_spots_table(1);
+    //populate_spots_table(1);
     // ui->tvSpots->selectRow(0);
-
 
 
     ui->tvSpots->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -602,6 +601,17 @@ void BookingWizard::setup_break_select_grid()
     }
 }
 
+void BookingWizard::print_selected_breaks()
+{
+    for (auto& [key, sel_break]: m_selected_breaks)
+    {
+        qDebug() << "Key: "<< key;
+        qDebug() << "Break Id: "<< sel_break.break_id;
+        qDebug() << "Booked Spots: "<< sel_break.booked_spots;
+        qDebug() << "Break Fill Method: "<< stoq(sel_break.break_fill_method);
+    }
+}
+
 bool BookingWizard::make_booking()
 {
     if (QMessageBox::question(this, tr("Traffik"),
@@ -614,18 +624,6 @@ bool BookingWizard::make_booking()
 
     return false;
 
-}
-
-
-void BookingWizard::print_selected_breaks()
-{
-    for (auto& [key, sel_break]: m_selected_breaks)
-    {
-        qDebug() << "Key: "<< key;
-        qDebug() << "Break Id: "<< sel_break.break_id;
-        qDebug() << "Booked Spots: "<< sel_break.booked_spots;
-        qDebug() << "Break Fill Method: "<< stoq(sel_break.break_fill_method);
-    }
 }
 
 void BookingWizard::commit_booking()
@@ -745,7 +743,7 @@ int BookingWizard::find_break_slot(int break_id, int max_spots)
     return next_seq;
 }
 
-void BookingWizard::show_order_details(Order* order)
+void BookingWizard::show_order_details(std::shared_ptr<Order> order)
 {
     ui->lblOrderNo->setText(order->orderNumber()->to_qstring());
     ui->lblSpotsOrdered->setText(QString::number(order->spotsOrdered()->value()));
