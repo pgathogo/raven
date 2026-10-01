@@ -1,14 +1,16 @@
+#include <source_location>
+
 #include "mainwindow.h"
 
 #include <QApplication>
 #include <QDate>
 #include <QDir>
+#include <QDebug>
 
-#include "../../../rave/security/loginform.h"
 #include "../../../rave/security/authentication.h"
-#include "../../../rave/security/user.h"
 #include "../../../rave/security/loginform.h"
 #include "../../../rave/security/selectstationform.h"
+#include "../../../rave/security/user.h"
 
 #include "../../../rave/framework/logger.h"
 #include "../../../rave/utils/tools.h"
@@ -17,6 +19,9 @@
 
 
 //#define LOG_TO_FILE
+
+#define MY_FUNC __FUNCSIG__
+#define LOG_LOCATION_STR QString("[%1 : Line %2]").arg(MY_FUNC).arg(__LINE__)
 
 
 QString module = "Main";
@@ -55,7 +60,14 @@ int main(int argc, char *argv[])
 
 #endif
     PIXELPLAN::ConfigManager config_manager;
+
+    qDebug() << LOG_LOCATION_STR << "Read local setup file (json)";
+
+    // Logger::info(__FUNCSIG__, QString("Read local setup file - %1").arg(__LINE__));
+
     auto [status, msg] = config_manager.read_config("setup.json");
+
+    Logger::info(__FUNCSIG__, "Read local setup file...");
 
     QString auto_login = "";
     QString username = "";
@@ -84,6 +96,9 @@ int main(int argc, char *argv[])
 
     if (lf.exec() > 0)
     {
+
+        const auto loc = std::source_location::current();
+        qDebug() << loc.line() <<":" << loc.file_name() << " : " << loc.function_name();
 
         Credentials cred = lf.credentials();
 
