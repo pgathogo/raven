@@ -22,7 +22,7 @@ SpotsPage::SpotsPage(OrderBookingWizard* wiz)
     setSubTitle("Select spot to book");
 
     setup_ui();
-    populate_spots_table(1);
+    populate_spots_table(wiz->booking_data.client_id);
 }
 
 void SpotsPage::setup_ui()

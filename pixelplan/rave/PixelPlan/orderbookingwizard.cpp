@@ -16,6 +16,7 @@ namespace PIXELPLAN
     {
         booking_data.order = order;
         booking_data.username = username;
+        booking_data.client_id = order->client()->value();
 
         const int WIDTH = 865;
         const int HEIGHT = 600;

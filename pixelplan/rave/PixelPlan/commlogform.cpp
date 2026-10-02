@@ -9,11 +9,13 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "commlogform.h"
-#include "ui_commlogform.h"
 #include "../../../rave/utils/qchecklist.h"
 #include "../../../rave/framework/entitydatamodel.h"
 #include "../../../rave/framework/ravensetup.h"
+
+#include "reportviewer.h"
+#include "commlogform.h"
+#include "ui_commlogform.h"
 
 CommLogForm::CommLogForm(QWidget *parent) :
     QDialog(parent)
@@ -36,7 +38,7 @@ CommLogForm::CommLogForm(QWidget *parent) :
 
     connect(ui->cbExpand, &QCheckBox::stateChanged, this, &CommLogForm::change_view_mode);
     // connect(ui->cbAllHours, &QCheckBox::stateChanged, this, &CommLogForm::select_all_hours);
-    connect(ui->btnPrintSum, &QPushButton::clicked, this, &CommLogForm::print_log);
+    connect(ui->btnPrintSum, &QPushButton::clicked, this, &CommLogForm::print_comm_log);
 
 //    setWindowState(this->windowState() | Qt::WindowFullScreen);
 
@@ -49,7 +51,6 @@ CommLogForm::CommLogForm(QWidget *parent) :
 
     if (m_edm_setup->count() > 0)
         m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
-
 
     set_default_dts();
 
@@ -75,6 +76,11 @@ CommLogForm::~CommLogForm()
 void CommLogForm::setMdiArea(QMdiArea* mdi)
 {
     m_mdi_area = mdi;
+}
+
+QMdiArea* CommLogForm::mdi_area()
+{
+    return m_mdi_area;
 }
 
 void CommLogForm::set_default_dts()
@@ -293,6 +299,57 @@ void CommLogForm::set_column_sizes()
     ui->tvCommLog->setColumnWidth(2, 300);
 
 }
+
+void CommLogForm::print_comm_log()
+{
+    QJsonArray breaks;
+
+    for (auto& [time, commlogs]: m_comm_logs) {
+        QJsonArray logs;
+
+        for (auto& commlog: commlogs) {
+            QJsonObject log;
+
+            log["client_name"] = QString::fromStdString(commlog.client_name);
+            log["spot_id"] = commlog.spot_id;
+            log["spot_name"] = QString::fromStdString(commlog.spot_name);
+            log["spot_duration"] = duration_to_time(commlog.spot_duration).toString("HH:mm:ss");
+            log["book_status"] = QString::fromStdString(commlog.booking_status);
+            log["play_date"] =  commlog.play_date.toString("dd-MM-yyyy");
+            log["play_time"] = commlog.play_time.toString("HH:mm");
+            log["schedule_date"] = commlog.schedule_date.toString("dd-MM-yyyy");
+            log["schedule_time"] = commlog.schedule_time.toString("HH:mm");
+
+            logs.append(log);
+
+        }
+
+        QJsonObject comm_break;
+        comm_break["break_time"] = QString::fromStdString(time);
+        comm_break["comms"] = logs;
+
+
+       breaks.append(comm_break);
+    }
+
+    std::sort(m_dts.sel_hours.begin(), m_dts.sel_hours.end());
+    std::string selected_hours = comma_sep(m_dts.sel_hours);
+
+    QJsonObject report;
+    report["report_title"] = "Commercial Booking Report";
+    report["station"] = m_setup->stationName()->to_qstring();
+    report["book_date"] = m_dts.sel_date.toString("dd-MM-yyyy");
+    report["book_hours"] = QString::fromStdString(selected_hours);
+    report["breaks"] = breaks;
+
+    std::unique_ptr<ReportViewer> rv = std::make_unique<ReportViewer>(report,
+                                                                      "commlog.html",
+                                                                      mdi_area());
+    rv->exec();
+
+
+}
+
 
 
 void CommLogForm::print_log()

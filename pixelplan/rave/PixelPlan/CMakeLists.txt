@@ -42,7 +42,7 @@ set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Xml)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets xml)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets xml WebEngineWidgets)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
@@ -294,6 +294,8 @@ set(PROJECT_SOURCES
     ctsgenerator.cpp
     formatselectorwidget.h
     formatselectorwidget.cpp
+    reportviewer.h
+    reportviewer.cpp
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
@@ -664,7 +666,10 @@ endif()
 target_compile_options(pixelplan PRIVATE /MT)
 target_link_options(pixelplan PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
-target_link_libraries(pixelplan PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Xml)
+target_link_libraries(pixelplan PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Xml
+    Qt${QT_VERSION_MAJOR}::WebEngineWidgets)
 
 
 target_link_libraries(pixelplan PRIVATE ${PostgreSQL_LIBRARIES})

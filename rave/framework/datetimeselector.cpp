@@ -21,7 +21,6 @@ DateTimeSelector::DateTimeSelector(QWidget *parent, DateTimeSelection dts)
     connect(ui->btnCancel, &QPushButton::clicked, this, &DateTimeSelector::cancel_dialog);
     connect(ui->btnClear, &QPushButton::clicked, this, &DateTimeSelector::clear_selection);
 
-
     auto print_hours = [](std::vector<int> hrs) {
         for(auto h : hrs){
             qDebug() << h ;
@@ -31,20 +30,8 @@ DateTimeSelector::DateTimeSelector(QWidget *parent, DateTimeSelection dts)
 
     if (dts.sel_hours.size() > 0)
     {
-
-        //qDebug() << ">>> ARRIVED:: DTS >>>";
-        //print_hours(dts.sel_hours);
-        //qDebug() << " >>>>> ";
-
         m_selection.sel_hours = dts.sel_hours;
-
-        //qDebug() << "m_selection::Asigned";
-        //print_hours(m_selection.sel_hours);
-
         set_selected_buttons();
-
-        //qDebug() << "After set_selected_buttons() ";
-        //print_hours(m_selection.sel_hours);
     }
 
     ui->calWidget->setSelectedDate(dts.sel_date);
@@ -114,21 +101,25 @@ void DateTimeSelector::color_btn()
 
 void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QString>& time_text)
 {
-
-
    // "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #F4D7D0, stop:1 #F9E6E3);"
+
     QString morning_style(
         "QPushButton {background-color:#FFE9A6;"
         "height:35;"
         "width:75;"
-        "font-weight:bold;}" );
+        "font-weight:bold;}"
+        "QPushButton:checked {background-color: #FFC107;}"
+       );
 
     //"QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0  #7B90C6, stop:1 #9FB1E0);"
+
     QString evening_style(
         "QPushButton {background-color:#7B90C6;"
         "height:35;"
         "width:75;"
-        "font-weight:bold;}" );
+        "font-weight:bold;}"
+         "QPushButton:checked {background-color:#3F5A9E;}"
+        );
 
     /*
         "QPushButton:hover{"
@@ -161,6 +152,7 @@ void DateTimeSelector::time_buttons(const QString time_symbol, std::vector<QStri
 
         btn->setMinimumHeight(40);
         btn->setCheckable(true);
+
         connect(btn, &QPushButton::clicked, this,
                 [&, btn, btn_text](){ m_hour_buttons[btn_text].is_selected = btn->isChecked(); });
 

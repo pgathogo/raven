@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Point this to your local bootstrap.min.css file -->
+
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="mustache.min.js"></script>
+    <script src="bootstrap.bundle.min.js" defer></script>
+
+    <style>
+        /* Small custom tweaks to match the screenshot exactly */
+        .break-time-row {
+            background-color: #f8f9fa; /* Bootstrap light gray */
+            font-weight: 600;
+            color: #495057;
+        }
+        .client-row td:first-child {
+            padding-left: 2.5rem; /* Indent the client name under the time */
+        }
+        .table th {
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom-width: 2px;
+        }
+        /* Ensure the arrow looks right */
+        .arrow-icon {
+            font-size: 0.8em;
+            margin-right: 5px;
+            color: #adb5bd;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+<div id="output"></div>
+<script id="template" type="x-tmpl-mustache">
+
+    <!-- Report Header Information -->
+    <div class="mb-4">
+        <h3 class="mb-3">{{report_title}}</h3>
+        <div class="text-muted">
+            <span class="me-3"><strong>Station:</strong> {{station}}</span>
+            <span class="me-3"><strong>Date:</strong> {{book_date}}</span>
+            <span><strong>Hours:</strong> {{book_hours}}</span>
+        </div>
+    </div>
+
+    <!-- Main Table -->
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col">Client</th>
+                <th scope="col">Spot Ref</th>
+                <th scope="col">Spot Title</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Status</th>
+                <th scope="col">Play Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through Breaks (The Times) -->
+            {{#breaks}}
+            <tr class="break-time-row">
+                <td colspan="6">
+                    <span class="arrow-icon">▼</span> {{break_time}}
+                </td>
+            </tr>
+
+            <!-- Loop through Commercials in this Break -->
+            {{#comms}}
+            <tr class="client-row">
+                <td>{{client_name}}</td>
+                <td>{{spot_id}}</td>
+                <td>{{spot_name}}</td>
+                <td>{{spot_duration}}</td>
+                <!-- Using Bootstrap badge for status to make it stand out -->
+                <td><span class="badge bg-success">{{book_status}}</span></td>
+                <td>{{play_date}}</td>
+            </tr>
+            {{/comms}}
+            <!-- End Commercials Loop -->
+
+            {{/breaks}}
+            <!-- End Breaks Loop -->
+        </tbody>
+    </table>
+    </script>
+
+    <script>
+        function render_report(jsonDataString) {
+                const data = JSON.parse(jsonDataString);
+                const template = document.getElementById("template").innerHTML;
+                const rendered = Mustache.render(template, data);
+                document.getElementById('output').innerHTML = rendered;
+            }
+    </script>
+
+</body>
+</html>

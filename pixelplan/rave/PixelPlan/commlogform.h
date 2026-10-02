@@ -27,6 +27,7 @@ public:
     void setMdiArea(QMdiArea* mdi);
 
     void set_default_dts();
+    QMdiArea* mdi_area();
 
 private slots:
     void on_clicked_datetime();
@@ -35,6 +36,7 @@ private slots:
     // void select_all_hours(int state);
     // void hours_popup_hidden();
     void print_log();
+    void print_comm_log();
     void proc_started();
     void error_occured(QProcess::ProcessError);
 

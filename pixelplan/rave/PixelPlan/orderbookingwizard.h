@@ -35,6 +35,7 @@ namespace PIXELPLAN
     };
 
     struct BookingData {
+        int client_id {-1};
         std::shared_ptr<Order> order;
         std::shared_ptr<TRAFFIK::Spot> spot{nullptr};
         bool is_all_breaks{false};
