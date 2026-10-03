@@ -38,21 +38,6 @@ public:
         T* win = new T(this);
         win->setMdiArea(mdiArea);
         mdiArea->addSubWindow(win);
-
-        /*
-        for(int i=0; i<mdiArea->subWindowList().size(); ++i){
-            BaseEntityBrowserDlg* basedlg = dynamic_cast<BaseEntityBrowserDlg*>(
-                        mdiArea->subWindowList().at(i));
-            if (basedlg->typeID() == T::TYPEID){
-                win = dynamic_cast<T*>(basedlg);
-            }else{
-                T* win = new T(this);
-                win->setMdiArea(mdiArea);
-                mdiArea->addSubWindow(win);
-            }
-        }
-        */
-
         return win;
     }
 
@@ -60,10 +45,12 @@ public:
     T1* createSubWindow(std::string vltype)
     {
         T1* win = new T1(vltype, this);
+
         win->setMdiArea(mdiArea);
         mdiArea->addSubWindow(win);
         return win;
     }
+
     void showEvent(QShowEvent*);
 
 private slots:

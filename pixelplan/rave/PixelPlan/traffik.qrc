@@ -167,5 +167,6 @@
         <file>build/html/bootstrap.bundle.min.js</file>
         <file>build/html/bootstrap.min.css</file>
         <file>build/html/mustache.min.js</file>
+        <file>build/html/order_bookings.html</file>
     </qresource>
 </RCC>

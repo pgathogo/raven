@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QCompleter>
 #include <QTableWidgetItem>
+#include <QJsonObject>
 #include "../../../rave/framework/picklistbrowser.h"
 
 
@@ -63,12 +64,12 @@ struct Booking{
     double spot_duration{0};
     QString formatted_duration{};
     int booking_id{-1};
-    std::string booking_status{};
-    std::string play_date{};
-    std::string play_time{};
+    std::string booking_status{};   //
+    std::string play_date{};        // TX Date
+    std::string play_time{};        // TX Time
     int schedule_id{-1};
-    std::string schedule_date{};
-    std::string schedule_time{};
+    std::string schedule_date{}; // Booking Date
+    std::string schedule_time{}; // Booking time
 };
 
 // NOTE: We call this struct 'ClientOrder' to avoid confusing it with the 'Order' Entity
@@ -81,6 +82,7 @@ struct ClientOrder {
     QDate end_date;
     int spots_ordered{0};
     int spots_booked{0};
+    int spots_played{0};
     int client_id{0};
     std::string client_name{""};
     std::vector<Booking> order_bookings;
@@ -121,7 +123,11 @@ private:
 
 using Bookings = std::map<int, std::vector<Booking>>;
 
+using ClientOrders = std::map<int, ClientOrder>;
+
 enum class VoidType{Cancel, Skip};
+
+enum class BookingStatus{All, Ready, Played, Cancel, Skipped};
 
 class BookingOrderBrowser : public QDialog
 {
@@ -135,6 +141,7 @@ public:
     ~BookingOrderBrowser();
 
     void setMdiArea(QMdiArea* mdi);
+    QMdiArea* mdi_area() { return m_mdi_area; }
 
     void search_by_client(std::shared_ptr<Client>);
     BookingItem make_booking_item(Booking);
@@ -152,7 +159,7 @@ private slots:
     void find_orders(QString);
     void date_filter_changed(int);
 
-    void print_all_bookings();
+    void print_order_bookings(BookingStatus);
     void booking_item_clicked(QTableWidgetItem*);
 
 private:
@@ -165,9 +172,9 @@ private:
     void set_autocompleter();
     void fill_cbox_date_filter();
     void set_client(std::shared_ptr<Client>);
-    void build_client_orders(int, std::string, std::vector<ClientOrder>&);
+    void build_client_orders(int, std::string, ClientOrders&);
+    void build_order_booking_table(ClientOrders&);
     void build_order_bookings(int, std::vector<Booking>&);
-    void build_order_booking_table(std::vector<ClientOrder>&);
     void make_inner_table_headers(QTableWidget*, int);
 
     void void_query(VoidType);
@@ -176,6 +183,9 @@ private:
 
     std::string vector_to_comma_sep(const std::vector<int>&);
 
+    QJsonObject bookings_to_json(ClientOrder&, std::string);
+
+    void print_order_bookings();
 
 
     Ui::BookingOrderBrowser *ui;
@@ -210,7 +220,7 @@ private:
     QCompleter* m_completer;
     std::unique_ptr<EntityDataModel> m_client_edm;
 
-    std::vector<ClientOrder> m_client_orders;
+    ClientOrders m_client_orders;
 
     template<typename T>
     class HasNameColumn

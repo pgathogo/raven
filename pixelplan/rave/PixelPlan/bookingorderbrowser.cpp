@@ -1,10 +1,12 @@
 #include <sstream>
 #include <format>
+#include <ranges>
 
 #include <QTableWidget>
 #include <QTreeWidgetItem>
 #include <QDateTime>
 #include <QMessageBox>
+#include <QJsonArray>
 
 #include "../../../framework/ravensetup.h"
 #include "../../../framework/entitydatamodel.h"
@@ -22,6 +24,7 @@
 #include "spotaudio.h"
 #include "voidbookingform.h"
 #include "orderbookingwizard.h"
+#include "reportviewer.h"
 
 
 BookingItem::BookingItem(Booking bk)
@@ -100,7 +103,11 @@ BookingOrderBrowser::BookingOrderBrowser(const std::string username, QWidget *pa
     QAction* actCancelled = new QAction(tr("&Cancelled"), this);
     QAction* actSkipped = new QAction(tr("&Skipped"), this);
 
-    connect(actAll, &QAction::triggered, this, &BookingOrderBrowser::print_all_bookings);
+    connect(actAll, &QAction::triggered, this, [this](){ print_order_bookings(BookingStatus::All);} );
+    connect(actReady, &QAction::triggered, this, [this](){ print_order_bookings(BookingStatus::Ready);} );
+    connect(actPlayed, &QAction::triggered, this, [this](){ print_order_bookings(BookingStatus::Played);} );
+    connect(actCancelled, &QAction::triggered, this, [this](){ print_order_bookings(BookingStatus::Cancel);} );
+    connect(actSkipped, &QAction::triggered, this, [this](){ print_order_bookings(BookingStatus::Skipped);} );
 
     menu->addAction(actAll);
     menu->addAction(actReady);
@@ -208,7 +215,8 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
 
     sql << " select a.name AS client_name, f.title AS order_title, f.id AS order_id, f.order_number, "
         << " f.order_date, f.start_date, f.end_date,  f.spots_ordered, f.spots_booked, "
-        << " b.id AS spot_id, b.name AS spot_name, b.spot_duration,  c.id AS booking_id, c.booking_status, "
+        << " b.id AS spot_id, b.name AS spot_name, b.spot_duration, "
+        << " c.id AS booking_id, c.booking_status, c.book_date, c.book_time, "
         << " c.play_date, c.play_time,  e.id AS schedule_id, "
         << " e.schedule_date, e.schedule_time "
         << " From rave_order f "
@@ -301,7 +309,9 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                 order_bookings.push_back(booking);
 
             provider->cache()->next();
+
         } while(!provider->cache()->isLast());
+
       }
 
 }
@@ -830,7 +840,7 @@ std::string BookingOrderBrowser::order_by(int client_id)
 }
 
 void BookingOrderBrowser::build_client_orders(int client_id, std::string date_filter,
-                         std::vector<ClientOrder>& client_orders)
+                         std::map<int, ClientOrder>& client_orders)
 {
 
     std::stringstream sql;
@@ -901,7 +911,7 @@ void BookingOrderBrowser::build_client_orders(int client_id, std::string date_fi
 
         build_order_bookings(client_order.order_id, client_order.order_bookings);
 
-        client_orders.push_back(client_order);
+        client_orders[client_order.order_id] = client_order;
 
         provider->cache()->next();
 
@@ -909,7 +919,7 @@ void BookingOrderBrowser::build_client_orders(int client_id, std::string date_fi
 
 }
 
-void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& client_orders)
+void BookingOrderBrowser::build_order_booking_table(std::map<int, ClientOrder>& client_orders)
 {
     ui->twOrders->setStyleSheet(
         "QHeaderView::section {;"
@@ -944,14 +954,14 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
 
     m_tree_nodes.clear();
 
-    for (auto& co: client_orders)
+    for (auto& [order_id, co]: client_orders)
     {
         parent_is_created = false;
 
         QTreeWidgetItem* wi_order_node  = new QTreeWidgetItem(ui->twOrders);
 
         wi_order_node->setText(0, stoq(co.title));
-        wi_order_node->setData(0, Qt::UserRole, co.order_id);
+        wi_order_node->setData(0, Qt::UserRole, order_id);
 
         wi_order_node->setText(1, stoq(co.order_number));
         wi_order_node->setText(2, co.order_date.toString("dd-MM-yyyy"));
@@ -981,7 +991,7 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
         for (auto& booking : co.order_bookings)
         {
             if (booking.schedule_date.empty())
-                continue;
+            continue;
 
             auto bi = make_booking_item(booking);
 
@@ -1000,29 +1010,23 @@ void BookingOrderBrowser::build_order_booking_table(std::vector<ClientOrder>& cl
 
             connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
 
-            connect(table, &QTableWidget::itemClicked, this, [this, table](QTableWidgetItem* item){
-
+            connect(table, &QTableWidget::itemClicked, this, [this, table](QTableWidgetItem* item) {
                 int col6 = 6;
-
                 if (item) {
 
                     QTableWidgetItem* twi = table->item(item->row(), col6);
 
-                    if(twi)
+                    if (twi->text() == "SKIPPED" || twi->text() == "CANCELLED")
+                    {
+                        this->ui->btnSkip->setEnabled(false);
+                        this->ui->btnCancel->setEnabled(false);
 
-                        if (twi->text() == "SKIPPED" || twi->text() == "CANCELLED") {
-
-                            this->ui->btnSkip->setEnabled(false);
-                            this->ui->btnCancel->setEnabled(false);
-
-                        } else {
-
-                            this->ui->btnSkip->setEnabled(true);
-                            this->ui->btnCancel->setEnabled(true);
-                        }
+                    } else {
+                        this->ui->btnSkip->setEnabled(true);
+                        this->ui->btnCancel->setEnabled(true);
+                    }
                 }
-
-                  });
+            });
 
             ++row;
         }
@@ -1108,9 +1112,99 @@ void BookingOrderBrowser::sort_bookings(std::vector<Booking>& bookings)
 
 }
 
-void BookingOrderBrowser::print_all_bookings()
+void BookingOrderBrowser::print_order_bookings(BookingStatus bs)
 {
-    qDebug() << "printing all bookings...";
+    if ( ui->twOrders->selectedItems().size() == 0 ||
+        ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt() == 0)
+    {
+        auto msg = QString("Please select an order to print");
+        QMessageBox::information(this, "Print Order Bookingsr", msg);
+        return;
+    }
+
+    auto filter = [](BookingStatus bs) -> std::string {
+        std::string status;
+        switch(bs) {
+        case BookingStatus::All:
+            status = "";
+            break;
+        case BookingStatus::Ready:
+            status = "READY";
+            break;
+        case BookingStatus::Played:
+            status = "PLAYED";
+            break;
+        case BookingStatus::Cancel:
+            status = "CANCELLED";
+            break;
+        case BookingStatus::Skipped:
+            status = "SKIPPED";
+            break;
+        default:
+            status = "NONE";
+            break;
+        }
+
+        return status;
+    };
+
+    int order_id = ui->twOrders->currentItem()->data(0, Qt::UserRole).toInt();
+
+    QJsonObject order_bookings = bookings_to_json(m_client_orders.at(order_id), filter(bs));
+
+    std::unique_ptr<ReportViewer> rv = std::make_unique<ReportViewer>(order_bookings,
+                                                                      "order_bookings.html",
+                                                                      mdi_area());
+    rv->exec();
+}
+
+QJsonObject BookingOrderBrowser::bookings_to_json(ClientOrder& order, std::string filter_status)
+{
+    QJsonArray jbookings;
+
+
+    auto filtered_bookings = order.order_bookings | std::views::filter([&filter_status](const Booking& b) {
+                                 if (filter_status.empty()) return true;
+                            return b.booking_status == filter_status;
+                        });
+
+    for(auto& bkn : filtered_bookings)
+    {
+        QJsonObject jbook;
+
+        if (bkn.schedule_date.empty()) continue;
+
+        jbook["book_date"] = QString::fromStdString(bkn.schedule_date);
+        jbook["book_time"] = QString::fromStdString(bkn.schedule_time);
+        jbook["spot_title"] = QString::fromStdString(bkn.spot_name);
+        jbook["duration"] = bkn.formatted_duration;
+        jbook["tx_date"] = QString::fromStdString(bkn.play_date);
+        jbook["tx_time"] = QString::fromStdString(bkn.play_time);
+        jbook["tx_status"] = QString::fromStdString(bkn.booking_status);
+
+        jbookings.append(jbook);
+
+    }
+
+    QJsonObject jorder;
+    jorder["order_id"] = order.order_id;
+    jorder["order_number"] = QString::fromStdString(order.order_number);
+    jorder["order_title"] = QString::fromStdString(order.title);
+    jorder["order_date"] = order.order_date.toString("dd-MM-yyyy");
+    jorder["start_date"] = order.start_date.toString("dd-MM-yyyy");
+    jorder["end_date"] = order.end_date.toString("dd-MM-yyyy");
+    jorder["spot_ordered"] = order.spots_ordered;
+    jorder["spot_booked"] = order.spots_booked;
+    jorder["bookings"] = jbookings;
+
+
+    QJsonObject jbook;
+    jbook["report_date"] = QDate::currentDate().toString("dd/MM/yyyy");
+    jbook["client_name"] = QString::fromStdString(order.client_name);
+    jbook["order"] = jorder;
+
+    return jbook;
+
 }
 
 PrintBookingMenu::PrintBookingMenu(QPushButton* button, QWidget* parent)

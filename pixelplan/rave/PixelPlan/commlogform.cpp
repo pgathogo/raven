@@ -335,16 +335,15 @@ void CommLogForm::print_comm_log()
     std::sort(m_dts.sel_hours.begin(), m_dts.sel_hours.end());
     std::string selected_hours = comma_sep(m_dts.sel_hours);
 
-    QJsonObject report;
-    report["report_title"] = "Commercial Booking Report";
-    report["station"] = m_setup->stationName()->to_qstring();
-    report["book_date"] = m_dts.sel_date.toString("dd-MM-yyyy");
-    report["book_hours"] = QString::fromStdString(selected_hours);
-    report["breaks"] = breaks;
+    QJsonObject report_data;
 
-    std::unique_ptr<ReportViewer> rv = std::make_unique<ReportViewer>(report,
-                                                                      "commlog.html",
-                                                                      mdi_area());
+    report_data["report_title"] = "Commercial Booking Report";
+    report_data["station"] = m_setup->stationName()->to_qstring();
+    report_data["book_date"] = m_dts.sel_date.toString("dd-MM-yyyy");
+    report_data["book_hours"] = QString::fromStdString(selected_hours);
+    report_data["breaks"] = breaks;
+
+    std::unique_ptr<ReportViewer> rv = std::make_unique<ReportViewer>(report_data, "commlog.html", mdi_area());
     rv->exec();
 
 

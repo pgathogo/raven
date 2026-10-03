@@ -49,6 +49,5 @@ void ReportViewer::render_report()
     m_web_view->load(QUrl(report_file));
 
 
-
 }
 
