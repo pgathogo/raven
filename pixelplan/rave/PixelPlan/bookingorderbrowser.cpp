@@ -840,7 +840,7 @@ std::string BookingOrderBrowser::order_by(int client_id)
 }
 
 void BookingOrderBrowser::build_client_orders(int client_id, std::string date_filter,
-                         std::map<int, ClientOrder>& client_orders)
+                         ClientOrders& client_orders)
 {
 
     std::stringstream sql;
@@ -919,7 +919,7 @@ void BookingOrderBrowser::build_client_orders(int client_id, std::string date_fi
 
 }
 
-void BookingOrderBrowser::build_order_booking_table(std::map<int, ClientOrder>& client_orders)
+void BookingOrderBrowser::build_order_booking_table(ClientOrders& client_orders)
 {
     ui->twOrders->setStyleSheet(
         "QHeaderView::section {;"
@@ -1162,7 +1162,6 @@ QJsonObject BookingOrderBrowser::bookings_to_json(ClientOrder& order, std::strin
 {
     QJsonArray jbookings;
 
-
     auto filtered_bookings = order.order_bookings | std::views::filter([&filter_status](const Booking& b) {
                                  if (filter_status.empty()) return true;
                             return b.booking_status == filter_status;
@@ -1196,7 +1195,6 @@ QJsonObject BookingOrderBrowser::bookings_to_json(ClientOrder& order, std::strin
     jorder["spot_ordered"] = order.spots_ordered;
     jorder["spot_booked"] = order.spots_booked;
     jorder["bookings"] = jbookings;
-
 
     QJsonObject jbook;
     jbook["report_date"] = QDate::currentDate().toString("dd/MM/yyyy");

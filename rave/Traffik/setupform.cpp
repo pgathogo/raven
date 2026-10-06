@@ -50,6 +50,8 @@ SetupForm::SetupForm(RavenSetup* setup,
     connect(ui->btnAudioPath, &QPushButton::clicked, this, &SetupForm::set_audio_path);
     connect(ui->btnCommAudioPath, &QPushButton::clicked, this, &SetupForm::set_comm_audio_path);
 
+    connect(ui->btnLogo, &QPushButton::clicked, this, &SetupForm::on_select_logo);
+
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     load_order_approvers();
@@ -97,6 +99,9 @@ void SetupForm::populateEntityFields()
 
     m_setup->set_audio_folder(ui->edtAudioPath->text().toStdString());
     m_setup->set_comm_audio_folder(ui->edtCommAudioPath->text().toStdString());
+
+    m_setup->setStationLogo(ui->edtLogo->text().toStdString());
+
 }
 
 void SetupForm::populateFormWidgets()
@@ -131,6 +136,10 @@ void SetupForm::populateFormWidgets()
 
     ui->edtAudioPath->setText(stoq(m_setup->audio_folder()->value()));
     ui->edtCommAudioPath->setText(stoq(m_setup->comm_audio_folder()->value()));
+
+    ui->edtLogo->setText(stoq(m_setup->stationLogo()->value()));
+    if (!ui->edtLogo->text().isEmpty())
+        show_image(ui->edtLogo->text());
 }
 
 void SetupForm::populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf)
@@ -290,4 +299,40 @@ void SetupForm::set_comm_audio_path()
     auto comm_audio_folder = get_audio_folder(ui->edtCommAudioPath->text());
     if (!comm_audio_folder.isEmpty())
          ui->edtCommAudioPath->setText(comm_audio_folder+"/");
+}
+
+void SetupForm::on_select_logo()
+{
+    QString curr_folder = ui->edtLogo->text();
+
+    QString logo_path = ".";
+    if (!curr_folder.isEmpty()) {
+        QFileInfo file_info(curr_folder);
+        logo_path = file_info.absolutePath();
+    }
+
+    QString filename = QFileDialog::getOpenFileName(
+        this,
+        tr("Select logo file"),
+        logo_path,
+        tr("Image Files (*.png);;(*.jpg)"));
+
+    if (filename.isEmpty())
+        return;
+
+    ui->edtLogo->setText(filename);
+
+    show_image(filename);
+}
+
+void SetupForm::show_image(QString filepath)
+{
+    QFileInfo file_info(filepath);
+    QString filename = file_info.fileName();
+
+    QPixmap pixmap(QString(":/reports/build/html/%1").arg(filename));
+    ui->lblLogo->setPixmap(pixmap);
+    ui->lblLogo->setAlignment(Qt::AlignCenter);
+    ui->lblLogo->resize(400, 300);
+    ui->lblLogo->show();
 }

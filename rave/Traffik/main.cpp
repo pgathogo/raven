@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
     //LoginForm lf(auth.get());
     //if (lf.exec() > 0){
 
-    LoginForm lf("nbohr", "abc123");
+    LoginForm lf("postgres", "abc123");
+
     if (lf.exec() > 0)
     {
         Credentials cred = lf.credentials();
@@ -52,11 +53,15 @@ int main(int argc, char *argv[])
         Logger::info(module, msg);
 
         auto ssform = std::make_unique<SelectStationForm>(cred.username);
+
+        /*
         if (ssform->exec() == 0) {
             return 0;
         }
-
         StationInfo station_info = ssform->selected_station();
+        */
+
+        StationInfo station_info = ssform->auto_selected_station(6);
 
         ConnInfo conn_info;
         conn_info.host = station_info.ip_address.toStdString();

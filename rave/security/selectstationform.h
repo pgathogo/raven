@@ -15,9 +15,13 @@ class SelectStationForm : public QDialog
 public:
     explicit SelectStationForm(QWidget* parent=nullptr);
     explicit SelectStationForm(const QString username, QWidget *parent = nullptr);
+    ~SelectStationForm();
+
     int station_id();
     StationInfo selected_station();
-    ~SelectStationForm();
+    StationInfo auto_selected_station(int);
+
+
 
     //StationInfo station_by_station_code(const QString station_code);
 

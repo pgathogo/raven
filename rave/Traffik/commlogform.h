@@ -13,6 +13,7 @@ class CommLogForm;
 
 class QMdiArea;
 class QCheckList;
+class RavenSetup;
 
 class CommLogForm : public QDialog
 {
@@ -43,6 +44,10 @@ private:
     void write_json_data(QJsonArray&);
     void execute_report();
     void write_report_launcher(QString, QString&);
+    void set_column_width();
+
+
+    QMdiArea* mdi_area(){ return m_mdi_area; }
 
     Ui::CommLogForm *ui;
     QMdiArea* m_mdi_area;
@@ -52,6 +57,7 @@ private:
     DateTimeSelection m_dts;
 
     std::unique_ptr<QProcess> m_process;
+    std::shared_ptr<RavenSetup> m_setup;
 };
 
 #endif // COMMLOGFORM_H

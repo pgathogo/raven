@@ -156,4 +156,12 @@
         <file>media/editor/play_start.png</file>
         <file>media/editor/stop_play.png</file>
     </qresource>
+    <qresource prefix="/reports">
+        <file>build/html/bootstrap.bundle.min.js</file>
+        <file>build/html/bootstrap.min.css</file>
+        <file>build/html/commlog.html</file>
+        <file>build/html/mustache.min.js</file>
+        <file>build/html/order_bookings.html</file>
+        <file>build/html/citizen_logo.png</file>
+    </qresource>
 </RCC>

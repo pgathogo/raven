@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QStandardPaths>
 #include <QLineEdit>
 
@@ -66,6 +67,8 @@ SetupForm::SetupForm(RavenSetup* setup,
 
     connect(ui->btnMagicSoftLog, &QPushButton::clicked, this, &SetupForm::on_magicsoft_log_path);
     connect(ui->btnCTS, &QPushButton::clicked, this, &SetupForm::cts_filepath);
+
+    connect(ui->btnLogo, &QPushButton::clicked, this, &SetupForm::on_select_logo);
 
     ui->tvApprovers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -401,6 +404,28 @@ void SetupForm::on_magicsoft_log_path()
 void SetupForm::cts_filepath()
 {
     set_folder(ui->edtCTSFilepath, "CTC Filepath");
+}
+
+void SetupForm::on_select_log()
+{
+    QString curr_folder = ui->edtLogo->text();
+
+    QString logo_path = ".";
+    if (!curr_folder.isEmpty()) {
+        QFileInfo file_info(curr_folder);
+        logo_path = file_info.absolutePath();
+    }
+
+    QString filename = QFileDialog::getOpenFileName(
+        this,
+        tr("Select logo file"),
+        logo_path,
+        tr("Image Files (*.png);;(*.jpg)"));
+
+    if (filename.isEmpty())
+        return;
+
+    ui->edtLogo->setText(filename);
 }
 
 void SetupForm::set_folder(QLineEdit* le, const QString title)

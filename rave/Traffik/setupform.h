@@ -46,17 +46,19 @@ private slots:
       int selectedRowId() const;
       void set_audio_path();
       void set_comm_audio_path();
+      void on_select_logo();
 
 private:
-    Ui::SetupForm *ui;
-    RavenSetup* m_setup;
-    std::unique_ptr<EntityDataModel> m_edm_approver;
-
     void load_order_approvers();
     std::set<int> make_aprv_levels();
     void populate_choice_combo(QComboBox* cbox, const ChoiceField<std::string>* cf);
 
     QString get_audio_folder(QString default_folder);
+    void show_image(QString);
+
+    Ui::SetupForm *ui;
+    RavenSetup* m_setup;
+    std::unique_ptr<EntityDataModel> m_edm_approver;
 };
 
 #endif // SETUPFORM_H

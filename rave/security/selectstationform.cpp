@@ -86,6 +86,13 @@ StationInfo SelectStationForm::selected_station()
     return m_selected_station;
 }
 
+StationInfo SelectStationForm::auto_selected_station(int station_id)
+{
+    fetch_user_stations("postgres");
+    m_selected_station = m_stations_info[station_id];
+    return m_selected_station;
+}
+
 void SelectStationForm::cancel()
 {
     done(0);

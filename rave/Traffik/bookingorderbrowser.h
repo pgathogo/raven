@@ -6,6 +6,8 @@
 #include <QItemDelegate>
 #include <QMenu>
 #include <QCompleter>
+#include <QJsonObject>
+
 #include "../framework/picklistbrowser.h"
 
 
@@ -19,7 +21,7 @@ class QTableWidget;
 class QTreeWidgetItem;
 class PickListBrowser;
 class Client;
-
+class RavenSetup;
 
 class TreeWidgetItemDelegate : public QItemDelegate
 {
@@ -60,6 +62,7 @@ struct Booking{
     int spot_id{-1};
     std::string spot_name{};
     double spot_duration{0};
+    QString formatted_duration{};
     int booking_id{-1};
     std::string booking_status{};
     std::string play_date{};
@@ -86,6 +89,9 @@ struct ClientOrder {
 
 
 using Bookings = std::map<int, std::vector<Booking>>;
+using ClientOrders = std::map<int, ClientOrder>;
+
+enum class BookingStatus{All, Ready, Played, Cancel, Skipped};
 
 class BookingOrderBrowser : public QDialog
 {
@@ -113,34 +119,13 @@ private slots:
     void find_orders(QString);
     void date_filter_changed(int);
 
-    void print_all_bookings();
+    void print_order_bookings(BookingStatus);
 
 private:
-    Ui::BookingOrderBrowser *ui;
-    QMdiArea* m_mdi_area;
-    std::unique_ptr<PickListBrowser> m_picklist_browser;
-
-    int m_id{-1};
-    std::string m_label{};
 
     std::string make_filter(int);
     std::string make_order_date_filter();
     std::string order_by(int);
-
-    std::vector<QTableWidget*> m_grid_tables;
-    std::vector<int> booking_ids;
-
-    std::vector<QTreeWidgetItem*> m_tree_nodes;
-
-    TreeWidgetItemDelegate m_item_delegate;
-
-    QMenu* m_spot_ctx_menu;
-    QAction* m_spot_ctx_action;
-
-    std::shared_ptr<Client> m_client;
-
-    int t_row{-1};
-    int t_col{-1};
 
     void set_treewidget(Bookings&, int, const std::string);
     void resizeColumnsToContents(QTreeWidget& tree_widget);
@@ -151,15 +136,17 @@ private:
     void set_autocompleter();
     void fill_cbox_date_filter();
     void set_client(std::shared_ptr<Client>);
-    void build_client_orders(int, std::string, std::vector<ClientOrder>&);
+
+    void build_client_orders(int, std::string, ClientOrders&);
+    void build_order_booking_table(ClientOrders&);
+
     void build_order_bookings(int, std::vector<Booking>&);
-    void build_order_booking_table(std::vector<ClientOrder>&);
+
     void make_inner_table_headers(QTableWidget*, int);
+    QJsonObject bookings_to_json(ClientOrder&, const std::string);
 
-    QCompleter* m_completer;
-    std::unique_ptr<EntityDataModel> m_client_edm;
+    QMdiArea* mdi_area(){ return m_mdi_area; }
 
-    std::vector<ClientOrder> m_client_orders;
 
     template<typename T>
     class HasNameColumn
@@ -196,6 +183,32 @@ private:
         }
     }
 
+    Ui::BookingOrderBrowser *ui;
+    QMdiArea* m_mdi_area;
+    std::unique_ptr<PickListBrowser> m_picklist_browser;
+    int m_id{-1};
+
+    std::string m_label{};
+    std::vector<QTableWidget*> m_grid_tables;
+    std::vector<int> booking_ids;
+
+    std::vector<QTreeWidgetItem*> m_tree_nodes;
+
+    TreeWidgetItemDelegate m_item_delegate;
+
+    QMenu* m_spot_ctx_menu;
+    QAction* m_spot_ctx_action;
+
+    std::shared_ptr<Client> m_client;
+    std::shared_ptr<RavenSetup> m_setup;
+
+    int t_row{-1};
+    int t_col{-1};
+
+    QCompleter* m_completer;
+    std::unique_ptr<EntityDataModel> m_client_edm;
+
+    ClientOrders m_client_orders;
 
 };
 

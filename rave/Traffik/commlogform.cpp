@@ -8,10 +8,13 @@
 #include <iostream>
 #include <fstream>
 
-#include "commlogform.h"
-#include "ui_commlogform.h"
 #include "../utils/qchecklist.h"
 #include "../framework/entitydatamodel.h"
+#include "../framework/ravensetup.h"
+
+#include "commlogform.h"
+#include "ui_commlogform.h"
+#include "reportviewer.h"
 
 CommLogForm::CommLogForm(QWidget *parent) :
     QDialog(parent),
@@ -48,6 +51,11 @@ CommLogForm::CommLogForm(QWidget *parent) :
     update_hours_label(hours);
 
     fetch_bookings(m_dts);
+
+    std::unique_ptr<EntityDataModel> edm = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
+    edm->all();
+    if (edm->count() > 0)
+        m_setup = std::dynamic_pointer_cast<RavenSetup>(edm->firstEntity());
 
     this->setMinimumSize(QSize(950, 500));
 
@@ -268,9 +276,24 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
 
         ui->tvCommLog->header()->setSectionResizeMode(QHeaderView::Interactive);
         ui->cbExpand->setChecked(true);
+
+        set_column_width();
     }
 
 }
+
+void CommLogForm::set_column_width()
+{
+    QStringList col_titles {"Client", "Spot Ref", "Spot Title", "Duration", "Status", "Play Date", "Play Time"};
+    ui->tvCommLog->setColumnWidth(0, 300);
+    ui->tvCommLog->setColumnWidth(1, 100);
+    ui->tvCommLog->setColumnWidth(2, 300);
+    ui->tvCommLog->setColumnWidth(3, 100);
+    ui->tvCommLog->setColumnWidth(4, 100);
+    ui->tvCommLog->setColumnWidth(5, 100);
+    ui->tvCommLog->setColumnWidth(6, 100);
+}
+
 
 void CommLogForm::print_log()
 {
@@ -307,14 +330,20 @@ void CommLogForm::print_log()
        breaks.append(comm_break);
     }
 
-    //execute_report();
+    std::sort(m_dts.sel_hours.begin(), m_dts.sel_hours.end());
+    std::string selected_hours = comma_sep(m_dts.sel_hours);
 
+    QJsonObject report_data;
 
-    if (breaks.size() > 0) {
-        write_json_data(breaks);
-        // Call report renderer
-        execute_report();
-    }
+    report_data["report_title"] = "Commercial Booking Report";
+    report_data["station"] = m_setup->stationName()->to_qstring();
+    report_data["book_date"] = m_dts.sel_date.toString("dd-MM-yyyy");
+    report_data["book_hours"] = QString::fromStdString(selected_hours);
+    report_data["breaks"] = breaks;
+
+    std::unique_ptr<ReportViewer> rv = std::make_unique<ReportViewer>(report_data, "commlog.html", mdi_area());
+    rv->exec();
+
 }
 
 void CommLogForm::write_json_data(QJsonArray& data)

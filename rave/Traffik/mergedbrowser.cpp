@@ -66,6 +66,7 @@ MergedBrowser::MergedBrowser(QWidget *parent)
 void MergedBrowser::setMdiArea(QMdiArea* mdi)
 {
     m_mdi_area2 = mdi;
+    m_book_order_browser->setMdiArea(m_mdi_area2);
 }
 
 MergedBrowser::~MergedBrowser()

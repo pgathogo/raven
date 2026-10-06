@@ -31,7 +31,7 @@ set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets WebEngineWidgets REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
@@ -208,6 +208,8 @@ set(PROJECT_SOURCES
     traffiktree.cpp
     traffiktreeviewmodel.h
     traffiktreeviewmodel.cpp
+    reportviewer.h
+    reportviewer.cpp
 
     ../audio/artist.h
     ../audio/audio.h
@@ -470,7 +472,9 @@ endif()
 target_compile_options(traffik PRIVATE /MT)
 target_link_options(traffik PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
-target_link_libraries(traffik PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(traffik PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::WebEngineWidgets )
 
 
 target_link_libraries(traffik PRIVATE ${PostgreSQL_LIBRARIES})

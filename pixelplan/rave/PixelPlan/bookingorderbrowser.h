@@ -172,6 +172,7 @@ private:
     void set_autocompleter();
     void fill_cbox_date_filter();
     void set_client(std::shared_ptr<Client>);
+
     void build_client_orders(int, std::string, ClientOrders&);
     void build_order_booking_table(ClientOrders&);
     void build_order_bookings(int, std::vector<Booking>&);
@@ -185,7 +186,7 @@ private:
 
     QJsonObject bookings_to_json(ClientOrder&, std::string);
 
-    void print_order_bookings();
+    //void print_order_bookings();
 
 
     Ui::BookingOrderBrowser *ui;
