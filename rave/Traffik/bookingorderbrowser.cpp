@@ -9,6 +9,7 @@
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
 #include "../utils/tools.h"
+#include "../audio/audiotool.h"
 
 #include "bookingorderbrowser.h"
 #include "ui_bookingorderbrowser.h"
@@ -166,7 +167,7 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
 
     sql << " select a.name AS client_name, f.title AS order_title, f.id AS order_id, f.order_number, "
         << " f.order_date, f.start_date, f.end_date,  f.spots_ordered, f.spots_booked, "
-        << " b.id AS spot_id, b.name AS spot_name, b.spot_duration,  c.id AS booking_id, c.booking_status, "
+        << " b.id AS spot_id, b.name AS spot_name, b.real_duration as spot_duration,  c.id AS booking_id, c.booking_status, "
         << " c.play_date, c.play_time,  e.id AS schedule_id, "
         << " e.schedule_date, e.schedule_time "
         << " From rave_order f "
@@ -228,7 +229,7 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
 
                     if (field == "spot_duration") {
                         booking.spot_duration = str_to_double(value);
-                        booking.formatted_duration = duration_to_time(booking.spot_duration).toString("HH:mm:ss");
+                        booking.formatted_duration = duration_to_time(booking.spot_duration).toString("HH:mm");
                     }
 
                     if (field == "booking_id")
@@ -237,8 +238,15 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                         booking.booking_status = value;
                     if (field == "play_date")
                         booking.play_date = value;
-                    if (field == "play_time")
-                        booking.play_time = value;
+
+                    if (field == "play_time") {
+                        if (!value.empty()) {
+                            QString tstr = QString::fromStdString(value);
+                            QString str_time = QTime::fromString(tstr,"HH:mm").toString("HH:mm");
+                            booking.play_time = str_time.toStdString();
+                        }
+                    }
+
                     if (field == "schedule_id")
                         booking.schedule_id = str_to_int(value);
                     if (field == "schedule_date")
@@ -744,6 +752,8 @@ void BookingOrderBrowser::build_order_booking_table(ClientOrders& client_orders)
 
     m_tree_nodes.clear();
 
+    AUDIO::AudioTool audio_tool;
+
     for (auto& [order_id, co]: client_orders)
     {
         parent_is_created = false;
@@ -785,6 +795,7 @@ void BookingOrderBrowser::build_order_booking_table(ClientOrders& client_orders)
             if (booking.schedule_date.empty())
                 continue;
 
+
             QTableWidgetItem* wi_book_date = new QTableWidgetItem(stoq(booking.schedule_date));
             wi_book_date->setData(Qt::UserRole, co.order_id);
 
@@ -794,7 +805,8 @@ void BookingOrderBrowser::build_order_booking_table(ClientOrders& client_orders)
             QTableWidgetItem* wi_spot_title = new QTableWidgetItem(stoq(booking.spot_name));
             wi_spot_title->setData(Qt::UserRole, booking.spot_id);
 
-            QTableWidgetItem* wi_spot_duration = new QTableWidgetItem(QString::number(booking.spot_duration));
+            QTableWidgetItem* wi_spot_duration = new QTableWidgetItem(audio_tool.format_time_hr_to_ms(booking.spot_duration));
+
             QTableWidgetItem* wi_tx_date = new QTableWidgetItem(stoq(booking.play_date));
             QTableWidgetItem* wi_tx_time = new QTableWidgetItem(stoq(booking.play_time));
             QTableWidgetItem* wi_book_status = new QTableWidgetItem(stoq(booking.booking_status));
@@ -810,6 +822,23 @@ void BookingOrderBrowser::build_order_booking_table(ClientOrders& client_orders)
             table->setItem(row, 6, wi_book_status);
 
             table->setContextMenuPolicy(Qt::CustomContextMenu);
+
+            for(int c = 0; c < table->columnCount(); c++) {
+                auto item = table->item(row, c);
+                switch(str_to_enum(booking.booking_status)) {
+                    case BookingStatus::Ready:
+                        break;
+                    case BookingStatus::Played:
+                        item->setForeground(QBrush(QColor("#03fc13")));
+                        break;
+                    case BookingStatus::Cancel:
+                        item->setForeground(QBrush(QColor("#03fc13")));
+                        break;
+                    case BookingStatus::Skipped:
+                        item->setForeground(QBrush(QColor("#ce03fc")));
+                        break;
+                }
+            }
 
             connect(table, &QTableWidget::customContextMenuRequested, this, &BookingOrderBrowser::show_spot_details);
 
@@ -944,6 +973,8 @@ QJsonObject BookingOrderBrowser::bookings_to_json(ClientOrder& order, const std:
                             return b.booking_status == filter_status;
                         });
 
+    AUDIO::AudioTool audio_tool;
+
     for(auto& bkn : filtered_bookings)
     {
         QJsonObject jbook;
@@ -953,7 +984,9 @@ QJsonObject BookingOrderBrowser::bookings_to_json(ClientOrder& order, const std:
         jbook["book_date"] = QString::fromStdString(bkn.schedule_date);
         jbook["book_time"] = QString::fromStdString(bkn.schedule_time);
         jbook["spot_title"] = QString::fromStdString(bkn.spot_name);
-        jbook["duration"] = bkn.formatted_duration;
+
+        jbook["duration"] = audio_tool.format_time_hr_to_ms(bkn.spot_duration);
+
         jbook["tx_date"] = QString::fromStdString(bkn.play_date);
         jbook["tx_time"] = QString::fromStdString(bkn.play_time);
         jbook["tx_status"] = QString::fromStdString(bkn.booking_status);

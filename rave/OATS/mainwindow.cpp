@@ -900,14 +900,15 @@ void MainWindow::fetch_commercials_bydate(QDate date)
            " From rave_orderbooking a "
            " left outer join rave_spot b on b.id = a.spot_id "
            " left outer join rave_spotaudio c on c.spot_id = b.id "
-           " left outer join rave_audio d on d.id = c.audio_id ";
+           " left outer join rave_audio d on d.id = c.audio_id "
+           " left outer join rave_schedule e on a.schedule_id = e.id ";
 
     QDate next_date = date.addDays(1);
 
     std::string first_date =  date.toString("yyyy/MM/dd").toStdString();
     std::string second_date = next_date.toString("yyyy/MM/dd").toStdString();
 
-    std::string date_filter = std::format(" WHERE a.schedule_date BETWEEN '{}' AND '{}'", first_date, second_date );
+    std::string date_filter = std::format(" WHERE e.schedule_date BETWEEN '{}' AND '{}'", first_date, second_date );
 
     //std::string date_filter = std::format(" WHERE a.book_date = '{}'",date.toString("yyyy/MM/dd").toStdString());
     std::string audio_filter = " AND c.audio_id IS NOT NULL ";

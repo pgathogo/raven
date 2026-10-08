@@ -55,7 +55,8 @@ void ScheduleForm::clear_schedule() {
   }
 }
 
-void ScheduleForm::load_schedule(const QDate &date) {
+void ScheduleForm::load_schedule(const QDate &date)
+{
   const std::string ignore_case = "IGNORE-CASE";
 
   clear_schedule();
@@ -72,7 +73,6 @@ void ScheduleForm::load_schedule(const QDate &date) {
   std::string filter =
       m_edm_schedule->prepareFilter(date_filter, breaks_only_filter);
 
-  qDebug() << stoq(filter);
 
   m_edm_schedule->search(filter);
 

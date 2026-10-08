@@ -32,6 +32,7 @@ namespace AUDIO
         bool copy_ogg_to_audiolib(std::string, std::string);
         bool copy_wave_to_audiolib(std::string, std::string);
         QString format_time(double);
+        QString format_time_hr_to_ms(double);
         void probe_file(const QString&);
 
         QString probe_filename();

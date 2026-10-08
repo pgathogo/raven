@@ -4,6 +4,7 @@
 #include "commlogtreeviewmodel.h"
 #include "traffiktree.h"
 #include "../utils/tools.h"
+#include "../audio/audiotool.h"
 
 CommLogTreeViewModel::CommLogTreeViewModel(CommercialLogs items, QObject *parent)
     :QStandardItemModel{ parent }
@@ -21,6 +22,7 @@ CommLogTreeViewModel::CommLogTreeViewModel(CommercialLogs items, QObject *parent
 int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
 {
     int parent_id = 0;
+    AUDIO::AudioTool audio_tool;
     for (auto& [key, bookings] : items){
         TRAFFIK::TraffikNode* parent_node = new TRAFFIK::TraffikNode(key, key, ++parent_id, -1, -1);
         m_nodes.push_back(parent_node);
@@ -32,7 +34,7 @@ int CommLogTreeViewModel::read_tree_data(const CommercialLogs& items)
             QStandardItem* client_name = new QStandardItem(stoq(booking.client_name));
             QStandardItem* spot_id = new QStandardItem(QString::number(booking.spot_id));
             QStandardItem* spot_name = new QStandardItem(stoq(booking.spot_name));
-            QStandardItem* spot_duration = new QStandardItem(QString::number(booking.spot_duration));
+            QStandardItem* spot_duration = new QStandardItem(audio_tool.format_time_hr_to_ms(booking.spot_duration));
             QStandardItem* booking_status = new QStandardItem(stoq(booking.booking_status));
 
             qDebug() << booking.play_date;

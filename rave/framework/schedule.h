@@ -91,7 +91,6 @@ public:
     ForeignKeyField* break_layout_line();
     ForeignKeyField* set_break_layout_line(int);
 
-
     TextField* comment()const;
     TextField* set_comment(const std::string val);
 
@@ -115,7 +114,6 @@ public:
 
     std::shared_ptr<BaseEntity> cloneAsShared() override;
     void afterMapping(BaseEntity& entity) override;
-
 
     std::string order_by() const override { return "schedule_date, schedule_time, id"; }
 

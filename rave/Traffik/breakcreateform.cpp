@@ -119,7 +119,7 @@ void BreakCreateForm::close_form()
 
 void BreakCreateForm::create_breaks()
 {
-    if (m_edm_break_line->count() == 0){
+    if (m_edm_break_line->count() == 0) {
         showMessage("Select a break layout");
         return;
     }
@@ -130,7 +130,7 @@ void BreakCreateForm::create_breaks()
     if (reply == QMessageBox::No)
         return;
 
-    if (ui->dtTo->date() < ui->dtFrom->date()){
+    if (ui->dtTo->date() < ui->dtFrom->date()) {
         showMessage("`To` date less than `From` date!");
         return;
     }
@@ -139,6 +139,10 @@ void BreakCreateForm::create_breaks()
 
     if (sql.empty())
         return;
+
+    std::cout << " ---------------------------- \n";
+    std::cout << sql << '\n';
+    std::cout << " ---------------------------- \n";
 
     if (write_breaks_to_db(sql))
         close_form();

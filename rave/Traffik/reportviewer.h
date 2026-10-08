@@ -13,7 +13,7 @@ class ReportViewer : public QDialog
    Q_OBJECT
 
 public:
-   ReportViewer(QJsonObject, QString, QMdiArea*);
+   ReportViewer(QJsonObject, QString, QMdiArea*, bool show_dev_tools=false);
 
 private slots:
    void on_save_pdf();
@@ -27,6 +27,8 @@ private:
     QString m_report_file;
     QWebEngineView* m_web_view;
     QVBoxLayout* m_main_layout;
+
+    bool m_show_dev_tools;
 
 
 };

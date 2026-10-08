@@ -145,6 +145,8 @@ set(PROJECT_SOURCES
     breaklayoutbrowser.h
     breaklayoutbrowser.cpp
     breaklayoutbrowser.ui
+    schedule.h
+    schedule.cpp
     schedulemantreeviewmodel.h
     schedulemantreeviewmodel.cpp
     mergedbrowser.h
@@ -285,8 +287,6 @@ set(PROJECT_SOURCES
     ../framework/ravensetup.h
     ../framework/ravensetup.cpp
     ../framework/entityregister.h
-    ../framework/schedule.h
-    ../framework/schedule.cpp
     ../framework/relationmapper.h
     ../framework/relationmapper.cpp
     ../framework/entitydatamodel.h

@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QCompleter>
 #include <QJsonObject>
+#include <QTableWidgetItem>
 
 #include "../framework/picklistbrowser.h"
 
@@ -22,6 +23,7 @@ class QTreeWidgetItem;
 class PickListBrowser;
 class Client;
 class RavenSetup;
+
 
 class TreeWidgetItemDelegate : public QItemDelegate
 {
@@ -107,6 +109,7 @@ public:
 
     void search_by_client(std::shared_ptr<Client>);
 
+
 private slots:
     void search_field_changed(int i);
     void search(int);
@@ -181,6 +184,42 @@ private:
             else
                 return std::make_tuple(entity->id(), entity->title()->displayName());
         }
+    }
+
+    BookingStatus str_to_enum(std::string status)
+    {
+        if (status == "READY")
+            return BookingStatus::Ready;
+        if (status == "PLAYED")
+            return BookingStatus::Played;
+        if (status == "CANCELLED")
+            return BookingStatus::Cancel;
+        if (status == "SKIPPED")
+            return BookingStatus::Skipped;
+    }
+
+    QTableWidgetItem* make_table_widget_item(const std::string caption)
+    {
+        QTableWidgetItem* item = new QTableWidgetItem(stoq(caption));
+
+        switch(bk) {
+
+        case BookingStatus::Ready:
+            break;
+        case BookingStatus::Played:
+            item->setForeground(QBrush(QColor("#03fc13")));
+            break;
+        case BookingStatus::Cancel:
+            item->setForeground(QBrush(QColor("#03fc13")));
+            break;
+        case BookingStatus::Skipped:
+            item->setForeground(QBrush(QColor("#ce03fc")));
+            break;
+
+        }
+
+        return item;
+
     }
 
     Ui::BookingOrderBrowser *ui;

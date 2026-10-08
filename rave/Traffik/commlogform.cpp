@@ -11,6 +11,7 @@
 #include "../utils/qchecklist.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/ravensetup.h"
+#include "../audio/audiotool.h"
 
 #include "commlogform.h"
 #include "ui_commlogform.h"
@@ -200,7 +201,7 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
     std::stringstream sql;
 
     sql << "select a.name AS client_name, b.id AS spot_id, b.name AS spot_name, "
-        << "b.spot_duration AS spot_duration,  c.booking_status AS booking_status, "
+        << "b.real_duration AS spot_duration,  c.booking_status AS booking_status, "
         << "c.play_date AS play_date, c.play_time AS play_time, c.id AS booking_id, "
         << "e.schedule_date AS schedule_date, e.schedule_time AS schedule_time "
         << " from rave_client a, rave_spot b, rave_orderbooking c, rave_bookingsegment d, "
@@ -243,6 +244,7 @@ void CommLogForm::fetch_bookings(const DateTimeSelection& dts)
                     comm_log.spot_name = value;
                 if (field == "spot_duration")
                     comm_log.spot_duration = stod(value);
+
                 if (field == "booking_status")
                     comm_log.booking_status = value;
 
@@ -302,6 +304,8 @@ void CommLogForm::print_log()
 
     QJsonArray breaks;
 
+    AUDIO::AudioTool audio_tool;
+
     for (auto& [time, commlogs]: m_comm_logs) {
         QJsonArray logs;
 
@@ -311,7 +315,11 @@ void CommLogForm::print_log()
             log["client_name"] = QString::fromStdString(commlog.client_name);
             log["spot_id"] = commlog.spot_id;
             log["spot_name"] = QString::fromStdString(commlog.spot_name);
-            log["spot_duration"] = commlog.spot_duration;
+
+            log["spot_duration"] = audio_tool.format_time_hr_to_ms(commlog.spot_duration);
+
+            //duration_to_time(commlog.spot_duration).toString("HH:mm");
+
             log["book_status"] = QString::fromStdString(commlog.booking_status);
             log["play_date"] =  commlog.play_date.toString("dd-MM-yyyy");
             log["play_time"] = commlog.play_time.toString("HH:mm");
@@ -360,28 +368,6 @@ void CommLogForm::write_json_data(QJsonArray& data)
     file.resize(0);
     file.write(doc.toJson());
     file.close();
-}
-
-void CommLogForm::execute_report()
-{
-    //std::wstring exe = "electron";
-    QStringList args;
-    args << " d:\\home\\lab\\Javascript\\electjson\\main.js breaks";
-
-    QString path = "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\electron\\dist\\electron.exe";
-
-    QString report_launcher = "report.bat";
-
-    QString target = QString("%1 %2").arg(path).arg(args.join(""));
-
-    qDebug() << "Creating report launcher...";
-
-    write_report_launcher(target, report_launcher);
-
-    qDebug() << "Running report...";
-
-    m_process->start(report_launcher);
-
 }
 
 

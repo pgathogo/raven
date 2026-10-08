@@ -42,7 +42,6 @@ private:
     std::string comma_sep(const std::vector<int>&);
     void update_hours_label(std::string);
     void write_json_data(QJsonArray&);
-    void execute_report();
     void write_report_launcher(QString, QString&);
     void set_column_width();
 

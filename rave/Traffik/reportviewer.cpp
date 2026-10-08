@@ -10,9 +10,10 @@
 #include "reportviewer.h"
 
 
-ReportViewer::ReportViewer(QJsonObject data, QString report_file, QMdiArea* mdi_area)
+ReportViewer::ReportViewer(QJsonObject data, QString report_file, QMdiArea* mdi_area, bool show_dev_tools)
     :m_data{data}
     ,m_report_file{report_file}
+    ,m_show_dev_tools{show_dev_tools}
 {
     setupui();
 
@@ -89,6 +90,14 @@ void ReportViewer::render_report()
 
     QString report_file = QString("qrc:/reports/build/html/%1").arg(m_report_file);
     m_web_view->load(QUrl(report_file));
+
+    // Devtools
+    if (m_show_dev_tools) {
+        QWebEngineView* devtools = new QWebEngineView();
+        m_web_view->page()->setDevToolsPage(devtools->page());
+        devtools->resize(1200, 800);
+        devtools->show();
+    }
 
 }
 
