@@ -49,7 +49,7 @@ void BrandBrowser::updateRecord()
             try{
                 updateTableViewRecord(brand->tableViewValues());
                 entityDataModel().updateEntity(*brand);
-                entityDataModel().all();
+                search_by_client(m_client);
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());

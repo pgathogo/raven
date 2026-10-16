@@ -31,6 +31,9 @@ public:
 public slots:
     void change_tab(int);
     void change_client(std::shared_ptr<BaseEntity>);
+    QMdiArea* mdi_area();
+
+
 
 private:
     Ui::MergedBrowser *ui;

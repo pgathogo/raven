@@ -55,7 +55,6 @@ void DateTimeSelector::build_time_buttons()
     time_buttons("AM", time_text_am);
     time_buttons("PM", time_text_pm);
 
-
     ui->calWidget->setSelectedDate(m_selection.sel_date);
     set_selected_buttons();
 }

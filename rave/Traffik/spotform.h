@@ -29,6 +29,10 @@ class CueEditor;
 class SpotAudioBrowser;
 class QTableWidget;
 
+namespace AUDIO {
+class AudioPropertyWidget;
+}
+
 using EntityRecord = std::tuple<std::string, std::shared_ptr<BaseEntity>>;
 
 class SpotForm : public BaseEntityDetailDlg
@@ -49,12 +53,10 @@ public:
 
     std::vector<EntityRecord> const& voiceOvers() const;
     std::vector<EntityRecord> const& typeExclusions() const;
-    std::vector<EntityRecord> const& spot_audios() const;
+    std::shared_ptr<AUDIO::Audio> spot_audio();
 
     int parentId() const;
 
-    std::unique_ptr<SpotAudioBrowser> const& spot_browser() const;
-    AudioCreationMode const get_audio_creation_mode() const;
 
 public slots:
     void cue_edit();
@@ -67,12 +69,18 @@ private slots:
     void brandsComboChanged(int);
     void on_import_audio();
     void time_band_selected();
+    void on_attach_audio();
 
 private:
     void add_time_band_widget();
     void create_time_band_widget();
     void create_dow_widget();
     void populate_time_band_widget(const std::unique_ptr<EntityDataModel>&, QTableWidget*);
+    void make_audio_widget();
+    QFrame* hline(QWidget*);
+    bool audio_is_available();
+    void add_audio_property_widget(int);
+    void make_property_widget(std::shared_ptr<AUDIO::Audio>);
 
     Ui::SpotForm* ui;
     std::shared_ptr<Client> m_client;
@@ -84,10 +92,13 @@ private:
 
     std::unique_ptr<EntityDataModel> m_edm_setup;
     std::shared_ptr<RavenSetup> m_setup;
+    std::shared_ptr<AUDIO::Audio> m_audio;
 
     std::unique_ptr<EntityDataModel> m_edm_time_band;
     std::unique_ptr<DowWidget> m_dow_widget;
     QTableWidget* m_time_band_widget;
+
+    AUDIO::AudioPropertyWidget* m_audio_prop_widget;
 
 };
 

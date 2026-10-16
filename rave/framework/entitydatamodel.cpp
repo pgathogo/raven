@@ -448,6 +448,12 @@ size_t EntityDataModel::count()
     return entitiesCount();
 }
 
+bool EntityDataModel::is_empty()
+{
+    auto provider = dbManager->provider();
+    return (provider->cacheSize() == 0) ? true : false;
+}
+
 void EntityDataModel::searchByStr(std::tuple<std::string, std::string> searchItem)
 {
     if (dbManager->searchByStr(*(getEntity()), searchItem) > 0)
@@ -516,6 +522,7 @@ int EntityDataModel::insert_returning_id(const std::string sql)
 
 int EntityDataModel::readRaw(const std::string sql)
 {
+    std::cout << sql << "\n";
 
     return dbManager->readRaw( sql );
 }

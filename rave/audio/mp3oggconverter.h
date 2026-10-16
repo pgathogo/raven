@@ -18,16 +18,18 @@ namespace AUDIO
 {
     class Mp3ToOggConverter : public AUDIO::AudioConverter
     {
+        Q_OBJECT
     public:
         QString FFMPEG_EXE = "ffmpeg.exe";
         QString BATCH_EXEC = "test.bat";
         QString TEMP_BATCH = "mp3_to_ogg.bat";
 
         //Mp3ToOggConverter(const QString mp3_file);
-        Mp3ToOggConverter(const QString, std::shared_ptr<QProcess> process_runner=nullptr);
+        explicit Mp3ToOggConverter(const QString = "", std::shared_ptr<QProcess> process_runner=nullptr);
         ~Mp3ToOggConverter() override;
 
         bool convert() override;
+        bool convert(QString&, QString&);
         QString mp3_filename();
         void set_mp3_filename(QString);
 

@@ -775,8 +775,6 @@ void MainWindow::fetch_data_from_db(QDate date, int hr)
 
     sql << where_filter <<  order_by;
 
-    std::cout << sql.str() << '\n';
-
     EntityDataModel edm;
     edm.readRaw(sql.str());
 
@@ -895,12 +893,11 @@ void MainWindow::fetch_commercials_bydate(QDate date)
     std::stringstream sql;
 
     sql << " select a.id, a.schedule_id, a.spot_id,  a.booking_status, "
-           " a.book_date, a.book_hour, a.book_time, c.audio_id, "
+           " a.book_date, a.book_hour, a.book_time, b.audio_id, "
            " d.title, d.duration, d.file_extension, d.filepath "
            " From rave_orderbooking a "
            " left outer join rave_spot b on b.id = a.spot_id "
-           " left outer join rave_spotaudio c on c.spot_id = b.id "
-           " left outer join rave_audio d on d.id = c.audio_id "
+           " left outer join rave_audio d on d.id = b.audio_id "
            " left outer join rave_schedule e on a.schedule_id = e.id ";
 
     QDate next_date = date.addDays(1);
@@ -911,7 +908,7 @@ void MainWindow::fetch_commercials_bydate(QDate date)
     std::string date_filter = std::format(" WHERE e.schedule_date BETWEEN '{}' AND '{}'", first_date, second_date );
 
     //std::string date_filter = std::format(" WHERE a.book_date = '{}'",date.toString("yyyy/MM/dd").toStdString());
-    std::string audio_filter = " AND c.audio_id IS NOT NULL ";
+    std::string audio_filter = " AND b.audio_id IS NOT NULL ";
 
     std::string order_by     = " ORDER BY a.book_date, a.book_time, a.book_seq ";
 

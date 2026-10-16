@@ -15,7 +15,7 @@ namespace AUDIO{
         virtual void set_ogg_filename(QString);
     private:
         QString m_audio_filename;
-        QString m_ogg_filename;
+        QString m_ogg_filename{""};
     };
 }
 

@@ -31,7 +31,11 @@ set(postgreSQL_ROOT "C:/Program Files/PostgreSQL/14")
 find_package(PostgreSQL REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets WebEngineWidgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS
+    Widgets
+    WebEngineWidgets
+    Multimedia
+    REQUIRED)
 
 include_directories(${PostgreSQL_INCLUDE_DIRS})
 link_directories(${PostgreSQL_LIBRARY_DIRS})
@@ -213,6 +217,7 @@ set(PROJECT_SOURCES
     reportviewer.h
     reportviewer.cpp
 
+
     ../audio/artist.h
     ../audio/audio.h
     ../audio/audiofile.h
@@ -260,6 +265,16 @@ set(PROJECT_SOURCES
     ../audio/audiolibrary.cpp
     ../audio/audiofolder.h
     ../audio/audiofolder.cpp
+    ../audio/audiopropertywidget.h
+    ../audio/audiopropertywidget.cpp
+    ../audio/audioform.h
+    ../audio/audioform.cpp
+    ../audio/spotaudioform.h
+    ../audio/spotaudioform.cpp
+    ../audio/audiowavewidget.h
+    ../audio/audiowavewidget.cpp
+    ../audio/WaveformWidget.h
+    ../audio/WaveformWidget.cpp
 
     ${RAVE_AUDIO_EDITOR}/audiographic.cpp
     ${RAVE_AUDIO_EDITOR}/audiographic.h
@@ -474,7 +489,9 @@ target_link_options(traffik PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
 target_link_libraries(traffik PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::WebEngineWidgets )
+    Qt${QT_VERSION_MAJOR}::WebEngineWidgets
+    Qt${QT_VERSION_MAJOR}::Multimedia
+)
 
 
 target_link_libraries(traffik PRIVATE ${PostgreSQL_LIBRARIES})

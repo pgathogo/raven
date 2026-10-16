@@ -107,6 +107,7 @@ namespace AUDIO {
          ,m_fade_out_marker{}
          ,m_fade_delay_marker{}
          ,m_end_marker{}
+         ,m_source_filepath{}
          ,m_file_path{}
          ,m_folder{}
          ,m_genre{}
@@ -124,6 +125,8 @@ namespace AUDIO {
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
 
+
+        m_source_filepath = createField<StringField>("source_filepath", "Source Filepath");
 
         m_file_path = createField<StringField>("filepath", "File Path");
 
@@ -152,7 +155,8 @@ namespace AUDIO {
 
         m_audio_type = createField<ChoiceField<std::string>>("audio_type", "Audio Type");
         m_audio_type->addChoice({"SONG", "Song"});
-        m_audio_type->addChoice({"COMM-AUDIO", "Commercial"});
+        m_audio_type->addChoice({"COMM-AUD","Commercial"});
+        m_audio_type->addChoice({"COMM", "Commercial"});
         m_audio_type->addChoice({"JINGLE", "Jingle"});
         m_audio_type->addChoice({"DROP", "Drop"});
         m_audio_type->addChoice({"NBITE", "News Bite"});
@@ -193,6 +197,7 @@ namespace AUDIO {
          ,m_extro_marker{}
          ,m_fade_out_marker{}
          ,m_end_marker{}
+         ,m_source_filepath{}
          ,m_file_path{}
          ,m_folder{}
          ,m_genre{}
@@ -211,6 +216,7 @@ namespace AUDIO {
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
 
+        m_source_filepath = createField<StringField>("source_filepath", "Source Filepath");
         m_file_path = createField<StringField>("filepath", "File Path");
 
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
@@ -239,6 +245,7 @@ namespace AUDIO {
         m_audio_type = createField<ChoiceField<std::string>>("audio_type", "Audio Type");
         m_audio_type->addChoice({"SONG", "Song"});
         m_audio_type->addChoice({"COMM-AUDIO", "Commercial"});
+        m_audio_type->addChoice({"COMM", "Commercial"});
         m_audio_type->addChoice({"JINGLE", "Jingle"});
         m_audio_type->addChoice({"DROP", "Drop"});
         m_audio_type->addChoice({"NBITE", "News Bite"});
@@ -256,12 +263,14 @@ namespace AUDIO {
         auto dt = QDate(QDate::currentDate());
         m_audio_year->setValue(dt.year());
 
+        m_audio_filename = createField<StringField>("audio_filename", "Audio Filename");
+        m_audio_filename->setValue(audio_file);
+        m_audio_filename->setFormOnly(true);
+
         m_file_extension = createField<StringField>("file_extension", "File Extension");
         m_file_extension->setValue(get_file_extension(audio_file));
 
-        m_audio_filename = createField<StringField>("audio_filename", "Audio Filename");
-        m_audio_filename->setFormOnly(true);
-        m_audio_filename->setValue(audio_file);
+
     }
 
     Audio::Audio(const Audio& other)
@@ -279,6 +288,7 @@ namespace AUDIO {
          ,m_extro_marker{}
          ,m_fade_out_marker{}
          ,m_end_marker{}
+         ,m_source_filepath{}
          ,m_file_path{}
          ,m_folder{}
          ,m_genre{}
@@ -294,6 +304,7 @@ namespace AUDIO {
         m_artist = createField<ForeignKeyField>("artist_id", "Artist",
                                                 std::make_unique<Artist>(), "fullname");
 
+        m_source_filepath = createField<StringField>("source_filepath", "Source Filepath");
         m_file_path = createField<StringField>("filepath", "File Path");
 
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
@@ -322,6 +333,7 @@ namespace AUDIO {
         m_audio_type = createField<ChoiceField<std::string>>("audio_type", "Audio Type");
         m_audio_type->addChoice({"SONG", "Song"});
         m_audio_type->addChoice({"COMM-AUDIO", "Commercial"});
+        m_audio_type->addChoice({"COMM", "Commercial"});
         m_audio_type->addChoice({"JINGLE", "Jingle"});
         m_audio_type->addChoice({"DROP", "Drop"});
         m_audio_type->addChoice({"NBITE", "News Bite"});
@@ -415,6 +427,7 @@ namespace AUDIO {
         m_fade_delay_marker->setValue(other.fade_delay_marker()->value());
         m_end_marker->setValue(other.end_marker()->value());
 
+        m_source_filepath->setValue(other.source_filepath()->value());
         m_file_path->setValue(other.file_path()->value());
 
         m_folder->setValue(other.folder()->value());
@@ -636,6 +649,16 @@ namespace AUDIO {
     void Audio::set_end_marker(double end_marker)
     {
         m_end_marker->setValue(end_marker);
+    }
+
+    StringField* Audio::source_filepath() const
+    {
+        return m_source_filepath;
+    }
+
+    void Audio::set_source_filepath(const std::string s_path)
+    {
+        m_source_filepath->setValue(s_path);
     }
 
     void Audio::set_file_path(const std::string f_path)

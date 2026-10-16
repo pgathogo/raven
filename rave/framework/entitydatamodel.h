@@ -136,6 +136,7 @@ public:
     int readRaw(const std::string sql);
 
     size_t count();
+    bool is_empty();
 
     void mapEntity(StringMap* map, BaseEntity& entity);
     void populateMToMDetails();

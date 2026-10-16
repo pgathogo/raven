@@ -43,7 +43,6 @@ SetupForm::SetupForm(RavenSetup* setup,
 
     ui->tabWidget->setCurrentIndex(0);
 
-
     connect(ui->btnAdd, &QPushButton::clicked, this, &SetupForm::addApprover);
     connect(ui->btnDelete, &QPushButton::clicked, this, &SetupForm::deleteApprover);
 

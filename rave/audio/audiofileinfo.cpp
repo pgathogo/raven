@@ -95,6 +95,8 @@ namespace AUDIO{
             return;
         }
 
+
+
         log_info("Writting probe command to batch runner file");
 
         out_stream << probe_tool
@@ -110,6 +112,9 @@ namespace AUDIO{
         std::this_thread::sleep_for(std::chrono::seconds(1));
         m_probe_process->start("cmd.exe", QStringList() << "/c" << batch_runner);
         m_probe_process->waitForFinished();
+
+
+
 
         log_info(QString("END: probing file `%1` complete.").arg(m_audio_file));
 
@@ -166,10 +171,49 @@ namespace AUDIO{
     }
 
 
+    QJsonObject AudioFileInfo::probe_file_format(const QString& audio_filepath)
+    {
+        QProcess process;
+        QString probe_tool = QDir::currentPath()+"/"+ PROBE_TOOL;
+        log_info(QString("Probe tools: `%1`").arg(probe_tool));
+
+        if (!QFile::exists(probe_tool)) {
+            log_error(QString("Probe tool: `%1` NOT found. File probing terminated.").arg(probe_tool));
+            return QJsonObject();
+        }
+
+        QStringList arguments;
+        arguments << "-v" << "quiet"
+                  << "-print_format" << "json"
+                  << "-show_format"
+                  << "-show_streams"
+                  << audio_filepath;
+
+        process.start(probe_tool, arguments);
+
+        // wait for the process to finish (timeout after 5 seconds)
+
+        if (!process.waitForFinished(5000)) {
+            qWarning() << "ffprobe timed out or failed to start!";
+            return QJsonObject();
+        }
+
+        QByteArray output = process.readAllStandardOutput();
+        QJsonDocument jsondoc = QJsonDocument::fromJson(output);
+
+        return jsondoc.object();
+
+    }
+
+
     QString AudioFileInfo::file_format()
     {
         log_info("Start: Find audio file format...");
 
+        QJsonObject file_info = probe_file_format(m_audio_file);
+
+
+        /*
         if (!m_probed)
             probe_file_info();
 
@@ -182,12 +226,13 @@ namespace AUDIO{
             log_info(QString("Audio probe data file size: %1").arg(QString::number(m_data.size())));
         }
 
-
         if (!m_data.contains(json_key))
             return "";
+        */
 
+        QJsonObject format = file_info["format"].toObject();
 
-        QString file_fmt =  m_data[json_key].toString();
+        QString file_fmt =  format["format_name"].toString();
 
         log_info(QString("File format found in probe file: %1").arg(file_fmt));
 

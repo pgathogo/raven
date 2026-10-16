@@ -34,8 +34,7 @@ MergedBrowser::MergedBrowser(QWidget *parent)
 
     qDebug() << "Created OrderBrowser...";
 
-    m_spot_browser = std::make_unique<SpotBrowser>(std::make_shared<Client>(),
-                                                   this);
+    m_spot_browser = std::make_unique<SpotBrowser>(std::make_shared<Client>(), this);
     ui->vlSpot->addWidget(m_spot_browser.get());
 
     qDebug() << "Created SpotBrowser...";
@@ -60,6 +59,12 @@ MergedBrowser::MergedBrowser(QWidget *parent)
     setMinimumSize(800, 500);
 
     //ui->tabMain->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+}
+
+QMdiArea* MergedBrowser::mdi_area()
+{
+    return m_mdi_area2;
 
 }
 

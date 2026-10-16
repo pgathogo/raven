@@ -36,7 +36,6 @@
 
 namespace fs = std::filesystem;
 
-
 SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
                                     QVBoxLayout* layout, QWidget *parent)
         :BaseEntityBrowserDlg(parent, mtom->cloneAsShared())
@@ -64,6 +63,7 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
                   button_size, "cue_edit.bmp");
 
     create_separator();
+
     create_button("btnPlayBack", "Play", &SpotAudioBrowser::play_back,
                   button_size, "play.png");
 
@@ -234,14 +234,13 @@ void SpotAudioBrowser::import_audio()
     AUDIO::AudioFileInfo afi(audio_filename);
     QString file_format = afi.file_format().toLower();
 
-
-
-
-
-
-
-
     auto audio = std::make_unique<AUDIO::Audio>(audio_filename.toStdString());
+
+    qDebug() << " --------------  ";
+    std::cout << audio->audio_filename()->value() << '\n';
+    qDebug() << " -----------------";
+
+
     // auto audio_shared = std::make_shared<AUDIO::Audio>(audio_filename.toStdString());
 
     log_info(QString("Audio lib path: %1").arg(m_setup->audio_folder()->to_qstring()));

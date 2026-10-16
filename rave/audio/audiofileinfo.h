@@ -28,6 +28,8 @@ namespace AUDIO{
         void file_probe_finished(int, QProcess::ExitStatus);
 
     private:
+        QJsonObject probe_file_format(const QString&);
+
         QString m_audio_file;
         QString m_info_file;
         QJsonObject m_data;

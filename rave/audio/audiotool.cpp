@@ -245,6 +245,9 @@ namespace AUDIO
     }
     QString AudioTool::format_time_hr_to_ms(double time)
     {
+        if (time <= 0)
+            return "00:00:00";
+
         auto tm = QTime::fromMSecsSinceStartOfDay(time);
         auto fmt_str = QTime::fromMSecsSinceStartOfDay(time).toString("hh:mm:ss");
         return fmt_str;

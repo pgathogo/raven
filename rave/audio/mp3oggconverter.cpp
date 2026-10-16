@@ -22,14 +22,15 @@ namespace AUDIO
         ,m_mp3_filename{audio_filename}
         ,m_converter_process{process_runner.get()}
     {
-        // m_converter_process = new QProcess(this);
+        m_converter_process = new QProcess(this);
 
         if (m_converter_process != nullptr)
         {
-            //connect(m_converter_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Mp3ToOggConverter::conversion_finished);
-            connect(m_converter_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(conversion_finished(int, QProcess::ExitStatus)));
-            //connect(m_converter_process, &QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
-            connect(m_converter_process, SIGNAL(errorOccured(QProcess::ProcessError)),this, SLOT(conversion_error(QProcess::ProcessError)));
+            // connect(m_converter_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(conversion_finished(int, QProcess::ExitStatus)));
+            // connect(m_converter_process, SIGNAL(errorOccured(QProcess::ProcessError)),this, SLOT(conversion_error(QProcess::ProcessError)));
+
+            connect(m_converter_process, &QProcess::finished, this, &Mp3ToOggConverter::conversion_finished);
+            connect(m_converter_process, &QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
         }
     }
 
@@ -43,14 +44,16 @@ namespace AUDIO
     {
         qDebug() << "MP3 to OGG conversion started ...";
 
+        auto oggf = ogg_filename();
+
+        if (oggf.isEmpty())
+            return false;
+
         QString ffmpeg = QDir::currentPath()+"/"+FFMPEG_EXE;
         //QString batch_exec = QDir::currentPath()+"/"+BATCH_EXEC;
 
         auto in_file = QDir::toNativeSeparators(m_mp3_filename);
-        auto out_file = QDir::toNativeSeparators(ogg_filename());
-
-        qDebug() << "In File: "<< in_file;
-        qDebug() << "Out File: "<< out_file;
+        auto out_file = QDir::toNativeSeparators(oggf);
 
         QString batch_file = QDir::currentPath()+"/"+TEMP_BATCH;
 
@@ -88,6 +91,52 @@ namespace AUDIO
         return true;
     }
 
+    // ------
+
+    bool Mp3ToOggConverter::convert(QString& src_path, QString& dst_path)
+    {
+        qDebug() << "MP3 to OGG conversion started ...";
+
+        QString ffmpeg = QDir::currentPath()+"/"+FFMPEG_EXE;
+
+        if (!QFileInfo::exists(ffmpeg)) {
+            qDebug() << "FFMPEG missing - prcess aborted!";
+            return false;
+        }
+
+        auto in_file = QDir::toNativeSeparators(src_path);
+        auto out_file = QDir::toNativeSeparators(dst_path);
+
+        QStringList args;
+              args  << "-y"
+                    << "-i"
+                    << in_file
+                    << "-c:a" << "libvorbis"
+                    << "-q:a" << "4"
+                    << "-vsync" << "2"
+                    << out_file;
+
+
+        QProcess* process = new QProcess();
+
+        process->setProgram(ffmpeg);
+        process->setArguments(args) ;
+
+        connect(process, &QProcess::finished, this, &Mp3ToOggConverter::conversion_finished);
+        connect(process, &QProcess::errorOccurred, this, &Mp3ToOggConverter::conversion_error);
+
+        connect(process, &QProcess::finished, process, &QProcess::deleteLater);
+
+        process->start();
+
+        process->waitForFinished();
+
+
+        return true;
+
+    }
+
+
     QString Mp3ToOggConverter::mp3_filename()
     {
         return m_mp3_filename;
@@ -99,16 +148,29 @@ namespace AUDIO
     }
 
 
-    void Mp3ToOggConverter::conversion_finished(int code, QProcess::ExitStatus exit)
+    void Mp3ToOggConverter::conversion_finished(int exitCode, QProcess::ExitStatus exitStatus)
     {
-        m_progress_dialog->close();
-        qDebug() << "MP3 to OGG conversion finished.";
+        // Retrieve the sender process safely
+        QProcess* process = qobject_cast<QProcess*>(sender());
+
+        if (exitStatus == QProcess::CrashExit) {
+            qDebug() << "FFmpeg crashed during execution.";
+        } else if (exitCode != 0) {
+            qDebug() << "FFmpeg failed with exit code:" << exitCode;
+            if (process) qDebug() << "FFmpeg Error Output:" << process->readAllStandardError();
+        } else {
+            qDebug() << "FFmpeg conversion completed successfully!";
+        }
     }
 
     void Mp3ToOggConverter::conversion_error(QProcess::ProcessError error)
     {
-        switch(error){
+        QProcess* process = qobject_cast<QProcess*>(sender());
+        qDebug() << "QProcess Error Occurred:" << error;
+        if (process) qDebug() << "Error String:" << process->errorString();
 
+        /*
+        switch(error){
         case QProcess::FailedToStart:
             throw AudioImportException("WAVE-GENERATOR", "Fail Start: Wave generator failed to start, missing file or insufficient rights");
             break;
@@ -128,6 +190,7 @@ namespace AUDIO
             throw AudioImportException("WAVE-GENERATOR", "Unknown Error: Unknown error occured.");
             break;
         }
+    */
 
     }
 

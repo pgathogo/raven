@@ -153,6 +153,11 @@ bool PostgresDataProvider::executeQuery(const std::string query)
         PQexec(conn, "ROLLBACK");
         cleanFinish(res);
 
+        std::cout << "Throwing PostgresException...\n";
+
+        std::cout << errorMsg << '\n';
+
+
         throw PostgresException("EXCEUTE", errorMsg);
     }
 

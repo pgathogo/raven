@@ -126,6 +126,8 @@ class Spot(Daypart):
     real_duration = models.DecimalField(max_digits=16, decimal_places=2, null=True)
     client = models.ForeignKey(Client, models.DO_NOTHING)
     brand = models.ForeignKey(Brand, models.DO_NOTHING, blank=True, null=True)
+    add_date = models.DateField(null=True, blank=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
 
 class SpotVoiceOver(ManyToMany):
     pass
@@ -367,6 +369,7 @@ class Audio(Daypart):
     title = models.CharField(max_length=255)
     short_desc = models.CharField(max_length=255, null=True, blank=True)
     artist = models.ForeignKey(Artist,models.DO_NOTHING,  null=True)
+    source_filepath = models.CharField(max_length=350, null=True, blank=True)
     filepath = models.CharField(max_length=255)
     audio_type = models.CharField(max_length=20, choices=AUDIO_TYPE, default='SONG')
     file_extension = models.CharField(max_length=5, default='OGG')

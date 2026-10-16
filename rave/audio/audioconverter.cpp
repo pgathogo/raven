@@ -18,6 +18,9 @@ namespace AUDIO{
 
     void AudioConverter::set_ogg_filename(QString audio_file)
     {
+        if (audio_file.isEmpty())
+            return;
+
         QFileInfo fi(audio_file);
         auto abs_path = fi.absolutePath();
         auto base_name = fi.baseName();

@@ -14,13 +14,17 @@ namespace Ui {
 class SpotBrowser;
 }
 
+namespace AUDIO {
+class Audio;
+}
+
 
 class SpotBrowser : public BaseEntityBrowserDlg
 {
     Q_OBJECT
 
 public:
-    explicit SpotBrowser(std::shared_ptr<Client> client, QWidget *parent=nullptr);
+    explicit SpotBrowser(std::shared_ptr<Client> client,  QWidget *parent=nullptr);
     ~SpotBrowser() override;
 
     void addRecord() override;
@@ -31,7 +35,7 @@ public:
 
     void save_voice_overs(const SpotForm&);
     void save_type_exclusions(const SpotForm&);
-    void save_spot_audio(const SpotForm&);
+    //void save_spot_audio(const SpotForm&);
 
     void search_by_client(std::shared_ptr<Client> client);
 
@@ -39,7 +43,11 @@ public:
 
     void log_info(const QString msg) { Logger::info("SpotBrowser", msg);}
     void log_error(const QString msg) { Logger::error("SpotBrowser", msg);}
+
 private:
+    void delete_audio(int);
+    int create_audio_file(std::shared_ptr<AUDIO::Audio>);
+
     Ui::SpotBrowser *ui;
     std::shared_ptr<Client> m_client;
 };

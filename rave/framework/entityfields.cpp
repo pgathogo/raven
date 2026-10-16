@@ -767,7 +767,7 @@ DateTimeField::DateTimeField(const std::string aName, const std::string aLabel)
 
 std::string DateTimeField::valueToString() const
 {
-    return mValue.toString("yyyy-MM-dd hh:mm").toStdString();
+    return mValue.date().toString("yyyy-MM-dd").toStdString();
 }
 
 std::string DateTimeField::dbValueFormatter()
@@ -783,8 +783,9 @@ void DateTimeField::setValue(QDateTime dt)
 
 void DateTimeField::stringToValue(std::string val)
 {
-    mValue.setDate(QDateTime::fromString(stoq(val)).date());
-    mValue.setTime(QDateTime::fromString(stoq(val)).time());
+    mValue = QDateTime::fromString(QString::fromStdString(val), "yyyy-MM-dd HH:mm:sst");
+    // mValue.setDate(QDateTime::fromString(stoq(val)).date());
+    // mValue.setTime(QDateTime::fromString(stoq(val)).time());
 }
 
 QDateTime DateTimeField::value()

@@ -146,6 +146,10 @@ namespace AUDIO {
         DecimalField* fade_delay_marker() const;
         DecimalField* end_marker() const;
 
+
+        StringField* source_filepath() const;
+        void set_source_filepath(const std::string);
+
         StringField* file_path() const;
         ForeignKeyField* folder() const;
         ForeignKeyField* genre() const;
@@ -252,6 +256,8 @@ namespace AUDIO {
 
         StringField* m_audio_filename;
         StringField* m_file_extension;
+
+        StringField* m_source_filepath;
 
         AudioFile m_file_info;
 

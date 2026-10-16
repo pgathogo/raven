@@ -1,3 +1,5 @@
+#include <QFileInfo>
+
 #include "audiofile.h"
 
 AudioFile::AudioFile()
@@ -16,11 +18,11 @@ AudioFile::AudioFile()
 {
 }
 
-AudioFile::AudioFile(const std::string a_file)
+AudioFile::AudioFile(const std::string filepath)
     :m_audio_title{""},
      m_artist_name{""},
      m_audio_path{""},
-     m_audio_file{a_file},
+     m_audio_file{filepath},
      m_audio_type{""},
      m_wave_file{""},
      m_filename{""},
@@ -30,7 +32,7 @@ AudioFile::AudioFile(const std::string a_file)
      m_cue_marker{},
      m_id{-1}
 {
-    std::filesystem::path af{a_file};
+    std::filesystem::path af{filepath};
     m_file_ext = af.extension().string();
     m_filename = af.filename().string(); // contains plus the path
     m_audio_path = af.remove_filename().string();
@@ -267,7 +269,9 @@ void AudioFile::set_year(int yr)
 bool AudioFile::is_valid() const
 {
     // check if file is valid (exists ... and the likes)
-    return true;
+    // 1. We check if the file exists
+    return QFileInfo::exists(QString::fromStdString(m_ogg_filename)); // TODO: It should be called current_filepath
+
 }
 
 CueMarker& AudioFile::marker()

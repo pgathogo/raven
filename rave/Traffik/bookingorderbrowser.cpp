@@ -168,7 +168,7 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
     sql << " select a.name AS client_name, f.title AS order_title, f.id AS order_id, f.order_number, "
         << " f.order_date, f.start_date, f.end_date,  f.spots_ordered, f.spots_booked, "
         << " b.id AS spot_id, b.name AS spot_name, b.real_duration as spot_duration,  c.id AS booking_id, c.booking_status, "
-        << " c.play_date, c.play_time,  e.id AS schedule_id, "
+        << " c.book_date, c.book_hour, c.book_time, c.play_date, c.play_time,  e.id AS schedule_id, "
         << " e.schedule_date, e.schedule_time "
         << " From rave_order f "
         << " left outer join rave_bookingsegment d on f.id = d.order_id "
@@ -236,13 +236,29 @@ void BookingOrderBrowser::build_order_bookings(int order_id, std::vector<Booking
                         booking.booking_id = str_to_int(value);
                     if (field == "booking_status")
                         booking.booking_status = value;
+
+                    if (field == "book_date")
+                        booking.book_date = value;
+                    if (field == "book_time") {
+                        if (!value.empty()) {
+                            QString tstr = QString::fromStdString(value);
+                            QTime full_time = QTime::fromString(tstr, "HH:mm:ss");
+                            QTime hour_minute(full_time.hour(), full_time.minute());
+                            QString  str_time =hour_minute.toString("HH:mm");
+                            booking.book_time = str_time.toStdString();
+                        }
+
+                    }
+
                     if (field == "play_date")
                         booking.play_date = value;
 
                     if (field == "play_time") {
                         if (!value.empty()) {
                             QString tstr = QString::fromStdString(value);
-                            QString str_time = QTime::fromString(tstr,"HH:mm").toString("HH:mm");
+                            QTime full_time = QTime::fromString(tstr, "HH:mm:ss");
+                            QTime hour_minute(full_time.hour(), full_time.minute());
+                            QString  str_time =hour_minute.toString("HH:mm");
                             booking.play_time = str_time.toStdString();
                         }
                     }
@@ -327,6 +343,7 @@ void BookingOrderBrowser::new_booking()
         if (order != nullptr){
             auto bw = std::make_unique<BookingWizard>(order, this);
             bw->exec();
+            search_by_client(m_client);
         }
     }
 }
@@ -796,10 +813,10 @@ void BookingOrderBrowser::build_order_booking_table(ClientOrders& client_orders)
                 continue;
 
 
-            QTableWidgetItem* wi_book_date = new QTableWidgetItem(stoq(booking.schedule_date));
+            QTableWidgetItem* wi_book_date = new QTableWidgetItem(stoq(booking.book_date));
             wi_book_date->setData(Qt::UserRole, co.order_id);
 
-            QTableWidgetItem* wi_book_time = new QTableWidgetItem(stoq(booking.schedule_time));
+            QTableWidgetItem* wi_book_time = new QTableWidgetItem(stoq(booking.book_time));
             wi_book_time->setData(Qt::UserRole, booking.booking_id);
 
             QTableWidgetItem* wi_spot_title = new QTableWidgetItem(stoq(booking.spot_name));

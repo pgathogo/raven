@@ -27,6 +27,11 @@
 #include "order.h"
 #include "bookingwizard.h"
 
+#include "spot.h"
+#include "client.h"
+#include "spotaudio.h"
+
+
 AccessMap MainWindow::access_map;
 
 MainWindow::MainWindow(QApplication* app,
@@ -92,15 +97,14 @@ MainWindow::MainWindow(QApplication* app,
 
 void MainWindow::createActions()
 {
-    traffikMenu = menuBar()->addMenu(tr("&Traffik"));
+    traffikMenu = menuBar()->addMenu(tr("&File"));
     reportMenu = menuBar()->addMenu(tr("&Reports"));
     setupMenu = menuBar()->addMenu(tr("&System Setup"));
     helpMenu = menuBar()->addMenu(tr("&Help"));
 
     // Client
-    clientAction = traffikMenu->addAction("&Client");
-    clientAction->setStatusTip("Client details");
-    connect(clientAction, &QAction::triggered, this, &MainWindow::browseClients);
+    clientAction = traffikMenu->addAction("&Exit");
+    connect(clientAction, &QAction::triggered, this, &QWidget::close);
 
     // Quick Reports SubMenu
     qreportAction = reportMenu->addAction("&Quick Reports");
@@ -152,9 +156,9 @@ void MainWindow::createActions()
     QAction* cue_editor_act = new QAction("Cue Editor");
     connect(cue_editor_act, &QAction::triggered, this, &MainWindow::open_cue_editor);
 
-    QAction* test_wizard_act = new QAction(tr("&Book Order"));
-    test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
-    connect(test_wizard_act, &QAction::triggered, this, &MainWindow::test_new_booking);
+    // QAction* test_wizard_act = new QAction(tr("&Spot Form"));
+    // test_wizard_act->setIcon(QIcon(":/images/media/icons/booking.bmp"));
+    // connect(test_wizard_act, &QAction::triggered, this, &MainWindow::test_func);
 
 
     QToolBar* mainToolBar = addToolBar(tr("Traffik"));
@@ -233,19 +237,47 @@ void MainWindow::open_cue_editor()
 
 }
 
-void MainWindow::test_new_booking()
+void MainWindow::test_func()
 {
-    int order_id = 49;
-    auto order_edm = std::make_unique<EntityDataModel>(std::make_shared<Order>());
-    order_edm->getById({"id", "=", order_id});
+    auto spot = std::make_shared<TRAFFIK::Spot>();
+    auto client = std::make_shared<Client>();
+    client->setId(999);
+    client->set_name("TEST");
+    auto spot_form = std::make_unique<SpotForm>(client, spot);
 
-    Order* order = dynamic_cast<Order*>(order_edm->getEntity().get());
-    if (order != nullptr) {
-        auto bw = std::make_unique<BookingWizard>(order);
-        bw->test_set_start_end_dates();
-        bw->exec();
+    if (spot_form->exec() > 0) {
+        //save_spot_audio(*spot_form);
     }
+
 }
+
+/*
+void MainWindow::save_spot_audio(const SpotForm& sf)
+{
+    // Get Lib Path from the RavenSetup
+    auto setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
+    setup_edm->all();
+    std::shared_ptr<RavenSetup> setup = std::dynamic_pointer_cast<RavenSetup>(setup_edm->firstEntity());
+
+    //auto edm = std::make_unique<EntityDataModel>();
+
+    auto& spot_audios = sf.spot_audios();
+
+    QString audio_count = QString("Spot audio count: %1").arg(QString::number(spot_audios.size()));
+    log_info(audio_count);
+
+    //auto audio_creation_mode = sf.get_audio_creation_mode();
+
+    auto& sa = spot_audios.at(0);
+
+    TRAFFIK::SpotAudio* s_audio = static_cast<TRAFFIK::SpotAudio*>(std::get<1>(sa).get());
+
+    auto& audio = s_audio->get_paudio();
+
+    log_info(QString("Create audio entity: `%1`").arg(audio.title()->to_qstring()));
+
+}
+*/
 
 void MainWindow::print_comm_log()
 {

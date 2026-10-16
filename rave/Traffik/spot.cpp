@@ -18,6 +18,8 @@ namespace TRAFFIK {
         ,m_real_duration{}
         ,m_client{}
         ,m_brand{}
+    ,m_add_date{}
+    ,m_add_login{}
     {
         m_client = createField<ForeignKeyField>("client_id", "Client",
                                                std::make_unique<Client>(), "name");
@@ -31,6 +33,10 @@ namespace TRAFFIK {
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
                                               std::make_unique<TRAFFIK::Brand>(),
                                               "brand_name");
+
+        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+                                               std::make_unique<AUDIO::Audio>(),
+                                               "audio");
 
         m_daypart1 = createField<StringField>("daypart1", "Daypart1");
         m_daypart1->setSearchable(false);
@@ -50,8 +56,12 @@ namespace TRAFFIK {
         m_daypart7 = createField<StringField>("daypart7", "Daypart6");
         m_daypart7->setSearchable(false);
 
+        m_add_date = createField<DateField>("add_date", "Add Date");
+        m_add_login = createField<StringField>("add_login", "Add Login");
+
         mHeader << QString::fromStdString(m_name->fieldLabel())
-                 <<QString::fromStdString(m_spot_duration->fieldLabel());
+                <<QString::fromStdString(m_spot_duration->fieldLabel())
+                << QString::fromStdString(m_add_date->fieldLabel());
 
         m_voice_over = std::make_unique<VoiceOver>();
         m_spot_voice_over = std::make_unique<SpotVoiceOver>(this, m_voice_over.get());
@@ -59,8 +69,8 @@ namespace TRAFFIK {
         m_type_ex = std::make_unique<TRAFFIK::TypeExclusion>();
         m_spot_type_ex = std::make_unique<SpotTypeExclusion>(this, m_type_ex.get() );
 
-        m_audio = std::make_unique<AUDIO::Audio>("");
-        m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
+        //m_audio = std::make_unique<AUDIO::Audio>("");
+        //m_spot_audio = std::make_unique<SpotAudio>(this, m_audio.get());
 
         setTableName("rave_spot");
     }
@@ -71,6 +81,8 @@ namespace TRAFFIK {
         ,m_real_duration{}
         ,m_client{}
         ,m_brand{}
+        ,m_add_date{}
+        ,m_add_login{}
     {
         m_client = createField<ForeignKeyField>("client_id", "Client",
                                                std::make_unique<Client>(), "name");
@@ -87,16 +99,14 @@ namespace TRAFFIK {
         std::string fstr = edm.prepareFilter(filter);
 
 
-        qDebug() << "** Spot::Client: "<< client->id();
-
-
         m_brand = createField<ForeignKeyField>("brand_id", "Brand",
                                               std::make_unique<TRAFFIK::Brand>(client),
                                               "brand_name");
                                               // fstr);
 
-        qDebug() << "* Brand Count: " << m_brand->dataModel()->count();
-
+        m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+                                               std::make_unique<AUDIO::Audio>(),
+                                               "audio");
 
         m_daypart1 = createField<StringField>("daypart1", "Daypart1");
         m_daypart1->setSearchable(false);
@@ -116,8 +126,12 @@ namespace TRAFFIK {
         m_daypart7 = createField<StringField>("daypart7", "Daypart6");
         m_daypart7->setSearchable(false);
 
+        m_add_date = createField<DateField>("add_date", "Add Date");
+        m_add_login = createField<StringField>("add_login", "Add Login");
+
         mHeader << QString::fromStdString(m_name->fieldLabel())
-                 <<QString::fromStdString(m_spot_duration->fieldLabel());
+                 <<QString::fromStdString(m_spot_duration->fieldLabel())
+                << QString::fromStdString(m_add_date->fieldLabel());
 
         m_voice_over = std::make_unique<VoiceOver>();
         m_spot_voice_over = std::make_unique<SpotVoiceOver>(this, m_voice_over.get());
@@ -157,10 +171,12 @@ namespace TRAFFIK {
 
         name()->set_display_width(300);
         spot_duration()->set_display_width(200);
+        add_date()->set_display_width(300);
 
         return tableViewCols<std::string>(
                     name()->displayName(),
-                    spot_duration()->displayName()
+                    spot_duration()->displayName(),
+                    add_date()->displayName()
                     );
     }
 
@@ -194,7 +210,7 @@ namespace TRAFFIK {
 
         m_spot_voice_over->setParentId(spot.id());
         m_spot_type_ex->setParentId(spot.id());
-        m_spot_audio->setParentId(spot.id());
+        //m_spot_audio->setParentId(spot.id());
 
     }
 
@@ -248,6 +264,15 @@ namespace TRAFFIK {
         m_brand->setValue( brand_id );
     }
 
+    ForeignKeyField* Spot::audio() const
+    {
+        return m_audio;
+    }
+
+    void Spot::set_audio(int audio_id)
+    {
+        m_audio->setValue(audio_id);
+    }
 
     StringField* Spot::daypart1() const
     {
@@ -310,6 +335,25 @@ namespace TRAFFIK {
     void Spot::set_daypart7(std::string dp)
     {
         m_daypart7->setValue(dp);
+    }
+
+    DateField* Spot::add_date() const
+    {
+        return m_add_date;
+    }
+    void Spot::set_add_date(QDate d)
+    {
+      m_add_date->setValue(d);
+    }
+
+    StringField* Spot::add_login() const
+    {
+        return m_add_login;
+    }
+
+    void Spot::set_add_login(const std::string user)
+    {
+        m_add_login->setValue(user);
     }
 
     SpotVoiceOver& Spot::voice_over()

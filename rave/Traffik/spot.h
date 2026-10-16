@@ -48,8 +48,13 @@ namespace TRAFFIK {
         void set_real_duration(double dur);
         ForeignKeyField* client() const;
         void set_client(int client_id);
+
         ForeignKeyField* brand() const;
         void set_brand(int brand_id);
+
+        ForeignKeyField* audio() const;
+        void set_audio(int);
+
 
         StringField* daypart1() const;
         void set_daypart1(std::string dp);
@@ -72,6 +77,12 @@ namespace TRAFFIK {
         StringField* daypart7() const;
         void set_daypart7(std::string dp);
 
+        DateField* add_date() const;
+        void set_add_date(QDate);
+
+        StringField* add_login() const;
+        void set_add_login(const std::string);
+
         SpotVoiceOver& voice_over();
         SpotTypeExclusion& type_exclusion();
 
@@ -87,6 +98,7 @@ namespace TRAFFIK {
 
         ForeignKeyField* m_client;
         ForeignKeyField* m_brand;
+        ForeignKeyField* m_audio;
 
         StringField* m_daypart1;
         StringField* m_daypart2;
@@ -95,6 +107,9 @@ namespace TRAFFIK {
         StringField* m_daypart5;
         StringField* m_daypart6;
         StringField* m_daypart7;
+
+        DateField* m_add_date;
+        StringField* m_add_login;
 
         QStringList mHeader;
         std::string mTableName;
@@ -105,7 +120,7 @@ namespace TRAFFIK {
         std::unique_ptr<TRAFFIK::TypeExclusion> m_type_ex;
         std::unique_ptr<SpotTypeExclusion> m_spot_type_ex;
 
-        std::unique_ptr<AUDIO::Audio> m_audio;
+        //std::unique_ptr<AUDIO::Audio> m_audio;
         std::unique_ptr<TRAFFIK::SpotAudio> m_spot_audio;
 
     };

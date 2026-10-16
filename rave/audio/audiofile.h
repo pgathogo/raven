@@ -64,7 +64,7 @@ class  AudioFile
 {
 public:
     AudioFile();
-    AudioFile(const std::string audio_file);
+    AudioFile(const std::string);
 
     void set_audio_title(const std::string audio_title);
     void set_short_desc(const std::string short_desc);

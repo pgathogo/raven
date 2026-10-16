@@ -1,5 +1,6 @@
 #include "audioplayer.h"
 
+#include <QMetaObject>
 
 namespace AUDIO
 {
@@ -15,9 +16,7 @@ namespace AUDIO
         ,m_played_audio{""}
     {
         m_audio_thread = std::make_unique<AudioThread>(this);
-        connect(m_audio_thread.get(), &AudioThread::end_of_playback, this, &AudioPlayer::end_of_playback);
-
-        connect(m_audio_thread.get(), &AudioThread::current_position, this, &AudioPlayer::audio_position);
+        init_connections();
     }
 
     AudioPlayer::AudioPlayer(AudioFile& audio_file)
@@ -26,9 +25,8 @@ namespace AUDIO
         ,m_played_audio{""}
     {
         m_audio_thread = std::make_unique<AudioThread>(this);
-        connect(m_audio_thread.get(), &AudioThread::end_of_playback, this, &AudioPlayer::end_of_playback);
-        connect(m_audio_thread.get(), &AudioThread::current_position, this, &AudioPlayer::audio_position);
-        // connect(m_audio_thread.get(), &AudioThread::current_peak, this, &AudioPlayer::audio_current_peak);
+        init_connections();
+
         //update_output_channel(QString::fromStdString(m_audio_file.audio_file()));
     }
 
@@ -45,6 +43,24 @@ namespace AUDIO
 
     AudioPlayer::~AudioPlayer()
     {
+        cancel_waveform();
+    }
+
+    // Both constructors used to wire the signals separately (and the default
+    // constructor forgot timer_tick) - now they share one place.
+    void AudioPlayer::init_connections()
+    {
+        qRegisterMetaType<WaveformDataPtr>();
+
+        connect(m_audio_thread.get(), &AudioThread::end_of_playback, this, &AudioPlayer::end_of_playback);
+        connect(m_audio_thread.get(), &AudioThread::current_position, this, &AudioPlayer::audio_position);
+        connect(m_audio_thread.get(), &AudioThread::timer_tick, this, [this]{ emit player_timer_tick(); });
+    }
+
+    void AudioPlayer::set_state(PlaybackState state)
+    {
+        m_playback_state = state;
+        emit playback_state_changed(state);
     }
 
     std::tuple<float, float> AudioPlayer::audio_levels()
@@ -75,7 +91,9 @@ namespace AUDIO
     {
         m_played_audio = audio_file;
         m_audio_thread->play(audio_file);
+        m_playback_state = PlaybackState::PlayingState;
         emit sig_start_play();
+        emit playback_state_changed(PlaybackState::PlayingState);
     }
 
 
@@ -114,7 +132,9 @@ namespace AUDIO
         if (m_audio_thread != nullptr)
             m_audio_thread->stop();
 
+        m_playback_state = PlaybackState::StoppedState;
         emit sig_stop_play();
+        emit playback_state_changed(PlaybackState::StoppedState);
     }
 
     void AudioPlayer::fade_audio()
@@ -127,20 +147,33 @@ namespace AUDIO
 
     void AudioPlayer::pause_audio()
     {
-        if (m_audio_thread != nullptr)
+        if (m_audio_thread != nullptr) {
             m_audio_thread->pause();
+            m_playback_state = PlaybackState::PausedState;
+            emit playback_state_changed(PlaybackState::PausedState);
+        }
     }
 
     void AudioPlayer::resume_audio()
     {
-        if(m_audio_thread != nullptr)
+        if(m_audio_thread != nullptr) {
             m_audio_thread->resume();
+            m_playback_state = PlaybackState::PlayingState;
+            emit playback_state_changed(PlaybackState::PlayingState);
+        }
     }
 
     void AudioPlayer::audio_position(double position, double total)
     {
+        m_current_position = position;
+
         emit audio_current_position(position, total);
 
+    }
+
+    double AudioPlayer::current_position()
+    {
+        return m_current_position;
     }
 
     void AudioPlayer::end_of_playback()
@@ -152,7 +185,11 @@ namespace AUDIO
 
         emit audio_played(m_played_audio);
 
-        if (AudioPlayer::play_list_index > 0){
+        // Was: "if (AudioPlayer::play_list_index > 0)". That counter is static, i.e.
+        // shared by every AudioPlayer, so a second player (e.g. the waveform editor's)
+        // could see another player's pending items, never emit end_of_play() and
+        // never play anything. Look at this player's own playlist instead.
+        if (!m_playlist.empty()){
             play_audio();
         }else {
             emit end_of_play();
@@ -225,7 +262,9 @@ namespace AUDIO
     void AudioPlayer::play()
     {
         m_audio_thread->play(QString::fromStdString(m_audio_file.audio_file()));
+        m_playback_state = PlaybackState::PlayingState;
         emit sig_start_play();
+        emit playback_state_changed(PlaybackState::PlayingState);
 
     }
 
@@ -239,8 +278,113 @@ namespace AUDIO
     {
         m_audio_thread->play_from_position(QString::fromStdString(m_audio_file.audio_file()),
                                            position);
+        m_playback_state = PlaybackState::PlayingState;
         emit sig_start_play();
+        emit playback_state_changed(PlaybackState::PlayingState);
 
+    }
+
+    void AudioPlayer::set_timer_interval(int interval)
+    {
+        m_audio_thread->set_timer_interval(interval);
+    }
+
+    void AudioPlayer::set_source(std::string audio_filepath)
+    {
+        m_audio_file.set_audio_filename(audio_filepath);
+    }
+
+    AudioPlayer::PlaybackState AudioPlayer::playback_state()
+    {
+        return m_playback_state;
+    }
+
+    // -----------------------------------------------------------------------
+    // Additions for WaveformWidget
+    // -----------------------------------------------------------------------
+    void AudioPlayer::play_from_seconds(double seconds)
+    {
+        m_audio_thread->play_from_seconds(QString::fromStdString(m_audio_file.audio_file()), seconds);
+        m_playback_state = PlaybackState::PlayingState;
+        emit sig_start_play();
+        emit playback_state_changed(PlaybackState::PlayingState);
+    }
+
+    bool AudioPlayer::seek_seconds(double seconds)
+    {
+        return m_audio_thread->seek_seconds(seconds);
+    }
+
+    double AudioPlayer::position_seconds()
+    {
+        return m_audio_thread->position_seconds();
+    }
+
+    double AudioPlayer::length_seconds()
+    {
+        return m_audio_thread->length_seconds();
+    }
+
+    void AudioPlayer::set_volume(float volume01)
+    {
+        m_audio_thread->set_volume(volume01);
+    }
+
+    float AudioPlayer::volume() const
+    {
+        return m_audio_thread->volume();
+    }
+
+    void AudioPlayer::cancel_waveform()
+    {
+        ++m_wave_job;                       // results of the old job are ignored
+        if (m_wave_cancel)
+            m_wave_cancel->store(true);
+        if (m_wave_thread) {                // the decode loop checks the flag every chunk
+            m_wave_thread->wait();
+        }
+        m_wave_cancel.reset();
+    }
+
+    void AudioPlayer::load_waveform(const QString& filename, int block_frames)
+    {
+        cancel_waveform();
+
+        auto cancel = std::make_shared<std::atomic_bool>(false);
+        m_wave_cancel = cancel;
+        const quint64 job = m_wave_job;
+
+        QThread* thread = QThread::create([this, filename, block_frames, cancel, job]() {
+            int last_pct = -1;
+            auto progress = [this, job, &last_pct](int pct) {
+                if (pct == last_pct)
+                    return;
+                last_pct = pct;
+                QMetaObject::invokeMethod(this, [this, job, pct]() {
+                    if (job == m_wave_job)
+                        emit waveform_progress(pct);
+                }, Qt::QueuedConnection);
+            };
+
+            QString error;
+            WaveformDataPtr data = AudioThread::decode_waveform(filename, block_frames,
+                                                                *cancel, progress, &error);
+            if (cancel->load())
+                return;                                 // superseded / cancelled
+
+            QMetaObject::invokeMethod(this, [this, job, data, error]() {
+                if (job != m_wave_job)
+                    return;
+                if (data)
+                    emit waveform_ready(data);
+                else
+                    emit waveform_failed(error);
+            }, Qt::QueuedConnection);
+        });
+
+        connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+        m_wave_thread = thread;
+        thread->start();
     }
 
 }

@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <filesystem>
+#include <sstream>
 
 #include <QDebug>
 
@@ -16,8 +17,10 @@
 
 #include "../audio/audio.h"
 #include "../audio/audiotool.h"
+#include "../audio/mp3oggconverter.h"
 #include "../framework/manytomany.h"
 #include "../framework/ravenexception.h"
+#include "../framework/ravensetup.h"
 
 #include "../utils/tools.h"
 
@@ -28,7 +31,6 @@ SpotBrowser::SpotBrowser(std::shared_ptr<Client> client, QWidget* parent)
     ,ui{new Ui::SpotBrowser}
     ,m_client{client}
 {
-
     ui->setupUi(this);
     setDialogTitle("Client Spots");
 
@@ -43,16 +45,95 @@ SpotBrowser::~SpotBrowser()
     delete ui;
 }
 
+int SpotBrowser::create_audio_file(std::shared_ptr<AUDIO::Audio> audio)
+{
+    QString src_filepath = QString::fromStdString(audio->source_filepath()->value());
+    std::string filepath = audio->file_path()->value();
+
+    // Create Audio record in the database - get ID
+    auto edm = std::make_unique<EntityDataModel>();
+    int audio_id = edm->createEntityDB(*audio);
+
+    AUDIO::AudioTool at;
+    auto ogg_filename = at.make_audio_filename(audio_id);
+    filepath = filepath + ogg_filename+".ogg";
+    auto dest_filepath = QString::fromStdString(filepath);
+
+    log_info(QString("Converting audio `%1` to `%2`")
+         .arg(src_filepath)
+         .arg(dest_filepath));
+
+    // Call Mp3 converter
+    bool success = false;
+
+    try {
+        auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>();
+        success = audio_converter->convert(src_filepath, dest_filepath);
+    } catch (AudioImportException& aie) {
+        log_error(QString("Error converting Mp3 to OGG:  %1").arg(QString::fromStdString(aie.errorMessage())));
+    }
+
+    if (!success) {
+        log_info(QString("Failed to convert audio file: %1").arg(src_filepath));
+
+        // Audio conversion failed - Delete from the database!
+        log_info(QString("Deleting audio ID: %1").arg(QString::number(audio_id)));
+        auto audio_edm = std::make_unique<EntityDataModel>(
+            std::make_shared<AUDIO::Audio>() );
+        audio_edm->deleteEntityByValue(std::make_tuple("id", audio_id));
+
+        log_info(QString("Saving aborted!"));
+
+        return -1;
+    }
+
+    log_info(QString("Conversion completed successfully..."));
+
+    auto msg = QString("Audio file created: %1").arg(dest_filepath);
+    log_info(msg);
+
+    return audio_id;
+}
+
+void SpotBrowser::delete_audio(int old_audio_id)
+{
+  log_info(QString("Deleting audio ID:%1").arg(old_audio_id));
+
+  std::stringstream sql;
+
+  sql << " Update rave_audio set deleted = true "
+      << " Where id = "<< std::to_string(old_audio_id);
+
+  EntityDataModel edm;
+
+  try {
+    edm.executeRawSQL(sql.str());
+  } catch (DatabaseException &de) {
+    showMessage(de.errorMessage());
+  }
+
+  log_info("Audio delete!");
+
+}
 
 void SpotBrowser::addRecord()
 {
     auto spot = std::make_shared<TRAFFIK::Spot>();
-    auto spot_form = std::make_unique<SpotForm>(m_client, spot, this);
+    auto spot_form = std::make_unique<SpotForm>(m_client, spot,  this);
 
     log_info("Opening SpotForm...");
 
     if (spot_form->exec() > 0){
         try{
+            log_info("Saving spot audio...");
+
+            int audio_id = create_audio_file(spot_form->spot_audio());
+            if (audio_id == -1)
+                return;
+
+            spot->set_audio(audio_id);
+            spot->set_add_date(QDate::currentDate());
+            spot->set_add_login("traffik"); // TODO: Get the actual user name
 
             int id = entityDataModel().createEntity(std::move(spot));
 
@@ -63,9 +144,6 @@ void SpotBrowser::addRecord()
 
             log_info("Saving type exclusions...");
             save_type_exclusions(*spot_form);
-
-            log_info("Saving spot audio...");
-            save_spot_audio(*spot_form);
 
         }catch(DatabaseException& de){
 
@@ -96,24 +174,42 @@ void SpotBrowser::updateRecord()
 
         spot->client()->setValue(m_client->id());
 
+        // We cache the old audio ID
+        int old_audio_id = spot->audio()->value();
+
         std::unique_ptr<SpotForm> spot_form =
-                std::make_unique<SpotForm>(m_client, spot, this);
+                std::make_unique<SpotForm>(m_client, spot,  this);
 
         if (spot_form->exec() > 0){
+
             try{
+
+                if (spot_form->spot_audio()->id() == -1 ) {
+
+                    // First mark the old audio as deleted
+                    if (old_audio_id != -1) {
+                        delete_audio(old_audio_id);
+                    }
+
+                    // Create the new audio - create record in DB and write the audio file to disk
+                    int audio_id = create_audio_file(spot_form->spot_audio());
+
+                    if (audio_id == -1)
+                        return;
+
+                    spot->set_audio(audio_id);
+                }
 
                 updateTableViewRecord(spot->tableViewValues());
 
                 entityDataModel().updateEntity(*spot);
-                entityDataModel().all();
+
+                search_by_client(m_client);
+                //entityDataModel().all();
 
                 save_voice_overs(*spot_form);
 
                 save_type_exclusions(*spot_form);
-
-
-                save_spot_audio(*spot_form);
-
 
             }catch(DatabaseException& de){
                 showMessage(de.errorMessage());
@@ -141,6 +237,7 @@ bool SpotBrowser::okay_to_delete(std::shared_ptr<BaseEntity> entity)
 {
 //   BaseEntity* entity = findSelectedEntity();
    TRAFFIK::Spot* spot = dynamic_cast<TRAFFIK::Spot*>(entity.get());
+
    EntityDataModel edm = EntityDataModel(std::make_shared<OrderBooking>());
    edm.searchByInt({"spot_id", "=", spot->id()});
 
@@ -191,9 +288,16 @@ void SpotBrowser::save_type_exclusions(const SpotForm& sf)
     }
 }
 
+
+/*
 void SpotBrowser::save_spot_audio(const SpotForm& sf)
 {
     log_info("Start save spot audio function...");
+
+    // Get Lib Path from the RavenSetup
+    auto setup_edm = std::make_unique<EntityDataModel>(std::make_unique<RavenSetup>());
+    setup_edm->all();
+    std::shared_ptr<RavenSetup> setup = std::dynamic_pointer_cast<RavenSetup>(setup_edm->firstEntity());
 
     auto edm = std::make_unique<EntityDataModel>();
 
@@ -202,7 +306,7 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
     QString audio_count = QString("Spot audio count: %1").arg(QString::number(spot_audios.size()));
     log_info(audio_count);
 
-    auto audio_creation_mode = sf.get_audio_creation_mode();
+    //auto audio_creation_mode = sf.get_audio_creation_mode();
 
     for(auto& sa : spot_audios) {
 
@@ -248,13 +352,20 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
 
                 // Format audio name from Id
                 std::string ogg_file = at.make_audio_filename(id);
-                std::string lib_path = audio.audio_lib_path()->value();
+
+                //std::string lib_path = audio.audio_lib_path()->value();
+                std::string lib_path = setup->audio_folder()->value();
 
                 log_info(QString("OGG File: `%1`").arg(QString::fromStdString(ogg_file)));
                 log_info(QString("Lib Path: %1").arg(QString::fromStdString(lib_path)));
 
+
                 //std::string old_filename = lib_path+audio.audio_file().short_filename()+OGG_EXT;
                 std::string old_filename = audio.audio_file().ogg_filename();
+
+
+
+
                 std::string new_filename = lib_path+ogg_file+OGG_EXT;
 
                 log_info(QString("Old filename: %1").arg(QString::fromStdString(old_filename)));
@@ -371,4 +482,5 @@ void SpotBrowser::save_spot_audio(const SpotForm& sf)
     }
 
 }
+*/
 

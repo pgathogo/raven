@@ -132,7 +132,6 @@ Order::Order(std::shared_ptr<Client> client)
 
     mOrderNumber = createField<StringField>("order_number", "Order Number");
 
-
     mOrderDate = createField<DateField>("order_date", "Order Date");
     mStartDate = createField<DateField>("start_date", "Start Date");
     mEndDate = createField<DateField>("end_date", "End Date");
@@ -197,7 +196,8 @@ Order::Order(std::shared_ptr<Client> client)
 
     mHeader << QString::fromStdString(m_title->fieldLabel())
             << QString::fromStdString(m_spots_ordered->fieldLabel())
-            << QString::fromStdString(m_spots_booked->fieldLabel());
+            << QString::fromStdString(m_spots_booked->fieldLabel())
+            << QString::fromStdString(mAddDtime->fieldLabel());
 
     setTableName("rave_order");
 
@@ -524,19 +524,27 @@ std::vector<std::string> Order::tableViewColumns() const
     spotsOrdered()->set_display_width(200);
     spotsBooked()->set_display_width(200);
 
+    std::cout << addDtime()->displayName() << '\n';
+
     return tableViewCols<std::string>(
                 title()->displayName(),
                 spotsOrdered()->displayName(),
-                spotsBooked()->displayName()
+                spotsBooked()->displayName(),
+                addDtime()->displayName()
                 );
 }
 
 std::vector<std::string> Order::tableViewValues()
 {
+    std::cout << addDtime()->displayName() << '\n';
+
+
+
     return {
         title()->displayName(),
         spotsOrdered()->displayName(),
-        spotsBooked()->displayName()
+        spotsBooked()->displayName(),
+        addDtime()->displayName()
     };
 }
 

@@ -44,7 +44,6 @@
 #include "../utils/cachehandler.h"
 
 
-
 #define DEBUG_MODE
 
 BookingWizard::BookingWizard(Order* order,  QWidget *parent)
@@ -154,7 +153,7 @@ BookingWizard::BookingWizard(Order* order,  QWidget *parent)
     QString title = QString("Order Booking - %1").arg(order->title()->to_qstring());
     setWindowTitle(title);
 
-    setMaximumWidth(840);
+    //setMaximumWidth(840);
 
 
     //QPixmap* wpixmap = new QPixmap("D:/home/PMS/Raven/images/wizard_sidebanner.png");
@@ -880,7 +879,7 @@ void BookingWizard::build_breaks()
         m_engine_data.spot_to_book.spot_duration = spot->spot_duration()->value();
         m_engine_data.spot_to_book.real_duration = spot->real_duration()->value();
         m_engine_data.spot_to_book.spot_daypart = fetch_spot_daypart(*spot);
-        m_engine_data.spot_to_book.audio_id = get_spot_audio(spot->id());
+        m_engine_data.spot_to_book.audio_id = spot->audio()->value();  //get_spot_audio(spot->id());
 
         fetch_type_exclusions(m_engine_data);
 
@@ -1167,7 +1166,7 @@ void BookingWizard::spot_details(int spot_id)
     spot->spot_audio().setParentId(spot_id);
 
     std::unique_ptr<SpotForm> spot_form =
-            std::make_unique<SpotForm>(client, spot, this);
+            std::make_unique<SpotForm>(client, spot,  this);
 
     if (spot_form->exec() == 0){}
 
@@ -1528,6 +1527,7 @@ std::tuple<int, int> BookingWizard::selection_hour_and_minute(QString break_time
 
 bool BookingWizard::spot_has_audio(const TRAFFIK::Spot* spot)
 {
+    /*
     auto edm = EntityDataModel(
                std::make_shared<TRAFFIK::SpotAudio>());
 
@@ -1538,12 +1538,11 @@ bool BookingWizard::spot_has_audio(const TRAFFIK::Spot* spot)
                 " = ",
                 spot->id()
                 );
-
     std::string filter = edm.prepareFilter(audio_filter);
-
     edm.search(filter);
+    */
 
-    return edm.count() > 0 ? true : false;
+    return (spot->audio()->value() > -1)  ? true : false;
 }
 
 void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
@@ -1562,22 +1561,20 @@ void BookingWizard::find_existing_bookings(TRAFFIK::EngineData& engine_data)
 
     std::stringstream sql;
     sql << "SELECT a.id AS booking_id, a.schedule_id, a.spot_id, a.bookingsegment_id, a.book_seq, "
-        << " b.name, b.spot_duration, b.real_duration, b.brand_id, b.client_id, "
+        << " b.name, b.spot_duration, b.real_duration, b.brand_id, b.client_id, b.audio_id as audio_id, "
         << " b.daypart1 AS spotDP1, b.daypart2 AS spotDP2, b.daypart3 AS spotDP3, "
         << " b.daypart4 AS spotDP4, b.daypart5 AS spotDP5, b.daypart6 AS spotDP6,b.daypart7 AS spotDP7, "
         << " e.daypart1 AS typeDP1, e.daypart2 AS typeDP2, e.daypart3 AS typeDP3, "
         << " e.daypart4 AS typeDP4, e.daypart5 AS typeDP5, e.daypart6 AS typeDP6,e.daypart7 AS typeDP7, "
         << " f.daypart1 AS voDP1, f.daypart2 AS voDP2, f.daypart3 AS voDP3, "
         << " f.daypart4 AS voDP4, f.daypart5 AS voDP5, f.daypart6 AS voDP6, f.daypart7 AS voDP7, "
-        << " c.detail_id AS spot_excl, d.detail_id AS spot_vo, "
-        << " g.audio_id AS audio_id "
+        << " c.detail_id AS spot_excl, d.detail_id AS spot_vo "
         << " FROM rave_orderbooking a "
         << " left join rave_spot b on a.spot_id = b.id "
         << " left join rave_spottypeexclusion c on a.spot_id = c.parent_id "
         << " left join rave_spotvoiceover d on a.spot_id = d.parent_id "
         << " left join rave_typeexclusion e on c.detail_id = e.id "
         << " left join rave_voiceover f on d.detail_id = f.id "
-        << " left join rave_spotaudio g on b.id = g.spot_id "
         << "WHERE a.schedule_id in " + schedule_ids+" ORDER BY a.id " ;
 
     EntityDataModel edm;

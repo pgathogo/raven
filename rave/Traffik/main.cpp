@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDate>
 #include <QDir>
+#include <QMediaFormat>
 
 #include "../security/loginform.h"
 #include "../security/authentication.h"
@@ -19,6 +20,17 @@ QString module = "Main";
 
 int main(int argc, char *argv[])
 {
+    // qputenv("QT_MEDIA_BACKEND", "ffmpeg");
+
+
+    // QMediaFormat format;
+    // format.setAudioCodec(QMediaFormat::AudioCodec::Vorbis);
+    // bool hasVorbis = format.isSupported(QMediaFormat::Encode);
+    // bool hasVorbis2 = format.isSupported(QMediaFormat::Decode);
+    // //bool hasVorbis2 = format.isSupported(QMediaFormat::FileFormat::Ogg);
+    // qDebug() << "Is Ogg Vorbis natively supported by the backend 1? " << hasVorbis;
+    // qDebug() << "Is Ogg Vorbis natively supported by the backend 2? " << hasVorbis2;
+
     QApplication a(argc, argv);
 
 #ifdef LOG_TO_FILE

@@ -10,6 +10,8 @@
 #include "../security/authentication.h"
 #include "../security/structs.h"
 
+#include "spotform.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 class QMenu;
@@ -74,11 +76,15 @@ private slots:
     void open_merged_browser();
     void open_setup_browser();
     void open_cue_editor();
-    void test_new_booking();
+    void test_func();
 
     void print_comm_log();
 
 private:
+    //void save_spot_audio(const SpotForm&);
+    void log_info(const QString msg) { Logger::info("SpotBrowser", msg);}
+    void log_error(const QString msg) { Logger::error("SpotBrowser", msg);}
+
     //PlainForm* pf;
     Ui::MainWindow *ui;
 

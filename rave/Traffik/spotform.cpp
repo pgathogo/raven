@@ -21,7 +21,10 @@
 #include "../audio/audiofile.h"
 #include "../audio/audiotool.h"
 #include "../audio/audio.h"
+#include "../audio/audiopropertywidget.h"
 #include "../audiolib/headers/cueeditor.h"
+
+#include "../audio/spotaudioform.h"
 
 #include "spotform.h"
 #include "ui_spotform.h"
@@ -41,11 +44,14 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
      ,ui{new Ui::SpotForm}
      ,m_client{client}
      ,m_spot{spot}
+     ,m_audio{nullptr}
+    ,m_audio_prop_widget{nullptr}
 {
     ui->setupUi(bui->baseContainer);
+
     setTitle(windowTitle());
 
-    add_time_band_widget();
+    //add_time_band_widget();
 
     populateGrid();
 
@@ -60,15 +66,13 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
                                                 ui->vlTypeEx,
                                                 this);
 
-    m_spot_audio_browser =
-            std::make_unique<SpotAudioBrowser>(&m_spot->spot_audio(),
-                                               ui->vlSpotAudio,
-                                               this);
-
-    connect(m_spot_audio_browser.get(), &SpotAudioBrowser::audio_duration, this, &SpotForm::update_audio_duration);
-
     connect(ui->cbBrands, QOverload<int>::of(&QComboBox::currentIndexChanged),
            this, &SpotForm::brandsComboChanged);
+
+    make_audio_widget();
+
+    if (spot->audio()->value() > 0)
+        add_audio_property_widget(spot->audio()->value());
 
     //connect(ui->btnCueEdit, &QPushButton::clicked, this, &SpotForm::cue_edit);
 
@@ -79,17 +83,126 @@ SpotForm::SpotForm(std::shared_ptr<Client> client,
     m_edm_setup->all();
     m_setup = std::dynamic_pointer_cast<RavenSetup>(m_edm_setup->firstEntity());
 
-
     ui->edtRealDuration->setMaximum(999999);
 
     int w = 720;
-    int h = 530;
+    int h = 650;
 
     int max_width = 780;
-    int max_height = 550;
+    int max_height = 900;
 
     setMinimumSize(w, h);
     setMaximumSize(max_width, max_height);
+}
+
+void SpotForm::make_audio_widget()
+{
+
+    auto hl = hline(this);
+    ui->vlAudio->addWidget(hl);
+
+    // Make audio toolbar
+    QSize button_size = QSize(100, 30);
+
+    QHBoxLayout* hlToolbar = new QHBoxLayout();
+    QPushButton* btnImport = new QPushButton("Import Audio...");
+    connect(btnImport, &QPushButton::clicked, this, &SpotForm::on_import_audio);
+
+    btnImport->setMinimumSize(button_size);
+
+    QPushButton* btnAttach = new QPushButton("Attach Audio...");
+    connect(btnAttach, &QPushButton::clicked, this, &SpotForm::on_attach_audio);
+    btnAttach->setMinimumSize(button_size);
+
+    hlToolbar->addWidget(btnImport);
+    hlToolbar->addWidget(btnAttach);
+    hlToolbar->addStretch(1);
+
+    ui->vlAudio->addLayout(hlToolbar);
+
+}
+
+void SpotForm::make_property_widget(std::shared_ptr<AUDIO::Audio> audio)
+{
+    m_audio_prop_widget = new AUDIO::AudioPropertyWidget(audio);
+    connect(m_audio_prop_widget, &AUDIO::AudioPropertyWidget::cue_edit_audio, this, &SpotForm::cue_edit);
+    ui->vlAudio->addWidget(m_audio_prop_widget);
+}
+
+void SpotForm::add_audio_property_widget(int audio_id)
+{
+    auto edm = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
+    edm->getById({"id", "=", audio_id});
+
+    if (edm->is_empty())
+        return;
+
+    m_audio = std::dynamic_pointer_cast<AUDIO::Audio>(edm->getEntity());
+    make_property_widget(m_audio);
+    // m_audio_prop_widget = new AUDIO::AudioPropertyWidget(m_audio);
+    // connect(m_audio_prop_widget, &AUDIO::AudioPropertyWidget::cue_edit_audio, this, &SpotForm::cue_edit);
+    //ui->vlAudio->addWidget(m_audio_prop_widget);
+
+}
+
+void SpotForm::on_import_audio()
+{
+    auto audio_filepath = QFileDialog::getOpenFileName(this,
+                                                    tr("Import Audio"), QDir::currentPath(),
+                                                    tr("OGG Files (*.ogg);; MP3 Files (*.mp3);; MTS Files (*.mts);; Wave Files (*.wav)"));
+    if (audio_filepath.isEmpty())
+         return;
+
+    m_audio = std::make_shared<AUDIO::Audio>(audio_filepath.toStdString());
+
+    m_audio->set_source_filepath(audio_filepath.toStdString());
+
+  // if (m_audio == nullptr)
+   //m_audio = std::make_shared<AUDIO::Audio>("D:/Home/Clients/PMS/RavenData/Audio/MP3/BRITANIA_WHEN_I_NEED.mp3");
+
+   AUDIO::SpotAudioForm saf(m_audio,
+                            ui->edtName->text(),
+                            QString::fromStdString(m_client->name()->value()),
+                            this);
+   if (saf.exec()) {
+
+       if (m_audio_prop_widget == nullptr) {
+            make_property_widget(m_audio);
+           // m_audio_prop_widget = new AUDIO::AudioPropertyWidget(m_audio);
+           // connect(m_audio_prop_widget, &AUDIO::AudioPropertyWidget::cue_edit_audio, this, &SpotForm::cue_edit);
+           //ui->vlAudio->addWidget(m_audio_prop_widget);
+       } else {
+           m_audio_prop_widget->update_widget(m_audio);
+       }
+
+       if (m_audio->duration()->value() > 0)
+       {
+           double msec = m_audio->duration()->value();
+           double secs = m_audio->duration()->value() / 1000.0;
+
+           ui->edtSpotDuration->setValue(secs);
+           ui->edtRealDuration->setValue(msec);
+       }
+
+   } else {
+
+       m_audio = nullptr;
+   }
+
+}
+
+void SpotForm::on_attach_audio()
+{
+
+}
+
+QFrame* SpotForm::hline(QWidget* parent)
+{
+    QFrame* hline = new QFrame(parent);
+    hline->setFrameShape(QFrame::HLine);
+    hline->setFrameShadow(QFrame::Sunken);
+
+    return hline;
 }
 
 SpotForm::~SpotForm()
@@ -97,9 +210,19 @@ SpotForm::~SpotForm()
     delete ui;
 }
 
+bool SpotForm::audio_is_available()
+{
+    return (m_audio == nullptr) ? false : true;
+}
+
 ActionResult SpotForm::saveRecord()
 {
     populateEntityFields();
+    // Check that the spot has audio
+    if (!audio_is_available() ) {
+        return std::make_tuple(ActionResultType::arERROR, "No audio found!");
+    }
+
     return m_spot->validate();
 }
 
@@ -113,25 +236,14 @@ std::vector<EntityRecord> const& SpotForm::typeExclusions() const
     return m_MtoMTypeExBrowser->entityDataModel().modelEntities();
 }
 
-const std::vector<EntityRecord> &SpotForm::spot_audios() const
+std::shared_ptr<AUDIO::Audio> SpotForm::spot_audio()
 {
-    return  m_spot_audio_browser->entityDataModel().modelEntities();
+    return m_audio;
 }
-
-const AudioCreationMode SpotForm::get_audio_creation_mode() const
-{
-    return m_spot_audio_browser->audio_creation_mode();
-}
-
 
 int SpotForm::parentId() const
 {
     return m_spot->id();
-}
-
-const std::unique_ptr<SpotAudioBrowser> &SpotForm::spot_browser() const
-{
-    return m_spot_audio_browser;
 }
 
 std::string SpotForm::windowTitle()
@@ -191,7 +303,6 @@ void SpotForm::create_dow_widget()
     QLineEdit* edtMon = new QLineEdit();
     glDOW->addWidget(lblMon, ROW0, COL0);
     glDOW->addWidget(edtMon, ROW1, COL0);
-
     */
 
     m_dow_widget = std::make_unique<DowWidget>();
@@ -280,6 +391,9 @@ void SpotForm::populateEntityFields()
     m_spot->set_daypart6(dayparts[6]);
     m_spot->set_daypart7(dayparts[7]);
 
+    if (!m_spot->add_date()->value().isValid())
+        m_spot->add_date()->setValue(QDate::currentDate());
+
 }
 
 void SpotForm::populateFormWidgets()
@@ -293,6 +407,9 @@ void SpotForm::populateFormWidgets()
         stoq(m_spot->brand()->displayName())));
 
     ui->edtClient->setText(stoq(m_client->name()->value()));
+
+    // If audio_id != null, load the Audio
+   // if (m_spot->aud)
 }
 
 void SpotForm::brandsComboChanged(int i)
@@ -304,12 +421,18 @@ void SpotForm::brandsComboChanged(int i)
     m_spot->brand()->setValue(std::get<1>(*(edm->vecBegin()+i))->id());
 }
 
-void SpotForm::on_import_audio()
-{
-}
 
 void SpotForm::cue_edit()
 {
+   AUDIO::SpotAudioForm saf(m_audio,
+                            ui->edtName->text(),
+                            QString::fromStdString(m_client->name()->value()),
+                            this);
+   if (saf.exec())
+   {
+     // Update audio: Title, Notes, and Cue Markers
+     // make_property_widget(m_audio);
+   }
 }
 
 void SpotForm::update_audio_duration(int audio_duration)
@@ -319,7 +442,6 @@ void SpotForm::update_audio_duration(int audio_duration)
 
 void SpotForm::closeEvent(QCloseEvent* event)
 {
-    m_spot_audio_browser->stop_play();
 }
 
 void SpotForm::time_band_selected()

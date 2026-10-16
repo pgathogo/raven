@@ -49,7 +49,7 @@ void OrderBrowser::updateRecord()
             try{
                 updateTableViewRecord(order->tableViewValues());
                 entityDataModel().updateEntity(*order);
-                entityDataModel().all();
+                search_by_client(mClient);
             } catch (DatabaseException& de){
                 showMessage(de.errorMessage());
             }
