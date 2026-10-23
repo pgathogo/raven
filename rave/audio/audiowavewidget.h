@@ -2,6 +2,10 @@
 
 #include <QWidget>
 
+#include "WaveFormWidget.h"
+
+class WaveformWidget;
+
 namespace AUDIO {
 
 class WaveToolBar : public QWidget
@@ -30,13 +34,23 @@ class AudioWaveWidget : public QWidget
 {
     Q_OBJECT
 public:
-    AudioWaveWidget(QString&);
-    double audio_duration();
+    enum class MarkerType { Start = 0, FadeIn, Intro, Extro, FadeOut, End };
+
+    AudioWaveWidget(QString);
+    double audio_duration_sec();
+    double audio_duration_ms();
+    QMap<MarkerType, double> markers() const;
+    void set_marker(MarkerType, double);
+signals:
+    void wave_is_loaded();
 private:
     void setupui();
+    QFrame* hline(QWidget*);
+
     QString m_audio_filepath;
 
     double m_audio_duration{0.0};
+    WaveformWidget* m_wf;
 
 };
 

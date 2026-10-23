@@ -158,11 +158,17 @@ namespace AUDIO {
         IntegerField* audio_year() const;
         ChoiceField<std::string>* audio_type() const;
         TextField* notes() const;
+
         AudioFile& audio_file();
         CueMarker cue_marker() const;
 
         StringField* audio_filename() const;
         StringField* file_extension() const;
+
+        StringField* add_login() const;
+        void set_add_login(const std::string);
+
+
         std::string artist_fullname() const;
 
         void set_title(const std::string);
@@ -258,6 +264,7 @@ namespace AUDIO {
         StringField* m_file_extension;
 
         StringField* m_source_filepath;
+        StringField* m_add_login;
 
         AudioFile m_file_info;
 

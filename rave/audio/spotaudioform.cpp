@@ -113,7 +113,7 @@ void SpotAudioForm::accept()
 
     m_audio->set_title(m_edtTitle->text().toStdString());
     m_audio->set_notes(m_edtNotes->toPlainText().toStdString());
-    m_audio->set_duration(m_audio_wave_widget->audio_duration() * 1000.0); // msecs
+    m_audio->set_duration(m_audio_wave_widget->audio_duration_ms()); // msecs
     m_audio->set_audio_type("COMM");
     m_audio->set_file_path(setup->comm_audio_folder()->value());
     m_audio->set_audio_year(QDate::currentDate().year());

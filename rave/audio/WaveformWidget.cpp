@@ -152,6 +152,7 @@ bool WaveformWidget::loadFile(const QString &path)
     m_player->set_source(abs.toStdString());    // used for playback
     m_player->load_waveform(abs, kBlockFrames); // BASS decodes on a worker thread
     update();
+
     return true;
 }
 
@@ -910,6 +911,7 @@ QJsonObject WaveformWidget::markersToJson() const
         m["seconds"] = std::round(m_markerTime[i] * 1000.0) / 1000.0;
         m["time"] = formatHMS(m_markerTime[i]);
         m["timeMs"] = formatHMS(m_markerTime[i], true);
+        m["msec"] = m_markerTime[i];
         root[markerKey(type)] = m;
     }
     return root;
@@ -945,7 +947,9 @@ bool WaveformWidget::isMarkerOrderValid() const
 
 void WaveformWidget::setMarker(MarkerType type, double seconds)
 {
+
     if (!m_hasAudio) return;
+
     seconds = std::clamp(seconds, 0.0, m_duration);
     double &slot = m_markerTime[int(type)];
     if (slot == seconds) return;

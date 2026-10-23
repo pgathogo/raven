@@ -6,7 +6,7 @@
 #include <QMessageBox>
 
 #include "audiowavewidget.h"
-#include "WaveFormWidget.h"
+#include "CountdownLabel.h"
 
 namespace AUDIO {
 
@@ -91,7 +91,7 @@ void WaveToolBar::setupui()
 
 
 
-AudioWaveWidget::AudioWaveWidget(QString& audio_filepath)
+AudioWaveWidget::AudioWaveWidget(QString audio_filepath)
 {
     m_audio_filepath = audio_filepath;
     setupui();
@@ -102,11 +102,11 @@ void AudioWaveWidget::setupui()
     QVBoxLayout* main_layout = new QVBoxLayout;
     WaveToolBar* tb = new WaveToolBar();
 
-    auto* wf = new WaveformWidget;
+    m_wf = new WaveformWidget;
 
-    connect(tb, &WaveToolBar::arm_marker, this, [wf](int marker){
+    connect(tb, &WaveToolBar::arm_marker, this, [this](int marker){
         const auto type = static_cast<WaveformWidget::MarkerType>(marker);
-        wf->armMarker(type);
+        m_wf->armMarker(type);
     });
 
     // Marker Information
@@ -114,12 +114,12 @@ void AudioWaveWidget::setupui()
     auto* marker_info = new QLabel;
     marker_info->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-    auto refresh_markers = [wf, marker_info]{
+    auto refresh_markers = [this, marker_info]{
         QStringList parts;
         for(int i = 0; i < WaveformWidget::MarkerCount; ++i) {
             const auto type = static_cast<WaveformWidget::MarkerType>(i);
             parts << QString("%1 : %2").arg(WaveformWidget::markerName(type),
-                                            wf->hasMarker(type) ? wf->markerTimeString(type) : QString("--"));
+                                            m_wf->hasMarker(type) ? m_wf->markerTimeString(type) : QString("--"));
         }
         marker_info->setText(parts.join("   |   "));
     };
@@ -130,44 +130,137 @@ void AudioWaveWidget::setupui()
 
     refresh_markers();
 
-    connect(tb, &WaveToolBar::play_pause_audio, wf, &WaveformWidget::togglePlayPause);
-    connect(tb, &WaveToolBar::stop_audio, wf, &WaveformWidget::stop);
-    connect(tb, &WaveToolBar::play_sel, wf, &WaveformWidget::playSelection);
-    connect(tb, &WaveToolBar::set_loop_play, [wf](bool on) { wf->setLoopSelection(on);});
-    connect(tb, &WaveToolBar::zoom_in, wf, &WaveformWidget::zoomIn);
-    connect(tb, &WaveToolBar::zoom_out, wf, &WaveformWidget::zoomOut);
-    connect(tb, &WaveToolBar::zoom_fit, wf, &WaveformWidget::zoomToFit);
-    connect(tb, &WaveToolBar::zoom_sel, wf, &WaveformWidget::zoomToSelection);
-    connect(tb, &WaveToolBar::highlight_wave, [wf] {wf->addSelectionAsHighlight();});
-    connect(tb, &WaveToolBar::clear_highlight, wf, &WaveformWidget::clearHighlights);
-    connect(tb, &WaveToolBar::scale_wave, [wf](int i) {wf->setAmplitudeScale( i == 0 ? WaveformWidget::AmplitudeScale::Linear
+    connect(tb, &WaveToolBar::play_pause_audio, m_wf, &WaveformWidget::togglePlayPause);
+    connect(tb, &WaveToolBar::stop_audio, m_wf, &WaveformWidget::stop);
+    connect(tb, &WaveToolBar::play_sel, m_wf, &WaveformWidget::playSelection);
+    connect(tb, &WaveToolBar::set_loop_play, [this](bool on) { m_wf->setLoopSelection(on);});
+    connect(tb, &WaveToolBar::zoom_in, m_wf, &WaveformWidget::zoomIn);
+    connect(tb, &WaveToolBar::zoom_out, m_wf, &WaveformWidget::zoomOut);
+    connect(tb, &WaveToolBar::zoom_fit, m_wf, &WaveformWidget::zoomToFit);
+    connect(tb, &WaveToolBar::zoom_sel, m_wf, &WaveformWidget::zoomToSelection);
+    connect(tb, &WaveToolBar::highlight_wave, [this] {m_wf->addSelectionAsHighlight();});
+    connect(tb, &WaveToolBar::clear_highlight, m_wf, &WaveformWidget::clearHighlights);
+    connect(tb, &WaveToolBar::scale_wave, [this](int i) {m_wf->setAmplitudeScale( i == 0 ? WaveformWidget::AmplitudeScale::Linear
                                                                                      : WaveformWidget::AmplitudeScale::Decibel);});
 
 
     // WaveformWidget connections
-    connect(wf, &WaveformWidget::loaded, [this](double duration){
+    connect(m_wf, &WaveformWidget::loaded, [this](double duration){
         m_audio_duration = duration;
+        emit wave_is_loaded();
     });
 
-    connect(wf, &WaveformWidget::errorOccurred, [this](const QString& msg) {
+    connect(m_wf, &WaveformWidget::errorOccurred, [this](const QString& msg) {
         QMessageBox::warning(this, "Audio error: ", msg);
     });
 
     main_layout->addWidget(tb);
     main_layout->addWidget(marker_info);
     //main_layout->addLayout(marker_layout);
-    main_layout->addWidget(wf);
+    main_layout->addWidget(m_wf);
+
+    // HLine
+    auto* line1 = hline(this);
+    main_layout->addWidget(line1);
+
+    // Countdown label
+    auto* count_down = new CountdownLabel;
+    count_down->setWaveform(m_wf);
+    auto* count_down_layout = new QHBoxLayout;
+    count_down_layout->addStretch();
+    count_down_layout->addWidget(count_down);
+
+
+    main_layout->addLayout(count_down_layout);
+
+    auto* line2 = hline(this);
+    main_layout->addWidget(line2);
+
 
     // Open Audio;
-    wf->loadFile(m_audio_filepath);
+    if (!m_audio_filepath.isEmpty())
+        m_wf->loadFile(m_audio_filepath);
 
     setLayout(main_layout);
 
 }
 
-    double AudioWaveWidget::audio_duration()
+    double AudioWaveWidget::audio_duration_sec()
     {
         return m_audio_duration;
     }
+
+    double AudioWaveWidget::audio_duration_ms()
+    {
+        return m_audio_duration * 1000.0;
+    }
+
+    QFrame* AudioWaveWidget::hline(QWidget* parent)
+    {
+        QFrame* hline = new QFrame(parent);
+        hline->setFrameShape(QFrame::HLine);
+        hline->setFrameShadow(QFrame::Sunken);
+
+        return hline;
+    }
+
+
+    QMap<AudioWaveWidget::MarkerType, double> AudioWaveWidget::markers() const
+    {
+
+        using aam  = AUDIO::AudioWaveWidget::MarkerType;
+
+        auto marks =  m_wf->markers();
+
+        QMap<aam, double> mark2;
+
+        mark2[aam::Start] = marks[WaveformWidget::MarkerType::Start];
+        mark2[aam::FadeIn] = marks[WaveformWidget::MarkerType::FadeIn];
+        mark2[aam::Intro] = marks[WaveformWidget::MarkerType::Intro];
+        mark2[aam::Extro] = marks[WaveformWidget::MarkerType::Extro];
+        mark2[aam::FadeOut] = marks[WaveformWidget::MarkerType::FadeOut];
+        mark2[aam::End] = marks[WaveformWidget::MarkerType::End];
+
+        return mark2;
+
+    }
+
+    void AudioWaveWidget::set_marker(MarkerType marker_type, double ms)
+    {
+
+        if (ms == 0.0)  return;
+
+        double mark_ms = 0.0;
+
+        if (ms > 0 )
+            mark_ms = ms / 1000.0;
+
+        switch (marker_type) {
+        case MarkerType::Start:
+            qDebug() << "Start Marker: " << mark_ms;
+            m_wf->setMarker(WaveformWidget::MarkerType::Start, mark_ms);
+            break;
+        case MarkerType::FadeIn:
+            m_wf->setMarker(WaveformWidget::MarkerType::FadeIn, mark_ms);
+            break;
+        case MarkerType::Intro:
+            qDebug() << "Intro Marker: " << mark_ms;
+            m_wf->setMarker(WaveformWidget::MarkerType::Intro, mark_ms);
+            break;
+        case MarkerType::Extro:
+            m_wf->setMarker(WaveformWidget::MarkerType::Extro, mark_ms);
+            break;
+        case MarkerType::FadeOut:
+            m_wf->setMarker(WaveformWidget::MarkerType::FadeOut, mark_ms);
+            break;
+        case MarkerType::End:
+            m_wf->setMarker(WaveformWidget::MarkerType::End, mark_ms);
+            break;
+        }
+
+    }
+
+
+
 
 }

@@ -18,7 +18,7 @@
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <widget class="QTabWidget" name="tabWidget">
        <property name="minimumSize">
@@ -34,10 +34,10 @@
         </size>
        </property>
        <property name="tabPosition">
-        <enum>QTabWidget::South</enum>
+        <enum>QTabWidget::TabPosition::South</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabFolder">
         <attribute name="title">
@@ -48,7 +48,7 @@
           <layout class="QHBoxLayout" name="hlMessage"/>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="hlFolder">
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
@@ -80,7 +80,7 @@
              <item>
               <widget class="Line" name="line_3">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -113,7 +113,7 @@
              <item>
               <widget class="Line" name="line_4">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -133,7 +133,7 @@
              <item>
               <spacer name="verticalSpacer">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -148,7 +148,7 @@
            <item>
             <widget class="QTreeView" name="tvFolders">
              <property name="editTriggers">
-              <set>QAbstractItemView::NoEditTriggers</set>
+              <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
              </property>
             </widget>
            </item>
@@ -203,10 +203,10 @@
          <item>
           <widget class="QTableView" name="tvArtists">
            <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
+            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
            </property>
            <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
+            <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
            </property>
           </widget>
          </item>
@@ -244,10 +244,10 @@
          <item>
           <widget class="QTableView" name="tvGenre">
            <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
+            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
            </property>
            <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
+            <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
            </property>
           </widget>
          </item>
@@ -280,7 +280,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Audio Properties</string>
+             <string>Edit Audio...</string>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -312,20 +312,7 @@
           <item>
            <widget class="Line" name="line">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="btnCueEdit">
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Cue Edit</string>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
            </widget>
           </item>
@@ -345,7 +332,7 @@
           <item>
            <widget class="Line" name="line_2">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
            </widget>
           </item>
@@ -358,7 +345,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Cut Audio</string>
+             <string>Copy Audio </string>
             </property>
            </widget>
           </item>
@@ -391,7 +378,7 @@
           <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -406,13 +393,13 @@
         <item>
          <widget class="QTableView" name="tvTracks">
           <property name="editTriggers">
-           <set>QAbstractItemView::NoEditTriggers</set>
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::ExtendedSelection</enum>
+           <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
           </property>
           <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
+           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
           </property>
           <property name="sortingEnabled">
            <bool>true</bool>
@@ -424,6 +411,9 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget">
+       <layout class="QHBoxLayout" name="hlCustom"/>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -434,7 +424,7 @@
      <x>0</x>
      <y>0</y>
      <width>1108</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -111,6 +111,7 @@ namespace AUDIO
               args  << "-y"
                     << "-i"
                     << in_file
+                    << "-vn"     // Ignore the video stream
                     << "-c:a" << "libvorbis"
                     << "-q:a" << "4"
                     << "-vsync" << "2"

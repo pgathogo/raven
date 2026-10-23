@@ -56,9 +56,12 @@ namespace AUDIOEXP{
 
     void ArtistManager::fetch_data(const std::string filter)
     {
-        if (filter.empty())	{
+        if (filter.empty()){
+
             m_model->all();
+
         }else{
+
             m_model->search(filter);
         }
     }

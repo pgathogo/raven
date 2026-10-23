@@ -522,7 +522,6 @@ int EntityDataModel::insert_returning_id(const std::string sql)
 
 int EntityDataModel::readRaw(const std::string sql)
 {
-    std::cout << sql << "\n";
 
     return dbManager->readRaw( sql );
 }

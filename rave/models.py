@@ -391,6 +391,7 @@ class Audio(Daypart):
     audio_year = models.IntegerField(null=True)
     creation_date = models.DateField(null=True)
     notes = models.TextField(blank=True, null=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
 
 PLAY_STATUS = (
         ('WAITING','WAITING'),

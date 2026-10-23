@@ -275,6 +275,8 @@ set(PROJECT_SOURCES
     ../audio/audiowavewidget.cpp
     ../audio/WaveformWidget.h
     ../audio/WaveformWidget.cpp
+    ../audio/CountdownLabel.h
+    ../audio/CountdownLabel.cpp
 
     ${RAVE_AUDIO_EDITOR}/audiographic.cpp
     ${RAVE_AUDIO_EDITOR}/audiographic.h

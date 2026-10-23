@@ -91,6 +91,7 @@ std::string BaseDatabaseManager::commaSepValues(const BaseEntity& entity)
 
         if (!vals.empty())
             vals +=",";
+
         vals += field->dbValueFormatter();
     }
 
@@ -178,6 +179,10 @@ int PostgresDatabaseManager::createEntity(const BaseEntity& entity)
 
     sqlQuery = make_insert_returning_string(entity);
 
+    std::cout << " ------------------------ \n";
+    std::cout<< sqlQuery << '\n';
+    std::cout << " ------------------------ \n";
+
     int last_id = -1;
 
     try{
@@ -196,6 +201,9 @@ void PostgresDatabaseManager::updateEntity(const BaseEntity& entity)
 {
     std::string sqlQuery;
     sqlQuery = makeUpdateString(entity);
+
+    std::cout << sqlQuery << '\n';
+
     provider()->executeQuery(sqlQuery);
 }
 

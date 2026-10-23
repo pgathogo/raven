@@ -168,7 +168,7 @@ void MainWindow::createActions()
     mainToolBar->addSeparator();
     mainToolBar->addAction(scheduleAction);
     mainToolBar->addSeparator();
-    mainToolBar->addAction(test_wizard_act);
+    //mainToolBar->addAction(test_wizard_act);
 }
 
 

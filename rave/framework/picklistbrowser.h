@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+#include "baseentitydetaildlg.h"
 #include "baseentitybrowserdlg.h"
 
 class SelectCloseWidget;
@@ -21,10 +22,15 @@ enum class PickListMode{
 struct PickListSetting {
     PickListSetting(std::shared_ptr<BaseEntity> entity, int search_col_index,
                     PickListMode plm = PickListMode::plmSINGLE_SELECT);
+
     std::shared_ptr<BaseEntity> listEntity;
     std::vector<BaseEntity*> selectedEntities;
     PickListMode pickMode;
     int m_search_col_index=0;
+    bool can_add_new=false;
+
+    std::unique_ptr<BaseEntityDetailDlg> form;
+
 };
 
 

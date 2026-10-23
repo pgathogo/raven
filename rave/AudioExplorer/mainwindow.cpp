@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <format>
+#include <string>
 
 #include <QDebug>
 #include <QStandardItemModel>
@@ -10,12 +11,13 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QFileInfo>
+#include <QModelIndex>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "datatoolbar.h"
 #include "artistform.h"
-#include "audioform.h"
+//#include "audioform.h"
 #include "foldernameform.h"
 #include "trashcanform.h"
 #include "setupform.h"
@@ -37,6 +39,7 @@
 #include "../audio/editor/audiowaveform.h"
 #include "../audio/editor/audioplayer.h"
 #include "../audio/audiometer.h"
+#include "../audio/audioform.h"
 
 #include "../framework/baseentity.h"
 #include "../framework/treeviewmodel.h"
@@ -91,7 +94,7 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     connect(ui->btnImport, &QPushButton::clicked, this, &MainWindow::import_audio);
     connect(ui->btnAudioProp, &QPushButton::clicked, this, &MainWindow::audio_properties);
     connect(ui->btnPlay, &QPushButton::clicked, this, &MainWindow::play_btn_clicked);
-    connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
+    // connect(ui->btnCueEdit, &QPushButton::clicked, this, &MainWindow::cue_edit);
     connect(ui->btnEditor, &QPushButton::clicked, this, &MainWindow::audio_editor);
     connect(ui->btnCut, &QPushButton::clicked, this, &MainWindow::cut_audio);
     connect(ui->btnPaste, &QPushButton::clicked, this, &MainWindow::paste_audio);
@@ -150,7 +153,6 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     m_editor_process = std::make_unique<QProcess>(this);
 
     // set taskbar
-
     std::string uname = std::format("Username: {}       ", ci.username);
     std::string station = std::format("Station: {}      ", si.station_name.toStdString());
     std::string db_ip = std::format("Host: {}      ", si.ip_address.toStdString());
@@ -185,12 +187,37 @@ MainWindow::~MainWindow()
 
 void MainWindow::attach_folder_model()
 {
-    //AudioLibrary audio_lib;
-    //auto tree_data = audio_lib.read_data_from_db();
-    //m_folder_model = new TreeViewModel(tree_data, this);
+    m_custom_treeview = new CustomTreeView;
+    m_custom_treeview->setModel(m_folder_model);
+
+    ui->hl_audio->addWidget(m_custom_treeview);
+
+    ui->tvFolders->viewport()->installEventFilter(this);
+
     m_folder_model->rebuild_tree();
     ui->tvFolders->setModel(m_folder_model);
     m_folder_model->setHorizontalHeaderItem(0, new QStandardItem("Audio Library"));
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+
+    if (watched == ui->tvFolders->viewport() && event->type() == QEvent::MouseButtonPress) {
+        qDebug() << "Mouse Press...";
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        QModelIndex index = ui->tvFolders->indexAt(mouseEvent->pos());
+
+        qDebug() << "Clicked Index: " << index;
+
+
+        if (!index.isValid()) {
+            ui->tvFolders->clearSelection();
+            ui->tvFolders->setCurrentIndex(QModelIndex());
+        }
+    }
+
+    return QMainWindow::eventFilter(watched, event);
+
 }
 
 void MainWindow::setup_audio_folders()
@@ -278,6 +305,13 @@ void MainWindow::set_track_view_column_width()
 void MainWindow::folder_clicked(const QModelIndex& index)
 {
     int folder_id = selected_folder_id();
+
+    fetch_audio_for_folder(folder_id);
+
+}
+
+void MainWindow::fetch_audio_for_folder(int folder_id)
+{
     auto audio = std::make_unique<AUDIO::Audio>();
     auto folder_filter = std::make_tuple(audio->folder()->qualified_column_name<AUDIO::Audio>(),"=", folder_id);
     //fetch_folder_audio(folder_filter);
@@ -300,9 +334,9 @@ void MainWindow::track_toolbar_icons()
     ui->btnPlay->setIcon(QIcon(":/images/media/icons/listen02_sm.bmp"));
     ui->btnPlay->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->btnCueEdit->setIconSize(btn_icon_size);
-    ui->btnCueEdit->setIcon(QIcon(":/images/media/icons/cue_edit_02.bmp"));
-    ui->btnCueEdit->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    // ui->btnCueEdit->setIconSize(btn_icon_size);
+    // ui->btnCueEdit->setIcon(QIcon(":/images/media/icons/cue_edit_02.bmp"));
+    // ui->btnCueEdit->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnEditor->setIconSize(btn_icon_size);
     ui->btnEditor->setIcon(QIcon(":/images/media/icons/audacity02.bmp"));
@@ -610,8 +644,6 @@ bool MainWindow::is_folder_empty(int folder_id)
     auto audio_filter = std::make_tuple(column_name, " = ", folder_id);
     auto filter = edm->prepareFilter(audio_filter);
 
-    qDebug() << stoq(filter);
-
     edm->search(filter);
 
     return (edm->count() == 0) ? true : false;
@@ -622,6 +654,8 @@ void MainWindow::delete_folder_db(int folder_id)
 {
     std::stringstream sql;
     sql << "Delete from rave_folder where id = "+std::to_string(folder_id);
+
+
     EntityDataModel edm;
     edm.executeRawSQL(sql.str());
 }
@@ -744,7 +778,6 @@ void MainWindow::show_audio_data()
     for(auto& [name, entity] : m_audio_entity_data_model->modelEntities()){
         AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(entity.get());
 
-
         if (audio->audio_type()->displayName() == "Song")
             m_audio_lib_item->create_row_item<AUDIO::SongAudioLibItem>(audio);
 
@@ -770,7 +803,8 @@ void MainWindow::show_artist_data()
     m_artist_model->clear();
     setup_artists_view();
 
-    for(auto& [name, entity] : m_artist_manager.model()->modelEntities()){
+    for(auto& [name, entity] : m_artist_manager.model()->modelEntities())
+    {
         AUDIO::Artist* artist = dynamic_cast<AUDIO::Artist*>(entity.get());
 
         if (artist->artist_type()->displayName() == "Female")
@@ -968,11 +1002,29 @@ void MainWindow::track_double_clicked(const QModelIndex& /*index*/)
 
 std::string MainWindow::get_search_value(const QTableView* tv, int col)
 {
-    QItemSelectionModel* select = tv->selectionModel();
-    auto mod_index = tv->model()->index(select->currentIndex().row(), col);
-    auto col_value = tv->model()->data(mod_index, col).toString();
-    std::string search_value = col_value.toStdString();
-    return search_value;
+    qDebug() << "get_search_value";
+
+    auto mod_index = tv->selectionModel()->currentIndex();
+
+    // qDebug() << "Current Index: " << mod_index ;
+
+    // QItemSelectionModel* select = tv->selectionModel();
+    //QModelIndex mod_index = select->
+    // if (mod_index.isValid())
+    //     return "";
+
+    //qDebug() << "Model Index: " << mod_index;
+
+   //auto col_value = tv->model()->data(mod_index, col).toString();
+
+    QVariant data = tv->selectionModel()->model()->data(mod_index, Qt::UserRole);
+
+    //std::string search_value = col_value.toStdString();
+    QString search_value = data.toString();
+
+    qDebug() << "Search Value: " << search_value;
+
+    return search_value.toStdString();
 }
 
 std::shared_ptr<BaseEntity> MainWindow::find_selected_entity(EntityDataModel* edm, QTableView* tv, int col)
@@ -1022,8 +1074,9 @@ void MainWindow::search_artist()
 
     std::string search_value = ui->edtSearchArtist->text().toStdString();
     auto artist = std::make_unique<AUDIO::Artist>();
-    auto artist_filter = std::make_tuple(artist->fullName()->dbColumnName(), "like", search_value);
+    auto artist_filter = std::make_tuple(artist->fullName()->dbColumnName(), "IGNORE-CASE", search_value);
     std::string filter_str = m_artist_manager.model()->prepareFilter(artist_filter);
+
 
     fetch_artist(filter_str);
 }
@@ -1031,7 +1084,6 @@ void MainWindow::search_artist()
 
 void MainWindow::import_audio()
 {
-
     int folder_id = selected_folder_id();
 
     if (folder_id == 0){
@@ -1039,139 +1091,34 @@ void MainWindow::import_audio()
         return;
     }
 
-    auto audio_file = QFileDialog::getOpenFileName(this,
-                                                   tr("Import Audio"), QDir::currentPath(),
-                                                   tr("Audio Files (*.mp3 *.ogg *.mts)"));
-    if (audio_file.isEmpty())
+    auto audio_filepath = QFileDialog::getOpenFileName(this,
+                                                       tr("Import Audio"), QDir::currentPath(),
+                                                       tr("MP3 Files (*.mp3);; OGG Files (*.ogg);; MTS Files (.*mts);; Wave Files (*.wav)"));
+    if (audio_filepath.isEmpty())
         return;
 
+    auto new_audio = std::make_shared<AUDIO::Audio>(audio_filepath.toStdString());
+    new_audio->set_folder(folder_id);
 
-    auto audio = std::make_unique<AUDIO::Audio>(audio_file.toStdString());
-    
-    audio->set_folder(folder_id);
-    audio->set_audio_lib_path(m_setup->audio_folder()->value());
-
-    auto audio_form = std::make_unique<AudioForm>(audio.get(), m_setup);
-
-    // open the audio property window
-    if (audio_form->exec() == 0)
-        return;
-
-    //auto shared_audio = std::make_shared<AUDIO::Audio>(audio_file.toStdString());
-
-    //convert_audio(shared_audio);
-
-    // QFileInfo afi(audio_file);
-    // QString file_format = afi.suffix().toLower();
-
-    // TODO: Check if we are allowed to use MP3 before converting it to OGG
-
-    //TODO: Resolve the file extension issue (Ogg, Mp3, or MTS)
-
-    //audio->set_file_extension(file_format.toUpper().toStdString());
-    audio->set_file_extension("OGG");
-
-    auto audio_file_info = audio->audio_file();
-
-     //audio_file_info.set_audio_filename(shared_audio->audio_filename()->value());
-    audio_file_info.set_audio_filename(audio_file.toStdString());
-
-    audio->audio_file().set_audio_filename(audio_file.toStdString());
-
-    auto wave_form = std::make_unique<AUDIO::AudioWaveForm>(audio->audio_file(),
-                                 AUDIO::FormMode::New);
-
-    if (wave_form->exec() == 1)
+    auto* audio_form = new AUDIO::AudioForm(new_audio);
+    if (audio_form->exec())
     {
-        audio->audio_file().set_wave_file(wave_form->wave_filename().toStdString());
+        log_info(QString("Creating audio %1").arg(new_audio->source_filepath()->to_qstring()));
 
-        //audio->set_duration(audio_file_info.duration());
-        audio->set_duration(audio->audio_file().duration());
-        audio->set_cue_marker(wave_form->cue_marker());
-        audio->setDBAction(DBAction::dbaCREATE);
-
-        //audio_file_info.set_marker(wave_form->cue_marker());
-        audio->audio_file().set_marker(wave_form->cue_marker());
-
-        ImportResult import_result;
-
-        int audio_id = write_audio_to_db(std::move(audio));
-
-        import_result.audio_id = audio_id;
-
-        if (audio_id == -1){
-            rollback_import_process(import_result);
-            audio->setDBAction(DBAction::dbaNONE);
+        int audio_id = create_audio_file(new_audio);
+        if (audio_id == -1) {
+            log_error("Failed to create audio - audio import aborted!");
             return;
         }
 
-        auto [status, new_filename] = copy_new_audio_to_library(audio_id, wave_form->ogg_filename());
+        fetch_audio_for_folder(folder_id);
 
-        import_result.temp_files.push_back(new_filename);
-        if (!status) {
-            rollback_import_process(import_result);
-            audio->setDBAction(DBAction::dbaNONE);
-            return;
-        }
-
-        auto [wave_file_is_created, wave_file] = copy_wave_file_to_library(audio_id, wave_form->wave_filename());
-
-        import_result.temp_files.push_back(wave_file);
-        if (!wave_file_is_created){
-            rollback_import_process(import_result);
-            audio->setDBAction(DBAction::dbaNONE);
-            return;
-        }
-
-        auto [adf_file_is_created, adf_file] = create_adf_file(audio_id, wave_form->audio_file_info());
-
-        import_result.temp_files.push_back(adf_file);
-        if (!adf_file_is_created){
-            rollback_import_process(import_result);
-            audio->setDBAction(DBAction::dbaNONE);
-            return;
-        }
-
-        wave_form->remove_temp_ogg_file();
-        wave_form->remove_temp_wave_file();
+        log_info(QString("Audio saved - ID: %1").arg(audio_id));
 
     }
+
 
 }
-
-/*
-bool MainWindow::convert_audio(std::shared_ptr<AUDIO::Audio> audio)
-{
-    auto file_ext = audio->file_extension()->value();
-
-    if (file_ext == "mp3"){
-        // TODO: Do we really need to convert MP3 to OGG, yet we can play MP3 audio just fine?
-        m_audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>(audio);
-        if (!m_audio_converter->convert()){
-            //clean-up
-            return false;
-        }
-    }
-
-    if (file_ext == "ogg"){
-        m_audio_converter = std::make_unique<AUDIO::OggToOggConverter>(audio);
-        if (!m_audio_converter->convert()){
-            // clean-up
-            return false;
-        }
-    }
-
-    if (file_ext == "mts"){
-        m_audio_converter = std::make_unique<AUDIO::MtsToMp3Converter>(audio);
-        m_audio_converter->convert();
-        auto mp3_file = dynamic_cast<AUDIO::MtsToMp3Converter*>(m_audio_converter.get());
-        auto audio_file = mp3_file->dest_mp3_filename();
-        audio->audio_file().set_audio_filename(audio_file.toStdString());
-    }
-
-    return true;
-}
-*/
 
 
 void MainWindow::rollback_import_process(ImportResult&  import_result)
@@ -1211,9 +1158,6 @@ FileOperationResult MainWindow::copy_new_audio_to_library(int audio_id, const QS
     auto src_audio_path = fs::path(ogg_filename.toStdString());
 
     auto dst_audio_path = fs::path(new_audio_file);
-
-    std::cout << "SRC> "<< src_audio_path << '\n';
-    std::cout << "DST> "<< dst_audio_path << '\n';
 
     try{
         fs::copy(src_audio_path, dst_audio_path);
@@ -1266,27 +1210,29 @@ FileOperationResult MainWindow::create_adf_file(int audio_id, AudioFile af)
 void MainWindow::audio_properties()
 {
     auto search_value = get_search_value(ui->tvTracks, TrackColumns::Title);
+
     if (search_value.empty())
         return;
 
-    std::shared_ptr<BaseEntity> be = m_audio_entity_data_model->findEntityByName(search_value);
+    std::shared_ptr<BaseEntity> be = m_audio_entity_data_model->find_entity_by_id(std::stoi(search_value)); //  findEntityByName(search_value);
     if (be == nullptr)
         return;
 
-    AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be.get());
 
-    if(!audio->audio_lib_path()->value().empty())
-        audio->set_file_path(audio->audio_lib_path()->value());
+    //AUDIO::Audio* audio = dynamic_cast<AUDIO::Audio*>(be.get());
+    std::shared_ptr<AUDIO::Audio> audio = dynamic_pointer_cast<AUDIO::Audio>(be);
 
-    qDebug() << "::show_audio_data::";
-    qDebug() << "Filepath: " << audio->file_path()->to_qstring();
-    qDebug() << "Audio Lib Path: " << audio->audio_lib_path()->to_qstring();
-    qDebug() << "-----";
+    // if(!audio->audio_lib_path()->value().empty())
+    //     audio->set_file_path(audio->audio_lib_path()->value());
 
-    std::unique_ptr<AudioForm> audio_form = std::make_unique<AudioForm>(audio, m_setup);
+
+    std::unique_ptr<AUDIO::AudioForm> audio_form = std::make_unique<AUDIO::AudioForm>(audio);
     if (audio_form->exec() > 0){
         try{
                 update_table_view_record(ui->tvTracks, audio->tableViewValues());
+
+        // std::unique_ptr<AUDIO::AudioForm> audio_form = std::make_unique<AUDIO::AudioForm>(audio);
+
                 m_audio_entity_data_model->updateEntity(*audio);
                 //m_audio_entity_data_model->all();
             }
@@ -1294,6 +1240,7 @@ void MainWindow::audio_properties()
                 showMessage(de.errorMessage());
             }
     }
+
 
 }
 
@@ -1651,3 +1598,61 @@ void MainWindow::open_settings()
     }
 
 }
+
+int MainWindow::create_audio_file(std::shared_ptr<AUDIO::Audio> audio)
+{
+    QString src_filepath = QString::fromStdString(audio->source_filepath()->value());
+    std::string filepath = audio->file_path()->value();
+
+    // Create Audio record in the database - get ID
+    //auto edm = std::make_unique<EntityDataModel>();
+    //int audio_id = edm->createEntityDB(*audio);
+
+    int audio_id = m_audio_edm->createEntity(std::move(audio)); // TODO: What happens if this fails????
+
+    log_info(QString("Create entity result - Audio ID: %1").arg(QString::number(audio_id)));
+
+    if (audio_id == -1 )
+        return audio_id;
+
+    AUDIO::AudioTool at;
+    auto ogg_filename = at.make_audio_filename(audio_id);
+    filepath = filepath + ogg_filename+".ogg";
+    auto dest_filepath = QString::fromStdString(filepath);
+
+    log_info(QString("Converting audio `%1` to `%2`")
+         .arg(src_filepath)
+         .arg(dest_filepath));
+
+    // Call Mp3 converter
+    bool success = false;
+
+    try {
+        auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>();
+        success = audio_converter->convert(src_filepath, dest_filepath);
+    } catch (AudioImportException& aie) {
+        log_error(QString("Error converting Mp3 to OGG:  %1").arg(QString::fromStdString(aie.errorMessage())));
+    }
+
+    if (!success) {
+        log_info(QString("Failed to convert audio file: %1").arg(src_filepath));
+
+        // Audio conversion failed - Delete from the database!
+        log_info(QString("Deleting audio ID: %1").arg(QString::number(audio_id)));
+        auto audio_edm = std::make_unique<EntityDataModel>(
+            std::make_shared<AUDIO::Audio>() );
+        audio_edm->deleteEntityByValue(std::make_tuple("id", audio_id));
+
+        log_info(QString("Saving aborted!"));
+
+        return -1;
+    }
+
+    log_info(QString("Conversion completed successfully..."));
+
+    auto msg = QString("Audio file created: %1").arg(dest_filepath);
+    log_info(msg);
+
+    return audio_id;
+}
+

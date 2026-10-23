@@ -24,8 +24,13 @@ PickListBrowser::PickListBrowser(PickListSetting& plSetting,
     m_picklist_setting{plSetting}
 {
     ui->setupUi(this);
-    hideAddButton();
+
+    if (!plSetting.can_add_new) {
+     hideAddButton();
+    }
+
     hideEditButton();
+
     hideDeleteButton();
 
     scw = new SelectCloseWidget();
@@ -46,6 +51,8 @@ PickListBrowser::~PickListBrowser()
 void PickListBrowser::addRecord()
 {
 }
+
+
 void PickListBrowser::updateRecord()
 {
 }

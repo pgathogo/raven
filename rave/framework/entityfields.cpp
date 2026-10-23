@@ -365,7 +365,16 @@ std::string StringField::valueToString() const
 
 std::string StringField::dbValueFormatter()
 {
-    return "'"+mValue+"'";
+    std::string escaped = mValue;
+
+    for (std::size_t pos = 0;
+         (pos = escaped.find('\'', pos)) != std::string::npos;
+         pos += 2)
+    {
+        escaped.replace(pos, 1, "''");
+    }
+
+    return "'" + escaped + "'";
 }
 
 void StringField::setValue(std::string val)
@@ -483,6 +492,7 @@ ForeignKeyField::ForeignKeyField(const std::string aName, const std::string aLab
         ,mValue{-1}
         ,mIndex{-1}
         ,mDisplayField{displayField}
+
         ,m_fk_entity{fkEntity.get()}
         ,m_unique_fk_entity{nullptr}
         ,mCurrText{aName}
@@ -659,6 +669,8 @@ std::string ForeignKeyField::displayName() const
 
         if (found)
             break;
+
+        //std::cout << "DisplayName: " << mDisplayField <<  "Value: " << value() <<'\n';
 
         if (value() == std::get<1>(*it)->id()){
             BaseEntity* entity = dynamic_cast<BaseEntity*>(std::get<1>(*it).get());

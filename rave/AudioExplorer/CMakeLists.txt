@@ -53,9 +53,6 @@ set(PROJECT_SOURCES
         artistform.h
         artistform.cpp
         artistform.ui
-        audioform.h
-        audioform.cpp
-        audioform.ui
         foldernameform.h
         foldernameform.cpp
         foldernameform.ui
@@ -99,6 +96,14 @@ set(PROJECT_SOURCES
         ../audio/audiofileinfo.cpp
         ../audio/audiometer.h
         ../audio/audiometer.cpp
+        ../audio/audioform.h
+        ../audio/audioform.cpp
+        ../audio/audiowavewidget.h
+        ../audio/audiowavewidget.cpp
+        ../audio/WaveformWidget.h
+        ../audio/WaveformWidget.cpp
+        ../audio/CountdownLabel.h
+        ../audio/CountdownLabel.cpp
 
         ../audio/editor/audiographic.cpp
         ../audio/editor/audioplayer.cpp

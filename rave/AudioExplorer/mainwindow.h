@@ -4,6 +4,8 @@
 
 #include <QApplication>
 #include <QMainWindow>
+#include <QTreeView>
+#include <QMouseEvent>
 
 #include "artistmanager.h"
 
@@ -13,6 +15,7 @@
 #include "../framework/relationmapper.h"
 #include "../framework/entitydatamodel.h"
 #include "../framework/tree.h"
+#include "../framework/Logger.h"
 #include "../security/structs.h"
 
 namespace FRAMEWORK {
@@ -45,11 +48,34 @@ namespace AUDIO{
 class RavenSetup;
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+    namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 
+class CustomTreeView : public QTreeView
+{
+    Q_OBJECT
+
+protected:
+    void mousePressEvent(QMouseEvent* event) override {
+
+        QModelIndex index = indexAt(event->pos());
+
+        if (!index.isValid()) {
+            clearSelection();
+            setCurrentIndex(QModelIndex());
+        }
+
+        QTreeView::mousePressEvent(event);
+
+    }
+};
+
+
+
 using FileOperationResult = std::tuple<bool, std::string>;
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -139,6 +165,8 @@ public:
         fetch_folder_audio(r_mapper);
 
     }
+protected:
+    bool eventFilter(QObject*, QEvent*);
 
 public slots:
     void open_trash_can();
@@ -186,6 +214,14 @@ public slots:
     bool audio_file_exists(const QString&);
 
 private:
+    int selected_folder_id();
+    int selected_folder_row();
+    int create_audio_file(std::shared_ptr<AUDIO::Audio>);
+    void fetch_audio_for_folder(int);
+
+    void log_info(const QString msg) { Logger::info("MainWindow", msg);}
+    void log_error(const QString msg) { Logger::error("MainWindow", msg);}
+
     Ui::MainWindow *ui;
     QApplication* m_qapp;
     DataToolBar* m_artist_toolbar;
@@ -229,8 +265,8 @@ private:
 
     std::unique_ptr<QProcess> m_editor_process;
 
-    int selected_folder_id();
-    int selected_folder_row();
+    CustomTreeView* m_custom_treeview;
+
 
 };
 

@@ -115,6 +115,7 @@ namespace AUDIO {
          ,m_creation_date{}
          ,m_audio_type{}
          ,m_notes{}
+        ,m_add_login{}
          ,m_audio_filename{}
         ,m_file_info{}
     {
@@ -164,6 +165,8 @@ namespace AUDIO {
         m_audio_year = createField<IntegerField>("audio_year", "Audio Year");
 
         m_notes = createField<TextField>("notes", "Notes");
+
+        m_add_login = createField<StringField>("add_login", "User ID");
 
         m_header << QString::fromStdString(m_title->fieldLabel());
         setTableName("rave_audio");
@@ -217,6 +220,8 @@ namespace AUDIO {
                                                 std::make_unique<Artist>(), "fullname");
 
         m_source_filepath = createField<StringField>("source_filepath", "Source Filepath");
+        m_source_filepath->setValue(audio_file);
+
         m_file_path = createField<StringField>("filepath", "File Path");
 
         m_audio_lib_path = createField<StringField>("filepath","Audio Lib");
@@ -253,6 +258,8 @@ namespace AUDIO {
         m_audio_year = createField<IntegerField>("audio_year", "Audio Year");
 
         m_notes = createField<TextField>("notes", "Notes");
+
+        m_add_login = createField<StringField>("add_login", "User ID");
 
         m_header << QString::fromStdString(m_title->fieldLabel());
         setTableName("rave_audio");
@@ -341,6 +348,8 @@ namespace AUDIO {
         m_audio_year = createField<IntegerField>("audio_year", "Audio Year");
         m_notes = createField<TextField>("notes", "Notes");
 
+        m_add_login = createField<StringField>("add_login", "User ID");
+
         m_header << QString::fromStdString(m_title->fieldLabel());
         setTableName("rave_audio");
 
@@ -387,6 +396,8 @@ namespace AUDIO {
         m_audio_type->setValue(other.audio_type()->value());
         m_audio_year->setValue(other.audio_year()->value());
         m_notes->setValue(other.notes()->value());
+        m_add_login->setValue(other.add_login()->value());
+
         m_header = other.m_header;
 
 
@@ -437,6 +448,9 @@ namespace AUDIO {
         m_audio_type->setValue(other.audio_type()->value());
         m_audio_year->setValue(other.audio_year()->value());
         m_notes->setValue(other.notes()->value());
+
+        m_add_login->setValue(other.add_login()->value());
+
         m_header = other.m_header;
 
         m_audio_filename->setValue(other.audio_filename()->value());
@@ -700,6 +714,16 @@ namespace AUDIO {
     void Audio::set_notes(const std::string notes)
     {
         m_notes->setValue(notes);
+    }
+
+    StringField* Audio::add_login() const
+    {
+        return m_add_login;
+    }
+
+    void Audio::set_add_login(const std::string login)
+    {
+        m_add_login->setValue(login);
     }
 
     void Audio::set_audio_file(AudioFile audio_file)
