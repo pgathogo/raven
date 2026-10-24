@@ -390,6 +390,7 @@ class Audio(Daypart):
     play_count = models.IntegerField(null=True)
     audio_year = models.IntegerField(null=True)
     creation_date = models.DateField(null=True)
+    filesize = models.IntegerField(null=True)
     notes = models.TextField(blank=True, null=True)
     add_login = models.CharField(max_length=15, null=True, blank=True)
 

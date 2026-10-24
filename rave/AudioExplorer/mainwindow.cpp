@@ -59,6 +59,8 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     ,m_letter_filter_widget{nullptr}
     ,m_cut_folder_id{-1}
 {
+    log_info("Start mainwindow...");
+
     ui->setupUi(this);
 
     m_audio_player = std::make_shared<AUDIO::AudioPlayer>();
@@ -102,12 +104,21 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
 
     track_toolbar_icons();
 
+    log_info("Create 1 audio data model...");
+
     m_audio_edm = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
+
+    log_info("Create 2 audio data model...");
+
     m_audio_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Audio>());
+
+    log_info("Create genre data model...");
 
     m_genre_entity_data_model = std::make_unique<EntityDataModel>(std::make_shared<AUDIO::Genre>());
 
+    log_info("Setup audio folders...");
     setup_audio_folders();
+
 
     m_tracks_model = new QStandardItemModel(this);
     create_track_view_headers();
@@ -129,7 +140,12 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     connect(ui->tvArtists, &QTableView::clicked, this, &MainWindow::artist_selected);
 
     setup_artists_view();
+
+    log_info("Fetch artist...");
+
     fetch_artist();
+
+    log_info("Attach genre model to treeview...");
 
     m_genre_model = new QStandardItemModel(this);
     ui->tvGenre->setModel(m_genre_model);
@@ -138,17 +154,28 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
     connect(ui->tvGenre, &QTableView::clicked, this, &MainWindow::genre_selected);
 
     setup_genre_view();
+
+    log_info("Fetch genre...");
     fetch_genre();
 
     show_letter_filter();
 
     show_audio_meter();
 
+    log_info("Create setup data model...");
+
     m_setup_edm = std::make_unique<EntityDataModel>(std::make_shared<RavenSetup>());
+
+    log_info("Fetch setup data...");
     m_setup_edm->all();
 
+    log_info("Setup data fetched.");
+
     //m_setup = dynamic_cast<RavenSetup*>(m_setup_edm->firstEntity().get());
-    m_setup = dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
+    if (m_setup_edm->count() > 0)
+        m_setup = dynamic_pointer_cast<RavenSetup>(m_setup_edm->firstEntity());
+
+    log_info("Initialize editor processor...");
 
     m_editor_process = std::make_unique<QProcess>(this);
 
@@ -171,6 +198,8 @@ MainWindow::MainWindow(QApplication* qapp, const StationInfo& si,
 
     ui->tabWidget->setCurrentIndex(0);
     setWindowTitle(title);
+
+    log_info("Main window created successfully.");
 
 }
 
