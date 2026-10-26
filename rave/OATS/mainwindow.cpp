@@ -35,7 +35,6 @@
 #include "../framework/ravenexception.h"
 #include "../framework/tree.h"
 #include "../framework/treeviewmodel.h"
-#include "../framework/schedule.h"
 #include "../framework/databasemanager.h"
 #include "../framework/Logger.h"
 
@@ -58,6 +57,7 @@
 #include "../data/commercialviewer.h"
 
 //#include "timeanalyzerwidget.h"
+#include "schedule.h"
 #include "timeanalyzertextwidget.h"
 #include "datetimewidget.h"
 #include "playlistcontrolwidget.h"
@@ -2338,13 +2338,21 @@ OATS::OutputPanel* MainWindow::find_output_panel(int panel_id)
 
 OATS::ScheduleItem* MainWindow::find_next_schedule_item(OATS::ScheduleItem* current_item)
 {
+    auto next_schedule_item = current_item;
+
     auto index = index_of(current_item->schedule_ref());
 
-    auto next_schedule_item = current_item;
+    qDebug() << "Index of current item: " << index;
+
+
+    if (index > 0 )
+        index += 1;
 
     for(int i=index; i < m_schedule_items.size()-1; ++i)
     {
-        auto next_item = schedule_item(i+1);
+        auto next_item = schedule_item(i);
+
+        qDebug() << "Next Item Audio:  " << next_item->audio()->title()->to_qstring();
 
         // Skip items with errors
         if (next_item->item_status() == OATS::ItemStatus::ERROR_01)
@@ -2354,6 +2362,9 @@ OATS::ScheduleItem* MainWindow::find_next_schedule_item(OATS::ScheduleItem* curr
         if (next_item->schedule_type()== OATS::ScheduleType::HOUR_HEADER)
             continue;
 
+
+        qDebug() << "Current Item Sched Time: " << current_item->schedule_time().toString("hh:mm:ss");
+        qDebug() << "Next Item Sched Time: " << next_item->schedule_time().toString("hh:mm:ss");
 
         if (next_item->schedule_time() > current_item->schedule_time()) {
             next_schedule_item = next_item;
@@ -2417,7 +2428,7 @@ void MainWindow::cue_commercial_item(OATS::ScheduleItem* next_schedule_item,
 
 void MainWindow::cue_schedule_item(OATS::ScheduleItem* next_schedule_item, OATS::OutputPanel* next_output_panel)
 {
-    set_scheduled_item_filepath(next_schedule_item);
+    //set_scheduled_item_filepath(next_schedule_item);  // TODO: Future enhancement - cache audio
 
     next_schedule_item->set_item_status(OATS::ItemStatus::CUED);
     next_output_panel->cue_item(next_schedule_item);
@@ -2459,7 +2470,7 @@ void MainWindow::cue_schedule_item(OATS::ScheduleItem* next_schedule_item, OATS:
 
     display_schedule();
 
-    queue_for_caching(next_schedule_item->audio());
+    //queue_for_caching(next_schedule_item->audio());
 
 }
 
@@ -2706,7 +2717,6 @@ void MainWindow::calculate_time_stats()
 
 void MainWindow::play_audio(OATS::OutputPanel* op)
 {
-
     if (op->panel_status() == OATS::PanelStatus::CUED)
     {
         op->set_panel_status(OATS::PanelStatus::PLAYING);
@@ -2796,9 +2806,22 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing,
                                                      op->panel_name());
+
+
+        broadcast_player_mode(OATS::PlayerMode::Playing);
+
+
     }
 
 
+}
+void MainWindow::broadcast_player_mode(OATS::PlayerMode pm)
+{
+    for(int i=0; i < m_schedule_grid.size()-1; i++) {
+        m_schedule_grid[i]->schedule_item()->update_player_mode(pm);
+    }
+
+    m_player_mode = OATS::PlayerMode::Playing;
 }
 
 void MainWindow::stop_audio(OATS::OutputPanel* op)
@@ -2815,7 +2838,6 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
         op->schedule_item()->set_item_status(OATS::ItemStatus::PLAYED);
 
         op->schedule_item()->notify();
-
 
         QString sched_id = QString("Schedule ID: %1").arg(QString::number(op->schedule_item()->id()));
         log_info(sched_id);
@@ -2842,6 +2864,9 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
     op->clear_panel();
 
     m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop,"");
+
+    broadcast_player_mode(OATS::PlayerMode::Stop);
+
 }
 
 void MainWindow::fade_audio(OATS::OutputPanel* op)
@@ -2883,7 +2908,10 @@ void MainWindow::pause_audio(OATS::OutputPanel* op)
         m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
                                                      op->panel_name());
 
+
         display_schedule();
+
+        broadcast_player_mode(OATS::PlayerMode::Pause);
 
     }
 }
@@ -2997,6 +3025,7 @@ void MainWindow::update_item_status()
 
         if (item->db_update_status() == OATS::DBUpdateStatus::Ready) {
             update_item(item);
+            item->set_db_update_status(OATS::DBUpdateStatus::Done);
         }
     }
 }
@@ -3181,10 +3210,14 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
         return;
 
     int index = index_of(schedule_ref);
-
     auto si = schedule_item(index);
+
     auto prev_si = schedule_item(index-1);
 
+    if (m_player_mode == OATS::PlayerMode::Playing)
+        prev_si->set_item_status(si->item_status());
+
+    // Block going on top of a playing item
     if ((si->item_status() == OATS::ItemStatus::CUED) &&
         (prev_si->item_status() == OATS::ItemStatus::PLAYING)){
 
@@ -3196,12 +3229,13 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
 
     std::iter_swap(m_schedule_items.begin()+index, m_schedule_items.begin()+(index-1));
 
+    recompute_time(grid_pos);
+
     m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
     m_schedule_grid[grid_pos-1]->set_subject(schedule_item(index-1));
 
-    recompute_time(grid_pos);
-
     cue_item();
+
 }
 
 void MainWindow::item_move_down(int schedule_ref, int grid_pos)
@@ -3210,12 +3244,31 @@ void MainWindow::item_move_down(int schedule_ref, int grid_pos)
         return;
 
     int index = index_of(schedule_ref);
+
+    auto item_to_move = schedule_item(index);
+    auto next_si = schedule_item(index+1);
+
+    auto temp_status = next_si->item_status();
+
+    if (m_player_mode == OATS::PlayerMode::Playing) {
+        if (item_to_move->item_status() == OATS::ItemStatus::CUED)
+            item_to_move->set_item_status(OATS::ItemStatus::WAITING);
+
+        // next_si->set_item_status(item_to_move->item_status());
+        // item_to_move->set_item_status(temp_status);
+    }
+
+
     std::iter_swap(m_schedule_items.begin()+index, m_schedule_items.begin()+(index+1));
+
+    recompute_time(grid_pos);
 
     m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
     m_schedule_grid[grid_pos+1]->set_subject(schedule_item(index+1));
 
     cue_item();
+
+
 }
 
 void MainWindow::make_item_current(int schedule_ref, int grid_pos)
@@ -3251,8 +3304,9 @@ void MainWindow::make_item_current(int schedule_ref, int grid_pos)
         m_current_cued_item.item->notify();
     }
 
-    set_scheduled_item_filepath(si);
+    //set_scheduled_item_filepath(si); // TODO: Future enhancement - cache audio
 
+    // This schedule item is the current item
     m_current_cued_item.item = si;
 
     QTime curr_time = QTime::currentTime();
@@ -3520,10 +3574,22 @@ void MainWindow::cue_item()
 
     auto next_schedule_item = find_next_schedule_item(m_current_playing_item.item);
 
+    if (next_schedule_item->audio() == nullptr) {
+        qDebug() << "Next item Audio is null";
+        return;
+    }
+
+    qDebug() << " --------------------------------------";
+    qDebug() << "^^  Current Playing Item: " << m_current_playing_item.item->audio()->title()->to_qstring();
+    qDebug() << ">>> Next Schedule Item  : " << next_schedule_item->audio()->title()->to_qstring();
+    qDebug() << " --------------------------------------";
+
     if (m_current_playing_item.item != next_schedule_item) {
         int next_index = index_of(next_schedule_item->schedule_ref());
 
         next_schedule_item->set_index(next_index);
+
+        qDebug() << "Current Playing Item: "<< m_current_playing_item.output_panel->panel_name() << '\n';
 
         if (m_current_playing_item.output_panel->panel_name() == "A" ) {
           schedule_item(next_index)->set_play_channel(ChannelB);

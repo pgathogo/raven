@@ -29,7 +29,8 @@
 
 #include "../audio/trackpickerdialog.h"
 
-#include "../AudioExplorer/audioform.h"
+//#include "../AudioExplorer/audioform.h"
+#include "../audio/audioform.h"
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
@@ -424,10 +425,12 @@ void SpotAudioBrowser::audio_properties()
     if (selectedRowId() < 0 )
         return;
 
+    /*
     AUDIO::Audio* audio = audio_from_selection();
     audio->set_file_path(audio->audio_lib_path()->value());
-    auto audio_form = std::make_unique<AudioForm>(audio, m_setup, FormMode::ReadOnly);
+    auto audio_form = std::make_unique<AUDIO::AudioForm>(audio, m_setup, FormMode::ReadOnly);
     audio_form->exec();
+    */
 
 }
 

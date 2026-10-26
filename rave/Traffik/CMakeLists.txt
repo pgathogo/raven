@@ -292,10 +292,6 @@ set(PROJECT_SOURCES
     ${RAVE_AUDIO_EDITOR}/markindicator.h
     ${RAVE_AUDIO_EDITOR}/subjectobserver.h
 
-    ../AudioExplorer/audioform.h
-    ../AudioExplorer/audioform.cpp
-    ../AudioExplorer/audioexplorer.qrc
-
     ../framework/tree.h
     ../framework/tree.cpp
     ../framework/treeviewmodel.h
@@ -449,7 +445,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(traffik
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        ../AudioExplorer/audioexplorer.qrc
     )
 else()
     if(ANDROID)

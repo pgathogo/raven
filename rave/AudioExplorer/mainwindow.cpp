@@ -1135,6 +1135,7 @@ void MainWindow::import_audio()
         log_info(QString("Creating audio %1").arg(new_audio->source_filepath()->to_qstring()));
 
         int audio_id = create_audio_file(new_audio);
+
         if (audio_id == -1) {
             log_error("Failed to create audio - audio import aborted!");
             return;
@@ -1653,14 +1654,26 @@ int MainWindow::create_audio_file(std::shared_ptr<AUDIO::Audio> audio)
          .arg(src_filepath)
          .arg(dest_filepath));
 
+    // Get extension of the source file to know the converter to call
+    QFileInfo fi(src_filepath);
+    QString ext = fi.suffix().toLower();
+
     // Call Mp3 converter
     bool success = false;
 
-    try {
+    if (ext == "mp3")
+    {
+       try {
         auto audio_converter = std::make_unique<AUDIO::Mp3ToOggConverter>();
         success = audio_converter->convert(src_filepath, dest_filepath);
-    } catch (AudioImportException& aie) {
-        log_error(QString("Error converting Mp3 to OGG:  %1").arg(QString::fromStdString(aie.errorMessage())));
+      } catch (AudioImportException& aie) {
+         log_error(QString("Error converting Mp3 to OGG:  %1").arg(QString::fromStdString(aie.errorMessage())));
+      }
+    }
+
+    if (ext == "ogg") {
+        auto audio_converter = std::make_unique<AUDIO::OggToOggConverter>();
+        success = audio_converter->convert(src_filepath, dest_filepath);
     }
 
     if (!success) {

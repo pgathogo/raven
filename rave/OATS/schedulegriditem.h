@@ -50,6 +50,7 @@ namespace OATS{
         OATS::ItemStatus item_status();
         void set_item_status(ItemStatus);
 
+
     signals:
         void move_up(int, int);
         void move_down(int, int);
@@ -87,6 +88,8 @@ namespace OATS{
         int m_subject_index;
 
         static int g_index;
+
+
     };
 
 }

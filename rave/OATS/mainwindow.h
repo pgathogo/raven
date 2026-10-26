@@ -341,6 +341,7 @@ private slots:
     void pause_playing_audio();
 
     void close_window();
+    void broadcast_player_mode(OATS::PlayerMode);
 
 
 private:
@@ -446,6 +447,8 @@ private:
     std::unique_ptr<QButtonGroup> m_control_buttons_group;
 
     std::shared_ptr<AUDIO::AudioMeter> m_audio_meter;
+
+    OATS::PlayerMode m_player_mode { OATS::PlayerMode::Stop};
 
 };
 

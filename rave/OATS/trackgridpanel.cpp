@@ -93,6 +93,8 @@ namespace OATS{
         //     "}"
         //     );
 
+         setStyleSheet("background-color: #3c79af");
+
         QMenu menu;
 
         m_act_move_up = std::make_unique<QAction>("Move Up");
@@ -110,6 +112,10 @@ namespace OATS{
             m_act_move_down->setEnabled(false);
             m_act_make_current->setEnabled(false);
             m_act_delete_item->setEnabled(false);
+        }
+
+        if (m_schedule_item->player_mode() == OATS::PlayerMode::Playing) {
+            m_act_make_current->setEnabled(false);
         }
 
         int current_hour = QTime::currentTime().hour();

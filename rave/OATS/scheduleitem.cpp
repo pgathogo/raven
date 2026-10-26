@@ -451,4 +451,14 @@ QDebug operator<<(QDebug qd, ScheduleItem& si)
         m_db_update_status = update_status;
     }
 
+    void ScheduleItem::update_player_mode(PlayerMode pm)
+    {
+        m_player_mode = pm;
+    }
+
+    PlayerMode ScheduleItem::player_mode()
+    {
+        return m_player_mode;
+    }
+
 }

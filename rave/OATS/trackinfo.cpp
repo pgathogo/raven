@@ -42,7 +42,7 @@ void TrackInfo::show_audio_info(const std::shared_ptr<AUDIO::Audio> audio, Histo
 
     AUDIO::AudioTool at;
     auto ogg_file =  at.make_audio_filename(audio->id())+".ogg";
-    ui->lblAudioFile->setText( stoq(audio->audio_lib_path()->value()+ogg_file) );
+    ui->lblAudioFile->setText( stoq(audio->file_path()->value()+ogg_file) );
 
     ui->lblFadeIn->setText(msec_to_time(0, audio->fade_in_marker()->value()).toString("HH:mm:ss"));
     ui->lblIntro->setText(msec_to_time(0, audio->intro_marker()->value()).toString("HH:mm:ss"));

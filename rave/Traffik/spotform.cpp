@@ -149,7 +149,7 @@ void SpotForm::on_import_audio()
 {
     auto audio_filepath = QFileDialog::getOpenFileName(this,
                                                     tr("Import Audio"), QDir::currentPath(),
-                                                    tr("OGG Files (*.ogg);; MP3 Files (*.mp3);; MTS Files (*.mts);; Wave Files (*.wav)"));
+                                                    tr("MP3 Files (*.mp3);; OGG Files (*.ogg);; MTS Files (*.mts);; Wave Files (*.wav)"));
     if (audio_filepath.isEmpty())
          return;
 

@@ -78,6 +78,8 @@ set(PROJECT_SOURCES
         trackgridpanel.cpp
         statusgridpanel.h
         statusgridpanel.cpp
+        schedule.h
+        schedule.cpp
         transitionmodegridpanel.h
         transitionmodegridpanel.cpp
         outputpanel.h
@@ -124,8 +126,6 @@ set(PROJECT_SOURCES
 
         ../framework/letterfilterwidget.h
         ../framework/letterfilterwidget.cpp
-        ../framework/schedule.h
-        ../framework/schedule.cpp
         ../framework/logger.h
         ../framework/logger.cpp
 
@@ -176,8 +176,6 @@ set(PROJECT_SOURCES
         ../audio/cacheupdaterthread.h
         ../audio/audiometer.h
         ../audio/audiometer.cpp
-        ../audio/audiometervert.h
-        ../audio/audiometervert.cpp
 
         ../security/authentication.cpp
         ../security/baserole.h

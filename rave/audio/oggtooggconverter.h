@@ -12,10 +12,12 @@ namespace AUDIO
     {
     public:
         //OggToOggConverter(const QString src_ogg_file);
+        OggToOggConverter();
         OggToOggConverter(const QString);
         ~OggToOggConverter() override;
 
         bool convert() override;
+        bool convert(const QString&, const QString&, bool overwrite=true);
         QString src_ogg_filename();
         void set_ogg_filename(QString);
     private:

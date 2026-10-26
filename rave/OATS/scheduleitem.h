@@ -13,6 +13,7 @@ namespace OATS{
     enum class ItemStatus{WAITING, CUED, PLAYING, PLAYED, STOP, PAUSED, ERROR_01};
     enum class TransitionType{NONE=0, STOP, MIX, CUT, BACK, CENTER, EARLY, SYNCHRO, SKIP};
     enum class DBUpdateStatus{None, Ready, Done};
+    enum class PlayerMode{Stop, Pause, Playing};
 
     class ScheduleItem : public Subject
     {
@@ -79,10 +80,17 @@ namespace OATS{
         QString schedule_type_to_str(ScheduleType);
         QString schedule_type_to_str();
 
+        void update_player_mode(PlayerMode);
+        PlayerMode player_mode();
+
 //        friend std::ostream operator<<(std::ostream& os,
 //                                       const ScheduleItem& si);
 
         friend QDebug operator<<(QDebug qd, ScheduleItem& si);
+
+        bool operator==(const ScheduleItem& other) const {
+            return (this->m_id == other.m_id);
+        }
 
     private:
         int m_id;
@@ -110,6 +118,8 @@ namespace OATS{
 
         // **
         DBUpdateStatus m_db_update_status;
+
+        PlayerMode m_player_mode;
     };
 
 }

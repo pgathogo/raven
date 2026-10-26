@@ -133,6 +133,7 @@ namespace OATS{
         m_schedule_item->set_item_status(i_status);
     }
 
+
     QString ScheduleGridItem::current_hour_stylesheet()
     {
         QString ss = R"(
