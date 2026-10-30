@@ -51,7 +51,8 @@ namespace OATS{
 
         if (schedule_item->transition_type() == OATS::TransitionType::STOP){
             //setStyleSheet("background-color: rgb(251, 27, 4)");
-            setStyleSheet("background-color: #DC143C");
+            //setStyleSheet("background-color: #DC143C");
+            setStyleSheet("background-color: #ff3b5c");
         }
 
         if (schedule_item->transition_type() == OATS::TransitionType::CUT){

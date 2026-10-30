@@ -84,7 +84,6 @@ namespace OATS{
         all_layout->addLayout(m_datetime_layout.get());
         all_layout->setContentsMargins(0,0,0,0);
 
-        setLayout(all_layout);
 
         fill_hour_string();
 
@@ -92,6 +91,9 @@ namespace OATS{
         connect(m_datetime_timer.get(), &QTimer::timeout, this, &DateTimeWidget::update_time);
 
         m_time_text->setText(time_to_timestr(QTime::currentTime().hour(), QTime::currentTime().minute()));
+
+        setLayout(all_layout);
+
     }
 
 

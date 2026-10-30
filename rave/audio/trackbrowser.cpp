@@ -69,8 +69,32 @@ namespace AUDIO
         m_tab_widget->setCurrentIndex(1);
 
         splitter->addWidget(m_top_widget.get());
-        set_tab_widget_style();
 
+        //set_tab_widget_style();
+
+        m_tab_widget->setStyleSheet(R"(
+        QTabWidget::pane {
+            background-color: #34424F;
+            color: #FFFFFF;
+            border: 1px solid lightgray;
+            }
+            QTabBar::tab {
+            background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #47617B, stop:0.5 #2C3C4B, stop:1 #10161C);
+            color: #FFFFFF;
+            font-weight: bold;
+            }
+            QTabBar::tab:selected {
+            background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500, stop:1 #777700);
+            color: #FFFFFF;
+            font-weight: bold;
+            }
+            QTabBar::tab:hover {
+            background-color: #555D64;
+            color: #FFFFFF;
+        }
+    )");
+
+        // -----
     }
 
     void TrackBrowser::set_tab_widget_style()
@@ -78,10 +102,12 @@ namespace AUDIO
          m_tab_widget->setStyleSheet("QTabBar::tab{background: qlineargradient(x1:0 y1:0, x2:0 y2:1,"
                                      " stop:0 #47617B, stop:0.5 #2C3C4B, stop:1 #10161C);"
                                     "color:#FFFFFF; font-weight: bold;}"
+
                                     "QTabBar::tab:selected{"
                                        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
                                     "stop:0 #454500 , stop:1 #777700 );"
                                     "color:#FFFFFF; font-weight: bold;}"
+
                                     "QTabWidget::pane{background-color: #34424F; border: 1px solid lightgray;}"
                                     "QTabBar::tab:hover{background-color:#555D64;} "
                                      );

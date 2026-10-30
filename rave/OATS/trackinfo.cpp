@@ -7,6 +7,7 @@
 #include "../framework/choicefield.h"
 
 #include "../utils/tools.h"
+#include "../oats/PanelTheme.h"
 
 #include "trackinfo.h"
 #include "ui_trackinfo.h"
@@ -58,6 +59,7 @@ void TrackInfo::show_audio_info(const std::shared_ptr<AUDIO::Audio> audio, Histo
 
 void TrackInfo::style_text()
 {
+
     QString text_label_style(
         "QLabel{color: #0479B0;}"
         );
@@ -66,8 +68,9 @@ void TrackInfo::style_text()
         "QLabel{color: #FFFFFF;}"
         );
 
+    //"QLabel{color: #0479B0;}"
     QString text_time_style(
-        "QLabel{color: #0479B0;}"
+        "background:transparent; color:#22d3ee; font-size:10px; font-weight:bold;"
         );
 
     QString value_time_style(
@@ -89,10 +92,15 @@ void TrackInfo::style_text()
     ui->lblAudioFile->setStyleSheet(value_label_style);
 
     ui->txtFadeIn->setStyleSheet(text_time_style);
+    PanelTheme::addGlow(ui->txtFadeIn, QColor("#22d3ee"), 14);
     ui->txtIntro->setStyleSheet(text_time_style);
+    PanelTheme::addGlow(ui->txtIntro, QColor("#22d3ee"), 14);
     ui->txtExtro->setStyleSheet(text_time_style);
+    PanelTheme::addGlow(ui->txtExtro, QColor("#22d3ee"), 14);
     ui->txtFadeOut->setStyleSheet(text_time_style);
+    PanelTheme::addGlow(ui->txtFadeOut, QColor("#22d3ee"), 14);
     ui->txtEnd->setStyleSheet(text_time_style);
+    PanelTheme::addGlow(ui->txtEnd, QColor("#22d3ee"), 14);
 
     ui->lblFadeIn->setStyleSheet(value_time_style);
     ui->lblIntro->setStyleSheet(value_time_style);

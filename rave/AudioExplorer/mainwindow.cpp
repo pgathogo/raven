@@ -1128,6 +1128,8 @@ void MainWindow::import_audio()
 
     auto new_audio = std::make_shared<AUDIO::Audio>(audio_filepath.toStdString());
     new_audio->set_folder(folder_id);
+    new_audio->set_file_path(m_setup->audio_folder()->value());
+    new_audio->set_play_count(0);
 
     auto* audio_form = new AUDIO::AudioForm(new_audio);
     if (audio_form->exec())

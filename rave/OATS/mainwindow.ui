@@ -37,7 +37,7 @@
         <property name="styleSheet">
          <string notr="true"/>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,1">
+        <layout class="QVBoxLayout" name="vlLeftWidget" stretch="0,1">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -51,105 +51,14 @@
           <number>11</number>
          </property>
          <item>
-          <layout class="QHBoxLayout" name="hlTestLay"/>
-         </item>
-         <item>
-          <widget class="QFrame" name="date_time_frame">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>100</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QFrame[objectName^=&quot;date&quot;]{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );
-border-radius: 20px;
-border-style: outset;
-border-bottom-width: 1px;
-border-radius: 3px;
-}</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Panel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <property name="lineWidth">
-            <number>3</number>
-           </property>
-           <layout class="QHBoxLayout" name="test_frame_layout"/>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="frame_time_analytics">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QFrame[objectName^=&quot;frame_&quot;]{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );
-border-radius: 20px;
-border-style: outset;
-border-bottom-width: 1px;
-border-radius: 3px;
-}</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="hlTimeAnalytics">
-            <property name="spacing">
-             <number>7</number>
-            </property>
-            <property name="topMargin">
-             <number>11</number>
-            </property>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="play_mode_frame">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QFrame[objectName^=&quot;play&quot;]{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );
-border-radius: 20px;
-border-style: outset;
-border-bottom-width: 1px;
-border-radius: 3px;
-}</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="hlPlayMode"/>
-          </widget>
+          <layout class="QVBoxLayout" name="vlHeader"/>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <layout class="QVBoxLayout" name="vlPlaylist">
              <property name="sizeConstraint">
-              <enum>QLayout::SetNoConstraint</enum>
+              <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
              </property>
             </layout>
            </item>
@@ -165,7 +74,7 @@ border-radius: 3px;
               <number>2</number>
              </property>
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Orientation::Vertical</enum>
              </property>
             </widget>
            </item>
@@ -175,21 +84,25 @@ border-radius: 3px;
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget_2" native="true">
+       <widget class="QWidget" name="wigRight" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="vlRight">
          <property name="leftMargin">
           <number>0</number>
          </property>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,0">
            <item>
-            <layout class="QHBoxLayout" name="hlTop"/>
+            <layout class="QHBoxLayout" name="hlTop">
+             <property name="leftMargin">
+              <number>10</number>
+             </property>
+            </layout>
            </item>
            <item>
             <layout class="QVBoxLayout" name="vlStackPanel">
@@ -217,7 +130,7 @@ border-radius: 3px;
                    <item>
                     <spacer name="verticalSpacer">
                      <property name="orientation">
-                      <enum>Qt::Vertical</enum>
+                      <enum>Qt::Orientation::Vertical</enum>
                      </property>
                      <property name="sizeHint" stdset="0">
                       <size>
@@ -243,7 +156,7 @@ border-radius: 3px;
                         <string>Licensed to:</string>
                        </property>
                        <property name="alignment">
-                        <set>Qt::AlignCenter</set>
+                        <set>Qt::AlignmentFlag::AlignCenter</set>
                        </property>
                       </widget>
                      </item>
@@ -259,7 +172,7 @@ border-radius: 3px;
                         <string>PHOTONICS FM</string>
                        </property>
                        <property name="alignment">
-                        <set>Qt::AlignCenter</set>
+                        <set>Qt::AlignmentFlag::AlignCenter</set>
                        </property>
                       </widget>
                      </item>
@@ -269,7 +182,7 @@ border-radius: 3px;
                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Product by: Baryonic Systems&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
-                        <set>Qt::AlignCenter</set>
+                        <set>Qt::AlignmentFlag::AlignCenter</set>
                        </property>
                       </widget>
                      </item>
@@ -280,7 +193,7 @@ border-radius: 3px;
                      <item>
                       <spacer name="horizontalSpacer_2">
                        <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
+                        <enum>Qt::Orientation::Horizontal</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
@@ -308,14 +221,14 @@ border-radius: 3px;
                         <string notr="true"/>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string>EXIT</string>
                        </property>
                       </widget>
                      </item>
                      <item>
                       <spacer name="horizontalSpacer_3">
                        <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
+                        <enum>Qt::Orientation::Horizontal</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
@@ -381,6 +294,12 @@ border-radius: 3px;
            </item>
            <item>
             <layout class="QGridLayout" name="gridStackControl">
+             <property name="leftMargin">
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>5</number>
+             </property>
              <property name="spacing">
               <number>1</number>
              </property>
@@ -695,7 +614,7 @@ Audio</string>
          <item>
           <widget class="Line" name="line">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
           </widget>
          </item>
@@ -705,7 +624,7 @@ Audio</string>
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>

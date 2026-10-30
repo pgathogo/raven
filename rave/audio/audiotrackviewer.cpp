@@ -4,6 +4,7 @@
 #include <QStandardItemModel>
 #include <QHeaderView>
 #include <QRegularExpression>
+#include <QScrollBar>
 #include <QDebug>
 
 #include "audiotrackviewer.h"
@@ -71,11 +72,101 @@ namespace AUDIO
 
     void AudioTrackViewer::set_viewer_style()
     {
-        m_track_view->setStyleSheet("QTableView{background-color: #34424F;} "
-                                    "QTableView::item{background-color: #323A3F; color: #FFFFFF;}"
-                                    "QTableView::item:alternate{background-color:#3C4449;}"
-                                    "QTableView::item:selected{background-color: #800000;}"
-                                    "QHeaderView::section{background-color:#708090; color:#FFFFFF;}");
+        m_track_view->setStyleSheet(R"(
+            QTableView {
+                background-color: #34424F;
+                font-size: 16px;
+            }
+               QTableView::item {
+                background-color: #323A3F;
+                color: #FFFFFF;
+            }
+               QTableView::item:alternate {
+                background-color:#3C4449;
+            }
+               QTableView::item:selected {
+                background-color: #ffd166;
+                color:#121A14;
+                font-weight: bold;
+            }
+               QHeaderView::section {
+                background-color:#708090;
+                color:#FFFFFF;
+            }
+            )");
+
+        const QString scrollBarStyle_horizontal = (R"(
+            QScrollBar:horizontal {
+                background: #34424F;  /*#1e1e1e;*/
+                height: 10px;
+                margin: 0px;
+                border-radius: 0px;
+            }
+
+            QScrollBar::handle:horizontal {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #7cc4e8, stop:0.5 #2f9bd6, stop:1 #1e739f);
+                min-width: 30px;
+                border-radius: 0px;
+            }
+
+            QScrollBar::handle:horizontal:hover {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #a8d9f2, stop:0.5 #5cb5e4, stop:1 #2f9bd6);
+            }
+
+            QScrollBar::handle:horizontal:pressed {
+                background: #247ba8;
+            }
+
+            QScrollBar::add-line:horizontal,
+            QScrollBar::sub-line:horizontal {
+                width: 0px;
+            }
+
+            QScrollBar::add-page:horizontal,
+            QScrollBar::sub-page:horizontal {
+                background: none;
+            }
+            )");
+
+        const QString scrollBarStyle_vertical = (R"(
+            QScrollBar:vertical {
+                background: #34424F;
+                width: 10px;
+                margin: 0px;
+                border-radius: 0px;  /*7px;*/
+            }
+
+            QScrollBar::handle:vertical {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #7cc4e8, stop:0.5 #2f9bd6, stop:1 #1e739f);
+                min-height: 30px;
+                border-radius: 0px; /*7px;*/
+            }
+
+            QScrollBar::handle:vertical:hover {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #a8d9f2, stop:0.5 #5cb5e4, stop:1 #2f9bd6);
+            }
+
+            QScrollBar::handle:vertical:pressed {
+                background: #247ba8;
+            }
+
+            QScrollBar::add-line:vertical,
+                QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+
+            QScrollBar::add-page:vertical,
+                QScrollBar::sub-page:vertical {
+                background: none;
+            }
+        )");
+
+        m_track_view->horizontalScrollBar()->setStyleSheet(scrollBarStyle_horizontal);
+        m_track_view->verticalScrollBar()->setStyleSheet(scrollBarStyle_vertical);
 
     }
 

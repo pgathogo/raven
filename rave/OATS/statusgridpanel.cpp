@@ -8,6 +8,8 @@
 #include "schedulegriditem.h"
 #include "scheduleitem.h"
 
+#include "PanelTheme.h"
+
 namespace OATS{
 
     StatusGridPanel::StatusGridPanel(QWidget* parent)
@@ -74,18 +76,32 @@ namespace OATS{
         m_output_name->setText(QString::fromStdString(schedule_item->play_channel()));
 
         //setStyleSheet("background-color: #222222;");
-        setStyleSheet("background-color: rgb(40, 133, 220)");
+        setStyleSheet("background-color: #2f9bd6");
+
+        QString text_style = "color: #FFFFFF; font-size: 12px";
+        m_output_name->setStyleSheet(text_style);
+        m_item_status->setStyleSheet(text_style);
 
         if (schedule_item->item_status() == OATS::ItemStatus::WAITING){
             setStyleSheet("background-color: #899499");
         }
 
         if (schedule_item->item_status() == OATS::ItemStatus::CUED){
-            setStyleSheet("background-color: #EF6C00");
+            setStyleSheet("background-color: #ff8a4c");
+            //setStyleSheet("background-color: #EF6C00");
         }
 
         if (schedule_item->item_status() == OATS::ItemStatus::PLAYING){
-            setStyleSheet("background-color: rgb(78, 207, 42)");
+            //setStyleSheet("background-color: rgb(78, 207, 42)");
+            setStyleSheet(QString(
+                      "background-color:#39ff6a; font-size:16px; font-weight:bold; %1")
+                        .arg(PanelTheme::monoFamily()));
+
+            QString text_color = "#121A14;";
+            QString text_style = QString("color: %1; font-size: 16px").arg(text_color);
+            m_output_name->setStyleSheet(text_style);
+            m_item_status->setStyleSheet(text_style);
+            PanelTheme::addGlow(m_item_status.get(), QColor(text_color));
         }
 
         if (schedule_item->item_status() == OATS::ItemStatus::PAUSED){

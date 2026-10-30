@@ -6,6 +6,8 @@
 #include "timegridpanel.h"
 #include "scheduleitem.h"
 
+#include "PanelTheme.h"
+
 namespace OATS{
     TimeGridPanel::TimeGridPanel(QWidget* parent)
         :GridPanel(parent)
@@ -69,10 +71,26 @@ namespace OATS{
             set_label(t.toString("HH:mm:ss"));
         }
 
+        // QString text_style = "QLabel{"
+        //                      "color:#FFFFFF; "
+        //                      "background-color:transparent;"
+        //                      "font-size: 12pt;  font-weight: bold; }";
+
+
+        // Default panel color
+        m_label->setStyleSheet("color: #FFFFFF");
+        setStyleSheet("background-color: rgb(40, 133, 220)");
 
         if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
         }
 
+        if (schedule_item->item_status() == OATS::ItemStatus::PLAYING){
+            //setStyleSheet("background-color: rgb(78, 207, 42)");
+            setStyleSheet(QString(
+                      "background-color:#39ff6a; font-size:16px; font-weight:bold; %1")
+                        .arg(PanelTheme::monoFamily()));
+            m_label->setStyleSheet("color: #121A14; font-size: 16px");
+        }
     }
 
     QVBoxLayout* TimeGridPanel::main_layout()

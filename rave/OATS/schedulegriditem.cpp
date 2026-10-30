@@ -38,7 +38,7 @@ namespace OATS{
         }
 
         m_layout = new QHBoxLayout();
-        m_layout->setSpacing(0);
+        m_layout->setSpacing(2);
         m_layout->setContentsMargins(0,0,0,0);
 
         m_layout->addWidget(m_time_panel.get());

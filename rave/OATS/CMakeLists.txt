@@ -94,6 +94,15 @@ set(PROJECT_SOURCES
         cartpanel.cpp
         timeanalyzertextwidget.h
         timeanalyzertextwidget.cpp
+        PanelTheme.h
+        ClockPanel.h
+        ClockPanel.cpp
+        MusicStatsPanel.h
+        MusicStatsPanel.cpp
+        NowPlayingPanel.h
+        NowPlayingPanel.cpp
+        togglebutton.h
+        togglebutton.cpp
         oats.qrc
         oats_styles.h
 

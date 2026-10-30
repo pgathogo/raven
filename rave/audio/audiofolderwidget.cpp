@@ -1,6 +1,7 @@
 #include <QVBoxLayout>
 #include <QStandardItem>
 #include <QStandardItemModel>
+#include <QScrollBar>
 
 #include "audiofolderwidget.h"
 
@@ -38,23 +39,79 @@ namespace AUDIO
 
     void AudioFolderWidget::style_folder_view()
     {
-        QString tree_style (
-            "QTreeView{background-color: #374148;}"
-            "QTreeView::item{color: #FFFFFF;}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {"
-            "  border-image: none;"
-            "  image: url(:/images/icons/treeview_closed_purple.png);"
-            "}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings  {"
-            "border-image: none;"
-            "image: url(:/images/icons/treeview_open_purple.png);}"
-            "QHeaderView::section{background-color:#708090; color:#FFFFFF;}"
+        QString tree_style (R"(
+            QTreeView{
+             background-color: #374148;
+             font-size: 16px;
+            }
+            QTreeView::item {
+             color: #FFFFFF;
+            }
+            QTreeView::branch:has-children:!has-siblings:closed,
+            QTreeView::branch:closed:has-children:has-siblings {
+              border-image: none;
+              image: url(:/images/icons/treeview_closed_purple.png);
+            }
+            QTreeView::branch:open:has-children:!has-siblings,
+            QTreeView::branch:open:has-children:has-siblings  {
+                border-image: none;
+                image: url(:/images/icons/treeview_open_purple.png);
+            }
+            QTreeView::item:selected:!active {
+             background-color: #ffd166; /* Faded highlight when window is out of focus */
+             color: #121A14;
+             font-weigh: bold;
+             }
+
+            QHeaderView::section {
+              background-color:#708090;
+              color:#FFFFFF;
+              font-weight: bold;
+            }
+
+            )"
             );
+
+        const QString scrollBarStyle = (R"(
+            QScrollBar:vertical {
+                background: #34424F;
+                width: 10px;
+                margin: 0px;
+                border-radius: 0px;  /*7px;*/
+            }
+
+            QScrollBar::handle:vertical {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #7cc4e8, stop:0.5 #2f9bd6, stop:1 #1e739f);
+                min-height: 30px;
+                border-radius: 0px; /*7px;*/
+            }
+
+            QScrollBar::handle:vertical:hover {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #a8d9f2, stop:0.5 #5cb5e4, stop:1 #2f9bd6);
+            }
+
+            QScrollBar::handle:vertical:pressed {
+                background: #247ba8;
+            }
+
+            QScrollBar::add-line:vertical,
+                QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+
+            QScrollBar::add-page:vertical,
+                QScrollBar::sub-page:vertical {
+                background: none;
+            }
+        )");
+
 
 
         m_folder_view->setStyleSheet(tree_style);
+
+        m_folder_view->verticalScrollBar()->setStyleSheet(scrollBarStyle);
 
     }
 

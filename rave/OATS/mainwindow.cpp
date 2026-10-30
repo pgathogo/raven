@@ -56,6 +56,7 @@
 
 #include "../data/commercialviewer.h"
 
+
 //#include "timeanalyzerwidget.h"
 #include "schedule.h"
 #include "timeanalyzertextwidget.h"
@@ -68,6 +69,11 @@
 #include "trackinfo.h"
 #include "jinglegrid.h"
 #include "cartpanel.h"
+
+#include "PanelTheme.h"
+#include "ClockPanel.h"
+#include "MusicStatsPanel.h"
+#include "NowPlayingPanel.h"
 
 
 int MainWindow::s_sched_ref{0};
@@ -83,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_dtw{nullptr}
     , m_outputA{nullptr}
     , m_outputB{nullptr}
+    , m_stats{nullptr}
 {
     ui->setupUi(this);
 
@@ -143,8 +150,11 @@ MainWindow::MainWindow(QWidget *parent)
 //    ui->twLoad->setCurrentIndex(0);
 
 //    connect(ui->gridScroll, &QScrollBar::valueChanged, this, &MainWindow::scroll_changed);
-    connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current);
-    connect(m_play_mode_panel.get(), &OATS::PlayModePanel::keep_current, this, &MainWindow::keep_current);
+    // connect(m_play_mode_panel.get(), &OATS::PlayModePanel::go_current, this, &MainWindow::go_current);
+    // connect(m_play_mode_panel.get(), &OATS::PlayModePanel::keep_current, this, &MainWindow::keep_current);
+
+    connect(m_now_play_widget, &NowPlayingPanel::goCurrentClicked, this, &MainWindow::go_current);
+    connect(m_now_play_widget, &NowPlayingPanel::keepCurrentClicked, this, &MainWindow::keep_current);
 
     connect(m_dtw.get(), &OATS::DateTimeWidget::time_updated, this, &MainWindow::time_updated);
 
@@ -156,8 +166,11 @@ MainWindow::MainWindow(QWidget *parent)
             [&](){ ui->swMain->setCurrentIndex(0);
             m_control_page = ControlPage::Home;
         });
-    ui->btnHome->setIcon(QIcon(":/images/icons/home03.png"));
-    ui->btnHome->setIconSize(QSize(100,40));
+
+    //"background:transparent; color:#22d3ee; font-size:14px; font-weight:bold;"
+
+    // ui->btnHome->setIcon(QIcon(":/images/icons/home03.png"));
+    // ui->btnHome->setIconSize(QSize(100,40));
 
     connect(ui->btnComm, &QPushButton::clicked, this,
             [&](){
@@ -196,8 +209,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_control_buttons_group->addButton(ui->btnLoad);
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close_window);
-    ui->btnExit->setIcon(QIcon(":/images/icons/exit01.png"));
-    ui->btnExit->setIconSize(QSize(100,40));
+    // ui->btnExit->setIcon(QIcon(":/images/icons/exit01.png"));
+    // ui->btnExit->setIconSize(QSize(100,40));
 
     ui->btnExit->setStyleSheet(
         "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
@@ -273,6 +286,8 @@ MainWindow::MainWindow(QWidget *parent)
     //QLabel* top_label = new QLabel("This is a TOP Label");
     ui->hlTop->addWidget(m_audio_meter.get());
 
+    ui->wigRight->setStyleSheet(PanelTheme::cardStyle("QWidget#wigRight", "#2f9bd6"));
+
 
     /*
     QLabel* home_image = new QLabel(this);
@@ -285,7 +300,6 @@ MainWindow::MainWindow(QWidget *parent)
         home_image->setPixmap(pm);
     }
     ui->hlTitle->addWidget(home_image);
-    QMainWindow::showFullScreen();
     */
 
     ui->lblClient->setText("Player One");
@@ -310,6 +324,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     log_info("App load-up. Done.");
 
+    //QMainWindow::showFullScreen();
 }
 
 
@@ -326,38 +341,42 @@ void MainWindow::style_page_controls()
 {
    //"QPushButton[objectName^='btnHome']{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
 
-    QString btn_style(
-        "QPushButton {background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );"
-        "border-radius: 20px;"
-        "border-style: outsi;"
-        "border-bottom-width: 1px;"
-        "border-bottom-color:#374148;"
-        "border-radius: 3px;"
-        "color:#FFFFFF;"
-        "font-weight:bold;"
-        "text-align: bottom;"
-       "}"
-
-       "QPushButton:hover{background-color:#555D64;border:none; }"
-
-       "QPushButton:pressed {"
-        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );"
-        "border-radius: 20px;"
-        "border-style: outset;"
-        "border-bottom-width: 1px;"
-        "border-radius: 3px;"
-        "color:#FFFFFF;"
-       "font-weight:bold;}"
-
-       "QPushButton:checked {"
-        "background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500 , stop:1 #777700 );"
-        "border-radius: 20px;"
-        "border-style: outset;"
-        "border-bottom-width: 1px;"
-        "border-radius: 3px;"
-        "color:#FFFFFF;"
-       "font-weight:bold;}"
-        );
+    QString btn_style(R"(
+        QPushButton {
+           background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #374148 );
+           border-radius: 20px;
+           border-style: outset;
+           border-bottom-width: 1px;
+           border-bottom-color:#374148;
+           border-radius: 3px;
+           color:#FFFFFF;
+           font-weight:bold;
+           text-align: bottom;
+       }
+       QPushButton:hover {
+           background-color:#555D64;
+           border-width: 1px;
+           border-color: #0479B0;
+        }
+       QPushButton:pressed {
+           background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #555D64 , stop:1 #555D64 );
+           border-radius: 20px;
+           border-style: outset;
+           border-bottom-width: 1px;
+           border-radius: 3px;
+           color:#FFFFFF;
+          font-weight:bold;
+        }
+       QPushButton:checked {
+           background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #454500 , stop:1 #777700 );
+           border-radius: 20px;
+           border-style: outset;
+           border-bottom-width: 1px;
+           border-radius: 3px;
+           color:#FFFFFF;
+           font-weight:bold;
+        }
+        )");
 
     ui->btnHome->setStyleSheet(btn_style);
     ui->btnComm->setStyleSheet(btn_style);
@@ -487,16 +506,19 @@ void MainWindow::start_timers()
 
 void MainWindow::set_playout_widgets()
 {
+    ui->vlHeader->setSpacing(5);
+
     set_datetime_widget();
     set_time_analytics_widget();
-    //draw_horizontal_line();
-
     make_play_mode_panel();
     make_output_panel();
     make_comm_viewer_widget();
     make_track_info_widget();
     make_jingle_grid_widget();
 
+    scrollbar_style();
+    // Make test panel
+    //make_test_panel();
 }
 
 void MainWindow::close_win()
@@ -506,12 +528,34 @@ void MainWindow::close_win()
 
 void MainWindow::set_datetime_widget()
 {
-    m_dtw = std::make_unique<OATS::DateTimeWidget>();
+    /*
+    QWidget* datetime_frame = new QWidget(this);
+    setStyleSheet(
+        " QWidget{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );"
+        "border-radius: 20px;"
+        "border-style: outset;"
+        "border-bottom-width: 1px;"
+        "border-radius: 3px;}"
+        );
+    datetime_frame->setMinimumHeight(100);
 
+    m_dtw = std::make_unique<OATS::DateTimeWidget>();
     auto curr_time = QTime::currentTime();
     m_dtw->set_time(curr_time);
 
-    ui->test_frame_layout->addWidget(m_dtw.get());
+    auto* hlDatetime = new QHBoxLayout;
+    hldatetime->addWidget(m_dtw);
+
+    datetime_frame->setLayout(hlDatetime);
+
+    datetime_frame->addWidget(m_dtw.get());
+    ui->hlTestLay->addWidget(datetime_frame);
+    m_dtw->start_timer(100);
+   */
+
+    auto* clock = new ClockPanel;
+    ui->vlHeader->addWidget(clock);
+
 
     /*
     m_onair_label = std::make_unique<QLabel>("On-Air");
@@ -521,14 +565,15 @@ void MainWindow::set_datetime_widget()
     ui->test_frame_layout->addWidget(m_onair_label.get());
    */
 
-    m_dtw->start_timer(100);
 }
 
 void MainWindow::set_time_analytics_widget()
 {
+    m_stats = new MusicStatsPanel;
+    ui->vlHeader->addWidget(m_stats);
 
-    m_tta_widget = std::make_unique<OATS::TimeAnalyzerTextWidget>();
-    ui->hlTimeAnalytics->addWidget(m_tta_widget.get());
+    //m_tta_widget = std::make_unique<OATS::TimeAnalyzerTextWidget>();
+    //ui->hlHeader->addWidget(m_tta_widget.get());
 
     /*
     auto m_taw = std::make_unique<TimeAnalyzerWidget>();
@@ -541,6 +586,9 @@ void MainWindow::set_time_analytics_widget()
     m_taw->set_time_bar(time_slots);
     ui->hlTimeAnalytics->addWidget(m_taw.get());
    */
+
+
+
 
 }
 
@@ -556,6 +604,7 @@ void MainWindow::draw_horizontal_line()
 
 void MainWindow::set_playlist_control_widget()
 {
+    /*
     m_pcw = std::make_unique<OATS::PlayListControlWidget>();
     connect(m_pcw.get(), &OATS::PlayListControlWidget::go_current, this, &MainWindow::go_current);
 
@@ -568,6 +617,7 @@ void MainWindow::set_playlist_control_widget()
     m_pcw->setStyleSheet(style);
 
     //ui->hlPlayMode->addWidget(m_pcw.get());
+  */
 }
 
 void MainWindow::compute_schedule_time()
@@ -1278,7 +1328,9 @@ void MainWindow::stop_button(OATS::OutputPanel* op)
                                     .arg(filename);
         log_info(msg);
 
-        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop, "");
+        // m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop, "");
+        m_now_play_widget->setTitle("");
+
         calculate_trigger_times();
     }
 }
@@ -1332,8 +1384,102 @@ void MainWindow::pause_c_button()
 
 void MainWindow::make_play_mode_panel()
 {
-    m_play_mode_panel = std::make_unique<OATS::PlayModePanel>(this);
-    ui->hlPlayMode->addWidget(m_play_mode_panel.get());
+    m_now_play_widget = new NowPlayingPanel;
+    ui->vlHeader->addWidget(m_now_play_widget);
+
+    m_play_mode_panel = std::make_unique<OATS::PlayModePanel>();
+   // ui->hlPlayMode->addWidget(m_play_mode_panel.get());
+
+}
+
+void MainWindow::make_test_panel()
+{
+    QWidget* test_frame = new QWidget(this);
+    test_frame->setStyleSheet(
+        "QWidget{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #4A5E72 , stop:1 #34424F );"
+        "   border-radius: 20px;"
+        "   border-style: outset;"
+        "   border-bottom-width: 1px;"
+        "   border-radius: 3px;}"
+        );
+
+    test_frame->setMinimumHeight(70);
+    log_info("Create test QFrame...");
+}
+
+void MainWindow::scrollbar_style()
+{
+    const QString scrollBarStyle = R"(
+    QScrollBar:vertical {
+        background: #1e1e1e;
+        width: 10px;
+        margin: 0px;
+        border-radius: 0px;  /*7px;*/
+    }
+
+    QScrollBar::handle:vertical {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 #7cc4e8, stop:0.5 #2f9bd6, stop:1 #1e739f);
+        min-height: 30px;
+        border-radius: 0px; /*7px;*/
+    }
+
+    QScrollBar::handle:vertical:hover {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 #a8d9f2, stop:0.5 #5cb5e4, stop:1 #2f9bd6);
+    }
+
+    QScrollBar::handle:vertical:pressed {
+        background: #247ba8;
+    }
+
+    QScrollBar::add-line:vertical,
+    QScrollBar::sub-line:vertical {
+        height: 0px;
+    }
+
+    QScrollBar::add-page:vertical,
+    QScrollBar::sub-page:vertical {
+        background: none;
+    }
+
+    /* ---------- Horizontal scrollbar ---------- */
+    QScrollBar:horizontal {
+        background: #1e1e1e;
+        height: 14px;
+        margin: 0px;
+        border-radius: 7px;
+    }
+
+    QScrollBar::handle:horizontal {
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 #7cc4e8, stop:0.5 #2f9bd6, stop:1 #1e739f);
+        min-width: 30px;
+        border-radius: 7px;
+    }
+
+    QScrollBar::handle:horizontal:hover {
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 #a8d9f2, stop:0.5 #5cb5e4, stop:1 #2f9bd6);
+    }
+
+    QScrollBar::handle:horizontal:pressed {
+        background: #247ba8;
+    }
+
+    QScrollBar::add-line:horizontal,
+    QScrollBar::sub-line:horizontal {
+        width: 0px;
+    }
+
+    QScrollBar::add-page:horizontal,
+    QScrollBar::sub-page:horizontal {
+        background: none;
+    }
+    )";
+
+    ui->gridScroll->setStyleSheet(scrollBarStyle);
+
 }
 
 void MainWindow::make_comm_viewer_widget()
@@ -1528,7 +1674,7 @@ void MainWindow::scroll_changed(int new_pos)
 
 
 
-void MainWindow::go_current()
+void MainWindow::go_current(bool clicked)
 {
     if (m_current_playing_item.grid_index > 0)
     {
@@ -1572,7 +1718,7 @@ void MainWindow::go_to_current_hour()
 void MainWindow::keep_current(bool checked)
 {
     if (checked)
-        go_current();
+        go_current(true);
 }
 
 void MainWindow::play_jingle(OATS::Jingle* jingle)
@@ -1660,7 +1806,7 @@ void MainWindow::set_current_play_item()
 void MainWindow::time_updated()
 {
     if (m_play_mode_panel->keep_current_checked())
-        go_current();
+        go_current(true);
 
 }
 
@@ -2295,7 +2441,7 @@ void MainWindow::status_timer()
                m_outputC->set_time_remaining(remaining);
 
                if ( (remaining <= 0) || (m_outputC->start_tick_stamp() < 0) ) {
-                   stop_audio(m_outputC);
+                   //stop_audio(m_outputC);   // TODO: Investigate this issue: This stop, stops everything!!
                }
 
            }
@@ -2710,8 +2856,12 @@ void MainWindow::calculate_time_stats()
                                   .arg(t_r2, 2, 10, QChar('0'));
 
 
-    auto time_stats = std::make_tuple(music_remain_txt, hour_remain_txt, talk_remain_txt);
-    m_tta_widget->update_stats(time_stats);
+    //auto time_stats = std::make_tuple(music_remain_txt, hour_remain_txt, talk_remain_txt);
+
+    m_stats->setMusicRemaining(music_remaining);
+    m_stats->setHourRemaining(hour_remaining);
+    m_stats->setTalkTime(talk_remaining);
+
 
 }
 
@@ -2804,8 +2954,9 @@ void MainWindow::play_audio(OATS::OutputPanel* op)
 
         //m_current_playing_item.item->set_play_channel(temp_play_channel);
 
-        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing,
-                                                     op->panel_name());
+        // m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing,
+        //                                              op->panel_name());
+        m_now_play_widget->setTitle(m_current_playing_item.item->audio()->title()->to_qstring());
 
 
         broadcast_player_mode(OATS::PlayerMode::Playing);
@@ -2821,7 +2972,7 @@ void MainWindow::broadcast_player_mode(OATS::PlayerMode pm)
         m_schedule_grid[i]->schedule_item()->update_player_mode(pm);
     }
 
-    m_player_mode = OATS::PlayerMode::Playing;
+    m_player_mode = pm;  //OATS::PlayerMode::Playing;
 }
 
 void MainWindow::stop_audio(OATS::OutputPanel* op)
@@ -2863,7 +3014,8 @@ void MainWindow::stop_audio(OATS::OutputPanel* op)
     op->update_progress_bar(0);
     op->clear_panel();
 
-    m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop,"");
+    // m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Stop,"");
+    m_now_play_widget->setTitle("");
 
     broadcast_player_mode(OATS::PlayerMode::Stop);
 
@@ -2885,7 +3037,8 @@ void MainWindow::fade_audio(OATS::OutputPanel* op)
         }
 
 
-        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Fade, op->panel_name());
+        // m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Fade, op->panel_name());
+        //m_now_play_widget->setTitle(op->panel_name());
         m_audio_player->fade_audio();
     }
 }
@@ -2905,9 +3058,10 @@ void MainWindow::pause_audio(OATS::OutputPanel* op)
 
         m_audio_player->pause_audio();
 
-        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
-                                                     op->panel_name());
+        // m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
+        //                                              op->panel_name());
 
+        //m_now_play_widget->setTitle(op->panel_name());
 
         display_schedule();
 
@@ -2928,8 +3082,11 @@ void MainWindow::pause_jingle(OATS::OutputPanel* op)
         op->set_pause_tick_stamp(m_audio_tool.get_tick_count());
         op->schedule_item()->notify();
 
-        m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
-                                                     op->panel_name());
+        // m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Paused,
+        //                                              op->panel_name());
+
+        //m_now_play_widget->setTitle(op->panel_name());
+
         m_jingle_player->pause_audio();
 
         //display_schedule();
@@ -2952,13 +3109,15 @@ void MainWindow::resume_audio(OATS::OutputPanel* op)
     std::string audio_filename = audio->full_audio_filename().toStdString();
     QString audio_file = QString::fromStdString(audio_filename);
 
-    QString msg = QString("Resume play: %1").arg(audio_file);
 
-    log_info(msg);
-
-    m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing, op->panel_name());
     m_audio_player->resume_audio();
     display_schedule();
+
+    QString msg = QString("Resume play: %1").arg(audio_file);
+    log_info(msg);
+
+    //m_play_mode_panel->update_ouput_status_label(OATS::PlayMode::Playing, op->panel_name());
+    //m_now_play_widget->setTitle(op->panel_name());
 
 }
 
@@ -3194,13 +3353,13 @@ void MainWindow::play_outputC(OATS::OutputPanel* op)
 
     int grid_index = index_of(op->schedule_item()->schedule_ref());
 
-    m_jingle_player->append_playlist(
-                  grid_index,
-                  op->schedule_item()->id(),
-                  JinglePlayoutChannel,
-                  audio_fullname);
+    // m_jingle_player->append_playlist(
+    //               grid_index,
+    //               op->schedule_item()->id(),
+    //               JinglePlayoutChannel,
+    //               audio_fullname);
 
-    m_jingle_player->play_audio();
+    m_jingle_player->play_audio(audio_fullname);
 
 }
 
@@ -3214,8 +3373,8 @@ void MainWindow::item_move_up(int schedule_ref, int grid_pos)
 
     auto prev_si = schedule_item(index-1);
 
-    if (m_player_mode == OATS::PlayerMode::Playing)
-        prev_si->set_item_status(si->item_status());
+    // if (m_player_mode == OATS::PlayerMode::Playing)
+    //     prev_si->set_item_status(si->item_status());
 
     // Block going on top of a playing item
     if ((si->item_status() == OATS::ItemStatus::CUED) &&
@@ -3246,16 +3405,32 @@ void MainWindow::item_move_down(int schedule_ref, int grid_pos)
     int index = index_of(schedule_ref);
 
     auto item_to_move = schedule_item(index);
-    auto next_si = schedule_item(index+1);
+
+    auto next_index = index+1;
+
+    if (next_index >= m_schedule_items.size()-1)
+        return;
+
+    auto next_si = schedule_item(next_index);
+
+    // auto after_next_index = next_index + 1;
+    // if (after_next_index < m_schedule_items.size()-1){
+    //     auto after_next_item = schedule_item(after_next_index);
+    //     after_next_item->set_item_status(OATS::ItemStatus::WAITING);
+    // }
 
     auto temp_status = next_si->item_status();
 
-    if (m_player_mode == OATS::PlayerMode::Playing) {
-        if (item_to_move->item_status() == OATS::ItemStatus::CUED)
-            item_to_move->set_item_status(OATS::ItemStatus::WAITING);
+    // if (m_player_mode == OATS::PlayerMode::Playing) {
+    //     if (item_to_move->item_status() == OATS::ItemStatus::CUED)
+    //         item_to_move->set_item_status(OATS::ItemStatus::WAITING);
 
-        // next_si->set_item_status(item_to_move->item_status());
-        // item_to_move->set_item_status(temp_status);
+    //     // next_si->set_item_status(item_to_move->item_status());
+    //     // item_to_move->set_item_status(temp_status);
+    // }
+
+    if (next_si->item_status() == OATS::ItemStatus::PLAYING) {
+        item_to_move->set_item_status(OATS::ItemStatus::CUED);
     }
 
 
@@ -3266,7 +3441,10 @@ void MainWindow::item_move_down(int schedule_ref, int grid_pos)
     m_schedule_grid[grid_pos]->set_subject(schedule_item(index));
     m_schedule_grid[grid_pos+1]->set_subject(schedule_item(index+1));
 
+
     cue_item();
+
+    //display_schedule();
 
 
 }
@@ -3562,6 +3740,8 @@ void MainWindow::load_item(int schedule_ref, int grid_pos)
     ui->gridScroll->setMaximum(m_schedule_items.size() - MAX_GRID_ITEMS);
 
     cue_item();
+
+    broadcast_player_mode(m_player_mode);
 
 }
 

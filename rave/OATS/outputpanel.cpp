@@ -10,6 +10,7 @@
 #include "scheduleitem.h"
 #include "outputpanel.h"
 #include "oats_styles.h"
+#include "PanelTheme.h"
 
 namespace OATS{
 
@@ -34,6 +35,7 @@ namespace OATS{
         connect(m_play_button.get(), &QPushButton::clicked, this, &OutputPanel::play);
 
         m_play_button->setIcon(QIcon(":/images/icons/play_02.png"));
+
         m_play_button->setStyleSheet(OATSTYLE::play_button_style);
 
         m_stop_button = std::make_unique<QPushButton>("STOP "+name);
@@ -87,20 +89,42 @@ namespace OATS{
         m_layout_artist = new QHBoxLayout();
         m_layout_artist->addWidget(m_artist.get());
 
+        QString counter_color = "#ff3b5c";
+
         m_time = std::make_unique<QLabel>("00:00 / 00:00 / 00:00");
         m_time->setAlignment(Qt::AlignHCenter);
-        m_time->setFont(QFont("DigifaceWide", 20));
+
+        m_time->setStyleSheet(QString(
+            "background:transparent; color:%1; font-size:40px; font-weight:bold; %2")
+             .arg(counter_color, PanelTheme::monoFamily()));
+        PanelTheme::addGlow(m_time.get(), QColor(counter_color), 22);
+
+        // m_time->setFont(QFont("DigifaceWide", 20));
 
         m_progress_bar = std::make_unique<QProgressBar>();
 //        m_progress_bar->setLayoutDirection(Qt::RightToLeft);
         m_progress_bar->setTextVisible(true);
         m_progress_bar->setFormat("00:00 / 00:00 / 00:00");
-        m_progress_bar->setFont(QFont("DigifaceWide", 20));
+
+        m_progress_bar->setStyleSheet(QString(
+            "background:transparent; color:%1; font-size:20px; font-weight:bold; %2")
+             .arg(counter_color, PanelTheme::monoFamily()));
+        PanelTheme::addGlow(m_progress_bar.get(), QColor(counter_color), 22);
+
+
+        // m_progress_bar->setFont(QFont("DigifaceWide", 20));
         //m_progress_bar->setStyleSheet("background-color:#40D58A; border: 1px solid grey; border-radius: 5px;"
 //        m_progress_bar->setStyleSheet("background-color:#40D58A; border: 0px solid grey; border-radius: 0px;"
 //                                      "text-align: center;font: 75 italic 14pt 'DigifaceWide'; ");
-        m_progress_bar->setStyleSheet("background-color:transparent;border: 0px solid; border-radius: 1px;"
-                                      "text-align: center;font: 75 italic 14pt 'DigifaceWide';color:#FF0000;");
+
+        // m_progress_bar->setStyleSheet("background-color:transparent;border: 0px solid; border-radius: 1px;"
+        //                               "text-align: center;font: 75 italic 14pt 'DigifaceWide';color:#FF0000;");
+
+         m_progress_bar->setStyleSheet(QString(
+                                 "background-color:transparent;border: 0px solid; border-radius: 1px;"
+                                           "text-align: center;font: 75 italic 14pt ;color:%1;").arg(counter_color)
+                                       );
+
         m_progress_bar->setMinimum(0);
         m_progress_bar->setMaximum(100);
         m_progress_bar->setValue(0);
@@ -447,34 +471,65 @@ namespace OATS{
 
     void OutputPanel::set_progress_bar_background(OATS::ProgressBarBGColor bg_color)
     {
+
+        /*
+        m_time->setStyleSheet(QString(
+            "background:transparent; color:%1; font-size:40px; font-weight:bold; %2")
+             .arg(counter_color, PanelTheme::monoFamily()));
+        PanelTheme::addGlow(m_time.get(), QColor(counter_color), 22);
+        */
+
+        QString counter_color = "#ff3b5c";
+
         switch(bg_color)
         {
         case OATS::ProgressBarBGColor::RED:
-            //m_progress_bar->setStyleSheet("QProgressBar{background-color:#F51503; border: 0px solid grey;"
             m_progress_bar->setStyleSheet("QProgressBar{background-color:#212121;border: 0px solid grey;"
                                           "border-radius: 0px; text-align: center; text-align: center;"
                                           "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;} "
-                                          "QProgressBar::chunk{background-color:#00C853;}");
+                                          "QProgressBar::chunk{background-color:#39ff6a;}");
             break;
         case OATS::ProgressBarBGColor::BLUE:
-            //m_progress_bar->setStyleSheet("QProgressBar{background-color:#0457E8; border: 0px solid grey; border-radius: 0px; "
-            m_progress_bar->setStyleSheet("QProgressBar{background-color:#212121;border: 0px solid grey; border-radius: 0px; "
-                                          "text-align: center;text-align: center;"
-                                          "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;}"
-                                          "QProgressBar::chunk{background-color:#00C853;}");
+            m_progress_bar->setStyleSheet(QString(
+                                       "QProgressBar{background:transparent;border: 0px solid grey;"
+                                        "border-radius: 0px; text-align: center;text-align: center;"
+                                        "font-size: 20px; font-style:italic 14pt; font-weight:bold; color:%1; %2}"
+                                        "QProgressBar::chunk{background-color:#39ff6a;}").arg(counter_color, PanelTheme::monoFamily())
+                                        );
+            PanelTheme::addGlow(m_progress_bar.get(), QColor(counter_color), 22);
+            // m_progress_bar->setStyleSheet("QProgressBar{background-color:#212121;border: 0px solid grey; border-radius: 0px; "
+            //                               "text-align: center;text-align: center;"
+            //                               "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;}"
+            //                               "QProgressBar::chunk{background-color:#00C853;}");
             break;
         case OATS::ProgressBarBGColor::GREEN:
-            //m_progress_bar->setStyleSheet("QProgressBar{background-color:#04E846; border: 0px solid grey;"
-            m_progress_bar->setStyleSheet("QProgressBar{background-color:#212121;border: 0px solid grey;"
-                                          "border-radius: 0px; text-align: center;text-align: center;"
-                                          "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;}"
-                                          "QProgressBar::chunk{background-color:#00C853;}");
+            m_progress_bar->setStyleSheet(QString(
+                                       "QProgressBar{background:transparent;border: 0px solid grey;"
+                                        "border-radius: 0px; text-align: center;text-align: center;"
+                                        "font-size: 20px; font-style:italic 14pt; font-weight:bold; color:%1; %2}"
+                                        "QProgressBar::chunk{background-color:#39ff6a;}").arg(counter_color, PanelTheme::monoFamily())
+                                        );
+            PanelTheme::addGlow(m_progress_bar.get(), QColor(counter_color), 22);
+            break;
+
+            // m_progress_bar->setStyleSheet("QProgressBar{background-color:#212121;border: 0px solid grey;"
+            //                               "border-radius: 0px; text-align: center;text-align: center;"
+            //                               "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;}"
+            //                               "QProgressBar::chunk{background-color:#00C853;}");
         default:
             //green
-            m_progress_bar->setStyleSheet("QProgressBar{background-color:#04E846; border: 0px solid grey;"
-                                          "border-radius: 0px; text-align: center;text-align: center;"
-                                          "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;}"
-                                          "QProgressBar::chunk{background-color:#00C853;}");
+            m_progress_bar->setStyleSheet(QString(
+                                       "QProgressBar{background:transparent;border: 0px solid grey;"
+                                        "border-radius: 0px; text-align: center;text-align: center;"
+                                        "font-size: 20px; font-style:italic 14pt; font-weight:bold; color:%1; %2}"
+                                        "QProgressBar::chunk{background-color:#39ff6a;}").arg(counter_color, PanelTheme::monoFamily())
+                                        );
+            PanelTheme::addGlow(m_progress_bar.get(), QColor(counter_color), 22);
+
+            // m_progress_bar->setStyleSheet("QProgressBar{background-color:#04E846; border: 0px solid grey;"
+            //                               "border-radius: 0px; text-align: center;text-align: center;"
+            //                               "font: 75 italic 14pt 'DigifaceWide';color:#FF0000;}"
+            //                               "QProgressBar::chunk{background-color:#00C853;}");
         }
 
     }

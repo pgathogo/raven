@@ -16,15 +16,26 @@
 #include <QTimer>
 #include <QPainter>
 
+// Drain Effect
+#include <QPainterPath>
+#include <QStyleOptionButton>
+#include <QVariantAnimation>
+#include <QtMath>
+
+#include <QStylePainter>
+#include <QFontMetrics>
+// Drain Effect
+
 #include <QVBoxLayout>
 #include <QPalette>
 
-#include "jinglegrid.h"
 
 #include "../audio/trackbrowser.h"
 #include "../audio/trackpickerdialog.h"
 #include "../audio/audio.h"
 
+#include "jinglegrid.h"
+#include "PanelTheme.h"
 
 using namespace std::chrono_literals;
 
@@ -177,6 +188,38 @@ namespace OATS
         setCheckable(true);
         auto name = QString("btn_%1_%2_%3").arg(m_page).arg(m_row).arg(m_col);
         this->setObjectName(name);
+
+        // --  Draining effect --
+
+        // Water level: drains linearly so it matches the track's progress exactly
+        m_levelAnim = new QVariantAnimation(this);
+        m_levelAnim->setStartValue(1.0);
+        m_levelAnim->setEndValue(0.0);
+        m_levelAnim->setEasingCurve(QEasingCurve::Linear);
+        connect(m_levelAnim, &QVariantAnimation::valueChanged, this, [this](const QVariant &v) {
+            m_level = v.toReal();
+            update();
+        });
+        connect(m_levelAnim, &QVariantAnimation::finished, this, [this]() {
+            m_level = 0.0;
+            m_waveAnim->stop();
+            update();
+            emit drainFinished();
+        });
+
+        // Wave motion: independent looping animation, 1.2 s per cycle
+        m_waveAnim = new QVariantAnimation(this);
+        m_waveAnim->setStartValue(0.0);
+        m_waveAnim->setEndValue(2.0 * M_PI);
+        m_waveAnim->setDuration(1200);
+        m_waveAnim->setLoopCount(-1);
+        connect(m_waveAnim, &QVariantAnimation::valueChanged, this, [this](const QVariant &v) {
+            m_phase = v.toReal();
+            if (m_levelAnim->state() == QAbstractAnimation::Running)
+                update();
+        });
+
+        // -- Draining effect
     }
 
     GridButton::GridButton(int page, Jingle* const jingle)
@@ -273,6 +316,7 @@ namespace OATS
        return QSize(parent_hint.width() + m_pixmap.width(), std::max(parent_hint.height(), m_pixmap.height()));
     }
 
+    /*
     void GridButton::paintEvent(QPaintEvent* e)
     {
         QPushButton::paintEvent(e);
@@ -284,6 +328,208 @@ namespace OATS
             painter.drawPixmap(width()-20, y, m_pixmap);
         }
     }
+    */
+
+    //  ---- Draining Effect ------
+
+    void GridButton::startDrain()
+    {
+        startDrain(m_durationMs);
+    }
+
+    void GridButton::startDrain(int durationMs)
+    {
+        if (durationMs <= 0)
+            return;
+
+        m_durationMs = durationMs;
+        m_levelAnim->stop();
+        m_levelAnim->setDuration(durationMs);
+        m_levelAnim->start();
+        m_waveAnim->start();
+    }
+
+    void GridButton::stopDrain()
+    {
+        m_levelAnim->stop();
+        m_waveAnim->stop();
+        m_level = 0.0;
+        update();
+    }
+
+    bool GridButton::isDraining() const
+    {
+        return m_levelAnim->state() == QAbstractAnimation::Running;
+    }
+
+    void GridButton::paintEvent(QPaintEvent *event)
+    {
+        // 1) Draw the normal button (background, border, text)
+        QPushButton::paintEvent(event);
+
+        if (!m_pixmap.isNull())
+        {
+            const int y = (height() - m_pixmap.height())/2;
+            QPainter painter(this);
+            //painter.drawPixmap(5, y, m_pixmap);
+            painter.drawPixmap(width()-20, y, m_pixmap);
+        }
+
+        QStylePainter p(this);
+        p.setRenderHint(QPainter::Antialiasing);
+
+        // 1) Button background/border only (no text)
+        QStyleOptionButton opt;
+        initStyleOption(&opt);
+        opt.text.clear();
+        opt.icon = QIcon();
+        p.drawControl(QStyle::CE_PushButtonBevel, opt);
+
+        // 2) Water
+        if (m_level > 0.0) {
+            const QRectF r = QRectF(rect()).adjusted(1, 1, -1, -1);
+
+            QPainterPath clip;
+            clip.addRoundedRect(r, 4, 4);
+            p.setClipPath(clip);
+
+            const qreal waterTop   = r.top() + r.height() * (1.0 - m_level);
+            const qreal amplitude  = 2.5 * qBound(0.0, qMin(m_level, 1.0 - m_level) * 6.0, 1.0);
+            const qreal wavelength = r.width() / 1.5;
+
+            QPainterPath water;
+            water.moveTo(r.left(), r.bottom());
+            water.lineTo(r.left(), waterTop);
+            for (qreal x = r.left(); x <= r.right(); x += 2.0) {
+                const qreal y = waterTop + amplitude *
+                                               qSin((x - r.left()) / wavelength * 2.0 * M_PI + m_phase);
+                water.lineTo(x, y);
+            }
+            water.lineTo(r.right(), r.bottom());
+            water.closeSubpath();
+
+            QColor fill = m_drainColor;
+            fill.setAlpha(210);
+            p.fillPath(water, fill);
+
+            p.setClipping(false);
+        }
+
+        // 3) Wrapped, auto-sized text on top
+        if (text().isEmpty())
+            return;
+
+        QRect textRect = rect().adjusted(6, 4, -6, -4);   // inner padding
+        if (isDown())
+            textRect.translate(1, 1);                      // subtle pressed feel
+
+        const QFont f = fittedFont(textRect);
+        p.setFont(f);
+        p.setPen(palette().buttonText().color());
+
+        int flags = Qt::AlignCenter | Qt::TextWordWrap;
+        // Last resort: if even the smallest size can't fit a very long word, break anywhere
+        if (QFontMetrics(f).boundingRect(textRect, flags, text()).width() > textRect.width())
+            flags |= Qt::TextWrapAnywhere;
+
+        p.setClipRect(textRect);
+        p.drawText(textRect, flags, text());
+
+
+
+
+
+        /*
+        if (m_level <= 0.0)
+            return;
+
+        QPainter p(this);
+        p.setRenderHint(QPainter::Antialiasing);
+
+        const QRectF r = QRectF(rect()).adjusted(1, 1, -1, -1);
+
+        // 2) Clip to the button shape (adjust radius to match your stylesheet)
+        QPainterPath clip;
+        clip.addRoundedRect(r, 4, 4);
+        p.setClipPath(clip);
+
+        // 3) Build the water shape: flat bottom, wavy top surface
+        const qreal waterTop = r.top() + r.height() * (1.0 - m_level);
+
+        // Wave calms down as the water gets very low or very full
+        const qreal amplitude = 2.5 * qBound(0.0, qMin(m_level, 1.0 - m_level) * 6.0, 1.0);
+        const qreal wavelength = r.width() / 1.5;
+
+        QPainterPath water;
+        water.moveTo(r.left(), r.bottom());
+        water.lineTo(r.left(), waterTop);
+        for (qreal x = r.left(); x <= r.right(); x += 2.0) {
+            const qreal y = waterTop + amplitude * qSin((x - r.left()) / wavelength * 2.0 * M_PI + m_phase);
+            water.lineTo(x, y);
+        }
+        water.lineTo(r.right(), r.bottom());
+        water.closeSubpath();
+
+        // 4) Fill (semi-transparent so the button texture shows through slightly)
+        QColor fill = m_drainColor;
+        fill.setAlpha(210);
+        p.fillPath(water, fill);
+
+        // 5) Redraw the text on top so the water doesn't hide it
+        p.setClipping(false);
+        QStyleOptionButton opt;
+        initStyleOption(&opt);
+        p.setPen(palette().buttonText().color());
+        p.setFont(font());
+        p.drawText(rect(), Qt::AlignCenter | Qt::TextWordWrap, text());
+       */
+
+
+
+
+    }
+
+    // Font
+    void GridButton::setFontSizeRange(qreal minPt, qreal maxPt)
+    {
+        m_minFontPt = minPt;
+        m_maxFontPt = maxPt;
+        update();
+    }
+
+    // Finds the largest font size (within the range) at which the wrapped text fits
+    QFont GridButton::fittedFont(const QRect &textRect) const
+    {
+        if (text() == m_cachedText && textRect.size() == m_cachedSize &&
+            m_minFontPt == m_cachedMin && m_maxFontPt == m_cachedMax)
+            return m_cachedFont;
+
+        QFont f = font();
+        f.setBold(true);
+
+        const int flags = Qt::AlignCenter | Qt::TextWordWrap;
+        for (qreal pt = m_maxFontPt; pt >= m_minFontPt; pt -= 0.5) {
+            f.setPointSizeF(pt);
+            const QRect br = QFontMetrics(f).boundingRect(textRect, flags, text());
+            // width check catches single words that are too long for the button
+            if (br.height() <= textRect.height() && br.width() <= textRect.width())
+                break;
+        }
+
+        m_cachedFont = f;
+        m_cachedText = text();
+        m_cachedSize = textRect.size();
+        m_cachedMin  = m_minFontPt;
+        m_cachedMax  = m_maxFontPt;
+        return f;
+    }
+
+
+    // ---- Draining Effect -------
+
+
+
+
 
     /* ----------------------------------------------- */
 
@@ -301,8 +547,12 @@ namespace OATS
 
         make_toolbar(m_main_layout.get());
 
-        m_file_path = std::make_unique<QLabel>("Jingle fiile... ");
-        m_file_path->setStyleSheet("color:#0479B0;");
+        m_file_path = std::make_unique<QLabel>("Jingle file... ");
+        m_file_path->setStyleSheet(
+        "background:transparent; color:#22d3ee; font-size:12px; font-weight:bold;");
+        PanelTheme::addGlow(m_file_path.get(), QColor("#22d3ee"), 14);
+
+
         m_main_layout->addWidget(m_file_path.get());
 
 
@@ -412,6 +662,7 @@ namespace OATS
 
             "QPushButton:pressed{background-color:#555D64; border:none;}"
             );
+
        m_grid_layout = new QGridLayout(this);
 
        int id=1;
@@ -457,13 +708,15 @@ namespace OATS
         if (m_current_grid_button->text().isEmpty())
             return;
 
-        print("AAAA");
         m_current_grid_button->set_page(m_current_page);
-        print("BBB");
+
+        m_current_grid_button->setTrackDurationMs(m_grid_cells[m_current_page][row][col].get()->audio()->duration()->value());
 
         emit play_jingle(m_grid_cells[m_current_page][row][col].get());
 
-        m_current_grid_button->switch_on();
+        m_current_grid_button->startDrain();
+
+        //m_current_grid_button->switch_on();
         m_play_is_on = true;
 
         // m_current_grid_button->start_countdown_timer();
@@ -473,7 +726,7 @@ namespace OATS
    void JingleGrid::stop_play()
     {
        qDebug() << "Output C Stopped!";
-       m_current_grid_button->switch_off();
+       //m_current_grid_button->switch_off();
        m_play_is_on = false;
     }
 
@@ -716,9 +969,6 @@ namespace OATS
             }
         }
 
-        qDebug() << "Current Page: "<< page;
-        qDebug() << "Grid Button Page: "<< m_current_grid_button->page();
-
         m_current_page = page;
 
         if (m_play_is_on && m_current_page != m_current_grid_button->page()) {
@@ -735,12 +985,14 @@ namespace OATS
    void JingleGrid::make_stop_button(QVBoxLayout* main_layout)
    {
        m_stop_button = std::make_unique<QPushButton>("STOP ALL");
+
        m_stop_button->setStyleSheet(
            "background-color:#DC143C;"
            "color: #FFFFFF;"
            "height:30;"
            "font-weight:bold;"
            );
+
        connect(m_stop_button.get(), &QPushButton::clicked, this, &JingleGrid::stop_all);
 
        main_layout->addWidget(m_stop_button.get());
@@ -806,7 +1058,6 @@ namespace OATS
 
          QFileInfo fi(obj["track_path"].toString());
          audio->set_file_path(fi.path().toStdString()+"/");
-
 
          audio->set_audio_lib_path(obj["track_path"].toString().toStdString());
 

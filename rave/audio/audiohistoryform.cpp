@@ -8,6 +8,8 @@
 #include "audiohistoryform.h"
 #include "ui_audiohistoryform.h"
 
+#include "../oats/PanelTheme.h"
+
 AudioHistoryForm::AudioHistoryForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AudioHistoryForm)
@@ -19,14 +21,18 @@ AudioHistoryForm::AudioHistoryForm(QWidget *parent) :
 
 void AudioHistoryForm::style_form()
 {
-    QString title_label_style(
-        "QLabel{"
-        "color: #0479B0;"
-        "font-weight: bold;"
-        "}"
-        );
+    // QString title_label_style(
+    //     "QLabel{"
+    //     "color: #0479B0;"
+    //     "font-weight: bold;"
+    //     "}"
+    //     );
 
-    ui->lblTitle->setStyleSheet(title_label_style);
+    ui->lblTitle->setStyleSheet(
+        "background:transparent; color:#22d3ee; font-size:12px; font-weight:bold;");
+        PanelTheme::addGlow(ui->lblTitle, QColor("#22d3ee"), 14);
+
+
 }
 
 AudioHistoryForm::~AudioHistoryForm()

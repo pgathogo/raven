@@ -44,6 +44,8 @@ class ScheduleItem;
 //class TimeAnalyzerWidget;
 class NodeData;
 class TrackInfo;
+class MusicStatsPanel;
+class NowPlayingPanel;
 
 namespace OATS{
     class DateTimeWidget;
@@ -206,11 +208,13 @@ public:
 
     void make_playlist_grid();
     void make_play_mode_panel();
+    void make_test_panel();
     void make_output_panel();
     void make_comm_viewer_widget();
     void make_track_info_widget();
     void make_jingle_grid_widget();
     void draw_horizontal_line();
+    void scrollbar_style();
 
     int index_of(int);
 
@@ -315,7 +319,7 @@ private slots:
     void pause_c_button();
 
 
-    void go_current();
+    void go_current(bool);
     void go_to_current_hour();
     void keep_current(bool);
     void play_jingle(OATS::Jingle*);
@@ -371,6 +375,9 @@ private:
 
    // std::unique_ptr<TimeAnalyzerWidget> m_taw;
     std::unique_ptr<OATS::TimeAnalyzerTextWidget> m_tta_widget;
+    MusicStatsPanel* m_stats;
+    NowPlayingPanel* m_now_play_widget;
+
     std::unique_ptr<OATS::DateTimeWidget> m_dtw;
     std::unique_ptr<OATS::PlayListControlWidget> m_pcw;
     std::unique_ptr<OATS::PlayModePanel> m_play_mode_panel;

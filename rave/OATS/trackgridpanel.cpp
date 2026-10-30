@@ -8,6 +8,8 @@
 #include "schedulegriditem.h"
 #include "scheduleitem.h"
 
+#include "PanelTheme.h"
+
 #include "../audio/audiotool.h"
 
 namespace OATS{
@@ -31,22 +33,33 @@ namespace OATS{
 
         m_layout = new QGridLayout();
 
-        QFont f_track("JetBrains Mono", 12, QFont::Bold);
-        f_track.setBold(true);
+        // QFont f_track("JetBrains Mono", 12, QFont::Bold);
+        // f_track.setBold(true);
 
         m_track_label = std::make_unique<QLabel>("Track Title");
         m_track_label->setObjectName("TrackTitleLabel");
-        m_track_label->setFont(f_track);
+        // m_track_label->setStyleSheet(
+        //     QString("color:#FFFFFF; font-size:16px; font-weight:bold; %1")
+        //             .arg(PanelTheme::monoFamily())
+        //     );
 
-        QFont f_artist("JetBrains Mono", 10, QFont::Bold);
-        f_artist.setBold(true);
+        // QFont f_artist("JetBrains Mono", 10, QFont::Bold);
+        // f_artist.setBold(true);
+
         m_artist_label = std::make_unique<QLabel>("Artist");
         m_artist_label->setObjectName("ArtistLabel");
-        m_artist_label->setFont(f_artist);
+
+        // m_artist_label->setStyleSheet(
+        //       QString("color:#FFFFFF; font-size:12px; font-weight:bold; font-style: italic; %1")
+        //             .arg(PanelTheme::monoFamily())
+        //     );
 
         m_duration_label = std::make_unique<QLabel>("03:02:07");
         m_duration_label->setObjectName("DurationLabel");
-        m_duration_label->setFont(f_artist);
+        m_duration_label->setStyleSheet(
+              QString("color:#FFFFFF; font-size:12px; font-weight:bold; %1")
+                    .arg(PanelTheme::monoFamily())
+            );
 
         m_layout->addWidget(m_track_label.get(), ROW_0, COLUMN_0);
         m_layout->addWidget(m_duration_label.get(), ROW_0, COLUMN_1);
@@ -66,34 +79,8 @@ namespace OATS{
 
     void TrackGridPanel::contextMenuEvent(QContextMenuEvent* event)
     {
-                // "{background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
-                //  "stop:0 #555D64 , stop:1 #374148 );"
-        // QString menu_style(
-        //     "QMenu::item{"
-        //         "background-color: #374148;"
-        //          "border-radius: 20px;"
-        //          "border-bottom-width: 1px;"
-        //          "border-bottom-color:#374148;"
-        //          "color:#FFFFFF;"
-        //          "font-weight:bold;}"
-        //          "QMenu::item:selected{"
-        //          "background-color: rgb(0, 85, 127);"
-        //          "color: rgb(255, 255, 255);"
-        //         "}"
-        //     );
 
-        // QString menu_style2(
-        //     "QMenu::item{"
-        //     "background-color: rgb(0, 170, 0);"
-        //     "color: rgb(255, 255, 255);"
-        //     "}"
-        //     "QMenu::item:selected{"
-        //     "background-color: rgb(0, 85, 127);"
-        //     "color: rgb(255, 255, 255);"
-        //     "}"
-        //     );
-
-         setStyleSheet("background-color: #3c79af");
+        setStyleSheet("background-color: #3c79af");
 
         QMenu menu;
 
@@ -187,11 +174,19 @@ namespace OATS{
 
         AUDIO::AudioTool at;
         QTime t = at.msec_to_time(schedule_item->hour(), schedule_item->audio()->playable_duration());
-
         m_duration_label->setText(t.toString("mm:ss"));
 
+        // Default panel color
         setStyleSheet("background-color: #636160;");
-        m_track_label->setStyleSheet("color: #FFFFFF");
+
+        QString track_label_style ("color:%1; font-size:18px; font-weight:bold; %2");
+        QString artist_label_style("color:%1; font-size:14px; font-weight:bold; font-style: italic; %2");
+        QString duration_label_style("color:%1; font-size:14px; font-weight:bold; %2");
+        QString def_color = "#FFFFFF";
+
+        m_track_label->setStyleSheet(track_label_style.arg(def_color, PanelTheme::monoFamily()));
+        m_artist_label->setStyleSheet(artist_label_style.arg(def_color, PanelTheme::monoFamily()));
+        m_duration_label->setStyleSheet(duration_label_style.arg(def_color, PanelTheme::monoFamily()) );
 
         if (schedule_item->schedule_type() == OATS::ScheduleType::HOUR_HEADER) {
             m_artist_label->setText("");
@@ -212,7 +207,28 @@ namespace OATS{
             m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
 
         }
-            //setStyleSheet("background-color: #088F8F");
+
+
+        if (schedule_item->schedule_type() == OATS::ScheduleType::JINGLE){
+            setStyleSheet("background-color: #9ec747");
+            m_artist_label->setText(QString::fromStdString(schedule_item->audio()->artist_fullname()));
+        }
+
+        if (schedule_item->item_status() == OATS::ItemStatus::PLAYING){
+            //setStyleSheet("background-color: rgb(78, 207, 42)");
+
+            setStyleSheet(QString(
+                      "background-color:#39ff6a; font-size:16px; font-weight:bold; %1")
+                        .arg(PanelTheme::monoFamily()));
+            PanelTheme::addGlow(this, QColor("#39ff6a"), 30);
+
+            QString play_color = "#121A14";
+            m_track_label->setStyleSheet(track_label_style.arg(play_color, PanelTheme::monoFamily()));
+            m_artist_label->setStyleSheet(artist_label_style.arg(play_color, PanelTheme::monoFamily()));
+            m_duration_label->setStyleSheet(duration_label_style.arg(play_color, PanelTheme::monoFamily()));
+        }
+
+         //setStyleSheet("background-color: #088F8F");
         if (schedule_item->item_status() == OATS::ItemStatus::ERROR_01){
             setStyleSheet("background-color: #fb1d04");
             m_artist_label->setText(m_artist_label->text()+": ERROR - FILE NOT FOUND");

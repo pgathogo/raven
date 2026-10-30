@@ -62,6 +62,7 @@ namespace AUDIO
         AudioTool at;
         if (m_audio->id() > -1)
             audio_id = QString::fromStdString(at.make_audio_filename(m_audio->id())+"."+m_audio->file_extension()->value() );
+
         m_fileNameValue->setText(audio_id);
         m_folderValue->setText(m_audio->file_path()->to_qstring());
 
@@ -69,9 +70,8 @@ namespace AUDIO
         QString current_date = QDate::currentDate().toString(DFMT);
         if (m_audio->creation_date()->value().isValid())
             current_date = m_audio->creation_date()->value().toString(DFMT);
-        m_creationDateValue->setText(current_date);
 
-        // Load markers
+        m_creationDateValue->setText(current_date);
 
 
     }
@@ -235,8 +235,9 @@ namespace AUDIO
         set_choice_field(m_audio->audio_type(), m_classCombo);
 
         m_audio->set_title(m_titleEdit->text().toStdString());
-        m_audio->set_file_path(setup->audio_folder()->value());
-        m_audio->set_audio_type("SONG");
+        //m_audio->set_file_path(setup->audio_folder()->value());
+        //m_audio->set_audio_type("SONG");
+
         m_audio->set_file_extension("OGG");
         m_audio->set_audio_year(m_yearSpin->value());
         m_audio->set_notes(m_notesEdit->toPlainText().toStdString());

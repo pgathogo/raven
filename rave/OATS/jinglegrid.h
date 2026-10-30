@@ -19,6 +19,7 @@ class QJsonDocument;
 class QJsonObject;
 class QProgressBar;
 class QTimer;
+class QVariantAnimation;
 
 namespace AUDIO{
     class TrackPickerDialog;
@@ -108,11 +109,29 @@ namespace OATS
 
         void set_pixmap(const QPixmap&);
         virtual QSize sizeHint() const override;
+
+        // Drain Effect
+        void setTrackDurationMs(int ms) {m_durationMs = ms; }
+        int trackDurationMs() const  { return m_durationMs; }
+
+        void setDrainColor(const QColor c) {m_drainColor = c; update();}
+        QColor drainColor() const {return m_drainColor; }
+
+        void startDrain();
+        void startDrain(int durationMs);
+        void stopDrain();
+        bool isDraining() const;
+
+        void setFontSizeRange(qreal minPt, qreal maxPt);
+
     protected:
         virtual void paintEvent(QPaintEvent*) override;
 
     private slots:
         void count_down();
+
+    signals:
+        void drainFinished();
 
     private:
         int m_page{-1};
@@ -126,6 +145,26 @@ namespace OATS
         float m_color_value{0.0f};
 
         QPixmap m_pixmap;
+
+        QVariantAnimation* m_levelAnim = nullptr;
+        QVariantAnimation* m_waveAnim = nullptr;
+        qreal m_level = 0.0;
+        qreal m_phase = 0.0;
+        int m_durationMs = 0;
+        QColor m_drainColor = QColor(0x9e, 0xc7, 0x47);
+
+        // Font
+        QFont fittedFont(const QRect &textRect) const;
+
+        qreal m_minFontPt = 7.0;
+        qreal m_maxFontPt = 10.0;
+
+        // cache so we don't re-measure on every animation frame
+        mutable QFont   m_cachedFont;
+        mutable QString m_cachedText;
+        mutable QSize   m_cachedSize;
+        mutable qreal   m_cachedMin = 0, m_cachedMax = 0;
+
     };
 
 
