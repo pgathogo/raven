@@ -62,8 +62,9 @@ int BookedCommercialTreeViewModel::read_tree_data(const BookedAdverts& items, Br
     return 1;
 }
 
-void BookedCommercialTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode *>& nodes)
+void BookedCommercialTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode*>& nodes)
 {
+    /*
     for(auto node : nodes) {
         if (node->parent_id() == -1) {
             m_root_item->appendRow(node);
@@ -72,10 +73,26 @@ void BookedCommercialTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode 
             insert_node(m_tree, node);
         }
     }
+    */
+        for (auto* node : nodes)
+        {
+            if (node->parent_id() == -1)
+            {
+                m_root_item->appendRow(node->row());
+                m_tree[node->node_id()] = node;
+            }
+            else
+            {
+                insert_node(m_tree, node);
+            }
+        }
+
+        //print_tree();
 }
 
-void BookedCommercialTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node)
+bool BookedCommercialTreeViewModel::insert_node(const TreeNode& tree, TRAFFIK::TraffikNode* node)
 {
+    /*
     bool found = false;
     for(auto& [id, parent]: tree_node) {
         if (found) return;
@@ -87,4 +104,24 @@ void BookedCommercialTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::Tra
             insert_node(parent->children(), node);
         }
     }
+    */
+        // Fast path: is the parent in this (sub)tree level?
+        auto it = tree.find(node->parent_id());
+        if (it != tree.end())
+        {
+            // node->row() has the TraffikNode itself as column 0, so the
+            // node becomes a real item in the view and can hold children.
+            it->second->appendRow(node->row());
+            return true;
+        }
+
+        // Otherwise descend into each child's children (by reference,
+        // no map copies).
+        for (const auto& [id, parent] : tree)
+        {
+            if (insert_node(parent->children(), node))
+                return true;
+        }
+
+        return false;
 }

@@ -35,8 +35,21 @@ namespace TRAFFIK{
         m_columns.push_back(column);
     }
 
+    void TraffikNode::add_child(int child_id, TraffikNode* tnode)
+    {
+        m_children[child_id] = tnode;
+    }
+
     QList<QStandardItem*> TraffikNode::columns() const
     {
         return m_columns;
+    }
+
+    QList<QStandardItem*> TraffikNode::row() const
+    {
+        QList<QStandardItem*> items;
+        items << const_cast<TraffikNode*>(this);
+        items << m_columns;
+        return items;
     }
 }

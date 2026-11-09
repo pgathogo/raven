@@ -6,6 +6,8 @@
 #include <chrono>
 
 #include <QAbstractItemModel>
+#include <QPalette>
+#include <QColor>
 
 #include "breakcreateform.h"
 #include "ui_breakcreateform.h"
@@ -126,6 +128,45 @@ void BreakCreateForm::setup_ui()
     ui->btnAddHour->setVisible(false);
     ui->cbSelectedHours->setVisible(false);
     ui->btnRemoveHour->setVisible(false);
+
+
+    /*
+    // Get the current palette of the tree view
+    QPalette palette = ui->tvBreakLayouts->palette();
+
+    // Set selection colors for when the window is Active (focused)
+    palette.setColor(QPalette::Active, QPalette::Highlight, QColor("#2563eb"));       // Background
+    palette.setColor(QPalette::Active, QPalette::HighlightedText, QColor(Qt::white)); // Text
+
+    // Set selection colors for when the window is Inactive (unfocused)
+    palette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#93c5fd"));     // Background
+    palette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor(Qt::black)); // Text
+
+    // Apply the modified palette back to the tree view
+    ui->tvBreakLayouts->setPalette(palette);
+    */
+
+
+    ui->tvBreakLayouts->setStyleSheet(
+        "QTableView {"
+        "    show-decoration-selected: 1;" /* Ensures row selection spans across full width */
+        "}"
+        "QTableView::item:selected {"
+        "    background-color: #3b82f6;"   /* Selection background color (e.g., bright blue) */
+        "    color: #ffffff;"               /* Selected text color */
+        "}"
+        "QTableView::item:selected:active {"
+        "    background-color: #2563eb;"   /* Color when widget has active keyboard focus */
+        "}"
+        "QTableView::item:selected:!active {"
+        "    background-color: #93c5fd;"   /* Color when window/widget loses focus */
+        "    color: #1e3a8a;"
+        "}"
+        "QTableView::branch:selected {"
+        "    background-color: #2563eb;"   /* Keeps the arrow/branch area color uniform with item */
+        "}"
+        );
+
 
 }
 

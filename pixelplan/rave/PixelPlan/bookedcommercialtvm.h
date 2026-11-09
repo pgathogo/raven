@@ -39,7 +39,7 @@ class BookedCommercialTreeViewModel: public QStandardItemModel {
 public:
     BookedCommercialTreeViewModel(BookedAdverts, BreakTitles, QObject* parent=nullptr);
     int read_tree_data(const BookedAdverts&, BreakTitles&);
-    void insert_node(TreeNode, TRAFFIK::TraffikNode*);
+    bool insert_node(const TreeNode&, TRAFFIK::TraffikNode*);
     void print_tree(TreeNode, int level=0);
     TreeData tokenize(std::string);
     void build_tree(std::vector<TRAFFIK::TraffikNode*>&);

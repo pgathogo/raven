@@ -31,8 +31,8 @@ public:
     IntegerField* schedule_hour() const;
     IntegerField* set_schedule_hour(int);
 
-    ForeignKeyField* audio() const;
-    void set_audio(int val);
+    // ForeignKeyField* audio() const;
+    // void set_audio(int val);
 
     IntegerField* fade_in() const;
     void set_fade_in(int val);
@@ -134,7 +134,7 @@ private:
     DateField* m_schedule_date;
     TimeField* m_schedule_time;
     IntegerField* m_schedule_hour;
-    ForeignKeyField* m_audio;
+    // ForeignKeyField* m_audio;
     IntegerField* m_fade_in;
     IntegerField* m_fade_out;
     IntegerField* m_fade_delay;

@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QTreeView>
+#include <QProgressDialog>
+#include <QCoreApplication>
 
 #include "../../../rave/framework/ravenexception.h"
 #include "../../../rave/framework/entitydatamodel.h"
@@ -81,6 +83,15 @@ bool SummaryPage::make_booking()
 
 void SummaryPage::commit_booking()
 {
+    int num_steps = 100;
+    QProgressDialog progress("Committing order booking...","",0, num_steps, this);
+    progress.setLabel(new QLabel("Committing order booking..."));
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
+    progress.setValue(0);
+    progress.show();
+    QCoreApplication::processEvents();
+
     try{
 
         BookingSegment book_segment;
@@ -105,11 +116,16 @@ void SummaryPage::commit_booking()
 
         auto selected_breaks = m_wizard->booking_data.sel_breaks;
 
+        // 1. Save booking segment
         int book_segment_id = edm.createEntityDB(book_segment);
 
         for (int i=0; i < selected_breaks.count(); ++i)
         {
             auto item = selected_breaks.at(i);
+
+            int curr_progress = static_cast<int>((static_cast<double>(i + 1) / selected_breaks.count() ) * 100 );
+            progress.setValue(curr_progress);
+            QCoreApplication::processEvents();
 
             if (item->column() == 0)
             {

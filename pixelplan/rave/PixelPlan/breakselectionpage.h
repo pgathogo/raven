@@ -30,6 +30,7 @@ namespace PIXELPLAN
         void setup_ui();
         void setup_break_select_grid();
         void show_selection_count();
+        void add_table_style();
 
         OrderBookingWizard* m_wizard;
         QTableWidget* m_tw_break_select;

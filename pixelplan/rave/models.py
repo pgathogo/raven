@@ -276,8 +276,31 @@ class Order(models.Model):
     grace_period = models.IntegerField(null=True)
     billing_basis = models.CharField(max_length=3, blank=True, null=True, choices=BILLING_BASIS)
     approval_count = models.IntegerField(null=True, default=0)
+    comment = models.TextField(null=True, blank=True)
     add_login = models.CharField(max_length=15, null=True, blank=True)
     add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+
+class OrderChangeLog(models.Model):
+    order_number = models.CharField(max_length=50, null=True, blank=True)
+    change_date =  models.DateField()
+    prev_order_date = models.DateField()
+    prev_start_date = models.DateField()
+    prev_end_date = models.DateField()
+    prev_spots_ordered = models.IntegerField(null=True)
+    prev_spots_booked = models.IntegerField(null=True)
+    prev_spots_played = models.IntegerField(null=True)
+    prev_comment = models.TextField(null=True, blank=True)
+    new_start_date = models.DateField()
+    new_end_date = models.DateField()
+    new_spots_ordered = models.IntegerField(null=True)
+    new_comment = models.TextField(null=True, blank=True)
+    seq = models.IntegerField(null=True, blank=True)
+    order = models.ForeignKey(Order, models.DO_NOTHING, null=True, blank=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING, null=True, blank=True)
+    add_login = models.CharField(max_length=15, null=True, blank=True)
+    add_dtime = models.DateTimeField(default=now(), null=True, blank=True)
+
+
 
 class OrderApprover(models.Model):
     user_id = models.IntegerField(null=True)

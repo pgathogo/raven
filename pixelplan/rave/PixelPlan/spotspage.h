@@ -26,6 +26,7 @@ namespace  PIXELPLAN
     private:
         void setup_ui();
         void populate_spots_table(int);
+        void add_table_view_style();
 
         QTableView* m_tvspots;
         std::unique_ptr<EntityDataModel> m_spot_edm;

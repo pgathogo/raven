@@ -8,6 +8,7 @@
 #include "breakcreateform.h"
 #include "ui_scheduleform.h"
 #include "scheduleform.h"
+#include "schedulemantreeviewmodel.h"
 
 
 //#include "traffik_autogen/include/ui_scheduleform.h"
@@ -18,6 +19,7 @@ ScheduleForm::ScheduleForm(QWidget *parent)
     , ui(new Ui::ScheduleForm)
     , m_edm_schedule{nullptr}
     , mMdiArea{nullptr}
+    , m_sched_model{nullptr}
 {
 
   ui->setupUi(this);
@@ -44,12 +46,9 @@ ScheduleForm::ScheduleForm(QWidget *parent)
   ui->btnDelete->setIcon(QIcon(":/images/media/icons/deletebreak.bmp"));
   ui->btnDelete->setIconSize(QSize(35, 35));
 
-  Breaks comm_breaks;
+  m_sched_model = new ScheduleManTreeViewModel;
 
-  ScheduleManTreeViewModel* sched_model =
-      new ScheduleManTreeViewModel(comm_breaks);
-
-  ui->tvSchedule->setModel(sched_model);
+  ui->tvSchedule->setModel(m_sched_model);
   ui->tvSchedule->setColumnWidth(0,10);
 
   load_schedule(QDate::fromString(ui->dtSchedule->date().toString()));
@@ -102,6 +101,8 @@ void ScheduleForm::clear_schedule() {
 
 void ScheduleForm::load_schedule(const QDate &date)
 {
+    m_sched_model->clear_data();
+
     std::string str_date = date.toString("yyyy-MM-dd").toStdString();
 
     std::string sql = std::format(
@@ -111,7 +112,7 @@ void ScheduleForm::load_schedule(const QDate &date)
         "rave_schedule.play_time, rave_schedule.auto_transition, rave_schedule.live_transition, rave_schedule.schedule_item_type,"
         "rave_schedule.break_duration, rave_schedule.break_start_win, rave_schedule.break_end_win, rave_schedule.break_max_spots,"
         "rave_schedule.break_fill_method, rave_schedule.booked_spots, rave_schedule.break_duration_left, rave_schedule.break_mode,"
-        "rave_schedule.break_status, rave_schedule.comment, rave_schedule.audio_id, rave_schedule.break_layout_line_id"
+        "rave_schedule.break_status, rave_schedule.comment, rave_schedule.audio_id, rave_schedule.break_layout_line_id "
         " FROM rave_schedule, rave_breaklayoutline, rave_breaklayout"
         " WHERE rave_schedule.break_layout_line_id = rave_breaklayoutline.id"
         " AND rave_breaklayoutline.break_layout_id = rave_breaklayout.id"
@@ -129,7 +130,6 @@ void ScheduleForm::load_schedule(const QDate &date)
 
       if (record_count == 0)
           return;
-
 
     } catch (PostgresException& pe) {
       qDebug() << QString::fromStdString(pe.errorMessage()) << '\n';
@@ -266,14 +266,13 @@ void ScheduleForm::hour_clicked(QListWidgetItem *item) {}
 
 void ScheduleForm::build_tree_view(OrderedMap& comm_breaks)
 {
+    // m_sched_model->clear();
+
   if (comm_breaks.insertion_order().size() > 0) {
 
-    ScheduleManTreeViewModel *sched_model =
-        new ScheduleManTreeViewModel(comm_breaks);
+    ui->tvSchedule->setModel(m_sched_model);
+   // ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
 
-    ui->tvSchedule->setModel(sched_model);
-
-    // ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvSchedule->setColumnWidth(0, 200);
     ui->tvSchedule->setColumnWidth(1, 100);
     ui->tvSchedule->setColumnWidth(2, 100);
@@ -281,6 +280,8 @@ void ScheduleForm::build_tree_view(OrderedMap& comm_breaks)
     ui->tvSchedule->setColumnWidth(4, 100);
     ui->tvSchedule->setColumnWidth(5, 100);
     ui->tvSchedule->setColumnWidth(6, 150);
+
+    m_sched_model->make_tree(comm_breaks);
 
     ui->btnDelete->setEnabled(true);
   }
@@ -339,9 +340,11 @@ void ScheduleForm::build_tree_view_mapped(const EntityDataModel& edm )
   // Sort breaks by id
 
   if (comm_breaks.insertion_order().size() > 0) {
-    ScheduleManTreeViewModel *sched_model =
-        new ScheduleManTreeViewModel(comm_breaks);
-    ui->tvSchedule->setModel(sched_model);
+    // ScheduleManTreeViewModel *sched_model =
+    //     new ScheduleManTreeViewModel(comm_breaks);
+    // ui->tvSchedule->setModel(sched_model);
+
+    m_sched_model->make_tree(comm_breaks);
 
     // ui->tvSchedule->header()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tvSchedule->setColumnWidth(0, 200);

@@ -43,10 +43,12 @@ void  BreakSelectionPage::setup_ui()
     QHBoxLayout* hl_items = new QHBoxLayout();
 
     m_tw_break_select = new QTableWidget();
-    m_tw_break_select->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_tw_break_select->setSelectionMode(QAbstractItemView::MultiSelection);
     m_tw_break_select->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_tw_break_select->setCornerButtonEnabled(true);
     connect(m_tw_break_select, &QTableWidget::itemClicked, this, &BreakSelectionPage::on_item_clicked);
+
+    add_table_style();
 
     hl_items->addWidget(m_tw_break_select);
 
@@ -103,6 +105,30 @@ void  BreakSelectionPage::setup_ui()
     main_layout->addLayout(hl_items);
 
     setLayout(main_layout);
+
+}
+void BreakSelectionPage::add_table_style()
+{
+    m_tw_break_select->setStyleSheet(
+        "QTableWidget {"
+        "    show-decoration-selected: 1;" /* Ensures row selection spans across full width */
+        "}"
+        "QTableWidget::item:selected {"
+        "    background-color: #3b82f6;"   /* Selection background color (e.g., bright blue) */
+        "    color: #ffffff;"               /* Selected text color */
+        "}"
+        "QTableWidget::item:selected:active {"
+        "    background-color: #2563eb;"   /* Color when widget has active keyboard focus */
+        "}"
+        "QTableWidget::item:selected:!active {"
+        "    background-color: #93c5fd;"   /* Color when window/widget loses focus */
+        "    color: #1e3a8a;"
+        "}"
+        "QTableWidget::branch:selected {"
+        "    background-color: #2563eb;"   /* Keeps the arrow/branch area color uniform with item */
+        "}"
+        );
+
 
 }
 

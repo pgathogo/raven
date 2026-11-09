@@ -21,8 +21,8 @@ Schedule::Schedule()
 
     m_schedule_hour = createField<IntegerField>("schedule_hour", "Schedule Hour");
 
-    m_audio = createField<ForeignKeyField>("audio_id", "Audio",
-                                      std::make_unique<AUDIO::Audio>(""), "title");
+    // m_audio = createField<ForeignKeyField>("audio_id", "Audio",
+    //                                   std::make_unique<AUDIO::Audio>(""), "title");
 
     m_fade_in = createField<IntegerField>("fade_in", "Fade In");
     m_fade_out = createField<IntegerField>("fade_out", "Fade Out");
@@ -126,15 +126,15 @@ IntegerField* Schedule::set_schedule_hour(int val)
     return m_schedule_hour;
 }
 
-ForeignKeyField* Schedule::audio() const
-{
-    return m_audio;
-}
+// ForeignKeyField* Schedule::audio() const
+// {
+//     return m_audio;
+// }
 
-void Schedule::set_audio(int val)
-{
-    m_audio->setValue( val );
-}
+// void Schedule::set_audio(int val)
+// {
+//     m_audio->setValue( val );
+// }
 
 IntegerField *Schedule::fade_in() const
 {
@@ -486,6 +486,7 @@ std::string Schedule::make_values(const std::vector<Field*>& fields)
 
 void Schedule::populate_audio_fk(int audio_id)
 {
+    /*
     EntityDataModel edm;
     auto filter = std::make_tuple("id", " = ", audio_id);
     std::string filter_str = edm.prepareFilter(filter);
@@ -494,6 +495,7 @@ void Schedule::populate_audio_fk(int audio_id)
                                       std::make_unique<AUDIO::Audio>(""),
                                       "title",
                                        filter_str);
+  */
 }
 
 

@@ -44,11 +44,37 @@ BaseEntityBrowserDlg::BaseEntityBrowserDlg(QWidget* parent,
 
     bui->tvEntity->setModel(mEntityDataModel.get());
     bui->tvEntity->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // bui->tvEntity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    add_table_style();
+
     populateFilterCombo();
 
     set_button_icons();
     resize_window();
+
+}
+
+void BaseEntityBrowserDlg::add_table_style()
+{
+    bui->tvEntity->setStyleSheet(
+        "QTableView {"
+        "    show-decoration-selected: 1;" /* Ensures row selection spans across full width */
+        "}"
+        "QTableView::item:selected {"
+        "    background-color: #3b82f6;"   /* Selection background color (e.g., bright blue) */
+        "    color: #ffffff;"               /* Selected text color */
+        "}"
+        "QTableView::item:selected:active {"
+        "    background-color: #2563eb;"   /* Color when widget has active keyboard focus */
+        "}"
+        "QTableView::item:selected:!active {"
+        "    background-color: #93c5fd;"   /* Color when window/widget loses focus */
+        "    color: #1e3a8a;"
+        "}"
+        "QTableView::branch:selected {"
+        "    background-color: #2563eb;"   /* Keeps the arrow/branch area color uniform with item */
+        "}"
+        );
 
 }
 

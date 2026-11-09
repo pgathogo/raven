@@ -68,6 +68,7 @@ private slots:
     void open_log_analysis();
 
     void print_comm_log();
+    void on_view_breaks();
 
 
 private:

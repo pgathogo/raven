@@ -31,8 +31,8 @@ namespace PIXELPLAN
         addPage(register_page<BreakSelectionPage>(this));
         addPage(register_page<SummaryPage>(this));
 
-        // booking_data.m_engine_data = std::make_unique<PIXELPLAN::EngineData>();
-        // booking_data.m_rule_engine = std::make_unique<PIXELPLAN::RuleEngine>(*booking_data.m_engine_data);
+        setWindowTitle("Order Booking Wizard");
+
     }
 
     OrderBookingWizard::~OrderBookingWizard()

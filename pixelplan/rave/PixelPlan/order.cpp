@@ -94,6 +94,8 @@ Order::Order()
     mAddLogin = createField<StringField>("add_login", "Add Login");
     mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
 
+    m_comment = createField<TextField>("comment", "Comment");
+
     mHeader << QString::fromStdString(m_title->fieldLabel())
             << QString::fromStdString(m_spots_ordered->fieldLabel())
             << QString::fromStdString(m_spots_booked->fieldLabel());
@@ -179,6 +181,8 @@ Order::Order(const std::shared_ptr<Client> client)
     mApprovalCount = createField<IntegerField>("approval_count", "Approval Count");
     mAddLogin = createField<StringField>("add_login", "Add Login");
     mAddDtime = createField<DateTimeField>("add_dtime", "Add DateTime");
+
+    m_comment = createField<TextField>("comment", "Comment");
 
     mHeader << QString::fromStdString(m_title->fieldLabel())
             << QString::fromStdString(m_spots_ordered->fieldLabel())
@@ -338,6 +342,8 @@ DateTimeField *Order::addDtime() const
     return mAddDtime;
 }
 
+TextField* Order::comment() const { return m_comment; }
+void Order::set_comment(std::string com){ m_comment->setValue(com);}
 
 void Order::setTitle(const std::string val)
 {

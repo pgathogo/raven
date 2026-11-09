@@ -16,6 +16,7 @@
 #include "../../../rave/framework/logger.h"
 
 //#include "../../../rave/framework/applicationcontext.h"
+
 #include <format>
 
 #include "mainwindow.h"
@@ -37,6 +38,7 @@
 
 #include "voidbookingform.h"
 #include "orderbookingwizard.h"
+#include "viewbreaksform.h"
 
 AccessMap MainWindow::access_map;
 
@@ -98,8 +100,8 @@ MainWindow::MainWindow(QApplication* app,
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
 
-    int w = 850;
-    int h = 750;
+    int w = 900;
+    int h = 850;
     setMinimumSize(w, h);
     setWindowIcon(QIcon(":/images/media/icons/raven.bmp"));
 
@@ -135,6 +137,8 @@ void MainWindow::createActions()
 
     QAction* viewBreaksAction = new QAction(tr("&View Breaks"));
     qreportSubMenu->addAction(viewBreaksAction);
+    connect(viewBreaksAction, &QAction::triggered, this, &MainWindow::on_view_breaks);
+
     //connect(commlogAction, &QAction::triggered, this, &MainWindow::printCommLog);
 
     // Client Reports SubMenu
@@ -351,6 +355,11 @@ void MainWindow::print_comm_log()
     //m_report->previewReport();
 }
 
+void MainWindow::on_view_breaks()
+{
+    PIXELPLAN::ViewBreaksForm* vbf  = createSubWindow<PIXELPLAN::ViewBreaksForm>();
+    vbf->exec();
+}
 
 
 MainWindow::~MainWindow()

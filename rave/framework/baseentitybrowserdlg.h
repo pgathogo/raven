@@ -310,6 +310,7 @@ private:
     std::unique_ptr<EntityDataModel> mEntityDataModel;
     std::unique_ptr<LetterFilterWidget> m_letter_filter_widget;
     void populateFilterCombo();
+    void add_table_style();
 
     BaseEntity* m_entity;
 };

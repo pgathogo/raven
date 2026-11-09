@@ -406,7 +406,7 @@ void SetupForm::cts_filepath()
     set_folder(ui->edtCTSFilepath, "CTC Filepath");
 }
 
-void SetupForm::on_select_log()
+void SetupForm::on_select_logo()
 {
     QString curr_folder = ui->edtLogo->text();
 

@@ -7,16 +7,32 @@
 #include "traffiktree.h"
 #include "../utils/tools.h"
 
-ScheduleManTreeViewModel::ScheduleManTreeViewModel(Breaks& items, QObject *parent)
+ScheduleManTreeViewModel::ScheduleManTreeViewModel(QObject *parent)
     :QStandardItemModel{ parent }
+{
+    m_root_item = invisibleRootItem();
+
+    prepare_tableview();
+}
+
+void ScheduleManTreeViewModel::prepare_tableview()
 {
     setColumnCount(8);
     QStringList col_titles {"Break Hour", "Break Time", "Break Mode", "Max Spots", "Duration", "Booked Spots", "Time Left", "Fill Method"};
     setHorizontalHeaderLabels(col_titles);
+}
+void ScheduleManTreeViewModel::clear_data()
+{
+    removeRows(0, rowCount());
+    m_nodes.clear();
+}
 
-    m_root_item = invisibleRootItem();
-    read_tree_data(items);
-    build_tree(m_nodes);
+void ScheduleManTreeViewModel::make_tree(Breaks& items)
+{
+    if (items.size() > 0 ) {
+        read_tree_data(items);
+        build_tree(m_nodes);
+    }
 }
 
 int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
@@ -77,6 +93,7 @@ int ScheduleManTreeViewModel::read_tree_data(Breaks& items)
 
 void ScheduleManTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode *> &nodes)
 {
+    /*
     for (auto node : nodes){
         if (node->parent_id() == -1){
             m_root_item->appendRow(node);
@@ -85,12 +102,28 @@ void ScheduleManTreeViewModel::build_tree(std::vector<TRAFFIK::TraffikNode *> &n
             insert_node(m_tree, node);
         }
     }
+    */
 
+        for (auto* node : nodes)
+        {
+            if (node->parent_id() == -1)
+            {
+                m_root_item->appendRow(node->row());
+                m_tree[node->node_id()] = node;
+            }
+            else
+            {
+                insert_node(m_tree, node);
+            }
+        }
+
+        //print_tree();
 }
 
 
-void ScheduleManTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node)
+bool ScheduleManTreeViewModel::insert_node(const TreeNode& tree, TRAFFIK::TraffikNode* node)
 {
+    /*
     bool found=false;
 
     for(auto& [id, parent] : tree_node)
@@ -105,6 +138,26 @@ void ScheduleManTreeViewModel::insert_node(TreeNode tree_node, TRAFFIK::TraffikN
             insert_node(parent->children(), node);
         }
     }
+    */
+        // Fast path: is the parent in this (sub)tree level?
+        auto it = tree.find(node->parent_id());
+        if (it != tree.end())
+        {
+            // node->row() has the TraffikNode itself as column 0, so the
+            // node becomes a real item in the view and can hold children.
+            it->second->appendRow(node->row());
+            return true;
+        }
+
+        // Otherwise descend into each child's children (by reference,
+        // no map copies).
+        for (const auto& [id, parent] : tree)
+        {
+            if (insert_node(parent->children(), node))
+                return true;
+        }
+
+        return false;
 }
 
 

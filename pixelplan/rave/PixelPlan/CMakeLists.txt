@@ -9,14 +9,14 @@ set(MSVS_BUILD_NUM "14.51.36231")
 set(CMAKE_CXX_COMPILER "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/${MSVS_BUILD_NUM}/bin/Hostx64/x64/cl.exe")
 
 
-if (CMAKE_GENERATOR MATCHES "Ninja")
-    file(
-        WRITE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake"
-            "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_C \"\${CMAKE_DEPFILE_FLAGS_C}\")\n"
-            "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_CXX \"\${CMAKE_DEPFILE_FLAGS_CXX}\")\n"
-    )
-    set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" CACHE INTERNAL "")
-endif()
+# if (CMAKE_GENERATOR MATCHES "Ninja")
+#     file(
+#         WRITE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake"
+#             "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_C \"\${CMAKE_DEPFILE_FLAGS_C}\")\n"
+#             "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_CXX \"\${CMAKE_DEPFILE_FLAGS_CXX}\")\n"
+#     )
+#     set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" CACHE INTERNAL "")
+# endif()
 
 
 project(pixelplan VERSION 0.1 LANGUAGES CXX)
@@ -296,6 +296,12 @@ set(PROJECT_SOURCES
     formatselectorwidget.cpp
     reportviewer.h
     reportviewer.cpp
+    viewbreaksform.h
+    viewbreaksform.cpp
+    viewbreaksmodel.h
+    viewbreaksmodel.cpp
+    orderchangelog.h
+    orderchangelog.cpp
 
     ${AUDIO_LIB_DIR}/artist.h
     ${AUDIO_LIB_DIR}/audio.h
@@ -358,9 +364,6 @@ set(PROJECT_SOURCES
     ${AUDIO_LIB_DIR}/audiolibrary.cpp
     ${AUDIO_LIB_DIR}/audiofolder.h
     ${AUDIO_LIB_DIR}/audiofolder.cpp
-
-    ${RAVE_DIR}/AudioExplorer/audioform.h
-    ${RAVE_DIR}/AudioExplorer/audioform.cpp
 
     ${RAVE_FRAMEWORK_DIR}/tree.h
     ${RAVE_FRAMEWORK_DIR}/tree.cpp

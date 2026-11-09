@@ -222,14 +222,21 @@ void OrderForm::prepare_for_edit(std::shared_ptr<Order> order) {
 void OrderForm::disable_controls() {
   auto widgets = this->findChildren<QWidget *>();
   for (auto w : widgets) {
-    w->setEnabled(false);
+      if (w->objectName() == "edtClient"
+         || w->objectName() == "edtTitle"
+         || w->objectName() == "edtOrderNumber"
+         || w->objectName() == "dtOrderDate") {
+
+        w->setEnabled(false);
+      }
   }
 
   bui->btnClose->setEnabled(true);
+  bui->btnSave->setEnabled(true);
 
-  QLabel* l = new QLabel("This order has spots booked. Editing is disabled.");
-  l->setStyleSheet("color: red;");
-  bui->baseContainer->layout()->addWidget(l);
+  // QLabel* l = new QLabel("This order has spots booked. Editing is disabled.");
+  // l->setStyleSheet("color: red;");
+  // bui->baseContainer->layout()->addWidget(l);
 
   // ui->sbSOrdered->setEnabled(false);
 }

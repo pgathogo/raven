@@ -58,6 +58,7 @@ namespace PIXELPLAN
         void show_tv_programs(const std::map<progid, Program>&);
         void set_breaks_table(QTableWidget*);
         void show_program_breaks(std::vector<ProgramBreak>&);
+        void fetch_all_breaks();
         void fetch_selected_program_breaks();
         bool breaks_selected();
         void show_selection_count();

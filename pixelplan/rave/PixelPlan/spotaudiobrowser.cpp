@@ -31,7 +31,7 @@
 
 #include "../../../rave/audio/trackpickerdialog.h"
 
-#include "../../../rave/AudioExplorer/audioform.h"
+//#include "../../../rave/AudioExplorer/audioform.h"
 
 #include "spotaudio.h"
 #include "spotaudioform.h"
@@ -54,8 +54,8 @@ SpotAudioBrowser::SpotAudioBrowser(TRAFFIK::SpotAudio* mtom,
     hideEditButton();
     hideDeleteButton();
 
-    create_button("btnImport", "Import", &SpotAudioBrowser::import_audio,
-                  QSize(80, 20), "import_audio.bmp");
+    // create_button("btnImport", "Import", &SpotAudioBrowser::import_audio,
+    //               QSize(80, 20), "import_audio.bmp");
 
     create_button("btnAttach", "Attach Media", &SpotAudioBrowser::attach_audio, QSize(80, 20));
 
@@ -225,6 +225,7 @@ TRAFFIK::SpotAudio& SpotAudioBrowser::get_spot_audio() const
 
 
 
+/*
 void SpotAudioBrowser::import_audio()
 {
     AUDIO::AudioTool audio_tool;
@@ -335,6 +336,7 @@ void SpotAudioBrowser::import_audio()
 
     }
 }
+*/
 
 void SpotAudioBrowser::attach_audio()
 {

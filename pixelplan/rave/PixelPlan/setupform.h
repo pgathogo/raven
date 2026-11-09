@@ -54,6 +54,7 @@ private slots:
       void on_runner_path();
       void on_magicsoft_log_path();
       void cts_filepath();
+      void on_select_logo();
 
 private:
       void set_folder(QLineEdit*, const QString);

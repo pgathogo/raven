@@ -20,6 +20,7 @@
 #include "bookingdatepage.h"
 #include "tvprogram.h"
 #include "orderbookingwizard.h"
+#include "order.h"
 
 namespace PIXELPLAN
 {
@@ -36,7 +37,10 @@ namespace PIXELPLAN
         show_tv_programs(m_programs);
 
         m_de_start_date->setDate(QDate::currentDate());
-        m_de_end_date->setDate(QDate::currentDate());
+        m_de_end_date->setDate(m_wizard->booking_data.order->endDate()->value());
+
+        //m_de_start_date->setDate(QDate::currentDate());
+        //m_de_end_date->setDate(QDate::currentDate());
     }
 
     void BookingDatePage::setup_ui()
@@ -77,7 +81,7 @@ namespace PIXELPLAN
         connect(m_cb_all_programs, &QCheckBox::toggled, this, &BookingDatePage::select_all_programs);
 
         m_lw_programs = new QListWidget();
-        m_lw_programs->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        m_lw_programs->setSelectionMode(QAbstractItemView::MultiSelection);
         m_lw_programs->setAlternatingRowColors(true);
         connect(m_lw_programs, &QListWidget::itemClicked, this, &BookingDatePage::on_program_clicked);
 
@@ -96,7 +100,9 @@ namespace PIXELPLAN
         QHBoxLayout* hl_sel_breaks = new QHBoxLayout();
 
         m_cb_all_breaks = new QCheckBox("All Breaks");
-        connect(m_cb_all_breaks, &QCheckBox::toggled, this, &BookingDatePage::select_all_breaks);
+        // connect(m_cb_all_breaks, &QCheckBox::toggled, this, &BookingDatePage::select_all_breaks);
+        m_cb_all_breaks->setChecked(true);
+        m_cb_all_breaks->setEnabled(false);
 
         QLabel* lbl_sel_breaks = new QLabel("Selected Breaks:");
         m_lbl_selected_break_count = new QLabel("0");
@@ -284,12 +290,13 @@ namespace PIXELPLAN
         m_wizard->booking_data.start_date = m_de_start_date->date();
         m_wizard->booking_data.end_date = m_de_end_date->date();
 
-        if (!breaks_selected()) {
-            showMessage("No breaks selected for placing booking", QMessageBox::Critical);
-            return false;
-        }
+        // if (!breaks_selected()) {
+        //     showMessage("No breaks selected for placing booking", QMessageBox::Critical);
+        //     return false;
+        // }
 
-        fetch_selected_program_breaks();
+        //fetch_selected_program_breaks();
+        fetch_all_breaks();
 
         return true;
 
@@ -429,6 +436,38 @@ namespace PIXELPLAN
     bool BookingDatePage::breaks_selected()
     {
         return (m_tw_breaks->selectionModel()->selectedRows().size() > 0) ? true : false;
+    }
+
+    void BookingDatePage::fetch_all_breaks()
+    {
+        constexpr int BREAK_TIME_COL = 0;
+        constexpr int DURATION_COL   = 1;
+        constexpr int MAX_SPOTS_COL  = 2;
+        constexpr int FILL_POS       = 3;
+
+        int total_rows = m_tw_breaks->rowCount();
+
+        for (int row=0; row < total_rows; ++row)
+        {
+            SelectedProgramBreak spb;
+
+            QTableWidgetItem* twi_break_time = m_tw_breaks->item(row, BREAK_TIME_COL);
+            spb.break_time = twi_break_time->text();
+
+            QTableWidgetItem* twi_duration = m_tw_breaks->item(row, DURATION_COL);
+            spb.duration =  twi_duration->text().toInt();
+
+            QTableWidgetItem* twi_max_spots = m_tw_breaks->item(row, MAX_SPOTS_COL);
+            spb.max_spots = twi_max_spots->text().toInt();
+
+            QComboBox* combo = (QComboBox*)m_tw_breaks->cellWidget(row, FILL_POS);
+
+            spb.fill_pos  = static_cast<FillPos>(combo->currentIndex());
+
+            m_wizard->booking_data.selected_breaks.push_back(spb);
+
+        }
+
     }
 
     void BookingDatePage::fetch_selected_program_breaks()

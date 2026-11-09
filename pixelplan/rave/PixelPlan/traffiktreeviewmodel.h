@@ -19,7 +19,7 @@ namespace TRAFFIK{
     public:
         TraffikTreeViewModel(SelectedItems items, QObject* parent = nullptr);
         int read_tree_data(const SelectedItems& items);
-        void insert_node(TreeNode tree_node, TraffikNode* node);
+        bool insert_node(const TreeNode& tree_node, TraffikNode* node);
         void print_tree(TreeNode tree_node, int level=0);
         TreeData tokenize(std::string line);
         void build_tree(std::vector<TraffikNode *> &nodes);

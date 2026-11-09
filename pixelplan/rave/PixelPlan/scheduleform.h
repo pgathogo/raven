@@ -13,6 +13,7 @@ class ScheduleForm;
 class EntityDataModel;
 class QMdiArea;
 class QListWidgetItem;
+class ScheduleManTreeViewModel;
 
 class ScheduleForm : public QDialog
 {
@@ -41,6 +42,7 @@ private:
     void build_tree_view_mapped(const EntityDataModel&);
     void build_tree_view(OrderedMap&);
     QDate current_date();
+    ScheduleManTreeViewModel* m_sched_model;
 };
 
 #endif // SCHEDULEFORM_H

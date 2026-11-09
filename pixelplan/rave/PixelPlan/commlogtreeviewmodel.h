@@ -39,7 +39,7 @@ public:
 
     CommLogTreeViewModel(QObject* parent = nullptr);
     int read_tree_data(const CommercialLogs& items);
-    void insert_node(TreeNode tree_node, TRAFFIK::TraffikNode* node);
+    bool insert_node(const TreeNode& tree_node, TRAFFIK::TraffikNode* node);
     void print_tree(TreeNode tree_node, int level=0);
     TreeData tokenize(std::string line);
     void build_tree(std::vector<TRAFFIK::TraffikNode *> &nodes);

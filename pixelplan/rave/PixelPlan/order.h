@@ -54,6 +54,9 @@ public:
     StringField* addLogin()const;
     DateTimeField* addDtime()const;
 
+    TextField* comment() const;
+    void set_comment(std::string);
+
     void setTitle(const std::string);
     void setOrderNumber(const std::string);
     void setClient(int);
@@ -134,6 +137,8 @@ private:
     IntegerField* mApprovalCount;
     StringField* mAddLogin;
     DateTimeField* mAddDtime;
+
+    TextField* m_comment;
 
     QStringList mHeader;
     std::string mTableName;

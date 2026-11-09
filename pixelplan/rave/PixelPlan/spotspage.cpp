@@ -33,6 +33,9 @@ void SpotsPage::setup_ui()
 
     m_tvspots->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_tvspots->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_tvspots->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    add_table_view_style();
 
     connect(m_tvspots, &QTableView::clicked, this, &SpotsPage::on_spot_clicked);
 
@@ -50,6 +53,29 @@ void SpotsPage::setup_ui()
     setLayout(main_layout);
 
 }
+void SpotsPage::add_table_view_style()
+{
+    m_tvspots->setStyleSheet(
+        "QTableView {"
+        "    show-decoration-selected: 1;" /* Ensures row selection spans across full width */
+        "}"
+        "QTableView::item:selected {"
+        "    background-color: #3b82f6;"   /* Selection background color (e.g., bright blue) */
+        "    color: #ffffff;"               /* Selected text color */
+        "}"
+        "QTableView::item:selected:active {"
+        "    background-color: #2563eb;"   /* Color when widget has active keyboard focus */
+        "}"
+        "QTableView::item:selected:!active {"
+        "    background-color: #93c5fd;"   /* Color when window/widget loses focus */
+        "    color: #1e3a8a;"
+        "}"
+        "QTableView::branch:selected {"
+        "    background-color: #2563eb;"   /* Keeps the arrow/branch area color uniform with item */
+        "}"
+        );
+
+}
 
 void SpotsPage::populate_spots_table(int client_id)
 {
@@ -64,6 +90,7 @@ void SpotsPage::populate_spots_table(int client_id)
                            " = ",
                            client_id
         );
+
 
     m_spot_edm->search(m_spot_edm->prepareFilter(spot_filter));
 

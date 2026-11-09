@@ -52,6 +52,8 @@ public:
 
     std::vector<std::tuple<hour, break_name>> insertion_order(){ return m_insertion_order; }
 
+    int size () { return m_data.size(); }
+
 private:
     std::vector<std::tuple<hour, break_name>> m_insertion_order;
     std::unordered_map<int, std::vector<Break>> m_data;
@@ -64,12 +66,16 @@ class ScheduleManTreeViewModel : public QStandardItemModel {
   // Q_OBJECT
 
 public:
-  ScheduleManTreeViewModel(Breaks& items, QObject *parent = nullptr);
+  ScheduleManTreeViewModel(QObject *parent = nullptr);
   int read_tree_data(Breaks& items);
-  void insert_node(TreeNode tree_node, TRAFFIK::TraffikNode *node);
+  bool insert_node(const TreeNode& tree_node, TRAFFIK::TraffikNode *node);
   void print_tree(TreeNode tree_node, int level = 0);
   TreeData tokenize(std::string line);
   void build_tree(std::vector<TRAFFIK::TraffikNode *> &nodes);
+
+  void make_tree(Breaks&);
+  void prepare_tableview();
+  void clear_data();
 
   Q_INVOKABLE void treeClicked(QModelIndex);
 
